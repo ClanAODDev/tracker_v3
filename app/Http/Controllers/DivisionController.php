@@ -50,11 +50,27 @@ class DivisionController extends Controller
                 'created_at' => $app->created_at->diffForHumans(),
                 'responses' => collect($app->responses)->map(fn ($response) => [
                     'label' => $response['label'] ?? 'Unknown',
-                    'value' => is_array($response['value'] ?? null) ? implode(', ', $response['value']) : ($response['value'] ?: '—'),
+                    'value' => $this->linkifyUrls(
+                        is_array($response['value'] ?? null)
+                            ? implode(', ', $response['value'])
+                            : ($response['value'] ?: '—')
+                    ),
                 ])->values(),
             ]);
 
         return response()->json(['applications' => $applications]);
+    }
+
+    private function linkifyUrls(string $text): string
+    {
+        $escaped = e($text);
+        $pattern = '/(https?:\/\/[^\s<]+)/i';
+
+        return preg_replace_callback($pattern, fn ($matches) => sprintf(
+            '<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>',
+            $matches[1],
+            $matches[1]
+        ), $escaped);
     }
 
     public function partTime(Division $division)

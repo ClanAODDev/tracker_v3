@@ -195,7 +195,7 @@ var Division = Division || {};
             app.responses.forEach((r) => {
               html += '<div style="margin-bottom: 14px;">' +
                 `<div class="text-muted" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">${escapeHtml(r.label)}</div>` +
-                `<div style="margin-top: 2px;">${escapeHtml(r.value)}</div>` +
+                `<div style="margin-top: 2px;">${r.value}</div>` +
               '</div>';
             });
 
