@@ -1,7 +1,7 @@
 var Platoon = Platoon || {};
 
 function initPlatoon() {
-    var $ = window.jQuery;
+    const $ = window.jQuery;
 
     if (!$ || typeof $.fn.DataTable !== 'function' || typeof $.fn.bootcomplete !== 'function' || typeof $.fn.select2 !== 'function') {
         setTimeout(initPlatoon, 50);
@@ -13,11 +13,13 @@ function initPlatoon() {
         return;
     }
 
+    const csrfToken = $('meta[name=csrf-token]').attr('content');
+
     Platoon = {
 
         dataTable: null,
 
-        setup: function () {
+        setup() {
             this.handleMembers();
             this.handleSquadMembers();
             this.handleVoiceActivityChart();
@@ -29,25 +31,25 @@ function initPlatoon() {
             this.initBulkReminder();
         },
 
-        handleVoiceActivityChart: function () {
-            var canvas = document.getElementById('voice-activity-chart');
+        handleVoiceActivityChart() {
+            const canvas = document.getElementById('voice-activity-chart');
 
             if (!canvas || typeof Chart === 'undefined') {
                 return;
             }
 
-            var values = JSON.parse(canvas.dataset.values || '[]');
-            var labels = JSON.parse(canvas.dataset.labels || '[]');
-            var colors = JSON.parse(canvas.dataset.colors || '[]');
+            const values = JSON.parse(canvas.dataset.values || '[]');
+            const labels = JSON.parse(canvas.dataset.labels || '[]');
+            const colors = JSON.parse(canvas.dataset.colors || '[]');
 
             if (!values || !labels || values.length === 0) {
                 return;
             }
 
-            var styles = getComputedStyle(document.documentElement);
-            var textColor = styles.getPropertyValue('--color-text-light').trim() || '#949ba2';
-            var bgColor = styles.getPropertyValue('--color-bg-panel').trim() || '#1a1d21';
-            var total = values.reduce(function(a, b) { return a + b; }, 0);
+            const styles = getComputedStyle(document.documentElement);
+            const textColor = styles.getPropertyValue('--color-text-light').trim() || '#949ba2';
+            const bgColor = styles.getPropertyValue('--color-bg-panel').trim() || '#1a1d21';
+            const total = values.reduce((a, b) => a + b, 0);
 
             new Chart(canvas, {
                 type: 'doughnut',
@@ -89,9 +91,9 @@ function initPlatoon() {
                             padding: 10,
                             cornerRadius: 6,
                             callbacks: {
-                                label: function(context) {
-                                    var pct = total > 0 ? Math.round((context.parsed / total) * 100) : 0;
-                                    return context.label + ': ' + context.parsed + ' (' + pct + '%)';
+                                label: (context) => {
+                                    const pct = total > 0 ? Math.round((context.parsed / total) * 100) : 0;
+                                    return `${context.label}: ${context.parsed} (${pct}%)`;
                                 }
                             }
                         }
@@ -99,27 +101,28 @@ function initPlatoon() {
                 }
             });
         },
-        handleSquadMembers: function () {
+
+        handleSquadMembers() {
             if (!$('.manage-squads-grid').length) {
                 return;
             }
 
-            var $sortableLists = $('.mod-plt .sortable');
+            const $sortableLists = $('.mod-plt .sortable');
 
-            function updateUnassignedStatus() {
-                var $unassignedOrganizer = $('.unassigned-organizer');
-                var $unassignedList = $unassignedOrganizer.find('.manage-sortable-list');
-                var count = $unassignedList.find('li').length;
-                var $header = $unassignedOrganizer.find('.unassigned-organizer-header span');
+            const updateUnassignedStatus = () => {
+                const $unassignedOrganizer = $('.unassigned-organizer');
+                const $unassignedList = $unassignedOrganizer.find('.manage-sortable-list');
+                const count = $unassignedList.find('li').length;
+                const $header = $unassignedOrganizer.find('.unassigned-organizer-header span');
 
                 if (count === 0) {
                     $unassignedOrganizer.removeClass('unassigned-organizer').addClass('all-assigned-organizer');
                     $header.html('<i class="fa fa-check-circle text-success"></i> All members assigned to a squad');
                 } else {
                     $unassignedOrganizer.removeClass('all-assigned-organizer').addClass('unassigned-organizer');
-                    $header.html('<i class="fa fa-exclamation-triangle text-warning"></i> ' + count + ' ' + (count === 1 ? 'member' : 'members') + ' not assigned to a squad');
+                    $header.html(`<i class="fa fa-exclamation-triangle text-warning"></i> ${count} ${count === 1 ? 'member' : 'members'} not assigned to a squad`);
                 }
-            }
+            };
 
             $sortableLists.sortable({
                 connectWith: '.mod-plt .sortable',
@@ -134,12 +137,13 @@ function initPlatoon() {
                     $(this).closest('.manage-squad-card, .unassign-drop-zone').removeClass('drag-hover');
                 },
                 receive: function (event, ui) {
-                    var $target = $(this);
-                    var $sender = $(ui.sender);
-                    var memberId = $(ui.item).attr('data-member-id');
-                    var targetSquadId = $target.attr('data-squad-id');
-                    var senderCount = $sender.find('li').length;
-                    var receiverCount = $target.find('li').length;
+                    const $target = $(this);
+                    const $sender = $(ui.sender);
+                    const memberId = $(ui.item).attr('data-member-id');
+                    const targetSquadId = $target.attr('data-squad-id');
+                    const senderCount = $sender.find('li').length;
+                    const receiverCount = $target.find('li').length;
+                    const $item = $(ui.item);
 
                     $sender.closest('.manage-squad-card').find('.count').text(senderCount);
                     $target.closest('.manage-squad-card').find('.count').text(receiverCount);
@@ -147,28 +151,28 @@ function initPlatoon() {
                     updateUnassignedStatus();
 
                     if (targetSquadId === '0') {
-                        $(ui.item).fadeOut(200, function() {
+                        $item.fadeOut(200, function() {
                             $(this).remove();
                         });
                     }
 
                     $.ajax({
                         type: 'POST',
-                        url: window.Laravel.appPath + '/members/assign-squad',
+                        url: `${window.Laravel.appPath}/members/assign-squad`,
                         data: {
                             member_id: memberId,
                             squad_id: targetSquadId,
-                            _token: $('meta[name=csrf-token]').attr('content')
+                            _token: csrfToken
                         },
                         dataType: 'json',
-                        success: function () {
+                        success: () => {
                             if (targetSquadId === '0') {
                                 toastr.success('Member unassigned from platoon');
                             } else {
                                 toastr.success('Member reassigned!');
                             }
                         },
-                        error: function () {
+                        error: () => {
                             toastr.error('Failed to reassign member');
                         }
                     });
@@ -179,20 +183,19 @@ function initPlatoon() {
             });
         },
 
-        initSquadAssignments: function () {
-            var self = this;
-            var organizeMode = false;
+        initSquadAssignments() {
+            let organizeMode = false;
 
-            $('.organize-squads-btn').on('click', function() {
+            $('.organize-squads-btn').on('click', (e) => {
                 organizeMode = !organizeMode;
-                var $btn = $(this);
+                const $btn = $(e.currentTarget);
 
                 if (organizeMode) {
                     $btn.html('<i class="fa fa-check"></i> Done');
                     $btn.removeClass('btn-accent').addClass('btn-success');
                     $('.unassigned-organizer-members').slideDown(200);
                     $('.squad-assignments-section').addClass('organize-mode');
-                    self.enableSquadDragDrop();
+                    this.enableSquadDragDrop();
                 } else {
                     $btn.html('<i class="fa fa-arrows-alt"></i> Organize');
                     $btn.removeClass('btn-success').addClass('btn-accent');
@@ -201,7 +204,7 @@ function initPlatoon() {
                 }
             });
 
-            $('.squad-drop-target').on('click', function(e) {
+            $('.squad-drop-target').on('click', (e) => {
                 if ($('.squad-assignments-section').hasClass('organize-mode')) {
                     e.preventDefault();
                 }
@@ -209,16 +212,14 @@ function initPlatoon() {
 
             if (new URLSearchParams(window.location.search).get('organize') === '1') {
                 $('.organize-squads-btn').trigger('click');
-                var $section = $('.squad-assignments-section');
+                const $section = $('.squad-assignments-section');
                 if ($section.length) {
                     $('html, body').animate({ scrollTop: $section.offset().top - 20 }, 400);
                 }
             }
         },
 
-        enableSquadDragDrop: function () {
-            var self = this;
-
+        enableSquadDragDrop() {
             if ($('.unassigned-squad-member').data('ui-draggable')) {
                 return;
             }
@@ -235,67 +236,68 @@ function initPlatoon() {
             $('.squad-drop-target').droppable({
                 hoverClass: 'squad-drop-target--active',
                 drop: function (event, ui) {
-                    var $target = $(this);
-                    var memberId = ui.draggable.attr('data-member-id');
-                    var squadId = $target.attr('data-squad-id');
+                    const $target = $(this);
+                    const memberId = ui.draggable.attr('data-member-id');
+                    const squadId = $target.attr('data-squad-id');
+                    const $draggable = $(ui.draggable);
 
                     $.ajax({
                         type: 'POST',
-                        url: window.Laravel.appPath + '/members/assign-squad',
+                        url: `${window.Laravel.appPath}/members/assign-squad`,
                         data: {
                             member_id: memberId,
                             squad_id: squadId,
-                            _token: $('meta[name=csrf-token]').attr('content')
+                            _token: csrfToken
                         },
                         dataType: 'json',
-                        success: function () {
+                        success: () => {
                             toastr.success('Member assigned to squad!');
-                            $(ui.draggable).fadeOut(200, function() {
+                            $draggable.fadeOut(200, function() {
                                 $(this).remove();
                                 if ($('.unassigned-squad-member').length < 1) {
                                     $('.unassigned-organizer').slideUp();
                                     $('.squad-assignments-section').removeClass('organize-mode');
                                 }
                             });
-                            var $count = $target.find('.squad-stat-badge .fa-users').parent();
-                            var currentCount = parseInt($count.text().trim()) || 0;
-                            $count.html('<i class="fa fa-users"></i> ' + (currentCount + 1));
+                            const $count = $target.find('.squad-stat-badge .fa-users').parent();
+                            const currentCount = parseInt($count.text().trim()) || 0;
+                            $count.html(`<i class="fa fa-users"></i> ${currentCount + 1}`);
                         },
-                        error: function () {
+                        error: () => {
                             toastr.error('Failed to assign member to squad');
                         }
                     });
                 }
             });
         },
-        initAutocomplete: function () {
+
+        initAutocomplete() {
             $('#leader').bootcomplete({
-                url: window.Laravel.appPath + '/search-member/',
+                url: `${window.Laravel.appPath}/search-member/`,
                 minLength: 3,
                 idField: true,
                 method: 'POST',
-                dataParams: {_token: $('meta[name=csrf-token]').attr('content')}
+                dataParams: {_token: csrfToken}
             });
         },
 
-        handleMembers: function () {
+        handleMembers() {
             if (!$('.members-table').length) {
                 return;
             }
 
-            var self = this;
-            var $table = $('table.members-table');
+            const $table = $('table.members-table');
 
-            var cols = {};
+            const cols = {};
             $table.find('thead th[data-col]').each(function(index) {
                 cols[$(this).data('col')] = index;
             });
 
-            self.dataTable = $table.DataTable({
-                initComplete: function (settings, json) {
-                    setTimeout(function () {
+            this.dataTable = $table.DataTable({
+                initComplete: (settings, json) => {
+                    setTimeout(() => {
                         $('.ld-loading').removeClass('ld-loading');
-                        self.dataTable.columns.adjust();
+                        this.dataTable.columns.adjust();
                     }, 2000);
                 },
                 autoWidth: false,
@@ -317,14 +319,14 @@ function initPlatoon() {
                     { targets: cols['discord-activity'], orderData: cols['discord-activity-date'] },
                     { targets: cols['inactivity-reminder'], orderData: cols['reminder-date'] }
                 ],
-                stateSaveParams: function(settings, data) {
+                stateSaveParams: (settings, data) => {
                     data.columns[cols['checkbox']].visible = false;
                     data.columns[cols['member']].visible = true;
                     if (data.order && data.order[0] && data.order[0][0] === cols['checkbox']) {
                         data.order = [[cols['member'], 'asc']];
                     }
                 },
-                stateLoadParams: function(settings, data) {
+                stateLoadParams: (settings, data) => {
                     data.columns[cols['checkbox']].visible = false;
                     data.columns[cols['member']].visible = true;
                     if (data.order && data.order[0] && data.order[0][0] === cols['checkbox']) {
@@ -333,23 +335,21 @@ function initPlatoon() {
                 }
             });
 
-            self.cols = cols;
+            this.cols = cols;
 
-            var resizeTimer;
-            $(window).on('resize', function() {
+            let resizeTimer;
+            $(window).on('resize', () => {
                 clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {
-                    self.dataTable.columns.adjust().draw();
+                resizeTimer = setTimeout(() => {
+                    this.dataTable.columns.adjust().draw();
                 }, 100);
             });
 
-            function getColumnIndex(name) {
-                return cols[name];
-            }
+            const getColumnIndex = (name) => cols[name];
 
-            function updateToggleState(link, column) {
-                var $link = $(link);
-                var $icon = $link.find('i.fa');
+            const updateToggleState = (link, column) => {
+                const $link = $(link);
+                const $icon = $link.find('i.fa');
                 if (column.visible()) {
                     $link.addClass('active');
                     $icon.removeClass('fa-square-o').addClass('fa-check');
@@ -357,13 +357,13 @@ function initPlatoon() {
                     $link.removeClass('active');
                     $icon.removeClass('fa-check').addClass('fa-square-o');
                 }
-            }
+            };
 
             $('a.toggle-vis').each(function () {
-                var colName = $(this).data('column');
-                var colIndex = getColumnIndex(colName);
+                const colName = $(this).data('column');
+                const colIndex = getColumnIndex(colName);
                 if (colIndex !== undefined) {
-                    var column = self.dataTable.column(colIndex);
+                    const column = Platoon.dataTable.column(colIndex);
                     updateToggleState(this, column);
                 }
             });
@@ -371,23 +371,23 @@ function initPlatoon() {
             $('a.toggle-vis').on('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                var colName = $(this).data('column');
-                var colIndex = getColumnIndex(colName);
+                const colName = $(this).data('column');
+                const colIndex = getColumnIndex(colName);
                 if (colIndex !== undefined) {
-                    var column = self.dataTable.column(colIndex);
+                    const column = Platoon.dataTable.column(colIndex);
                     column.visible(!column.visible());
                     updateToggleState(this, column);
                 }
             });
 
-            var $columnDropdown = $('.column-dropdown');
-            var $columnToggle = $columnDropdown.find('.dropdown-toggle');
-            var $columnMenu = $columnDropdown.find('.column-toggle-menu');
+            const $columnDropdown = $('.column-dropdown');
+            const $columnToggle = $columnDropdown.find('.dropdown-toggle');
+            const $columnMenu = $columnDropdown.find('.column-toggle-menu');
 
-            $columnToggle.on('click', function(e) {
+            $columnToggle.on('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                var isOpen = $columnDropdown.hasClass('show');
+                const isOpen = $columnDropdown.hasClass('show');
                 if (isOpen) {
                     $columnDropdown.removeClass('show');
                     $columnMenu.removeClass('show');
@@ -398,14 +398,14 @@ function initPlatoon() {
                 }
             });
 
-            $(document).on('click', function(e) {
+            $(document).on('click', (e) => {
                 if (!$(e.target).closest('.column-dropdown').length) {
                     $columnDropdown.removeClass('show');
                     $columnMenu.removeClass('show');
                 }
             });
 
-            var $searchInput = $('.dataTables_filter input').removeClass('input-sm');
+            const $searchInput = $('.dataTables_filter input').removeClass('input-sm');
             $searchInput.attr({
                 'placeholder': 'Search Players',
                 'class': 'form-control'
@@ -414,32 +414,32 @@ function initPlatoon() {
             $('#playerFilter').append($searchInput);
             $('.dataTables_filter label').remove();
 
-            var $tagFilter = $('#tag-filter');
+            const $tagFilter = $('#tag-filter');
             if ($tagFilter.length) {
-                var $tagWrapper = $('<div class="tag-filter-wrapper"></div>');
+                const $tagWrapper = $('<div class="tag-filter-wrapper"></div>');
                 $tagWrapper.append($tagFilter);
                 $('#playerFilter').append($tagWrapper);
             }
 
-            var $bulkToggle = null;
-            var bulkModeActive = false;
+            let $bulkToggle = null;
+            let bulkModeActive = false;
 
             if (window.Laravel && window.Laravel.canUseBulkMode) {
                 $bulkToggle = $('<button type="button" class="btn btn-default bulk-mode-toggle">Bulk Mode</button>');
                 $('#playerFilter').append($bulkToggle);
 
-                $bulkToggle.on('click', function() {
+                $bulkToggle.on('click', () => {
                     toggleBulkMode();
                 });
             }
 
             $('.no-sort').removeClass('sorting');
 
-            function toggleBulkMode() {
+            const toggleBulkMode = () => {
                 if (!$bulkToggle) return;
 
                 bulkModeActive = !bulkModeActive;
-                var checkboxCol = self.dataTable.column(cols['checkbox']);
+                const checkboxCol = this.dataTable.column(cols['checkbox']);
                 checkboxCol.visible(bulkModeActive);
 
                 if (bulkModeActive) {
@@ -453,16 +453,16 @@ function initPlatoon() {
                     $('.member-checkbox, #select-all-members').prop('checked', false);
                     updateBulkSelection();
                 }
-            }
+            };
 
-            function updateBulkSelection() {
-                var selected = [];
+            const updateBulkSelection = () => {
+                const selected = [];
                 $('.member-checkbox:checked').each(function() {
                     selected.push($(this).val());
                 });
 
-                var hasParttimers = $('.member-checkbox:checked[data-parttimer="1"]').length > 0;
-                var $transferBtn = $('#bulk-transfer-btn');
+                const hasParttimers = $('.member-checkbox:checked[data-parttimer="1"]').length > 0;
+                const $transferBtn = $('#bulk-transfer-btn');
 
                 if (hasParttimers) {
                     $transferBtn.prop('disabled', true).addClass('disabled');
@@ -474,7 +474,7 @@ function initPlatoon() {
 
                 if (selected.length >= 1) {
                     $("#selected-data").css('display', 'block');
-                    $("#selected-data .status-text").text(selected.length + " member" + (selected.length === 1 ? "" : "s") + " selected");
+                    $("#selected-data .status-text").text(`${selected.length} member${selected.length === 1 ? "" : "s"} selected`);
                     $("#pm-member-data").val(selected);
                     $("#tag-member-data").val(selected);
                     $("#transfer-member-data").val(selected);
@@ -485,30 +485,30 @@ function initPlatoon() {
                     $("#transfer-member-data").val('');
                 }
 
-                var total = $('.member-checkbox').length;
-                var checked = $('.member-checkbox:checked').length;
+                const total = $('.member-checkbox').length;
+                const checked = $('.member-checkbox:checked').length;
                 $('#select-all-members').prop('checked', checked > 0 && checked === total);
                 $('#select-all-members').prop('indeterminate', checked > 0 && checked < total);
-            }
+            };
 
-            $(document).on('click', '.bulk-action-close', function() {
+            $(document).on('click', '.bulk-action-close', () => {
                 $('.member-checkbox, #select-all-members').prop('checked', false);
                 updateBulkSelection();
             });
 
-            $(document).on('change', '.member-checkbox', function() {
+            $(document).on('change', '.member-checkbox', () => {
                 updateBulkSelection();
             });
 
             $(document).on('change', '#select-all-members', function() {
-                var isChecked = $(this).prop('checked');
+                const isChecked = $(this).prop('checked');
                 $('.member-checkbox').prop('checked', isChecked);
                 updateBulkSelection();
             });
 
-            var isDragging = false;
-            var dragStartRow = null;
-            var dragCheckState = true;
+            let isDragging = false;
+            let dragStartRow = null;
+            let dragCheckState = true;
 
             $(document).on('mousedown', '.members-table.bulk-mode tbody tr', function(e) {
                 if ($(e.target).closest('a, button, input, .btn').length) return;
@@ -516,7 +516,7 @@ function initPlatoon() {
 
                 isDragging = true;
                 dragStartRow = $(this).index();
-                var $checkbox = $(this).find('.member-checkbox');
+                const $checkbox = $(this).find('.member-checkbox');
                 dragCheckState = !$checkbox.prop('checked');
                 $checkbox.prop('checked', dragCheckState);
                 updateBulkSelection();
@@ -525,98 +525,89 @@ function initPlatoon() {
 
             $(document).on('mouseenter', '.members-table.bulk-mode tbody tr', function() {
                 if (!isDragging) return;
-                var $checkbox = $(this).find('.member-checkbox');
+                const $checkbox = $(this).find('.member-checkbox');
                 $checkbox.prop('checked', dragCheckState);
                 updateBulkSelection();
             });
 
-            $(document).on('mouseup', function() {
+            $(document).on('mouseup', () => {
                 isDragging = false;
                 dragStartRow = null;
             });
 
-            $('#is_tba').click(function () {
+            $('#is_tba').click(() => {
                 toggleTBA();
             });
 
             toggleTBA();
 
-            function toggleTBA() {
+            const toggleTBA = () => {
                 if ($('#is_tba').is(':checked')) {
                     $('#leader_id, #leader').prop('disabled', true).val('');
                 } else {
                     $('#leader_id, #leader').prop('disabled', false);
                 }
-            }
+            };
         },
 
-        initTagFilter: function () {
-            var self = this;
-            var $tagFilter = $('#tag-filter');
+        initTagFilter() {
+            const $tagFilter = $('#tag-filter');
 
-            if (!$tagFilter.length || !self.dataTable || !self.cols) {
+            if (!$tagFilter.length || !this.dataTable || !this.cols) {
                 return;
             }
 
-            var tagIdColIndex = self.cols['tag-ids'];
+            const tagIdColIndex = this.cols['tag-ids'];
 
             $tagFilter.select2({
                 placeholder: 'Filter by tag',
                 allowClear: true
-            }).on('change', function () {
-                self.dataTable.draw();
+            }).on('change', () => {
+                this.dataTable.draw();
             });
 
-            $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
-                var selectedTags = $tagFilter.val();
+            $.fn.dataTable.ext.search.push((settings, data, dataIndex) => {
+                const selectedTags = $tagFilter.val();
 
                 if (!selectedTags || selectedTags.length === 0) {
                     return true;
                 }
 
-                var memberTags = data[tagIdColIndex] ? data[tagIdColIndex].split(',') : [];
+                const memberTags = data[tagIdColIndex] ? data[tagIdColIndex].split(',') : [];
 
-                for (var i = 0; i < selectedTags.length; i++) {
-                    if (memberTags.indexOf(selectedTags[i]) !== -1) {
-                        return true;
-                    }
-                }
-
-                return false;
+                return selectedTags.some((tag) => memberTags.includes(tag));
             });
         },
 
-        initBulkTags: function () {
-            var $modal = $('#bulk-tags-modal');
+        initBulkTags() {
+            const $modal = $('#bulk-tags-modal');
             if (!$modal.length) return;
 
-            var csrfToken = $('meta[name=csrf-token]').attr('content');
-
-            function getSelectedMemberIds() {
+            const getSelectedMemberIds = () => {
                 return $('#tag-member-data').val() ? $('#tag-member-data').val().split(',') : [];
-            }
+            };
 
-            function getSelectedTagIds() {
-                var tagIds = [];
+            const getSelectedTagIds = () => {
+                const tagIds = [];
                 $('.bulk-tag-checkbox:checked').each(function() {
                     tagIds.push($(this).val());
                 });
                 return tagIds;
-            }
+            };
 
-            function updateButtonState() {
-                var hasSelectedTags = getSelectedTagIds().length > 0;
+            const updateButtonState = () => {
+                const hasSelectedTags = getSelectedTagIds().length > 0;
                 $('#bulk-assign-tags, #bulk-remove-tags').prop('disabled', !hasSelectedTags);
-            }
+            };
 
-            $modal.on('show.bs.modal', function() {
-                var memberCount = getSelectedMemberIds().length;
-                $('#bulk-tags-member-count').text(memberCount + ' member' + (memberCount !== 1 ? 's' : '') + ' selected');
+            $modal.on('show.bs.modal', () => {
+                const memberCount = getSelectedMemberIds().length;
+                $('#bulk-tags-member-count').text(`${memberCount} member${memberCount !== 1 ? 's' : ''} selected`);
                 $('.bulk-tag-checkbox').prop('checked', false).trigger('change');
             });
 
             $(document).on('change', '.bulk-tag-checkbox', function() {
-                var $badge = $(this).siblings('.bulk-tag-badge');
+                const $badge = $(this).siblings('.bulk-tag-badge');
                 if (this.checked) {
                     $badge.addClass('selected');
                 } else {
@@ -625,17 +616,17 @@ function initPlatoon() {
                 updateButtonState();
             });
 
-            function bulkTagAction(action) {
-                var memberIds = getSelectedMemberIds();
-                var tagIds = getSelectedTagIds();
-                var url = $modal.data('store-url');
+            const bulkTagAction = (action) => {
+                const memberIds = getSelectedMemberIds();
+                const tagIds = getSelectedTagIds();
+                const url = $modal.data('store-url');
 
                 if (tagIds.length === 0) {
                     toastr.warning('Please select at least one tag');
                     return;
                 }
 
-                var $btns = $('#bulk-assign-tags, #bulk-remove-tags');
+                const $btns = $('#bulk-assign-tags, #bulk-remove-tags');
                 $btns.prop('disabled', true);
 
                 $.ajax({
@@ -647,79 +638,78 @@ function initPlatoon() {
                         action: action,
                         _token: csrfToken
                     },
-                    success: function() {
-                        var msg = action === 'assign' ? 'Tags assigned to ' : 'Tags removed from ';
-                        toastr.success(msg + memberIds.length + ' members');
+                    success: () => {
+                        const msg = action === 'assign' ? 'Tags assigned to ' : 'Tags removed from ';
+                        toastr.success(`${msg}${memberIds.length} members`);
                         $modal.modal('hide');
                         location.reload();
                     },
-                    error: function() {
-                        toastr.error('Failed to ' + action + ' tags');
+                    error: () => {
+                        toastr.error(`Failed to ${action} tags`);
                     },
-                    complete: function() {
+                    complete: () => {
                         updateButtonState();
                     }
                 });
-            }
+            };
 
-            $(document).on('click', '#bulk-assign-tags', function() {
+            $(document).on('click', '#bulk-assign-tags', () => {
                 bulkTagAction('assign');
             });
 
-            $(document).on('click', '#bulk-remove-tags', function() {
+            $(document).on('click', '#bulk-remove-tags', () => {
                 bulkTagAction('remove');
             });
         },
 
-        initBulkTransfer: function () {
-            var $modal = $('#bulk-transfer-modal');
+        initBulkTransfer() {
+            const $modal = $('#bulk-transfer-modal');
             if (!$modal.length) return;
 
-            var csrfToken = $('meta[name=csrf-token]').attr('content');
-            var platoonsData = null;
+            let platoonsData = null;
 
-            function getSelectedMemberIds() {
+            const getSelectedMemberIds = () => {
                 return $('#transfer-member-data').val() ? $('#transfer-member-data').val().split(',') : [];
-            }
+            };
 
-            function updateSubmitState() {
-                var platoonId = $('#transfer-platoon').val();
+            const updateSubmitState = () => {
+                const platoonId = $('#transfer-platoon').val();
                 $('#bulk-transfer-submit').prop('disabled', !platoonId);
-            }
+            };
 
-            function loadPlatoons() {
+            const populatePlatoons = () => {
+                const $platoonSelect = $('#transfer-platoon');
+                $platoonSelect.find('option:not(:first)').remove();
+
+                platoonsData.forEach((platoon) => {
+                    $platoonSelect.append(
+                        $('<option>', { value: platoon.id, text: platoon.name })
+                    );
+                });
+            };
+
+            const loadPlatoons = () => {
                 if (platoonsData) {
                     populatePlatoons();
                     return;
                 }
 
-                var url = $modal.data('platoons-url');
+                const url = $modal.data('platoons-url');
                 $.ajax({
                     url: url,
                     method: 'GET',
-                    success: function(response) {
+                    success: (response) => {
                         platoonsData = response.platoons;
                         populatePlatoons();
                     },
-                    error: function() {
+                    error: () => {
                         toastr.error('Failed to load platoons');
                     }
                 });
-            }
+            };
 
-            function populatePlatoons() {
-                var $platoonSelect = $('#transfer-platoon');
-                $platoonSelect.find('option:not(:first)').remove();
-
-                platoonsData.forEach(function(platoon) {
-                    $platoonSelect.append(
-                        $('<option>', { value: platoon.id, text: platoon.name })
-                    );
-                });
-            }
-
-            function populateSquads(platoonId) {
-                var $squadSelect = $('#transfer-squad');
+            const populateSquads = (platoonId) => {
+                const $squadSelect = $('#transfer-squad');
                 $squadSelect.find('option:not(:first)').remove();
 
                 if (!platoonId) {
@@ -727,12 +717,10 @@ function initPlatoon() {
                     return;
                 }
 
-                var platoon = platoonsData.find(function(p) {
-                    return p.id == platoonId;
-                });
+                const platoon = platoonsData.find((p) => p.id == platoonId);
 
                 if (platoon && platoon.squads.length > 0) {
-                    platoon.squads.forEach(function(squad) {
+                    platoon.squads.forEach((squad) => {
                         $squadSelect.append(
                             $('<option>', { value: squad.id, text: squad.name })
                         );
@@ -741,10 +729,10 @@ function initPlatoon() {
                 } else {
                     $squadSelect.prop('disabled', true);
                 }
-            }
+            };
 
-            $modal.on('show.bs.modal', function() {
-                var hasParttimers = $modal.data('parttimers') === 'true';
+            $modal.on('show.bs.modal', () => {
+                const hasParttimers = $modal.data('parttimers') === 'true';
 
                 if (hasParttimers) {
                     $('#bulk-transfer-parttimer-warning').show();
@@ -757,8 +745,8 @@ function initPlatoon() {
                 $('#bulk-transfer-form-content').show();
                 $('#bulk-transfer-submit').show();
 
-                var memberCount = getSelectedMemberIds().length;
-                $('#bulk-transfer-member-count').text(memberCount + ' member' + (memberCount !== 1 ? 's' : '') + ' selected');
+                const memberCount = getSelectedMemberIds().length;
+                $('#bulk-transfer-member-count').text(`${memberCount} member${memberCount !== 1 ? 's' : ''} selected`);
                 $('#transfer-platoon').val('');
                 $('#transfer-squad').val('').prop('disabled', true);
                 updateSubmitState();
@@ -766,23 +754,23 @@ function initPlatoon() {
             });
 
             $(document).on('change', '#transfer-platoon', function() {
-                var platoonId = $(this).val();
+                const platoonId = $(this).val();
                 populateSquads(platoonId);
                 updateSubmitState();
             });
 
             $(document).on('click', '#bulk-transfer-submit', function() {
-                var memberIds = getSelectedMemberIds();
-                var platoonId = $('#transfer-platoon').val();
-                var squadId = $('#transfer-squad').val();
-                var url = $modal.data('store-url');
+                const memberIds = getSelectedMemberIds();
+                const platoonId = $('#transfer-platoon').val();
+                const squadId = $('#transfer-squad').val();
+                const url = $modal.data('store-url');
 
                 if (!platoonId) {
                     toastr.warning('Please select a platoon');
                     return;
                 }
 
-                var $btn = $(this);
+                const $btn = $(this);
                 $btn.prop('disabled', true).html('<span class="themed-spinner spinner-sm"></span> Transferring...');
 
                 $.ajax({
@@ -794,15 +782,15 @@ function initPlatoon() {
                         squad_id: squadId || null,
                         _token: csrfToken
                     },
-                    success: function(response) {
+                    success: (response) => {
                         toastr.success(response.message);
                         $modal.modal('hide');
                         location.reload();
                     },
-                    error: function() {
+                    error: () => {
                         toastr.error('Failed to transfer members');
                     },
-                    complete: function() {
+                    complete: () => {
                         $btn.prop('disabled', false).html('<i class="fa fa-exchange-alt"></i> Transfer');
                         updateSubmitState();
                     }
@@ -810,22 +798,19 @@ function initPlatoon() {
             });
         },
 
-        initBulkReminder: function () {
-            var $btn = $('#bulk-reminder-btn');
+        initBulkReminder() {
+            const $btn = $('#bulk-reminder-btn');
             if (!$btn.length) return;
 
-            var csrfToken = $('meta[name=csrf-token]').attr('content');
-            var self = this;
-
-            $btn.on('click', function() {
-                var memberIds = $('#pm-member-data').val();
+            $btn.on('click', () => {
+                const memberIds = $('#pm-member-data').val();
                 if (!memberIds) {
                     toastr.warning('No members selected');
                     return;
                 }
 
-                var memberIdArray = memberIds.split(',');
-                var url = $btn.data('url');
+                const memberIdArray = memberIds.split(',');
+                const url = $btn.data('url');
 
                 $btn.prop('disabled', true).html('<span class="themed-spinner spinner-sm"></span>');
 
@@ -836,18 +821,18 @@ function initPlatoon() {
                         _token: csrfToken,
                         member_ids: memberIdArray
                     },
-                    success: function(response) {
-                        var message = response.count + ' member' + (response.count !== 1 ? 's' : '') + ' marked as reminded';
+                    success: (response) => {
+                        let message = `${response.count} member${response.count !== 1 ? 's' : ''} marked as reminded`;
                         if (response.skipped > 0) {
-                            message += ' (' + response.skipped + ' skipped - already reminded today)';
+                            message += ` (${response.skipped} skipped - already reminded today)`;
                         }
                         toastr.success(message);
 
-                        response.updatedIds.forEach(function(memberId) {
-                            var $toggleBtn = $('.activity-reminder-toggle[data-member-id="' + memberId + '"]');
+                        response.updatedIds.forEach((memberId) => {
+                            const $toggleBtn = $(`.activity-reminder-toggle[data-member-id="${memberId}"]`);
                             if ($toggleBtn.length) {
                                 $toggleBtn.removeClass('btn-success').addClass('btn-default');
-                                $toggleBtn.html('<i class="fa fa-bell"></i> <span class="reminded-date">' + response.date + '</span>');
+                                $toggleBtn.html(`<i class="fa fa-bell"></i> <span class="reminded-date">${response.date}</span>`);
                                 $toggleBtn.attr('title', 'Reminded just now');
                                 $toggleBtn.prop('disabled', true);
                             }
@@ -855,11 +840,11 @@ function initPlatoon() {
 
                         $('.bulk-action-close').click();
                     },
-                    error: function(xhr) {
-                        var message = xhr.responseJSON?.message || 'Failed to set reminders';
+                    error: (xhr) => {
+                        const message = xhr.responseJSON?.message || 'Failed to set reminders';
                         toastr.error(message);
                     },
-                    complete: function() {
+                    complete: () => {
                         $btn.prop('disabled', false).html('<i class="fa fa-bell text-accent"></i> <span class="hidden-xs hidden-sm">Reminder</span>');
                     }
                 });

@@ -2,9 +2,11 @@ var Tracker = Tracker || {};
 
 (function ($) {
 
+    const csrfToken = $('meta[name=csrf-token]').attr('content');
+
     Tracker = {
 
-        Setup: function () {
+        Setup() {
             Tracker.InitNavToggle();
             Tracker.InitBackToTop();
             Tracker.InitClipboard();
@@ -37,30 +39,30 @@ var Tracker = Tracker || {};
             Tracker.InitPopulationMeter();
         },
 
-        InitNavToggle: function () {
-            var $toggle = $('.left-nav-toggle a');
+        InitNavToggle() {
+            const $toggle = $('.left-nav-toggle a');
             if (!$toggle.length) return;
 
-            $toggle.on('click', function (e) {
+            $toggle.on('click', (e) => {
                 e.preventDefault();
                 $('body').toggleClass('nav-toggle');
 
                 if ($('body').hasClass('nav-toggle')) {
-                    $.get(window.Laravel.appPath + '/primary-nav/collapse');
+                    $.get(`${window.Laravel.appPath}/primary-nav/collapse`);
                 } else {
-                    $.get(window.Laravel.appPath + '/primary-nav/decollapse');
+                    $.get(`${window.Laravel.appPath}/primary-nav/decollapse`);
                 }
 
                 Tracker.RefreshSparklines();
             });
         },
 
-        InitBackToTop: function () {
-            var $btn = $('#top-link-block');
+        InitBackToTop() {
+            const $btn = $('#top-link-block');
             if (!$btn.length) return;
 
-            $(window).on('scroll', function () {
-                if ($(this).scrollTop() > 100) {
+            $(window).on('scroll', () => {
+                if ($(window).scrollTop() > 100) {
                     $btn.addClass('visible');
                 } else {
                     $btn.removeClass('visible');
@@ -68,40 +70,40 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitSmoothScroll: function () {
+        InitSmoothScroll() {
             $('.smooth-scroll').on('click', function (e) {
-                var targetId = $(this).attr('href');
+                const targetId = $(this).attr('href');
                 if (!targetId || !targetId.startsWith('#')) return;
 
                 e.preventDefault();
-                var $target = $(targetId);
+                const $target = $(targetId);
                 if (!$target.length) return;
 
-                var top = $target.offset().top - 90;
-                $('html, body').stop().animate({ scrollTop: top }, 750, function () {
+                const top = $target.offset().top - 90;
+                $('html, body').stop().animate({ scrollTop: top }, 750, () => {
                     history.replaceState(null, null, targetId);
                     $(window).trigger('hashchange');
                 });
             });
         },
 
-        InitClipboard: function () {
+        InitClipboard() {
             if (typeof Clipboard === 'undefined') return;
             if (!$('.copy-to-clipboard').length) return;
 
-            var clipboard = new Clipboard('.copy-to-clipboard');
-            clipboard.on('success', function (e) {
+            const clipboard = new Clipboard('.copy-to-clipboard');
+            clipboard.on('success', (e) => {
                 toastr.success('Copied!');
                 e.clearSelection();
             });
         },
 
-        InitDataTables: function () {
-            var $basicTable = $('table.basic-datatable');
-            var $advTable = $('table.adv-datatable');
+        InitDataTables() {
+            const $basicTable = $('table.basic-datatable');
+            const $advTable = $('table.adv-datatable');
 
             if ($basicTable.length) {
-                var basicDatatable = $basicTable.DataTable({
+                const basicDatatable = $basicTable.DataTable({
                     paging: false,
                     bFilter: false,
                     stateSave: true,
@@ -117,13 +119,11 @@ var Tracker = Tracker || {};
                 });
 
                 if ($('.for-pm-selection').length) {
-                    basicDatatable.on('select', function () {
-                        var selected = basicDatatable.rows($('.selected')).data().toArray().map(function (row) {
-                            return row[4];
-                        });
+                    basicDatatable.on('select', () => {
+                        const selected = basicDatatable.rows($('.selected')).data().toArray().map((row) => row[4]);
                         if (selected.length >= 1) {
                             $('#selected-data').show();
-                            $('#selected-data .status-text').text(selected.length + ' member' + (selected.length === 1 ? '' : 's') + ' selected');
+                            $('#selected-data .status-text').text(`${selected.length} member${selected.length === 1 ? '' : 's'} selected`);
                             $('#pm-member-data').val(selected);
                         } else {
                             $('#selected-data').hide();
@@ -142,21 +142,21 @@ var Tracker = Tracker || {};
             }
         },
 
-        InitSparklines: function () {
+        InitSparklines() {
             Tracker.RefreshSparklines();
 
-            var resizeTimer;
-            $(window).on('resize', function () {
+            let resizeTimer;
+            $(window).on('resize', () => {
                 clearTimeout(resizeTimer);
                 resizeTimer = setTimeout(Tracker.RefreshSparklines, 100);
             });
         },
 
-        RefreshSparklines: function () {
+        RefreshSparklines() {
             $('[census-data]').each(function () {
-                var $el = $(this);
-                var inContainer = $el.closest('.census-sparkline-container').length > 0;
-                var chartHeight = inContainer ? 80 : 50;
+                const $el = $(this);
+                const inContainer = $el.closest('.census-sparkline-container').length > 0;
+                const chartHeight = inContainer ? 80 : 50;
 
                 $el.sparkline($el.data('counts'), {
                     type: 'line',
@@ -180,7 +180,7 @@ var Tracker = Tracker || {};
             });
 
             $('.census-pie').each(function () {
-                var $el = $(this);
+                const $el = $(this);
                 $el.sparkline($el.data('counts'), {
                     type: 'pie',
                     sliceColors: $el.data('colors')
@@ -188,12 +188,12 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitPanels: function () {
-            $('.panel-toggle').on('click', function (e) {
+        InitPanels() {
+            $('.panel-toggle').on('click', (e) => {
                 e.preventDefault();
-                var $panel = $(e.target).closest('div.panel');
-                var $icon = $(e.target).closest('i.toggle-icon');
-                var $iconNotLinked = $(e.target).find('i.toggle-icon');
+                const $panel = $(e.target).closest('div.panel');
+                const $icon = $(e.target).closest('i.toggle-icon');
+                const $iconNotLinked = $(e.target).find('i.toggle-icon');
 
                 $panel.find('div.panel-body').slideToggle(300);
                 $panel.find('div.panel-footer').slideToggle(200);
@@ -202,58 +202,58 @@ var Tracker = Tracker || {};
                 $iconNotLinked.toggleClass('fa-chevron-up fa-chevron-down');
                 $panel.toggleClass('panel-collapse');
 
-                setTimeout(function () {
+                setTimeout(() => {
                     $panel.resize();
                     $panel.find('[id^=map-]').resize();
                 }, 50);
             });
 
-            $('.panel-close').on('click', function (e) {
+            $('.panel-close').on('click', (e) => {
                 e.preventDefault();
                 $(e.target).closest('div.panel').remove();
             });
         },
 
-        InitSubNavCollapse: function () {
-            $('.nav-second').on('show.bs.collapse', function () {
+        InitSubNavCollapse() {
+            $('.nav-second').on('show.bs.collapse', () => {
                 $('.nav-second.in').collapse('hide');
             });
         },
 
-        InitMemberAutocomplete: function () {
-            var $search = $('.search-member');
+        InitMemberAutocomplete() {
+            const $search = $('.search-member');
             if (!$search.length) return;
 
             $search.bootcomplete({
-                url: window.Laravel.appPath + '/search-member/',
+                url: `${window.Laravel.appPath}/search-member/`,
                 minLength: 3,
                 idField: true,
                 method: 'POST',
-                dataParams: { _token: $('meta[name=csrf-token]').attr('content') }
+                dataParams: { _token: csrfToken }
             });
         },
 
-        InitMobileNav: function () {
-            var $toggle = $('.mobile-nav-toggle');
-            var $drawer = $('.mobile-nav-drawer');
-            var $overlay = $('.mobile-nav-overlay');
-            var $close = $('.mobile-nav-close');
+        InitMobileNav() {
+            const $toggle = $('.mobile-nav-toggle');
+            const $drawer = $('.mobile-nav-drawer');
+            const $overlay = $('.mobile-nav-overlay');
+            const $close = $('.mobile-nav-close');
 
             if (!$drawer.length) return;
 
-            function openNav() {
+            const openNav = () => {
                 $drawer.addClass('active');
                 $overlay.addClass('active');
                 $('body').addClass('mobile-nav-open');
-            }
+            };
 
-            function closeNav() {
+            const closeNav = () => {
                 $drawer.removeClass('active');
                 $overlay.removeClass('active');
                 $('body').removeClass('mobile-nav-open');
-            }
+            };
 
-            $toggle.on('click', function (e) {
+            $toggle.on('click', (e) => {
                 e.preventDefault();
                 if ($drawer.hasClass('active')) {
                     closeNav();
@@ -262,7 +262,7 @@ var Tracker = Tracker || {};
                 }
             });
 
-            $close.on('click', function (e) {
+            $close.on('click', (e) => {
                 e.preventDefault();
                 closeNav();
             });
@@ -270,7 +270,7 @@ var Tracker = Tracker || {};
             $overlay.on('click', closeNav);
 
             $drawer.find('a').on('click', function () {
-                var $link = $(this);
+                const $link = $(this);
                 if ($link.attr('data-toggle') === 'collapse' || $link.attr('href') === '#') {
                     return;
                 }
@@ -278,37 +278,37 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitMobileSearch: function () {
-            var $toggle = $('.mobile-search-toggle');
-            var $modal = $('.mobile-search-modal');
-            var $input = $('#mobile-member-search');
-            var $close = $('.mobile-search-close');
-            var $clear = $('.mobile-searchclear');
-            var $results = $('.mobile-search-results');
-            var $loader = $('.mobile-search-loader');
+        InitMobileSearch() {
+            const $toggle = $('.mobile-search-toggle');
+            const $modal = $('.mobile-search-modal');
+            const $input = $('#mobile-member-search');
+            const $close = $('.mobile-search-close');
+            const $clear = $('.mobile-searchclear');
+            const $results = $('.mobile-search-results');
+            const $loader = $('.mobile-search-loader');
 
             if (!$modal.length) return;
 
-            var timer = null;
-            var delay = 500;
+            let timer = null;
+            const delay = 500;
 
-            function openSearch() {
+            const openSearch = () => {
                 $modal.addClass('active');
                 $('body').addClass('mobile-search-open');
                 $input.focus();
-            }
+            };
 
-            function closeSearch() {
+            const closeSearch = () => {
                 $modal.removeClass('active');
                 $('body').removeClass('mobile-search-open');
                 $input.val('');
                 $clear.removeClass('visible');
                 $results.empty();
                 $loader.removeClass('active');
-            }
+            };
 
-            function performSearch() {
-                var query = $input.val().trim();
+            const performSearch = () => {
+                const query = $input.val().trim();
                 if (!query) {
                     $loader.removeClass('active');
                     $results.empty();
@@ -316,31 +316,31 @@ var Tracker = Tracker || {};
                 }
 
                 $.ajax({
-                    url: window.Laravel.appPath + '/search/members',
+                    url: `${window.Laravel.appPath}/search/members`,
                     type: 'GET',
                     data: { q: query },
-                    success: function (response) {
+                    success: (response) => {
                         $loader.removeClass('active');
                         $results.html(response);
                     }
                 });
-            }
+            };
 
-            $toggle.on('click', function (e) {
+            $toggle.on('click', (e) => {
                 e.preventDefault();
                 openSearch();
             });
 
             $close.on('click', closeSearch);
 
-            $clear.on('click', function () {
+            $clear.on('click', () => {
                 $input.val('').focus();
                 $clear.removeClass('visible');
                 $results.empty();
             });
 
-            $input.on('input', function () {
-                var value = $input.val().trim();
+            $input.on('input', () => {
+                const value = $input.val().trim();
                 $clear.toggleClass('visible', value.length > 0);
 
                 if (timer) {
@@ -357,42 +357,42 @@ var Tracker = Tracker || {};
                 timer = setTimeout(performSearch, delay);
             });
 
-            $input.on('keydown', function (e) {
+            $input.on('keydown', (e) => {
                 if (e.key === 'Escape') {
                     closeSearch();
                 }
             });
         },
 
-        InitRarityFilter: function () {
-            var $rarityFilters = $('.rarity-filter');
-            var $divisionSelect = $('#division-filter');
+        InitRarityFilter() {
+            const $rarityFilters = $('.rarity-filter');
+            const $divisionSelect = $('#division-filter');
             if (!$rarityFilters.length && !$divisionSelect.length) return;
 
-            function applyRarityFilter() {
-                var activeRarities = $('.rarity-filter.active').map(function () {
+            const applyRarityFilter = () => {
+                const activeRarities = $('.rarity-filter.active').map(function () {
                     return $(this).data('rarity');
                 }).get();
 
                 $('.award-card').each(function () {
-                    var $card = $(this);
-                    var $col = $card.closest('[class*="col-"]');
-                    var cardRarity = null;
+                    const $card = $(this);
+                    const $col = $card.closest('[class*="col-"]');
+                    let cardRarity = null;
 
-                    ['unclaimed', 'mythic', 'legendary', 'epic', 'rare', 'common'].forEach(function (r) {
-                        if ($card.hasClass('award-card-' + r)) {
+                    ['unclaimed', 'mythic', 'legendary', 'epic', 'rare', 'common'].forEach((r) => {
+                        if ($card.hasClass(`award-card-${r}`)) {
                             cardRarity = r;
                         }
                     });
 
-                    var show = activeRarities.length === 0 || activeRarities.indexOf(cardRarity) !== -1;
-                    var wasHidden = $col.hasClass('filter-hidden');
+                    const show = activeRarities.length === 0 || activeRarities.indexOf(cardRarity) !== -1;
+                    const wasHidden = $col.hasClass('filter-hidden');
 
                     if (show) {
                         $col.removeClass('filter-hidden filter-hiding');
                         if (wasHidden) {
                             $col.addClass('filter-entering');
-                            setTimeout(function() {
+                            setTimeout(() => {
                                 $col.removeClass('filter-entering').addClass('filter-visible');
                             }, 300);
                         } else {
@@ -400,12 +400,12 @@ var Tracker = Tracker || {};
                         }
                     } else if (!$col.hasClass('filter-hidden') && !$col.hasClass('filter-hiding')) {
                         $col.removeClass('filter-visible filter-entering').addClass('filter-hiding');
-                        setTimeout(function() {
+                        setTimeout(() => {
                             $col.removeClass('filter-hiding').addClass('filter-hidden');
                         }, 250);
                     }
                 });
-            }
+            };
 
             $rarityFilters.on('click', function () {
                 $(this).toggleClass('active');
@@ -413,8 +413,8 @@ var Tracker = Tracker || {};
             });
 
             $divisionSelect.on('change', function () {
-                var division = $(this).val();
-                var url = new URL(window.location.href);
+                const division = $(this).val();
+                const url = new URL(window.location.href);
                 if (division) {
                     url.searchParams.set('division', division);
                 } else {
@@ -423,37 +423,37 @@ var Tracker = Tracker || {};
                 window.location.href = url.toString();
             });
 
-            var $raritySort = $('#rarity-sort');
-            var rarityOrder = ['mythic', 'legendary', 'epic', 'rare', 'common', 'unclaimed'];
+            const $raritySort = $('#rarity-sort');
+            const rarityOrder = ['mythic', 'legendary', 'epic', 'rare', 'common', 'unclaimed'];
 
-            function sortAwards(sortType) {
+            const sortAwards = (sortType) => {
                 $('.award-grid').each(function () {
-                    var $grid = $(this);
-                    var $items = $grid.children('[class*="col-"]').detach().toArray();
+                    const $grid = $(this);
+                    const $items = $grid.children('[class*="col-"]').detach().toArray();
 
                     if (sortType === 'default') {
-                        $items.sort(function (a, b) {
-                            var orderA = parseInt($(a).data('original-order')) || 0;
-                            var orderB = parseInt($(b).data('original-order')) || 0;
+                        $items.sort((a, b) => {
+                            const orderA = parseInt($(a).data('original-order')) || 0;
+                            const orderB = parseInt($(b).data('original-order')) || 0;
                             return orderA - orderB;
                         });
                     } else {
-                        $items.sort(function (a, b) {
-                            var $cardA = $(a).find('.award-card');
-                            var $cardB = $(b).find('.award-card');
-                            var rarityA = 5, rarityB = 5;
+                        $items.sort((a, b) => {
+                            const $cardA = $(a).find('.award-card');
+                            const $cardB = $(b).find('.award-card');
+                            let rarityA = 5, rarityB = 5;
 
-                            rarityOrder.forEach(function (r, idx) {
-                                if ($cardA.hasClass('award-card-' + r)) rarityA = idx;
-                                if ($cardB.hasClass('award-card-' + r)) rarityB = idx;
+                            rarityOrder.forEach((r, idx) => {
+                                if ($cardA.hasClass(`award-card-${r}`)) rarityA = idx;
+                                if ($cardB.hasClass(`award-card-${r}`)) rarityB = idx;
                             });
 
                             return sortType === 'rarity-desc' ? rarityA - rarityB : rarityB - rarityA;
                         });
                     }
 
-                    $items.forEach(function (item, idx) {
-                        var $item = $(item);
+                    $items.forEach((item, idx) => {
+                        const $item = $(item);
                         if (!$item.data('original-order')) {
                             $item.attr('data-original-order', idx);
                         }
@@ -461,19 +461,19 @@ var Tracker = Tracker || {};
                         $grid.append(item);
                     });
 
-                    setTimeout(function () {
+                    setTimeout(() => {
                         $grid.children('[class*="col-"]').each(function (idx) {
-                            var $el = $(this);
-                            setTimeout(function () {
+                            const $el = $(this);
+                            setTimeout(() => {
                                 $el.addClass('filter-entering');
-                                setTimeout(function () {
+                                setTimeout(() => {
                                     $el.removeClass('filter-entering').addClass('filter-visible');
                                 }, 300);
                             }, idx * 30);
                         });
                     }, 10);
                 });
-            }
+            };
 
             $('.award-grid').each(function () {
                 $(this).children('[class*="col-"]').each(function (idx) {
@@ -487,157 +487,153 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitPopulationMeter: function () {
-            var $meters = $('.tier-population-meter');
+        InitPopulationMeter() {
+            const $meters = $('.tier-population-meter');
             if (!$meters.length) return;
 
-            var hasAnimated = false;
-            var barDelay = 25;
-            var tierDelay = 400;
+            const barDelay = 25;
+            const tierDelay = 400;
 
-            function calculateBarCount($meter) {
-                var width = $meter.width();
-                var barWidth = 4;
-                var gap = 4;
-                var count = Math.floor(width / (barWidth + gap));
+            const calculateBarCount = ($meter) => {
+                const width = $meter.width();
+                const barWidth = 4;
+                const gap = 4;
+                let count = Math.floor(width / (barWidth + gap));
                 if (count < 5) count = 5;
                 if (count > 80) count = 80;
                 return count;
-            }
+            };
 
-            function renderMeter($meter, animate, tierIndex) {
-                var pct = parseInt($meter.data('pct')) || 0;
-                var barCount = calculateBarCount($meter);
-                var activeBars = Math.round((pct / 100) * barCount);
+            const renderMeter = ($meter, animate, tierIndex) => {
+                const pct = parseInt($meter.data('pct')) || 0;
+                const barCount = calculateBarCount($meter);
+                const activeBars = Math.round((pct / 100) * barCount);
 
                 $meter.empty();
 
-                for (var i = 0; i < barCount; i++) {
-                    var $bar = $('<div class="tier-population-bar"></div>');
-                    var isActive = i < activeBars;
+                for (let i = 0; i < barCount; i++) {
+                    const $bar = $('<div class="tier-population-bar"></div>');
+                    const isActive = i < activeBars;
 
                     if (isActive) {
                         if (animate) {
                             $bar.addClass('animate-pending');
-                            (function(bar, barIdx, tIdx) {
-                                var delay = (tIdx * tierDelay) + (barIdx * barDelay);
-                                setTimeout(function() {
-                                    bar.removeClass('animate-pending').addClass('active');
-                                }, delay);
-                            })($bar, i, tierIndex);
+                            const delay = (tierIndex * tierDelay) + (i * barDelay);
+                            setTimeout(() => {
+                                $bar.removeClass('animate-pending').addClass('active');
+                            }, delay);
                         } else {
                             $bar.addClass('active');
                         }
                     }
                     $meter.append($bar);
                 }
-            }
+            };
 
-            function renderAll(animate) {
+            const renderAll = (animate) => {
                 $meters.each(function (index) {
                     renderMeter($(this), animate, index);
                 });
-            }
+            };
 
             renderAll(true);
-            hasAnimated = true;
 
-            var resizeTimer;
-            $(window).on('resize', function () {
+            let resizeTimer;
+            $(window).on('resize', () => {
                 clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function() {
+                resizeTimer = setTimeout(() => {
                     renderAll(false);
                 }, 150);
             });
         },
 
-        InitMemberSearch: function () {
-            var $input = $('#member-search');
+        InitMemberSearch() {
+            const $input = $('#member-search');
             if (!$input.length) return;
 
-            var $loader = $('.desktop-search-loader');
-            var $clearBtn = $('#searchclear');
-            var timer = null;
-            var delay = 1000;
+            const $loader = $('.desktop-search-loader');
+            const $clearBtn = $('#searchclear');
+            let timer = null;
+            const delay = 1000;
 
-            function triggerSearch() {
+            const triggerSearch = () => {
                 $loader.addClass('active');
 
                 if (timer) {
                     clearTimeout(timer);
                 }
 
-                timer = setTimeout(function () {
+                timer = setTimeout(() => {
                     timer = null;
-                    var value = $input.val().trim();
+                    const value = $input.val().trim();
                     if (!value) {
                         $loader.removeClass('active');
                         return;
                     }
                     Tracker.GetSearchResults();
                 }, delay);
-            }
+            };
 
             $input.on('keydown', triggerSearch);
-            $input.on('paste', function () {
+            $input.on('paste', () => {
                 setTimeout(triggerSearch, 0);
             });
-            $input.on('input', function () {
-                var hasValue = $input.val().trim();
+            $input.on('input', () => {
+                const hasValue = $input.val().trim();
                 if (!hasValue) {
                     $loader.removeClass('active');
                     $clearBtn.removeClass('visible');
                 }
             });
 
-            function clearSearch() {
+            const clearSearch = () => {
                 $('section.search-results').addClass('closed').removeClass('open');
                 $('body').removeClass('search-active');
                 $('.content').css('margin-top', '');
                 $input.val('');
                 $clearBtn.removeClass('visible');
-            }
+            };
 
             $clearBtn.on('click', clearSearch);
 
-            $('.content').on('click', function () {
+            $('.content').on('click', () => {
                 if ($('body').hasClass('search-active')) {
                     clearSearch();
                 }
             });
         },
 
-        GetSearchResults: function () {
-            var name = $('#member-search').val();
+        GetSearchResults() {
+            const name = $('#member-search').val();
             if (!name) return;
 
             $.ajax({
-                url: window.Laravel.appPath + '/search/members',
+                url: `${window.Laravel.appPath}/search/members`,
                 type: 'GET',
                 data: { q: name },
-                success: function (response) {
+                success: (response) => {
                     window.scrollTo(0, 0);
                     $('.desktop-search-loader').removeClass('active');
                     $('#searchclear').addClass('visible');
 
-                    var $results = $('section.search-results');
+                    const $results = $('section.search-results');
                     $results.html(response).addClass('open').removeClass('closed');
                     $('body').addClass('search-active');
 
-                    setTimeout(function () {
+                    setTimeout(() => {
                         $('.content').css('margin-top', '20px');
                     }, 50);
                 }
             });
         },
 
-        InitCollectionSearch: function () {
-            var $input = $('#search-collection');
+        InitCollectionSearch() {
+            const $input = $('#search-collection');
             if (!$input.length) return;
 
             $input.on('keyup', function () {
-                var value = $(this).val();
-                var exp = new RegExp('^' + value, 'i');
+                const value = $(this).val();
+                const exp = new RegExp(`^${value}`, 'i');
 
                 $('.collection .collection-item').each(function () {
                     $(this).toggle(exp.test($(this).text()));
@@ -645,8 +641,8 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitRepeater: function () {
-            var $repeater = $('.repeater');
+        InitRepeater() {
+            const $repeater = $('.repeater');
             if (!$repeater.length) return;
 
             $repeater.repeater({
@@ -654,40 +650,40 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitTabActivate: function () {
-            var $tabs = $('.nav-tabs');
+        InitTabActivate() {
+            const $tabs = $('.nav-tabs');
             if (!$tabs.length) return;
 
             $tabs.stickyTabs();
 
-            $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+            $('a[data-toggle="tab"]').on('shown.bs.tab', () => {
                 $.sparkline_display_visible();
             });
         },
 
-        InitSettings: function () {
-            var $toggle = $('.settings-toggle, .mobile-settings-toggle');
-            var $overlay = $('.settings-overlay');
-            var $slideover = $('.settings-slideover');
-            var $close = $('.settings-close');
+        InitSettings() {
+            const $toggle = $('.settings-toggle, .mobile-settings-toggle');
+            const $overlay = $('.settings-overlay');
+            const $slideover = $('.settings-slideover');
+            const $close = $('.settings-close');
 
             if (!$toggle.length) return;
 
-            function openSettings() {
+            const openSettings = () => {
                 $overlay.addClass('active');
                 $slideover.addClass('active');
                 $toggle.addClass('active');
                 $('body').addClass('settings-open');
-            }
+            };
 
-            function closeSettings() {
+            const closeSettings = () => {
                 $overlay.removeClass('active');
                 $slideover.removeClass('active');
                 $toggle.removeClass('active');
                 $('body').removeClass('settings-open');
-            }
+            };
 
-            $toggle.on('click', function (e) {
+            $toggle.on('click', (e) => {
                 e.preventDefault();
                 if ($slideover.hasClass('active')) {
                     closeSettings();
@@ -699,21 +695,21 @@ var Tracker = Tracker || {};
             $overlay.on('click', closeSettings);
             $close.on('click', closeSettings);
 
-            $(document).on('keydown', function (e) {
+            $(document).on('keydown', (e) => {
                 if (e.key === 'Escape' && $slideover.hasClass('active')) {
                     closeSettings();
                 }
             });
 
-            var saveTimer = null;
-            var $status = $('.settings-save-status');
+            let saveTimer = null;
+            const $status = $('.settings-save-status');
 
-            function saveSettings() {
+            const saveSettings = () => {
                 if (saveTimer) clearTimeout(saveTimer);
 
                 $status.text('Saving...').removeClass('saved error').addClass('saving');
 
-                var formData = {
+                const formData = {
                     _token: $('input[name="_token"]').val(),
                     disable_animations: $('#setting-disable-animations').is(':checked'),
                     mobile_nav_side: $('#setting-mobile-nav-side').val(),
@@ -723,33 +719,33 @@ var Tracker = Tracker || {};
                 };
 
                 $.ajax({
-                    url: window.Laravel.appPath + '/settings',
+                    url: `${window.Laravel.appPath}/settings`,
                     type: 'POST',
                     data: formData,
-                    success: function () {
+                    success: () => {
                         $status.text('Saved').removeClass('saving error').addClass('saved');
-                        saveTimer = setTimeout(function () {
+                        saveTimer = setTimeout(() => {
                             $status.text('').removeClass('saved');
                         }, 2000);
 
                         Tracker.ApplySettings(formData);
                     },
-                    error: function () {
+                    error: () => {
                         $status.text('Error saving').removeClass('saving saved').addClass('error');
                     }
                 });
-            }
+            };
 
             $('#setting-disable-animations, #setting-snow-ignore-mouse').on('change', saveSettings);
 
             $('.settings-btn[data-setting]').on('click', function () {
-                var $btn = $(this);
-                var setting = $btn.data('setting');
-                var value = $btn.data('value');
+                const $btn = $(this);
+                const setting = $btn.data('setting');
+                const value = $btn.data('value');
 
                 $btn.siblings('.settings-btn').removeClass('active');
                 $btn.addClass('active');
-                $('#setting-' + setting.split('_').join('-')).val(value);
+                $(`#setting-${setting.split('_').join('-')}`).val(value);
 
                 if (setting === 'theme') {
                     updateThemeSettings(value);
@@ -762,12 +758,12 @@ var Tracker = Tracker || {};
                 saveSettings();
             });
 
-            function updateSnowMouseSetting(snowValue) {
+            const updateSnowMouseSetting = (snowValue) => {
                 $('#snow-mouse-setting').toggle(snowValue !== 'no_snow');
-            }
+            };
 
-            function updateThemeSettings(theme) {
-                var isShattrath = theme === 'shattrath';
+            const updateThemeSettings = (theme) => {
+                const isShattrath = theme === 'shattrath';
                 $('.settings-btn[data-value="motes"]').toggle(isShattrath);
 
                 if (!isShattrath && $('#setting-snow').val() === 'motes') {
@@ -777,20 +773,20 @@ var Tracker = Tracker || {};
                     updateSnowMouseSetting('no_snow');
                 }
 
-                var favicon = document.getElementById('favicon');
+                const favicon = document.getElementById('favicon');
                 if (favicon) {
-                    var logoMap = {
+                    const logoMap = {
                         'shattrath': '/images/logo-shattrath.svg',
                         'aod': '/images/logo-aod.svg'
                     };
                     favicon.href = logoMap[theme] || '/images/logo_v2.svg';
                 }
-            }
+            };
 
             updateThemeSettings($('#setting-theme').val());
         },
 
-        ApplySettings: function (settings) {
+        ApplySettings(settings) {
             if (settings.disable_animations) {
                 $('body').addClass('no-animations');
             } else {
@@ -808,7 +804,7 @@ var Tracker = Tracker || {};
             }
 
             if (typeof initSnowStorm === 'function') {
-                var flakesMax = 0;
+                let flakesMax = 0;
                 if (settings.snow === 'some_snow') {
                     flakesMax = 32;
                 } else if (settings.snow === 'all_the_snow') {
@@ -818,7 +814,7 @@ var Tracker = Tracker || {};
             }
 
             if (typeof initMotesOfLight === 'function') {
-                var motesCount = 0;
+                let motesCount = 0;
                 if (settings.snow === 'motes') {
                     motesCount = 35;
                 }
@@ -826,14 +822,14 @@ var Tracker = Tracker || {};
             }
         },
 
-        InitProfileModals: function () {
-            var $partTimeModal = $('#part-time-divisions-modal');
-            var $handlesModal = $('#ingame-handles-modal');
-            var $transferModal = $('#transfer-request-modal');
+        InitProfileModals() {
+            const $partTimeModal = $('#part-time-divisions-modal');
+            const $handlesModal = $('#ingame-handles-modal');
+            const $transferModal = $('#transfer-request-modal');
 
             if (!$partTimeModal.length && !$handlesModal.length && !$transferModal.length) return;
 
-            $partTimeModal.add($handlesModal).add($transferModal).on('show.bs.modal', function () {
+            $partTimeModal.add($handlesModal).add($transferModal).on('show.bs.modal', () => {
                 $('.settings-overlay').removeClass('active');
                 $('.settings-slideover').removeClass('active');
                 $('.settings-toggle, .mobile-settings-toggle').removeClass('active');
@@ -841,9 +837,9 @@ var Tracker = Tracker || {};
             });
 
             $('#save-part-time-divisions').on('click', function () {
-                var $btn = $(this);
-                var $status = $partTimeModal.find('.modal-save-status');
-                var divisions = [];
+                const $btn = $(this);
+                const $status = $partTimeModal.find('.modal-save-status');
+                const divisions = [];
 
                 $partTimeModal.find('input[name="divisions[]"]:checked').each(function () {
                     divisions.push($(this).val());
@@ -853,34 +849,34 @@ var Tracker = Tracker || {};
                 $status.text('Saving...').removeClass('saved error').addClass('saving');
 
                 $.ajax({
-                    url: window.Laravel.appPath + '/settings/part-time-divisions',
+                    url: `${window.Laravel.appPath}/settings/part-time-divisions`,
                     type: 'POST',
                     data: {
-                        _token: $('meta[name=csrf-token]').attr('content'),
+                        _token: csrfToken,
                         divisions: divisions
                     },
-                    success: function (response) {
+                    success: (response) => {
                         $status.text('Saved!').removeClass('saving error').addClass('saved');
                         $('.settings-link-btn[data-target="#part-time-divisions-modal"] .settings-link-count').text(response.count);
-                        setTimeout(function () {
+                        setTimeout(() => {
                             $partTimeModal.modal('hide');
                             $status.text('').removeClass('saved');
                         }, 1000);
                     },
-                    error: function () {
+                    error: () => {
                         $status.text('Error saving').removeClass('saving saved').addClass('error');
                     },
-                    complete: function () {
+                    complete: () => {
                         $btn.prop('disabled', false);
                     }
                 });
             });
 
-            var handleIndex = $('#handles-container .handle-row').length;
+            let handleIndex = $('#handles-container .handle-row').length;
 
-            $('#add-handle').on('click', function () {
-                var template = $('#handle-row-template').html();
-                var newRow = template.replace(/__INDEX__/g, handleIndex);
+            $('#add-handle').on('click', () => {
+                const template = $('#handle-row-template').html();
+                const newRow = template.replace(/__INDEX__/g, handleIndex);
                 $('#handles-container').append(newRow);
                 handleIndex++;
             });
@@ -890,14 +886,14 @@ var Tracker = Tracker || {};
             });
 
             $('#save-ingame-handles').on('click', function () {
-                var $btn = $(this);
-                var $status = $handlesModal.find('.modal-save-status');
-                var handles = [];
+                const $btn = $(this);
+                const $status = $handlesModal.find('.modal-save-status');
+                const handles = [];
 
-                $('#handles-container .handle-row').each(function (index) {
-                    var $row = $(this);
-                    var handleId = $row.find('.handle-select').val();
-                    var value = $row.find('input[type="text"]').val();
+                $('#handles-container .handle-row').each(function () {
+                    const $row = $(this);
+                    const handleId = $row.find('.handle-select').val();
+                    const value = $row.find('input[type="text"]').val();
 
                     if (handleId && value) {
                         handles.push({
@@ -913,32 +909,32 @@ var Tracker = Tracker || {};
                 $status.text('Saving...').removeClass('saved error').addClass('saving');
 
                 $.ajax({
-                    url: window.Laravel.appPath + '/settings/ingame-handles',
+                    url: `${window.Laravel.appPath}/settings/ingame-handles`,
                     type: 'POST',
                     data: {
-                        _token: $('meta[name=csrf-token]').attr('content'),
+                        _token: csrfToken,
                         handles: handles
                     },
-                    success: function (response) {
+                    success: (response) => {
                         $status.text('Saved!').removeClass('saving error').addClass('saved');
                         $('.settings-link-btn[data-target="#ingame-handles-modal"] .settings-link-count').text(response.count);
-                        setTimeout(function () {
+                        setTimeout(() => {
                             $handlesModal.modal('hide');
                             $status.text('').removeClass('saved');
                         }, 1000);
                     },
-                    error: function () {
+                    error: () => {
                         $status.text('Error saving').removeClass('saving saved').addClass('error');
                     },
-                    complete: function () {
+                    complete: () => {
                         $btn.prop('disabled', false);
                     }
                 });
             });
 
             $('#save-transfer-request').on('click', function () {
-                var $btn = $(this);
-                var divisionId = $('#transfer-division-select').val();
+                const $btn = $(this);
+                const divisionId = $('#transfer-division-select').val();
 
                 if (!divisionId) {
                     toastr.warning('Please select a division');
@@ -948,72 +944,72 @@ var Tracker = Tracker || {};
                 $btn.prop('disabled', true);
 
                 $.ajax({
-                    url: window.Laravel.appPath + '/settings/transfer-request',
+                    url: `${window.Laravel.appPath}/settings/transfer-request`,
                     type: 'POST',
                     data: {
-                        _token: $('meta[name=csrf-token]').attr('content'),
+                        _token: csrfToken,
                         division_id: divisionId
                     },
-                    success: function (response) {
+                    success: (response) => {
                         $transferModal.modal('hide');
                         toastr.success(response.message);
-                        setTimeout(function () {
+                        setTimeout(() => {
                             window.location.reload();
                         }, 1500);
                     },
-                    error: function (xhr) {
-                        var message = xhr.responseJSON?.error || 'Error submitting request';
+                    error: (xhr) => {
+                        const message = xhr.responseJSON?.error || 'Error submitting request';
                         toastr.error(message);
                         $btn.prop('disabled', false);
                     }
                 });
             });
 
-            $transferModal.on('hidden.bs.modal', function () {
+            $transferModal.on('hidden.bs.modal', () => {
                 $('#transfer-division-select').val('');
                 $('#save-transfer-request').prop('disabled', false);
             });
         },
 
-        InitNoSquadModal: function () {
-            var $modal = $('#no-squad-modal');
+        InitNoSquadModal() {
+            const $modal = $('#no-squad-modal');
             if (!$modal.length) return;
 
-            var loaded = false;
+            let loaded = false;
 
-            $modal.on('show.bs.modal', function () {
+            $modal.on('show.bs.modal', () => {
                 if (loaded) return;
 
-                var url = $modal.data('url');
+                const url = $modal.data('url');
 
-                $.get(url, function (response) {
-                    var $list = $('#no-squad-list');
+                $.get(url, (response) => {
+                    const $list = $('#no-squad-list');
                     $list.empty();
 
                     if (response.members.length === 0) {
                         $list.html('<p class="text-muted">No members found.</p>');
                     } else {
-                        var grouped = {};
-                        response.members.forEach(function (member) {
+                        const grouped = {};
+                        response.members.forEach((member) => {
                             if (!grouped[member.platoon]) {
                                 grouped[member.platoon] = { members: [], manage_url: member.manage_url };
                             }
                             grouped[member.platoon].members.push(member);
                         });
 
-                        Object.keys(grouped).sort().forEach(function (platoon) {
-                            var group = grouped[platoon];
-                            var $group = $('<div class="no-squad-group"></div>');
+                        Object.keys(grouped).sort().forEach((platoon) => {
+                            const group = grouped[platoon];
+                            const $group = $('<div class="no-squad-group"></div>');
                             $group.append(
-                                '<div class="no-squad-platoon-header">' +
-                                '<span>' + platoon + '</span>' +
-                                '<a href="' + group.manage_url + '" class="btn btn-sm btn-accent">' +
+                                `<div class="no-squad-platoon-header">` +
+                                `<span>${platoon}</span>` +
+                                `<a href="${group.manage_url}" class="btn btn-sm btn-accent">` +
                                 '<i class="fa fa-arrows-alt"></i> Assign</a>' +
                                 '</div>'
                             );
-                            var $members = $('<div class="no-squad-members"></div>');
-                            group.members.forEach(function (member) {
-                                $members.append('<span class="no-squad-member">' + member.name + '</span>');
+                            const $members = $('<div class="no-squad-members"></div>');
+                            group.members.forEach((member) => {
+                                $members.append(`<span class="no-squad-member">${member.name}</span>`);
                             });
                             $group.append($members);
                             $list.append($group);
@@ -1027,37 +1023,37 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitWelcomeModal: function () {
-            var $modal = $('#welcome-modal');
+        InitWelcomeModal() {
+            const $modal = $('#welcome-modal');
             if (!$modal.length) return;
 
             $modal.modal('show');
 
-            $modal.on('hidden.bs.modal', function () {
+            $modal.on('hidden.bs.modal', () => {
                 $.ajax({
-                    url: window.Laravel.appPath + '/settings',
+                    url: `${window.Laravel.appPath}/settings`,
                     type: 'POST',
                     data: {
-                        _token: $('meta[name=csrf-token]').attr('content'),
+                        _token: csrfToken,
                         welcomed: true
                     }
                 });
             });
         },
 
-        InitLeaderboardTabs: function () {
-            var $tabs = $('.leaderboard-tab');
-            var $panels = $('.leaderboard-panel');
+        InitLeaderboardTabs() {
+            const $tabs = $('.leaderboard-tab');
+            const $panels = $('.leaderboard-panel');
             if (!$tabs.length) return;
 
             $tabs.on('click', function () {
-                var tabName = $(this).data('tab');
+                const tabName = $(this).data('tab');
 
                 $tabs.removeClass('active');
                 $panels.removeClass('active');
 
                 $(this).addClass('active');
-                $('.leaderboard-panel[data-panel="' + tabName + '"]').addClass('active');
+                $(`.leaderboard-panel[data-panel="${tabName}"]`).addClass('active');
             });
 
             $('.leaderboard-card.animate-fade-in-up').on('animationend', function () {
@@ -1065,10 +1061,10 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitInactiveTabs: function () {
-            var $tabs = $('.inactive-tab');
-            var $panels = $('.inactive-panel');
-            var $searchInput = $('#inactive-search');
+        InitInactiveTabs() {
+            const $tabs = $('.inactive-tab');
+            const $panels = $('.inactive-panel');
+            const $searchInput = $('#inactive-search');
 
             if (!$tabs.length) return;
 
@@ -1076,8 +1072,8 @@ var Tracker = Tracker || {};
             Tracker.inactiveTables = {};
 
             $('.inactive-table').each(function () {
-                var $table = $(this);
-                var tableId = $table.closest('.inactive-panel').data('panel') || 'default';
+                const $table = $(this);
+                const tableId = $table.closest('.inactive-panel').data('panel') || 'default';
 
                 Tracker.inactiveTables[tableId] = $table.DataTable({
                     paging: false,
@@ -1092,9 +1088,9 @@ var Tracker = Tracker || {};
                 });
             });
 
-            function activateTab(tabName, skipRefreshCheck) {
+            const activateTab = (tabName, skipRefreshCheck) => {
                 if (!skipRefreshCheck && Tracker.pendingTabRefresh[tabName]) {
-                    window.location.href = window.location.pathname + '#' + tabName;
+                    window.location.href = `${window.location.pathname}#${tabName}`;
                     window.location.reload();
                     return;
                 }
@@ -1102,8 +1098,8 @@ var Tracker = Tracker || {};
                 $tabs.removeClass('active');
                 $panels.removeClass('active');
 
-                $('.inactive-tab[data-tab="' + tabName + '"]').addClass('active');
-                $('.inactive-panel[data-panel="' + tabName + '"]').addClass('active');
+                $(`.inactive-tab[data-tab="${tabName}"]`).addClass('active');
+                $(`.inactive-panel[data-panel="${tabName}"]`).addClass('active');
 
                 if ($searchInput.val()) {
                     Tracker.FilterInactiveTable($searchInput.val());
@@ -1112,16 +1108,16 @@ var Tracker = Tracker || {};
                 if (Tracker.inactiveTables[tabName]) {
                     Tracker.inactiveTables[tabName].columns.adjust();
                 }
-            }
+            };
 
             $tabs.on('click', function () {
-                var tabName = $(this).data('tab');
+                const tabName = $(this).data('tab');
                 activateTab(tabName);
-                history.replaceState(null, null, '#' + tabName);
+                history.replaceState(null, null, `#${tabName}`);
             });
 
-            var hash = window.location.hash.replace('#', '');
-            if (hash && $tabs.filter('[data-tab="' + hash + '"]').length) {
+            const hash = window.location.hash.replace('#', '');
+            if (hash && $tabs.filter(`[data-tab="${hash}"]`).length) {
                 activateTab(hash, true);
             }
 
@@ -1132,46 +1128,46 @@ var Tracker = Tracker || {};
             }
         },
 
-        FilterInactiveTable: function (filter) {
-            var activePanel = $('.inactive-panel.active').data('panel');
-            var table = Tracker.inactiveTables && Tracker.inactiveTables[activePanel];
+        FilterInactiveTable(filter) {
+            const activePanel = $('.inactive-panel.active').data('panel');
+            const table = Tracker.inactiveTables && Tracker.inactiveTables[activePanel];
             if (table) {
                 table.search(filter).draw();
             }
         },
 
-        InitParttimerSearch: function () {
-            var $searchInput = $('#parttimer-search');
+        InitParttimerSearch() {
+            const $searchInput = $('#parttimer-search');
             if (!$searchInput.length) return;
 
             $searchInput.on('input', function () {
-                var filter = $(this).val().toLowerCase();
+                const filter = $(this).val().toLowerCase();
                 $('.inactive-panel.active tbody tr').each(function () {
-                    var text = $(this).text().toLowerCase();
+                    const text = $(this).text().toLowerCase();
                     $(this).toggle(text.indexOf(filter) !== -1);
                 });
             });
         },
 
-        InitAddParttimer: function () {
-            var $modal = $('#add-parttimer-modal');
+        InitAddParttimer() {
+            const $modal = $('#add-parttimer-modal');
             if (!$modal.length) return;
 
-            var $searchInput = $('#parttimer-member-search');
-            var $memberIdField = $('#parttimer-member-id');
-            var $selectedDisplay = $('#parttimer-selected-member');
-            var $selectedName = $selectedDisplay.find('.selected-member-name');
-            var $submitBtn = $('#add-parttimer-submit');
+            const $searchInput = $('#parttimer-member-search');
+            const $memberIdField = $('#parttimer-member-id');
+            const $selectedDisplay = $('#parttimer-selected-member');
+            const $selectedName = $selectedDisplay.find('.selected-member-name');
+            const $submitBtn = $('#add-parttimer-submit');
 
             $searchInput.bootcomplete({
-                url: window.Laravel.appPath + '/search-member/',
+                url: `${window.Laravel.appPath}/search-member/`,
                 minLength: 3,
                 idField: true,
                 method: 'POST',
-                dataParams: { _token: $('meta[name=csrf-token]').attr('content') }
+                dataParams: { _token: csrfToken }
             });
 
-            $searchInput.on('bootcomplete.selected', function (e, id, label) {
+            $searchInput.on('bootcomplete.selected', (e, id, label) => {
                 $memberIdField.val(id);
                 $selectedName.text(label);
                 $selectedDisplay.show();
@@ -1179,7 +1175,7 @@ var Tracker = Tracker || {};
                 $submitBtn.prop('disabled', false);
             });
 
-            $selectedDisplay.on('click', '.clear-selected-member', function () {
+            $selectedDisplay.on('click', '.clear-selected-member', () => {
                 $memberIdField.val('');
                 $selectedName.text('');
                 $selectedDisplay.hide();
@@ -1187,7 +1183,7 @@ var Tracker = Tracker || {};
                 $submitBtn.prop('disabled', true);
             });
 
-            $modal.on('hidden.bs.modal', function () {
+            $modal.on('hidden.bs.modal', () => {
                 $memberIdField.val('');
                 $selectedName.text('');
                 $selectedDisplay.hide();
@@ -1197,8 +1193,8 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitNoteReminderDetection: function () {
-            var reminderPatterns = [
+        InitNoteReminderDetection() {
+            const reminderPatterns = [
                 /\bpm\s*sent\b/i,
                 /\bdm\s*sent\b/i,
                 /\bmsg\s*sent\b/i,
@@ -1224,7 +1220,7 @@ var Tracker = Tracker || {};
                 /\bpinged\s+for\s+inactiv/i
             ];
 
-            var excludePatterns = [
+            const excludePatterns = [
                 /\bremoved\s+(for|due\s+to)\s+inactiv/i,
                 /\bflagged\s+(for|member|notice)\b/i,
                 /\bloa\b/i,
@@ -1238,25 +1234,21 @@ var Tracker = Tracker || {};
             ];
 
             $(document).on('input', '.note-body-input', function () {
-                var $input = $(this);
-                var $suggestion = $input.siblings('.reminder-note-suggestion');
-                var text = $input.val();
+                const $input = $(this);
+                const $suggestion = $input.siblings('.reminder-note-suggestion');
+                const text = $input.val();
 
                 if ($suggestion.data('dismissed')) return;
 
-                var matchesReminder = text.length < 100 && reminderPatterns.some(function (pattern) {
-                    return pattern.test(text);
-                });
+                const matchesReminder = text.length < 100 && reminderPatterns.some((pattern) => pattern.test(text));
 
-                var matchesExclude = excludePatterns.some(function (pattern) {
-                    return pattern.test(text);
-                });
+                const matchesExclude = excludePatterns.some((pattern) => pattern.test(text));
 
                 $suggestion.toggle(matchesReminder && !matchesExclude);
             });
 
             $(document).on('click', '.dismiss-suggestion', function () {
-                var $suggestion = $(this).closest('.reminder-note-suggestion');
+                const $suggestion = $(this).closest('.reminder-note-suggestion');
                 $suggestion.data('dismissed', true).hide();
             });
 
@@ -1265,13 +1257,11 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitActivityReminderToggle: function () {
-            var csrfToken = $('meta[name=csrf-token]').attr('content');
-
+        InitActivityReminderToggle() {
             $(document).on('click', '.activity-reminder-toggle', function(e) {
                 e.preventDefault();
-                var $btn = $(this);
-                var memberId = $btn.data('member-id');
+                const $btn = $(this);
+                const memberId = $btn.data('member-id');
 
                 if ($btn.prop('disabled')) {
                     return;
@@ -1280,16 +1270,16 @@ var Tracker = Tracker || {};
                 $btn.prop('disabled', true);
 
                 $.ajax({
-                    url: window.Laravel.appPath + '/members/' + memberId + '/set-activity-reminder',
+                    url: `${window.Laravel.appPath}/members/${memberId}/set-activity-reminder`,
                     method: 'POST',
                     data: { _token: csrfToken },
-                    success: function(response) {
+                    success: (response) => {
                         $btn.removeClass('btn-success').addClass('btn-default');
-                        $btn.html('<i class="fa fa-bell"></i> <span class="reminded-date">' + response.date + '</span>');
+                        $btn.html(`<i class="fa fa-bell"></i> <span class="reminded-date">${response.date}</span>`);
                         $btn.attr('title', response.title);
                     },
-                    error: function(xhr) {
-                        var message = xhr.responseJSON?.message || 'Failed to set reminder';
+                    error: (xhr) => {
+                        const message = xhr.responseJSON?.message || 'Failed to set reminder';
                         toastr.error(message);
                         $btn.prop('disabled', false);
                     }
@@ -1298,28 +1288,28 @@ var Tracker = Tracker || {};
 
             $(document).on('click', '.set-activity-reminder-btn', function(e) {
                 e.preventDefault();
-                var $btn = $(this);
-                var url = $btn.data('url');
+                const $btn = $(this);
+                const url = $btn.data('url');
 
                 if ($btn.prop('disabled') || $btn.hasClass('reminder-sent')) {
                     return;
                 }
 
                 $btn.prop('disabled', true);
-                var originalHtml = $btn.html();
+                const originalHtml = $btn.html();
                 $btn.html('<i class="fa fa-spinner fa-spin"></i> Sending...');
 
                 $.ajax({
                     url: url,
                     method: 'POST',
                     data: { _token: csrfToken },
-                    success: function(response) {
+                    success: (response) => {
                         $btn.addClass('reminder-sent');
-                        $btn.html('<i class="fa fa-check"></i> Reminded ' + response.date);
+                        $btn.html(`<i class="fa fa-check"></i> Reminded ${response.date}`);
                         toastr.success('Activity reminder marked');
                     },
-                    error: function(xhr) {
-                        var message = xhr.responseJSON?.message || 'Failed to set reminder';
+                    error: (xhr) => {
+                        const message = xhr.responseJSON?.message || 'Failed to set reminder';
                         toastr.error(message);
                         $btn.prop('disabled', false);
                         $btn.html(originalHtml);
@@ -1329,8 +1319,8 @@ var Tracker = Tracker || {};
 
             $(document).on('click', '.clear-reminders-btn', function(e) {
                 e.preventDefault();
-                var $btn = $(this);
-                var url = $btn.data('url');
+                const $btn = $(this);
+                const url = $btn.data('url');
 
                 if ($btn.prop('disabled')) {
                     return;
@@ -1347,13 +1337,13 @@ var Tracker = Tracker || {};
                     url: url,
                     method: 'DELETE',
                     data: { _token: csrfToken },
-                    success: function(response) {
-                        toastr.success(response.count + ' reminder(s) cleared');
+                    success: (response) => {
+                        toastr.success(`${response.count} reminder(s) cleared`);
                         $('#member-reminder-history-modal').modal('hide');
                         $('.stat-reminder-badge').fadeOut();
                     },
-                    error: function(xhr) {
-                        var message = xhr.responseJSON?.message || 'Failed to clear reminders';
+                    error: (xhr) => {
+                        const message = xhr.responseJSON?.message || 'Failed to clear reminders';
                         toastr.error(message);
                         $btn.prop('disabled', false);
                         $btn.html('<i class="fa fa-trash"></i> Clear Reminders');
@@ -1362,23 +1352,22 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitTrashedNotes: function () {
-            var $toggleBtn = $('.toggle-trashed-notes');
+        InitTrashedNotes() {
+            const $toggleBtn = $('.toggle-trashed-notes');
             if (!$toggleBtn.length) return;
 
-            var csrfToken = $('meta[name=csrf-token]').attr('content');
-            var trashedCount = $toggleBtn.data('count');
+            const trashedCount = $toggleBtn.data('count');
 
             $toggleBtn.on('click', function() {
-                var $btn = $(this);
-                var $active = $('.notes-active-list');
-                var $trashed = $('.notes-trashed-list');
+                const $btn = $(this);
+                const $active = $('.notes-active-list');
+                const $trashed = $('.notes-trashed-list');
 
                 if ($trashed.is(':visible')) {
                     $trashed.hide();
                     $active.show();
                     $btn.removeClass('btn-warning').addClass('btn-default');
-                    $btn.html('<i class="fa fa-trash"></i> Deleted (' + trashedCount + ')');
+                    $btn.html(`<i class="fa fa-trash"></i> Deleted (${trashedCount})`);
                 } else {
                     $active.hide();
                     $trashed.show();
@@ -1388,9 +1377,9 @@ var Tracker = Tracker || {};
             });
 
             $(document).on('click', '.restore-note-btn', function() {
-                var $btn = $(this);
-                var url = $btn.data('url');
-                var $card = $btn.closest('.note-card');
+                const $btn = $(this);
+                const url = $btn.data('url');
+                const $card = $btn.closest('.note-card');
 
                 $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i>');
 
@@ -1398,11 +1387,11 @@ var Tracker = Tracker || {};
                     url: url,
                     method: 'POST',
                     data: { _token: csrfToken },
-                    success: function() {
+                    success: () => {
                         $card.fadeOut(300, function() { $(this).remove(); });
                         toastr.success('Note restored');
                     },
-                    error: function(xhr) {
+                    error: (xhr) => {
                         toastr.error(xhr.responseJSON?.message || 'Failed to restore note');
                         $btn.prop('disabled', false).html('<i class="fa fa-undo"></i> Restore');
                     }
@@ -1410,9 +1399,9 @@ var Tracker = Tracker || {};
             });
 
             $(document).on('click', '.force-delete-note-btn', function() {
-                var $btn = $(this);
-                var url = $btn.data('url');
-                var $card = $btn.closest('.note-card');
+                const $btn = $(this);
+                const url = $btn.data('url');
+                const $card = $btn.closest('.note-card');
 
                 if (!confirm('Permanently delete this note? This cannot be undone.')) {
                     return;
@@ -1424,11 +1413,11 @@ var Tracker = Tracker || {};
                     url: url,
                     method: 'DELETE',
                     data: { _token: csrfToken },
-                    success: function() {
+                    success: () => {
                         $card.fadeOut(300, function() { $(this).remove(); });
                         toastr.success('Note permanently deleted');
                     },
-                    error: function(xhr) {
+                    error: (xhr) => {
                         toastr.error(xhr.responseJSON?.message || 'Failed to delete note');
                         $btn.prop('disabled', false).html('<i class="fa fa-trash"></i> Delete Forever');
                     }
@@ -1436,17 +1425,16 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitInactiveBulkMode: function () {
-            var $bulkToggle = $('.inactive-bulk-toggle');
+        InitInactiveBulkMode() {
+            const $bulkToggle = $('.inactive-bulk-toggle');
             if (!$bulkToggle.length) return;
 
-            var csrfToken = $('meta[name=csrf-token]').attr('content');
-            var bulkMode = false;
-            var isDragging = false;
-            var dragSelectState = true;
-            var dragStartRow = null;
+            let bulkMode = false;
+            let isDragging = false;
+            let dragSelectState = true;
+            let dragStartRow = null;
 
-            var tables = {
+            const tables = {
                 inactive: {
                     bar: $('#inactive-bulk-bar'),
                     data: $('#inactive-pm-member-data'),
@@ -1464,50 +1452,50 @@ var Tracker = Tracker || {};
             };
             tables.flagged.bar.append(tables.flagged.data);
 
-            function updateTabCount(tab, delta) {
-                var $count = $('.inactive-tab[data-tab="' + tab + '"] .inactive-tab-count');
-                var current = parseInt($count.text()) || 0;
+            const updateTabCount = (tab, delta) => {
+                const $count = $(`.inactive-tab[data-tab="${tab}"] .inactive-tab-count`);
+                const current = parseInt($count.text()) || 0;
                 $count.text(Math.max(0, current + delta));
-            }
+            };
 
-            function createSelectionUpdater(config) {
-                return function() {
-                    var selected = $('.' + config.checkboxClass + ':checked').map(function() {
+            const createSelectionUpdater = (config) => {
+                return () => {
+                    const selected = $(`.${config.checkboxClass}:checked`).map(function() {
                         return $(this).val();
                     }).get();
 
                     config.data.val(selected.join(','));
 
                     if (selected.length > 0) {
-                        config.bar.find('.status-text').text(selected.length + ' selected');
+                        config.bar.find('.status-text').text(`${selected.length} selected`);
                         config.bar.slideDown(200);
                     } else {
                         config.bar.slideUp(200);
                     }
 
-                    var total = $('.' + config.checkboxClass).length;
-                    var checked = selected.length;
-                    $('.' + config.selectAllClass).prop('checked', checked > 0 && checked === total);
-                    $('.' + config.selectAllClass).prop('indeterminate', checked > 0 && checked < total);
+                    const total = $(`.${config.checkboxClass}`).length;
+                    const checked = selected.length;
+                    $(`.${config.selectAllClass}`).prop('checked', checked > 0 && checked === total);
+                    $(`.${config.selectAllClass}`).prop('indeterminate', checked > 0 && checked < total);
                 };
-            }
+            };
 
-            var updateSelection = createSelectionUpdater(tables.inactive);
-            var updateFlaggedSelection = createSelectionUpdater(tables.flagged);
+            const updateSelection = createSelectionUpdater(tables.inactive);
+            const updateFlaggedSelection = createSelectionUpdater(tables.flagged);
 
-            function clearSelection(config, updateFn) {
-                $('.' + config.checkboxClass + ', .' + config.selectAllClass).prop('checked', false);
+            const clearSelection = (config, updateFn) => {
+                $(`.${config.checkboxClass}, .${config.selectAllClass}`).prop('checked', false);
                 updateFn();
-            }
+            };
 
-            function bulkAction(options) {
-                var memberIds = options.data.val();
+            const bulkAction = (options) => {
+                const memberIds = options.data.val();
                 if (!memberIds) {
                     toastr.warning('No members selected');
                     return;
                 }
 
-                var $btn = options.btn;
+                const $btn = options.btn;
                 $btn.prop('disabled', true).html('<span class="themed-spinner spinner-sm"></span>');
 
                 $.ajax({
@@ -1518,23 +1506,23 @@ var Tracker = Tracker || {};
                         member_ids: memberIds.split(',')
                     },
                     success: options.onSuccess,
-                    error: function(xhr) {
+                    error: (xhr) => {
                         toastr.error(xhr.responseJSON?.message || options.errorMessage);
                     },
-                    complete: function() {
+                    complete: () => {
                         $btn.prop('disabled', false).html(options.buttonHtml);
                     }
                 });
-            }
+            };
 
             $bulkToggle.on('click', function() {
                 bulkMode = !bulkMode;
-                var $btn = $(this);
+                const $btn = $(this);
                 $btn.toggleClass('active', bulkMode);
                 $('.inactive-table').toggleClass('bulk-mode', bulkMode);
 
                 if (Tracker.inactiveTables) {
-                    Object.values(Tracker.inactiveTables).forEach(function(table) {
+                    Object.values(Tracker.inactiveTables).forEach((table) => {
                         table.column(0).visible(bulkMode);
                     });
                 }
@@ -1548,8 +1536,8 @@ var Tracker = Tracker || {};
                 }
             });
 
-            $(document).on('change', '.' + tables.inactive.checkboxClass, updateSelection);
-            $(document).on('change', '.' + tables.flagged.checkboxClass, updateFlaggedSelection);
+            $(document).on('change', `.${tables.inactive.checkboxClass}`, updateSelection);
+            $(document).on('change', `.${tables.flagged.checkboxClass}`, updateFlaggedSelection);
 
             $(document).on('mousedown', '.inactive-table tbody tr', function(e) {
                 if (!bulkMode) return;
@@ -1560,9 +1548,9 @@ var Tracker = Tracker || {};
                 isDragging = true;
                 dragStartRow = this;
 
-                var isFlagged = $(this).closest('.flagged-table').length > 0;
-                var checkboxClass = isFlagged ? tables.flagged.checkboxClass : tables.inactive.checkboxClass;
-                var $checkbox = $(this).find('.' + checkboxClass);
+                const isFlagged = $(this).closest('.flagged-table').length > 0;
+                const checkboxClass = isFlagged ? tables.flagged.checkboxClass : tables.inactive.checkboxClass;
+                const $checkbox = $(this).find(`.${checkboxClass}`);
 
                 if ($checkbox.length) {
                     dragSelectState = !$checkbox.prop('checked');
@@ -1574,9 +1562,9 @@ var Tracker = Tracker || {};
             $(document).on('mouseenter', '.inactive-table tbody tr', function() {
                 if (!isDragging || !bulkMode) return;
 
-                var isFlagged = $(this).closest('.flagged-table').length > 0;
-                var checkboxClass = isFlagged ? tables.flagged.checkboxClass : tables.inactive.checkboxClass;
-                var $checkbox = $(this).find('.' + checkboxClass);
+                const isFlagged = $(this).closest('.flagged-table').length > 0;
+                const checkboxClass = isFlagged ? tables.flagged.checkboxClass : tables.inactive.checkboxClass;
+                const $checkbox = $(this).find(`.${checkboxClass}`);
 
                 if ($checkbox.length) {
                     $checkbox.prop('checked', dragSelectState);
@@ -1584,9 +1572,9 @@ var Tracker = Tracker || {};
                 }
             });
 
-            $(document).on('mouseup', function() {
+            $(document).on('mouseup', () => {
                 if (isDragging) {
-                    var wasFlagged = dragStartRow && $(dragStartRow).closest('.flagged-table').length > 0;
+                    const wasFlagged = dragStartRow && $(dragStartRow).closest('.flagged-table').length > 0;
                     isDragging = false;
                     dragStartRow = null;
                     $('.inactive-table tbody tr').removeClass('drag-selected');
@@ -1595,16 +1583,16 @@ var Tracker = Tracker || {};
             });
 
             $(document).on('change', '.inactive-select-all, .flagged-select-all', function() {
-                var isFlagged = $(this).hasClass('flagged-select-all');
-                var config = isFlagged ? tables.flagged : tables.inactive;
-                var updateFn = isFlagged ? updateFlaggedSelection : updateSelection;
+                const isFlagged = $(this).hasClass('flagged-select-all');
+                const config = isFlagged ? tables.flagged : tables.inactive;
+                const updateFn = isFlagged ? updateFlaggedSelection : updateSelection;
 
-                $(this).closest('.inactive-panel').find('.' + config.checkboxClass).prop('checked', $(this).prop('checked'));
+                $(this).closest('.inactive-panel').find(`.${config.checkboxClass}`).prop('checked', $(this).prop('checked'));
                 updateFn();
             });
 
             $(document).on('click', '.inactive-bulk-close', function() {
-                var isFlagged = $(this).closest('.bulk-action-bar').attr('id') === 'flagged-bulk-bar';
+                const isFlagged = $(this).closest('.bulk-action-bar').attr('id') === 'flagged-bulk-bar';
                 clearSelection(isFlagged ? tables.flagged : tables.inactive, isFlagged ? updateFlaggedSelection : updateSelection);
             });
 
@@ -1615,18 +1603,18 @@ var Tracker = Tracker || {};
                     url: $(this).data('url'),
                     errorMessage: 'Failed to set reminders',
                     buttonHtml: '<i class="fa fa-bell text-accent"></i> <span class="hidden-xs hidden-sm">Reminder</span>',
-                    onSuccess: function(response) {
-                        var message = response.count + ' member' + (response.count !== 1 ? 's' : '') + ' marked as reminded';
+                    onSuccess: (response) => {
+                        let message = `${response.count} member${response.count !== 1 ? 's' : ''} marked as reminded`;
                         if (response.skipped > 0) {
-                            message += ' (' + response.skipped + ' skipped - already reminded today)';
+                            message += ` (${response.skipped} skipped - already reminded today)`;
                         }
                         toastr.success(message);
 
-                        response.updatedIds.forEach(function(memberId) {
-                            var $toggleBtn = $('.activity-reminder-toggle[data-member-id="' + memberId + '"]');
+                        response.updatedIds.forEach((memberId) => {
+                            const $toggleBtn = $(`.activity-reminder-toggle[data-member-id="${memberId}"]`);
                             if ($toggleBtn.length) {
                                 $toggleBtn.removeClass('btn-success').addClass('btn-default')
-                                    .html('<i class="fa fa-bell"></i> <span class="reminded-date">' + response.date + '</span>')
+                                    .html(`<i class="fa fa-bell"></i> <span class="reminded-date">${response.date}</span>`)
                                     .attr('title', 'Reminded just now')
                                     .prop('disabled', true);
                             }
@@ -1644,11 +1632,11 @@ var Tracker = Tracker || {};
                     url: $(this).data('url'),
                     errorMessage: 'Failed to flag members',
                     buttonHtml: '<i class="fa fa-flag"></i> <span class="hidden-xs hidden-sm">Flag</span>',
-                    onSuccess: function(response) {
+                    onSuccess: (response) => {
                         toastr.success(response.message);
 
-                        response.flaggedIds.forEach(function(memberId) {
-                            $('.inactive-member-checkbox[value="' + memberId + '"]').closest('tr').fadeOut(300, function() {
+                        response.flaggedIds.forEach((memberId) => {
+                            $(`.inactive-member-checkbox[value="${memberId}"]`).closest('tr').fadeOut(300, function() {
                                 $(this).remove();
                             });
                         });
@@ -1671,11 +1659,11 @@ var Tracker = Tracker || {};
                     url: $(this).data('url'),
                     errorMessage: 'Failed to unflag members',
                     buttonHtml: '<i class="fa fa-flag"></i> <span class="hidden-xs hidden-sm">Unflag</span>',
-                    onSuccess: function(response) {
+                    onSuccess: (response) => {
                         toastr.success(response.message);
 
-                        response.unflaggedIds.forEach(function(memberId) {
-                            $('.flagged-member-checkbox[value="' + memberId + '"]').closest('tr').fadeOut(300, function() {
+                        response.unflaggedIds.forEach((memberId) => {
+                            $(`.flagged-member-checkbox[value="${memberId}"]`).closest('tr').fadeOut(300, function() {
                                 $(this).remove();
                                 if ($('.flagged-member-checkbox').length === 0) {
                                     $('.flagged-table').closest('.table-responsive').replaceWith(
@@ -1701,7 +1689,7 @@ var Tracker = Tracker || {};
             });
         },
 
-        InitActivityFeedToggle: function () {
+        InitActivityFeedToggle() {
             $(document).on('show.bs.collapse', '.activity-group-members', function() {
                 $('.activity-group-members.in').not(this).collapse('hide');
             });
@@ -1711,9 +1699,9 @@ var Tracker = Tracker || {};
                     return;
                 }
 
-                var $toggle = $(this).find('.activity-group-toggle');
+                const $toggle = $(this).find('.activity-group-toggle');
                 if ($toggle.length) {
-                    var $target = $($toggle.data('target'));
+                    const $target = $($toggle.data('target'));
                     $target.collapse('toggle');
                 }
             });
@@ -1724,7 +1712,7 @@ var Tracker = Tracker || {};
 })(window.jQuery);
 
 function initTracker() {
-    var $ = window.jQuery;
+    const $ = window.jQuery;
     if (!$ || typeof $.fn.DataTable !== 'function' || typeof $.fn.bootcomplete !== 'function') {
         setTimeout(initTracker, 50);
         return;

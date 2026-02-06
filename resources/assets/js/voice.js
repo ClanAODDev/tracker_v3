@@ -9,7 +9,7 @@ function initVoice() {
     if (!$('.members-table').length) {
         return;
     }
-    var dataTable = $('table.members-table').DataTable({
+    const dataTable = $('table.members-table').DataTable({
         oLanguage: {
             sLengthMenu: '' // _MENU_
         }, columnDefs: [{
@@ -22,13 +22,12 @@ function initVoice() {
             style: 'os', selector: 'td:first-child',
         }, stateSave: true, paging: false, autoWidth: true, bInfo: false, searching: false, info: false,
     });
-    // handle PM selection
-    dataTable.on("select", function (e, t, a, d) {
-        let l = dataTable.rows($(".selected")).data().toArray().map(function (e) {
-            return e[6]
-        });
+    dataTable.on("select", (e, t, a, d) => {
+        const l = dataTable.rows($(".selected")).data().toArray().map((e) => e[6]);
         if (l.length >= 2) {
-            $("#selected-data").show(), $("#selected-data .status-text").text("With selected (" + l.length + ")"), $("#pm-member-data").val(l);
+            $("#selected-data").show();
+            $("#selected-data .status-text").text(`With selected (${l.length})`);
+            $("#pm-member-data").val(l);
         }
     });
 }

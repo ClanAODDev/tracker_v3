@@ -1,22 +1,23 @@
 var Division = Division || {};
 
 (function ($) {
+  const csrfToken = $('meta[name=csrf-token]').attr('content');
+
+  const escapeHtml = (text) => $('<span>').text(text).html();
 
   Division = {
 
-    initUnassigned: function () {
-      var self = this;
-
-      $('.organize-platoons-btn').on('click', function() {
-        var $btn = $(this);
-        var isOrganizing = $('.platoon-assignments-section').hasClass('organize-mode');
+    initUnassigned() {
+      $('.organize-platoons-btn').on('click', (e) => {
+        const $btn = $(e.currentTarget);
+        const isOrganizing = $('.platoon-assignments-section').hasClass('organize-mode');
 
         if (!isOrganizing) {
           $btn.html('<i class="fa fa-check"></i> Done');
           $btn.removeClass('btn-accent').addClass('btn-success');
           $('.unassigned-organizer-members').slideDown(200);
           $('.platoon-assignments-section').addClass('organize-mode');
-          self.enablePlatoonDragDrop();
+          this.enablePlatoonDragDrop();
         } else {
           $btn.html('<i class="fa fa-arrows-alt"></i> Organize');
           $btn.removeClass('btn-success').addClass('btn-accent');
@@ -25,18 +26,16 @@ var Division = Division || {};
         }
       });
 
-      $('.platoon').on('click', function(e) {
+      $('.platoon').on('click', (e) => {
         if ($('.platoon-assignments-section').hasClass('organize-mode')) {
           e.preventDefault();
         }
       });
     },
 
-    initScrollToOrganize: function () {
-      var self = this;
-
-      $(document).on('click', '.scroll-to-organize', function(e) {
-        var $target = $('#platoons');
+    initScrollToOrganize() {
+      $(document).on('click', '.scroll-to-organize', (e) => {
+        const $target = $('#platoons');
         if (!$target.length) return;
 
         e.preventDefault();
@@ -44,24 +43,22 @@ var Division = Division || {};
         $('html, body').animate({
           scrollTop: $target.offset().top - 20
         }, 400, function() {
-          var $organizeBtn = $('.organize-platoons-btn');
-          var isOrganizing = $('.platoon-assignments-section').hasClass('organize-mode');
+          const $organizeBtn = $('.organize-platoons-btn');
+          const isOrganizing = $('.platoon-assignments-section').hasClass('organize-mode');
 
           if (!isOrganizing && $organizeBtn.length) {
             $organizeBtn.trigger('click');
           }
 
           $target.addClass('highlight-section');
-          setTimeout(function() {
+          setTimeout(() => {
             $target.removeClass('highlight-section');
           }, 1500);
         });
       });
     },
 
-    enablePlatoonDragDrop: function () {
-      var self = this;
-
+    enablePlatoonDragDrop() {
       if ($('.unassigned-platoon-member').data('ui-draggable')) {
         return;
       }
@@ -78,86 +75,87 @@ var Division = Division || {};
       $('.platoon').droppable({
         hoverClass: 'panel-c-success',
         drop: function (event, ui) {
-          var $platoon = $(this);
-          var base_url = window.Laravel.appPath;
-          var draggableId = ui.draggable.attr('data-member-id');
-          var droppableId = $platoon.attr('data-platoon-id');
+          const $platoon = $(this);
+          const base_url = window.Laravel.appPath;
+          const draggableId = ui.draggable.attr('data-member-id');
+          const droppableId = $platoon.attr('data-platoon-id');
+          const $draggable = $(ui.draggable);
 
           $.ajax({
             type: 'POST',
-            url: base_url + '/members/' + draggableId + '/assign-platoon',
+            url: `${base_url}/members/${draggableId}/assign-platoon`,
             data: {
               platoon_id: droppableId,
-              _token: $('meta[name=csrf-token]').attr('content')
+              _token: csrfToken
             },
-            success: function (response) {
+            success: () => {
               toastr.success('Member assigned to platoon!');
-              $(ui.draggable).fadeOut(200, function() {
+              $draggable.fadeOut(200, function() {
                 $(this).remove();
                 if ($('.unassigned-platoon-member').length < 1) {
                   $('.unassigned-organizer').slideUp();
                   $('.platoon-assignments-section').removeClass('organize-mode');
                 }
               });
-              var $count = $platoon.find('.platoon-stat-badge .fa-users').parent();
-              var currentCount = parseInt($count.text().trim()) || 0;
-              $count.html('<i class="fa fa-users"></i> ' + (currentCount + 1));
+              const $count = $platoon.find('.platoon-stat-badge .fa-users').parent();
+              const currentCount = parseInt($count.text().trim()) || 0;
+              $count.html(`<i class="fa fa-users"></i> ${currentCount + 1}`);
             },
-            error: function () {
+            error: () => {
               toastr.error('Failed to assign member to platoon');
             }
           });
         }
       });
     },
-    initApplicationsModal: function () {
-      var self = this;
-      var $trigger = $('#open-applications-modal');
+
+    initApplicationsModal() {
+      const $trigger = $('#open-applications-modal');
       if (!$trigger.length) return;
 
-      var url = $trigger.data('url');
-      var loaded = false;
+      const url = $trigger.data('url');
+      let loaded = false;
 
-      $trigger.on('click', function (e) {
+      $trigger.on('click', (e) => {
         e.preventDefault();
-        var params = new URLSearchParams(window.location.search);
+        const params = new URLSearchParams(window.location.search);
         params.set('applications', '1');
-        window.history.replaceState(null, '', '?' + params.toString());
+        window.history.replaceState(null, '', `?${params.toString()}`);
         $('#applicationsModal').modal('show');
       });
 
-      $('#applicationsModal').on('shown.bs.modal', function () {
+      $('#applicationsModal').on('shown.bs.modal', () => {
         if (!loaded) {
-          self.loadApplications(url);
+          this.loadApplications(url);
           loaded = true;
         }
       });
 
-      $('#applicationsModal').on('hidden.bs.modal', function () {
-        var params = new URLSearchParams(window.location.search);
+      $('#applicationsModal').on('hidden.bs.modal', () => {
+        const params = new URLSearchParams(window.location.search);
         params.delete('applications');
         params.delete('application');
-        var qs = params.toString();
-        window.history.replaceState(null, '', qs ? '?' + qs : window.location.pathname);
+        const qs = params.toString();
+        window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname);
       });
 
-      var params = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams(window.location.search);
       if (params.has('applications') || params.has('application')) {
         $('#applicationsModal').modal('show');
       }
     },
 
-    loadApplications: function (url) {
-      var $loading = $('#applications-loading');
-      var $content = $('#applications-content');
-      var $empty = $('#applications-empty');
-      var $list = $('#applications-list');
-      var $detail = $('#applications-detail');
+    loadApplications(url) {
+      const $loading = $('#applications-loading');
+      const $content = $('#applications-content');
+      const $empty = $('#applications-empty');
+      const $list = $('#applications-list');
+      const $detail = $('#applications-detail');
 
       $.ajax({
         url: url,
         type: 'GET',
-        success: function (data) {
+        success: (data) => {
           $loading.addClass('hidden');
 
           if (!data.applications || !data.applications.length) {
@@ -165,13 +163,13 @@ var Division = Division || {};
             return;
           }
 
-          var apps = data.applications;
+          const apps = data.applications;
 
-          var targetId = new URLSearchParams(window.location.search).get('application');
-          var selectedIndex = 0;
+          const targetId = new URLSearchParams(window.location.search).get('application');
+          let selectedIndex = 0;
 
           if (targetId) {
-            for (var i = 0; i < apps.length; i++) {
+            for (let i = 0; i < apps.length; i++) {
               if (String(apps[i].id) === String(targetId)) {
                 selectedIndex = i;
                 break;
@@ -179,25 +177,25 @@ var Division = Division || {};
             }
           }
 
-          apps.forEach(function (app, index) {
+          apps.forEach((app, index) => {
             $list.append(
-              '<a href="#" class="list-group-item application-item' + (index === selectedIndex ? ' active' : '') + '" data-index="' + index + '">' +
-                '<strong>' + $('<span>').text(app.discord_username).html() + '</strong>' +
-                '<span class="text-muted pull-right" style="font-size: 12px;">' + $('<span>').text(app.created_at).html() + '</span>' +
+              `<a href="#" class="list-group-item application-item${index === selectedIndex ? ' active' : ''}" data-index="${index}">` +
+                `<strong>${escapeHtml(app.discord_username)}</strong>` +
+                `<span class="text-muted pull-right" style="font-size: 12px;">${escapeHtml(app.created_at)}</span>` +
               '</a>'
             );
 
-            var html = '<div class="panel panel-filled application-modal-detail' + (index !== selectedIndex ? ' hidden' : '') + '" data-index="' + index + '" style="border-radius: 8px;">' +
+            let html = `<div class="panel panel-filled application-modal-detail${index !== selectedIndex ? ' hidden' : ''}" data-index="${index}" style="border-radius: 8px;">` +
               '<div class="panel-body">' +
                 '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06);">' +
-                  '<strong style="font-size: 16px;">' + $('<span>').text(app.discord_username).html() + '</strong>' +
-                  '<span class="text-muted" style="font-size: 12px;">' + $('<span>').text(app.created_at).html() + '</span>' +
+                  `<strong style="font-size: 16px;">${escapeHtml(app.discord_username)}</strong>` +
+                  `<span class="text-muted" style="font-size: 12px;">${escapeHtml(app.created_at)}</span>` +
                 '</div>';
 
-            app.responses.forEach(function (r) {
+            app.responses.forEach((r) => {
               html += '<div style="margin-bottom: 14px;">' +
-                '<div class="text-muted" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">' + $('<span>').text(r.label).html() + '</div>' +
-                '<div style="margin-top: 2px;">' + $('<span>').text(r.value).html() + '</div>' +
+                `<div class="text-muted" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">${escapeHtml(r.label)}</div>` +
+                `<div style="margin-top: 2px;">${escapeHtml(r.value)}</div>` +
               '</div>';
             });
 
@@ -205,24 +203,24 @@ var Division = Division || {};
             $detail.append(html);
           });
 
-          $list.on('click', '.application-item', function (e) {
+          $list.on('click', '.application-item', (e) => {
             e.preventDefault();
-            var idx = $(this).data('index');
+            const idx = $(e.currentTarget).data('index');
             $list.find('.application-item').removeClass('active');
-            $(this).addClass('active');
+            $(e.currentTarget).addClass('active');
             $detail.find('.application-modal-detail').addClass('hidden');
-            $detail.find('.application-modal-detail[data-index="' + idx + '"]').removeClass('hidden');
+            $detail.find(`.application-modal-detail[data-index="${idx}"]`).removeClass('hidden');
           });
 
           $content.removeClass('hidden');
         },
-        error: function () {
+        error: () => {
           $loading.html('<span class="text-danger"><i class="fa fa-exclamation-triangle"></i> Failed to load applications.</span>');
         }
       });
     },
 
-    setup: function () {
+    setup() {
       this.initAutocomplete();
       this.initPromotionsChart();
       this.initUnassigned();
@@ -230,22 +228,22 @@ var Division = Division || {};
       this.initApplicationsModal();
     },
 
-    initPromotionsChart: function () {
-      var canvas = document.getElementById('promotions-chart');
+    initPromotionsChart() {
+      const canvas = document.getElementById('promotions-chart');
 
       if (!canvas || typeof Chart === 'undefined') {
         return;
       }
 
-      var values = JSON.parse(canvas.dataset.values || '[]');
-      var labels = JSON.parse(canvas.dataset.labels || '[]');
+      const values = JSON.parse(canvas.dataset.values || '[]');
+      const labels = JSON.parse(canvas.dataset.labels || '[]');
 
       if (!values || !labels || values.length === 0) {
         return;
       }
 
-      var styles = getComputedStyle(document.documentElement);
-      var themeColors = [
+      const styles = getComputedStyle(document.documentElement);
+      const themeColors = [
         styles.getPropertyValue('--color-muted').trim() || '#949ba2',
         styles.getPropertyValue('--color-primary').trim() || '#0f83c9',
         styles.getPropertyValue('--color-success').trim() || '#1bbf89',
@@ -253,12 +251,10 @@ var Division = Division || {};
         styles.getPropertyValue('--color-info').trim() || '#56c0e0',
         styles.getPropertyValue('--color-danger').trim() || '#db524b'
       ];
-      var backgroundColors = values.map(function(_, i) {
-        return themeColors[i % themeColors.length];
-      });
+      const backgroundColors = values.map((_, i) => themeColors[i % themeColors.length]);
 
-      var gridColor = 'rgba(255,255,255,0.04)';
-      var textColor = styles.getPropertyValue('--color-text-light').trim() || '#949ba2';
+      const gridColor = 'rgba(255,255,255,0.04)';
+      const textColor = styles.getPropertyValue('--color-text-light').trim() || '#949ba2';
 
       new Chart(canvas, {
         type: 'bar',
@@ -283,9 +279,7 @@ var Division = Division || {};
               usePointStyle: true,
               boxPadding: 6,
               callbacks: {
-                label: function(context) {
-                  return context.parsed.x + ' promotions';
-                }
+                label: (context) => `${context.parsed.x} promotions`
               }
             }
           },
@@ -313,22 +307,20 @@ var Division = Division || {};
       });
     },
 
-    initAutocomplete: function () {
-
+    initAutocomplete() {
       $('#leader').bootcomplete({
-        url: window.Laravel.appPath + '/search-member/',
+        url: `${window.Laravel.appPath}/search-member/`,
         minLength: 3,
         idField: true,
         method: 'POST',
-        dataParams: {_token: $('meta[name=csrf-token]').attr('content')}
+        dataParams: {_token: csrfToken}
       });
-
     },
   };
 })(window.jQuery);
 
 function initDivision() {
-    var $ = window.jQuery;
+    const $ = window.jQuery;
     if (!$ || typeof $.fn.DataTable !== 'function' || typeof $.fn.bootcomplete !== 'function') {
         setTimeout(initDivision, 50);
         return;

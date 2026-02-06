@@ -24,7 +24,7 @@
     ]
   },
   "resources/assets/js/division.js": {
-    "file": "assets/division-DkjdsS3N.js",
+    "file": "assets/division-BkwrQIMb.js",
     "name": "division",
     "src": "resources/assets/js/division.js",
     "isEntry": true
@@ -39,7 +39,7 @@
     ]
   },
   "resources/assets/js/main.js": {
-    "file": "assets/main-702vLqlu.js",
+    "file": "assets/main-B1xuoRyO.js",
     "name": "main",
     "src": "resources/assets/js/main.js",
     "isEntry": true
@@ -57,7 +57,7 @@
     "isEntry": true
   },
   "resources/assets/js/platoon.js": {
-    "file": "assets/platoon-C58bdYhi.js",
+    "file": "assets/platoon-CRM7xia_.js",
     "name": "platoon",
     "src": "resources/assets/js/platoon.js",
     "isEntry": true
@@ -95,13 +95,13 @@
     ]
   },
   "resources/assets/js/training.js": {
-    "file": "assets/training-dx2q-ctT.js",
+    "file": "assets/training-DpPJccvs.js",
     "name": "training",
     "src": "resources/assets/js/training.js",
     "isEntry": true
   },
   "resources/assets/js/voice.js": {
-    "file": "assets/voice-DuFbEqFl.js",
+    "file": "assets/voice-C5eYLdXu.js",
     "name": "voice",
     "src": "resources/assets/js/voice.js",
     "isEntry": true

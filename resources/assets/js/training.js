@@ -1,12 +1,12 @@
 (function() {
     'use strict';
 
-    var TrainingStepper = {
+    const TrainingStepper = {
         currentStep: 0,
         checkpoints: {},
         totalCheckpoints: 0,
 
-        init: function() {
+        init() {
             this.cacheElements();
             if (!this.$container) return;
             this.bindEvents();
@@ -16,7 +16,7 @@
             this.handleInitialHash();
         },
 
-        cacheElements: function() {
+        cacheElements() {
             this.$container = document.querySelector('.training-stepper');
             if (!this.$container) return;
 
@@ -27,100 +27,97 @@
             this.$totalComplete = this.$container.querySelector('.total-complete');
         },
 
-        bindEvents: function() {
-            var self = this;
-
-            this.$steps.forEach(function(step) {
-                step.addEventListener('click', function() {
-                    var stepIndex = parseInt(this.dataset.step, 10);
-                    self.goToStep(stepIndex);
+        bindEvents() {
+            this.$steps.forEach((step) => {
+                step.addEventListener('click', () => {
+                    const stepIndex = parseInt(step.dataset.step, 10);
+                    this.goToStep(stepIndex);
                 });
             });
 
-            this.$container.querySelectorAll('.training-stepper__prev, .training-stepper__next').forEach(function(btn) {
-                btn.addEventListener('click', function() {
-                    var target = parseInt(this.dataset.target, 10);
-                    self.goToStep(target);
+            this.$container.querySelectorAll('.training-stepper__prev, .training-stepper__next').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const target = parseInt(btn.dataset.target, 10);
+                    this.goToStep(target);
                 });
             });
 
-            this.$checkboxes.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    self.handleCheckboxChange(this);
+            this.$checkboxes.forEach((checkbox) => {
+                checkbox.addEventListener('change', () => {
+                    this.handleCheckboxChange(checkbox);
                 });
             });
 
-            window.addEventListener('hashchange', function() {
-                self.handleHashChange();
+            window.addEventListener('hashchange', () => {
+                this.handleHashChange();
             });
 
-            var fullscreenBtn = this.$container.querySelector('.training-stepper__fullscreen-toggle');
+            const fullscreenBtn = this.$container.querySelector('.training-stepper__fullscreen-toggle');
             if (fullscreenBtn) {
-                fullscreenBtn.addEventListener('click', function() {
-                    self.toggleFullscreen();
+                fullscreenBtn.addEventListener('click', () => {
+                    this.toggleFullscreen();
                 });
             }
 
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && self.isFullscreen()) {
-                    self.toggleFullscreen();
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && this.isFullscreen()) {
+                    this.toggleFullscreen();
                 }
             });
 
-            this.$container.querySelectorAll('.training-stepper__checkpoint-toggle').forEach(function(btn) {
-                btn.addEventListener('click', function(e) {
+            this.$container.querySelectorAll('.training-stepper__checkpoint-toggle').forEach((btn) => {
+                btn.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    var wrapper = this.closest('.training-stepper__checkpoint-wrapper');
+                    const wrapper = btn.closest('.training-stepper__checkpoint-wrapper');
                     wrapper.classList.toggle('expanded');
                 });
             });
         },
 
-        isFullscreen: function() {
+        isFullscreen() {
             return document.getElementById('training-container').classList.contains('training-fullscreen');
         },
 
-        toggleFullscreen: function() {
-            var container = document.getElementById('training-container');
+        toggleFullscreen() {
+            const container = document.getElementById('training-container');
             container.classList.toggle('training-fullscreen');
             document.body.style.overflow = this.isFullscreen() ? 'hidden' : '';
         },
 
-        addHeadingAnchors: function() {
-            var self = this;
-            var headings = this.$container.querySelectorAll('.training-stepper__markdown h4, .training-stepper__markdown h5');
+        addHeadingAnchors() {
+            const headings = this.$container.querySelectorAll('.training-stepper__markdown h4, .training-stepper__markdown h5');
 
-            headings.forEach(function(heading) {
-                var text = heading.textContent.trim();
-                var id = self.slugify(text);
+            headings.forEach((heading) => {
+                const text = heading.textContent.trim();
+                const id = this.slugify(text);
                 heading.id = id;
 
-                var anchor = document.createElement('a');
-                anchor.href = '#' + id;
+                const anchor = document.createElement('a');
+                anchor.href = `#${id}`;
                 anchor.className = 'heading-anchor';
                 anchor.innerHTML = '<i class="fa fa-link"></i>';
                 anchor.title = 'Link to this section';
 
-                anchor.addEventListener('click', function(e) {
+                anchor.addEventListener('click', (e) => {
                     e.preventDefault();
-                    history.pushState(null, null, '#' + id);
-                    self.scrollToElement(heading);
+                    history.pushState(null, null, `#${id}`);
+                    this.scrollToElement(heading);
                 });
 
                 heading.appendChild(anchor);
             });
         },
 
-        openLinksInNewWindow: function() {
-            var links = this.$container.querySelectorAll('.training-stepper__markdown a:not(.heading-anchor)');
-            links.forEach(function(link) {
+        openLinksInNewWindow() {
+            const links = this.$container.querySelectorAll('.training-stepper__markdown a:not(.heading-anchor)');
+            links.forEach((link) => {
                 link.setAttribute('target', '_blank');
                 link.setAttribute('rel', 'noopener noreferrer');
             });
         },
 
-        slugify: function(text) {
+        slugify(text) {
             return text
                 .toLowerCase()
                 .replace(/[^\w\s-]/g, '')
@@ -129,62 +126,61 @@
                 .trim();
         },
 
-        handleInitialHash: function() {
+        handleInitialHash() {
             if (window.location.hash) {
                 this.handleHashChange();
             }
         },
 
-        handleHashChange: function() {
-            var hash = window.location.hash.substring(1);
+        handleHashChange() {
+            const hash = window.location.hash.substring(1);
             if (!hash) return;
 
-            var target = document.getElementById(hash);
+            const target = document.getElementById(hash);
             if (!target) return;
 
-            var section = target.closest('.training-stepper__section');
+            const section = target.closest('.training-stepper__section');
             if (!section) return;
 
-            var sectionIndex = parseInt(section.dataset.section, 10);
+            const sectionIndex = parseInt(section.dataset.section, 10);
             this.goToStep(sectionIndex);
 
-            setTimeout(function() {
+            setTimeout(() => {
                 target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 target.classList.add('heading-highlight');
-                setTimeout(function() {
+                setTimeout(() => {
                     target.classList.remove('heading-highlight');
                 }, 2000);
             }, 100);
         },
 
-        scrollToElement: function(element) {
+        scrollToElement(element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
             element.classList.add('heading-highlight');
-            setTimeout(function() {
+            setTimeout(() => {
                 element.classList.remove('heading-highlight');
             }, 2000);
         },
 
-        calculateTotals: function() {
-            var self = this;
+        calculateTotals() {
             this.totalCheckpoints = this.$checkboxes.length;
 
-            this.$steps.forEach(function(step, index) {
-                var sectionCheckpoints = self.$container.querySelectorAll('.training-checkpoint[data-section="' + index + '"]');
-                self.checkpoints[index] = {
+            this.$steps.forEach((step, index) => {
+                const sectionCheckpoints = this.$container.querySelectorAll(`.training-checkpoint[data-section="${index}"]`);
+                this.checkpoints[index] = {
                     total: sectionCheckpoints.length,
                     checked: 0
                 };
             });
         },
 
-        goToStep: function(stepIndex) {
+        goToStep(stepIndex) {
             if (stepIndex < 0 || stepIndex >= this.$sections.length) return;
 
-            this.$steps.forEach(function(step) {
+            this.$steps.forEach((step) => {
                 step.classList.remove('active');
             });
-            this.$sections.forEach(function(section) {
+            this.$sections.forEach((section) => {
                 section.classList.remove('active');
             });
 
@@ -193,9 +189,9 @@
             this.currentStep = stepIndex;
         },
 
-        handleCheckboxChange: function(checkbox) {
-            var sectionIndex = parseInt(checkbox.dataset.section, 10);
-            var label = checkbox.closest('.training-stepper__checkpoint');
+        handleCheckboxChange(checkbox) {
+            const sectionIndex = parseInt(checkbox.dataset.section, 10);
+            const label = checkbox.closest('.training-stepper__checkpoint');
 
             if (checkbox.checked) {
                 label.classList.add('checked');
@@ -209,28 +205,28 @@
             this.updateStepStatus(sectionIndex);
         },
 
-        updateProgress: function() {
-            var totalChecked = 0;
-            for (var key in this.checkpoints) {
-                totalChecked += this.checkpoints[key].checked;
-            }
+        updateProgress() {
+            let totalChecked = 0;
+            Object.values(this.checkpoints).forEach((checkpoint) => {
+                totalChecked += checkpoint.checked;
+            });
 
-            var percentage = this.totalCheckpoints > 0
+            const percentage = this.totalCheckpoints > 0
                 ? (totalChecked / this.totalCheckpoints) * 100
                 : 0;
 
             if (this.$progressFill) {
-                this.$progressFill.style.width = percentage + '%';
+                this.$progressFill.style.width = `${percentage}%`;
             }
             if (this.$totalComplete) {
                 this.$totalComplete.textContent = totalChecked;
             }
         },
 
-        updateStepStatus: function(sectionIndex) {
-            var step = this.$steps[sectionIndex];
-            var data = this.checkpoints[sectionIndex];
-            var countSpan = step.querySelector('.checkpoint-count');
+        updateStepStatus(sectionIndex) {
+            const step = this.$steps[sectionIndex];
+            const data = this.checkpoints[sectionIndex];
+            const countSpan = step.querySelector('.checkpoint-count');
 
             if (countSpan) {
                 countSpan.textContent = data.checked;
@@ -244,7 +240,7 @@
         }
     };
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
         TrainingStepper.init();
     });
 })();
