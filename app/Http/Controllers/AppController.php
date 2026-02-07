@@ -31,7 +31,6 @@ class AppController extends Controller
 
         $divisions = Division::active()
             ->withoutFloaters()
-            ->withoutBR()
             ->withCount('members')
             ->orderBy('name')
             ->get()
