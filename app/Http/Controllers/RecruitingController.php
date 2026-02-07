@@ -12,6 +12,7 @@ use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
 use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
 use App\Services\ForumProcedureService;
 use App\Services\RecruitmentService;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,7 +37,10 @@ class RecruitingController extends Controller
     {
         $this->authorize('recruit', Member::class);
 
-        $divisions = Division::active()->where('shutdown_at', null)->get();
+        $divisions = Division::active()->where('shutdown_at', null)
+            ->withoutFloaters()
+            ->withoutBR()
+            ->get();
 
         return view('recruit.index', compact('divisions'));
     }

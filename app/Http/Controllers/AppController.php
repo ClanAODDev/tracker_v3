@@ -29,7 +29,10 @@ class AppController extends Controller
         $pendingActions = PendingActionsData::forDivision($myDivision, $user);
         $leaderboard = DivisionLeaderboardData::forUser($user);
 
-        $divisions = Division::active()->withoutFloaters()->withCount('members')
+        $divisions = Division::active()
+            ->withoutFloaters()
+            ->withoutBR()
+            ->withCount('members')
             ->orderBy('name')
             ->get()
             ->except($myDivision->id);

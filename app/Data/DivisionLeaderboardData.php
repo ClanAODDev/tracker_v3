@@ -40,6 +40,7 @@ readonly class DivisionLeaderboardData
             $divisions = Division::query()
                 ->active()
                 ->withoutFloaters()
+                ->withoutBR()
                 ->whereHas('members')
                 ->withCount('members')
                 ->withCount(['members as recruits_count' => function ($query) {

@@ -73,6 +73,7 @@ class DiscordController extends Controller
 
         $divisions = Division::active()
             ->withoutFloaters()
+            ->withoutBR()
             ->orderBy('name')
             ->get(['id', 'name', 'abbreviation']);
 

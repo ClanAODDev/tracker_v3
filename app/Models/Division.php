@@ -233,7 +233,12 @@ class Division extends Model
 
     public function scopeWithoutFloaters($query)
     {
-        $query->whereNotIn('slug', ['floater', 'bluntz-reserves']);
+        $query->whereNotIn('slug', ['floater']);
+    }
+
+    public function scopeWithoutBR($query)
+    {
+        $query->whereNotIn('slug', ['bluntz-reserves']);
     }
 
     /**
