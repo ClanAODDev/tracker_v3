@@ -802,9 +802,7 @@ body.no-animations {
 }
 
 .my-division-actions {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    grid-auto-rows: 1fr;
+    display: flex;
     gap: 1px;
     background: var(--color-bg-dark);
     border-radius: 0 0 8px 8px;
@@ -814,6 +812,7 @@ body.no-animations {
 
 .action-card {
     display: flex;
+    flex: 1;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -872,6 +871,7 @@ body.no-animations {
 .action-card-dropdown {
     position: relative;
     display: flex;
+    flex: 1;
 }
 
 .action-card-trigger {
@@ -955,8 +955,7 @@ body.no-animations {
 }
 
 .division-tools {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    display: flex;
     gap: 2px;
     background: var(--color-bg-dark);
     border-radius: 8px;
@@ -966,6 +965,7 @@ body.no-animations {
 
 .tool-card {
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: center;
     gap: 10px;
@@ -1020,6 +1020,7 @@ body.no-animations {
 .tool-card-dropdown {
     position: relative;
     display: flex;
+    flex: 1;
 }
 
 .tool-card-trigger {
@@ -1099,6 +1100,34 @@ body.no-animations {
         i {
             color: var(--color-accent);
         }
+    }
+}
+
+.collapse-at-xl {
+    @media (max-width: 1199px) {
+        display: none !important;
+    }
+}
+
+.collapse-at-lg {
+    @media (max-width: 991px) {
+        display: none !important;
+    }
+}
+
+.show-at-xl {
+    display: none !important;
+
+    @media (max-width: 1199px) {
+        display: flex !important;
+    }
+}
+
+.show-at-lg {
+    display: none !important;
+
+    @media (max-width: 991px) {
+        display: flex !important;
     }
 }
 
@@ -2092,9 +2121,6 @@ body.no-animations {
         font-size: 18px;
     }
 
-    .my-division-actions {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    }
 
     .action-card {
         padding: 15px 10px;

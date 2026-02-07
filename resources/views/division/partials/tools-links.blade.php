@@ -22,11 +22,10 @@
         @endif
     @endcan
 
-    <div class="tool-card-dropdown">
+    <div class="tool-card-dropdown collapse-at-lg">
         <div class="tool-card tool-card-trigger">
             <i class="fa fa-chart-bar"></i>
             <span>Reports</span>
-            <i class="fa fa-chevron-down tool-card-arrow"></i>
         </div>
         <div class="tool-card-menu">
             <a href="{{ route('division.census', $division) }}" class="tool-card-menu-item">
@@ -44,18 +43,18 @@
         </div>
     </div>
 
-    <a href="{{ route('division.inactive-members', $division) }}" class="tool-card">
+    <a href="{{ route('division.inactive-members', $division) }}" class="tool-card collapse-at-xl">
         <i class="fa fa-user-clock"></i>
         <span>Inactives</span>
     </a>
 
-    <a href="{{ route('awards.index', ['division' => $division->slug]) }}" class="tool-card">
+    <a href="{{ route('awards.index', ['division' => $division->slug]) }}" class="tool-card collapse-at-xl">
         <i class="fa fa-trophy"></i>
         <span>Awards</span>
     </a>
 
     @can('manage', \App\Models\MemberRequest::class)
-        <a href="{{ route('filament.mod.resources.member-requests.index') }}" class="tool-card">
+        <a href="{{ route('filament.mod.resources.member-requests.index') }}" class="tool-card collapse-at-xl">
             <i class="fa fa-inbox"></i>
             <span>Requests</span>
         </a>
@@ -66,6 +65,29 @@
             <i class="fa fa-ellipsis-h"></i>
         </div>
         <div class="tool-card-menu">
+            <a href="{{ route('division.inactive-members', $division) }}" class="tool-card-menu-item show-at-xl">
+                <i class="fa fa-user-clock"></i> Inactives
+            </a>
+            <a href="{{ route('awards.index', ['division' => $division->slug]) }}" class="tool-card-menu-item show-at-xl">
+                <i class="fa fa-trophy"></i> Awards
+            </a>
+            @can('manage', \App\Models\MemberRequest::class)
+                <a href="{{ route('filament.mod.resources.member-requests.index') }}" class="tool-card-menu-item show-at-xl">
+                    <i class="fa fa-inbox"></i> Requests
+                </a>
+            @endcan
+            <a href="{{ route('division.census', $division) }}" class="tool-card-menu-item show-at-lg">
+                <i class="fa fa-chart-line"></i> Census
+            </a>
+            <a href="{{ route('division.retention-report', $division) }}" class="tool-card-menu-item show-at-lg">
+                <i class="fa fa-chart-area"></i> Retention
+            </a>
+            <a href="{{ route('division.promotions', $division) }}" class="tool-card-menu-item show-at-lg">
+                <i class="fa fa-medal"></i> Promotions
+            </a>
+            <a href="{{ route('division.voice-report', $division) }}" class="tool-card-menu-item show-at-lg">
+                <i class="fa fa-headset"></i> Voice
+            </a>
             <a href="{{ route('partTimers', $division) }}" class="tool-card-menu-item">
                 <i class="fa fa-user-tag"></i> Part Timers
             </a>
