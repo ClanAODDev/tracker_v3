@@ -18,23 +18,21 @@
     </div>
 
     <div class="my-division-actions">
-        <a href="{{ route('division', $myDivision->slug) }}" class="action-card">
-            <i class="fa fa-home"></i>
-            <span>Division Home</span>
-        </a>
         <a href="{{ route('division.members', $myDivision) }}" class="action-card">
             <i class="fa fa-users"></i>
             <span>Members</span>
-        </a>
-        <a href="{{ route('division.structure', $myDivision) }}" class="action-card">
-            <i class="fa fa-sitemap"></i>
-            <span>Structure</span>
         </a>
         @can('recruit', App\Models\Member::class)
             @if (!$myDivision->isShutdown())
                 <a href="{{ route('recruiting.form', $myDivision) }}" class="action-card action-card-accent">
                     <i class="fa fa-user-plus"></i>
                     <span>Add Recruit</span>
+                </a>
+            @endif
+            @if($myDivision->settings()->get('application_required', false))
+                <a href="{{ route('division', $myDivision->slug) }}?applications" class="action-card">
+                    <i class="fab fa-discord"></i>
+                    <span>Applications</span>
                 </a>
             @endif
         @endcan
@@ -67,17 +65,37 @@
             <i class="fa fa-trophy"></i>
             <span>Awards</span>
         </a>
-        @can('create', \App\Models\Leave::class)
-            <a href="{{ route('filament.mod.resources.leaves.index') }}" class="action-card">
-                <i class="fa fa-calendar-alt"></i>
-                <span>Leave</span>
+        @can('manage', \App\Models\MemberRequest::class)
+            <a href="{{ route('filament.mod.resources.member-requests.index') }}" class="action-card">
+                <i class="fa fa-inbox"></i>
+                <span>Requests</span>
             </a>
         @endcan
-        @can ('show', App\Models\Note::class)
-            <a href="{{ route('division.notes', $myDivision) }}" class="action-card">
-                <i class="fa fa-sticky-note"></i>
-                <span>Notes</span>
-            </a>
-        @endcan
+        <div class="action-card-dropdown">
+            <div class="action-card action-card-trigger">
+                <i class="fa fa-ellipsis-h"></i>
+            </div>
+            <div class="action-card-menu">
+                <a href="{{ route('division', $myDivision->slug) }}" class="action-card-menu-item">
+                    <i class="fa fa-home"></i> Division Home
+                </a>
+                <a href="{{ route('partTimers', $myDivision) }}" class="action-card-menu-item">
+                    <i class="fa fa-user-tag"></i> Part Timers
+                </a>
+                <a href="{{ route('division.structure', $myDivision) }}" class="action-card-menu-item">
+                    <i class="fa fa-sitemap"></i> Structure
+                </a>
+                @can('create', \App\Models\Leave::class)
+                    <a href="{{ route('filament.mod.resources.leaves.index') }}" class="action-card-menu-item">
+                        <i class="fa fa-calendar-alt"></i> Leave
+                    </a>
+                @endcan
+                @can('show', App\Models\Note::class)
+                    <a href="{{ route('division.notes', $myDivision) }}" class="action-card-menu-item">
+                        <i class="fa fa-sticky-note"></i> Notes
+                    </a>
+                @endcan
+            </div>
+        </div>
     </div>
 </div>

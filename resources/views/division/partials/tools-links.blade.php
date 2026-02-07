@@ -49,34 +49,10 @@
         <span>Inactives</span>
     </a>
 
-    <a href="{{ route('partTimers', $division) }}" class="tool-card">
-        <i class="fa fa-user-tag"></i>
-        <span>Part Timers</span>
-    </a>
-
-    <a href="{{ route('division.structure', $division) }}" class="tool-card">
-        <i class="fa fa-sitemap"></i>
-        <span>Structure</span>
-    </a>
-
     <a href="{{ route('awards.index', ['division' => $division->slug]) }}" class="tool-card">
         <i class="fa fa-trophy"></i>
         <span>Awards</span>
     </a>
-
-    @can('create', \App\Models\Leave::class)
-        <a href="{{ route('filament.mod.resources.leaves.index') }}" class="tool-card">
-            <i class="fa fa-calendar-alt"></i>
-            <span>Leave</span>
-        </a>
-    @endcan
-
-    @can ('show', App\Models\Note::class)
-        <a href="{{ route('division.notes', $division) }}" class="tool-card">
-            <i class="fa fa-sticky-note"></i>
-            <span>Notes</span>
-        </a>
-    @endcan
 
     @can('manage', \App\Models\MemberRequest::class)
         <a href="{{ route('filament.mod.resources.member-requests.index') }}" class="tool-card">
@@ -84,4 +60,28 @@
             <span>Requests</span>
         </a>
     @endcan
+
+    <div class="tool-card-dropdown">
+        <div class="tool-card tool-card-trigger">
+            <i class="fa fa-ellipsis-h"></i>
+        </div>
+        <div class="tool-card-menu">
+            <a href="{{ route('partTimers', $division) }}" class="tool-card-menu-item">
+                <i class="fa fa-user-tag"></i> Part Timers
+            </a>
+            <a href="{{ route('division.structure', $division) }}" class="tool-card-menu-item">
+                <i class="fa fa-sitemap"></i> Structure
+            </a>
+            @can('create', \App\Models\Leave::class)
+                <a href="{{ route('filament.mod.resources.leaves.index') }}" class="tool-card-menu-item">
+                    <i class="fa fa-calendar-alt"></i> Leave
+                </a>
+            @endcan
+            @can('show', App\Models\Note::class)
+                <a href="{{ route('division.notes', $division) }}" class="tool-card-menu-item">
+                    <i class="fa fa-sticky-note"></i> Notes
+                </a>
+            @endcan
+        </div>
+    </div>
 </div>

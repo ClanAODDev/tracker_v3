@@ -871,10 +871,12 @@ body.no-animations {
 
 .action-card-dropdown {
     position: relative;
+    display: flex;
 }
 
 .action-card-trigger {
     cursor: pointer;
+    flex: 1;
 }
 
 .action-card-dropdown:hover .action-card-trigger {
@@ -1017,10 +1019,12 @@ body.no-animations {
 
 .tool-card-dropdown {
     position: relative;
+    display: flex;
 }
 
 .tool-card-trigger {
     cursor: pointer;
+    flex: 1;
 }
 
 .tool-card-dropdown:hover .tool-card-trigger {
