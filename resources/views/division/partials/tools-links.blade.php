@@ -12,8 +12,7 @@
             </a>
         @endif
         @if($division->settings()->get('application_required', false))
-            <a href="#" class="tool-card" id="open-applications-modal"
-               data-url="{{ route('division.applications', $division) }}">
+            <a href="#" class="tool-card" id="open-applications-modal">
                 <i class="fab fa-discord"></i>
                 <span>Applications</span>
                 @if($pendingApplicationCount > 0)

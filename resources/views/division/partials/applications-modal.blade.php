@@ -8,22 +8,10 @@
                     Pending Applications
                 </h4>
             </div>
-            <div class="modal-body" id="applications-modal-body">
-                <div class="text-center" id="applications-loading">
-                    <span class="themed-spinner"></span> Loading applications...
-                </div>
-                <div id="applications-content" class="hidden">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="list-group" id="applications-list"></div>
-                        </div>
-                        <div class="col-md-8" id="applications-detail"></div>
-                    </div>
-                </div>
-                <div id="applications-empty" class="hidden text-center" style="padding: 40px 20px;">
-                    <i class="fab fa-discord" style="font-size: 32px; color: var(--color-muted);"></i>
-                    <h4 style="margin-top: 12px;">No Pending Applications</h4>
-                    <p class="text-muted">There are no pending Discord applications for this division.</p>
+            <div class="modal-body">
+                <div id="applications-widget-container"
+                     data-url="{{ url('/api/divisions/' . $division->slug . '/applications') }}"
+                     data-can-delete="{{ auth()->user()->isRole(['sr_ldr', 'admin']) ? 'true' : 'false' }}">
                 </div>
             </div>
             <div class="modal-footer">

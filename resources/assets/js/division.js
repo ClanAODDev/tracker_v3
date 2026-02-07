@@ -3,8 +3,6 @@ var Division = Division || {};
 (function ($) {
   const csrfToken = $('meta[name=csrf-token]').attr('content');
 
-  const escapeHtml = (text) => $('<span>').text(text).html();
-
   Division = {
 
     initUnassigned() {
@@ -113,22 +111,12 @@ var Division = Division || {};
       const $trigger = $('#open-applications-modal');
       if (!$trigger.length) return;
 
-      const url = $trigger.data('url');
-      let loaded = false;
-
       $trigger.on('click', (e) => {
         e.preventDefault();
         const params = new URLSearchParams(window.location.search);
         params.set('applications', '1');
         window.history.replaceState(null, '', `?${params.toString()}`);
         $('#applicationsModal').modal('show');
-      });
-
-      $('#applicationsModal').on('shown.bs.modal', () => {
-        if (!loaded) {
-          this.loadApplications(url);
-          loaded = true;
-        }
       });
 
       $('#applicationsModal').on('hidden.bs.modal', () => {
@@ -143,81 +131,6 @@ var Division = Division || {};
       if (params.has('applications') || params.has('application')) {
         $('#applicationsModal').modal('show');
       }
-    },
-
-    loadApplications(url) {
-      const $loading = $('#applications-loading');
-      const $content = $('#applications-content');
-      const $empty = $('#applications-empty');
-      const $list = $('#applications-list');
-      const $detail = $('#applications-detail');
-
-      $.ajax({
-        url: url,
-        type: 'GET',
-        success: (data) => {
-          $loading.addClass('hidden');
-
-          if (!data.applications || !data.applications.length) {
-            $empty.removeClass('hidden');
-            return;
-          }
-
-          const apps = data.applications;
-
-          const targetId = new URLSearchParams(window.location.search).get('application');
-          let selectedIndex = 0;
-
-          if (targetId) {
-            for (let i = 0; i < apps.length; i++) {
-              if (String(apps[i].id) === String(targetId)) {
-                selectedIndex = i;
-                break;
-              }
-            }
-          }
-
-          apps.forEach((app, index) => {
-            $list.append(
-              `<a href="#" class="list-group-item application-item${index === selectedIndex ? ' active' : ''}" data-index="${index}">` +
-                `<strong>${escapeHtml(app.discord_username)}</strong>` +
-                `<span class="text-muted pull-right" style="font-size: 12px;">${escapeHtml(app.created_at)}</span>` +
-              '</a>'
-            );
-
-            let html = `<div class="panel panel-filled application-modal-detail${index !== selectedIndex ? ' hidden' : ''}" data-index="${index}" style="border-radius: 8px;">` +
-              '<div class="panel-body">' +
-                '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.06);">' +
-                  `<strong style="font-size: 16px;">${escapeHtml(app.discord_username)}</strong>` +
-                  `<span class="text-muted" style="font-size: 12px;">${escapeHtml(app.created_at)}</span>` +
-                '</div>';
-
-            app.responses.forEach((r) => {
-              html += '<div style="margin-bottom: 14px;">' +
-                `<div class="text-muted" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">${escapeHtml(r.label)}</div>` +
-                `<div style="margin-top: 2px;">${r.value}</div>` +
-              '</div>';
-            });
-
-            html += '</div></div>';
-            $detail.append(html);
-          });
-
-          $list.on('click', '.application-item', (e) => {
-            e.preventDefault();
-            const idx = $(e.currentTarget).data('index');
-            $list.find('.application-item').removeClass('active');
-            $(e.currentTarget).addClass('active');
-            $detail.find('.application-modal-detail').addClass('hidden');
-            $detail.find(`.application-modal-detail[data-index="${idx}"]`).removeClass('hidden');
-          });
-
-          $content.removeClass('hidden');
-        },
-        error: () => {
-          $loading.html('<span class="text-danger"><i class="fa fa-exclamation-triangle"></i> Failed to load applications.</span>');
-        }
-      });
     },
 
     setup() {

@@ -3,8 +3,8 @@
     "file": "assets/_commonjsHelpers-Cpj98o6Y.js",
     "name": "_commonjsHelpers"
   },
-  "__plugin-vue_export-helper-BsPD_iHa.js": {
-    "file": "assets/_plugin-vue_export-helper-BsPD_iHa.js",
+  "__plugin-vue_export-helper-BHzaNdzO.js": {
+    "file": "assets/_plugin-vue_export-helper-BHzaNdzO.js",
     "name": "_plugin-vue_export-helper",
     "imports": [
       "__commonjsHelpers-Cpj98o6Y.js"
@@ -13,6 +13,19 @@
   "_chart-utils-PLXmSdtb.js": {
     "file": "assets/chart-utils-PLXmSdtb.js",
     "name": "chart-utils"
+  },
+  "resources/assets/js/applications.js": {
+    "file": "assets/applications-D5ypv374.js",
+    "name": "applications",
+    "src": "resources/assets/js/applications.js",
+    "isEntry": true,
+    "imports": [
+      "__plugin-vue_export-helper-BHzaNdzO.js",
+      "__commonjsHelpers-Cpj98o6Y.js"
+    ],
+    "css": [
+      "assets/applications-BganZo6L.css"
+    ]
   },
   "resources/assets/js/census-graph.js": {
     "file": "assets/census-graph-OeqED5s-.js",
@@ -24,7 +37,7 @@
     ]
   },
   "resources/assets/js/division.js": {
-    "file": "assets/division-DRycveN5.js",
+    "file": "assets/division-DtfWmiDJ.js",
     "name": "division",
     "src": "resources/assets/js/division.js",
     "isEntry": true
@@ -63,12 +76,12 @@
     "isEntry": true
   },
   "resources/assets/js/recruiting.js": {
-    "file": "assets/recruiting-C35GCHQ3.js",
+    "file": "assets/recruiting-CV3BeJfl.js",
     "name": "recruiting",
     "src": "resources/assets/js/recruiting.js",
     "isEntry": true,
     "imports": [
-      "__plugin-vue_export-helper-BsPD_iHa.js",
+      "__plugin-vue_export-helper-BHzaNdzO.js",
       "__commonjsHelpers-Cpj98o6Y.js"
     ]
   },
@@ -82,12 +95,12 @@
     ]
   },
   "resources/assets/js/tickets.js": {
-    "file": "assets/tickets-ClXQdy63.js",
+    "file": "assets/tickets-c92zSTPS.js",
     "name": "tickets",
     "src": "resources/assets/js/tickets.js",
     "isEntry": true,
     "imports": [
-      "__plugin-vue_export-helper-BsPD_iHa.js",
+      "__plugin-vue_export-helper-BHzaNdzO.js",
       "__commonjsHelpers-Cpj98o6Y.js"
     ],
     "css": [

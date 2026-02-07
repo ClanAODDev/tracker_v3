@@ -33,4 +33,9 @@
 
 @section('footer_scripts')
     @vite(['resources/assets/js/division.js'])
+    @can('recruit', App\Models\Member::class)
+        @if($division->settings()->get('application_required', false))
+            @vite(['resources/assets/js/applications.js'])
+        @endif
+    @endcan
 @endsection

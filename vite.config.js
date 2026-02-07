@@ -16,6 +16,7 @@ export default defineConfig({
                 'resources/assets/js/census-graph.js',
                 'resources/assets/js/member-tags.js',
                 'resources/assets/js/retention-graph.js',
+                'resources/assets/js/applications.js',
                 'resources/assets/js/tickets.js',
                 'resources/assets/js/training.js',
                 'resources/assets/js/org-chart.js',

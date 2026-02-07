@@ -89,7 +89,8 @@ class RecruitingController extends Controller
 
             DivisionApplication::where('user_id', $pendingUser->id)
                 ->pending()
-                ->update(['recruited_at' => now()]);
+                ->get()
+                ->each->delete();
 
             $this->handleNotification($member, $division);
 

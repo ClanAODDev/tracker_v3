@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\DivisionApplicationApiController;
 use App\Http\Controllers\API\TicketApiController;
 use App\Http\Controllers\API\v1\ClanController;
 use App\Http\Controllers\API\v1\DivisionController;
@@ -20,6 +21,14 @@ Route::prefix('v1')->name('v1.')->group(function () {
 
         Route::post('{slug}', 'update')->middleware('abilities:division:write')->name('update');
     });
+});
+
+Route::prefix('divisions/{division}/applications')->middleware(['web', 'auth'])->name('division-applications.')->group(function () {
+    Route::get('/', [DivisionApplicationApiController::class, 'index'])->name('index');
+    Route::get('/{application}', [DivisionApplicationApiController::class, 'show'])->name('show');
+    Route::delete('/{application}', [DivisionApplicationApiController::class, 'destroy'])->name('destroy');
+    Route::post('/{application}/comments', [DivisionApplicationApiController::class, 'addComment'])->name('comments.store');
+    Route::delete('/{application}/comments/{comment}', [DivisionApplicationApiController::class, 'deleteComment'])->name('comments.destroy');
 });
 
 Route::prefix('tickets')->middleware(['web', 'auth'])->name('tickets.')->group(function () {
