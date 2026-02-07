@@ -7,14 +7,15 @@ use App\Enums\Position;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Parallax\FilamentComments\Models\Traits\HasFilamentComments;
+use Kirschbaum\Commentions\Contracts\Commentable;
+use Kirschbaum\Commentions\HasComments;
 
 use function now;
 
-class Transfer extends Model
+class Transfer extends Model implements Commentable
 {
+    use HasComments;
     use HasFactory;
-    use HasFilamentComments;
 
     public $guarded = [];
 

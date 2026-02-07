@@ -19,8 +19,8 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
 use Filament\Resources\Pages\EditRecord;
+use Kirschbaum\Commentions\Filament\Actions\CommentsAction;
 use Log;
-use Parallax\FilamentComments\Actions\CommentsAction;
 
 class EditRankAction extends EditRecord
 {

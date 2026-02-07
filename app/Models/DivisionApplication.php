@@ -5,18 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Parallax\FilamentComments\Models\Traits\HasFilamentComments;
+use Kirschbaum\Commentions\Contracts\Commentable;
+use Kirschbaum\Commentions\HasComments;
 
-class DivisionApplication extends Model
+class DivisionApplication extends Model implements Commentable
 {
-    use HasFilamentComments;
+    use HasComments;
 
     protected $guarded = [];
 
     protected static function booted(): void
     {
         static::deleting(function (DivisionApplication $application) {
-            $application->filamentComments()->forceDelete();
+            $application->comments()->delete();
         });
     }
 

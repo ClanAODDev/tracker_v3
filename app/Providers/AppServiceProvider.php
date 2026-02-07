@@ -35,6 +35,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        if (! class_exists(\Filament\Tables\Actions\Action::class)) {
+            class_alias(\Filament\Actions\Action::class, \Filament\Tables\Actions\Action::class);
+        }
+
         $this->app->singleton(UserSettings::class, fn () => Auth::user()->settings());
 
         $this->app->bind(\Filament\Auth\Http\Responses\Contracts\LogoutResponse::class, LogoutResponse::class);

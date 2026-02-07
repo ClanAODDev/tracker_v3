@@ -21,7 +21,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Parallax\FilamentComments\Tables\Actions\CommentsAction;
+use Kirschbaum\Commentions\Filament\Actions\CommentsTableAction;
 
 class TransferResource extends Resource
 {
@@ -143,7 +143,7 @@ class TransferResource extends Resource
             ])
             ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
-                CommentsAction::make()
+                CommentsTableAction::make()
                     ->button()
                     ->color('info')
                     ->size('lg')

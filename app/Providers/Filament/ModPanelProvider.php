@@ -17,6 +17,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Kirschbaum\Commentions\CommentionsPlugin;
 
 class ModPanelProvider extends PanelProvider
 {
@@ -25,6 +26,7 @@ class ModPanelProvider extends PanelProvider
         return $panel
             ->id('mod')
             ->path('operations')
+            ->plugin(CommentionsPlugin::make())
             ->colors([
                 'primary' => '#0a8509',
             ])

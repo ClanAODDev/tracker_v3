@@ -31,7 +31,7 @@
         "opcodesio/log-viewer": "^3.10",
         "embed/embed": "^4.4",
         "ext-simplexml": "*",
-        "parallax/filament-comments": "^2.0",
+        "kirschbaum-development/commentions": "^0.7",
       "ext-gd": "*",
         "symfony/clock": "^7.0",
         "symfony/event-dispatcher": "^7.0",

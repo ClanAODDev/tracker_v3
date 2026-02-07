@@ -32,7 +32,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Parallax\FilamentComments\Tables\Actions\CommentsAction;
+use Kirschbaum\Commentions\Filament\Actions\CommentsTableAction;
 
 class RankActionResource extends Resource
 {
@@ -218,7 +218,7 @@ class RankActionResource extends Resource
             ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
                 ViewAction::make(),
-                CommentsAction::make()->visible(fn (
+                CommentsTableAction::make()->visible(fn (
                     RankAction $action
                 ) => auth()->user()->canManageRankActionCommentsFor($action)),
             ])

@@ -15,12 +15,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Kirschbaum\Commentions\Contracts\Commenter;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
  * Class User.
  */
-class User extends Authenticatable implements FilamentUser
+class User extends Authenticatable implements Commenter, FilamentUser
 {
     use HasApiTokens;
     use HasFactory;
@@ -292,6 +293,11 @@ class User extends Authenticatable implements FilamentUser
     public function getNameAttribute($value)
     {
         return ucfirst($value);
+    }
+
+    public function getCommenterName(): string
+    {
+        return $this->member?->present()->rankName() ?? $this->name;
     }
 
     public function canAccessPanel(Panel $panel): bool

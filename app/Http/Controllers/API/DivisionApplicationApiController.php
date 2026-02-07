@@ -8,7 +8,7 @@ use App\Models\DivisionApplication;
 use App\Models\Member;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Parallax\FilamentComments\Models\FilamentComment;
+use Kirschbaum\Commentions\Comment;
 
 class DivisionApplicationApiController extends Controller
 {
@@ -28,14 +28,14 @@ class DivisionApplicationApiController extends Controller
         $applications = DivisionApplication::pending()
             ->where('division_id', $division->id)
             ->with('user')
-            ->withCount('filamentComments')
+            ->withCount('comments')
             ->latest()
             ->get()
             ->map(fn ($app) => [
                 'id' => $app->id,
                 'discord_username' => $app->user->discord_username,
                 'created_at' => $app->created_at->toIso8601String(),
-                'comments_count' => $app->filament_comments_count,
+                'comments_count' => $app->comments_count,
                 'responses' => collect($app->responses)->map(fn ($response) => [
                     'label' => $response['label'] ?? 'Unknown',
                     'value' => is_array($response['value'] ?? null)
@@ -51,7 +51,7 @@ class DivisionApplicationApiController extends Controller
     {
         $this->authorize('recruit', Member::class);
 
-        $application->load(['user', 'filamentComments.user.member']);
+        $application->load(['user', 'comments.author.member']);
 
         return response()->json([
             'application' => [
@@ -64,12 +64,12 @@ class DivisionApplicationApiController extends Controller
                         ? implode(', ', $response['value'])
                         : ($response['value'] ?: '—'),
                 ])->values(),
-                'comments' => $application->filamentComments->map(fn ($comment) => [
+                'comments' => $application->comments->map(fn ($comment) => [
                     'id' => $comment->id,
-                    'body' => $comment->comment,
-                    'user' => $comment->user ? [
-                        'id' => $comment->user->id,
-                        'name' => $comment->user->member?->present()->rankName() ?? $comment->user->name,
+                    'body' => $comment->body,
+                    'user' => $comment->author ? [
+                        'id' => $comment->author->id,
+                        'name' => $comment->author->member?->present()->rankName() ?? $comment->author->name,
                     ] : null,
                     'created_at' => $comment->created_at->toIso8601String(),
                 ]),
@@ -98,21 +98,17 @@ class DivisionApplicationApiController extends Controller
             'body' => 'required|string|min:5',
         ]);
 
-        $comment = $application->filamentComments()->create([
-            'user_id' => auth()->id(),
-            'subject_type' => $application->getMorphClass(),
-            'comment' => $validated['body'],
-        ]);
+        $comment = $application->comment($validated['body'], auth()->user());
 
-        $comment->load('user.member');
+        $comment->load('author.member');
 
         return response()->json([
             'comment' => [
                 'id' => $comment->id,
-                'body' => $comment->comment,
+                'body' => $comment->body,
                 'user' => [
-                    'id' => $comment->user->id,
-                    'name' => $comment->user->member?->present()->rankName() ?? $comment->user->name,
+                    'id' => $comment->author->id,
+                    'name' => $comment->author->member?->present()->rankName() ?? $comment->author->name,
                 ],
                 'created_at' => $comment->created_at->toIso8601String(),
             ],
@@ -120,11 +116,11 @@ class DivisionApplicationApiController extends Controller
         ], 201);
     }
 
-    public function deleteComment(Division $division, DivisionApplication $application, FilamentComment $comment): JsonResponse
+    public function deleteComment(Division $division, DivisionApplication $application, Comment $comment): JsonResponse
     {
         $this->authorize('recruit', Member::class);
 
-        if ((int) $comment->user_id !== (int) auth()->id()) {
+        if ((int) $comment->author_id !== (int) auth()->id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 

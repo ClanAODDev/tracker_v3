@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
-use Parallax\FilamentComments\Models\FilamentComment;
+use Kirschbaum\Commentions\Comment;
 
 class PurgePendingDiscordRegistrations implements ShouldQueue
 {
@@ -25,9 +25,9 @@ class PurgePendingDiscordRegistrations implements ShouldQueue
             ->where('created_at', '<', $cutoff)
             ->pluck('id');
 
-        FilamentComment::where('subject_type', (new DivisionApplication)->getMorphClass())
-            ->whereIn('subject_id', $applicationIds)
-            ->forceDelete();
+        Comment::where('commentable_type', (new DivisionApplication)->getMorphClass())
+            ->whereIn('commentable_id', $applicationIds)
+            ->delete();
 
         $applicationCount = $applicationIds->count();
         DivisionApplication::whereIn('id', $applicationIds)->delete();
