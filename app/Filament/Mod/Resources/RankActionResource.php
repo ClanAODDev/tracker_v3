@@ -11,7 +11,6 @@ use App\Models\RankAction;
 use Carbon\Carbon;
 use Closure;
 use Filament\Actions\BulkActionGroup;
-use Filament\Actions\ViewAction;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Placeholder;
@@ -22,15 +21,16 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ViewField;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Livewire;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ViewColumn;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
+use Flashadvocate\FilamentReactions\Livewire\Reactions;
 use Illuminate\Database\Eloquent\Builder;
 use Kirschbaum\Commentions\Filament\Actions\CommentsTableAction;
 
@@ -107,6 +107,7 @@ class RankActionResource extends Resource
                                 return $record->requester_id !== auth()->user()->member_id;
                             })
                             ->columnSpanFull(),
+                        Livewire::make(Reactions::class),
                     ]),
 
             ]);
@@ -217,7 +218,6 @@ class RankActionResource extends Resource
             )
             ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
-                ViewAction::make(),
                 CommentsTableAction::make()->visible(fn (
                     RankAction $action
                 ) => auth()->user()->canManageRankActionCommentsFor($action)),

@@ -12,6 +12,7 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Widgets;
 use Filament\Widgets\AccountWidget;
+use Flashadvocate\FilamentReactions\FilamentReactionsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -33,6 +34,7 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => '#f6a821',
             ])
             ->plugin(CommentionsPlugin::make())
+            ->plugin(FilamentReactionsPlugin::make())
             ->plugin(FilamentFailedJobsPlugin::make()->navigationGroup('Admin'))
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\\Filament\\Admin\\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\\Filament\\Admin\\Pages')

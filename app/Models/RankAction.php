@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Rank;
+use Flashadvocate\FilamentReactions\Concerns\HasReactions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ class RankAction extends Model implements Commentable
 {
     use HasComments;
     use HasFactory;
+    use HasReactions;
 
     protected $casts = [
         'rank' => Rank::class,

@@ -10,6 +10,7 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Widgets\AccountWidget;
+use Flashadvocate\FilamentReactions\FilamentReactionsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -27,6 +28,7 @@ class ModPanelProvider extends PanelProvider
             ->id('mod')
             ->path('operations')
             ->plugin(CommentionsPlugin::make())
+            ->plugin(FilamentReactionsPlugin::make())
             ->colors([
                 'primary' => '#0a8509',
             ])

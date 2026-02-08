@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1401188c064d1573350ccdd50a2ae849",
+    "content-hash": "0bafc09a8e4ccaf09ab274a559453b57",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -2371,6 +2371,50 @@
                 "source": "https://github.com/firebase/php-jwt/tree/v7.0.2"
             },
             "time": "2025-12-16T22:17:28+00:00"
+        },
+        {
+            "name": "flashadvocate/filament-reactions",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flashadvocate/filament-reactions.git",
+                "reference": "dd1109fb262afb0de346bccaa698406029a454c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/flashadvocate/filament-reactions/zipball/dd1109fb262afb0de346bccaa698406029a454c2",
+                "reference": "dd1109fb262afb0de346bccaa698406029a454c2",
+                "shasum": ""
+            },
+            "require": {
+                "filament/support": "^3.2|^4.0",
+                "livewire/livewire": "^3.5|^4.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.18"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Flashadvocate\\FilamentReactions\\FilamentReactionsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Flashadvocate\\FilamentReactions\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Emoji reaction pills for Filament resource pages",
+            "support": {
+                "issues": "https://github.com/flashadvocate/filament-reactions/issues",
+                "source": "https://github.com/flashadvocate/filament-reactions/tree/v0.1.0"
+            },
+            "time": "2026-02-08T14:55:12+00:00"
         },
         {
             "name": "fruitcake/php-cors",
