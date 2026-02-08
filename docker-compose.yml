@@ -13,6 +13,7 @@ services:
             LARAVEL_SAIL: 1
         volumes:
             - '.:/var/www/html'
+            - '../filament-reactions:/var/www/filament-reactions'
         networks:
             - sail
         depends_on:
