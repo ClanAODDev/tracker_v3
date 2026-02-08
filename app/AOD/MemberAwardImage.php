@@ -210,28 +210,11 @@ SVG;
 
     private function generateDefs(): string
     {
-        $filters = '';
-        foreach (['mythic', 'legendary', 'epic', 'rare', 'common'] as $rarity) {
-            $rgb = config("aod.awards.rarity.{$rarity}.color", [128, 128, 128]);
-            $filters .= <<<FILTER
-        <filter id="glow-{$rarity}" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
-            <feFlood flood-color="rgb({$rgb[0]},{$rgb[1]},{$rgb[2]})" flood-opacity="0.5"/>
-            <feComposite in2="blur" operator="in"/>
-            <feMerge>
-                <feMergeNode/>
-                <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-        </filter>
-FILTER;
-        }
-
         return <<<DEFS
         <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
             <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
         </linearGradient>
-        {$filters}
 DEFS;
     }
 
@@ -273,7 +256,7 @@ BADGE;
         }
 
         return <<<AWARD
-    <g class="award-group" filter="url(#glow-{$rarity})">
+    <g class="award-group">
         <image x="{$x}" y="{$y}" width="{$this->awardSize}" height="{$this->awardSize}"
                xlink:href="data:image/png;base64,{$imageBase64}" />
     </g>
