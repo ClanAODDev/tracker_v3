@@ -2378,7 +2378,7 @@
             "dist": {
                 "type": "path",
                 "url": "../filament-reactions",
-                "reference": "03cb4813c1d60314bc6c8a00de2d04ca96c59188"
+                "reference": "e89c528985c3450efefde08422e07e5d11e5ea63"
             },
             "require": {
                 "filament/support": "^3.2|^4.0",
