@@ -1131,6 +1131,20 @@ body.no-animations {
     }
 }
 
+.collapse-at-sm {
+    @media (max-width: 575px) {
+        display: none !important;
+    }
+}
+
+.show-at-sm {
+    display: none !important;
+
+    @media (max-width: 575px) {
+        display: flex !important;
+    }
+}
+
 .divisions-section {
     margin-top: 30px;
 }

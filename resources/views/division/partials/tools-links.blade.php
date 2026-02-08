@@ -12,7 +12,7 @@
             </a>
         @endif
         @if($division->settings()->get('application_required', false))
-            <a href="#" class="tool-card" id="open-applications-modal">
+            <a href="#" class="tool-card collapse-at-sm" id="open-applications-modal">
                 <i class="fab fa-discord"></i>
                 <span>Applications</span>
                 @if($pendingApplicationCount > 0)
@@ -22,7 +22,7 @@
         @endif
     @endcan
 
-    <div class="tool-card-dropdown collapse-at-lg">
+    <div class="tool-card-dropdown collapse-at-lg collapse-at-sm">
         <div class="tool-card tool-card-trigger">
             <i class="fa fa-chart-bar"></i>
             <span>Reports</span>
@@ -65,6 +65,13 @@
             <i class="fa fa-ellipsis-h"></i>
         </div>
         <div class="tool-card-menu">
+            @can('recruit', App\Models\Member::class)
+                @if($division->settings()->get('application_required', false))
+                    <a href="#" class="tool-card-menu-item show-at-sm" onclick="$('#applicationsModal').modal('show'); return false;">
+                        <i class="fab fa-discord"></i> Applications
+                    </a>
+                @endif
+            @endcan
             <a href="{{ route('division.inactive-members', $division) }}" class="tool-card-menu-item show-at-xl">
                 <i class="fa fa-user-clock"></i> Inactives
             </a>
