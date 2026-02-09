@@ -47,20 +47,20 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="date_of_birth">Date of Birth</label>
+                            <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
                             <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" value="{{ old('date_of_birth') }}" required>
                             <p class="help-block text-muted">You must be at least 13 years old to join.</p>
                         </div>
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="password">Password</label>
+                                    <label for="password">Password <span class="text-danger">*</span></label>
                                     <input type="password" name="password" id="password" class="form-control" autocomplete="new-password" required minlength="8">
                                 </div>
                             </div>
                             <div class="col-sm-6">
                                 <div class="form-group">
-                                    <label for="password_confirmation">Confirm Password</label>
+                                    <label for="password_confirmation">Confirm Password <span class="text-danger">*</span></label>
                                     <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" autocomplete="new-password" required>
                                 </div>
                             </div>
