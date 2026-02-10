@@ -169,7 +169,8 @@ store.validateMemberId = (memberId) => {
                 };
 
                 if (data.is_member && data.valid_group && data.username) {
-                    const forumName = data.username.replace(/^AOD_/i, '');
+                    const forumName = data.username.replace(/^AOD_/i, '')
+                        .replace(/\b\w/g, c => c.toUpperCase());
                     store.member.forum_name = forumName;
                     store.validateForumName(forumName, memberId);
                 }
@@ -333,7 +334,8 @@ store.toggleDemoMode = () => {
 
 store.getFormattedName = () => {
     if (!store.member.forum_name) return '';
-    return `AOD_${store.member.forum_name}`;
+    const capitalized = store.member.forum_name.replace(/\b\w/g, c => c.toUpperCase());
+    return `AOD_${capitalized}`;
 };
 
 window.onbeforeunload = (e) => {

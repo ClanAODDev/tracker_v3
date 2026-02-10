@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ceaadd13518055316c0618da5d7ba54a",
+    "content-hash": "e2f94c2b187e72e618c23d4f87af9c7d",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -2374,11 +2374,17 @@
         },
         {
             "name": "flashadvocate/filament-reactions",
-            "version": "dev-main",
+            "version": "v0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/flashadvocate/filament-reactions.git",
+                "reference": "b35a1050da2fcaef147447925c831a82426f2ab1"
+            },
             "dist": {
-                "type": "path",
-                "url": "../filament-reactions",
-                "reference": "e89c528985c3450efefde08422e07e5d11e5ea63"
+                "type": "zip",
+                "url": "https://api.github.com/repos/flashadvocate/filament-reactions/zipball/b35a1050da2fcaef147447925c831a82426f2ab1",
+                "reference": "b35a1050da2fcaef147447925c831a82426f2ab1",
+                "shasum": ""
             },
             "require": {
                 "filament/support": "^3.2|^4.0",
@@ -2399,14 +2405,16 @@
                     "Flashadvocate\\FilamentReactions\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "Emoji reaction pills for Filament resource pages",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
+            "support": {
+                "issues": "https://github.com/flashadvocate/filament-reactions/issues",
+                "source": "https://github.com/flashadvocate/filament-reactions/tree/v0.2.1"
+            },
+            "time": "2026-02-08T16:55:08+00:00"
         },
         {
             "name": "fruitcake/php-cors",
@@ -2550,16 +2558,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.431.0",
+            "version": "v0.432.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "0a3b9c8feb2ed473eb4e47214edd3211e8c29045"
+                "reference": "c0d8b801cf615f8edf1b5b356a3d121d0c95ef92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/0a3b9c8feb2ed473eb4e47214edd3211e8c29045",
-                "reference": "0a3b9c8feb2ed473eb4e47214edd3211e8c29045",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/c0d8b801cf615f8edf1b5b356a3d121d0c95ef92",
+                "reference": "c0d8b801cf615f8edf1b5b356a3d121d0c95ef92",
                 "shasum": ""
             },
             "require": {
@@ -2588,9 +2596,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.431.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.432.0"
             },
-            "time": "2026-02-02T01:06:19+00:00"
+            "time": "2026-02-09T01:14:27+00:00"
         },
         {
             "name": "google/auth",
@@ -3209,16 +3217,16 @@
         },
         {
             "name": "kirschbaum-development/commentions",
-            "version": "0.7.6",
+            "version": "0.7.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kirschbaum-development/commentions.git",
-                "reference": "6de2c512d70f630a1c5f1ba1fcbf644d76faca00"
+                "reference": "6936b40148695c1cc56b7dee42f465ba447d3384"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kirschbaum-development/commentions/zipball/6de2c512d70f630a1c5f1ba1fcbf644d76faca00",
-                "reference": "6de2c512d70f630a1c5f1ba1fcbf644d76faca00",
+                "url": "https://api.github.com/repos/kirschbaum-development/commentions/zipball/6936b40148695c1cc56b7dee42f465ba447d3384",
+                "reference": "6936b40148695c1cc56b7dee42f465ba447d3384",
                 "shasum": ""
             },
             "require": {
@@ -3268,9 +3276,9 @@
             "description": "A package to allow you to create comments, tag users and more",
             "support": {
                 "issues": "https://github.com/kirschbaum-development/commentions/issues",
-                "source": "https://github.com/kirschbaum-development/commentions/tree/0.7.6"
+                "source": "https://github.com/kirschbaum-development/commentions/tree/0.7.7"
             },
-            "time": "2026-01-23T11:29:07+00:00"
+            "time": "2026-02-09T13:42:54+00:00"
         },
         {
             "name": "kirschbaum-development/eloquent-power-joins",
@@ -4899,16 +4907,16 @@
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.7.9",
+            "version": "v3.7.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "112b27e41e87e89d828a96e37b257aff2a058c7a"
+                "reference": "0dc679eb4c8b4470cb12522b5927ef08ca2358bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/112b27e41e87e89d828a96e37b257aff2a058c7a",
-                "reference": "112b27e41e87e89d828a96e37b257aff2a058c7a",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/0dc679eb4c8b4470cb12522b5927ef08ca2358bb",
+                "reference": "0dc679eb4c8b4470cb12522b5927ef08ca2358bb",
                 "shasum": ""
             },
             "require": {
@@ -4963,7 +4971,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.7.9"
+                "source": "https://github.com/livewire/livewire/tree/v3.7.10"
             },
             "funding": [
                 {
@@ -4971,7 +4979,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-05T23:27:27+00:00"
+            "time": "2026-02-09T22:49:33+00:00"
         },
         {
             "name": "ml/iri",
@@ -5287,16 +5295,16 @@
         },
         {
             "name": "nette/php-generator",
-            "version": "v4.2.0",
+            "version": "v4.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/php-generator.git",
-                "reference": "4707546a1f11badd72f5d82af4f8a6bc64bd56ac"
+                "reference": "52aff4d9b12f20ca9f3e31a559b646d2fd21dd61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/php-generator/zipball/4707546a1f11badd72f5d82af4f8a6bc64bd56ac",
-                "reference": "4707546a1f11badd72f5d82af4f8a6bc64bd56ac",
+                "url": "https://api.github.com/repos/nette/php-generator/zipball/52aff4d9b12f20ca9f3e31a559b646d2fd21dd61",
+                "reference": "52aff4d9b12f20ca9f3e31a559b646d2fd21dd61",
                 "shasum": ""
             },
             "require": {
@@ -5305,9 +5313,9 @@
             },
             "require-dev": {
                 "jetbrains/phpstorm-attributes": "^1.2",
-                "nette/tester": "^2.4",
+                "nette/tester": "^2.6",
                 "nikic/php-parser": "^5.0",
-                "phpstan/phpstan-nette": "^2.0@stable",
+                "phpstan/phpstan": "^2.0@stable",
                 "tracy/tracy": "^2.8"
             },
             "suggest": {
@@ -5353,9 +5361,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nette/php-generator/issues",
-                "source": "https://github.com/nette/php-generator/tree/v4.2.0"
+                "source": "https://github.com/nette/php-generator/tree/v4.2.1"
             },
-            "time": "2025-08-06T18:24:31+00:00"
+            "time": "2026-02-09T05:43:31+00:00"
         },
         {
             "name": "nette/schema",
@@ -15502,9 +15510,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "flashadvocate/filament-reactions": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
