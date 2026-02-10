@@ -37,7 +37,7 @@ class DivisionTagResource extends Resource
 
         return parent::getEloquentQuery()
             ->forDivision($divisionId)
-            ->visibleTo($user);
+            ->assignableBy($user);
     }
 
     public static function canAccess(): bool
