@@ -17,7 +17,6 @@ use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
-use App\Policies\DivisionTagPolicy;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
@@ -160,39 +159,6 @@ class MemberResource extends Resource
                     ->description('Select any additional divisions this member is part-time in.')
                     ->schema([
                         PartTimeDivisionsForm::makeUsingFormModel(),
-                    ]),
-
-                Section::make('Member Tags')
-                    ->id('member-tags')
-                    ->columnSpanFull()
-                    ->collapsible()
-                    ->collapsed()
-                    ->description('Assign tags to this member for tracking and organization.')
-                    ->visible(function (?Member $record) {
-                        if (! $record) {
-                            return false;
-                        }
-
-                        return auth()->user()->can('assign', [DivisionTag::class, $record]);
-                    })
-                    ->schema([
-                        CheckboxList::make('tags')
-                            ->relationship('tags', 'name')
-                            ->options(function (?Member $record) {
-                                if (! $record) {
-                                    return [];
-                                }
-
-                                $policy = new DivisionTagPolicy;
-
-                                return $policy->getAssignableTags(auth()->user(), $record)
-                                    ->pluck('name', 'id');
-                            })
-                            ->searchable()
-                            ->bulkToggleable()
-                            ->columns(3)
-                            ->gridDirection('row')
-                            ->extraAttributes(['class' => 'max-h-64 overflow-y-auto']),
                     ]),
 
                 Section::make('In-game Handles')
