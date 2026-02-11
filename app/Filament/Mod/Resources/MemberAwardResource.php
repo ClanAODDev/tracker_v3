@@ -43,9 +43,19 @@ class MemberAwardResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        if (auth()->user()->isDivisionLeader()) {
+        $user = auth()->user();
+
+        if ($user->isRole('admin')) {
             $count = MemberAward::needsApproval()
-                ->whereHas('member', fn ($query) => $query->where('division_id', auth()->user()->division->id))
+                ->whereHas('award', fn ($query) => $query->whereNull('division_id'))
+                ->count();
+
+            return $count > 0 ? (string) $count : null;
+        }
+
+        if ($user->isDivisionLeader()) {
+            $count = MemberAward::needsApproval()
+                ->whereHas('member', fn ($query) => $query->where('division_id', $user->member->division_id))
                 ->count();
 
             return $count > 0 ? (string) $count : null;
