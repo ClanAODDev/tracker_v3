@@ -11,6 +11,7 @@ use App\Notifications\Channel\NotifyDivisionMemberRequestPutOnHold;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
@@ -40,9 +41,20 @@ class EditMemberRequest extends EditRecord
                     return ! $onHold && ! $isApproved;
                 })
                 ->requiresConfirmation()
-                ->action(function (): void {
+                ->schema([
+                    TextInput::make('member_name')
+                        ->label('Member Name')
+                        ->helperText('This name will be synced to the forum as AOD_{name}.')
+                        ->required()
+                        ->default(fn () => $this->getRecord()->member->name),
+                ])
+                ->action(function (array $data): void {
                     $rec = $this->getRecord();
                     $user = auth()->user();
+
+                    if ($rec->member->name !== $data['member_name']) {
+                        $rec->member->update(['name' => $data['member_name']]);
+                    }
 
                     $rec->division->notify(new NotifyDivisionMemberRequestApproved(
                         $user,

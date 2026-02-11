@@ -78,5 +78,16 @@ class MemberRequestPolicy
     /**
      * @return mixed
      */
-    public function delete() {}
+    public function delete(User $user, MemberRequest $request)
+    {
+        if ($user->isRole(['sr_ldr', 'admin'])) {
+            return true;
+        }
+
+        if ($request->requester_id === $user->member->clan_id) {
+            return true;
+        }
+
+        return false;
+    }
 }
