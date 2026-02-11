@@ -14,6 +14,7 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -67,6 +68,9 @@ class TicketTypeResource extends Resource
                             ->label('Discord Channel')
                             ->placeholder('aod-admins')
                             ->helperText('Channel name without # (leave blank for default)'),
+                        Toggle::make('include_content_in_notification')
+                            ->label('Include content in notification')
+                            ->helperText('Include the ticket description in the Discord channel notification'),
                         Select::make('auto_assign_to_id')
                             ->label('Auto-assign To')
                             ->relationship('auto_assign_to', 'name')

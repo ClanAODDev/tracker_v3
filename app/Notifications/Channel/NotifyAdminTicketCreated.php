@@ -24,18 +24,27 @@ class NotifyAdminTicketCreated extends Notification implements ShouldQueue
      */
     public function toBot($notifiable)
     {
+        $fields = [
+            [
+                'name' => "Ticket: {$notifiable->type->name} - " . ($notifiable->caller
+                        ? $notifiable->caller->name
+                        : 'UNK'
+                ),
+                'value' => sprintf('[Open Ticket](%s)', route('help.tickets.show', $notifiable)),
+            ],
+        ];
+
+        if ($notifiable->type->include_content_in_notification) {
+            $fields[] = [
+                'name' => 'Description',
+                'value' => str($notifiable->description)->limit(1024),
+            ];
+        }
+
         return new BotChannelMessage($notifiable)
             ->title('ClanAOD Tracker')
             ->target('help')
-            ->fields([
-                [
-                    'name' => "Ticket: {$notifiable->type->name} - " . ($notifiable->caller
-                            ? $notifiable->caller->name
-                            : 'UNK'
-                    ),
-                    'value' => sprintf('[Open Ticket](%s)', route('help.tickets.show', $notifiable)),
-                ],
-            ])
+            ->fields($fields)
             ->info()
             ->send();
     }

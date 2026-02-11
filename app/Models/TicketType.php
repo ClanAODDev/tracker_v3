@@ -15,6 +15,7 @@ class TicketType extends Model
     protected $casts = [
         'role_access' => 'json',
         'minimum_rank' => Rank::class,
+        'include_content_in_notification' => 'boolean',
     ];
 
     public function ticket()
