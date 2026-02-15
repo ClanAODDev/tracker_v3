@@ -191,9 +191,16 @@ store.validateForumName = (name, memberId) => {
         return;
     }
 
-    const hasAodPrefix = name.toLowerCase().startsWith('aod_');
-    if (hasAodPrefix) {
-        store.validation.forumName = { valid: false, available: false };
+    const lower = name.toLowerCase();
+    if (lower.startsWith('aod_')) {
+        store.validation.forumName = { valid: false, available: false, rejectedPrefix: 'aod' };
+        return;
+    }
+
+    const rankPrefixes = ['rct', 'cdt', 'pvt', 'pfc', 'spec', 'tr', 'lcpl', 'cpl', 'sgt', 'ssgt', 'msgt', '1stsgt', 'cmdsgt', 'sgtmaj'];
+    const hasRankPrefix = rankPrefixes.some(r => lower.startsWith(r));
+    if (hasRankPrefix) {
+        store.validation.forumName = { valid: false, available: false, rejectedPrefix: 'rank' };
         return;
     }
 

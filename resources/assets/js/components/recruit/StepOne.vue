@@ -157,8 +157,11 @@
                 <span class="help-block" v-if="store.member.forum_name && store.validation.forumName.valid && !store.validation.forumName.existingAccount">
                   Will become: <strong>{{ store.getFormattedName() }}</strong>
                 </span>
-                <span class="help-block text-danger" v-else-if="store.member.forum_name && store.member.forum_name.toLowerCase().startsWith('aod_')">
+                <span class="help-block text-danger" v-else-if="store.member.forum_name && store.validation.forumName.rejectedPrefix === 'aod'">
                   Do not include "AOD_" prefix
+                </span>
+                <span class="help-block text-danger" v-else-if="store.member.forum_name && store.validation.forumName.rejectedPrefix === 'rank'">
+                  Name cannot begin with a rank abbreviation
                 </span>
                 <span class="help-block text-danger" v-else-if="store.member.forum_name && !store.validation.forumName.available && !store.validation.loading">
                   This name is already taken

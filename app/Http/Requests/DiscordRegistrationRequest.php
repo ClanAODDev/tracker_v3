@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\Position;
+use App\Enums\Rank;
 use App\Jobs\CreateForumAccount;
 use App\Models\Division;
 use App\Models\Member;
@@ -21,7 +22,25 @@ class DiscordRegistrationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => ['required', 'string', 'max:50', 'regex:/^[a-zA-Z0-9_]+$/'],
+            'username' => [
+                'required', 'string', 'max:50', 'regex:/^[a-zA-Z0-9_]+$/',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    if (str_starts_with(strtolower($value), 'aod_')) {
+                        $fail('Username cannot begin with "AOD_".');
+
+                        return;
+                    }
+
+                    $lower = strtolower($value);
+                    foreach (Rank::cases() as $rank) {
+                        if (str_starts_with($lower, strtolower($rank->getAbbreviation()))) {
+                            $fail('Username cannot begin with a rank abbreviation.');
+
+                            return;
+                        }
+                    }
+                },
+            ],
             'date_of_birth' => ['required', 'date', 'before:' . now()->subYears(13)->format('Y-m-d')],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'division_id' => ['required', 'exists:divisions,id'],
