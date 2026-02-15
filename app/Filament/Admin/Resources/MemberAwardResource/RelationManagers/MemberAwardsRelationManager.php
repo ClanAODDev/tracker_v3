@@ -36,12 +36,16 @@ class MemberAwardsRelationManager extends RelationManager
                     ->searchable()
                     ->relationship('member', 'name')
                     ->rules([
-                        fn (): Closure => function (string $attribute, $value, Closure $fail) {
+                        fn (?MemberAward $record): Closure => function (string $attribute, $value, Closure $fail) use ($record) {
                             $award = $this->ownerRecord;
                             if ($award->repeatable) {
                                 return;
                             }
-                            if (MemberAward::where('member_id', $value)->where('award_id', $award->id)->exists()) {
+                            $query = MemberAward::where('member_id', $value)->where('award_id', $award->id);
+                            if ($record) {
+                                $query->where('id', '!=', $record->id);
+                            }
+                            if ($query->exists()) {
                                 $fail('This member already has this award.');
                             }
                         },

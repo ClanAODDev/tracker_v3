@@ -124,7 +124,7 @@ class MemberAwardResource extends Resource
                             ->required()
                             ->helperText('Search by member name')
                             ->rules([
-                                fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                                fn (Get $get, ?Model $record): Closure => function (string $attribute, $value, Closure $fail) use ($get, $record) {
                                     $awardId = $get('award_id');
                                     if (! $awardId) {
                                         return;
@@ -133,7 +133,11 @@ class MemberAwardResource extends Resource
                                     if (! $award || $award->repeatable) {
                                         return;
                                     }
-                                    if (MemberAward::where('member_id', $value)->where('award_id', $awardId)->exists()) {
+                                    $query = MemberAward::where('member_id', $value)->where('award_id', $awardId);
+                                    if ($record) {
+                                        $query->where('id', '!=', $record->id);
+                                    }
+                                    if ($query->exists()) {
                                         $fail('This member already has this award.');
                                     }
                                 },
