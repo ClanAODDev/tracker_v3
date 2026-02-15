@@ -118,7 +118,7 @@ class AODForumService
         string $dateOfBirth,
         string $password,
         string $discordId,
-        ForumGroup $forumGroup = ForumGroup::AWAITING_MODERATION
+        ForumGroup $forumGroup = ForumGroup::AWAITING_MODERATION,
     ): array {
         $response = self::postRequest(self::MODCP_URL, [
             'aod_userid' => $impersonatingMemberId,
@@ -128,7 +128,7 @@ class AODForumService
             'dob' => $dateOfBirth,
             'password' => $password,
             'discord_id' => $discordId,
-            'group_id' => $forumGroup->value,
+            'usergroupid' => $forumGroup->value,
         ]);
 
         if (is_string($response) && str_contains($response, 'saved_user') && str_contains($response, 'successfully')) {
