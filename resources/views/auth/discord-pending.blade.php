@@ -1,10 +1,11 @@
 @extends('application.base-tracker')
 
 @section('content')
+    @php $preview = $preview ?? false @endphp
 
     <div class="discord-pending-wrapper">
 
-        @if ($preview ?? false)
+        @if ($preview)
             <div class="alert alert-warning text-center animate-fade-in-up m-b-lg">
                 <i class="fa fa-eye"></i>
                 <strong>Preview Mode</strong> &mdash; {{ $previewDivision->name }} registration flow
@@ -21,7 +22,7 @@
             <p class="text-muted">Welcome, <strong class="c-white">{{ auth()->user()->discord_username ?? auth()->user()->name }}</strong></p>
         </div>
 
-        @if (($preview ?? false) || ! auth()->user()->date_of_birth || auth()->user()->forum_password)
+        @if ($preview || ! auth()->user()->date_of_birth || auth()->user()->forum_password)
             <div class="panel panel-filled animate-fade-in-up auth__panel">
                 <div class="auth__pattern"></div>
                 <div class="panel-body">
@@ -37,7 +38,7 @@
                         </div>
                     @endif
 
-                    <fieldset {{ ($preview ?? false) ? 'disabled' : '' }}>
+                    <fieldset {{ $preview ? 'disabled' : '' }}>
                         <form action="{{ route('auth.discord.register') }}" method="POST" id="dob-form">
                             @csrf
                             <div class="form-group">
@@ -45,7 +46,7 @@
                                 <div class="division-select-grid">
                                     @foreach($divisions as $division)
                                         <label class="division-select-item">
-                                            <input type="radio" name="division_id" value="{{ $division->id }}" {{ ($preview ?? false) && $previewDivision->id === $division->id ? 'checked' : ((int) old('division_id') === $division->id ? 'checked' : '') }} required>
+                                            <input type="radio" name="division_id" value="{{ $division->id }}" {{ $preview && $previewDivision->id === $division->id ? 'checked' : ((int) old('division_id') === $division->id ? 'checked' : '') }} required>
                                             <div class="division-select-card">
                                                 <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" class="division-select-logo">
                                                 <span class="division-select-name">{{ $division->name }}</span>
@@ -79,7 +80,7 @@
                                 </div>
                             </div>
                             <p class="help-block text-muted m-t-none">This will be your forum account password.</p>
-                            @if (! ($preview ?? false))
+                            @if (! $preview)
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">
                                         Continue <i class="fa fa-arrow-right"></i>
@@ -91,7 +92,7 @@
                 </div>
             </div>
 
-            @if (($preview ?? false) && $needsApplication)
+            @if ($preview && $needsApplication)
                 @include('auth.partials.application-form', ['preview' => true])
             @endif
         @elseif ($needsApplication)
@@ -133,7 +134,7 @@
             </div>
         @endif
 
-        @if (! ($preview ?? false))
+        @if (! $preview)
             <div class="text-center m-t-lg animate-fade-in-up auth__footer">
                 <small class="text-muted">Already a member?</small><br>
                 <a href="{{ route('logout') }}" class="btn btn-sm btn-default m-t-xs auth__subtle-btn">

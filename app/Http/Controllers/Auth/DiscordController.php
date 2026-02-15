@@ -66,38 +66,24 @@ class DiscordController extends Controller
     public function pending(): RedirectResponse|View
     {
         $user = auth()->user();
-        $previewDivision = request('preview');
+        $previewSlug = request('preview');
 
-        if ($previewDivision) {
-            return $this->previewPending($user, $previewDivision);
+        if ($previewSlug) {
+            return $this->previewPending($user, $previewSlug);
         }
 
         if (! $user->isPendingRegistration()) {
             return redirect('/');
         }
 
-        $divisions = Division::active()
-            ->withoutFloaters()
-            ->withoutBR()
-            ->orderBy('name')
-            ->get(['id', 'name', 'abbreviation']);
-
-        $applicationFields = null;
-        $needsApplication = false;
+        $division = null;
 
         if ($user->date_of_birth && ! $user->forum_password && ! $user->divisionApplication) {
             $divisionId = session('pending_division_id');
             $division = $divisionId ? Division::find($divisionId) : null;
-
-            if ($division
-                && $division->settings()->get('application_required', false)
-            ) {
-                $applicationFields = $division->applicationFields;
-                $needsApplication = $applicationFields->isNotEmpty();
-            }
         }
 
-        return view('auth.discord-pending', compact('divisions', 'applicationFields', 'needsApplication'));
+        return view('auth.discord-pending', $this->buildPendingViewData($division));
     }
 
     private function previewPending(User $user, string $divisionSlug): RedirectResponse|View
@@ -108,6 +94,14 @@ class DiscordController extends Controller
 
         $division = Division::where('slug', $divisionSlug)->firstOrFail();
 
+        return view('auth.discord-pending', array_merge(
+            $this->buildPendingViewData($division),
+            ['preview' => true, 'previewDivision' => $division]
+        ));
+    }
+
+    private function buildPendingViewData(?Division $division): array
+    {
         $divisions = Division::active()
             ->withoutFloaters()
             ->withoutBR()
@@ -117,18 +111,12 @@ class DiscordController extends Controller
         $applicationFields = null;
         $needsApplication = false;
 
-        if ($division->settings()->get('application_required', false)) {
+        if ($division && $division->settings()->get('application_required', false)) {
             $applicationFields = $division->applicationFields;
             $needsApplication = $applicationFields->isNotEmpty();
         }
 
-        return view('auth.discord-pending', [
-            'divisions' => $divisions,
-            'applicationFields' => $applicationFields,
-            'needsApplication' => $needsApplication,
-            'preview' => true,
-            'previewDivision' => $division,
-        ]);
+        return compact('divisions', 'applicationFields', 'needsApplication');
     }
 
     public function register(DiscordRegistrationRequest $request): RedirectResponse

@@ -51,13 +51,10 @@ class AddClanMember implements ShouldQueue
 
         $group = ForumGroup::tryFrom((int) $profile->usergroupid);
 
-        return match ($group) {
-            ForumGroup::AWAITING_EMAIL_CONFIRMATION => 'User has not verified their email',
-            ForumGroup::AWAITING_MODERATION => 'User is awaiting moderation approval',
-            ForumGroup::BANNED => 'User forum account is banned',
-            ForumGroup::MEMBER => 'User is already an AOD member',
-            null => "Unknown forum group: {$profile->usergroupid}",
-            default => "User is in forum group: {$group->name}",
-        };
+        if (! $group) {
+            return "Unknown forum group: {$profile->usergroupid}";
+        }
+
+        return $group->recruitmentRejectionReason() ?? "User is in forum group: {$group->name}";
     }
 }

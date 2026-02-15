@@ -98,7 +98,7 @@ class DiscordRegistrationRequest extends FormRequest
 
         if (! $result['success']) {
             throw ValidationException::withMessages([
-                'password' => $result['error'],
+                'username' => $result['error'],
             ]);
         }
 

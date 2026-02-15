@@ -79,15 +79,9 @@ class RecruitingController extends Controller
             if ($forumProfile && property_exists($forumProfile, 'usergroupid')) {
                 $group = ForumGroup::tryFrom((int) $forumProfile->usergroupid);
 
-                if ($group === ForumGroup::AWAITING_EMAIL_CONFIRMATION) {
+                if ($group && ! $group->isEligibleForRecruitment()) {
                     return response()->json([
-                        'message' => 'This user needs to verify their email address before they can be recruited.',
-                    ], 422);
-                }
-
-                if ($group === ForumGroup::BANNED) {
-                    return response()->json([
-                        'message' => 'This user\'s forum account has been banned.',
+                        'message' => $group->recruitmentRejectionReason(),
                     ], 422);
                 }
             }
@@ -320,10 +314,7 @@ class RecruitingController extends Controller
         return [
             'is_member' => true,
             'username' => $result->username,
-            'valid_group' => in_array((int) $result->usergroupid, [
-                ForumGroup::REGISTERED_USER->value,
-                ForumGroup::AWAITING_MODERATION->value,
-            ]),
+            'valid_group' => ForumGroup::tryFrom((int) $result->usergroupid)?->isEligibleForRecruitment() ?? false,
             'group_id' => (int) $result->usergroupid,
             'exists_in_tracker' => $existsInTracker,
             'tags' => $tags,
