@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ForumGroup;
+use App\Enums\Position;
 use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
 use App\Models\DivisionApplication;
@@ -65,7 +66,12 @@ class RecruitingController extends Controller
                 ], 422);
             }
 
-            $forumUser = app(AODForumService::class)->getUserByEmail($pendingUser->email);
+            $forumService = app(AODForumService::class);
+            $forumUser = $forumService->getUserByEmail($pendingUser->email);
+
+            if (! $forumUser && $pendingUser->forum_password) {
+                $forumUser = $this->createLegacyForumAccount($pendingUser, $division, $forumService);
+            }
 
             if (! $forumUser) {
                 return response()->json([
@@ -372,8 +378,7 @@ class RecruitingController extends Controller
     private function getPendingDiscordUsers(Division $division, bool $allPending = false)
     {
         $query = User::pendingDiscord()
-            ->whereNotNull('date_of_birth')
-            ->whereNull('forum_password');
+            ->whereNotNull('date_of_birth');
 
         if (! $allPending) {
             $query->where(function ($q) use ($division) {
@@ -407,6 +412,35 @@ class RecruitingController extends Controller
                     'application_division' => $u->divisionApplication?->division?->name,
                 ];
             });
+    }
+
+    private function createLegacyForumAccount(User $pendingUser, Division $division, AODForumService $forumService): ?object
+    {
+        $co = $division->members()
+            ->where('position', Position::COMMANDING_OFFICER)
+            ->first();
+
+        if (! $co) {
+            return null;
+        }
+
+        $result = AODForumService::createForumAccount(
+            impersonatingMemberId: $co->clan_id,
+            username: $pendingUser->name,
+            email: $pendingUser->email,
+            dateOfBirth: $pendingUser->date_of_birth->format('Y-m-d'),
+            password: $pendingUser->forum_password,
+            discordId: $pendingUser->discord_id,
+            forumGroup: ForumGroup::AWAITING_MODERATION,
+        );
+
+        if (! $result['success']) {
+            return null;
+        }
+
+        $pendingUser->update(['forum_password' => null]);
+
+        return $forumService->getUserByEmail($pendingUser->email);
     }
 
     private function handleNotification($member, $division)
