@@ -34,7 +34,7 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
             $applicationUrl = url("divisions/{$notifiable->slug}?application={$this->application->id}");
             $message = sprintf(
                 ':clipboard: **%s** has submitted an application to join %s. [View application](%s)',
-                $this->user->discord_username,
+                $this->user->name,
                 $notifiable->name,
                 $applicationUrl
             );
@@ -42,7 +42,7 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
         } else {
             $message = sprintf(
                 ':wave: **%s** has registered via Discord and is interested in joining %s. Check %s, %s',
-                $this->user->discord_username,
+                $this->user->name,
                 $notifiable->name,
                 self::RECRUITING_CHANNEL,
                 self::INTRODUCTIONS_CHANNEL

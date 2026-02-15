@@ -118,7 +118,7 @@ class AODForumService
         string $dateOfBirth,
         string $password,
         string $discordId,
-        ForumGroup $forumGroup = ForumGroup::REGISTERED_USER
+        ForumGroup $forumGroup = ForumGroup::AWAITING_MODERATION
     ): array {
         $response = self::postRequest(self::MODCP_URL, [
             'aod_userid' => $impersonatingMemberId,
