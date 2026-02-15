@@ -405,6 +405,7 @@ class RecruitingController extends Controller
                 return [
                     'id' => $u->id,
                     'discord_username' => $u->discord_username,
+                    'forum_name' => $u->name,
                     'discord_id' => $u->discord_id,
                     'email' => $u->email,
                     'created_at' => $u->created_at->diffForHumans(),

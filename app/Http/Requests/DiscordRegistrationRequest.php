@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ForumGroup;
 use App\Enums\Position;
+use App\Jobs\CreateForumAccount;
 use App\Models\Division;
 use App\Models\Member;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
@@ -48,17 +48,6 @@ class DiscordRegistrationRequest extends FormRequest
 
         $division = Division::findOrFail($this->validated('division_id'));
 
-        $this->createForumAccount($user, $division);
-
-        session(['pending_division_id' => $division->id]);
-
-        if (! $division->settings()->get('application_required', false)) {
-            $division->notify(new NotifyDivisionPendingDiscordRegistration($user));
-        }
-    }
-
-    private function createForumAccount($user, Division $division): void
-    {
         $co = $division->members()
             ->where('position', Position::COMMANDING_OFFICER)
             ->first();
@@ -82,26 +71,25 @@ class DiscordRegistrationRequest extends FormRequest
             }
 
             $user->update(['forum_password' => null]);
+        } else {
+            $password = $this->validated('password');
+            $user->update(['forum_password' => null]);
 
-            return;
+            CreateForumAccount::dispatch(
+                user: $user,
+                impersonatingMemberId: $co->clan_id,
+                username: $this->validated('username'),
+                email: $user->email,
+                dateOfBirth: $this->validated('date_of_birth'),
+                password: $password,
+                discordId: $user->discord_id,
+            );
         }
 
-        $result = AODForumService::createForumAccount(
-            impersonatingMemberId: $co->clan_id,
-            username: $this->validated('username'),
-            email: $user->email,
-            dateOfBirth: $this->validated('date_of_birth'),
-            password: $this->validated('password'),
-            discordId: $user->discord_id,
-            forumGroup: ForumGroup::AWAITING_MODERATION,
-        );
+        session(['pending_division_id' => $division->id]);
 
-        if (! $result['success']) {
-            throw ValidationException::withMessages([
-                'username' => $result['error'],
-            ]);
+        if (! $division->settings()->get('application_required', false)) {
+            $division->notify(new NotifyDivisionPendingDiscordRegistration($user));
         }
-
-        $user->update(['forum_password' => null]);
     }
 }

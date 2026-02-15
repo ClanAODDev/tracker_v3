@@ -122,10 +122,11 @@ store.selectPendingUser = (userId) => {
     const user = store.division.pending_discord.find(u => u.id === parseInt(userId));
     if (user) {
         store.selectedPendingUser = user;
-        store.member.forum_name = user.discord_username;
+        const name = user.forum_name || user.discord_username;
+        store.member.forum_name = name;
         store.member.rank = '1';
         store.validation.forumName = { valid: false, available: false };
-        store.validateForumName(user.discord_username, store.member.id);
+        store.validateForumName(name, store.member.id);
     }
 };
 
