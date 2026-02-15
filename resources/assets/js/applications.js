@@ -15,7 +15,7 @@ if (container) {
 
     const modal = document.getElementById('applicationsModal');
     if (modal) {
-        $(modal).on('shown.bs.modal', () => {
+        const handleModalShown = () => {
             const targetId = new URLSearchParams(window.location.search).get('application');
 
             if (targetId && !store.loading.applications) {
@@ -28,6 +28,12 @@ if (container) {
             if (store.applications.length === 0 && !store.loading.applications) {
                 store.loadApplications();
             }
-        });
+        };
+
+        $(modal).on('shown.bs.modal', handleModalShown);
+
+        if ($(modal).hasClass('in') || $(modal).hasClass('show')) {
+            handleModalShown();
+        }
     }
 }
