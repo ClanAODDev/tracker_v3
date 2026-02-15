@@ -126,7 +126,7 @@ class AODForumServiceTest extends TestCase
         ]);
 
         $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Failed to add member TestMember');
+        $this->expectExceptionMessage('Failed to add member to AOD - TestMember');
 
         AODForumService::addForumMember(12345, 67890, 'PFC', 'TestMember', 'Test');
     }
