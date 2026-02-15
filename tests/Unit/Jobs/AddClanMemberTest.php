@@ -2,9 +2,12 @@
 
 namespace Tests\Unit\Jobs;
 
+use App\Enums\ForumGroup;
 use App\Jobs\AddClanMember;
+use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use Mockery;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -15,10 +18,14 @@ class AddClanMemberTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
+    private ForumProcedureService $procedureService;
+
     protected function setUp(): void
     {
         parent::setUp();
         config(['aod.token' => 'test-token']);
+        $this->procedureService = Mockery::mock(ForumProcedureService::class);
+        $this->procedureService->shouldReceive('getUser')->byDefault()->andReturn(null);
     }
 
     public function test_job_can_be_instantiated()
@@ -42,7 +49,7 @@ class AddClanMemberTest extends TestCase
         $adminId = 12345;
 
         $job = new AddClanMember($member, $adminId);
-        $job->handle();
+        $job->handle($this->procedureService);
 
         Http::assertSent(function ($request) use ($member, $adminId) {
             $url = $request->url();
@@ -66,7 +73,7 @@ class AddClanMemberTest extends TestCase
         ]);
 
         $job = new AddClanMember($member, 12345);
-        $job->handle();
+        $job->handle($this->procedureService);
 
         Http::assertSent(function ($request) {
             return str_contains($request->url(), urlencode('AOD_TestPlayer'));
@@ -85,6 +92,46 @@ class AddClanMemberTest extends TestCase
         $job = new AddClanMember($member, 12345);
 
         $this->expectException(\RuntimeException::class);
-        $job->handle();
+        $job->handle($this->procedureService);
+    }
+
+    public function test_job_diagnoses_banned_user_on_failure()
+    {
+        Http::fake([
+            '*' => Http::response('error_invalid_user', 200),
+        ]);
+
+        $division = $this->createActiveDivision();
+        $member = $this->createMember(['division_id' => $division->id]);
+
+        $this->procedureService->shouldReceive('getUser')
+            ->with($member->clan_id)
+            ->andReturn((object) ['usergroupid' => ForumGroup::BANNED->value]);
+
+        $job = new AddClanMember($member, 12345);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('banned');
+        $job->handle($this->procedureService);
+    }
+
+    public function test_job_diagnoses_awaiting_email_on_failure()
+    {
+        Http::fake([
+            '*' => Http::response('error_invalid_user', 200),
+        ]);
+
+        $division = $this->createActiveDivision();
+        $member = $this->createMember(['division_id' => $division->id]);
+
+        $this->procedureService->shouldReceive('getUser')
+            ->with($member->clan_id)
+            ->andReturn((object) ['usergroupid' => ForumGroup::AWAITING_EMAIL_CONFIRMATION->value]);
+
+        $job = new AddClanMember($member, 12345);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('not verified their email');
+        $job->handle($this->procedureService);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\ForumGroup;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -59,6 +60,9 @@ class AODForumService
         return $json !== null ? $json : $last;
     }
 
+    /**
+     * Adds a forum account to AOD (ForumGroup::MEMBER)
+     */
     public static function addForumMember(
         int $impersonatingMemberId,
         int $memberIdBeingAdded,
@@ -77,12 +81,15 @@ class AODForumService
         ]);
 
         if (! is_string($response) || ! str_contains($response, self::SUCCESS)) {
-            throw new RuntimeException("Failed to add member $name - $response");
+            throw new RuntimeException("Failed to add member to AOD - $name - $response");
         }
 
         return true;
     }
 
+    /**
+     * Removes a forum account from AOD
+     */
     public static function removeForumMember(
         int $memberIdBeingRemoved,
         int $impersonatingMemberId,
@@ -101,13 +108,17 @@ class AODForumService
         return true;
     }
 
-    public static function createForumUser(
+    /**
+     * Creates a new forum account
+     */
+    public static function createForumAccount(
         int $impersonatingMemberId,
         string $username,
         string $email,
         string $dateOfBirth,
         string $password,
         string $discordId,
+        ForumGroup $forumGroup = ForumGroup::REGISTERED_USER
     ): array {
         $response = self::postRequest(self::MODCP_URL, [
             'aod_userid' => $impersonatingMemberId,
@@ -117,6 +128,7 @@ class AODForumService
             'dob' => $dateOfBirth,
             'password' => $password,
             'discord_id' => $discordId,
+            'group_id' => $forumGroup->value,
         ]);
 
         if (is_string($response) && str_contains($response, 'saved_user') && str_contains($response, 'successfully')) {
@@ -126,7 +138,7 @@ class AODForumService
         $error = is_string($response) ? $response : 'Unknown error';
 
         if (str_contains($error, 'invalid_user_specified')) {
-            $error = "Invalid user. Email may already be registered on the forums.";
+            $error = 'Invalid user. Email may already be registered on the forums.';
         }
 
         return [

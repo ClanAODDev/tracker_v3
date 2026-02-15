@@ -9,73 +9,9 @@ use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\RankAction;
 use App\Models\Transfer;
-use App\Models\User;
 
 class RecruitmentService
 {
-    public function __construct(
-        protected ForumProcedureService $forumProcedureService
-    ) {}
-
-    public function createForumAccountForDiscordUser(User $user, string $forumName, int $recruiterId): array
-    {
-        if (! $user->date_of_birth) {
-            return [
-                'success' => false,
-                'error' => 'Date of birth is required to create a forum account.',
-            ];
-        }
-
-        if (! $user->forum_password) {
-            return [
-                'success' => false,
-                'error' => 'Password is required to create a forum account.',
-            ];
-        }
-
-        $forumService = app(AODForumService::class);
-        $existingUser = $forumService->getUserByEmail($user->email);
-
-        if ($existingUser) {
-            $user->update(['forum_password' => null]);
-
-            return [
-                'success' => true,
-                'clan_id' => (int) $existingUser->userid,
-                'existing_account' => true,
-            ];
-        }
-
-        $result = AODForumService::createForumUser(
-            $recruiterId,
-            $forumName,
-            $user->email,
-            $user->date_of_birth->format('Y-m-d'),
-            $user->forum_password,
-            $user->discord_id,
-        );
-
-        if (! $result['success']) {
-            return $result;
-        }
-
-        $forumUser = $this->forumProcedureService->checkUser($forumName, $user->forum_password);
-
-        $user->update(['forum_password' => null]);
-
-        if (! $forumUser?->userid) {
-            return [
-                'success' => false,
-                'error' => 'Forum account created but failed to retrieve user ID.',
-            ];
-        }
-
-        return [
-            'success' => true,
-            'clan_id' => (int) $forumUser->userid,
-        ];
-    }
-
     public function createMember(
         int $clanId,
         string $name,

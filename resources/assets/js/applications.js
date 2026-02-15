@@ -16,6 +16,15 @@ if (container) {
     const modal = document.getElementById('applicationsModal');
     if (modal) {
         $(modal).on('shown.bs.modal', () => {
+            const targetId = new URLSearchParams(window.location.search).get('application');
+
+            if (targetId && !store.loading.applications) {
+                store.loadApplications().then(() => {
+                    store.setView('detail', parseInt(targetId, 10));
+                });
+                return;
+            }
+
             if (store.applications.length === 0 && !store.loading.applications) {
                 store.loadApplications();
             }

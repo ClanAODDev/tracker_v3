@@ -3,11 +3,8 @@
 namespace Tests\Unit\Services;
 
 use App\Models\Member;
-use App\Models\User;
-use App\Services\ForumProcedureService;
 use App\Services\RecruitmentService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Mockery;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 
@@ -22,8 +19,7 @@ class RecruitmentServiceTest extends TestCase
     {
         parent::setUp();
 
-        $forumService = Mockery::mock(ForumProcedureService::class);
-        $this->service = new RecruitmentService($forumService);
+        $this->service = new RecruitmentService;
     }
 
     public function test_create_member_creates_new_member(): void
@@ -124,46 +120,5 @@ class RecruitmentServiceTest extends TestCase
         $this->service->createMemberRequest($member, $division, 88888);
 
         $this->assertDatabaseCount('member_requests', 1);
-    }
-
-    public function test_create_forum_account_requires_date_of_birth(): void
-    {
-        $user = User::factory()->pending()->create(['date_of_birth' => null]);
-
-        $result = $this->service->createForumAccountForDiscordUser($user, 'TestName', 12345);
-
-        $this->assertFalse($result['success']);
-        $this->assertEquals('Date of birth is required to create a forum account.', $result['error']);
-    }
-
-    public function test_create_forum_account_requires_forum_password(): void
-    {
-        $user = User::factory()->pending()->create(['forum_password' => null]);
-
-        $result = $this->service->createForumAccountForDiscordUser($user, 'TestName', 12345);
-
-        $this->assertFalse($result['success']);
-        $this->assertEquals('Password is required to create a forum account.', $result['error']);
-    }
-
-    /**
-     * @todo Enable when forum account creation is implemented
-     */
-    public function test_create_forum_account_returns_error_on_failure(): void
-    {
-        $this->markTestSkipped('Forum account creation not yet implemented');
-
-        $forumService = Mockery::mock(ForumProcedureService::class);
-        $forumService->shouldReceive('createUser')
-            ->with('test@example.com', 'AOD_TakenName')
-            ->andReturn((object) ['userid' => null, 'error' => 'Username already exists']);
-
-        $service = new RecruitmentService($forumService);
-        $user = User::factory()->pending()->create(['email' => 'test@example.com']);
-
-        $result = $service->createForumAccountForDiscordUser($user, 'TakenName', 12345);
-
-        $this->assertFalse($result['success']);
-        $this->assertEquals('Username already exists', $result['error']);
     }
 }

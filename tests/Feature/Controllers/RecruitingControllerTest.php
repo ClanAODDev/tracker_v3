@@ -6,7 +6,6 @@ use App\Enums\Rank;
 use App\Enums\Role;
 use App\Models\User;
 use App\Services\AODForumService;
-use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Mockery;
@@ -26,25 +25,19 @@ class RecruitingControllerTest extends TestCase
         Notification::fake();
     }
 
-    protected function mockForumUserCreation(int $clanId): void
+    protected function mockForumUserLookup(int $clanId): void
     {
-        $mock = Mockery::mock('overload:' . AODForumService::class);
-        $mock->shouldReceive('getUserByEmail')->andReturn(null);
-        $mock->shouldReceive('createForumUser')
-            ->andReturn(['success' => true, 'clan_id' => $clanId]);
-
-        $forumUser = (object) ['userid' => $clanId];
-        $procedureMock = Mockery::mock(ForumProcedureService::class);
-        $procedureMock->shouldReceive('checkUser')->andReturn($forumUser);
-        $this->app->instance(ForumProcedureService::class, $procedureMock);
+        $forumUser = (object) ['userid' => $clanId, 'username' => 'TestUser'];
+        $mock = Mockery::mock(AODForumService::class);
+        $mock->shouldReceive('getUserByEmail')->andReturn($forumUser);
+        $this->app->instance(AODForumService::class, $mock);
     }
 
-    protected function mockForumUserCreationFailure(string $error): void
+    protected function mockForumUserLookupFailure(): void
     {
-        $mock = Mockery::mock('overload:' . AODForumService::class);
+        $mock = Mockery::mock(AODForumService::class);
         $mock->shouldReceive('getUserByEmail')->andReturn(null);
-        $mock->shouldReceive('createForumUser')
-            ->andReturn(['success' => false, 'error' => $error]);
+        $this->app->instance(AODForumService::class, $mock);
     }
 
     public function test_index_displays_recruit_page()
@@ -226,11 +219,9 @@ class RecruitingControllerTest extends TestCase
         $response->assertJsonPath('pending_discord.0.discord_username', 'ReadyUser');
     }
 
-    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
-    #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
     public function test_submit_discord_recruitment_creates_member(): void
     {
-        $this->mockForumUserCreation(12345);
+        $this->mockForumUserLookup(12345);
 
         $officer = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -257,11 +248,9 @@ class RecruitingControllerTest extends TestCase
         $this->assertNotNull($pendingUser->member_id);
     }
 
-    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
-    #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
-    public function test_submit_discord_recruitment_returns_error_on_forum_creation_failure(): void
+    public function test_submit_discord_recruitment_returns_error_when_forum_account_missing(): void
     {
-        $this->mockForumUserCreationFailure('Username already taken');
+        $this->mockForumUserLookupFailure();
 
         $officer = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -279,7 +268,7 @@ class RecruitingControllerTest extends TestCase
             ]);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('message', 'Username already taken');
+        $response->assertJsonPath('message', 'Forum account not found for this user. Registration may not have completed.');
     }
 
     public function test_submit_discord_recruitment_rejects_invalid_pending_user(): void
@@ -302,11 +291,9 @@ class RecruitingControllerTest extends TestCase
         $response->assertJsonPath('message', 'Pending Discord user not found.');
     }
 
-    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
-    #[\PHPUnit\Framework\Attributes\PreserveGlobalState(false)]
     public function test_submit_discord_recruitment_links_user_to_member(): void
     {
-        $this->mockForumUserCreation(67890);
+        $this->mockForumUserLookup(67890);
 
         $officer = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -333,20 +320,7 @@ class RecruitingControllerTest extends TestCase
 
     public function test_submit_discord_recruitment_uses_existing_forum_account(): void
     {
-        $existingForumUser = (object) [
-            'userid' => 54321,
-            'username' => 'ExistingForumUser',
-            'email' => 'existing@example.com',
-        ];
-
-        $forumServiceMock = Mockery::mock(AODForumService::class);
-        $forumServiceMock->shouldReceive('getUserByEmail')
-            ->once()
-            ->andReturn($existingForumUser);
-        $this->app->instance(AODForumService::class, $forumServiceMock);
-
-        $procedureMock = Mockery::mock(ForumProcedureService::class);
-        $this->app->instance(ForumProcedureService::class, $procedureMock);
+        $this->mockForumUserLookup(54321);
 
         $officer = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -371,7 +345,6 @@ class RecruitingControllerTest extends TestCase
         ]);
 
         $pendingUser->refresh();
-        $this->assertNull($pendingUser->forum_password);
         $this->assertNotNull($pendingUser->member_id);
     }
 }

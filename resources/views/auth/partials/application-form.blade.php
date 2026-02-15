@@ -13,6 +13,7 @@
             </div>
         @endif
 
+        <fieldset {{ ($preview ?? false) ? 'disabled' : '' }}>
         <form action="{{ route('auth.discord.application') }}" method="POST">
             @csrf
 
@@ -82,11 +83,14 @@
                 </div>
             @endforeach
 
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">
-                    Submit Application <i class="fa fa-arrow-right"></i>
-                </button>
-            </div>
+            @if (! ($preview ?? false))
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">
+                        Submit Application <i class="fa fa-arrow-right"></i>
+                    </button>
+                </div>
+            @endif
         </form>
+        </fieldset>
     </div>
 </div>

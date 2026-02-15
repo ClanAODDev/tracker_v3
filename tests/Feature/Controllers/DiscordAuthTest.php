@@ -3,11 +3,13 @@
 namespace Tests\Feature\Controllers;
 
 use App\Enums\ForumGroup;
+use App\Enums\Position;
 use App\Enums\Role;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
+use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
@@ -394,13 +396,26 @@ class DiscordAuthTest extends TestCase
         Notification::fake();
 
         $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position' => Position::COMMANDING_OFFICER,
+        ]);
+
+        $forumServiceMock = Mockery::mock(AODForumService::class);
+        $forumServiceMock->shouldReceive('getUserByEmail')
+            ->andReturn((object) ['userid' => 99999]);
+        $this->app->instance(AODForumService::class, $forumServiceMock);
+
         $user = User::factory()->pending()->create([
             'discord_id' => '123456789',
             'discord_username' => 'TestRecruit',
+            'date_of_birth' => null,
+            'forum_password' => null,
         ]);
 
         $this->actingAs($user)
             ->post(route('auth.discord.register'), [
+                'username' => 'TestRecruit',
                 'date_of_birth' => '2000-01-15',
                 'password' => 'password123',
                 'password_confirmation' => 'password123',

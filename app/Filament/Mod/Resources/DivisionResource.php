@@ -7,6 +7,7 @@ use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
 use App\Filament\Mod\Resources\DivisionResource\Pages\ListDivisions;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Models\Division;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
@@ -17,6 +18,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -149,6 +151,15 @@ class DivisionResource extends Resource
                                 Toggle::make('settings.application_required')
                                     ->label('Required for recruitment')
                                     ->helperText('New members will be prompted to complete this information during the registration process'),
+
+                                Actions::make([
+                                    Action::make('preview_registration')
+                                        ->label('Preview Registration Flow')
+                                        ->icon('heroicon-o-eye')
+                                        ->color('gray')
+                                        ->url(fn ($record) => route('auth.discord.pending', ['preview' => $record->slug]))
+                                        ->openUrlInNewTab(),
+                                ]),
 
                                 Section::make('Application Fields')
                                     ->description('Define the fields that applicants must complete. Keep it brief and only request what is necessary before recruitment.')

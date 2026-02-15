@@ -10,6 +10,7 @@ use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
 use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
+use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use App\Services\RecruitmentService;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -64,20 +65,35 @@ class RecruitingController extends Controller
                 ], 422);
             }
 
-            $forumResult = $this->recruitmentService->createForumAccountForDiscordUser(
-                $pendingUser,
-                $request->forum_name,
-                $recruiterId
-            );
+            $forumUser = app(AODForumService::class)->getUserByEmail($pendingUser->email);
 
-            if (! $forumResult['success']) {
+            if (! $forumUser) {
                 return response()->json([
-                    'message' => $forumResult['error'],
+                    'message' => 'Forum account not found for this user. Registration may not have completed.',
                 ], 422);
             }
 
+            $clanId = (int) $forumUser->userid;
+            $forumProfile = $this->procedureService->getUser($clanId);
+
+            if ($forumProfile && property_exists($forumProfile, 'usergroupid')) {
+                $group = ForumGroup::tryFrom((int) $forumProfile->usergroupid);
+
+                if ($group === ForumGroup::AWAITING_EMAIL_CONFIRMATION) {
+                    return response()->json([
+                        'message' => 'This user needs to verify their email address before they can be recruited.',
+                    ], 422);
+                }
+
+                if ($group === ForumGroup::BANNED) {
+                    return response()->json([
+                        'message' => 'This user\'s forum account has been banned.',
+                    ], 422);
+                }
+            }
+
             $member = $this->recruitmentService->createMember(
-                $forumResult['clan_id'],
+                $clanId,
                 $request->forum_name,
                 $division,
                 (int) $request->rank,
@@ -100,7 +116,7 @@ class RecruitingController extends Controller
 
             SyncDiscordMember::dispatch($member);
 
-            $this->showSuccessToast('Recruitment completed! Forum account created for Discord user.');
+            $this->showSuccessToast('Recruitment completed for Discord user.');
 
             return;
         }
@@ -304,7 +320,10 @@ class RecruitingController extends Controller
         return [
             'is_member' => true,
             'username' => $result->username,
-            'valid_group' => $result->usergroupid === ForumGroup::REGISTERED_USER->value,
+            'valid_group' => in_array((int) $result->usergroupid, [
+                ForumGroup::REGISTERED_USER->value,
+                ForumGroup::AWAITING_MODERATION->value,
+            ]),
             'group_id' => (int) $result->usergroupid,
             'exists_in_tracker' => $existsInTracker,
             'tags' => $tags,
@@ -363,7 +382,7 @@ class RecruitingController extends Controller
     {
         $query = User::pendingDiscord()
             ->whereNotNull('date_of_birth')
-            ->whereNotNull('forum_password');
+            ->whereNull('forum_password');
 
         if (! $allPending) {
             $query->where(function ($q) use ($division) {

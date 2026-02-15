@@ -73,7 +73,7 @@ class UserFactory extends Factory
                 'discord_id' => $this->faker->numerify('#########'),
                 'discord_username' => $this->faker->userName,
                 'date_of_birth' => $this->faker->dateTimeBetween('-50 years', '-18 years')->format('Y-m-d'),
-                'forum_password' => $this->faker->password(8, 16),
+                'forum_password' => null,
             ];
         });
     }

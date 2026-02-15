@@ -9,6 +9,7 @@ enum ForumGroup: int
     case AWAITING_MODERATION = 4;
     case ADMIN = 6;
     case BANNED = 49;
+    case MEMBER = 50;
     case SERGEANT = 52;
     case STAFF_SERGEANT = 66;
     case DIVISION_XO = 79;

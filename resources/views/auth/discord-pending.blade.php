@@ -4,6 +4,13 @@
 
     <div class="discord-pending-wrapper">
 
+        @if ($preview ?? false)
+            <div class="alert alert-warning text-center animate-fade-in-up m-b-lg">
+                <i class="fa fa-eye"></i>
+                <strong>Preview Mode</strong> &mdash; {{ $previewDivision->name }} registration flow
+            </div>
+        @endif
+
         <div class="text-center m-b-lg animate-fade-in-up">
             <div class="auth__logo-row m-b-md">
                 <i class="fab fa-discord auth__discord-icon"></i>
@@ -11,10 +18,10 @@
                 <img src="{{ asset('images/aod-logo.png') }}" alt="AOD" class="auth__aod-logo">
             </div>
             <h2 class="auth__header m-b-xs">ClanAOD Registration</h2>
-            <p class="text-muted">Welcome, <strong class="c-white">{{ auth()->user()->discord_username }}</strong></p>
+            <p class="text-muted">Welcome, <strong class="c-white">{{ auth()->user()->discord_username ?? auth()->user()->name }}</strong></p>
         </div>
 
-        @if (! auth()->user()->date_of_birth || ! auth()->user()->forum_password)
+        @if (($preview ?? false) || ! auth()->user()->date_of_birth || auth()->user()->forum_password)
             <div class="panel panel-filled animate-fade-in-up auth__panel">
                 <div class="auth__pattern"></div>
                 <div class="panel-body">
@@ -30,50 +37,63 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('auth.discord.register') }}" method="POST" id="dob-form">
-                        @csrf
-                        <div class="form-group">
-                            <label>What game are you interested in playing? <span class="text-danger">*</span></label>
-                            <div class="division-select-grid">
-                                @foreach($divisions as $division)
-                                    <label class="division-select-item">
-                                        <input type="radio" name="division_id" value="{{ $division->id }}" {{ (int) old('division_id') === $division->id ? 'checked' : '' }} required>
-                                        <div class="division-select-card">
-                                            <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" class="division-select-logo">
-                                            <span class="division-select-name">{{ $division->name }}</span>
-                                        </div>
-                                    </label>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
-                            <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" value="{{ old('date_of_birth') }}" required>
-                            <p class="help-block text-muted">You must be at least 13 years old to join.</p>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="password">Password <span class="text-danger">*</span></label>
-                                    <input type="password" name="password" id="password" class="form-control" autocomplete="new-password" required minlength="8">
+                    <fieldset {{ ($preview ?? false) ? 'disabled' : '' }}>
+                        <form action="{{ route('auth.discord.register') }}" method="POST" id="dob-form">
+                            @csrf
+                            <div class="form-group">
+                                <label>What game are you interested in playing? <span class="text-danger">*</span></label>
+                                <div class="division-select-grid">
+                                    @foreach($divisions as $division)
+                                        <label class="division-select-item">
+                                            <input type="radio" name="division_id" value="{{ $division->id }}" {{ ($preview ?? false) && $previewDivision->id === $division->id ? 'checked' : ((int) old('division_id') === $division->id ? 'checked' : '') }} required>
+                                            <div class="division-select-card">
+                                                <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" class="division-select-logo">
+                                                <span class="division-select-name">{{ $division->name }}</span>
+                                            </div>
+                                        </label>
+                                    @endforeach
                                 </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="password_confirmation">Confirm Password <span class="text-danger">*</span></label>
-                                    <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" autocomplete="new-password" required>
+                            <div class="form-group">
+                                <label for="username">Forum Username <span class="text-danger">*</span></label>
+                                <input type="text" name="username" id="username" class="form-control" value="{{ old('username', auth()->user()->name) }}" required maxlength="50">
+                                <p class="help-block text-muted">This will be your forum account username. Letters, numbers, and underscores only.</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
+                                <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" value="{{ old('date_of_birth') }}" required>
+                                <p class="help-block text-muted">You must be at least 13 years old to join.</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="password">Password <span class="text-danger">*</span></label>
+                                        <input type="password" name="password" id="password" class="form-control" autocomplete="new-password" required minlength="8">
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label for="password_confirmation">Confirm Password <span class="text-danger">*</span></label>
+                                        <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" autocomplete="new-password" required>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <p class="help-block text-muted m-t-none">This will be your forum account password.</p>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-primary">
-                                Continue <i class="fa fa-arrow-right"></i>
-                            </button>
-                        </div>
-                    </form>
+                            <p class="help-block text-muted m-t-none">This will be your forum account password.</p>
+                            @if (! ($preview ?? false))
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary">
+                                        Continue <i class="fa fa-arrow-right"></i>
+                                    </button>
+                                </div>
+                            @endif
+                        </form>
+                    </fieldset>
                 </div>
             </div>
+
+            @if (($preview ?? false) && $needsApplication)
+                @include('auth.partials.application-form', ['preview' => true])
+            @endif
         @elseif ($needsApplication)
             @include('auth.partials.application-form')
         @else
@@ -113,12 +133,14 @@
             </div>
         @endif
 
-        <div class="text-center m-t-lg animate-fade-in-up auth__footer">
-            <small class="text-muted">Already a member?</small><br>
-            <a href="{{ route('logout') }}" class="btn btn-sm btn-default m-t-xs auth__subtle-btn">
-                Sign out and use forum login
-            </a>
-        </div>
+        @if (! ($preview ?? false))
+            <div class="text-center m-t-lg animate-fade-in-up auth__footer">
+                <small class="text-muted">Already a member?</small><br>
+                <a href="{{ route('logout') }}" class="btn btn-sm btn-default m-t-xs auth__subtle-btn">
+                    Sign out and use forum login
+                </a>
+            </div>
+        @endif
 
     </div>
 

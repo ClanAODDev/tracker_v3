@@ -11,12 +11,12 @@ use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
 use GuzzleHttp\Exception\ClientException;
-use Laravel\Socialite\Two\InvalidStateException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\Two\InvalidStateException;
 
 class DiscordController extends Controller
 {
@@ -66,6 +66,11 @@ class DiscordController extends Controller
     public function pending(): RedirectResponse|View
     {
         $user = auth()->user();
+        $previewDivision = request('preview');
+
+        if ($previewDivision) {
+            return $this->previewPending($user, $previewDivision);
+        }
 
         if (! $user->isPendingRegistration()) {
             return redirect('/');
@@ -80,7 +85,7 @@ class DiscordController extends Controller
         $applicationFields = null;
         $needsApplication = false;
 
-        if ($user->date_of_birth && $user->forum_password && ! $user->divisionApplication) {
+        if ($user->date_of_birth && ! $user->forum_password && ! $user->divisionApplication) {
             $divisionId = session('pending_division_id');
             $division = $divisionId ? Division::find($divisionId) : null;
 
@@ -93,6 +98,37 @@ class DiscordController extends Controller
         }
 
         return view('auth.discord-pending', compact('divisions', 'applicationFields', 'needsApplication'));
+    }
+
+    private function previewPending(User $user, string $divisionSlug): RedirectResponse|View
+    {
+        if (! $user->isRole(['admin', 'sr_ldr', 'officer'])) {
+            return redirect('/');
+        }
+
+        $division = Division::where('slug', $divisionSlug)->firstOrFail();
+
+        $divisions = Division::active()
+            ->withoutFloaters()
+            ->withoutBR()
+            ->orderBy('name')
+            ->get(['id', 'name', 'abbreviation']);
+
+        $applicationFields = null;
+        $needsApplication = false;
+
+        if ($division->settings()->get('application_required', false)) {
+            $applicationFields = $division->applicationFields;
+            $needsApplication = $applicationFields->isNotEmpty();
+        }
+
+        return view('auth.discord-pending', [
+            'divisions' => $divisions,
+            'applicationFields' => $applicationFields,
+            'needsApplication' => $needsApplication,
+            'preview' => true,
+            'previewDivision' => $division,
+        ]);
     }
 
     public function register(DiscordRegistrationRequest $request): RedirectResponse
