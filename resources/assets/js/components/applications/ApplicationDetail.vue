@@ -404,4 +404,16 @@ export default {
 .p-md {
   padding: 30px;
 }
+
+.alert-danger {
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    var(--overlay-light) 10px,
+    var(--overlay-light) 11px
+  );
+  border: 1px solid var(--overlay-light);
+  color: var(--color-muted);
+}
 </style>
