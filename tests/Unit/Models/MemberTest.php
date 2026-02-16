@@ -19,7 +19,7 @@ class MemberTest extends TestCase
 
     public function test_is_squad_leader_returns_true_when_member_is_squad_leader()
     {
-        $squad = $this->createSquad();
+        $squad  = $this->createSquad();
         $member = $this->createSquadLeader($squad);
 
         $this->assertTrue($member->isSquadLeader($squad));
@@ -27,7 +27,7 @@ class MemberTest extends TestCase
 
     public function test_is_squad_leader_returns_false_when_member_is_not_squad_leader()
     {
-        $squad = $this->createSquad();
+        $squad  = $this->createSquad();
         $member = $this->createMember(['squad_id' => $squad->id]);
 
         $this->assertFalse($member->isSquadLeader($squad));
@@ -36,7 +36,7 @@ class MemberTest extends TestCase
     public function test_is_platoon_leader_returns_true_when_member_is_platoon_leader()
     {
         $platoon = $this->createPlatoon();
-        $member = $this->createPlatoonLeader($platoon);
+        $member  = $this->createPlatoonLeader($platoon);
 
         $this->assertTrue($member->isPlatoonLeader($platoon));
     }
@@ -44,7 +44,7 @@ class MemberTest extends TestCase
     public function test_is_platoon_leader_returns_false_when_member_is_not_platoon_leader()
     {
         $platoon = $this->createPlatoon();
-        $member = $this->createMember(['platoon_id' => $platoon->id]);
+        $member  = $this->createMember(['platoon_id' => $platoon->id]);
 
         $this->assertFalse($member->isPlatoonLeader($platoon));
     }
@@ -52,7 +52,7 @@ class MemberTest extends TestCase
     public function test_is_division_leader_returns_true_for_commanding_officer()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createCommander($division);
+        $member   = $this->createCommander($division);
 
         $this->assertTrue($member->isDivisionLeader($division));
     }
@@ -60,7 +60,7 @@ class MemberTest extends TestCase
     public function test_is_division_leader_returns_true_for_executive_officer()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createExecutiveOfficer($division);
+        $member   = $this->createExecutiveOfficer($division);
 
         $this->assertTrue($member->isDivisionLeader($division));
     }
@@ -68,7 +68,7 @@ class MemberTest extends TestCase
     public function test_is_division_leader_returns_false_for_regular_member()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->assertFalse($member->isDivisionLeader($division));
     }
@@ -77,7 +77,7 @@ class MemberTest extends TestCase
     {
         $division1 = $this->createActiveDivision();
         $division2 = $this->createActiveDivision();
-        $member = $this->createCommander($division1);
+        $member    = $this->createCommander($division1);
 
         $this->assertFalse($member->isDivisionLeader($division2));
     }
@@ -85,14 +85,14 @@ class MemberTest extends TestCase
     public function test_reset_clears_division_assignments()
     {
         $division = $this->createDivisionWithFullStructure(1, 1, 1);
-        $platoon = $division->platoons->first();
-        $squad = $platoon->squads->first();
+        $platoon  = $division->platoons->first();
+        $squad    = $platoon->squads->first();
 
         $member = $this->createMember([
-            'division_id' => $division->id,
-            'platoon_id' => $platoon->id,
-            'squad_id' => $squad->id,
-            'position' => Position::SQUAD_LEADER,
+            'division_id'            => $division->id,
+            'platoon_id'             => $platoon->id,
+            'squad_id'               => $squad->id,
+            'position'               => Position::SQUAD_LEADER,
             'flagged_for_inactivity' => true,
         ]);
 
@@ -108,7 +108,7 @@ class MemberTest extends TestCase
 
     public function test_reset_detaches_part_time_divisions()
     {
-        $division = $this->createActiveDivision();
+        $division         = $this->createActiveDivision();
         $partTimeDivision = $this->createActiveDivision();
 
         $member = $this->createMember(['division_id' => $division->id]);
@@ -125,10 +125,10 @@ class MemberTest extends TestCase
     public function test_reset_detaches_division_specific_tags()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $divisionTag = DivisionTag::factory()->create(['division_id' => $division->id]);
-        $globalTag = DivisionTag::factory()->global()->create();
+        $globalTag   = DivisionTag::factory()->global()->create();
 
         $member->tags()->attach([$divisionTag->id, $globalTag->id]);
 
@@ -145,13 +145,13 @@ class MemberTest extends TestCase
     public function test_scope_unassigned_squad_leaders_returns_orphaned_leaders()
     {
         $division = $this->createActiveDivision();
-        $squad = $this->createSquad($this->createPlatoon($division));
+        $squad    = $this->createSquad($this->createPlatoon($division));
 
         $assignedLeader = $this->createSquadLeader($squad);
 
         $unassignedLeader = Member::factory()->create([
             'division_id' => $division->id,
-            'position' => Position::SQUAD_LEADER,
+            'position'    => Position::SQUAD_LEADER,
         ]);
 
         $results = Member::unassignedSquadLeaders()->get();
@@ -163,13 +163,13 @@ class MemberTest extends TestCase
     public function test_scope_unassigned_platoon_leaders_returns_orphaned_leaders()
     {
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
+        $platoon  = $this->createPlatoon($division);
 
         $assignedLeader = $this->createPlatoonLeader($platoon);
 
         $unassignedLeader = Member::factory()->create([
             'division_id' => $division->id,
-            'position' => Position::PLATOON_LEADER,
+            'position'    => Position::PLATOON_LEADER,
         ]);
 
         $results = Member::unassignedPlatoonLeaders()->get();
@@ -197,10 +197,10 @@ class MemberTest extends TestCase
     public function test_bot_response_formats_correctly()
     {
         $division = $this->createActiveDivision(['name' => 'Test Division']);
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::SERGEANT,
-            'discord' => 'testuser#1234',
+            'rank'        => Rank::SERGEANT,
+            'discord'     => 'testuser#1234',
         ]);
 
         $response = $member->botResponse();

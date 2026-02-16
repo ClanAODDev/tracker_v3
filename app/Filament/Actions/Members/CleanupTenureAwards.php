@@ -17,7 +17,7 @@ class CleanupTenureAwards
         20 => 140,
         15 => 139,
         10 => 19,
-        5 => 18,
+        5  => 18,
     ];
 
     /**
@@ -52,13 +52,13 @@ class CleanupTenureAwards
 
     private static function runFixForMembers($members, bool $persist): array
     {
-        $missing = 0;
-        $invalid = 0;
+        $missing    = 0;
+        $invalid    = 0;
         $extraneous = 0;
 
         foreach ($members as $member) {
             $joinDate = Carbon::parse($member->join_date);
-            $years = $joinDate->diffInYears(now());
+            $years    = $joinDate->diffInYears(now());
 
             [$eligibleAwardId, $milestone] = self::determineEligibleAward(self::TENURE_AWARD_IDS, $years);
 
@@ -84,10 +84,10 @@ class CleanupTenureAwards
 
     private static function processMissingAwards($member, ?int $eligibleAwardId, ?int $milestone, bool $persist): int
     {
-        $count = 0;
+        $count    = 0;
         $joinDate = Carbon::parse($member->join_date);
-        $now = now();
-        $years = $joinDate->diffInYears($now);
+        $now      = now();
+        $years    = $joinDate->diffInYears($now);
 
         $candidates = [];
         if ($eligibleAwardId) {
@@ -110,9 +110,9 @@ class CleanupTenureAwards
                 if ($persist) {
                     MemberAward::firstOrCreate([
                         'member_id' => $member->clan_id,
-                        'award_id' => $awardId,
+                        'award_id'  => $awardId,
                     ], [
-                        'reason' => "Awarded for reaching the {$awardYears}-year milestone.",
+                        'reason'   => "Awarded for reaching the {$awardYears}-year milestone.",
                         'approved' => true,
                     ]);
                 }
@@ -125,9 +125,9 @@ class CleanupTenureAwards
 
     private static function processInvalidAwards($member, array $tenureAwards, int $years, bool $persist): int
     {
-        $count = 0;
+        $count         = 0;
         [, $milestone] = self::determineEligibleAward($tenureAwards, $years);
-        $upcoming = null;
+        $upcoming      = null;
 
         if (Carbon::parse($member->join_date)->month === now()->month) {
             [$nextAwardId, $nextMilestone] = self::determineEligibleAward($tenureAwards, $years + 1);
@@ -170,8 +170,8 @@ class CleanupTenureAwards
         }
 
         $joinDate = Carbon::parse($member->join_date);
-        $now = now();
-        $years = $joinDate->diffInYears($now);
+        $now      = now();
+        $years    = $joinDate->diffInYears($now);
 
         $effective = $milestone;
         if ($joinDate->month === $now->month) {

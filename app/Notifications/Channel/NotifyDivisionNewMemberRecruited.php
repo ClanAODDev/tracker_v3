@@ -29,7 +29,7 @@ class NotifyDivisionNewMemberRecruited extends BaseNotification
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
-                    'name' => ':crossed_swords: New Member Recruited',
+                    'name'  => ':crossed_swords: New Member Recruited',
                     'value' => sprintf(
                         '%s just recruited [%s](%s) into the %s Division!',
                         $this->recruiter->name,

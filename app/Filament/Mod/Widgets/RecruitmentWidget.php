@@ -36,7 +36,7 @@ class RecruitmentWidget extends BaseWidget
     protected function getTableHeading(): string
     {
         $label = match ($this->days) {
-            365 => '1 Year',
+            365     => '1 Year',
             default => "{$this->days} Days",
         };
 

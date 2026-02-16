@@ -22,7 +22,7 @@ class DivisionApplication extends Model implements Commentable
     }
 
     protected $casts = [
-        'responses' => 'array',
+        'responses'    => 'array',
         'recruited_at' => 'datetime',
     ];
 

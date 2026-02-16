@@ -21,16 +21,16 @@ class LogApiRequests
 
         $duration = round((microtime(true) - $startTime) * 1000, 2);
 
-        $token = $request->user()?->currentAccessToken();
+        $token     = $request->user()?->currentAccessToken();
         $tokenName = $token && property_exists($token, 'name') ? $token->name : null;
 
         $context = [
-            'method' => $request->method(),
-            'url' => $request->fullUrl(),
-            'ip' => $request->ip(),
-            'user_id' => $request->user()?->id,
-            'token_name' => $tokenName,
-            'status' => $response->getStatusCode(),
+            'method'      => $request->method(),
+            'url'         => $request->fullUrl(),
+            'ip'          => $request->ip(),
+            'user_id'     => $request->user()?->id,
+            'token_name'  => $tokenName,
+            'status'      => $response->getStatusCode(),
             'duration_ms' => $duration,
         ];
 

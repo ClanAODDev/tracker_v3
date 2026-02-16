@@ -40,9 +40,9 @@ class ClanSeeder extends Seeder
             $adminMember = Member::inRandomOrder()->first();
             if ($adminMember) {
                 $adminUser = User::factory()->create([
-                    'name' => $adminMember->name,
+                    'name'      => $adminMember->name,
                     'member_id' => $adminMember->id,
-                    'role' => Role::ADMIN,
+                    'role'      => Role::ADMIN,
                     'developer' => true,
                 ]);
                 $this->command->info("Created Admin user: {$adminUser->name} (Member ID: {$adminUser->member_id})");
@@ -52,9 +52,9 @@ class ClanSeeder extends Seeder
                 ->inRandomOrder()->first();
             if ($leadershipMember) {
                 $srLdrDivisionUser = User::factory()->create([
-                    'name' => $leadershipMember->name,
+                    'name'      => $leadershipMember->name,
                     'member_id' => $leadershipMember->id,
-                    'role' => Role::SENIOR_LEADER,
+                    'role'      => Role::SENIOR_LEADER,
                 ]);
                 $this->command->info("Created Senior Leader (Division CO/XO) user: {$srLdrDivisionUser->name} (Member ID: {$srLdrDivisionUser->member_id}, Position: {$leadershipMember->position})");
             }
@@ -63,12 +63,12 @@ class ClanSeeder extends Seeder
             if ($randomPlatoon) {
                 $platoonLeader = Member::factory()->ofTypePlatoonLeader()->create([
                     'division_id' => $randomPlatoon->division_id,
-                    'platoon_id' => $randomPlatoon->id,
+                    'platoon_id'  => $randomPlatoon->id,
                 ]);
                 $srLdrPlatoonUser = User::factory()->create([
-                    'name' => $platoonLeader->name,
+                    'name'      => $platoonLeader->name,
                     'member_id' => $platoonLeader->id,
-                    'role' => Role::SENIOR_LEADER,
+                    'role'      => Role::SENIOR_LEADER,
                 ]);
                 $this->command->info("Created Senior Leader (Platoon Leader) user: {$srLdrPlatoonUser->name} (Member ID: {$srLdrPlatoonUser->member_id})");
             }
@@ -76,18 +76,18 @@ class ClanSeeder extends Seeder
             $randomSquad = Squad::inRandomOrder()->first();
             if ($randomSquad) {
 
-                $platoon = $randomSquad->platoon;
+                $platoon     = $randomSquad->platoon;
                 $division_id = $platoon ? $platoon->division_id : null;
 
                 $squadLeader = Member::factory()->ofTypeSquadLeader()->create([
                     'division_id' => $division_id,
-                    'platoon_id' => $randomSquad->platoon_id,
-                    'squad_id' => $randomSquad->id,
+                    'platoon_id'  => $randomSquad->platoon_id,
+                    'squad_id'    => $randomSquad->id,
                 ]);
                 $officerUser = User::factory()->create([
-                    'name' => $squadLeader->name,
+                    'name'      => $squadLeader->name,
                     'member_id' => $squadLeader->id,
-                    'role' => Role::OFFICER,
+                    'role'      => Role::OFFICER,
                 ]);
                 $this->command->info("Created Officer (Squad Leader) user: {$officerUser->name} (Member ID: {$officerUser->member_id})");
                 $this->command->info("Created Admin user: {$adminUser->name} (Member ID: {$adminUser->member_id})");
@@ -97,9 +97,9 @@ class ClanSeeder extends Seeder
                 ->inRandomOrder()->first();
             if ($leadershipMember) {
                 $srLdrDivisionUser = User::factory()->create([
-                    'name' => $leadershipMember->name,
+                    'name'      => $leadershipMember->name,
                     'member_id' => $leadershipMember->id,
-                    'role' => Role::SENIOR_LEADER,
+                    'role'      => Role::SENIOR_LEADER,
                 ]);
                 $this->command->info("Created Senior Leader (Division CO/XO) user: {$srLdrDivisionUser->name} (Member ID: {$srLdrDivisionUser->member_id}, Position: {$leadershipMember->position})");
             }
@@ -108,12 +108,12 @@ class ClanSeeder extends Seeder
             if ($randomPlatoon) {
                 $platoonLeader = Member::factory()->ofTypePlatoonLeader()->create([
                     'division_id' => $randomPlatoon->division_id,
-                    'platoon_id' => $randomPlatoon->id,
+                    'platoon_id'  => $randomPlatoon->id,
                 ]);
                 $srLdrPlatoonUser = User::factory()->create([
-                    'name' => $platoonLeader->name,
+                    'name'      => $platoonLeader->name,
                     'member_id' => $platoonLeader->id,
-                    'role' => Role::SENIOR_LEADER,
+                    'role'      => Role::SENIOR_LEADER,
                 ]);
                 $this->command->info("Created Senior Leader (Platoon Leader) user: {$srLdrPlatoonUser->name} (Member ID: {$srLdrPlatoonUser->member_id})");
             }
@@ -121,18 +121,18 @@ class ClanSeeder extends Seeder
             $randomSquad = Squad::inRandomOrder()->first();
             if ($randomSquad) {
 
-                $platoon = $randomSquad->platoon;
+                $platoon     = $randomSquad->platoon;
                 $division_id = $platoon ? $platoon->division_id : null;
 
                 $squadLeader = Member::factory()->ofTypeSquadLeader()->create([
                     'division_id' => $division_id,
-                    'platoon_id' => $randomSquad->platoon_id,
-                    'squad_id' => $randomSquad->id,
+                    'platoon_id'  => $randomSquad->platoon_id,
+                    'squad_id'    => $randomSquad->id,
                 ]);
                 $officerUser = User::factory()->create([
-                    'name' => $squadLeader->name,
+                    'name'      => $squadLeader->name,
                     'member_id' => $squadLeader->id,
-                    'role' => Role::OFFICER,
+                    'role'      => Role::OFFICER,
                 ]);
                 $this->command->info("Created Officer (Squad Leader) user: {$officerUser->name} (Member ID: {$officerUser->member_id})");
             }
@@ -144,7 +144,7 @@ class ClanSeeder extends Seeder
         for ($week = 1; $week <= 6; $week++) {
             Census::factory()->create([
                 'division_id' => $division->id,
-                'created_at' => now()->subWeeks($week),
+                'created_at'  => now()->subWeeks($week),
             ]);
         }
     }
@@ -177,8 +177,8 @@ class ClanSeeder extends Seeder
 
                 $members = Member::factory()->ofTypeMember()->count(rand(5, 20))->create([
                     'division_id' => $division->id,
-                    'platoon_id' => $platoon->id,
-                    'squad_id' => $squad->id,
+                    'platoon_id'  => $platoon->id,
+                    'squad_id'    => $squad->id,
                 ]);
 
                 $members->each(function ($member) {

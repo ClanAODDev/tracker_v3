@@ -14,7 +14,7 @@ class Activity extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'name' => ActivityType::class,
+        'name'       => ActivityType::class,
         'properties' => 'array',
     ];
 

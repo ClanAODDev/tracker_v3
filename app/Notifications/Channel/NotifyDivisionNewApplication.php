@@ -38,7 +38,7 @@ class NotifyDivisionNewApplication extends Notification implements ShouldQueue
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
-                    'name' => $this->threadTitle,
+                    'name'  => $this->threadTitle,
                     'value' => sprintf(
                         'Applying via AOD Forums — [View application](%s)',
                         $this->threadLink

@@ -10,23 +10,23 @@ class TrainingContentSeeder extends Seeder
     public function run(): void
     {
         $sgtModule = TrainingModule::create([
-            'name' => 'SGT Training Process',
-            'slug' => 'sgt',
-            'description' => 'Training module for newly promoted Sergeants covering duties, structure, forum moderation, Discord, and miscellaneous information.',
+            'name'          => 'SGT Training Process',
+            'slug'          => 'sgt',
+            'description'   => 'Training module for newly promoted Sergeants covering duties, structure, forum moderation, Discord, and miscellaneous information.',
             'display_order' => 1,
-            'is_active' => true,
+            'is_active'     => true,
         ]);
 
         $this->createSgtSections($sgtModule);
 
         $divisionModule = TrainingModule::create([
-            'name' => 'Division Checklist',
-            'slug' => 'division-checklist',
-            'description' => 'Step-by-step guide for creating or removing divisions, covering DNS, forums, Discord, and Tracker configuration.',
-            'display_order' => 2,
-            'is_active' => true,
+            'name'                 => 'Division Checklist',
+            'slug'                 => 'division-checklist',
+            'description'          => 'Step-by-step guide for creating or removing divisions, covering DNS, forums, Discord, and Tracker configuration.',
+            'display_order'        => 2,
+            'is_active'            => true,
             'show_completion_form' => false,
-            'checkpoint_label' => 'Tasks',
+            'checkpoint_label'     => 'Tasks',
         ]);
 
         $this->createDivisionChecklistSections($divisionModule);
@@ -36,11 +36,11 @@ class TrainingContentSeeder extends Seeder
     {
         $sections = [
             [
-                'title' => 'SGT Duties',
-                'icon' => 'fa-tasks',
+                'title'         => 'SGT Duties',
+                'icon'          => 'fa-tasks',
                 'display_order' => 1,
-                'content' => $this->getSgtDutiesContent(),
-                'checkpoints' => [
+                'content'       => $this->getSgtDutiesContent(),
+                'checkpoints'   => [
                     'Explained responsibility scope beyond division',
                     'Reviewed SGT Decision Log usage',
                     'Discussed "stay in your lane" philosophy',
@@ -48,11 +48,11 @@ class TrainingContentSeeder extends Seeder
                 ],
             ],
             [
-                'title' => 'SGT Structure',
-                'icon' => 'fa-sitemap',
+                'title'         => 'SGT Structure',
+                'icon'          => 'fa-sitemap',
                 'display_order' => 2,
-                'content' => $this->getSgtStructureContent(),
-                'checkpoints' => [
+                'content'       => $this->getSgtStructureContent(),
+                'checkpoints'   => [
                     'Reviewed leadership structure page',
                     'Explained SSgt role and responsibilities',
                     'Discussed who to contact for questions',
@@ -60,11 +60,11 @@ class TrainingContentSeeder extends Seeder
                 ],
             ],
             [
-                'title' => 'Forum Moderation',
-                'icon' => 'fa-comments',
+                'title'         => 'Forum Moderation',
+                'icon'          => 'fa-comments',
                 'display_order' => 3,
-                'content' => $this->getForumModContent(),
-                'checkpoints' => [
+                'content'       => $this->getForumModContent(),
+                'checkpoints'   => [
                     'Demonstrated user search feature',
                     'Warned about Ban User button placement',
                     'Explained IP address search use-cases',
@@ -75,11 +75,11 @@ class TrainingContentSeeder extends Seeder
                 ],
             ],
             [
-                'title' => 'Discord Moderation',
-                'icon' => 'fa-discord fab',
+                'title'         => 'Discord Moderation',
+                'icon'          => 'fa-discord fab',
                 'display_order' => 4,
-                'content' => $this->getDiscordModContent(),
-                'checkpoints' => [
+                'content'       => $this->getDiscordModContent(),
+                'checkpoints'   => [
                     'Showed Sgts Discord Channel',
                     'Reviewed admin commands (/ and ! commands)',
                     'Demonstrated kick and ban options',
@@ -88,11 +88,11 @@ class TrainingContentSeeder extends Seeder
                 ],
             ],
             [
-                'title' => 'Misc Information',
-                'icon' => 'fa-info-circle',
+                'title'         => 'Misc Information',
+                'icon'          => 'fa-info-circle',
                 'display_order' => 5,
-                'content' => $this->getMiscContent(),
-                'checkpoints' => [
+                'content'       => $this->getMiscContent(),
+                'checkpoints'   => [
                     'Explained post view tracking feature',
                     'Discussed cross-division forum access',
                     'Reminded about guest etiquette',
@@ -111,7 +111,7 @@ class TrainingContentSeeder extends Seeder
 
             foreach ($checkpoints as $order => $label) {
                 $section->checkpoints()->create([
-                    'label' => $label,
+                    'label'         => $label,
                     'display_order' => $order + 1,
                 ]);
             }
@@ -213,11 +213,11 @@ MD;
     {
         $sections = [
             [
-                'title' => 'DNS & Forums',
-                'icon' => 'fa-globe',
+                'title'         => 'DNS & Forums',
+                'icon'          => 'fa-globe',
                 'display_order' => 1,
-                'content' => 'Set up DNS entry and forum infrastructure for the new division.',
-                'checkpoints' => [
+                'content'       => 'Set up DNS entry and forum infrastructure for the new division.',
+                'checkpoints'   => [
                     ['label' => 'DNS Entry', 'description' => $this->getDnsTaskContent()],
                     ['label' => 'Forum Officers Group', 'description' => $this->getForumOfficersGroupContent()],
                     ['label' => 'Custom Style', 'description' => $this->getCustomStyleContent()],
@@ -227,11 +227,11 @@ MD;
                 ],
             ],
             [
-                'title' => 'Forum Configuration',
-                'icon' => 'fa-cog',
+                'title'         => 'Forum Configuration',
+                'icon'          => 'fa-cog',
                 'display_order' => 2,
-                'content' => 'Configure vbCerberus, application forms, and navigation links.',
-                'checkpoints' => [
+                'content'       => 'Configure vbCerberus, application forms, and navigation links.',
+                'checkpoints'   => [
                     ['label' => 'vbCerberus Entry', 'description' => $this->getVbCerberusContent()],
                     ['label' => 'Application Form', 'description' => $this->getApplicationFormContent()],
                     ['label' => 'Navigation Links', 'description' => $this->getNavigationLinksContent()],
@@ -239,30 +239,30 @@ MD;
                 ],
             ],
             [
-                'title' => 'Discord',
-                'icon' => 'fa-discord fab',
+                'title'         => 'Discord',
+                'icon'          => 'fa-discord fab',
                 'display_order' => 3,
-                'content' => 'Add the division to Discord using the forum bot.',
-                'checkpoints' => [
+                'content'       => 'Add the division to Discord using the forum bot.',
+                'checkpoints'   => [
                     ['label' => 'Add Division to Discord', 'description' => $this->getDiscordAddContent()],
                 ],
             ],
             [
-                'title' => 'Tracker',
-                'icon' => 'fa-server',
+                'title'         => 'Tracker',
+                'icon'          => 'fa-server',
                 'display_order' => 4,
-                'content' => 'Create the division in the Tracker Admin CP.',
-                'checkpoints' => [
+                'content'       => 'Create the division in the Tracker Admin CP.',
+                'checkpoints'   => [
                     ['label' => 'Create Division', 'description' => $this->getTrackerDivisionContent()],
                     ['label' => 'Configure Handle', 'description' => $this->getTrackerHandleContent()],
                 ],
             ],
             [
-                'title' => 'Cosmetic Items',
-                'icon' => 'fa-paint-brush',
+                'title'         => 'Cosmetic Items',
+                'icon'          => 'fa-paint-brush',
                 'display_order' => 5,
-                'content' => 'Create visual assets for the division.',
-                'checkpoints' => [
+                'content'       => 'Create visual assets for the division.',
+                'checkpoints'   => [
                     ['label' => 'Division Icon', 'description' => $this->getDivisionIconContent()],
                     ['label' => 'Website Page', 'description' => $this->getWebsitePageContent()],
                     ['label' => 'Division Header', 'description' => $this->getDivisionHeaderContent()],
@@ -279,8 +279,8 @@ MD;
 
             foreach ($checkpoints as $order => $checkpoint) {
                 $section->checkpoints()->create([
-                    'label' => $checkpoint['label'],
-                    'description' => $checkpoint['description'] ?? null,
+                    'label'         => $checkpoint['label'],
+                    'description'   => $checkpoint['description'] ?? null,
                     'display_order' => $order + 1,
                 ]);
             }

@@ -69,7 +69,7 @@ class LeaveResource extends Resource
                     ->columnSpanFull()
                     ->placeholder(function ($get) {
                         $note_id = $get('note_id');
-                        $note = Note::find($note_id);
+                        $note    = Note::find($note_id);
 
                         return ($note) ? $note->body : '';
                     })->disabledOn('edit'),
@@ -125,9 +125,9 @@ class LeaveResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListLeaves::route('/'),
+            'index'  => ListLeaves::route('/'),
             'create' => CreateLeave::route('/create'),
-            'edit' => EditLeave::route('/{record}/edit'),
+            'edit'   => EditLeave::route('/{record}/edit'),
         ];
     }
 }

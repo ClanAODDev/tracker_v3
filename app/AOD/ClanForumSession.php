@@ -52,7 +52,7 @@ class ClanForumSession
     protected function loginLocalUser(): void
     {
         $userId = config('dev_default_user') ?? 1;
-        $user = config('dev_default_user') ? User::find($userId) : User::first();
+        $user   = config('dev_default_user') ? User::find($userId) : User::first();
         Auth::login($user);
     }
 
@@ -98,9 +98,9 @@ class ClanForumSession
             return $existingUser;
         }
 
-        $user = new User;
-        $user->name = $username;
-        $user->email = $sessionData->email;
+        $user            = new User;
+        $user->name      = $username;
+        $user->email     = $sessionData->email;
         $user->member_id = $member->clan_id;
         $user->save();
 
@@ -115,7 +115,7 @@ class ClanForumSession
     protected function syncForumPermissions(int $clanId, object $sessionData): void
     {
         $memberGroupIds = array_map('intval', explode(',', $sessionData->membergroupids));
-        $roles = array_merge($memberGroupIds, [$sessionData->usergroupid]);
+        $roles          = array_merge($memberGroupIds, [$sessionData->usergroupid]);
 
         app(ClanForumPermissions::class)->handleAccountRoles($clanId, $roles);
     }

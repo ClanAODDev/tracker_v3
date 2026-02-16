@@ -77,7 +77,7 @@ final class PendingActionsDataTest extends TestCase
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
 
-        $allActions = $pendingActions->actions;
+        $allActions      = $pendingActions->actions;
         $divisionActions = $pendingActions->divisionActions();
 
         $this->assertTrue($allActions->contains(fn ($a) => $a->key === 'clan-award-requests'));
@@ -140,7 +140,7 @@ final class PendingActionsDataTest extends TestCase
 
         $member = Member::factory()->create(['division_id' => $this->division->id]);
         Leave::factory()->create([
-            'member_id' => $member->clan_id,
+            'member_id'   => $member->clan_id,
             'approver_id' => null,
         ]);
 
@@ -158,7 +158,7 @@ final class PendingActionsDataTest extends TestCase
 
         $member = Member::factory()->create(['division_id' => $this->division->id]);
         Leave::factory()->create([
-            'member_id' => $member->clan_id,
+            'member_id'   => $member->clan_id,
             'approver_id' => null,
         ]);
 
@@ -173,7 +173,7 @@ final class PendingActionsDataTest extends TestCase
         $user = $this->createUserWithRole('sr_ldr');
 
         Member::factory()->create([
-            'division_id' => $this->division->id,
+            'division_id'       => $this->division->id,
             'last_voice_status' => \App\Enums\DiscordStatus::NEVER_CONNECTED,
         ]);
 
@@ -191,7 +191,7 @@ final class PendingActionsDataTest extends TestCase
 
         Member::factory()->create([
             'division_id' => $this->division->id,
-            'platoon_id' => 0,
+            'platoon_id'  => 0,
         ]);
 
         $this->division->refresh();
@@ -211,9 +211,9 @@ final class PendingActionsDataTest extends TestCase
         $platoon = Platoon::factory()->create(['division_id' => $this->division->id]);
         Member::factory()->create([
             'division_id' => $this->division->id,
-            'platoon_id' => $platoon->id,
-            'squad_id' => 0,
-            'position' => Position::MEMBER,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => 0,
+            'position'    => Position::MEMBER,
         ]);
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);
@@ -296,7 +296,7 @@ final class PendingActionsDataTest extends TestCase
         $this->createClanAwardRequests();
         $this->createOpenTickets();
 
-        $pendingActions = PendingActionsData::forDivision($this->division, $user);
+        $pendingActions  = PendingActionsData::forDivision($this->division, $user);
         $divisionActions = $pendingActions->divisionActions();
 
         $this->assertFalse($divisionActions->contains(fn ($a) => $a->key === 'clan-award-requests'));
@@ -369,7 +369,7 @@ final class PendingActionsDataTest extends TestCase
         $user = User::factory()->create(['role' => $role]);
         $user->member->update([
             'division_id' => $this->division->id,
-            'position' => $position ?? Position::MEMBER,
+            'position'    => $position ?? Position::MEMBER,
         ]);
 
         $this->actingAs($user);

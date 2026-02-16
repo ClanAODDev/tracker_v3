@@ -45,16 +45,16 @@ class Division extends Model
     public array $defaultSettings = [
 
         'officer_channel' => '',
-        'member_channel' => '',
+        'member_channel'  => '',
 
         /**
          * Recruiting and basic settings
          */
-        'use_welcome_thread' => false,
-        'division_structure' => '',
-        'welcome_area' => '',
-        'welcome_pm' => '',
-        'inactivity_days' => 30,
+        'use_welcome_thread'   => false,
+        'division_structure'   => '',
+        'welcome_area'         => '',
+        'welcome_pm'           => '',
+        'inactivity_days'      => 30,
         'recruitment_rss_feed' => '',
 
         'activity_threshold' => [
@@ -64,16 +64,16 @@ class Division extends Model
         'max_platoon_leader_rank' => Rank::PRIVATE_FIRST_CLASS,
 
         'chat_alerts' => [
-            'division_edited' => false,
-            'member_approved' => false,
-            'member_awarded' => false,
-            'member_created' => false,
-            'member_denied' => false,
-            'member_removed' => false,
+            'division_edited'    => false,
+            'member_approved'    => false,
+            'member_awarded'     => false,
+            'member_created'     => false,
+            'member_denied'      => false,
+            'member_removed'     => false,
             'member_transferred' => false,
-            'pt_member_removed' => false,
-            'rank_changed' => false,
-            'request_created' => false,
+            'pt_member_removed'  => false,
+            'rank_changed'       => false,
+            'request_created'    => false,
         ],
 
         'recruiting_threads' => [
@@ -98,11 +98,11 @@ class Division extends Model
     ];
 
     protected $casts = [
-        'active' => 'boolean',
+        'active'       => 'boolean',
         'show_on_site' => 'boolean',
-        'settings' => 'json',
-        'screenshots' => 'array',
-        'shutdown_at' => 'datetime',
+        'settings'     => 'json',
+        'screenshots'  => 'array',
+        'shutdown_at'  => 'datetime',
     ];
 
     /**
@@ -121,7 +121,7 @@ class Division extends Model
     {
         static::creating(function (self $division) {
             $division->settings = $division->defaultSettings;
-            $division->slug = Str::slug($division->name);
+            $division->slug     = Str::slug($division->name);
         });
 
         static::created(function (Division $division) {

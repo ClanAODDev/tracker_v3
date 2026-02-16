@@ -44,8 +44,8 @@ class DivisionController extends Controller
             });
 
         $stats = [
-            'total' => $members->count(),
-            'active' => $members->filter(fn ($m) => $m->division_id > 0 && ! $m->leave)->count(),
+            'total'   => $members->count(),
+            'active'  => $members->filter(fn ($m) => $m->division_id > 0 && ! $m->leave)->count(),
             'onLeave' => $members->filter(fn ($m) => $m->leave)->count(),
             'removed' => $members->filter(fn ($m) => $m->division_id === 0)->count(),
         ];
@@ -91,7 +91,7 @@ class DivisionController extends Controller
         $members = $this->memberQuery->loadSortedMembers($division->members(), $division);
 
         if ($includeParttimers) {
-            $parttimeQuery = Member::whereHas('partTimeDivisions', fn ($q) => $q->where('division_id', $division->id));
+            $parttimeQuery   = Member::whereHas('partTimeDivisions', fn ($q) => $q->where('division_id', $division->id));
             $parttimeMembers = $this->memberQuery->withStandardRelations($parttimeQuery, $division)
                 ->with('division')
                 ->get();
@@ -101,7 +101,7 @@ class DivisionController extends Controller
         }
 
         $voiceActivityGraph = $this->division->getDivisionVoiceActivity($division);
-        $unitStats = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
+        $unitStats          = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
 
         return view('division.members', compact('division', 'members', 'unitStats', 'includeParttimers'));
     }
@@ -119,9 +119,9 @@ class DivisionController extends Controller
             ->where('position', Position::MEMBER)
             ->get(['id', 'clan_id', 'name', 'rank', 'platoon_id'])
             ->map(fn ($member) => [
-                'id' => $member->clan_id,
-                'name' => $member->present()->rankName,
-                'platoon' => $member->platoon?->name ?? 'Unknown',
+                'id'         => $member->clan_id,
+                'name'       => $member->present()->rankName,
+                'platoon'    => $member->platoon?->name ?? 'Unknown',
                 'platoon_id' => $member->platoon_id,
                 'manage_url' => route('platoon', [$division, $member->platoon_id]) . '?organize=1',
             ]);
@@ -132,7 +132,7 @@ class DivisionController extends Controller
     public function addPartTimer(Division $division): JsonResponse|RedirectResponse
     {
         $validated = request()->validate([
-            'member_id' => 'required|exists:members,clan_id',
+            'member_id'    => 'required|exists:members,clan_id',
             'handle_value' => 'nullable|string|max:255',
         ]);
 

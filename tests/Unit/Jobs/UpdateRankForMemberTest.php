@@ -35,14 +35,14 @@ class UpdateRankForMemberTest extends TestCase
     public function test_job_can_be_instantiated()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $action = RankAction::factory()->approved()->create([
             'member_id' => $member->id,
-            'rank' => Rank::CORPORAL,
+            'rank'      => Rank::CORPORAL,
         ]);
 
         $job = new UpdateRankForMember($action);
@@ -53,14 +53,14 @@ class UpdateRankForMemberTest extends TestCase
     public function test_job_updates_member_rank()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $action = RankAction::factory()->approved()->create([
             'member_id' => $member->id,
-            'rank' => Rank::CORPORAL,
+            'rank'      => Rank::CORPORAL,
         ]);
 
         $job = new UpdateRankForMember($action);
@@ -73,15 +73,15 @@ class UpdateRankForMemberTest extends TestCase
     public function test_job_updates_last_promoted_at_on_promotion()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
-            'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+        $member   = $this->createMember([
+            'division_id'      => $division->id,
+            'rank'             => Rank::PRIVATE_FIRST_CLASS,
             'last_promoted_at' => null,
         ]);
 
         $action = RankAction::factory()->approved()->create([
             'member_id' => $member->id,
-            'rank' => Rank::CORPORAL,
+            'rank'      => Rank::CORPORAL,
         ]);
 
         $job = new UpdateRankForMember($action);
@@ -93,17 +93,17 @@ class UpdateRankForMemberTest extends TestCase
 
     public function test_job_does_not_update_last_promoted_at_on_demotion()
     {
-        $division = $this->createActiveDivision();
+        $division     = $this->createActiveDivision();
         $originalDate = now()->subYear();
-        $member = $this->createMember([
-            'division_id' => $division->id,
-            'rank' => Rank::CORPORAL,
+        $member       = $this->createMember([
+            'division_id'      => $division->id,
+            'rank'             => Rank::CORPORAL,
             'last_promoted_at' => $originalDate,
         ]);
 
         $action = RankAction::factory()->approved()->create([
             'member_id' => $member->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'      => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $job = new UpdateRankForMember($action);
@@ -119,14 +119,14 @@ class UpdateRankForMemberTest extends TestCase
     public function test_job_sends_division_notification_on_promotion()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $action = RankAction::factory()->approved()->create([
             'member_id' => $member->id,
-            'rank' => Rank::CORPORAL,
+            'rank'      => Rank::CORPORAL,
         ]);
 
         $job = new UpdateRankForMember($action);
@@ -138,14 +138,14 @@ class UpdateRankForMemberTest extends TestCase
     public function test_job_does_not_send_promotion_notification_on_demotion()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::CORPORAL,
+            'rank'        => Rank::CORPORAL,
         ]);
 
         $action = RankAction::factory()->approved()->create([
             'member_id' => $member->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'      => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $job = new UpdateRankForMember($action);

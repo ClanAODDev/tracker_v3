@@ -239,9 +239,9 @@ class RankActionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListRankActions::route('/'),
+            'index'  => ListRankActions::route('/'),
             'create' => CreateRankAction::route('/create'),
-            'edit' => EditRankAction::route('/{record}/edit'),
+            'edit'   => EditRankAction::route('/{record}/edit'),
         ];
     }
 
@@ -270,14 +270,14 @@ class RankActionResource extends Resource
                 ->getOptionLabelUsing(fn ($value): ?string => Member::find($value)?->present()->rankName())
                 ->allowHtml()
                 ->helperText(function () {
-                    $user = auth()->user();
+                    $user   = auth()->user();
                     $append = 'You cannot select yourself or others of greater rank.';
 
                     return match (true) {
-                        $user->isSquadLeader() => "Only squad members up to PFC can be selected. {$append}",
-                        $user->isPlatoonLeader() => "Only platoon members up to LCpl can be selected. {$append}",
+                        $user->isSquadLeader()    => "Only squad members up to PFC can be selected. {$append}",
+                        $user->isPlatoonLeader()  => "Only platoon members up to LCpl can be selected. {$append}",
                         $user->isDivisionLeader() => "Only division members up to SGT can be selected. {$append}",
-                        default => $append,
+                        default                   => $append,
                     };
                 })
                 ->rules([
@@ -286,7 +286,7 @@ class RankActionResource extends Resource
                         $get,
                         $min_days_rank_action
                     ) {
-                        $user = auth()->user();
+                        $user     = auth()->user();
                         $skipRule = ($user->isDivisionLeader() || $user->isRole('admin')) && $get('override_existing');
 
                         if (! $skipRule) {
@@ -348,7 +348,7 @@ class RankActionResource extends Resource
                                     }
                                 }
                                 if ($currentIndex !== null && isset($allRanks[$currentIndex + 1])) {
-                                    $nextRank = $allRanks[$currentIndex + 1];
+                                    $nextRank       = $allRanks[$currentIndex + 1];
                                     $promotionLabel = 'Promotion (next rank: ' . ucwords($nextRank->getLabel()) . ')';
                                 } else {
                                     $promotionLabel = 'Promotion (member is at the highest rank)';

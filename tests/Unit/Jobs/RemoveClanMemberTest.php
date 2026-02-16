@@ -30,7 +30,7 @@ class RemoveClanMemberTest extends TestCase
             '*' => Http::response('saved_user_x_successfully', 200),
         ]);
 
-        $memberIdBeingRemoved = 12345;
+        $memberIdBeingRemoved  = 12345;
         $impersonatingMemberId = 67890;
 
         $job = new RemoveClanMember($memberIdBeingRemoved, $impersonatingMemberId);

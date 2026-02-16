@@ -3,6 +3,12 @@
   "rules": {
     "concat_space": {
       "spacing": "one"
+    },
+    "binary_operator_spaces": {
+      "operators": {
+        "=": "align_single_space_minimal",
+        "=>": "align_single_space_minimal"
+      }
     }
   }
 }

@@ -70,8 +70,8 @@ class DivisionResource extends Resource
     {
         $channelOptions = [
             'officers' => 'Officers',
-            'members' => 'Members',
-            false => 'Disabled',
+            'members'  => 'Members',
+            false      => 'Disabled',
         ];
 
         return $schema
@@ -117,8 +117,8 @@ class DivisionResource extends Resource
                                         Select::make('settings.max_platoon_leader_rank')
                                             ->label('PL Promotion Cap')
                                             ->options([
-                                                Rank::CADET->value => Rank::CADET->getLabel(),
-                                                Rank::PRIVATE->value => Rank::PRIVATE->getLabel(),
+                                                Rank::CADET->value               => Rank::CADET->getLabel(),
+                                                Rank::PRIVATE->value             => Rank::PRIVATE->getLabel(),
                                                 Rank::PRIVATE_FIRST_CLASS->value => Rank::PRIVATE_FIRST_CLASS->getLabel(),
                                             ])
                                             ->helperText('Highest rank PLs can promote to without approval'),
@@ -173,10 +173,10 @@ class DivisionResource extends Resource
                                             ->schema([
                                                 Select::make('type')
                                                     ->options([
-                                                        'text' => 'Single Line',
+                                                        'text'     => 'Single Line',
                                                         'textarea' => 'Multi-Line',
                                                         'checkbox' => 'Checkbox Group',
-                                                        'radio' => 'Radio Buttons',
+                                                        'radio'    => 'Radio Buttons',
                                                     ])
                                                     ->required()
                                                     ->live(),
@@ -410,7 +410,7 @@ class DivisionResource extends Resource
     {
         return [
             'index' => ListDivisions::route('/'),
-            'edit' => EditDivision::route('/{record}/edit'),
+            'edit'  => EditDivision::route('/{record}/edit'),
         ];
     }
 }

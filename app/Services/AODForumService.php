@@ -47,7 +47,7 @@ class AODForumService
             $clean = strip_tags($resp->body());
             $clean = preg_replace('/\s+/', ' ', $clean);
             $parts = explode(' ', trim($clean));
-            $last = end($parts);
+            $last  = end($parts);
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -72,12 +72,12 @@ class AODForumService
     ): array|string {
         $response = self::request(self::MODCP_URL, [
             '_token_param' => 'authcode',
-            'aod_userid' => $impersonatingMemberId,
-            'do' => self::ADD_TO_AOD,
-            'aodname' => $name,
-            'rank' => $rank,
-            'division' => $division,
-            'u' => $memberIdBeingAdded,
+            'aod_userid'   => $impersonatingMemberId,
+            'do'           => self::ADD_TO_AOD,
+            'aodname'      => $name,
+            'rank'         => $rank,
+            'division'     => $division,
+            'u'            => $memberIdBeingAdded,
         ]);
 
         if (! is_string($response) || ! str_contains($response, self::SUCCESS)) {
@@ -96,9 +96,9 @@ class AODForumService
     ): array|string {
         $response = self::request(self::MODCP_URL, [
             '_token_param' => 'authcode',
-            'aod_userid' => $impersonatingMemberId,
-            'do' => self::REMOVE_FROM_AOD,
-            'u' => $memberIdBeingRemoved,
+            'aod_userid'   => $impersonatingMemberId,
+            'do'           => self::REMOVE_FROM_AOD,
+            'u'            => $memberIdBeingRemoved,
         ]);
 
         if (! is_string($response) || ! str_contains($response, self::SUCCESS)) {
@@ -121,13 +121,13 @@ class AODForumService
         ForumGroup $forumGroup = ForumGroup::AWAITING_MODERATION,
     ): array {
         $response = self::postRequest(self::MODCP_URL, [
-            'aod_userid' => $impersonatingMemberId,
-            'do' => self::CREATE_USER,
-            'username' => $username,
-            'email' => $email,
-            'dob' => $dateOfBirth,
-            'password' => $password,
-            'discord_id' => $discordId,
+            'aod_userid'  => $impersonatingMemberId,
+            'do'          => self::CREATE_USER,
+            'username'    => $username,
+            'email'       => $email,
+            'dob'         => $dateOfBirth,
+            'password'    => $password,
+            'discord_id'  => $discordId,
             'usergroupid' => $forumGroup->value,
         ]);
 
@@ -143,7 +143,7 @@ class AODForumService
 
         return [
             'success' => false,
-            'error' => $error,
+            'error'   => $error,
         ];
     }
 
@@ -212,8 +212,8 @@ class AODForumService
 
         return [
             'clan_id' => (int) $member->userid,
-            'email' => $member->email,
-            'roles' => array_merge(
+            'email'   => $member->email,
+            'roles'   => array_merge(
                 array_map('intval', explode(',', $member->membergroupids)),
                 [(int) $member->usergroupid]
             ),

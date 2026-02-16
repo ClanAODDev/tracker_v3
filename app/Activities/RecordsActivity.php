@@ -15,12 +15,12 @@ trait RecordsActivity
             $divisionId = $this->getAttribute('division_id') ?? $actor->member?->division_id;
 
             $this->activity()->create([
-                'name' => $type,
-                'user_id' => $actor->id,
-                'subject_id' => $this->id,
+                'name'         => $type,
+                'user_id'      => $actor->id,
+                'subject_id'   => $this->id,
                 'subject_type' => static::class,
-                'division_id' => $divisionId,
-                'properties' => $properties ?: null,
+                'division_id'  => $divisionId,
+                'properties'   => $properties ?: null,
             ]);
         }
     }

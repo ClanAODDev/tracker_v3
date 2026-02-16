@@ -22,11 +22,11 @@ class TransferTest extends TestCase
 
         $member = $this->createMember([
             'division_id' => $sourceDivision->id,
-            'position' => Position::MEMBER,
+            'position'    => Position::MEMBER,
         ]);
 
         $transfer = Transfer::factory()->pending()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $targetDivision->id,
         ]);
 
@@ -45,11 +45,11 @@ class TransferTest extends TestCase
 
         $member = $this->createMember([
             'division_id' => $sourceDivision->id,
-            'position' => Position::MEMBER,
+            'position'    => Position::MEMBER,
         ]);
 
         $transfer = Transfer::factory()->pending()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $targetDivision->id,
         ]);
 
@@ -64,10 +64,10 @@ class TransferTest extends TestCase
         $this->actingAs($approver);
 
         $targetDivision = $approver->member->division;
-        $member = $this->createMember();
+        $member         = $this->createMember();
 
         $transfer = Transfer::factory()->pending()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $targetDivision->id,
         ]);
 
@@ -83,17 +83,17 @@ class TransferTest extends TestCase
         $targetDivision = $this->createActiveDivision();
 
         $platoon = $this->createPlatoon($sourceDivision);
-        $squad = $this->createSquad($platoon);
+        $squad   = $this->createSquad($platoon);
 
         $member = $this->createMember([
             'division_id' => $sourceDivision->id,
-            'platoon_id' => $platoon->id,
-            'squad_id' => $squad->id,
-            'position' => Position::MEMBER,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => $squad->id,
+            'position'    => Position::MEMBER,
         ]);
 
         $transfer = Transfer::factory()->pending()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $targetDivision->id,
         ]);
 
@@ -112,14 +112,14 @@ class TransferTest extends TestCase
         $targetDivision = $this->createActiveDivision();
 
         $platoon = $this->createPlatoon($sourceDivision);
-        $squad = $this->createSquad($platoon);
+        $squad   = $this->createSquad($platoon);
 
         $member = $this->createSquadLeader($squad);
 
         $this->assertEquals($member->clan_id, $squad->leader_id);
 
         $transfer = Transfer::factory()->pending()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $targetDivision->id,
         ]);
 
@@ -135,12 +135,12 @@ class TransferTest extends TestCase
         $targetDivision = $this->createActiveDivision();
 
         $platoon = $this->createPlatoon($sourceDivision);
-        $member = $this->createPlatoonLeader($platoon);
+        $member  = $this->createPlatoonLeader($platoon);
 
         $this->assertEquals($member->clan_id, $platoon->leader_id);
 
         $transfer = Transfer::factory()->pending()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $targetDivision->id,
         ]);
 
@@ -153,15 +153,15 @@ class TransferTest extends TestCase
     public function test_scope_pending_returns_unapproved_transfers()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember();
+        $member   = $this->createMember();
 
         $pending = Transfer::factory()->pending()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $division->id,
         ]);
 
         $approved = Transfer::factory()->approved()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $division->id,
         ]);
 
@@ -173,11 +173,11 @@ class TransferTest extends TestCase
 
     public function test_member_relationship_returns_correct_member()
     {
-        $member = $this->createMember();
+        $member   = $this->createMember();
         $division = $this->createActiveDivision();
 
         $transfer = Transfer::factory()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $division->id,
         ]);
 
@@ -186,11 +186,11 @@ class TransferTest extends TestCase
 
     public function test_division_relationship_returns_target_division()
     {
-        $member = $this->createMember();
+        $member   = $this->createMember();
         $division = $this->createActiveDivision();
 
         $transfer = Transfer::factory()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $division->id,
         ]);
 
@@ -204,11 +204,11 @@ class TransferTest extends TestCase
 
         $member = $this->createMember([
             'division_id' => $sourceDivision->id,
-            'position' => Position::CLAN_ADMIN,
+            'position'    => Position::CLAN_ADMIN,
         ]);
 
         $transfer = Transfer::factory()->pending()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $targetDivision->id,
         ]);
 

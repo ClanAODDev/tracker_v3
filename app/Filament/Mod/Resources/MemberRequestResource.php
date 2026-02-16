@@ -62,7 +62,7 @@ class MemberRequestResource extends Resource
 
     public static function getNavigationBadgeTooltip(): ?string
     {
-        $user = auth()->user();
+        $user  = auth()->user();
         $scope = (self::isDivisionLeadership() && ! $user?->isRole('admin')) ? 'your division' : 'all divisions';
 
         return "Pending requests in {$scope}";
@@ -217,7 +217,7 @@ class MemberRequestResource extends Resource
                     ->colors([
                         'warning' => 'Pending',
                         'success' => 'Approved',
-                        'danger' => 'On Hold',
+                        'danger'  => 'On Hold',
                     ]),
                 TextColumn::make('approved_at')
                     ->label('Approved')
@@ -246,16 +246,16 @@ class MemberRequestResource extends Resource
                     ->native(false)
                     ->default('pending')
                     ->options([
-                        'pending' => 'Pending',
+                        'pending'  => 'Pending',
                         'approved' => 'Approved',
-                        'on_hold' => 'On Hold',
+                        'on_hold'  => 'On Hold',
                     ])
                     ->query(function (Builder $query, array $data) {
                         return match ($data['value'] ?? null) {
-                            'pending' => $query->pending(),
+                            'pending'  => $query->pending(),
                             'approved' => $query->approved(),
-                            'on_hold' => $query->onHold(),
-                            default => $query,
+                            'on_hold'  => $query->onHold(),
+                            default    => $query,
                         };
                     }),
             ])
@@ -270,7 +270,7 @@ class MemberRequestResource extends Resource
     {
         return [
             'index' => ListMemberRequests::route('/'),
-            'edit' => EditMemberRequest::route('/{record}/edit'),
+            'edit'  => EditMemberRequest::route('/{record}/edit'),
         ];
     }
 

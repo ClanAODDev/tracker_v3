@@ -22,10 +22,10 @@ class BulkMoveController extends Controller
             ->orderBy('name')
             ->get(['id', 'name'])
             ->map(fn ($platoon) => [
-                'id' => $platoon->id,
-                'name' => $platoon->name ?? 'Untitled',
+                'id'     => $platoon->id,
+                'name'   => $platoon->name ?? 'Untitled',
                 'squads' => $platoon->squads->map(fn ($squad) => [
-                    'id' => $squad->id,
+                    'id'   => $squad->id,
                     'name' => $squad->name ?? 'Untitled',
                 ]),
             ]);
@@ -38,10 +38,10 @@ class BulkMoveController extends Controller
         $this->authorize('manageUnassigned', User::class);
 
         $validated = $request->validate([
-            'member_ids' => 'required|array',
+            'member_ids'   => 'required|array',
             'member_ids.*' => 'integer',
-            'platoon_id' => 'required|integer|exists:platoons,id',
-            'squad_id' => 'nullable|integer',
+            'platoon_id'   => 'required|integer|exists:platoons,id',
+            'squad_id'     => 'nullable|integer',
         ]);
 
         $platoon = Platoon::where('id', $validated['platoon_id'])
@@ -62,7 +62,7 @@ class BulkMoveController extends Controller
         $transferredCount = 0;
         foreach ($members as $member) {
             $member->platoon_id = $platoon->id;
-            $member->squad_id = $squad ? $squad->id : 0;
+            $member->squad_id   = $squad ? $squad->id : 0;
             $member->save();
 
             $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [

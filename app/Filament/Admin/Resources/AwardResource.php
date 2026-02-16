@@ -191,9 +191,9 @@ class AwardResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListAwards::route('/'),
+            'index'  => ListAwards::route('/'),
             'create' => CreateAward::route('/create'),
-            'edit' => EditAward::route('/{record}/edit'),
+            'edit'   => EditAward::route('/{record}/edit'),
         ];
     }
 }

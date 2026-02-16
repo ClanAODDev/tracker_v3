@@ -50,7 +50,7 @@ class LeavePolicyTest extends TestCase
     public function test_member_cannot_create_leave()
     {
         $division = $this->createActiveDivision();
-        $user = $this->createMemberWithUser([
+        $user     = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
         $user->role = Role::MEMBER;
@@ -87,7 +87,7 @@ class LeavePolicyTest extends TestCase
     public function test_member_cannot_update_leave()
     {
         $division = $this->createActiveDivision();
-        $user = $this->createMemberWithUser([
+        $user     = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
         $user->role = Role::MEMBER;
@@ -124,7 +124,7 @@ class LeavePolicyTest extends TestCase
     public function test_member_cannot_delete_any_leave()
     {
         $division = $this->createActiveDivision();
-        $user = $this->createMemberWithUser([
+        $user     = $this->createMemberWithUser([
             'division_id' => $division->id,
         ]);
         $user->role = Role::MEMBER;

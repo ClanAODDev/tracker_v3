@@ -25,7 +25,7 @@ class UpdateDivision extends FormRequest
     {
         return [
             'officer_channel' => 'nullable|alpha_dash',
-            'member_channel' => 'nullable|alpha_dash',
+            'member_channel'  => 'nullable|alpha_dash',
         ];
     }
 }

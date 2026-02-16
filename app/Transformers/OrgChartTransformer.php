@@ -27,10 +27,10 @@ class OrgChartTransformer
         }
 
         return [
-            'id' => "division-{$division->id}",
-            'name' => $division->name,
-            'type' => 'division',
-            'logo' => $division->getLogoPath(),
+            'id'       => "division-{$division->id}",
+            'name'     => $division->name,
+            'type'     => 'division',
+            'logo'     => $division->getLogoPath(),
             'children' => $children,
         ];
     }
@@ -40,14 +40,14 @@ class OrgChartTransformer
         $children = [];
 
         foreach ($leaders as $leader) {
-            $type = $leader->position === Position::COMMANDING_OFFICER ? 'co' : 'xo';
+            $type       = $leader->position === Position::COMMANDING_OFFICER ? 'co' : 'xo';
             $children[] = $this->transformMember($leader, $type);
         }
 
         return [
-            'id' => 'leaders',
-            'name' => 'Leadership',
-            'type' => 'leadership-group',
+            'id'       => 'leaders',
+            'name'     => 'Leadership',
+            'type'     => 'leadership-group',
             'children' => $children,
         ];
     }
@@ -61,12 +61,12 @@ class OrgChartTransformer
         }
 
         $node = [
-            'id' => "platoon-{$platoon->id}",
-            'name' => $platoon->name,
+            'id'          => "platoon-{$platoon->id}",
+            'name'        => $platoon->name,
             'description' => $platoon->description,
-            'type' => 'platoon',
-            'logo' => $platoon->logo ? $platoon->getLogoPath() : null,
-            'children' => $children,
+            'type'        => 'platoon',
+            'logo'        => $platoon->logo ? $platoon->getLogoPath() : null,
+            'children'    => $children,
         ];
 
         if ($platoon->leader) {
@@ -90,9 +90,9 @@ class OrgChartTransformer
         }
 
         $node = [
-            'id' => "squad-{$squad->id}",
-            'name' => $squad->name,
-            'type' => 'squad',
+            'id'       => "squad-{$squad->id}",
+            'name'     => $squad->name,
+            'type'     => 'squad',
             'children' => $children,
         ];
 
@@ -106,24 +106,24 @@ class OrgChartTransformer
     private function transformMember(Member $member, string $type): array
     {
         return [
-            'id' => "member-{$member->clan_id}",
-            'clanId' => $member->clan_id,
-            'name' => $member->name,
-            'rankName' => $member->present()->rankName(),
+            'id'        => "member-{$member->clan_id}",
+            'clanId'    => $member->clan_id,
+            'name'      => $member->name,
+            'rankName'  => $member->present()->rankName(),
             'rankColor' => $member->rank->getColorHex(),
-            'handle' => $this->getMemberHandle($member),
-            'type' => $type,
+            'handle'    => $this->getMemberHandle($member),
+            'type'      => $type,
         ];
     }
 
     private function transformLeaderInfo(Member $leader): array
     {
         return [
-            'clanId' => $leader->clan_id,
-            'name' => $leader->name,
-            'rankName' => $leader->present()->rankName(),
+            'clanId'    => $leader->clan_id,
+            'name'      => $leader->name,
+            'rankName'  => $leader->present()->rankName(),
             'rankColor' => $leader->rank->getColorHex(),
-            'handle' => $this->getMemberHandle($leader),
+            'handle'    => $this->getMemberHandle($leader),
         ];
     }
 

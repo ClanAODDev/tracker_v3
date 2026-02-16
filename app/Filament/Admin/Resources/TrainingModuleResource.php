@@ -113,9 +113,9 @@ class TrainingModuleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListTrainingModules::route('/'),
+            'index'  => ListTrainingModules::route('/'),
             'create' => CreateTrainingModule::route('/create'),
-            'edit' => EditTrainingModule::route('/{record}/edit'),
+            'edit'   => EditTrainingModule::route('/{record}/edit'),
         ];
     }
 }

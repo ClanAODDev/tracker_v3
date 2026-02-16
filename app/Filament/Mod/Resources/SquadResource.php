@@ -142,7 +142,7 @@ class SquadResource extends Resource
     {
         return [
             'index' => ListSquads::route('/'),
-            'edit' => EditSquad::route('/{record}/edit'),
+            'edit'  => EditSquad::route('/{record}/edit'),
         ];
     }
 

@@ -56,7 +56,7 @@ class TicketResource extends Resource
 
                         Select::make('state')
                             ->options([
-                                'new' => 'New',
+                                'new'      => 'New',
                                 'assigned' => 'Assigned',
                                 'resolved' => 'Resolved',
                                 'rejected' => 'Rejected',
@@ -122,11 +122,11 @@ class TicketResource extends Resource
                 TextColumn::make('state')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
-                        'new' => 'info',
+                        'new'      => 'info',
                         'assigned' => 'warning',
                         'resolved' => 'success',
                         'rejected' => 'danger',
-                        default => 'gray',
+                        default    => 'gray',
                     })
                     ->sortable(),
 
@@ -164,7 +164,7 @@ class TicketResource extends Resource
             ->filters([
                 SelectFilter::make('state')
                     ->options([
-                        'new' => 'New',
+                        'new'      => 'New',
                         'assigned' => 'Assigned',
                         'resolved' => 'Resolved',
                         'rejected' => 'Rejected',
@@ -178,13 +178,13 @@ class TicketResource extends Resource
                 SelectFilter::make('assignment')
                     ->label('Assignment')
                     ->options([
-                        'mine' => 'My Assigned',
+                        'mine'       => 'My Assigned',
                         'unassigned' => 'Unassigned',
                     ])
                     ->query(fn (Builder $query, array $data) => match ($data['value'] ?? null) {
-                        'mine' => $query->where('owner_id', auth()->id()),
+                        'mine'       => $query->where('owner_id', auth()->id()),
                         'unassigned' => $query->whereNull('owner_id'),
-                        default => $query,
+                        default      => $query,
                     }),
 
                 SelectFilter::make('division_id')
@@ -211,9 +211,9 @@ class TicketResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListTickets::route('/'),
+            'index'  => ListTickets::route('/'),
             'create' => CreateTicket::route('/create'),
-            'edit' => EditTicket::route('/{record}/edit'),
+            'edit'   => EditTicket::route('/{record}/edit'),
         ];
     }
 }

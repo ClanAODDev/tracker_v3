@@ -111,9 +111,9 @@ class MemberRequestResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListMemberRequests::route('/'),
+            'index'  => ListMemberRequests::route('/'),
             'create' => CreateMemberRequest::route('/create'),
-            'edit' => EditMemberRequest::route('/{record}/edit'),
+            'edit'   => EditMemberRequest::route('/{record}/edit'),
         ];
     }
 }

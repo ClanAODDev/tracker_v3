@@ -33,14 +33,14 @@ class ForumProcedureService
     {
         return $this->call(self::SET_USER_RANK, [
             'userid' => $userId,
-            'rank' => $rank,
+            'rank'   => $rank,
         ]);
     }
 
     public function setUserDivision(int $userId, string $division): ?object
     {
         return $this->call(self::SET_USER_DIVISION, [
-            'userid' => $userId,
+            'userid'   => $userId,
             'division' => $division,
         ]);
     }
@@ -65,7 +65,7 @@ class ForumProcedureService
         } catch (\Exception $exception) {
             Log::error("Forum procedure failed: {$procedure}", [
                 'params' => $params,
-                'error' => $exception->getMessage(),
+                'error'  => $exception->getMessage(),
             ]);
 
             return null;

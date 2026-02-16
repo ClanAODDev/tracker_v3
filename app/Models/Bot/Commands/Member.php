@@ -43,8 +43,8 @@ class Member extends Base implements Command
         if ($members->count() >= 1) {
             return [
                 'embed' => [
-                    'color' => 10181046,
-                    'title' => 'The following members were found:',
+                    'color'  => 10181046,
+                    'title'  => 'The following members were found:',
                     'fields' => $content,
                 ],
             ];

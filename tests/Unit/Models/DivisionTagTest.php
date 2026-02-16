@@ -24,15 +24,15 @@ class DivisionTagTest extends TestCase
     public function test_is_global_returns_false_for_division_tag()
     {
         $division = $this->createActiveDivision();
-        $tag = DivisionTag::factory()->create(['division_id' => $division->id]);
+        $tag      = DivisionTag::factory()->create(['division_id' => $division->id]);
 
         $this->assertFalse($tag->isGlobal());
     }
 
     public function test_scope_global_returns_only_global_tags()
     {
-        $division = $this->createActiveDivision();
-        $globalTag = DivisionTag::factory()->global()->create();
+        $division    = $this->createActiveDivision();
+        $globalTag   = DivisionTag::factory()->global()->create();
         $divisionTag = DivisionTag::factory()->create(['division_id' => $division->id]);
 
         $results = DivisionTag::global()->get();
@@ -60,7 +60,7 @@ class DivisionTagTest extends TestCase
         $division = $this->createActiveDivision();
 
         $divisionTag = DivisionTag::factory()->create(['division_id' => $division->id]);
-        $globalTag = DivisionTag::factory()->global()->create();
+        $globalTag   = DivisionTag::factory()->global()->create();
 
         $results = DivisionTag::forDivision($division->id)->get();
 
@@ -100,9 +100,9 @@ class DivisionTagTest extends TestCase
     {
         $admin = $this->createAdmin();
 
-        $publicTag = DivisionTag::factory()->public()->create();
+        $publicTag   = DivisionTag::factory()->public()->create();
         $officersTag = DivisionTag::factory()->officersOnly()->create();
-        $srLdrsTag = DivisionTag::factory()->seniorLeadersOnly()->create();
+        $srLdrsTag   = DivisionTag::factory()->seniorLeadersOnly()->create();
 
         $this->assertTrue($publicTag->isVisibleTo($admin));
         $this->assertTrue($officersTag->isVisibleTo($admin));
@@ -113,9 +113,9 @@ class DivisionTagTest extends TestCase
     {
         $srLeader = $this->createSeniorLeader();
 
-        $publicTag = DivisionTag::factory()->public()->create();
+        $publicTag   = DivisionTag::factory()->public()->create();
         $officersTag = DivisionTag::factory()->officersOnly()->create();
-        $srLdrsTag = DivisionTag::factory()->seniorLeadersOnly()->create();
+        $srLdrsTag   = DivisionTag::factory()->seniorLeadersOnly()->create();
 
         $this->assertTrue($publicTag->isVisibleTo($srLeader));
         $this->assertTrue($officersTag->isVisibleTo($srLeader));
@@ -126,9 +126,9 @@ class DivisionTagTest extends TestCase
     {
         $officer = $this->createOfficer();
 
-        $publicTag = DivisionTag::factory()->public()->create();
+        $publicTag   = DivisionTag::factory()->public()->create();
         $officersTag = DivisionTag::factory()->officersOnly()->create();
-        $srLdrsTag = DivisionTag::factory()->seniorLeadersOnly()->create();
+        $srLdrsTag   = DivisionTag::factory()->seniorLeadersOnly()->create();
 
         $this->assertTrue($publicTag->isVisibleTo($officer));
         $this->assertTrue($officersTag->isVisibleTo($officer));
@@ -137,7 +137,7 @@ class DivisionTagTest extends TestCase
 
     public function test_scope_visible_to_filters_correctly_for_null_user()
     {
-        $publicTag = DivisionTag::factory()->public()->create();
+        $publicTag   = DivisionTag::factory()->public()->create();
         $officersTag = DivisionTag::factory()->officersOnly()->create();
 
         $results = DivisionTag::visibleTo(null)->get();
@@ -150,9 +150,9 @@ class DivisionTagTest extends TestCase
     {
         $admin = $this->createAdmin();
 
-        $publicTag = DivisionTag::factory()->public()->create();
+        $publicTag   = DivisionTag::factory()->public()->create();
         $officersTag = DivisionTag::factory()->officersOnly()->create();
-        $srLdrsTag = DivisionTag::factory()->seniorLeadersOnly()->create();
+        $srLdrsTag   = DivisionTag::factory()->seniorLeadersOnly()->create();
 
         $results = DivisionTag::visibleTo($admin)->get();
 
@@ -165,9 +165,9 @@ class DivisionTagTest extends TestCase
     {
         $officer = $this->createOfficer();
 
-        $publicTag = DivisionTag::factory()->public()->create();
+        $publicTag   = DivisionTag::factory()->public()->create();
         $officersTag = DivisionTag::factory()->officersOnly()->create();
-        $srLdrsTag = DivisionTag::factory()->seniorLeadersOnly()->create();
+        $srLdrsTag   = DivisionTag::factory()->seniorLeadersOnly()->create();
 
         $results = DivisionTag::visibleTo($officer)->get();
 
@@ -202,9 +202,9 @@ class DivisionTagTest extends TestCase
     {
         $officer = $this->createOfficer();
 
-        $publicTag = DivisionTag::factory()->public()->create();
+        $publicTag   = DivisionTag::factory()->public()->create();
         $officersTag = DivisionTag::factory()->officersOnly()->create();
-        $srLdrsTag = DivisionTag::factory()->seniorLeadersOnly()->create();
+        $srLdrsTag   = DivisionTag::factory()->seniorLeadersOnly()->create();
 
         $results = DivisionTag::assignableBy($officer)->get();
 
@@ -216,8 +216,8 @@ class DivisionTagTest extends TestCase
     public function test_members_relationship_returns_tagged_members()
     {
         $division = $this->createActiveDivision();
-        $tag = DivisionTag::factory()->create(['division_id' => $division->id]);
-        $member = $this->createMember(['division_id' => $division->id]);
+        $tag      = DivisionTag::factory()->create(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $member->tags()->attach($tag->id);
 

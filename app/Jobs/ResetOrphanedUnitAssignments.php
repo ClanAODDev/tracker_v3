@@ -23,7 +23,7 @@ class ResetOrphanedUnitAssignments implements ShouldQueue
             })
             ->update([
                 'platoon_id' => 0,
-                'squad_id' => 0,
+                'squad_id'   => 0,
             ]);
     }
 }

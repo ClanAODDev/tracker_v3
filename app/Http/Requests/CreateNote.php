@@ -17,16 +17,16 @@ class CreateNote extends FormRequest
     public function rules()
     {
         return [
-            'body' => 'required',
+            'body'            => 'required',
             'forum_thread_id' => 'nullable|numeric',
-            'tag_id' => 'nullable|integer|exists:division_tags,id',
+            'tag_id'          => 'nullable|integer|exists:division_tags,id',
         ];
     }
 
     public function messages()
     {
         return [
-            'body.required' => 'You must provide content for your note',
+            'body.required'           => 'You must provide content for your note',
             'forum_thread_id.numeric' => 'Forum thread ID must be a number',
         ];
     }
@@ -34,16 +34,16 @@ class CreateNote extends FormRequest
     public function persist()
     {
         $member = $this->route('member');
-        $user = auth()->user();
+        $user   = auth()->user();
 
-        $note = new Note($this->only(['body', 'type', 'forum_thread_id']));
+        $note            = new Note($this->only(['body', 'type', 'forum_thread_id']));
         $note->member_id = $member->id;
         $note->author_id = $user->id;
         $note->save();
 
         if ($this->filled('tag_id') && $user->can('assign', [DivisionTag::class, $member])) {
             $policy = new DivisionTagPolicy;
-            $tag = $policy->getAssignableTags($user, $member)->find($this->input('tag_id'));
+            $tag    = $policy->getAssignableTags($user, $member)->find($this->input('tag_id'));
 
             if ($tag) {
                 $assignerId = $user->member?->id;

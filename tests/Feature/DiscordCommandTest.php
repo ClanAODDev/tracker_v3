@@ -16,9 +16,9 @@ final class DiscordCommandTest extends TestCase
     public function a_discord_command_with_a_valid_token_returns_successful()
     {
         Division::factory()->create([
-            'name' => 'Planetside',
+            'name'         => 'Planetside',
             'abbreviation' => 'ps2',
-            'active' => true,
+            'active'       => true,
         ]);
 
         $token = 'a-test-token';

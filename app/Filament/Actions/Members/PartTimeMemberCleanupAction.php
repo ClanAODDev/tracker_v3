@@ -47,7 +47,7 @@ class PartTimeMemberCleanupAction
 
     private static function runCleanupForMembers(iterable $members, bool $persist): array
     {
-        $checked = 0;
+        $checked  = 0;
         $affected = 0;
         $detached = 0;
 

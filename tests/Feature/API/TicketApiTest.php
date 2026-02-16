@@ -31,20 +31,20 @@ class TicketApiTest extends TestCase
 
     public function test_index_returns_user_tickets()
     {
-        $officer = $this->createOfficer();
-        $division = $officer->member->division;
+        $officer    = $this->createOfficer();
+        $division   = $officer->member->division;
         $ticketType = TicketType::factory()->create();
 
         $userTicket = Ticket::factory()->create([
-            'caller_id' => $officer->id,
-            'division_id' => $division->id,
+            'caller_id'      => $officer->id,
+            'division_id'    => $division->id,
             'ticket_type_id' => $ticketType->id,
         ]);
 
-        $otherUser = $this->createMemberWithUser(['division_id' => $division->id]);
+        $otherUser   = $this->createMemberWithUser(['division_id' => $division->id]);
         $otherTicket = Ticket::factory()->create([
-            'caller_id' => $otherUser->id,
-            'division_id' => $division->id,
+            'caller_id'      => $otherUser->id,
+            'division_id'    => $division->id,
             'ticket_type_id' => $ticketType->id,
         ]);
 
@@ -58,7 +58,7 @@ class TicketApiTest extends TestCase
 
     public function test_types_returns_available_ticket_types()
     {
-        $officer = $this->createOfficer();
+        $officer    = $this->createOfficer();
         $ticketType = TicketType::factory()->create([
             'name' => 'General Support',
         ]);
@@ -76,32 +76,32 @@ class TicketApiTest extends TestCase
 
     public function test_store_creates_ticket()
     {
-        $officer = $this->createOfficer();
+        $officer    = $this->createOfficer();
         $ticketType = TicketType::factory()->create();
 
         $response = $this->actingAs($officer)
             ->postJson('/api/tickets', [
                 'ticket_type_id' => $ticketType->id,
-                'description' => 'This is a test ticket with sufficient description length.',
+                'description'    => 'This is a test ticket with sufficient description length.',
             ]);
 
         $response->assertCreated();
         $response->assertJsonPath('message', 'Ticket created successfully');
         $this->assertDatabaseHas('tickets', [
-            'caller_id' => $officer->id,
+            'caller_id'      => $officer->id,
             'ticket_type_id' => $ticketType->id,
         ]);
     }
 
     public function test_store_validates_minimum_description_length()
     {
-        $officer = $this->createOfficer();
+        $officer    = $this->createOfficer();
         $ticketType = TicketType::factory()->create();
 
         $response = $this->actingAs($officer)
             ->postJson('/api/tickets', [
                 'ticket_type_id' => $ticketType->id,
-                'description' => 'Too short',
+                'description'    => 'Too short',
             ]);
 
         $response->assertUnprocessable();
@@ -110,13 +110,13 @@ class TicketApiTest extends TestCase
 
     public function test_show_returns_ticket_for_owner()
     {
-        $officer = $this->createOfficer();
-        $division = $officer->member->division;
+        $officer    = $this->createOfficer();
+        $division   = $officer->member->division;
         $ticketType = TicketType::factory()->create();
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $officer->id,
-            'division_id' => $division->id,
+            'caller_id'      => $officer->id,
+            'division_id'    => $division->id,
             'ticket_type_id' => $ticketType->id,
         ]);
 
@@ -129,13 +129,13 @@ class TicketApiTest extends TestCase
 
     public function test_show_returns_403_for_non_owner()
     {
-        $officer = $this->createOfficer();
-        $division = $officer->member->division;
+        $officer    = $this->createOfficer();
+        $division   = $officer->member->division;
         $ticketType = TicketType::factory()->create();
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $officer->id,
-            'division_id' => $division->id,
+            'caller_id'      => $officer->id,
+            'division_id'    => $division->id,
             'ticket_type_id' => $ticketType->id,
         ]);
 
@@ -149,14 +149,14 @@ class TicketApiTest extends TestCase
 
     public function test_admin_can_view_any_ticket()
     {
-        $admin = $this->createAdmin();
-        $division = $admin->member->division;
+        $admin      = $this->createAdmin();
+        $division   = $admin->member->division;
         $ticketType = TicketType::factory()->create();
 
         $otherUser = $this->createMemberWithUser(['division_id' => $division->id]);
-        $ticket = Ticket::factory()->create([
-            'caller_id' => $otherUser->id,
-            'division_id' => $division->id,
+        $ticket    = Ticket::factory()->create([
+            'caller_id'      => $otherUser->id,
+            'division_id'    => $division->id,
             'ticket_type_id' => $ticketType->id,
         ]);
 
@@ -168,13 +168,13 @@ class TicketApiTest extends TestCase
 
     public function test_add_comment_to_ticket()
     {
-        $officer = $this->createOfficer();
-        $division = $officer->member->division;
+        $officer    = $this->createOfficer();
+        $division   = $officer->member->division;
         $ticketType = TicketType::factory()->create();
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $officer->id,
-            'division_id' => $division->id,
+            'caller_id'      => $officer->id,
+            'division_id'    => $division->id,
             'ticket_type_id' => $ticketType->id,
         ]);
 
@@ -187,19 +187,19 @@ class TicketApiTest extends TestCase
         $response->assertJsonPath('message', 'Comment added successfully');
         $this->assertDatabaseHas('ticket_comments', [
             'ticket_id' => $ticket->id,
-            'user_id' => $officer->id,
+            'user_id'   => $officer->id,
         ]);
     }
 
     public function test_cannot_add_comment_to_others_ticket()
     {
-        $officer = $this->createOfficer();
-        $division = $officer->member->division;
+        $officer    = $this->createOfficer();
+        $division   = $officer->member->division;
         $ticketType = TicketType::factory()->create();
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $officer->id,
-            'division_id' => $division->id,
+            'caller_id'      => $officer->id,
+            'division_id'    => $division->id,
             'ticket_type_id' => $ticketType->id,
         ]);
 
@@ -215,13 +215,13 @@ class TicketApiTest extends TestCase
 
     public function test_deleting_ticket_type_deletes_associated_tickets()
     {
-        $officer = $this->createOfficer();
-        $division = $officer->member->division;
+        $officer    = $this->createOfficer();
+        $division   = $officer->member->division;
         $ticketType = TicketType::factory()->create();
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $officer->id,
-            'division_id' => $division->id,
+            'caller_id'      => $officer->id,
+            'division_id'    => $division->id,
             'ticket_type_id' => $ticketType->id,
         ]);
 

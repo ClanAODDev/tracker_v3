@@ -26,7 +26,7 @@ class MemberTransferControllerTest extends TestCase
 
         $user = $this->createMemberWithUser([
             'division_id' => $sourceDivision->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $this->actingAs($user)
@@ -37,7 +37,7 @@ class MemberTransferControllerTest extends TestCase
             ->assertJson(['success' => true]);
 
         $this->assertDatabaseHas('transfers', [
-            'member_id' => $user->member->id,
+            'member_id'   => $user->member->id,
             'division_id' => $targetDivision->id,
         ]);
     }
@@ -51,7 +51,7 @@ class MemberTransferControllerTest extends TestCase
 
         $user = $this->createMemberWithUser([
             'division_id' => $sourceDivision->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $response = $this->actingAs($user)
@@ -61,7 +61,7 @@ class MemberTransferControllerTest extends TestCase
             ->assertOk();
 
         $response->assertJson([
-            'success' => true,
+            'success'       => true,
             'auto_approved' => true,
         ]);
 
@@ -78,7 +78,7 @@ class MemberTransferControllerTest extends TestCase
 
         $user = $this->createMemberWithUser([
             'division_id' => $sourceDivision->id,
-            'rank' => Rank::LANCE_CORPORAL,
+            'rank'        => Rank::LANCE_CORPORAL,
         ]);
 
         $response = $this->actingAs($user)
@@ -88,7 +88,7 @@ class MemberTransferControllerTest extends TestCase
             ->assertOk();
 
         $response->assertJson([
-            'success' => true,
+            'success'       => true,
             'auto_approved' => false,
         ]);
 
@@ -102,7 +102,7 @@ class MemberTransferControllerTest extends TestCase
 
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $this->actingAs($user)
@@ -117,17 +117,17 @@ class MemberTransferControllerTest extends TestCase
     {
         Notification::fake();
 
-        $sourceDivision = $this->createActiveDivision();
-        $targetDivision = $this->createActiveDivision();
+        $sourceDivision  = $this->createActiveDivision();
+        $targetDivision  = $this->createActiveDivision();
         $anotherDivision = $this->createActiveDivision();
 
         $user = $this->createMemberWithUser([
             'division_id' => $sourceDivision->id,
-            'rank' => Rank::LANCE_CORPORAL,
+            'rank'        => Rank::LANCE_CORPORAL,
         ]);
 
         Transfer::factory()->pending()->create([
-            'member_id' => $user->member->id,
+            'member_id'   => $user->member->id,
             'division_id' => $targetDivision->id,
         ]);
 
@@ -143,19 +143,19 @@ class MemberTransferControllerTest extends TestCase
     {
         Notification::fake();
 
-        $sourceDivision = $this->createActiveDivision();
-        $targetDivision = $this->createActiveDivision();
+        $sourceDivision  = $this->createActiveDivision();
+        $targetDivision  = $this->createActiveDivision();
         $anotherDivision = $this->createActiveDivision();
 
         $user = $this->createMemberWithUser([
             'division_id' => $sourceDivision->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         Transfer::factory()->approved()->create([
-            'member_id' => $user->member->id,
+            'member_id'   => $user->member->id,
             'division_id' => $targetDivision->id,
-            'created_at' => now()->subDays(3),
+            'created_at'  => now()->subDays(3),
         ]);
 
         $response = $this->actingAs($user)
@@ -174,19 +174,19 @@ class MemberTransferControllerTest extends TestCase
     {
         Notification::fake();
 
-        $sourceDivision = $this->createActiveDivision();
-        $targetDivision = $this->createActiveDivision();
+        $sourceDivision  = $this->createActiveDivision();
+        $targetDivision  = $this->createActiveDivision();
         $anotherDivision = $this->createActiveDivision();
 
         $user = $this->createMemberWithUser([
             'division_id' => $sourceDivision->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         Transfer::factory()->approved()->create([
-            'member_id' => $user->member->id,
+            'member_id'   => $user->member->id,
             'division_id' => $targetDivision->id,
-            'created_at' => now()->subDays(8),
+            'created_at'  => now()->subDays(8),
         ]);
 
         $this->actingAs($user)
@@ -199,12 +199,12 @@ class MemberTransferControllerTest extends TestCase
 
     public function test_cannot_transfer_to_floater_division()
     {
-        $sourceDivision = $this->createActiveDivision();
+        $sourceDivision  = $this->createActiveDivision();
         $floaterDivision = Division::factory()->create(['name' => 'Floater', 'active' => true]);
 
         $user = $this->createMemberWithUser([
             'division_id' => $sourceDivision->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $this->actingAs($user)
@@ -217,12 +217,12 @@ class MemberTransferControllerTest extends TestCase
 
     public function test_cannot_transfer_to_bluntz_reserves()
     {
-        $sourceDivision = $this->createActiveDivision();
+        $sourceDivision   = $this->createActiveDivision();
         $reservesDivision = Division::factory()->create(['name' => "Bluntz' Reserves", 'active' => true]);
 
         $user = $this->createMemberWithUser([
             'division_id' => $sourceDivision->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $this->actingAs($user)
@@ -236,11 +236,11 @@ class MemberTransferControllerTest extends TestCase
     public function test_cannot_transfer_from_floater_division()
     {
         $floaterDivision = Division::factory()->create(['name' => 'Floater', 'active' => true]);
-        $targetDivision = $this->createActiveDivision();
+        $targetDivision  = $this->createActiveDivision();
 
         $user = $this->createMemberWithUser([
             'division_id' => $floaterDivision->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $this->actingAs($user)
@@ -253,12 +253,12 @@ class MemberTransferControllerTest extends TestCase
 
     public function test_cannot_transfer_to_inactive_division()
     {
-        $sourceDivision = $this->createActiveDivision();
+        $sourceDivision   = $this->createActiveDivision();
         $inactiveDivision = Division::factory()->create(['active' => false]);
 
         $user = $this->createMemberWithUser([
             'division_id' => $sourceDivision->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $this->actingAs($user)
@@ -271,15 +271,15 @@ class MemberTransferControllerTest extends TestCase
 
     public function test_cannot_transfer_to_shutdown_division()
     {
-        $sourceDivision = $this->createActiveDivision();
+        $sourceDivision   = $this->createActiveDivision();
         $shutdownDivision = Division::factory()->create([
-            'active' => true,
+            'active'      => true,
             'shutdown_at' => now()->subDay(),
         ]);
 
         $user = $this->createMemberWithUser([
             'division_id' => $sourceDivision->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $this->actingAs($user)

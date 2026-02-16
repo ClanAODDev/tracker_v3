@@ -24,7 +24,7 @@ trait CreatesDivisions
     protected function createInactiveDivision(array $attributes = []): Division
     {
         return Division::factory()->create(array_merge([
-            'active' => false,
+            'active'      => false,
             'shutdown_at' => now(),
         ], $attributes));
     }
@@ -69,7 +69,7 @@ trait CreatesDivisions
         for ($p = 0; $p < $platoonCount; $p++) {
             $platoon = Platoon::factory()->create([
                 'division_id' => $division->id,
-                'order' => ($p + 1) * 100,
+                'order'       => ($p + 1) * 100,
             ]);
 
             for ($s = 0; $s < $squadsPerPlatoon; $s++) {
@@ -79,8 +79,8 @@ trait CreatesDivisions
 
                 Member::factory()->count($membersPerSquad)->create([
                     'division_id' => $division->id,
-                    'platoon_id' => $platoon->id,
-                    'squad_id' => $squad->id,
+                    'platoon_id'  => $platoon->id,
+                    'squad_id'    => $squad->id,
                 ]);
             }
         }
@@ -113,8 +113,8 @@ trait CreatesDivisions
 
         Member::factory()->count($memberCount)->create([
             'division_id' => $platoon->division_id,
-            'platoon_id' => $platoon->id,
-            'squad_id' => $squad->id,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => $squad->id,
         ]);
 
         return $squad->fresh(['members']);

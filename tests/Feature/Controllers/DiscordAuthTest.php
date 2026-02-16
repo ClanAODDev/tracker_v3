@@ -28,10 +28,10 @@ class DiscordAuthTest extends TestCase
     protected function mockDiscordUser(array $attributes = []): void
     {
         $defaults = [
-            'id' => '123456789',
+            'id'       => '123456789',
             'nickname' => 'TestUser',
-            'name' => 'Test User',
-            'email' => 'test@discord.com',
+            'name'     => 'Test User',
+            'email'    => 'test@discord.com',
         ];
 
         $attributes = array_merge($defaults, $attributes);
@@ -68,18 +68,18 @@ class DiscordAuthTest extends TestCase
     public function test_discord_callback_creates_pending_user_for_unknown_discord_id(): void
     {
         $this->mockDiscordUser([
-            'id' => '999888777',
+            'id'       => '999888777',
             'nickname' => 'NewUser',
-            'email' => 'new@discord.com',
+            'email'    => 'new@discord.com',
         ]);
 
         $response = $this->get(route('auth.discord.callback'));
 
         $this->assertDatabaseHas('users', [
-            'discord_id' => '999888777',
+            'discord_id'       => '999888777',
             'discord_username' => 'NewUser',
-            'email' => 'new@discord.com',
-            'member_id' => null,
+            'email'            => 'new@discord.com',
+            'member_id'        => null,
         ]);
 
         $response->assertRedirect(route('auth.discord.pending'));
@@ -90,9 +90,9 @@ class DiscordAuthTest extends TestCase
         $member = Member::factory()->create(['discord_id' => '111222333']);
 
         $this->mockDiscordUser([
-            'id' => '111222333',
+            'id'       => '111222333',
             'nickname' => 'ExistingMember',
-            'email' => 'existing@discord.com',
+            'email'    => 'existing@discord.com',
         ]);
 
         $response = $this->get(route('auth.discord.callback'));
@@ -108,14 +108,14 @@ class DiscordAuthTest extends TestCase
     public function test_discord_callback_uses_existing_user_with_discord_id(): void
     {
         $member = Member::factory()->create(['discord_id' => '777888999']);
-        $user = User::factory()->create([
-            'member_id' => $member->id,
-            'discord_id' => '777888999',
+        $user   = User::factory()->create([
+            'member_id'        => $member->id,
+            'discord_id'       => '777888999',
             'discord_username' => 'existinguser',
         ]);
 
         $this->mockDiscordUser([
-            'id' => '777888999',
+            'id'    => '777888999',
             'email' => 'new@discord.com',
         ]);
 
@@ -128,12 +128,12 @@ class DiscordAuthTest extends TestCase
     public function test_discord_callback_redirects_pending_user_to_pending_page(): void
     {
         $user = User::factory()->pending()->create([
-            'discord_id' => '555666777',
+            'discord_id'       => '555666777',
             'discord_username' => 'pendinguser',
         ]);
 
         $this->mockDiscordUser([
-            'id' => '555666777',
+            'id'    => '555666777',
             'email' => 'pending@discord.com',
         ]);
 
@@ -146,9 +146,9 @@ class DiscordAuthTest extends TestCase
     public function test_discord_callback_rejects_new_user_without_email(): void
     {
         $this->mockDiscordUser([
-            'id' => '123123123',
+            'id'       => '123123123',
             'nickname' => 'NoEmail',
-            'email' => null,
+            'email'    => null,
         ]);
 
         $response = $this->get(route('auth.discord.callback'));
@@ -164,9 +164,9 @@ class DiscordAuthTest extends TestCase
         User::factory()->create(['email' => 'taken@example.com']);
 
         $this->mockDiscordUser([
-            'id' => '321321321',
+            'id'       => '321321321',
             'nickname' => 'DupeEmail',
-            'email' => 'taken@example.com',
+            'email'    => 'taken@example.com',
         ]);
 
         $response = $this->get(route('auth.discord.callback'));
@@ -180,9 +180,9 @@ class DiscordAuthTest extends TestCase
     public function test_discord_callback_sanitizes_username(): void
     {
         $this->mockDiscordUser([
-            'id' => '444555666',
+            'id'       => '444555666',
             'nickname' => 'Test@User#123!',
-            'email' => 'test@example.com',
+            'email'    => 'test@example.com',
         ]);
 
         $response = $this->get(route('auth.discord.callback'));
@@ -196,10 +196,10 @@ class DiscordAuthTest extends TestCase
     public function test_discord_callback_uses_name_when_nickname_null(): void
     {
         $this->mockDiscordUser([
-            'id' => '666777888',
+            'id'       => '666777888',
             'nickname' => null,
-            'name' => 'DiscordName',
-            'email' => 'name@example.com',
+            'name'     => 'DiscordName',
+            'email'    => 'name@example.com',
         ]);
 
         $response = $this->get(route('auth.discord.callback'));
@@ -213,15 +213,15 @@ class DiscordAuthTest extends TestCase
     public function test_discord_callback_links_discord_to_existing_member_user(): void
     {
         $member = Member::factory()->create(['discord_id' => '888999000']);
-        $user = User::factory()->create([
+        $user   = User::factory()->create([
             'member_id' => $member->id,
-            'email' => 'existing@example.com',
+            'email'     => 'existing@example.com',
         ]);
 
         $this->mockDiscordUser([
-            'id' => '888999000',
+            'id'       => '888999000',
             'nickname' => 'LinkedUser',
-            'email' => 'new@discord.com',
+            'email'    => 'new@discord.com',
         ]);
 
         $this->get(route('auth.discord.callback'));
@@ -241,8 +241,8 @@ class DiscordAuthTest extends TestCase
     public function test_pending_page_redirects_completed_users_to_home(): void
     {
         $member = Member::factory()->create();
-        $user = User::factory()->create([
-            'member_id' => $member->id,
+        $user   = User::factory()->create([
+            'member_id'  => $member->id,
             'discord_id' => '123456789',
         ]);
 
@@ -254,7 +254,7 @@ class DiscordAuthTest extends TestCase
     public function test_pending_page_displays_for_pending_users(): void
     {
         $user = User::factory()->pending()->create([
-            'discord_id' => '123456789',
+            'discord_id'       => '123456789',
             'discord_username' => 'PendingUser',
         ]);
 
@@ -277,9 +277,9 @@ class DiscordAuthTest extends TestCase
     public function test_user_is_pending_registration_returns_false_for_linked_member(): void
     {
         $member = Member::factory()->create();
-        $user = User::factory()->create([
+        $user   = User::factory()->create([
             'discord_id' => '123456789',
-            'member_id' => $member->id,
+            'member_id'  => $member->id,
         ]);
 
         $this->assertFalse($user->isPendingRegistration());
@@ -287,8 +287,8 @@ class DiscordAuthTest extends TestCase
 
     public function test_user_has_member_returns_correct_value(): void
     {
-        $member = Member::factory()->create();
-        $userWithMember = User::factory()->create(['member_id' => $member->id]);
+        $member            = Member::factory()->create();
+        $userWithMember    = User::factory()->create(['member_id' => $member->id]);
         $userWithoutMember = User::factory()->pending()->create();
 
         $this->assertTrue($userWithMember->hasMember());
@@ -333,20 +333,20 @@ class DiscordAuthTest extends TestCase
     {
         $member = Member::factory()->create([
             'discord_id' => '123456789',
-            'clan_id' => 99999,
+            'clan_id'    => 99999,
         ]);
 
         $this->mockDiscordUser([
-            'id' => '123456789',
+            'id'       => '123456789',
             'nickname' => 'SeniorLeader',
-            'email' => 'leader@example.com',
+            'email'    => 'leader@example.com',
         ]);
 
         $this->mock(ForumProcedureService::class, function ($mock) {
             $mock->shouldReceive('getUser')
                 ->with(99999)
                 ->andReturn((object) [
-                    'usergroupid' => ForumGroup::SERGEANT->value,
+                    'usergroupid'    => ForumGroup::SERGEANT->value,
                     'membergroupids' => '',
                 ]);
         });
@@ -362,25 +362,25 @@ class DiscordAuthTest extends TestCase
     {
         $member = Member::factory()->create([
             'discord_id' => '987654321',
-            'clan_id' => 88888,
+            'clan_id'    => 88888,
         ]);
         $user = User::factory()->create([
-            'member_id' => $member->id,
+            'member_id'  => $member->id,
             'discord_id' => '987654321',
-            'role' => Role::MEMBER,
+            'role'       => Role::MEMBER,
         ]);
 
         $this->mockDiscordUser([
-            'id' => '987654321',
+            'id'       => '987654321',
             'nickname' => 'PromotedOfficer',
-            'email' => 'officer@example.com',
+            'email'    => 'officer@example.com',
         ]);
 
         $this->mock(ForumProcedureService::class, function ($mock) {
             $mock->shouldReceive('getUser')
                 ->with(88888)
                 ->andReturn((object) [
-                    'usergroupid' => ForumGroup::ADMIN->value,
+                    'usergroupid'    => ForumGroup::ADMIN->value,
                     'membergroupids' => '',
                 ]);
         });
@@ -398,7 +398,7 @@ class DiscordAuthTest extends TestCase
         $division = Division::factory()->create(['active' => true]);
         Member::factory()->create([
             'division_id' => $division->id,
-            'position' => Position::COMMANDING_OFFICER,
+            'position'    => Position::COMMANDING_OFFICER,
         ]);
 
         $forumServiceMock = Mockery::mock(AODForumService::class);
@@ -407,19 +407,19 @@ class DiscordAuthTest extends TestCase
         $this->app->instance(AODForumService::class, $forumServiceMock);
 
         $user = User::factory()->pending()->create([
-            'discord_id' => '123456789',
+            'discord_id'       => '123456789',
             'discord_username' => 'TestRecruit',
-            'date_of_birth' => null,
-            'forum_password' => null,
+            'date_of_birth'    => null,
+            'forum_password'   => null,
         ]);
 
         $this->actingAs($user)
             ->post(route('auth.discord.register'), [
-                'username' => 'TestRecruit',
-                'date_of_birth' => '2000-01-15',
-                'password' => 'password123',
+                'username'              => 'TestRecruit',
+                'date_of_birth'         => '2000-01-15',
+                'password'              => 'password123',
                 'password_confirmation' => 'password123',
-                'division_id' => $division->id,
+                'division_id'           => $division->id,
             ])
             ->assertRedirect();
 
@@ -431,14 +431,14 @@ class DiscordAuthTest extends TestCase
         Notification::fake();
 
         $user = User::factory()->pending()->create([
-            'discord_id' => '123456789',
+            'discord_id'       => '123456789',
             'discord_username' => 'TestRecruit',
         ]);
 
         $this->actingAs($user)
             ->post(route('auth.discord.register'), [
-                'date_of_birth' => '2000-01-15',
-                'password' => 'password123',
+                'date_of_birth'         => '2000-01-15',
+                'password'              => 'password123',
                 'password_confirmation' => 'password123',
             ])
             ->assertRedirect();

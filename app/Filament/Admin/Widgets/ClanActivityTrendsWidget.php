@@ -21,17 +21,17 @@ class ClanActivityTrendsWidget extends ChartWidget
     protected function getFilters(): ?array
     {
         return [
-            '30' => '30 Days',
-            '90' => '90 Days',
+            '30'  => '30 Days',
+            '90'  => '90 Days',
             '365' => '1 Year',
         ];
     }
 
     public function getHeading(): string
     {
-        $days = $this->filter ?? '30';
+        $days  = $this->filter ?? '30';
         $label = match ($days) {
-            '365' => '1 Year',
+            '365'   => '1 Year',
             default => "{$days} Days",
         };
 
@@ -41,7 +41,7 @@ class ClanActivityTrendsWidget extends ChartWidget
     protected function getData(): array
     {
         $activeDivisionIds = Division::whereHas('members')->pluck('id');
-        $days = (int) ($this->filter ?? 30);
+        $days              = (int) ($this->filter ?? 30);
 
         $trends = Census::select(
             DB::raw('DATE(created_at) as date'),
@@ -56,27 +56,27 @@ class ClanActivityTrendsWidget extends ChartWidget
             ->reverse()
             ->values();
 
-        $labels = $trends->map(fn ($t) => Carbon::parse($t->date)->format('M j'))->toArray();
-        $population = $trends->pluck('total_population')->toArray();
+        $labels      = $trends->map(fn ($t) => Carbon::parse($t->date)->format('M j'))->toArray();
+        $population  = $trends->pluck('total_population')->toArray();
         $weeklyVoice = $trends->pluck('total_voice')->toArray();
 
         return [
             'datasets' => [
                 [
-                    'label' => 'Total Population',
-                    'data' => $population,
-                    'borderColor' => '#3b82f6',
+                    'label'           => 'Total Population',
+                    'data'            => $population,
+                    'borderColor'     => '#3b82f6',
                     'backgroundColor' => 'rgba(59, 130, 246, 0.1)',
-                    'fill' => true,
-                    'tension' => 0.3,
+                    'fill'            => true,
+                    'tension'         => 0.3,
                 ],
                 [
-                    'label' => 'Weekly Voice',
-                    'data' => $weeklyVoice,
-                    'borderColor' => '#8b5cf6',
+                    'label'           => 'Weekly Voice',
+                    'data'            => $weeklyVoice,
+                    'borderColor'     => '#8b5cf6',
                     'backgroundColor' => 'rgba(139, 92, 246, 0.1)',
-                    'fill' => true,
-                    'tension' => 0.3,
+                    'fill'            => true,
+                    'tension'         => 0.3,
                 ],
             ],
             'labels' => $labels,
@@ -98,7 +98,7 @@ class ClanActivityTrendsWidget extends ChartWidget
             ],
             'plugins' => [
                 'legend' => [
-                    'display' => true,
+                    'display'  => true,
                     'position' => 'bottom',
                 ],
             ],

@@ -60,7 +60,7 @@ class DivisionController extends ApiController
                     [
                         'data' => [
                             'division' => $this->divisionTransformer->transform($division),
-                            'members' => $this->memberTransformer->transformCollection(
+                            'members'  => $this->memberTransformer->transformCollection(
                                 $members->all()
                             ),
 

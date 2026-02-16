@@ -9,16 +9,16 @@ class DivisionBasicTransformer extends Transformer
     public function transform($item): array
     {
         $data = [
-            'name' => $item->name,
-            'slug' => $item->slug,
-            'abbreviation' => $item->abbreviation,
-            'description' => $item->description,
-            'forum_app_id' => $item->forum_app_id,
-            'members_count' => $item->members_count,
-            'show_on_site' => $item->show_on_site,
+            'name'            => $item->name,
+            'slug'            => $item->slug,
+            'abbreviation'    => $item->abbreviation,
+            'description'     => $item->description,
+            'forum_app_id'    => $item->forum_app_id,
+            'members_count'   => $item->members_count,
+            'show_on_site'    => $item->show_on_site,
             'officer_channel' => $item->settings()->get('officer_channel', null),
-            'icon' => $item->getLogoPath(),
-            'leadership' => $this->memberTransformer->transformCollection(
+            'icon'            => $item->getLogoPath(),
+            'leadership'      => $this->memberTransformer->transformCollection(
                 $item->leaders()->get()->all()
             ),
         ];
@@ -32,14 +32,14 @@ class DivisionBasicTransformer extends Transformer
         }
 
         if (request()->has('include-screenshots')) {
-            $screenshots = $item->screenshots ?? [];
+            $screenshots         = $item->screenshots ?? [];
             $data['screenshots'] = array_map(function ($screenshot) {
                 if (is_string($screenshot)) {
                     return ['url' => asset('storage/' . $screenshot), 'caption' => null];
                 }
 
                 return [
-                    'url' => isset($screenshot['image']) ? asset('storage/' . $screenshot['image']) : ($screenshot['url'] ?? null),
+                    'url'     => isset($screenshot['image']) ? asset('storage/' . $screenshot['image']) : ($screenshot['url'] ?? null),
                     'caption' => $screenshot['caption'] ?? null,
                 ];
             }, $screenshots);

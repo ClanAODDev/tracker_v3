@@ -22,14 +22,14 @@ readonly class ActivityData
 
         $health = match (true) {
             $daysSinceVoice === null => 'unknown',
-            $daysSinceVoice <= 7 => 'excellent',
-            $daysSinceVoice <= 14 => 'good',
-            $daysSinceVoice <= 30 => 'warning',
-            default => 'critical',
+            $daysSinceVoice <= 7     => 'excellent',
+            $daysSinceVoice <= 14    => 'good',
+            $daysSinceVoice <= 30    => 'warning',
+            default                  => 'critical',
         };
 
         $divisionMax = $division?->settings()->get('inactivity_days') ?? 30;
-        $healthPct = $daysSinceVoice !== null
+        $healthPct   = $daysSinceVoice !== null
             ? max(0, min(100, 100 - ($daysSinceVoice / $divisionMax * 100)))
             : 0;
 

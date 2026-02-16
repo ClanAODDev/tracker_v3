@@ -12,7 +12,7 @@ class MemberRequest extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'approved_at' => 'datetime',
+        'approved_at'    => 'datetime',
         'hold_placed_at' => 'datetime',
     ];
 
@@ -135,8 +135,8 @@ class MemberRequest extends Model
     {
         $this->update([
             'hold_placed_at' => now(),
-            'holder_id' => auth()->user()->member->clan_id,
-            'notes' => $notes,
+            'holder_id'      => auth()->user()->member->clan_id,
+            'notes'          => $notes,
         ]);
     }
 

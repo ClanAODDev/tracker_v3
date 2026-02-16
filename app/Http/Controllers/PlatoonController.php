@@ -22,9 +22,9 @@ class PlatoonController extends Controller
     {
         $platoon->load('squads.leader', 'squads.members');
 
-        $members = $this->memberQuery->loadSortedMembers($platoon->members(), $division);
+        $members            = $this->memberQuery->loadSortedMembers($platoon->members(), $division);
         $voiceActivityGraph = $this->platoon->getPlatoonVoiceActivity($platoon);
-        $unitStats = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
+        $unitStats          = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
 
         return view('platoon.show', compact('platoon', 'members', 'division', 'unitStats'));
     }

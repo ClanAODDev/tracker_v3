@@ -48,9 +48,9 @@ class CreateLeave extends FormRequest
         $memberRequestingLeave = Member::whereClanId($this->member_id)->firstOrFail();
 
         $note = Note::create([
-            'body' => "Leave of absence requested. Reason: {$this->note_body}",
+            'body'            => "Leave of absence requested. Reason: {$this->note_body}",
             'forum_thread_id' => $this->note_thread_id, 'type' => 'misc',
-            'author_id' => auth()->id(), 'member_id' => $memberRequestingLeave->id,
+            'author_id'       => auth()->id(), 'member_id' => $memberRequestingLeave->id,
         ]);
 
         $leave = Leave::create([

@@ -8,7 +8,7 @@ trait EnumOptions
 {
     public static function options(): array
     {
-        $cases = static::cases();
+        $cases   = static::cases();
         $options = [];
         foreach ($cases as $case) {
 

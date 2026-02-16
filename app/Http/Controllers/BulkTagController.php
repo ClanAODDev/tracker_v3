@@ -14,23 +14,23 @@ class BulkTagController extends Controller
     public function getTags(Division $division, Member $member)
     {
         $this->authorize('assign', [DivisionTag::class, $member]);
-        $user = auth()->user();
+        $user   = auth()->user();
         $policy = new DivisionTagPolicy;
 
         $availableTags = $policy->getAssignableTags($user, $member)
             ->get()
             ->map(fn ($tag) => [
-                'id' => $tag->id,
-                'name' => $tag->name,
+                'id'         => $tag->id,
+                'name'       => $tag->name,
                 'visibility' => $tag->visibility->value,
-                'global' => $tag->isGlobal(),
+                'global'     => $tag->isGlobal(),
             ]);
 
         $memberTagIds = $member->tags()->pluck('division_tags.id')->toArray();
 
         return response()->json([
             'available' => $availableTags,
-            'assigned' => $memberTagIds,
+            'assigned'  => $memberTagIds,
         ]);
     }
 
@@ -42,7 +42,7 @@ class BulkTagController extends Controller
             'tag_id' => 'required|integer|exists:division_tags,id',
         ]);
 
-        $user = auth()->user();
+        $user   = auth()->user();
         $policy = new DivisionTagPolicy;
 
         $tag = $policy->getAssignableTags($user, $member)
@@ -74,7 +74,7 @@ class BulkTagController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:25',
+            'name'       => 'required|string|max:25',
             'visibility' => 'nullable|string|in:' . implode(',', $validVisibilities),
         ]);
 
@@ -84,7 +84,7 @@ class BulkTagController extends Controller
         }
 
         $tag = $userDivision->tags()->create([
-            'name' => $validated['name'],
+            'name'       => $validated['name'],
             'visibility' => $validated['visibility'] ?? TagVisibility::PUBLIC->value,
         ]);
 
@@ -93,9 +93,9 @@ class BulkTagController extends Controller
 
         return response()->json([
             'success' => true,
-            'tag' => [
-                'id' => $tag->id,
-                'name' => $tag->name,
+            'tag'     => [
+                'id'         => $tag->id,
+                'name'       => $tag->name,
                 'visibility' => $tag->visibility->value,
             ],
         ]);
@@ -130,7 +130,7 @@ class BulkTagController extends Controller
         }
 
         $validated = $request->validate([
-            'name' => 'required|string|max:25',
+            'name'       => 'required|string|max:25',
             'visibility' => 'nullable|string|in:' . implode(',', $validVisibilities),
         ]);
 
@@ -140,15 +140,15 @@ class BulkTagController extends Controller
         }
 
         $tag = $userDivision->tags()->create([
-            'name' => $validated['name'],
+            'name'       => $validated['name'],
             'visibility' => $validated['visibility'] ?? TagVisibility::PUBLIC->value,
         ]);
 
         return response()->json([
             'success' => true,
-            'tag' => [
-                'id' => $tag->id,
-                'name' => $tag->name,
+            'tag'     => [
+                'id'         => $tag->id,
+                'name'       => $tag->name,
                 'visibility' => $tag->visibility->value,
             ],
         ]);
@@ -168,7 +168,7 @@ class BulkTagController extends Controller
             ->select('id', 'clan_id', 'name', 'rank')
             ->get();
 
-        $user = auth()->user();
+        $user           = auth()->user();
         $userDivisionId = $user->member?->division_id;
 
         $tags = $user->isRole('admin')
@@ -182,9 +182,9 @@ class BulkTagController extends Controller
     {
         $this->authorize('assign', [DivisionTag::class, $member]);
 
-        $members = collect([$member]);
-        $policy = new DivisionTagPolicy;
-        $tags = $policy->getAssignableTags(auth()->user(), $member)->get();
+        $members  = collect([$member]);
+        $policy   = new DivisionTagPolicy;
+        $tags     = $policy->getAssignableTags(auth()->user(), $member)->get();
         $returnTo = url()->previous();
 
         return view('division.bulk-tags', compact('division', 'members', 'tags', 'returnTo'));
@@ -195,15 +195,15 @@ class BulkTagController extends Controller
         $this->authorize('assign', DivisionTag::class);
 
         $validated = $request->validate([
-            'member_ids' => 'required|array',
+            'member_ids'   => 'required|array',
             'member_ids.*' => 'integer',
-            'tags' => 'required|array',
-            'tags.*' => 'integer|exists:division_tags,id',
-            'action' => 'required|in:assign,remove',
+            'tags'         => 'required|array',
+            'tags.*'       => 'integer|exists:division_tags,id',
+            'action'       => 'required|in:assign,remove',
         ]);
 
-        $members = Member::whereIn('clan_id', $validated['member_ids'])->get();
-        $user = auth()->user();
+        $members    = Member::whereIn('clan_id', $validated['member_ids'])->get();
+        $user       = auth()->user();
         $assignerId = $user->member?->id;
 
         foreach ($members as $member) {
@@ -222,7 +222,7 @@ class BulkTagController extends Controller
             }
         }
 
-        $action = $validated['action'] === 'assign' ? 'assigned to' : 'removed from';
+        $action  = $validated['action'] === 'assign' ? 'assigned to' : 'removed from';
         $message = 'Tags ' . $action . ' ' . $members->count() . ' ' . ($members->count() === 1 ? 'member' : 'members') . '.';
 
         if ($request->ajax() || $request->wantsJson()) {

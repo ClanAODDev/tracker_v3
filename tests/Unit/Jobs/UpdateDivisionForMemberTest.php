@@ -18,11 +18,11 @@ class UpdateDivisionForMemberTest extends TestCase
     public function test_job_can_be_instantiated()
     {
         $fromDivision = $this->createActiveDivision();
-        $toDivision = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $fromDivision->id]);
+        $toDivision   = $this->createActiveDivision();
+        $member       = $this->createMember(['division_id' => $fromDivision->id]);
 
         $transfer = Transfer::factory()->approved()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $toDivision->id,
         ]);
 
@@ -34,11 +34,11 @@ class UpdateDivisionForMemberTest extends TestCase
     public function test_job_stores_transfer_reference()
     {
         $fromDivision = $this->createActiveDivision();
-        $toDivision = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $fromDivision->id]);
+        $toDivision   = $this->createActiveDivision();
+        $member       = $this->createMember(['division_id' => $fromDivision->id]);
 
         $transfer = Transfer::factory()->approved()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $toDivision->id,
         ]);
 
@@ -50,14 +50,14 @@ class UpdateDivisionForMemberTest extends TestCase
     public function test_job_accesses_member_clan_id_from_transfer()
     {
         $fromDivision = $this->createActiveDivision();
-        $toDivision = $this->createActiveDivision();
-        $member = $this->createMember([
+        $toDivision   = $this->createActiveDivision();
+        $member       = $this->createMember([
             'division_id' => $fromDivision->id,
-            'clan_id' => 99999,
+            'clan_id'     => 99999,
         ]);
 
         $transfer = Transfer::factory()->approved()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $toDivision->id,
         ]);
 
@@ -69,11 +69,11 @@ class UpdateDivisionForMemberTest extends TestCase
     public function test_job_accesses_division_name_from_transfer()
     {
         $fromDivision = $this->createActiveDivision();
-        $toDivision = $this->createActiveDivision(['name' => 'Target Division']);
-        $member = $this->createMember(['division_id' => $fromDivision->id]);
+        $toDivision   = $this->createActiveDivision(['name' => 'Target Division']);
+        $member       = $this->createMember(['division_id' => $fromDivision->id]);
 
         $transfer = Transfer::factory()->approved()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $toDivision->id,
         ]);
 
@@ -85,11 +85,11 @@ class UpdateDivisionForMemberTest extends TestCase
     public function test_job_is_queueable()
     {
         $fromDivision = $this->createActiveDivision();
-        $toDivision = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $fromDivision->id]);
+        $toDivision   = $this->createActiveDivision();
+        $member       = $this->createMember(['division_id' => $fromDivision->id]);
 
         $transfer = Transfer::factory()->approved()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $toDivision->id,
         ]);
 

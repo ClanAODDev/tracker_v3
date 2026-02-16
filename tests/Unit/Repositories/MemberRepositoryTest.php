@@ -25,7 +25,7 @@ class MemberRepositoryTest extends TestCase
     public function test_search_finds_member_by_name()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['name' => 'TestMember', 'division_id' => $division->id]);
+        $member   = $this->createMember(['name' => 'TestMember', 'division_id' => $division->id]);
 
         $results = $this->repository->search('TestMember');
 
@@ -88,7 +88,7 @@ class MemberRepositoryTest extends TestCase
     public function test_autocomplete_finds_member_by_name()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['name' => 'SearchableUser', 'division_id' => $division->id]);
+        $member   = $this->createMember(['name' => 'SearchableUser', 'division_id' => $division->id]);
 
         $results = $this->repository->searchAutocomplete('Searchable');
 

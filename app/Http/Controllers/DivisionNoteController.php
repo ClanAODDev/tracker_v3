@@ -22,9 +22,9 @@ class DivisionNoteController extends Controller
     {
         $this->authorize('show', Note::class);
 
-        $type = request('type');
+        $type   = request('type');
         $search = request('search');
-        $tagId = request('tag');
+        $tagId  = request('tag');
 
         $notes = $type
             ? $division->notes()->whereType($type)

@@ -27,7 +27,7 @@ class MemberController extends Controller
 
     public function search(Request $request)
     {
-        $name = $request->query('q');
+        $name    = $request->query('q');
         $members = $name ? $this->memberRepository->search($name) : collect();
 
         if (request()->ajax()) {
@@ -44,40 +44,40 @@ class MemberController extends Controller
 
     public function show(Member $member)
     {
-        $user = auth()->user();
-        $canViewSrLdr = $user->isRole(['sr_ldr', 'admin']);
+        $user           = auth()->user();
+        $canViewSrLdr   = $user->isRole(['sr_ldr', 'admin']);
         $canViewTrashed = $user->can('viewTrashed', Note::class);
 
         $this->memberRepository->loadProfileRelations($member);
         $division = $member->division;
 
-        $notes = $this->memberRepository->getNotesForMember($member, $canViewSrLdr);
-        $trashedNotes = $canViewTrashed ? $this->memberRepository->getTrashedNotesForMember($member) : collect();
-        $rankHistory = $this->memberRepository->getRankHistory($member);
-        $transfers = $member->transfers;
+        $notes             = $this->memberRepository->getNotesForMember($member, $canViewSrLdr);
+        $trashedNotes      = $canViewTrashed ? $this->memberRepository->getTrashedNotesForMember($member) : collect();
+        $rankHistory       = $this->memberRepository->getRankHistory($member);
+        $transfers         = $member->transfers;
         $partTimeDivisions = $member->partTimeDivisions()->whereActive(true)->get();
 
-        $memberStats = MemberStatsData::fromMember($member, $division, $this->memberRepository);
-        $noteStats = NoteStatsData::fromNotes($notes);
+        $memberStats  = MemberStatsData::fromMember($member, $division, $this->memberRepository);
+        $noteStats    = NoteStatsData::fromNotes($notes);
         $rankTimeline = $this->rankTimelineService->buildTimeline($member, $rankHistory);
 
         return view('member.show', [
-            'member' => $member,
-            'division' => $division,
-            'notes' => $notes,
-            'trashedNotes' => $trashedNotes,
-            'noteStats' => $noteStats,
+            'member'            => $member,
+            'division'          => $division,
+            'notes'             => $notes,
+            'trashedNotes'      => $trashedNotes,
+            'noteStats'         => $noteStats,
             'partTimeDivisions' => $partTimeDivisions,
-            'rankHistory' => $rankHistory,
-            'rankTimeline' => $rankTimeline,
-            'transfers' => $transfers,
-            'memberStats' => $memberStats,
+            'rankHistory'       => $rankHistory,
+            'rankTimeline'      => $rankTimeline,
+            'transfers'         => $transfers,
+            'memberStats'       => $memberStats,
         ]);
     }
 
     public function assignPlatoon(Member $member): JsonResponse
     {
-        $platoon = Platoon::find(request()->platoon_id);
+        $platoon            = Platoon::find(request()->platoon_id);
         $member->platoon_id = $platoon->id;
         $member->save();
         $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
@@ -92,14 +92,14 @@ class MemberController extends Controller
         $this->authorize('reset', $member);
 
         return view('member.confirm-unassign', [
-            'member' => $member,
+            'member'   => $member,
             'division' => $member->division,
         ]);
     }
 
     public function unassignMember(Member $member): RedirectResponse
     {
-        $member->squad_id = 0;
+        $member->squad_id   = 0;
         $member->platoon_id = 0;
         $member->save();
         $member->recordActivity(ActivityType::UNASSIGNED);
@@ -125,19 +125,19 @@ class MemberController extends Controller
         }
 
         $reminder = ActivityReminder::create([
-            'member_id' => $member->clan_id,
-            'division_id' => $member->division_id,
+            'member_id'      => $member->clan_id,
+            'division_id'    => $member->division_id,
             'reminded_by_id' => auth()->id(),
         ]);
 
         $member->last_activity_reminder_at = $reminder->created_at;
-        $member->activity_reminded_by_id = auth()->id();
+        $member->activity_reminded_by_id   = auth()->id();
         $member->save();
 
         return response()->json([
             'success' => true,
-            'date' => $reminder->created_at->format('n/j'),
-            'title' => 'Reminded ' . $reminder->created_at->diffForHumans(),
+            'date'    => $reminder->created_at->format('n/j'),
+            'title'   => 'Reminded ' . $reminder->created_at->diffForHumans(),
         ]);
     }
 
@@ -160,12 +160,12 @@ class MemberController extends Controller
         $count = ActivityReminder::where('member_id', $member->clan_id)->delete();
 
         $member->last_activity_reminder_at = null;
-        $member->activity_reminded_by_id = null;
+        $member->activity_reminded_by_id   = null;
         $member->save();
 
         return response()->json([
             'success' => true,
-            'count' => $count,
+            'count'   => $count,
         ]);
     }
 
@@ -197,7 +197,7 @@ class MemberController extends Controller
         if (empty($toUpdate)) {
             if ($request->has('redirect')) {
                 return redirect($request->input('redirect'))->with('reminder_result', [
-                    'count' => 0,
+                    'count'   => 0,
                     'skipped' => count($alreadyRemindedToday),
                 ]);
             }
@@ -208,19 +208,19 @@ class MemberController extends Controller
             ], 400);
         }
 
-        $now = now();
-        $userId = auth()->id();
+        $now       = now();
+        $userId    = auth()->id();
         $reminders = [];
 
         foreach ($toUpdate as $memberId) {
             $member = Member::where('clan_id', $memberId)->first();
             if ($member) {
                 $reminders[] = [
-                    'member_id' => $memberId,
-                    'division_id' => $member->division_id,
+                    'member_id'      => $memberId,
+                    'division_id'    => $member->division_id,
                     'reminded_by_id' => $userId,
-                    'created_at' => $now,
-                    'updated_at' => $now,
+                    'created_at'     => $now,
+                    'updated_at'     => $now,
                 ];
             }
         }
@@ -230,24 +230,24 @@ class MemberController extends Controller
         $count = Member::whereIn('clan_id', $toUpdate)
             ->update([
                 'last_activity_reminder_at' => $now,
-                'activity_reminded_by_id' => $userId,
+                'activity_reminded_by_id'   => $userId,
             ]);
 
         $skippedCount = count($alreadyRemindedToday);
 
         if ($request->has('redirect')) {
             return redirect($request->input('redirect'))->with('reminder_result', [
-                'count' => $count,
+                'count'   => $count,
                 'skipped' => $skippedCount,
             ]);
         }
 
         return response()->json([
-            'success' => true,
-            'count' => $count,
-            'skipped' => $skippedCount,
+            'success'    => true,
+            'count'      => $count,
+            'skipped'    => $skippedCount,
             'updatedIds' => $toUpdate,
-            'date' => $now->format('n/j'),
+            'date'       => $now->format('n/j'),
         ]);
     }
 }

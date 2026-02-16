@@ -16,7 +16,7 @@ class ClanStatsWidget extends BaseWidget
     protected function getStats(): array
     {
         $activeDivisionIds = Division::whereHas('members')->pluck('id');
-        $activeDivisions = $activeDivisionIds->count();
+        $activeDivisions   = $activeDivisionIds->count();
 
         $latestCensuses = Census::select('division_id', DB::raw('MAX(id) as id'))
             ->whereIn('division_id', $activeDivisionIds)
@@ -28,7 +28,7 @@ class ClanStatsWidget extends BaseWidget
             ->first();
 
         $totalFromCensus = $clanStats->total_count ?? Member::whereIn('division_id', $activeDivisionIds)->count();
-        $totalVoice = $clanStats->total_voice ?? 0;
+        $totalVoice      = $clanStats->total_voice ?? 0;
 
         $voicePercent = $totalFromCensus > 0 ? round(($totalVoice / $totalFromCensus) * 100) : 0;
 
@@ -39,8 +39,8 @@ class ClanStatsWidget extends BaseWidget
         ])->count();
 
         $populationTrend = $this->getClanPopulationTrend();
-        $voiceTrend = $this->getClanVoiceTrend();
-        $recruitsTrend = $this->getClanRecruitsTrend();
+        $voiceTrend      = $this->getClanVoiceTrend();
+        $recruitsTrend   = $this->getClanRecruitsTrend();
 
         return [
             Stat::make('Total Clan Members', number_format($totalFromCensus))
@@ -97,8 +97,8 @@ class ClanStatsWidget extends BaseWidget
     {
         $data = [];
         for ($i = 13; $i >= 0; $i--) {
-            $start = now()->subDays(($i + 1) * 7);
-            $end = now()->subDays($i * 7);
+            $start  = now()->subDays(($i + 1) * 7);
+            $end    = now()->subDays($i * 7);
             $data[] = Member::whereBetween('join_date', [$start, $end])->count();
         }
 
@@ -111,7 +111,7 @@ class ClanStatsWidget extends BaseWidget
             return $current > 0 ? 'New recruiting activity' : 'No recruiting yet';
         }
 
-        $diff = $current - $previous;
+        $diff    = $current - $previous;
         $percent = round(abs($diff / $previous) * 100);
 
         if ($diff > 0) {

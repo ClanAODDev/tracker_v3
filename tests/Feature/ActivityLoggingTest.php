@@ -22,9 +22,9 @@ class ActivityLoggingTest extends TestCase
 
     public function test_member_activity_records_correct_type_and_subject()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($officer);
         $member->recordActivity(ActivityType::RECRUITED);
@@ -40,10 +40,10 @@ class ActivityLoggingTest extends TestCase
 
     public function test_activity_records_properties()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $platoon = Platoon::factory()->create(['division_id' => $division->id]);
-        $member = $this->createMember(['division_id' => $division->id]);
+        $platoon  = Platoon::factory()->create(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($officer);
         $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
@@ -59,17 +59,17 @@ class ActivityLoggingTest extends TestCase
 
     public function test_note_creation_logs_activity_on_member()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($officer);
 
         Note::create([
-            'body' => 'Test note',
+            'body'      => 'Test note',
             'member_id' => $member->id,
             'author_id' => $officer->id,
-            'type' => 'positive',
+            'type'      => 'positive',
         ]);
 
         $activity = Activity::where('name', ActivityType::CREATED_NOTE)->first();
@@ -82,17 +82,17 @@ class ActivityLoggingTest extends TestCase
 
     public function test_note_update_logs_activity_on_member()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($officer);
 
         $note = Note::create([
-            'body' => 'Test note',
+            'body'      => 'Test note',
             'member_id' => $member->id,
             'author_id' => $officer->id,
-            'type' => 'misc',
+            'type'      => 'misc',
         ]);
 
         Activity::truncate();
@@ -107,17 +107,17 @@ class ActivityLoggingTest extends TestCase
 
     public function test_note_deletion_logs_activity_on_member()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($officer);
 
         $note = Note::create([
-            'body' => 'Test note',
+            'body'      => 'Test note',
             'member_id' => $member->id,
             'author_id' => $officer->id,
-            'type' => 'negative',
+            'type'      => 'negative',
         ]);
 
         Activity::truncate();
@@ -133,14 +133,14 @@ class ActivityLoggingTest extends TestCase
 
     public function test_squad_creation_logs_activity()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $platoon = Platoon::factory()->create(['division_id' => $division->id]);
+        $platoon  = Platoon::factory()->create(['division_id' => $division->id]);
 
         $this->actingAs($officer);
 
         $squad = Squad::create([
-            'name' => 'Alpha Squad',
+            'name'       => 'Alpha Squad',
             'platoon_id' => $platoon->id,
         ]);
 
@@ -153,13 +153,13 @@ class ActivityLoggingTest extends TestCase
 
     public function test_platoon_creation_logs_activity()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
 
         $this->actingAs($officer);
 
         $platoon = Platoon::create([
-            'name' => 'Bravo Platoon',
+            'name'        => 'Bravo Platoon',
             'division_id' => $division->id,
         ]);
 
@@ -173,28 +173,28 @@ class ActivityLoggingTest extends TestCase
     public function test_activity_not_recorded_without_authenticated_user()
     {
         $division = Division::factory()->create();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $member->recordActivity(ActivityType::RECRUITED);
 
         $this->assertDatabaseMissing('activities', [
-            'name' => ActivityType::RECRUITED->value,
+            'name'       => ActivityType::RECRUITED->value,
             'subject_id' => $member->id,
         ]);
     }
 
     public function test_transfer_activity_includes_destination_properties()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $platoon = Platoon::factory()->create(['division_id' => $division->id, 'name' => 'Delta Platoon']);
-        $squad = Squad::factory()->create(['platoon_id' => $platoon->id, 'name' => 'Echo Squad']);
-        $member = $this->createMember(['division_id' => $division->id]);
+        $platoon  = Platoon::factory()->create(['division_id' => $division->id, 'name' => 'Delta Platoon']);
+        $squad    = Squad::factory()->create(['platoon_id' => $platoon->id, 'name' => 'Echo Squad']);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($officer);
         $member->recordActivity(ActivityType::TRANSFERRED, [
             'platoon' => $platoon->name,
-            'squad' => $squad->name,
+            'squad'   => $squad->name,
         ]);
 
         $activity = Activity::where('name', ActivityType::TRANSFERRED)->first();
@@ -206,10 +206,10 @@ class ActivityLoggingTest extends TestCase
 
     public function test_part_time_activity_includes_division_name()
     {
-        $officer = $this->createOfficer();
-        $division = $officer->member->division;
+        $officer       = $this->createOfficer();
+        $division      = $officer->member->division;
         $otherDivision = Division::factory()->create(['name' => 'Test Division']);
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member        = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($officer);
         $member->recordActivity(ActivityType::ADD_PART_TIME, [
@@ -225,7 +225,7 @@ class ActivityLoggingTest extends TestCase
     public function test_activity_type_enum_casts_correctly()
     {
         $officer = $this->createOfficer();
-        $member = $this->createMember(['division_id' => $officer->member->division_id]);
+        $member  = $this->createMember(['division_id' => $officer->member->division_id]);
 
         $this->actingAs($officer);
         $member->recordActivity(ActivityType::FLAGGED);
@@ -240,7 +240,7 @@ class ActivityLoggingTest extends TestCase
     public function test_activity_belongs_to_user()
     {
         $officer = $this->createOfficer();
-        $member = $this->createMember(['division_id' => $officer->member->division_id]);
+        $member  = $this->createMember(['division_id' => $officer->member->division_id]);
 
         $this->actingAs($officer);
         $member->recordActivity(ActivityType::REMOVED);
@@ -254,7 +254,7 @@ class ActivityLoggingTest extends TestCase
     public function test_activity_morph_to_subject()
     {
         $officer = $this->createOfficer();
-        $member = $this->createMember(['division_id' => $officer->member->division_id]);
+        $member  = $this->createMember(['division_id' => $officer->member->division_id]);
 
         $this->actingAs($officer);
         $member->recordActivity(ActivityType::UNASSIGNED);
@@ -269,7 +269,7 @@ class ActivityLoggingTest extends TestCase
     public function test_member_has_activity_relationship()
     {
         $officer = $this->createOfficer();
-        $member = $this->createMember(['division_id' => $officer->member->division_id]);
+        $member  = $this->createMember(['division_id' => $officer->member->division_id]);
 
         $this->actingAs($officer);
         $member->recordActivity(ActivityType::RECRUITED);
@@ -283,7 +283,7 @@ class ActivityLoggingTest extends TestCase
     public function test_empty_properties_stored_as_null()
     {
         $officer = $this->createOfficer();
-        $member = $this->createMember(['division_id' => $officer->member->division_id]);
+        $member  = $this->createMember(['division_id' => $officer->member->division_id]);
 
         $this->actingAs($officer);
         $member->recordActivity(ActivityType::RECRUITED);

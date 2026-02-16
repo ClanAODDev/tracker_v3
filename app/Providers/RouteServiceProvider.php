@@ -44,7 +44,7 @@ class RouteServiceProvider extends ServiceProvider
          */
         \Route::bind('division', function ($division) {
             $division = strtolower($division);
-            $model = Division::where('slug', $division)->first();
+            $model    = Division::where('slug', $division)->first();
             if ($model instanceof Division) {
                 return $model;
             }
@@ -98,8 +98,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'api',
-            'namespace' => $this->namespace,
-            'prefix' => 'api',
+            'namespace'  => $this->namespace,
+            'prefix'     => 'api',
         ], function ($router) {
             require base_path('routes/api.php');
         });
@@ -109,7 +109,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::group([
             'middleware' => 'web',
-            'namespace' => $this->namespace,
+            'namespace'  => $this->namespace,
         ], function ($router) {
             require base_path('routes/web.php');
         });

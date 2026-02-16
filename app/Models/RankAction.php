@@ -18,10 +18,10 @@ class RankAction extends Model implements Commentable
     use HasReactions;
 
     protected $casts = [
-        'rank' => Rank::class,
+        'rank'        => Rank::class,
         'approved_at' => 'datetime',
         'accepted_at' => 'datetime',
-        'awarded_at' => 'datetime',
+        'awarded_at'  => 'datetime',
         'declined_at' => 'datetime',
     ];
 
@@ -82,7 +82,7 @@ class RankAction extends Model implements Commentable
         $this->update([
             'approved_at' => $now,
             'accepted_at' => $now,
-            'awarded_at' => $now,
+            'awarded_at'  => $now,
         ]);
 
         return $this;
@@ -110,7 +110,7 @@ class RankAction extends Model implements Commentable
     {
         $this->update([
             'deny_reason' => $deny_reason,
-            'denied_at' => now(),
+            'denied_at'   => now(),
         ]);
 
         return $this;
@@ -131,8 +131,8 @@ class RankAction extends Model implements Commentable
 
     public function scopeForUser(Builder $query, $user): Builder
     {
-        $member = $user->member;
-        $userRank = $member->rank->value;
+        $member          = $user->member;
+        $userRank        = $member->rank->value;
         $currentMemberId = $member->id;
 
         $query->whereHas('member', function (Builder $memberQuery) use ($user, $member) {

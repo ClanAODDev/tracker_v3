@@ -14,10 +14,10 @@ class NoteFactory extends Factory
     public function definition(): array
     {
         return [
-            'body' => $this->faker->paragraph,
+            'body'      => $this->faker->paragraph,
             'member_id' => Member::factory(),
             'author_id' => User::factory(),
-            'type' => $this->faker->randomElement(['misc', 'positive', 'negative']),
+            'type'      => $this->faker->randomElement(['misc', 'positive', 'negative']),
         ];
     }
 

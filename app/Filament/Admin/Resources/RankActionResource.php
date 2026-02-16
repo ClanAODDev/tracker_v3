@@ -97,9 +97,9 @@ class RankActionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListRankActions::route('/'),
+            'index'  => ListRankActions::route('/'),
             'create' => CreateRankAction::route('/create'),
-            'edit' => EditRankAction::route('/{record}/edit'),
+            'edit'   => EditRankAction::route('/{record}/edit'),
         ];
     }
 }

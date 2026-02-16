@@ -38,14 +38,14 @@ class EditSquad extends EditRecord
         $state = $this->form->getState();
 
         $originalLeaderId = $state['original_leader_id'] ?? null;
-        $newLeaderId = (int) $this->record->leader_id;
+        $newLeaderId      = (int) $this->record->leader_id;
 
         if ($originalLeaderId !== $newLeaderId) {
             if ($newLeaderId) {
                 Member::where('clan_id', $newLeaderId)->update([
-                    'position' => Position::SQUAD_LEADER,
+                    'position'   => Position::SQUAD_LEADER,
                     'platoon_id' => $this->record->platoon_id,
-                    'squad_id' => $this->record->id,
+                    'squad_id'   => $this->record->id,
                 ]);
 
                 Platoon::where('leader_id', $newLeaderId)->update(['leader_id' => null]);
@@ -56,9 +56,9 @@ class EditSquad extends EditRecord
 
             if ($originalLeaderId) {
                 Member::where('clan_id', $originalLeaderId)->update([
-                    'position' => Position::MEMBER,
+                    'position'   => Position::MEMBER,
                     'platoon_id' => null,
-                    'squad_id' => null,
+                    'squad_id'   => null,
                 ]);
 
                 Platoon::where('leader_id', $originalLeaderId)

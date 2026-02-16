@@ -18,7 +18,7 @@ trait HasActivityGraph
             : $unit->division;
 
         $maxDays = $division->settings()->get('inactivity_days') ?? 90;
-        $now = CarbonImmutable::now();
+        $now     = CarbonImmutable::now();
         $members = $unit->members();
 
         // Define cutoffs including the final maxDays
@@ -30,7 +30,7 @@ trait HasActivityGraph
         $values = [];
         $colors = array_slice($this->activityColors, 0, $buckets + 1); // +1 for final bucket
 
-        $prevCutoff = 0;
+        $prevCutoff    = 0;
         $prevThreshold = $now;
 
         foreach ($cutoffs as $cutoff) {
@@ -44,7 +44,7 @@ trait HasActivityGraph
 
             $values[] = $query->count();
 
-            $prevCutoff = $cutoff;
+            $prevCutoff    = $cutoff;
             $prevThreshold = $currentThreshold;
         }
 

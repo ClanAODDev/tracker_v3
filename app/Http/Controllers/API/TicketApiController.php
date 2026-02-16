@@ -63,7 +63,7 @@ class TicketApiController extends Controller
 
         return response()->json([
             'message' => 'Ticket assigned to you',
-            'ticket' => $this->transformTicket($ticket, true, true),
+            'ticket'  => $this->transformTicket($ticket, true, true),
         ]);
     }
 
@@ -82,7 +82,7 @@ class TicketApiController extends Controller
 
         return response()->json([
             'message' => 'Ticket resolved',
-            'ticket' => $this->transformTicket($ticket, true, true),
+            'ticket'  => $this->transformTicket($ticket, true, true),
         ]);
     }
 
@@ -105,7 +105,7 @@ class TicketApiController extends Controller
 
         return response()->json([
             'message' => 'Ticket rejected',
-            'ticket' => $this->transformTicket($ticket, true, true),
+            'ticket'  => $this->transformTicket($ticket, true, true),
         ]);
     }
 
@@ -123,13 +123,13 @@ class TicketApiController extends Controller
 
         return response()->json([
             'message' => 'Ticket reopened',
-            'ticket' => $this->transformTicket($ticket, true, true),
+            'ticket'  => $this->transformTicket($ticket, true, true),
         ]);
     }
 
     public function types(): JsonResponse
     {
-        $user = auth()->user();
+        $user       = auth()->user();
         $userRoleId = $user->role->value ? (string) $user->role->value : null;
 
         $types = TicketType::orderBy('display_order')
@@ -143,9 +143,9 @@ class TicketApiController extends Controller
                 return $userRoleId && in_array($userRoleId, $roleAccess);
             })
             ->map(fn ($type) => [
-                'id' => $type->id,
-                'name' => $type->name,
-                'slug' => $type->slug,
+                'id'          => $type->id,
+                'name'        => $type->name,
+                'slug'        => $type->slug,
                 'description' => $type->description,
                 'boilerplate' => $type->boilerplate,
             ])
@@ -156,7 +156,7 @@ class TicketApiController extends Controller
 
     public function show(Ticket $ticket): JsonResponse
     {
-        $user = auth()->user();
+        $user    = auth()->user();
         $canWork = $ticket->type?->userCanWork($user) ?? $user->isRole('admin');
 
         if ($ticket->caller_id !== $user->id && ! $canWork) {
@@ -174,15 +174,15 @@ class TicketApiController extends Controller
     {
         $validated = $request->validate([
             'ticket_type_id' => 'required|exists:ticket_types,id',
-            'description' => 'required|string|min:25',
+            'description'    => 'required|string|min:25',
         ]);
 
         $ticket = Ticket::create([
-            'state' => 'new',
+            'state'          => 'new',
             'ticket_type_id' => $validated['ticket_type_id'],
-            'description' => $validated['description'],
-            'caller_id' => auth()->id(),
-            'division_id' => auth()->user()->member?->division_id ?? 1,
+            'description'    => $validated['description'],
+            'caller_id'      => auth()->id(),
+            'division_id'    => auth()->user()->member?->division_id ?? 1,
         ]);
 
         $this->notificationService->notifyTicketCreated($ticket);
@@ -190,7 +190,7 @@ class TicketApiController extends Controller
         $ticket->load(['type', 'owner', 'division']);
 
         return response()->json([
-            'ticket' => $this->transformTicket($ticket),
+            'ticket'  => $this->transformTicket($ticket),
             'message' => 'Ticket created successfully',
         ], 201);
     }
@@ -208,7 +208,7 @@ class TicketApiController extends Controller
         ]);
 
         $comment = $ticket->comments()->create([
-            'body' => $validated['body'],
+            'body'    => $validated['body'],
             'user_id' => auth()->id(),
         ]);
 
@@ -218,11 +218,11 @@ class TicketApiController extends Controller
 
         return response()->json([
             'comment' => [
-                'id' => $comment->id,
+                'id'   => $comment->id,
                 'body' => $comment->body,
                 'user' => [
-                    'id' => $comment->user->id,
-                    'name' => $comment->user->name,
+                    'id'       => $comment->user->id,
+                    'name'     => $comment->user->name,
                     'is_admin' => $comment->user->isRole('admin'),
                 ],
                 'created_at' => $comment->created_at->toIso8601String(),
@@ -233,47 +233,47 @@ class TicketApiController extends Controller
 
     protected function transformTicket(Ticket $ticket, bool $includeComments = false, bool $includeCaller = false): array
     {
-        $type = $ticket->type;
+        $type     = $ticket->type;
         $division = $ticket->division;
-        $owner = $ticket->owner;
-        $caller = $ticket->caller;
+        $owner    = $ticket->owner;
+        $caller   = $ticket->caller;
 
         $data = [
-            'id' => $ticket->id,
-            'state' => $ticket->state,
+            'id'          => $ticket->id,
+            'state'       => $ticket->state,
             'state_color' => $ticket->stateColors[$ticket->state] ?? 'gray',
             'description' => $ticket->description,
-            'type' => $type ? [
-                'id' => $type->id,
+            'type'        => $type ? [
+                'id'   => $type->id,
                 'name' => $type->name,
             ] : null,
             'division' => $division ? [
-                'id' => $division->id,
+                'id'   => $division->id,
                 'name' => $division->name,
             ] : null,
             'owner' => $owner ? [
-                'id' => $owner->id,
+                'id'   => $owner->id,
                 'name' => $owner->name,
             ] : null,
-            'created_at' => $ticket->created_at->toIso8601String(),
-            'updated_at' => $ticket->updated_at->toIso8601String(),
+            'created_at'  => $ticket->created_at->toIso8601String(),
+            'updated_at'  => $ticket->updated_at->toIso8601String(),
             'resolved_at' => $ticket->resolved_at?->toIso8601String(),
         ];
 
         if ($includeCaller) {
             $data['caller'] = $caller ? [
-                'id' => $caller->id,
+                'id'   => $caller->id,
                 'name' => $caller->name,
             ] : null;
         }
 
         if ($includeComments) {
             $data['comments'] = $ticket->comments->map(fn ($comment) => [
-                'id' => $comment->id,
+                'id'   => $comment->id,
                 'body' => $comment->body,
                 'user' => $comment->user ? [
-                    'id' => $comment->user->id,
-                    'name' => $comment->user->name,
+                    'id'       => $comment->user->id,
+                    'name'     => $comment->user->name,
                     'is_admin' => $comment->user->isRole('admin'),
                 ] : null,
                 'created_at' => $comment->created_at->toIso8601String(),

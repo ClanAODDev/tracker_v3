@@ -18,13 +18,13 @@ class AODBotServiceTest extends TestCase
 
     private function createServiceWithMockedClient(array $responses): AODBotService
     {
-        $mock = new MockHandler($responses);
+        $mock         = new MockHandler($responses);
         $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        $client       = new Client(['handler' => $handlerStack]);
 
         $service = new AODBotService;
 
-        $reflection = new \ReflectionClass($service);
+        $reflection     = new \ReflectionClass($service);
         $clientProperty = $reflection->getProperty('client');
         $clientProperty->setAccessible(true);
         $clientProperty->setValue($service, $client);
@@ -72,7 +72,7 @@ class AODBotServiceTest extends TestCase
         ]);
 
         $response = $service->getForumMember(12345);
-        $body = json_decode($response->getBody()->getContents(), true);
+        $body     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertEquals($expectedData, $body);
     }
@@ -101,7 +101,7 @@ class AODBotServiceTest extends TestCase
         ]);
 
         $response = $service->updateDiscordMember('123456789012345678');
-        $body = json_decode($response->getBody()->getContents(), true);
+        $body     = json_decode($response->getBody()->getContents(), true);
 
         $this->assertEquals('success', $body['status']);
         $this->assertTrue($body['updated']);
@@ -123,10 +123,10 @@ class AODBotServiceTest extends TestCase
         ]);
 
         $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        $client       = new Client(['handler' => $handlerStack]);
 
-        $service = new AODBotService;
-        $reflection = new \ReflectionClass($service);
+        $service        = new AODBotService;
+        $reflection     = new \ReflectionClass($service);
         $clientProperty = $reflection->getProperty('client');
         $clientProperty->setAccessible(true);
         $clientProperty->setValue($service, $client);
@@ -153,10 +153,10 @@ class AODBotServiceTest extends TestCase
         ]);
 
         $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
+        $client       = new Client(['handler' => $handlerStack]);
 
-        $service = new AODBotService;
-        $reflection = new \ReflectionClass($service);
+        $service        = new AODBotService;
+        $reflection     = new \ReflectionClass($service);
         $clientProperty = $reflection->getProperty('client');
         $clientProperty->setAccessible(true);
         $clientProperty->setValue($service, $client);

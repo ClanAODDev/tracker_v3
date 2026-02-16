@@ -25,17 +25,17 @@ class RecruitmentService
         $member = Member::firstOrNew(['clan_id' => $clanId]);
 
         $member->fill([
-            'name' => $name,
-            'join_date' => now(),
-            'last_activity' => now(),
-            'recruiter_id' => $recruiterId,
-            'rank' => $rankId,
-            'position' => Position::MEMBER,
-            'division_id' => $division->id,
+            'name'                   => $name,
+            'join_date'              => now(),
+            'last_activity'          => now(),
+            'recruiter_id'           => $recruiterId,
+            'rank'                   => $rankId,
+            'position'               => Position::MEMBER,
+            'division_id'            => $division->id,
             'flagged_for_inactivity' => false,
-            'last_promoted_at' => now(),
-            'platoon_id' => $platoonId,
-            'squad_id' => $squadId ?? 0,
+            'last_promoted_at'       => now(),
+            'platoon_id'             => $platoonId,
+            'squad_id'               => $squadId ?? 0,
         ])->save();
 
         $this->attachIngameHandle($member, $division, $ingameName);
@@ -43,14 +43,14 @@ class RecruitmentService
         $member->recordActivity(ActivityType::RECRUITED);
 
         RankAction::create([
-            'member_id' => $member->id,
-            'rank' => $rankId,
+            'member_id'     => $member->id,
+            'rank'          => $rankId,
             'justification' => 'New recruit',
-            'requester_id' => $recruiterId,
+            'requester_id'  => $recruiterId,
         ])->approveAndAccept();
 
         Transfer::create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $division->id,
             'approved_at' => now(),
         ]);
@@ -77,8 +77,8 @@ class RecruitmentService
 
         MemberRequest::create([
             'requester_id' => $requesterId,
-            'member_id' => $member->clan_id,
-            'division_id' => $division->id,
+            'member_id'    => $member->clan_id,
+            'division_id'  => $division->id,
         ]);
     }
 }

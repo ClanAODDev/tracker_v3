@@ -78,7 +78,7 @@ class PartTimeMemberCleanupTest extends TestCase
 
     public function test_does_not_affect_members_without_division()
     {
-        $tempDivision = $this->createActiveDivision();
+        $tempDivision     = $this->createActiveDivision();
         $partTimeDivision = $this->createActiveDivision();
 
         $member = $this->createMember([

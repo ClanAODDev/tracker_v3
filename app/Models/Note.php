@@ -35,7 +35,7 @@ class Note extends Model
     }
 
     protected static $noteTypes = [
-        'misc' => 'Misc',
+        'misc'     => 'Misc',
         'negative' => 'Negative',
         'positive' => 'Positive',
     ];

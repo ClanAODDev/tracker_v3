@@ -31,8 +31,8 @@ readonly class CensusChartData
     public function toArray(): array
     {
         return [
-            'labels' => $this->labels,
-            'population' => $this->population,
+            'labels'      => $this->labels,
+            'population'  => $this->population,
             'voiceActive' => $this->voiceActive,
         ];
     }

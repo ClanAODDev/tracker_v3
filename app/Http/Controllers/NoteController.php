@@ -58,7 +58,7 @@ class NoteController extends Controller
         $this->authorize('separate', $member);
 
         $this->validate(request(), [
-            'body.required' => 'You must provide content for your note',
+            'body.required'           => 'You must provide content for your note',
             'forum_thread_id.numeric' => 'Forum thread ID must be a number',
         ]);
 

@@ -9,12 +9,12 @@ enum Position: int implements HasLabel
 {
     use EnumOptions;
 
-    case MEMBER = 1;
-    case SQUAD_LEADER = 2;
-    case PLATOON_LEADER = 3;
-    case EXECUTIVE_OFFICER = 5;
+    case MEMBER             = 1;
+    case SQUAD_LEADER       = 2;
+    case PLATOON_LEADER     = 3;
+    case EXECUTIVE_OFFICER  = 5;
     case COMMANDING_OFFICER = 6;
-    case CLAN_ADMIN = 7;
+    case CLAN_ADMIN         = 7;
 
     public function getLabel(): ?string
     {
@@ -36,11 +36,11 @@ enum Position: int implements HasLabel
     public function getAbbreviation(): ?string
     {
         return match ($this) {
-            self::SQUAD_LEADER => 'SL',
-            self::PLATOON_LEADER => 'PL',
-            self::EXECUTIVE_OFFICER => 'XO',
+            self::SQUAD_LEADER       => 'SL',
+            self::PLATOON_LEADER     => 'PL',
+            self::EXECUTIVE_OFFICER  => 'XO',
             self::COMMANDING_OFFICER => 'CO',
-            self::CLAN_ADMIN => 'CA',
+            self::CLAN_ADMIN         => 'CA',
 
             self::MEMBER => '',
         };
@@ -49,8 +49,8 @@ enum Position: int implements HasLabel
     public function getClass(): string
     {
         return match ($this) {
-            self::MEMBER => 'text-default',
-            self::SQUAD_LEADER => 'text-info',
+            self::MEMBER         => 'text-default',
+            self::SQUAD_LEADER   => 'text-info',
             self::PLATOON_LEADER => 'text-warning',
 
             self::EXECUTIVE_OFFICER,

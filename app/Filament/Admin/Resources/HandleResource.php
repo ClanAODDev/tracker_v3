@@ -83,9 +83,9 @@ class HandleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListHandles::route('/'),
+            'index'  => ListHandles::route('/'),
             'create' => CreateHandle::route('/create'),
-            'edit' => EditHandle::route('/{record}/edit'),
+            'edit'   => EditHandle::route('/{record}/edit'),
         ];
     }
 }

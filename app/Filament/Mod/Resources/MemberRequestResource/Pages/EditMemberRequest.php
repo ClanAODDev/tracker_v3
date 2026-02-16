@@ -34,8 +34,8 @@ class EditMemberRequest extends EditRecord
                 ->label('Approve')
                 ->icon('heroicon-o-check-circle')
                 ->visible(function (): bool {
-                    $rec = $this->getRecord();
-                    $onHold = $rec->newQuery()->onHold()->whereKey($rec)->exists();
+                    $rec        = $this->getRecord();
+                    $onHold     = $rec->newQuery()->onHold()->whereKey($rec)->exists();
                     $isApproved = (bool) ($rec->approved_at && is_null($rec->processed_at));
 
                     return ! $onHold && ! $isApproved;
@@ -49,7 +49,7 @@ class EditMemberRequest extends EditRecord
                         ->default(fn () => $this->getRecord()->member->name),
                 ])
                 ->action(function (array $data): void {
-                    $rec = $this->getRecord();
+                    $rec  = $this->getRecord();
                     $user = auth()->user();
 
                     if ($rec->member->name !== $data['member_name']) {
@@ -74,8 +74,8 @@ class EditMemberRequest extends EditRecord
                 ->color('warning')
                 ->icon('heroicon-o-pause-circle')
                 ->visible(function (): bool {
-                    $rec = $this->getRecord();
-                    $onHold = $rec->newQuery()->onHold()->whereKey($rec)->exists();
+                    $rec        = $this->getRecord();
+                    $onHold     = $rec->newQuery()->onHold()->whereKey($rec)->exists();
                     $isApproved = ($rec->approved_at && is_null($rec->processed_at));
 
                     return ! $onHold && ! $isApproved;
@@ -88,7 +88,7 @@ class EditMemberRequest extends EditRecord
                         ->rows(5),
                 ])
                 ->action(function (array $data): void {
-                    $rec = $this->getRecord();
+                    $rec  = $this->getRecord();
                     $user = auth()->user();
 
                     $rec->placeOnHold($data['notes']);
@@ -136,7 +136,7 @@ class EditMemberRequest extends EditRecord
                 })
                 ->requiresConfirmation()
                 ->action(function (): void {
-                    $rec = $this->getRecord();
+                    $rec  = $this->getRecord();
                     $user = auth()->user();
 
                     // Just (re)queue the job — no status changes here

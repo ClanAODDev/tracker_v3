@@ -134,9 +134,9 @@ class TicketTypeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListTicketTypes::route('/'),
+            'index'  => ListTicketTypes::route('/'),
             'create' => CreateTicketType::route('/create'),
-            'edit' => EditTicketType::route('/{record}/edit'),
+            'edit'   => EditTicketType::route('/{record}/edit'),
         ];
     }
 }

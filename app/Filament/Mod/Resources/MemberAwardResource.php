@@ -251,9 +251,9 @@ class MemberAwardResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListMemberAwards::route('/'),
+            'index'  => ListMemberAwards::route('/'),
             'create' => CreateMemberAward::route('/create'),
-            'edit' => EditMemberAward::route('/{record}/edit'),
+            'edit'   => EditMemberAward::route('/{record}/edit'),
         ];
     }
 }

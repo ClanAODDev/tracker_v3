@@ -23,9 +23,9 @@ class FetchApplicationFeeds extends BaseCommand
 
     protected array $stats = [
         'divisions_processed' => 0,
-        'applications_found' => 0,
-        'notifications_sent' => 0,
-        'errors' => 0,
+        'applications_found'  => 0,
+        'notifications_sent'  => 0,
+        'errors'              => 0,
     ];
 
     public function handle(): int
@@ -62,7 +62,7 @@ class FetchApplicationFeeds extends BaseCommand
         $this->verbose("Processing {$division->name}...");
 
         try {
-            $feedUrl = $division->settings()->get('recruitment_rss_feed');
+            $feedUrl    = $division->settings()->get('recruitment_rss_feed');
             $rssContent = $this->fetchRssContent($feedUrl);
 
             if (! $rssContent) {
@@ -94,7 +94,7 @@ class FetchApplicationFeeds extends BaseCommand
             }
 
             $body = $this->sanitizeRssContent($response->body());
-            $xml = new SimpleXMLElement($body);
+            $xml  = new SimpleXMLElement($body);
 
             if (! $this->isValidRssFeed($xml)) {
                 $this->logError("Invalid RSS feed structure for {$url}");
@@ -112,7 +112,7 @@ class FetchApplicationFeeds extends BaseCommand
 
     protected function sanitizeRssContent(string $content): string
     {
-        $endTag = '</rss>';
+        $endTag   = '</rss>';
         $position = stripos($content, $endTag);
 
         if ($position !== false) {
@@ -177,7 +177,7 @@ class FetchApplicationFeeds extends BaseCommand
         $ttlDays = config('tracker.application_cache_days', 45);
 
         Cache::put($cacheKey, [
-            'guid' => $threadId,
+            'guid'     => $threadId,
             'pub_date' => now()->toDateTimeString(),
         ], now()->addDays($ttlDays));
     }

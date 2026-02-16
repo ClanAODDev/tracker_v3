@@ -62,11 +62,11 @@ class MemberTransferController extends Controller
             ], 400);
         }
 
-        $isOfficer = $member->rank->isOfficer();
+        $isOfficer   = $member->rank->isOfficer();
         $oldDivision = $member->division;
 
         $transfer = Transfer::create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'division_id' => $targetDivision->id,
         ]);
 
@@ -89,9 +89,9 @@ class MemberTransferController extends Controller
         }
 
         return response()->json([
-            'success' => true,
+            'success'       => true,
             'auto_approved' => ! $isOfficer,
-            'message' => $isOfficer
+            'message'       => $isOfficer
                 ? 'Transfer request submitted. Awaiting approval from ' . $targetDivision->name . ' leadership.'
                 : 'You have been transferred to ' . $targetDivision->name,
         ]);

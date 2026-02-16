@@ -14,9 +14,9 @@ class DivisionTagFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->word,
+            'name'        => $this->faker->word,
             'division_id' => Division::factory(),
-            'visibility' => TagVisibility::PUBLIC,
+            'visibility'  => TagVisibility::PUBLIC,
         ];
     }
 

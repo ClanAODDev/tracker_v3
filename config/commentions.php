@@ -7,8 +7,8 @@ return [
     |--------------------------------------------------------------------------
     */
     'tables' => [
-        'comments' => 'comments',
-        'comment_reactions' => 'comment_reactions',
+        'comments'              => 'comments',
+        'comment_reactions'     => 'comment_reactions',
         'comment_subscriptions' => 'comment_subscriptions',
     ],
 
@@ -27,7 +27,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'comment' => [
-        'model' => \Kirschbaum\Commentions\Comment::class,
+        'model'  => \Kirschbaum\Commentions\Comment::class,
         'policy' => \Kirschbaum\Commentions\Policies\CommentPolicy::class,
     ],
 
@@ -73,7 +73,7 @@ return [
 
             'channels' => explode(',', env('COMMENTIONS_NOTIFICATIONS_MENTIONS_CHANNELS', 'mail')),
 
-            'listener' => \Kirschbaum\Commentions\Listeners\SendUserMentionedNotification::class,
+            'listener'     => \Kirschbaum\Commentions\Listeners\SendUserMentionedNotification::class,
             'notification' => \Kirschbaum\Commentions\Notifications\UserMentionedInComment::class,
 
             'mail' => [

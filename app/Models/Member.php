@@ -37,20 +37,20 @@ class Member extends Model
     }
 
     protected $casts = [
-        'pending_member' => 'boolean',
-        'flagged_for_inactivity' => 'boolean',
-        'join_date' => 'datetime',
-        'last_activity' => 'datetime',
-        'last_ts_activity' => 'datetime',
-        'last_voice_activity' => 'datetime',
-        'last_promoted_at' => 'datetime',
-        'last_trained_at' => 'datetime',
-        'xo_at' => 'datetime',
-        'co_at' => 'datetime',
+        'pending_member'            => 'boolean',
+        'flagged_for_inactivity'    => 'boolean',
+        'join_date'                 => 'datetime',
+        'last_activity'             => 'datetime',
+        'last_ts_activity'          => 'datetime',
+        'last_voice_activity'       => 'datetime',
+        'last_promoted_at'          => 'datetime',
+        'last_trained_at'           => 'datetime',
+        'xo_at'                     => 'datetime',
+        'co_at'                     => 'datetime',
         'last_activity_reminder_at' => 'datetime',
 
-        'position' => Position::class,
-        'rank' => Rank::class,
+        'position'          => Position::class,
+        'rank'              => Rank::class,
         'last_voice_status' => DiscordStatus::class,
     ];
 
@@ -126,12 +126,12 @@ class Member extends Model
     public function reset()
     {
         $this->update([
-            'division_id' => 0,
-            'platoon_id' => 0,
-            'squad_id' => 0,
-            'position' => Position::MEMBER,
+            'division_id'            => 0,
+            'platoon_id'             => 0,
+            'squad_id'               => 0,
+            'position'               => Position::MEMBER,
             'flagged_for_inactivity' => false,
-            'groups' => null,
+            'groups'                 => null,
         ]);
 
         $this->partTimeDivisions()->detach();
@@ -367,7 +367,7 @@ class Member extends Model
         ];
 
         return [
-            'name' => "{$this->present()->rankName} ({$this->clan_id}) - {$division}",
+            'name'  => "{$this->present()->rankName} ({$this->clan_id}) - {$division}",
             'value' => 'Profiles: '
                 . implode(', ', $links)
                 . PHP_EOL
@@ -378,9 +378,9 @@ class Member extends Model
     public function scopeEligibleForRankAction(Builder $query, $user, ?string $search = null): Builder
     {
         $currentMember = $user->member;
-        $roleLimits = [
-            'squadLeader' => config('aod.rank.max_squad_leader'),
-            'platoonLeader' => config('aod.rank.max_platoon_leader'),
+        $roleLimits    = [
+            'squadLeader'    => config('aod.rank.max_squad_leader'),
+            'platoonLeader'  => config('aod.rank.max_platoon_leader'),
             'divisionLeader' => config('aod.rank.max_division_leader'),
         ];
 

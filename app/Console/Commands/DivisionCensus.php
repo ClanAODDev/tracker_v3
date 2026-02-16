@@ -16,7 +16,7 @@ class DivisionCensus extends BaseCommand
 
     protected array $stats = [
         'recorded' => 0,
-        'errors' => 0,
+        'errors'   => 0,
     ];
 
     public function handle(): int
@@ -50,11 +50,11 @@ class DivisionCensus extends BaseCommand
     {
         try {
             Census::create([
-                'division_id' => $division->id,
-                'count' => $division->members()->count(),
+                'division_id'         => $division->id,
+                'count'               => $division->members()->count(),
                 'weekly_active_count' => $division->membersActiveSinceDaysAgo(8)->count(),
-                'weekly_ts_count' => $division->membersActiveOnTsSinceDaysAgo(8)->count(),
-                'weekly_voice_count' => $division->membersActiveOnDiscordSinceDaysAgo(8)->count(),
+                'weekly_ts_count'     => $division->membersActiveOnTsSinceDaysAgo(8)->count(),
+                'weekly_voice_count'  => $division->membersActiveOnDiscordSinceDaysAgo(8)->count(),
             ]);
 
             $this->stats['recorded']++;

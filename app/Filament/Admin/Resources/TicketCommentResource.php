@@ -86,9 +86,9 @@ class TicketCommentResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListTicketComments::route('/'),
+            'index'  => ListTicketComments::route('/'),
             'create' => CreateTicketComment::route('/create'),
-            'edit' => EditTicketComment::route('/{record}/edit'),
+            'edit'   => EditTicketComment::route('/{record}/edit'),
         ];
     }
 }

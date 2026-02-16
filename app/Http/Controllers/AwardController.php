@@ -51,7 +51,7 @@ class AwardController extends Controller
         $maxRecipients = $awards->max('recipients_count') ?: 1;
         $awards->each(function ($award) use ($maxRecipients) {
             $award->popularityPct = round($award->recipients_count / $maxRecipients * 100);
-            $award->rarity = $award->getRarity();
+            $award->rarity        = $award->getRarity();
         });
 
         $clanAwards = $awards->whereNull('division_id')->values();
@@ -69,9 +69,9 @@ class AwardController extends Controller
             ->sortKeys();
 
         $activeAndClanAwards = $awards->filter(fn ($a) => $a->division_id === null || $a->division?->active);
-        $totals = (object) [
-            'awards' => $awards->count(),
-            'recipients' => $awards->sum('recipients_count'),
+        $totals              = (object) [
+            'awards'      => $awards->count(),
+            'recipients'  => $awards->sum('recipients_count'),
             'requestable' => $activeAndClanAwards->where('allow_request', true)->count(),
         ];
 
@@ -86,7 +86,7 @@ class AwardController extends Controller
             ->sortBy([['active', 'desc'], ['name', 'asc']])
             ->values();
 
-        $tieredGroups = $this->buildTieredGroups();
+        $tieredGroups   = $this->buildTieredGroups();
         $tieredAwardIds = collect($tieredGroups)
             ->flatMap(fn ($group) => $group['tiers']->pluck('id'))
             ->toArray();
@@ -125,14 +125,14 @@ class AwardController extends Controller
             ->get();
 
         $processed = [];
-        $groups = [];
+        $groups    = [];
 
         foreach ($awardsWithChains as $award) {
             if (in_array($award->id, $processed)) {
                 continue;
             }
 
-            $chain = collect([$award]);
+            $chain   = collect([$award]);
             $current = $award->prerequisite;
             while ($current) {
                 $chain->push($current);
@@ -147,28 +147,28 @@ class AwardController extends Controller
 
             $chain = $chain->unique('id')->sortBy('display_order')->values();
 
-            $chainIds = $chain->pluck('id')->toArray();
+            $chainIds  = $chain->pluck('id')->toArray();
             $processed = array_merge($processed, $chainIds);
 
-            $topTier = $chain->last();
+            $topTier        = $chain->last();
             $recipientCount = MemberAward::whereIn('award_id', $chainIds)
                 ->where('approved', true)
                 ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
                 ->distinct('member_id')
                 ->count('member_id');
 
-            $baseTier = $chain->first();
+            $baseTier  = $chain->first();
             $groupName = $baseTier->tiered_group_name ?? $this->getTieredGroupName($chain);
-            $division = $baseTier->division;
-            $groups[] = [
-                'name' => $groupName,
-                'slug' => Str::slug($groupName),
-                'description' => $baseTier->tiered_group_description ?? $this->getTieredGroupDescription($chain, $groupName),
-                'tiers' => $chain,
-                'topTier' => $topTier,
+            $division  = $baseTier->division;
+            $groups[]  = [
+                'name'           => $groupName,
+                'slug'           => Str::slug($groupName),
+                'description'    => $baseTier->tiered_group_description ?? $this->getTieredGroupDescription($chain, $groupName),
+                'tiers'          => $chain,
+                'topTier'        => $topTier,
                 'recipientCount' => $recipientCount,
-                'division_id' => $division?->id,
-                'division' => $division,
+                'division_id'    => $division?->id,
+                'division'       => $division,
             ];
         }
 
@@ -184,7 +184,7 @@ class AwardController extends Controller
         }
 
         $commonWords = [];
-        $firstWords = explode(' ', $names[0]);
+        $firstWords  = explode(' ', $names[0]);
         foreach ($firstWords as $word) {
             if (collect($names)->every(fn ($n) => str_contains($n, $word))) {
                 $commonWords[] = $word;
@@ -197,7 +197,7 @@ class AwardController extends Controller
     private function getTieredGroupDescription($chain, string $groupName): string
     {
         $tierCount = $chain->count();
-        $topTier = $chain->last();
+        $topTier   = $chain->last();
 
         if (str_contains($groupName, 'Tenure')) {
             return 'Recognition for years of dedicated service to the Angels of Death clan. Each tier represents a milestone in your AOD journey.';
@@ -209,14 +209,14 @@ class AwardController extends Controller
     public function tiered(string $slug)
     {
         $tieredGroups = $this->buildTieredGroups();
-        $group = collect($tieredGroups)->firstWhere('slug', $slug);
+        $group        = collect($tieredGroups)->firstWhere('slug', $slug);
 
         if (! $group) {
             abort(404);
         }
 
         $tierIds = $group['tiers']->pluck('id')->toArray();
-        $tiers = Award::whereIn('id', $tierIds)
+        $tiers   = Award::whereIn('id', $tierIds)
             ->withCount('recipients')
             ->orderBy('display_order')
             ->get();
@@ -232,8 +232,8 @@ class AwardController extends Controller
             : collect();
 
         $userAwardIds = $userAwards->pluck('award_id')->toArray();
-        $earnedCount = count($userAwardIds);
-        $totalTiers = $tiers->count();
+        $earnedCount  = count($userAwardIds);
+        $totalTiers   = $tiers->count();
 
         $nextTierId = null;
         foreach ($tiers as $tier) {
@@ -245,12 +245,12 @@ class AwardController extends Controller
 
         $stats = (object) [
             'totalRecipients' => $group['recipientCount'],
-            'firstAwarded' => MemberAward::whereIn('award_id', $tierIds)
+            'firstAwarded'    => MemberAward::whereIn('award_id', $tierIds)
                 ->where('approved', true)
                 ->orderBy('created_at')
                 ->first()?->created_at,
             'earnedCount' => $earnedCount,
-            'totalTiers' => $totalTiers,
+            'totalTiers'  => $totalTiers,
             'progressPct' => $totalTiers > 0 ? round(($earnedCount / $totalTiers) * 100) : 0,
         ];
 
@@ -269,7 +269,7 @@ class AwardController extends Controller
             ->orderByDesc('created_at')
             ->paginate(50);
 
-        $userMember = auth()->user()?->member;
+        $userMember   = auth()->user()?->member;
         $userHasAward = $userMember
             ? MemberAward::where('award_id', $award->id)
                 ->where('member_id', $userMember->clan_id)
@@ -278,7 +278,7 @@ class AwardController extends Controller
             : false;
 
         $stats = (object) [
-            'total' => $recipients->total(),
+            'total'        => $recipients->total(),
             'firstAwarded' => MemberAward::where('award_id', $award->id)
                 ->where('approved', true)
                 ->orderBy('created_at')
@@ -300,7 +300,7 @@ class AwardController extends Controller
         }
 
         $validatedData = $request->validate([
-            'reason' => 'required|string|max:255',
+            'reason'    => 'required|string|max:255',
             'member_id' => [
                 'required',
                 'numeric',
@@ -311,9 +311,9 @@ class AwardController extends Controller
 
         MemberAward::create([
             'requester_id' => auth()->user()->member_id,
-            'award_id' => $award->id,
-            'member_id' => $validatedData['member_id'],
-            'reason' => $validatedData['reason'],
+            'award_id'     => $award->id,
+            'member_id'    => $validatedData['member_id'],
+            'reason'       => $validatedData['reason'],
         ]);
 
         $this->showSuccessToast('Your award request has been submitted successfully.');

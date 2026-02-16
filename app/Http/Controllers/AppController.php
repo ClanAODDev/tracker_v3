@@ -23,11 +23,11 @@ class AppController extends Controller
 
     public function index(): Factory|View
     {
-        $user = Auth::user();
+        $user       = Auth::user();
         $myDivision = $user->member->division;
 
         $pendingActions = PendingActionsData::forDivision($myDivision, $user);
-        $leaderboard = DivisionLeaderboardData::forUser($user);
+        $leaderboard    = DivisionLeaderboardData::forUser($user);
 
         $divisions = Division::active()
             ->withoutFloaters()

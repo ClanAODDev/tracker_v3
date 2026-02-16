@@ -16,6 +16,6 @@ class Base
     public function __construct($request)
     {
         $this->request = $request;
-        $this->params = $request->all();
+        $this->params  = $request->all();
     }
 }

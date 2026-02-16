@@ -57,7 +57,7 @@ class NotifyDivisionPartTimeMemberRemoved extends Notification implements Should
             ->thumbnail($this->primaryDivision->getLogoPath())
             ->fields([
                 [
-                    'name' => 'Part Time Member Removed',
+                    'name'  => 'Part Time Member Removed',
                     'value' => sprintf(
                         ':door: [%s](%s) [%d] was removed from %s and they were a part-time member in your division',
                         $this->member->name,
@@ -67,11 +67,11 @@ class NotifyDivisionPartTimeMemberRemoved extends Notification implements Should
                     ),
                 ],
                 [
-                    'name' => 'Reason',
+                    'name'  => 'Reason',
                     'value' => addslashes($this->removalReason),
                 ],
                 [
-                    'name' => $handle->label ?? 'In-Game Handle',
+                    'name'  => $handle->label ?? 'In-Game Handle',
                     'value' => $handle->pivot->value ?? 'N/A',
                 ],
             ])->error()

@@ -16,7 +16,7 @@ class UserSettings
     public function __construct(array $settings, User $user)
     {
         $this->settings = $settings;
-        $this->user = $user;
+        $this->user     = $user;
     }
 
     /**

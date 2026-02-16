@@ -20,7 +20,7 @@ class DivisionShowService
     public function getShowData(Division $division): DivisionShowData
     {
         $latestCensus = $division->latestCensus;
-        $stats = DivisionStatsData::fromDivision($division, $latestCensus);
+        $stats        = DivisionStatsData::fromDivision($division, $latestCensus);
 
         return new DivisionShowData(
             division: $division,
@@ -71,7 +71,7 @@ class DivisionShowService
             return collect();
         }
 
-        $grouped = collect();
+        $grouped      = collect();
         $currentGroup = null;
 
         foreach ($activities as $activity) {
@@ -80,8 +80,8 @@ class DivisionShowService
                     $grouped->push($currentGroup);
                 }
                 $currentGroup = [
-                    'type' => $activity->name,
-                    'events' => collect([$activity]),
+                    'type'       => $activity->name,
+                    'events'     => collect([$activity]),
                     'created_at' => $activity->created_at,
                 ];
             } else {

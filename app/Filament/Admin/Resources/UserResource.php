@@ -63,8 +63,8 @@ class UserResource extends Resource
                             ->helperText('Festive winter snow')
                             ->options([
                                 'all_the_snow' => 'All the snow',
-                                'some_snow' => 'Some snow',
-                                'no_snow' => 'Disable',
+                                'some_snow'    => 'Some snow',
+                                'no_snow'      => 'Disable',
                             ])->selectablePlaceholder(false),
                         Toggle::make('ticket_notifications')
                             ->helperText('Get notified about ticket events'),
@@ -132,9 +132,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListUsers::route('/'),
+            'index'  => ListUsers::route('/'),
             'create' => CreateUser::route('/create'),
-            'edit' => EditUser::route('/{record}/edit'),
+            'edit'   => EditUser::route('/{record}/edit'),
         ];
     }
 }

@@ -14,10 +14,10 @@ class ActivityFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->randomElement(['created', 'updated', 'deleted']),
+            'name'         => $this->faker->randomElement(['created', 'updated', 'deleted']),
             'subject_type' => Member::class,
-            'subject_id' => Member::factory(),
-            'user_id' => User::factory(),
+            'subject_id'   => Member::factory(),
+            'user_id'      => User::factory(),
         ];
     }
 
@@ -25,7 +25,7 @@ class ActivityFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'subject_type' => get_class($subject),
-            'subject_id' => $subject->id,
+            'subject_id'   => $subject->id,
         ]);
     }
 }

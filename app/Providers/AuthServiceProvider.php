@@ -36,18 +36,18 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Division::class => DivisionPolicy::class,
-        DivisionTag::class => DivisionTagPolicy::class,
-        Leave::class => LeavePolicy::class,
-        Member::class => MemberPolicy::class,
-        MemberRequest::class => MemberRequestPolicy::class,
+        Division::class       => DivisionPolicy::class,
+        DivisionTag::class    => DivisionTagPolicy::class,
+        Leave::class          => LeavePolicy::class,
+        Member::class         => MemberPolicy::class,
+        MemberRequest::class  => MemberRequestPolicy::class,
         NewAccessToken::class => ApiTokenPolicy::class,
-        Note::class => NotePolicy::class,
-        Platoon::class => PlatoonPolicy::class,
-        RankAction::class => RankActionPolicy::class,
-        Squad::class => SquadPolicy::class,
-        Ticket::class => TicketPolicy::class,
-        User::class => UserPolicy::class,
+        Note::class           => NotePolicy::class,
+        Platoon::class        => PlatoonPolicy::class,
+        RankAction::class     => RankActionPolicy::class,
+        Squad::class          => SquadPolicy::class,
+        Ticket::class         => TicketPolicy::class,
+        User::class           => UserPolicy::class,
     ];
 
     /**

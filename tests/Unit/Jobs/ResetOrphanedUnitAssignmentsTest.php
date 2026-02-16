@@ -17,13 +17,13 @@ class ResetOrphanedUnitAssignmentsTest extends TestCase
     public function test_resets_platoon_and_squad_for_member_with_zero_division()
     {
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
-        $squad = $this->createSquad($platoon);
+        $platoon  = $this->createPlatoon($division);
+        $squad    = $this->createSquad($platoon);
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id' => $platoon->id,
-            'squad_id' => $squad->id,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => $squad->id,
         ]);
 
         $member->update(['division_id' => 0]);
@@ -39,13 +39,13 @@ class ResetOrphanedUnitAssignmentsTest extends TestCase
     public function test_does_not_affect_members_with_valid_division()
     {
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
-        $squad = $this->createSquad($platoon);
+        $platoon  = $this->createPlatoon($division);
+        $squad    = $this->createSquad($platoon);
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id' => $platoon->id,
-            'squad_id' => $squad->id,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => $squad->id,
         ]);
 
         (new ResetOrphanedUnitAssignments)->handle();
@@ -62,8 +62,8 @@ class ResetOrphanedUnitAssignmentsTest extends TestCase
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id' => 0,
-            'squad_id' => 0,
+            'platoon_id'  => 0,
+            'squad_id'    => 0,
         ]);
 
         $member->update(['division_id' => 0]);

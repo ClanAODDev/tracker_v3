@@ -13,8 +13,8 @@ class TicketType extends Model
     public $guarded = [];
 
     protected $casts = [
-        'role_access' => 'json',
-        'minimum_rank' => Rank::class,
+        'role_access'                     => 'json',
+        'minimum_rank'                    => Rank::class,
         'include_content_in_notification' => 'boolean',
     ];
 

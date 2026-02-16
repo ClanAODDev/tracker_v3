@@ -16,6 +16,7 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
     use Queueable, RetryableNotification;
 
     const RECRUITING_CHANNEL = 'https://discord.com/channels/507758143774916609/508656360028766219';
+
     const INTRODUCTIONS_CHANNEL = 'https://discord.com/channels/507758143774916609/1137896866286157834';
 
     public function __construct(
@@ -32,7 +33,7 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
     {
         if ($this->application) {
             $applicationUrl = url("divisions/{$notifiable->slug}?application={$this->application->id}");
-            $message = sprintf(
+            $message        = sprintf(
                 ':clipboard: **%s** has submitted an application to join %s. [View application](%s)',
                 $this->user->name,
                 $notifiable->name,
@@ -56,7 +57,7 @@ class NotifyDivisionPendingDiscordRegistration extends Notification implements S
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
-                    'name' => $heading,
+                    'name'  => $heading,
                     'value' => $message,
                 ],
             ])

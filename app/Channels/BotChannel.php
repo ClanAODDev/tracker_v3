@@ -36,7 +36,7 @@ class BotChannel
         $url = sprintf('%s/%s', config('aod.bot_api_base_url'), $message['api_uri']);
 
         $headers = [
-            'Content-Type' => 'application/json',
+            'Content-Type'  => 'application/json',
             'Authorization' => sprintf('Bearer %s', config('aod.discord_bot_token')),
         ];
 
@@ -50,9 +50,9 @@ class BotChannel
             $response = $this->client->send($request, ['verify' => false]);
         } catch (GuzzleException $e) {
             $this->logger->error('BotChannel request failed', [
-                'url' => $url,
+                'url'          => $url,
                 'notification' => get_class($notification),
-                'error' => $e->getMessage(),
+                'error'        => $e->getMessage(),
             ]);
 
             return;

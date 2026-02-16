@@ -31,7 +31,7 @@ class ApiController extends Controller
     {
         return $this->respond([
             'error' => [
-                'message' => $message,
+                'message'     => $message,
                 'status_code' => $this->getStatusCode(),
             ],
         ]);
@@ -84,10 +84,10 @@ class ApiController extends Controller
     protected function paginatorDetails($paginator)
     {
         return [
-            'total' => $paginator->total(),
-            'per_page' => $paginator->perPage(),
+            'total'        => $paginator->total(),
+            'per_page'     => $paginator->perPage(),
             'current_page' => $paginator->currentPage(),
-            'last_page' => $paginator->lastPage(),
+            'last_page'    => $paginator->lastPage(),
         ];
     }
 }

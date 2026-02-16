@@ -56,10 +56,10 @@ class IngameHandlesForm
             ->get()
             ->map(function ($mh) {
                 return [
-                    'id' => $mh->id,
+                    'id'        => $mh->id,
                     'handle_id' => $mh->handle_id,
-                    'value' => $mh->value,
-                    'primary' => (bool) $mh->primary,
+                    'value'     => $mh->value,
+                    'primary'   => (bool) $mh->primary,
                 ];
             })
             ->toArray();
@@ -71,7 +71,7 @@ class IngameHandlesForm
             ->pluck('id')
             ->toArray();
 
-        $formIds = collect($handles)->pluck('id')->filter()->toArray();
+        $formIds     = collect($handles)->pluck('id')->filter()->toArray();
         $idsToDelete = array_diff($existingIds, $formIds);
 
         if (! empty($idsToDelete)) {
@@ -93,7 +93,7 @@ class IngameHandlesForm
                 $isPrimary = false;
                 if (! $primaryAssigned) {
                     if ($row['primary'] ?? false) {
-                        $isPrimary = true;
+                        $isPrimary       = true;
                         $primaryAssigned = true;
                     } elseif ($index === $handlesOfType->keys()->last()) {
                         $isPrimary = true;
@@ -103,17 +103,17 @@ class IngameHandlesForm
                 if (! empty($row['id'])) {
                     MemberHandle::where('id', $row['id'])
                         ->update([
-                            'handle_id' => $row['handle_id'],
-                            'value' => $row['value'],
-                            'primary' => $isPrimary,
+                            'handle_id'  => $row['handle_id'],
+                            'value'      => $row['value'],
+                            'primary'    => $isPrimary,
                             'updated_at' => now(),
                         ]);
                 } else {
                     MemberHandle::create([
-                        'member_id' => $member->id,
-                        'handle_id' => $row['handle_id'],
-                        'value' => $row['value'],
-                        'primary' => $isPrimary,
+                        'member_id'  => $member->id,
+                        'handle_id'  => $row['handle_id'],
+                        'value'      => $row['value'],
+                        'primary'    => $isPrimary,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ]);

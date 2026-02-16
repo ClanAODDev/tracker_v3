@@ -11,7 +11,7 @@ class MemberRepository
     public function search(string $name): Collection
     {
         $escaped = $this->escapeLike($name);
-        $byName = Member::where('name', 'LIKE', "%{$escaped}%")->with('division');
+        $byName  = Member::where('name', 'LIKE', "%{$escaped}%")->with('division');
 
         return Member::withWhereHas('handles', fn ($query) => $query->where('value', 'LIKE', "%{$escaped}%"))
             ->with('division')
@@ -28,7 +28,7 @@ class MemberRepository
             ->take($limit)
             ->get()
             ->map(fn ($member) => [
-                'id' => $member->clan_id,
+                'id'    => $member->clan_id,
                 'label' => $member->name,
             ]);
     }
@@ -95,7 +95,7 @@ class MemberRepository
 
     public function getDivisionComparison(Member $member, Division $division): ?object
     {
-        $tenureDays = $member->join_date ? (int) $member->join_date->diffInDays() : 0;
+        $tenureDays     = $member->join_date ? (int) $member->join_date->diffInDays() : 0;
         $daysSinceVoice = $member->last_voice_activity
             ? (int) $member->last_voice_activity->diffInDays()
             : null;
@@ -117,21 +117,21 @@ class MemberRepository
         }
 
         $avgTenureDays = (float) ($stats->avg_tenure ?? 0);
-        $avgVoiceDays = (float) ($stats->avg_voice ?? 0);
+        $avgVoiceDays  = (float) ($stats->avg_voice ?? 0);
 
-        $tenurePercentile = ($stats->tenure_rank / $stats->total_count) * 100;
+        $tenurePercentile   = ($stats->tenure_rank / $stats->total_count) * 100;
         $activityPercentile = $daysSinceVoice !== null && $stats->voice_count > 0
             ? ($stats->activity_rank / $stats->voice_count) * 100
             : 0;
 
         return (object) [
-            'avgTenureDays' => round($avgTenureDays),
-            'avgTenureYears' => round($avgTenureDays / 365, 1),
-            'avgVoiceDays' => round($avgVoiceDays),
-            'tenurePercentile' => round($tenurePercentile),
+            'avgTenureDays'      => round($avgTenureDays),
+            'avgTenureYears'     => round($avgTenureDays / 365, 1),
+            'avgVoiceDays'       => round($avgVoiceDays),
+            'tenurePercentile'   => round($tenurePercentile),
             'activityPercentile' => round($activityPercentile),
-            'tenureBetter' => $tenureDays > $avgTenureDays,
-            'activityBetter' => $daysSinceVoice !== null && $daysSinceVoice < $avgVoiceDays,
+            'tenureBetter'       => $tenureDays > $avgTenureDays,
+            'activityBetter'     => $daysSinceVoice !== null && $daysSinceVoice < $avgVoiceDays,
         ];
     }
 }

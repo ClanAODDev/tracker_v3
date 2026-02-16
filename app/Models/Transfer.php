@@ -86,9 +86,9 @@ class Transfer extends Model implements Commentable
 
         $this->member->update([
             'division_id' => $this->division_id,
-            'position' => $newPosition,
-            'platoon_id' => 0,
-            'squad_id' => 0,
+            'position'    => $newPosition,
+            'platoon_id'  => 0,
+            'squad_id'    => 0,
         ]);
     }
 }

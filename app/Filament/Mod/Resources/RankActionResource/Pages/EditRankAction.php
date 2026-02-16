@@ -80,10 +80,10 @@ class EditRankAction extends EditRecord
                     ->hidden(function ($action) {
                         $record = $action->getRecord();
 
-                        $rank = $record->rank;
+                        $rank       = $record->rank;
                         $memberRank = $record->member->rank;
                         $approvedAt = $record->approved_at;
-                        $awardedAt = $record->awarded_at;
+                        $awardedAt  = $record->awarded_at;
                         $acceptedAt = $record->accepted_at;
 
                         $isPromotion = $rank->isPromotion($memberRank);
@@ -119,7 +119,7 @@ class EditRankAction extends EditRecord
                         Radio::make('notification_type')
                             ->label('Rank Acceptance Notification')
                             ->options([
-                                'now' => 'Send Now',
+                                'now'   => 'Send Now',
                                 'later' => 'Schedule for Later',
                             ])
                             ->default('now')
@@ -164,7 +164,7 @@ class EditRankAction extends EditRecord
                             Radio::make('notification_type')
                                 ->label('Rank Acceptance Notification')
                                 ->options([
-                                    'now' => 'Send Now',
+                                    'now'   => 'Send Now',
                                     'later' => 'Schedule for Later',
                                 ])
                                 ->default('now')

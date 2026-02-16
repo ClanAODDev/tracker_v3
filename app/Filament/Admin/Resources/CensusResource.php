@@ -105,9 +105,9 @@ class CensusResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListCensuses::route('/'),
+            'index'  => ListCensuses::route('/'),
             'create' => CreateCensus::route('/create'),
-            'edit' => EditCensus::route('/{record}/edit'),
+            'edit'   => EditCensus::route('/{record}/edit'),
         ];
     }
 }

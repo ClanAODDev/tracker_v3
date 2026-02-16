@@ -82,9 +82,9 @@ class TransferResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListTransfers::route('/'),
+            'index'  => ListTransfers::route('/'),
             'create' => CreateTransfer::route('/create'),
-            'edit' => EditTransfer::route('/{record}/edit'),
+            'edit'   => EditTransfer::route('/{record}/edit'),
         ];
     }
 }

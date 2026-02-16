@@ -31,7 +31,7 @@ class AddClanMemberTest extends TestCase
     public function test_job_can_be_instantiated()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $job = new AddClanMember($member, 12345);
 
@@ -45,8 +45,8 @@ class AddClanMemberTest extends TestCase
         ]);
 
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
-        $adminId = 12345;
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $adminId  = 12345;
 
         $job = new AddClanMember($member, $adminId);
         $job->handle($this->procedureService);
@@ -67,9 +67,9 @@ class AddClanMemberTest extends TestCase
         ]);
 
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'name' => 'TestPlayer',
+            'name'        => 'TestPlayer',
         ]);
 
         $job = new AddClanMember($member, 12345);
@@ -87,7 +87,7 @@ class AddClanMemberTest extends TestCase
         ]);
 
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $job = new AddClanMember($member, 12345);
 
@@ -102,7 +102,7 @@ class AddClanMemberTest extends TestCase
         ]);
 
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->procedureService->shouldReceive('getUser')
             ->with($member->clan_id)
@@ -122,7 +122,7 @@ class AddClanMemberTest extends TestCase
         ]);
 
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->procedureService->shouldReceive('getUser')
             ->with($member->clan_id)

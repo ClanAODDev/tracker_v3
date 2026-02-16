@@ -16,7 +16,7 @@ class ImpersonationTest extends TestCase
 
     public function test_admin_can_impersonate_regular_user()
     {
-        $admin = $this->createAdmin();
+        $admin   = $this->createAdmin();
         $officer = $this->createOfficer();
 
         $response = $this->actingAs($admin)
@@ -29,7 +29,7 @@ class ImpersonationTest extends TestCase
 
     public function test_admin_cannot_impersonate_developer()
     {
-        $admin = $this->createAdmin([], ['developer' => false]);
+        $admin     = $this->createAdmin([], ['developer' => false]);
         $developer = $this->createAdmin([], ['developer' => true]);
 
         $response = $this->actingAs($admin)
@@ -52,7 +52,7 @@ class ImpersonationTest extends TestCase
     public function test_officer_cannot_impersonate()
     {
         $officer = $this->createOfficer();
-        $member = $this->createMemberWithUser();
+        $member  = $this->createMemberWithUser();
 
         $response = $this->actingAs($officer)
             ->get(route('impersonate', $member));
@@ -62,7 +62,7 @@ class ImpersonationTest extends TestCase
 
     public function test_cannot_impersonate_while_already_impersonating()
     {
-        $admin = $this->createAdmin();
+        $admin    = $this->createAdmin();
         $officer1 = $this->createOfficer();
         $officer2 = $this->createOfficer();
 
@@ -76,7 +76,7 @@ class ImpersonationTest extends TestCase
     {
         $this->app->detectEnvironment(fn () => 'local');
 
-        $developer = $this->createAdmin([], ['developer' => true]);
+        $developer      = $this->createAdmin([], ['developer' => true]);
         $otherDeveloper = $this->createAdmin([], ['developer' => true]);
 
         $response = $this->actingAs($developer)
@@ -91,7 +91,7 @@ class ImpersonationTest extends TestCase
         $this->app->detectEnvironment(fn () => 'testing');
 
         $developer = $this->createAdmin([], ['developer' => true]);
-        $officer = $this->createOfficer();
+        $officer   = $this->createOfficer();
 
         $response = $this->actingAs($developer)
             ->get(route('impersonate', $officer));
@@ -105,7 +105,7 @@ class ImpersonationTest extends TestCase
         $this->app->detectEnvironment(fn () => 'production');
 
         $developer = $this->createMemberWithUser([], ['developer' => true, 'role' => Role::MEMBER]);
-        $officer = $this->createOfficer();
+        $officer   = $this->createOfficer();
 
         $response = $this->actingAs($developer)
             ->get(route('impersonate', $officer));
@@ -115,7 +115,7 @@ class ImpersonationTest extends TestCase
 
     public function test_end_impersonation_returns_to_original_user()
     {
-        $admin = $this->createAdmin();
+        $admin   = $this->createAdmin();
         $officer = $this->createOfficer();
 
         $this->actingAs($officer)

@@ -20,11 +20,11 @@ class RankActionTest extends TestCase
         $admin = $this->createAdmin();
         $this->actingAs($admin);
 
-        $member = $this->createMember();
+        $member    = $this->createMember();
         $requester = $this->createMember();
 
         $rankAction = RankAction::factory()->create([
-            'member_id' => $member->id,
+            'member_id'    => $member->id,
             'requester_id' => $requester->id,
         ]);
 
@@ -36,7 +36,7 @@ class RankActionTest extends TestCase
 
     public function test_accept_sets_accepted_at()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->create([
             'member_id' => $member->id,
         ]);
@@ -48,7 +48,7 @@ class RankActionTest extends TestCase
 
     public function test_decline_sets_declined_at()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->create([
             'member_id' => $member->id,
         ]);
@@ -60,7 +60,7 @@ class RankActionTest extends TestCase
 
     public function test_deny_sets_denied_at_and_reason()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->create([
             'member_id' => $member->id,
         ]);
@@ -73,7 +73,7 @@ class RankActionTest extends TestCase
 
     public function test_award_sets_awarded_at()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->create([
             'member_id' => $member->id,
         ]);
@@ -85,7 +85,7 @@ class RankActionTest extends TestCase
 
     public function test_approve_and_accept_sets_all_timestamps()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->create([
             'member_id' => $member->id,
         ]);
@@ -99,7 +99,7 @@ class RankActionTest extends TestCase
 
     public function test_is_approved_returns_truthy_when_approved()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->approved()->create([
             'member_id' => $member->id,
         ]);
@@ -109,7 +109,7 @@ class RankActionTest extends TestCase
 
     public function test_is_approved_returns_falsy_when_not_approved()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->pending()->create([
             'member_id' => $member->id,
         ]);
@@ -119,7 +119,7 @@ class RankActionTest extends TestCase
 
     public function test_actionable_returns_true_when_pending()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->pending()->create([
             'member_id' => $member->id,
         ]);
@@ -129,7 +129,7 @@ class RankActionTest extends TestCase
 
     public function test_actionable_returns_false_when_approved()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->approved()->create([
             'member_id' => $member->id,
         ]);
@@ -139,7 +139,7 @@ class RankActionTest extends TestCase
 
     public function test_actionable_returns_false_when_denied()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->denied()->create([
             'member_id' => $member->id,
         ]);
@@ -149,7 +149,7 @@ class RankActionTest extends TestCase
 
     public function test_resolved_by_recipient_returns_true_when_accepted()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->accepted()->create([
             'member_id' => $member->id,
         ]);
@@ -159,7 +159,7 @@ class RankActionTest extends TestCase
 
     public function test_resolved_by_recipient_returns_true_when_declined()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->declined()->create([
             'member_id' => $member->id,
         ]);
@@ -169,9 +169,9 @@ class RankActionTest extends TestCase
 
     public function test_resolved_by_recipient_returns_false_when_pending()
     {
-        $member = $this->createMember();
+        $member     = $this->createMember();
         $rankAction = RankAction::factory()->approved()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'accepted_at' => null,
             'declined_at' => null,
         ]);
@@ -183,7 +183,7 @@ class RankActionTest extends TestCase
     {
         $member = $this->createMember();
 
-        $pending = RankAction::factory()->pending()->create(['member_id' => $member->id]);
+        $pending  = RankAction::factory()->pending()->create(['member_id' => $member->id]);
         $approved = RankAction::factory()->approved()->accepted()->create(['member_id' => $member->id]);
 
         $results = RankAction::pending()->get();
@@ -197,7 +197,7 @@ class RankActionTest extends TestCase
         $member = $this->createMember();
 
         $approvedNotAccepted = RankAction::factory()->approved()->create([
-            'member_id' => $member->id,
+            'member_id'   => $member->id,
             'accepted_at' => null,
             'declined_at' => null,
         ]);
@@ -227,27 +227,27 @@ class RankActionTest extends TestCase
 
     public function test_scope_for_user_filters_by_division_for_non_admin()
     {
-        $division = $this->createActiveDivision();
+        $division      = $this->createActiveDivision();
         $otherDivision = $this->createActiveDivision();
 
         $srLeader = $this->createSeniorLeader($division);
 
         $divisionMember = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
         $otherMember = $this->createMember([
             'division_id' => $otherDivision->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $divisionAction = RankAction::factory()->create([
             'member_id' => $divisionMember->id,
-            'rank' => Rank::SPECIALIST,
+            'rank'      => Rank::SPECIALIST,
         ]);
         $otherAction = RankAction::factory()->create([
             'member_id' => $otherMember->id,
-            'rank' => Rank::SPECIALIST,
+            'rank'      => Rank::SPECIALIST,
         ]);
 
         $results = RankAction::forUser($srLeader)->get();

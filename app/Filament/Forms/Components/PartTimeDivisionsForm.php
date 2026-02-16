@@ -27,7 +27,7 @@ class PartTimeDivisionsForm
                     return [];
                 }
 
-                $validOptionIds = array_keys(self::getValidOptions($member));
+                $validOptionIds    = array_keys(self::getValidOptions($member));
                 $memberPartTimeIds = $member->partTimeDivisions()->pluck('divisions.id')->all();
 
                 return array_values(array_intersect($memberPartTimeIds, $validOptionIds));
@@ -40,7 +40,7 @@ class PartTimeDivisionsForm
                     return;
                 }
 
-                $validOptionIds = array_keys(self::getValidOptions($member));
+                $validOptionIds    = array_keys(self::getValidOptions($member));
                 $memberPartTimeIds = $member->partTimeDivisions()->pluck('divisions.id')->all();
 
                 $set(self::FIELD, array_values(array_intersect($memberPartTimeIds, $validOptionIds)));
@@ -77,7 +77,7 @@ class PartTimeDivisionsForm
     public static function sync($member, array $selectedIds): void
     {
         $activeIds = Division::active()->pluck('id')->all();
-        $ids = array_values(array_intersect($selectedIds, $activeIds));
+        $ids       = array_values(array_intersect($selectedIds, $activeIds));
         $member->partTimeDivisions()->sync($ids);
     }
 }

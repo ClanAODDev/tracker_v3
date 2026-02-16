@@ -64,7 +64,7 @@ class ClanRepository
 
             return (object) [
                 'abbreviation' => $rank->getAbbreviation(),
-                'count' => $row->count,
+                'count'        => $row->count,
             ];
         });
     }

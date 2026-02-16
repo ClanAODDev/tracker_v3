@@ -39,7 +39,7 @@ trait GeneratesAwardImages
     protected function placeAwardOnCanvas(GdImage $canvas, string $imagePath, int $x, int $y): void
     {
         $awardImage = $this->loadAwardImage($imagePath, $this->awardSize, $this->awardSize);
-        $resized = $this->resizeImage($awardImage, $this->awardSize, $this->awardSize);
+        $resized    = $this->resizeImage($awardImage, $this->awardSize, $this->awardSize);
 
         imagecopy($canvas, $resized, $x, $y, 0, 0, $this->awardSize, $this->awardSize);
 
@@ -57,7 +57,7 @@ trait GeneratesAwardImages
             ->get(array_unique(array_merge($columns, ['awards.id', 'awards.prerequisite_award_id'])));
 
         $memberAwardIds = $memberAwards->pluck('id')->unique();
-        $skipIds = collect();
+        $skipIds        = collect();
 
         foreach ($memberAwards as $item) {
             if ($item->prerequisite_award_id && $memberAwardIds->contains($item->prerequisite_award_id)) {
@@ -98,8 +98,8 @@ trait GeneratesAwardImages
         imagerectangle($image, 0, 0, $width - 1, $height - 1, $borderColor);
         imagerectangle($image, 1, 1, $width - 2, $height - 2, $borderColor);
 
-        $textColor = imagecolorallocate($image, 255, 255, 255);
-        $charWidth = imagefontwidth(5);
+        $textColor  = imagecolorallocate($image, 255, 255, 255);
+        $charWidth  = imagefontwidth(5);
         $charHeight = imagefontheight(5);
         imagestring($image, 5, ($width - $charWidth) / 2, ($height - $charHeight) / 2, '?', $textColor);
 

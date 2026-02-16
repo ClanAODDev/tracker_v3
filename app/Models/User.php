@@ -28,11 +28,11 @@ class User extends Authenticatable implements Commenter, FilamentUser
     use Notifiable;
 
     public array $defaultSettings = [
-        'snow' => 'no_snow',
+        'snow'                 => 'no_snow',
         'ticket_notifications' => true,
-        'disable_animations' => false,
-        'mobile_nav_side' => 'right',
-        'theme' => 'traditional',
+        'disable_animations'   => false,
+        'mobile_nav_side'      => 'right',
+        'theme'                => 'traditional',
     ];
 
     /**
@@ -69,12 +69,12 @@ class User extends Authenticatable implements Commenter, FilamentUser
      * @var array
      */
     protected $casts = [
-        'developer' => 'boolean',
-        'settings' => 'json',
-        'last_login_at' => 'datetime',
-        'date_of_birth' => 'date',
+        'developer'      => 'boolean',
+        'settings'       => 'json',
+        'last_login_at'  => 'datetime',
+        'date_of_birth'  => 'date',
         'forum_password' => 'encrypted',
-        'role' => Role::class,
+        'role'           => Role::class,
     ];
 
     public function getSettingsAttribute($value): array
@@ -309,7 +309,7 @@ class User extends Authenticatable implements Commenter, FilamentUser
         $panelId = $panel->getId();
 
         $panelToRoleMapping = [
-            'mod' => ['admin', 'sr_ldr', 'officer'],
+            'mod'   => ['admin', 'sr_ldr', 'officer'],
             'admin' => 'admin',
         ];
 
@@ -337,7 +337,7 @@ class User extends Authenticatable implements Commenter, FilamentUser
         $division,
         bool $asBoolean = false
     ): bool|null|Carbon {
-        $user = auth()->user();
+        $user       = auth()->user();
         $targetRank = Rank::from($targetRank);
 
         // CmdSgt+ authority on Sergeant+ approvals
@@ -374,7 +374,7 @@ class User extends Authenticatable implements Commenter, FilamentUser
     public function canManageRankActionCommentsFor(RankAction $action): bool
     {
         $userRank = $this->member->rank;
-        $newRank = $action->rank;
+        $newRank  = $action->rank;
 
         // For Sergeant and above, require that the user is at least Master Sergeant
         if ($newRank->value >= Rank::SERGEANT->value) {
@@ -393,7 +393,7 @@ class User extends Authenticatable implements Commenter, FilamentUser
     public function canApproveOrDeny(RankAction $action): bool
     {
         $userRank = $this->member->rank;
-        $newRank = $action->rank;
+        $newRank  = $action->rank;
 
         // A user cannot approve/deny a rank action for a rank higher than their own
         if ($newRank->value > $userRank->value) {
@@ -436,10 +436,10 @@ class User extends Authenticatable implements Commenter, FilamentUser
         }
 
         return self::create([
-            'name' => $name,
-            'email' => $email,
+            'name'      => $name,
+            'email'     => $email,
             'member_id' => $member->id,
-            'role' => Role::MEMBER,
+            'role'      => Role::MEMBER,
         ]);
     }
 }

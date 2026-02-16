@@ -18,14 +18,14 @@ class AODBotService
     public function __construct()
     {
         $this->baseUrl = config('aod.bot_api_base_url');
-        $this->token = config('aod.discord_bot_token');
-        $this->client = new Client;
+        $this->token   = config('aod.discord_bot_token');
+        $this->client  = new Client;
     }
 
     private function buildHeaders(): array
     {
         $headers = [
-            'Content-Type' => 'application/json',
+            'Content-Type'  => 'application/json',
             'Authorization' => sprintf('Bearer %s', $this->token),
         ];
 

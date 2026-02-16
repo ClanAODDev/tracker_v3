@@ -52,7 +52,7 @@ class OpenTicketsWidget extends BaseWidget
                 ->color($myAssigned > 0 ? 'info' : 'gray')
                 ->url(TicketResource::getUrl('index') . '?' . http_build_query([
                     'filters' => [
-                        'state' => ['values' => ['assigned']],
+                        'state'      => ['values' => ['assigned']],
                         'assignment' => ['value' => 'mine'],
                     ],
                 ])),

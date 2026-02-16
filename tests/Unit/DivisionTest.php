@@ -13,7 +13,7 @@ final class DivisionTest extends TestCase
     {
         $division = Division::factory()->make([
             'abbreviation' => 'UPPERCASE',
-            'handle_id' => 1,
+            'handle_id'    => 1,
         ]);
 
         $this->assertSame($division->abbreviation, 'uppercase');

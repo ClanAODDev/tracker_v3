@@ -37,19 +37,19 @@ class Division extends Base implements Command
 
             return [
                 'embed' => [
-                    'color' => 10181046,
+                    'color'  => 10181046,
                     'author' => [
-                        'name' => $division->name,
+                        'name'     => $division->name,
                         'icon_url' => $division->getLogoPath(),
-                        'url' => 'https://clanaod.net/divisions/' . Str::slug($division->name),
+                        'url'      => 'https://clanaod.net/divisions/' . Str::slug($division->name),
                     ],
                     'fields' => [
                         [
-                            'name' => 'Leadership',
+                            'name'  => 'Leadership',
                             'value' => $leaderData,
                         ],
                         [
-                            'name' => 'Member count',
+                            'name'  => 'Member count',
                             'value' => $division->members()->count(),
                         ],
                     ],

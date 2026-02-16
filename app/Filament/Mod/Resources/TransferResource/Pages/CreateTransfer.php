@@ -28,10 +28,10 @@ class CreateTransfer extends CreateRecord
     {
         $transfer = $this->record;
 
-        $member = $transfer->member;
+        $member      = $transfer->member;
         $oldDivision = $member->division;
         $newDivision = $transfer->division;
-        $newDivName = $newDivision->name;
+        $newDivName  = $newDivision->name;
 
         $notifications = [
             [$oldDivision, 'OUTGOING'],

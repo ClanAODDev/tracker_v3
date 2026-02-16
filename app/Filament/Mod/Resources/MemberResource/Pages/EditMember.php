@@ -101,8 +101,8 @@ class EditMember extends EditRecord
                     }
 
                     Note::create([
-                        'type' => 'negative',
-                        'body' => 'Member removal: ' . $data['removal_reason'],
+                        'type'      => 'negative',
+                        'body'      => 'Member removal: ' . $data['removal_reason'],
                         'author_id' => auth()->id(),
                         'member_id' => $member->id,
                     ]);

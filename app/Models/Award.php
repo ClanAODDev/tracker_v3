@@ -15,9 +15,9 @@ class Award extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'active' => 'boolean',
+        'active'        => 'boolean',
         'allow_request' => 'boolean',
-        'repeatable' => 'boolean',
+        'repeatable'    => 'boolean',
     ];
 
     protected static function boot()
@@ -66,7 +66,7 @@ class Award extends Model
 
     public function getPrerequisiteChain(): array
     {
-        $chain = [];
+        $chain   = [];
         $current = $this->prerequisite;
 
         while ($current) {
@@ -113,7 +113,7 @@ class Award extends Model
         }
 
         $isOfficerOrAbove = $user->isRole(['officer', 'sr_ldr', 'admin']);
-        $isRequestable = $this->allow_request || $isOfficerOrAbove;
+        $isRequestable    = $this->allow_request || $isOfficerOrAbove;
         $isDivisionActive = $this->division?->active ?? true;
 
         return $isRequestable && $isDivisionActive;
@@ -146,7 +146,7 @@ class Award extends Model
         }
 
         $commonWords = [];
-        $firstWords = explode(' ', $names[0]);
+        $firstWords  = explode(' ', $names[0]);
         foreach ($firstWords as $word) {
             if (collect($names)->every(fn ($n) => str_contains($n, $word))) {
                 $commonWords[] = $word;

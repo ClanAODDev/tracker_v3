@@ -161,7 +161,7 @@ class BotChannelMessage
 
         if (empty($routeTarget)) {
             \Log::debug('Notification skipped - no channel configured', [
-                'target' => $this->target,
+                'target'     => $this->target,
                 'notifiable' => get_class($this->notifiable) . ':' . $this->notifiable->getKey(),
             ]);
 
@@ -170,14 +170,14 @@ class BotChannelMessage
 
         $message = [
             'api_uri' => sprintf('channels/%s', $routeTarget ?? $this->target),
-            'body' => [
+            'body'    => [
                 'embeds' => [[
-                    'color' => $this->color ?? 0,
+                    'color'       => $this->color ?? 0,
                     'description' => $this->message ?? '',
-                    'author' => [
-                        'name' => $this->title,
+                    'author'      => [
+                        'name'     => $this->title,
                         'icon_url' => asset('images/logo_v2.png'),
-                        'url' => $this->url ?? config('app.url'),
+                        'url'      => $this->url ?? config('app.url'),
                     ],
                     'fields' => $this->fields ?? [],
                 ]],

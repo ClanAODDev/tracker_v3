@@ -47,7 +47,7 @@ class UserTest extends TestCase
 
     public function test_is_role_with_string_returns_correct_value()
     {
-        $adminUser = $this->createAdmin();
+        $adminUser   = $this->createAdmin();
         $officerUser = $this->createOfficer();
 
         $this->assertTrue($adminUser->isRole('admin'));
@@ -65,7 +65,7 @@ class UserTest extends TestCase
 
     public function test_is_role_with_enum_returns_correct_value()
     {
-        $adminUser = $this->createAdmin();
+        $adminUser   = $this->createAdmin();
         $officerUser = $this->createOfficer();
 
         $this->assertTrue($adminUser->isRole(Role::ADMIN));
@@ -75,7 +75,7 @@ class UserTest extends TestCase
 
     public function test_get_role_returns_role_enum()
     {
-        $adminUser = $this->createAdmin();
+        $adminUser   = $this->createAdmin();
         $officerUser = $this->createOfficer();
 
         $this->assertEquals(Role::ADMIN, $adminUser->getRole());
@@ -85,9 +85,9 @@ class UserTest extends TestCase
     public function test_is_member_returns_true_for_member_position()
     {
         $division = $this->createActiveDivision();
-        $user = $this->createMemberWithUser([
+        $user     = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'position' => Position::MEMBER,
+            'position'    => Position::MEMBER,
         ]);
 
         $this->assertTrue($user->isMember());
@@ -96,9 +96,9 @@ class UserTest extends TestCase
     public function test_is_member_returns_false_for_leader_position()
     {
         $division = $this->createActiveDivision();
-        $user = $this->createMemberWithUser([
+        $user     = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'position' => Position::SQUAD_LEADER,
+            'position'    => Position::SQUAD_LEADER,
         ]);
 
         $this->assertFalse($user->isMember());
@@ -106,14 +106,14 @@ class UserTest extends TestCase
 
     public function test_is_squad_leader_returns_correct_value()
     {
-        $division = $this->createActiveDivision();
+        $division        = $this->createActiveDivision();
         $squadLeaderUser = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'position' => Position::SQUAD_LEADER,
+            'position'    => Position::SQUAD_LEADER,
         ]);
         $memberUser = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'position' => Position::MEMBER,
+            'position'    => Position::MEMBER,
         ]);
 
         $this->assertTrue($squadLeaderUser->isSquadLeader());
@@ -122,14 +122,14 @@ class UserTest extends TestCase
 
     public function test_is_platoon_leader_returns_correct_value()
     {
-        $division = $this->createActiveDivision();
+        $division          = $this->createActiveDivision();
         $platoonLeaderUser = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'position' => Position::PLATOON_LEADER,
+            'position'    => Position::PLATOON_LEADER,
         ]);
         $memberUser = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'position' => Position::MEMBER,
+            'position'    => Position::MEMBER,
         ]);
 
         $this->assertTrue($platoonLeaderUser->isPlatoonLeader());
@@ -139,13 +139,13 @@ class UserTest extends TestCase
     public function test_is_division_leader_returns_true_for_co_or_xo()
     {
         $division = $this->createActiveDivision();
-        $coUser = $this->createMemberWithUser([
+        $coUser   = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'position' => Position::COMMANDING_OFFICER,
+            'position'    => Position::COMMANDING_OFFICER,
         ]);
         $xoUser = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'position' => Position::EXECUTIVE_OFFICER,
+            'position'    => Position::EXECUTIVE_OFFICER,
         ]);
 
         $this->assertTrue($coUser->isDivisionLeader());
@@ -154,10 +154,10 @@ class UserTest extends TestCase
 
     public function test_is_division_leader_returns_false_for_other_positions()
     {
-        $division = $this->createActiveDivision();
+        $division   = $this->createActiveDivision();
         $memberUser = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'position' => Position::PLATOON_LEADER,
+            'position'    => Position::PLATOON_LEADER,
         ]);
 
         $this->assertFalse($memberUser->isDivisionLeader());
@@ -165,7 +165,7 @@ class UserTest extends TestCase
 
     public function test_is_developer_returns_correct_value()
     {
-        $adminUser = $this->createAdmin();
+        $adminUser   = $this->createAdmin();
         $regularUser = $this->createMemberWithUser([], ['developer' => false]);
 
         $this->assertTrue($adminUser->isDeveloper());
@@ -174,14 +174,14 @@ class UserTest extends TestCase
 
     public function test_can_remove_users_returns_true_for_sergeant_or_higher()
     {
-        $division = $this->createActiveDivision();
+        $division     = $this->createActiveDivision();
         $sergeantUser = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'rank' => Rank::SERGEANT,
+            'rank'        => Rank::SERGEANT,
         ]);
         $corporalUser = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'rank' => Rank::CORPORAL,
+            'rank'        => Rank::CORPORAL,
         ]);
 
         $this->assertTrue($sergeantUser->canRemoveUsers());
@@ -220,7 +220,7 @@ class UserTest extends TestCase
 
     public function test_scope_admins_returns_only_admin_users()
     {
-        $adminUser = $this->createAdmin();
+        $adminUser   = $this->createAdmin();
         $regularUser = $this->createMemberWithUser();
 
         $results = User::admins()->get();
@@ -243,10 +243,10 @@ class UserTest extends TestCase
 
     public function test_find_or_create_for_member_returns_existing_user()
     {
-        $member = Member::factory()->create();
+        $member       = Member::factory()->create();
         $existingUser = User::factory()->create([
             'member_id' => $member->id,
-            'email' => 'existing@example.com',
+            'email'     => 'existing@example.com',
         ]);
 
         $user = User::findOrCreateForMember($member, 'new@example.com');
@@ -256,10 +256,10 @@ class UserTest extends TestCase
 
     public function test_find_or_create_for_member_updates_email_if_changed_and_available()
     {
-        $member = Member::factory()->create();
+        $member       = Member::factory()->create();
         $existingUser = User::factory()->create([
             'member_id' => $member->id,
-            'email' => 'old@example.com',
+            'email'     => 'old@example.com',
         ]);
 
         $user = User::findOrCreateForMember($member, 'new@example.com');
@@ -271,10 +271,10 @@ class UserTest extends TestCase
     {
         User::factory()->create(['email' => 'taken@example.com']);
 
-        $member = Member::factory()->create();
+        $member       = Member::factory()->create();
         $existingUser = User::factory()->create([
             'member_id' => $member->id,
-            'email' => 'original@example.com',
+            'email'     => 'original@example.com',
         ]);
 
         $user = User::findOrCreateForMember($member, 'taken@example.com');
@@ -303,10 +303,10 @@ class UserTest extends TestCase
 
     public function test_find_or_create_for_member_does_not_update_email_when_null()
     {
-        $member = Member::factory()->create();
+        $member       = Member::factory()->create();
         $existingUser = User::factory()->create([
             'member_id' => $member->id,
-            'email' => 'existing@example.com',
+            'email'     => 'existing@example.com',
         ]);
 
         $user = User::findOrCreateForMember($member, null);

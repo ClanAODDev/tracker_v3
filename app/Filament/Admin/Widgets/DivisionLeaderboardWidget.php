@@ -23,7 +23,7 @@ class DivisionLeaderboardWidget extends BaseWidget
     {
         return match ($this->leaderboardType) {
             'recruiting' => $this->recruitingLeaderboard($table),
-            default => $this->voiceLeaderboard($table),
+            default      => $this->voiceLeaderboard($table),
         };
     }
 

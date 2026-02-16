@@ -18,7 +18,7 @@ class Ticket extends Model
     use Notifiable;
 
     public $stateColors = [
-        'new' => 'info',
+        'new'      => 'info',
         'assigned' => 'accent',
         'resolved' => 'success',
         'rejected' => 'danger',
@@ -125,8 +125,8 @@ class Ticket extends Model
 
     public function resolve()
     {
-        $this->state = 'resolved';
-        $this->owner_id = auth()->id();
+        $this->state       = 'resolved';
+        $this->owner_id    = auth()->id();
         $this->resolved_at = now();
         $this->save();
         $this->say('resolved the ticket');
@@ -134,7 +134,7 @@ class Ticket extends Model
 
     public function reopen()
     {
-        $this->state = 'assigned';
+        $this->state       = 'assigned';
         $this->resolved_at = null;
         $this->save();
         $this->say('reopened the ticket');
@@ -142,9 +142,9 @@ class Ticket extends Model
 
     public function reject()
     {
-        $this->state = 'rejected';
+        $this->state       = 'rejected';
         $this->resolved_at = now();
-        $this->owner_id = auth()->id();
+        $this->owner_id    = auth()->id();
         $this->save();
         $this->say('rejected the ticket');
     }
@@ -153,7 +153,7 @@ class Ticket extends Model
     {
         $this->comments()->create([
             'user_id' => auth()->id(),
-            'body' => $comment,
+            'body'    => $comment,
         ]);
     }
 

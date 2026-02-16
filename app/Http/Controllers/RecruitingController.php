@@ -54,7 +54,7 @@ class RecruitingController extends Controller
     {
         $this->authorize('recruit', Member::class);
 
-        $division = Division::whereSlug($request->division)->first();
+        $division    = Division::whereSlug($request->division)->first();
         $recruiterId = auth()->user()->member->clan_id;
 
         if ($request->pending_user_id) {
@@ -67,7 +67,7 @@ class RecruitingController extends Controller
             }
 
             $forumService = app(AODForumService::class);
-            $forumUser = $forumService->getUserByEmail($pendingUser->email);
+            $forumUser    = $forumService->getUserByEmail($pendingUser->email);
 
             if (! $forumUser && $pendingUser->forum_password) {
                 $forumUser = $this->createLegacyForumAccount($pendingUser, $division, $forumService);
@@ -79,7 +79,7 @@ class RecruitingController extends Controller
                 ], 422);
             }
 
-            $clanId = (int) $forumUser->userid;
+            $clanId       = (int) $forumUser->userid;
             $forumProfile = $this->procedureService->getUser($clanId);
 
             if ($forumProfile && property_exists($forumProfile, 'usergroupid')) {
@@ -159,8 +159,8 @@ class RecruitingController extends Controller
         $this->authorize('recruit', Member::class);
 
         $settings = $division->settings();
-        $threads = $settings->get('recruiting_threads', []);
-        $tasks = $settings->get('recruiting_tasks', []);
+        $threads  = $settings->get('recruiting_threads', []);
+        $tasks    = $settings->get('recruiting_tasks', []);
 
         $platoons = $division->platoons()
             ->withCount('members')
@@ -173,35 +173,35 @@ class RecruitingController extends Controller
         $pendingDiscord = $this->getPendingDiscordUsers($division, request()->boolean('all_pending'));
 
         return response()->json([
-            'name' => $division->name,
+            'name'     => $division->name,
             'platoons' => $platoons->map(fn ($p) => [
-                'id' => $p->id,
-                'name' => $p->name,
+                'id'            => $p->id,
+                'name'          => $p->name,
                 'members_count' => $p->members_count,
-                'leader_name' => $p->leader?->name,
-                'squads' => $p->squads->map(fn ($s) => [
-                    'id' => $s->id,
-                    'name' => $s->name,
+                'leader_name'   => $p->leader?->name,
+                'squads'        => $p->squads->map(fn ($s) => [
+                    'id'            => $s->id,
+                    'name'          => $s->name,
                     'members_count' => $s->members_count,
-                    'leader_name' => $s->leader?->name,
+                    'leader_name'   => $s->leader?->name,
                 ]),
             ]),
             'threads' => collect($threads)->map(fn ($t) => [
-                'name' => $t['thread_name'] ?? '',
-                'url' => $t['thread_url'] ?? '',
+                'name'     => $t['thread_name'] ?? '',
+                'url'      => $t['thread_url'] ?? '',
                 'comments' => $t['comments'] ?? '',
-                'read' => false,
+                'read'     => false,
             ]),
             'tasks' => collect($tasks)->map(fn ($t) => [
                 'description' => $t['task_description'] ?? '',
-                'complete' => false,
+                'complete'    => false,
             ]),
-            'welcome_area' => $settings->get('welcome_area', ''),
-            'welcome_pm' => $settings->get('welcome_pm', ''),
+            'welcome_area'       => $settings->get('welcome_area', ''),
+            'welcome_pm'         => $settings->get('welcome_pm', ''),
             'use_welcome_thread' => $settings->get('use_welcome_thread', false),
-            'locality' => [
+            'locality'           => [
                 'platoon' => $division->locality('platoon'),
-                'squad' => $division->locality('squad'),
+                'squad'   => $division->locality('squad'),
             ],
             'pending_discord' => $pendingDiscord,
         ]);
@@ -267,26 +267,26 @@ class RecruitingController extends Controller
     {
         if (! is_numeric($member_id) || (int) $member_id < 1) {
             return [
-                'is_member' => false,
-                'valid_group' => false,
-                'group_id' => null,
+                'is_member'         => false,
+                'valid_group'       => false,
+                'group_id'          => null,
                 'exists_in_tracker' => false,
-                'tags' => [],
-                'division' => null,
+                'tags'              => [],
+                'division'          => null,
             ];
         }
 
-        $member_id = (int) $member_id;
-        $member = Member::where('clan_id', $member_id)->first();
+        $member_id       = (int) $member_id;
+        $member          = Member::where('clan_id', $member_id)->first();
         $existsInTracker = $member !== null;
 
-        $tags = [];
+        $tags     = [];
         $division = null;
         if ($member) {
             $tags = $member->tags()
                 ->get()
                 ->map(fn ($tag) => [
-                    'name' => $tag->name,
+                    'name'     => $tag->name,
                     'division' => $tag->division?->abbreviation ?? 'Global',
                 ])
                 ->toArray();
@@ -295,12 +295,12 @@ class RecruitingController extends Controller
 
         if (app()->environment() === 'local') {
             return [
-                'is_member' => true,
-                'valid_group' => true,
-                'username' => 'LocalTestUser',
+                'is_member'         => true,
+                'valid_group'       => true,
+                'username'          => 'LocalTestUser',
                 'exists_in_tracker' => $existsInTracker,
-                'tags' => $tags,
-                'division' => $division,
+                'tags'              => $tags,
+                'division'          => $division,
             ];
         }
 
@@ -308,23 +308,23 @@ class RecruitingController extends Controller
 
         if (! $result || ! property_exists($result, 'usergroupid')) {
             return [
-                'is_member' => false,
-                'valid_group' => false,
-                'group_id' => null,
+                'is_member'         => false,
+                'valid_group'       => false,
+                'group_id'          => null,
                 'exists_in_tracker' => $existsInTracker,
-                'tags' => $tags,
-                'division' => $division,
+                'tags'              => $tags,
+                'division'          => $division,
             ];
         }
 
         return [
-            'is_member' => true,
-            'username' => $result->username,
-            'valid_group' => ForumGroup::tryFrom((int) $result->usergroupid)?->isEligibleForRecruitment() ?? false,
-            'group_id' => (int) $result->usergroupid,
+            'is_member'         => true,
+            'username'          => $result->username,
+            'valid_group'       => ForumGroup::tryFrom((int) $result->usergroupid)?->isEligibleForRecruitment() ?? false,
+            'group_id'          => (int) $result->usergroupid,
             'exists_in_tracker' => $existsInTracker,
-            'tags' => $tags,
-            'division' => $division,
+            'tags'              => $tags,
+            'division'          => $division,
         ];
     }
 
@@ -339,12 +339,12 @@ class RecruitingController extends Controller
             return response()->json(['memberExists' => false]);
         }
 
-        $name = request('name');
+        $name     = request('name');
         $memberId = request('member_id', 0);
-        $email = request('email');
+        $email    = request('email');
 
         try {
-            $result = DB::connection('aod_forums')->select('CALL user_exists(?, ?)', [$name, $memberId]);
+            $result      = DB::connection('aod_forums')->select('CALL user_exists(?, ?)', [$name, $memberId]);
             $nameIsTaken = ! empty($result);
 
             if ($nameIsTaken && $email) {
@@ -353,9 +353,9 @@ class RecruitingController extends Controller
 
                 if ($existingUser && strcasecmp($existingUser->username, $name) === 0) {
                     return response()->json([
-                        'memberExists' => false,
+                        'memberExists'    => false,
                         'existingAccount' => true,
-                        'existingUserId' => (int) $existingUser->userid,
+                        'existingUserId'  => (int) $existingUser->userid,
                     ]);
                 }
             }
@@ -403,13 +403,13 @@ class RecruitingController extends Controller
                 }
 
                 return [
-                    'id' => $u->id,
-                    'discord_username' => $u->discord_username,
-                    'forum_name' => $u->name,
-                    'discord_id' => $u->discord_id,
-                    'email' => $u->email,
-                    'created_at' => $u->created_at->diffForHumans(),
-                    'application' => $application,
+                    'id'                   => $u->id,
+                    'discord_username'     => $u->discord_username,
+                    'forum_name'           => $u->name,
+                    'discord_id'           => $u->discord_id,
+                    'email'                => $u->email,
+                    'created_at'           => $u->created_at->diffForHumans(),
+                    'application'          => $application,
                     'application_division' => $u->divisionApplication?->division?->name,
                 ];
             });

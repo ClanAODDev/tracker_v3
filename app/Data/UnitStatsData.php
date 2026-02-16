@@ -20,20 +20,20 @@ readonly class UnitStatsData
 
     public static function fromMembers(Collection $members, ?Division $division, array $voiceActivityGraph): self
     {
-        $division = $division ?? $members->first()?->division;
-        $maxDays = $division?->settings()->get('inactivity_days') ?? 90;
-        $now = now();
+        $division          = $division ?? $members->first()?->division;
+        $maxDays           = $division?->settings()->get('inactivity_days') ?? 90;
+        $now               = now();
         $inactiveThreshold = $now->copy()->subDays($maxDays);
 
-        $totalCount = $members->count();
-        $onLeaveCount = $members->filter(fn ($m) => $m->leave)->count();
+        $totalCount    = $members->count();
+        $onLeaveCount  = $members->filter(fn ($m) => $m->leave)->count();
         $activeMembers = $members->reject(fn ($m) => $m->leave);
         $inactiveCount = $activeMembers->filter(
             fn ($m) => $m->last_voice_activity && $m->last_voice_activity < $inactiveThreshold
         )->count();
 
         $avgTenureDays = $members->avg(fn ($m) => $m->join_date ? $m->join_date->diffInDays($now) : 0);
-        $officerCount = $members->filter(fn ($m) => $m->rank->isOfficer())->count();
+        $officerCount  = $members->filter(fn ($m) => $m->rank->isOfficer())->count();
 
         return new self(
             totalCount: $totalCount,

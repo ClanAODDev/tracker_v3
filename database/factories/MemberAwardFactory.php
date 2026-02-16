@@ -14,11 +14,11 @@ class MemberAwardFactory extends Factory
     public function definition(): array
     {
         return [
-            'member_id' => Member::factory()->create()->clan_id,
-            'award_id' => Award::factory(),
+            'member_id'    => Member::factory()->create()->clan_id,
+            'award_id'     => Award::factory(),
             'requester_id' => Member::factory(),
-            'approved' => false,
-            'reason' => $this->faker->sentence,
+            'approved'     => false,
+            'reason'       => $this->faker->sentence,
         ];
     }
 

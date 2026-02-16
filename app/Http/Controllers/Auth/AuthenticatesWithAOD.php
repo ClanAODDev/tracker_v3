@@ -25,8 +25,8 @@ trait AuthenticatesWithAOD
         }
 
         $this->clanId = $result['clan_id'];
-        $this->email = $result['email'];
-        $this->roles = $result['roles'];
+        $this->email  = $result['email'];
+        $this->roles  = $result['roles'];
 
         return true;
     }

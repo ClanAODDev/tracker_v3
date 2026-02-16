@@ -396,8 +396,8 @@ class CleanupInactivityReminderNotes extends Command
 
     public function handle(): int
     {
-        $dryRun = $this->option('dry-run');
-        $maxLength = (int) $this->option('max-length');
+        $dryRun      = $this->option('dry-run');
+        $maxLength   = (int) $this->option('max-length');
         $showSamples = $this->option('show-samples');
 
         if ($dryRun) {
@@ -444,8 +444,8 @@ class CleanupInactivityReminderNotes extends Command
         $bar = $this->output->createProgressBar(count($memberIds));
         $bar->start();
 
-        $notesDeleted = 0;
-        $membersUpdated = 0;
+        $notesDeleted     = 0;
+        $membersUpdated   = 0;
         $remindersCreated = 0;
 
         $notesForceDeleted = 0;
@@ -487,11 +487,11 @@ class CleanupInactivityReminderNotes extends Command
 
                         if (! $exists) {
                             ActivityReminder::create([
-                                'member_id' => $member->clan_id,
-                                'division_id' => $member->division_id ?: 1,
+                                'member_id'      => $member->clan_id,
+                                'division_id'    => $member->division_id ?: 1,
                                 'reminded_by_id' => $note->author?->id ?? 1,
-                                'created_at' => $note->created_at,
-                                'updated_at' => $note->created_at,
+                                'created_at'     => $note->created_at,
+                                'updated_at'     => $note->created_at,
                             ]);
                             $remindersCreated++;
                         }
@@ -508,7 +508,7 @@ class CleanupInactivityReminderNotes extends Command
                         if ($latestReminder) {
                             $member->update([
                                 'last_activity_reminder_at' => $latestReminder->created_at,
-                                'activity_reminded_by_id' => $latestReminder->reminded_by_id,
+                                'activity_reminded_by_id'   => $latestReminder->reminded_by_id,
                             ]);
                         }
                     }

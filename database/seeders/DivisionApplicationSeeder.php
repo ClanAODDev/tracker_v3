@@ -21,36 +21,36 @@ class DivisionApplicationSeeder extends Seeder
 
     private array $customFields = [
         [
-            'type' => 'text',
-            'label' => 'What region do you play in?',
-            'helper_text' => 'NA East, NA West, EU, etc.',
-            'required' => true,
+            'type'          => 'text',
+            'label'         => 'What region do you play in?',
+            'helper_text'   => 'NA East, NA West, EU, etc.',
+            'required'      => true,
             'display_order' => 1,
         ],
         [
-            'type' => 'textarea',
-            'label' => 'Tell us about your experience with the game',
-            'required' => true,
+            'type'          => 'textarea',
+            'label'         => 'Tell us about your experience with the game',
+            'required'      => true,
             'display_order' => 2,
         ],
         [
-            'type' => 'text',
-            'label' => 'How did you hear about AOD?',
-            'required' => true,
+            'type'          => 'text',
+            'label'         => 'How did you hear about AOD?',
+            'required'      => true,
             'display_order' => 3,
         ],
         [
-            'type' => 'textarea',
-            'label' => 'What are you looking for in a gaming community?',
-            'required' => true,
+            'type'          => 'textarea',
+            'label'         => 'What are you looking for in a gaming community?',
+            'required'      => true,
             'display_order' => 4,
         ],
         [
-            'type' => 'radio',
-            'label' => 'Are you 18 or older?',
-            'required' => true,
+            'type'          => 'radio',
+            'label'         => 'Are you 18 or older?',
+            'required'      => true,
             'display_order' => 5,
-            'options' => [
+            'options'       => [
                 ['label' => 'Yes'],
                 ['label' => 'No'],
             ],
@@ -59,25 +59,25 @@ class DivisionApplicationSeeder extends Seeder
 
     private array $defaultResponses = [
         [
-            'text' => 'EST, Virginia',
+            'text'     => 'EST, Virginia',
             'textarea' => 'I was in a small guild in WoW a few years ago but nothing active right now.',
-            'radio' => 'Yes',
+            'radio'    => 'Yes',
         ],
         [
-            'text' => 'PST, California',
+            'text'     => 'PST, California',
             'textarea' => 'No, this would be my first clan.',
-            'radio' => 'Yes',
+            'radio'    => 'Yes',
         ],
         [
-            'text' => 'CST, Texas',
+            'text'     => 'CST, Texas',
             'textarea' => 'I play casually with a group of friends but no formal clan or guild.',
-            'radio' => 'Yes',
+            'radio'    => 'Yes',
         ],
     ];
 
     private array $customResponses = [
         [
-            'text' => ['NA East', 'Reddit LFG post'],
+            'text'     => ['NA East', 'Reddit LFG post'],
             'textarea' => [
                 'Been playing since early access, mostly ranked. Hit Diamond last season. I main support but can flex to DPS when needed.',
                 'Looking for a chill group to play with regularly. Tired of solo queue and random toxicity. Want people who communicate and have fun.',
@@ -85,7 +85,7 @@ class DivisionApplicationSeeder extends Seeder
             'radio' => 'Yes',
         ],
         [
-            'text' => ['EU West', 'Friend recommended AOD'],
+            'text'     => ['EU West', 'Friend recommended AOD'],
             'textarea' => [
                 'Fairly new, picked it up about two months ago. Still learning the meta but I watch a lot of guides and I improve fast.',
                 "I want a community that actually plays together and doesn't just exist on paper. Regular events and people to group up with would be great.",
@@ -93,7 +93,7 @@ class DivisionApplicationSeeder extends Seeder
             'radio' => 'Yes',
         ],
         [
-            'text' => ['NA West', 'Saw an AOD member in-game'],
+            'text'     => ['NA West', 'Saw an AOD member in-game'],
             'textarea' => [
                 'Played the original and jumped into this one at launch. I mostly do PvE content but getting into PvP more. Have about 300 hours total.',
                 "Something organized but not sweaty. I have a full-time job so I can't commit to mandatory raid schedules, but I'm on most evenings.",
@@ -101,7 +101,7 @@ class DivisionApplicationSeeder extends Seeder
             'radio' => 'Yes',
         ],
         [
-            'text' => ['NA East', 'Google search for gaming clans'],
+            'text'     => ['NA East', 'Google search for gaming clans'],
             'textarea' => [
                 'Competitive background in other FPS games. Was Global Elite in CS and Immortal in Valorant. Switched to this game recently for something fresh.',
                 "I'm looking for people who take the game seriously enough to improve but aren't toxic about it. Good vibes and teamwork are more important than rank to me.",
@@ -123,8 +123,8 @@ class DivisionApplicationSeeder extends Seeder
             User::firstOrCreate(
                 ['discord_id' => $userData['discord_id']],
                 [
-                    'name' => $userData['name'],
-                    'email' => $userData['name'] . '@example.com',
+                    'name'             => $userData['name'],
+                    'email'            => $userData['name'] . '@example.com',
                     'discord_username' => $userData['discord_username'],
                 ],
             );
@@ -145,9 +145,9 @@ class DivisionApplicationSeeder extends Seeder
         $division->applicationFields()->delete();
         $division->applicationFields()->createMany($this->customFields);
 
-        $settings = $division->settings ?? [];
+        $settings                         = $division->settings ?? [];
         $settings['application_required'] = true;
-        $division->settings = $settings;
+        $division->settings               = $settings;
         $division->save();
 
         $this->seedApplications($division, $this->customResponses, 4);
@@ -164,9 +164,9 @@ class DivisionApplicationSeeder extends Seeder
             return;
         }
 
-        $settings = $division->settings ?? [];
+        $settings                         = $division->settings ?? [];
         $settings['application_required'] = true;
-        $division->settings = $settings;
+        $division->settings               = $settings;
         $division->save();
 
         $this->seedApplications($division, $this->defaultResponses, 3);
@@ -174,20 +174,20 @@ class DivisionApplicationSeeder extends Seeder
 
     private function seedApplications(Division $division, array $sampleResponses, int $count): void
     {
-        $fields = $division->applicationFields()->orderBy('display_order')->get();
+        $fields       = $division->applicationFields()->orderBy('display_order')->get();
         $pendingUsers = User::pendingDiscord()
             ->whereDoesntHave('divisionApplication')
             ->take($count)
             ->get();
 
         foreach ($pendingUsers as $index => $user) {
-            $sample = $sampleResponses[$index % count($sampleResponses)];
-            $responses = [];
+            $sample       = $sampleResponses[$index % count($sampleResponses)];
+            $responses    = [];
             $typeCounters = [];
 
             foreach ($fields as $field) {
                 $typeCounters[$field->type] = ($typeCounters[$field->type] ?? -1) + 1;
-                $value = is_array($sample[$field->type] ?? null)
+                $value                      = is_array($sample[$field->type] ?? null)
                     ? ($sample[$field->type][$typeCounters[$field->type]] ?? '')
                     : ($sample[$field->type] ?? '');
 
@@ -198,9 +198,9 @@ class DivisionApplicationSeeder extends Seeder
             }
 
             DivisionApplication::create([
-                'user_id' => $user->id,
+                'user_id'     => $user->id,
                 'division_id' => $division->id,
-                'responses' => $responses,
+                'responses'   => $responses,
             ]);
         }
     }

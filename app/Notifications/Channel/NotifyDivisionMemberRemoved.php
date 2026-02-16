@@ -61,7 +61,7 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
             ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail($notifiable->getLogoPath())->fields(array_values(array_filter([
                 [
-                    'name' => 'Member Removed',
+                    'name'  => 'Member Removed',
                     'value' => sprintf(
                         ':door: [%s](%s) [%d] was removed from %s by %s.',
                         $this->member->name,
@@ -85,7 +85,7 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
                     ) : 'Unassigned',
                 ],
                 [
-                    'name' => $handle?->label ?? 'In-Game Handle',
+                    'name'  => $handle?->label ?? 'In-Game Handle',
                     'value' => $handle?->pivot?->value ?? 'N/A',
                 ],
             ], fn ($field) => $field !== null)))->error()

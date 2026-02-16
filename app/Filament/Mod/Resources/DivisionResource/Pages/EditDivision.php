@@ -41,7 +41,7 @@ class EditDivision extends EditRecord
                     ->icon('heroicon-o-megaphone')
                     ->color('warning')
                     ->action(function () {
-                        $record = $this->getRecord();
+                        $record  = $this->getRecord();
                         $channel = $record->routeNotificationForOfficers();
                         if (! $channel) {
                             Notification::make()
@@ -63,7 +63,7 @@ class EditDivision extends EditRecord
                     ->icon('heroicon-o-megaphone')
                     ->color('info')
                     ->action(function () {
-                        $record = $this->getRecord();
+                        $record  = $this->getRecord();
                         $channel = $record->routeNotificationForMembers();
                         if (! $channel) {
                             Notification::make()

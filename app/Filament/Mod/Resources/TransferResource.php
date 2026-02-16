@@ -96,8 +96,8 @@ class TransferResource extends Resource
                     ->badge()
                     ->color(fn (string $state): string => match (true) {
                         str_contains($state, 'Approved') => 'success',
-                        str_contains($state, 'Hold') => 'warning',
-                        default => 'info',
+                        str_contains($state, 'Hold')     => 'warning',
+                        default                          => 'info',
                     }),
                 TextColumn::make('approver.name')
                     ->label('Approved By')
@@ -210,7 +210,7 @@ class TransferResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListTransfers::route('/'),
+            'index'  => ListTransfers::route('/'),
             'create' => CreateTransfer::route('/create'),
         ];
     }

@@ -40,14 +40,14 @@ class EditPlatoon extends EditRecord
         $state = $this->form->getState();
 
         $originalLeaderId = $state['original_leader_id'] ?? null;
-        $newLeaderId = (int) $this->record->leader_id;
+        $newLeaderId      = (int) $this->record->leader_id;
 
         if ($originalLeaderId !== $newLeaderId) {
             if ($newLeaderId) {
                 Member::where('clan_id', $newLeaderId)->update([
-                    'position' => Position::PLATOON_LEADER,
+                    'position'   => Position::PLATOON_LEADER,
                     'platoon_id' => $this->record->id,
-                    'squad_id' => 0,
+                    'squad_id'   => 0,
                 ]);
 
                 Platoon::where('leader_id', $newLeaderId)->where('id', '!=',
@@ -59,9 +59,9 @@ class EditPlatoon extends EditRecord
 
             if ($originalLeaderId) {
                 Member::where('clan_id', $originalLeaderId)->update([
-                    'position' => Position::MEMBER,
+                    'position'   => Position::MEMBER,
                     'platoon_id' => null,
-                    'squad_id' => null,
+                    'squad_id'   => null,
                 ]);
 
                 Platoon::where('leader_id', $originalLeaderId)->where('id', '!=',
@@ -81,7 +81,7 @@ class EditPlatoon extends EditRecord
                 ->action(function ($record) {
                     Member::where('platoon_id', $record->id)->update([
                         'platoon_id' => 0,
-                        'squad_id' => 0,
+                        'squad_id'   => 0,
                     ]);
 
                     Squad::where('platoon_id', $record->id)->delete();

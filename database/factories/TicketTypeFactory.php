@@ -16,14 +16,14 @@ class TicketTypeFactory extends Factory
         $name = $this->faker->words(2, true);
 
         return [
-            'name' => $name,
-            'slug' => Str::slug($name),
-            'description' => $this->faker->sentence,
-            'boilerplate' => $this->faker->paragraph,
+            'name'                 => $name,
+            'slug'                 => Str::slug($name),
+            'description'          => $this->faker->sentence,
+            'boilerplate'          => $this->faker->paragraph,
             'notification_channel' => null,
-            'minimum_rank' => null,
-            'role_access' => null,
-            'auto_assign_to_id' => null,
+            'minimum_rank'         => null,
+            'role_access'          => null,
+            'auto_assign_to_id'    => null,
         ];
     }
 

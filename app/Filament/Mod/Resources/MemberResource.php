@@ -20,7 +20,6 @@ use App\Models\Squad;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
@@ -303,7 +302,7 @@ class MemberResource extends Resource
                     ->query(function (Builder $query, array $data): Builder {
                         $division = $data['division'] ?? null;
                         $platoons = $data['platoon'] ?? [];
-                        $squads = $data['squad'] ?? [];
+                        $squads   = $data['squad'] ?? [];
 
                         if ($squads) {
                             return $query->whereIn('squad_id', $squads);
@@ -373,7 +372,7 @@ class MemberResource extends Resource
                 SelectFilter::make('member_scope')
                     ->label('Show Members')
                     ->options([
-                        'division' => 'My Division Only',
+                        'division'        => 'My Division Only',
                         'with_parttimers' => 'Include Part-Timers',
                     ])
                     ->default('division')
@@ -444,7 +443,7 @@ class MemberResource extends Resource
                                 ->disabled(fn (callable $get) => ! $get('platoon_id')),
                         ])
                         ->beforeFormFilled(function (Collection $records, BulkAction $action): void {
-                            $user = auth()->user();
+                            $user           = auth()->user();
                             $userDivisionId = $user->member?->division_id;
 
                             if ($records->pluck('division_id')->unique()->count() > 1) {
@@ -476,7 +475,7 @@ class MemberResource extends Resource
                         ->action(function (Collection $records, array $data): void {
                             $records->each->update([
                                 'platoon_id' => $data['platoon_id'],
-                                'squad_id' => $data['squad_id'],
+                                'squad_id'   => $data['squad_id'],
                             ]);
                         })
                         ->color('primary'),
@@ -495,7 +494,7 @@ class MemberResource extends Resource
                                 ->required(),
                         ])
                         ->action(function (Collection $records, array $data): void {
-                            $user = auth()->user();
+                            $user       = auth()->user();
                             $assignerId = $user->member?->id;
 
                             foreach ($records as $member) {
@@ -566,7 +565,7 @@ class MemberResource extends Resource
     {
         return [
             'index' => ListMembers::route('/'),
-            'edit' => EditMember::route('/{record}/edit'),
+            'edit'  => EditMember::route('/{record}/edit'),
         ];
     }
 }

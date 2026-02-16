@@ -42,8 +42,8 @@ Breadcrumbs::for('member.context', function ($breadcrumbs, $member, $division) {
 });
 
 $memberPages = [
-    'member-note' => 'Edit Note',
-    'member-leave' => 'Edit Leave',
+    'member-note'     => 'Edit Note',
+    'member-leave'    => 'Edit Leave',
     'member-recruits' => 'Recruiting History',
 ];
 

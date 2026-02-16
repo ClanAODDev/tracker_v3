@@ -20,11 +20,11 @@ class Leave extends Model
     ];
 
     public static array $reasons = [
-        'military' => 'Military',
-        'medical' => 'Medical',
+        'military'  => 'Military',
+        'medical'   => 'Medical',
         'education' => 'Education',
-        'travel' => 'Travel',
-        'other' => 'Other',
+        'travel'    => 'Travel',
+        'other'     => 'Other',
     ];
 
     /**

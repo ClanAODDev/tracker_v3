@@ -42,15 +42,15 @@ class DiscordRegistrationRequest extends FormRequest
                 },
             ],
             'date_of_birth' => ['required', 'date', 'before:' . now()->subYears(13)->format('Y-m-d')],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'division_id' => ['required', 'exists:divisions,id'],
+            'password'      => ['required', 'string', 'min:8', 'confirmed'],
+            'division_id'   => ['required', 'exists:divisions,id'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'username.regex' => 'Username may only contain letters, numbers, and underscores.',
+            'username.regex'       => 'Username may only contain letters, numbers, and underscores.',
             'date_of_birth.before' => 'You must be at least 13 years old to join.',
         ];
     }
@@ -60,8 +60,8 @@ class DiscordRegistrationRequest extends FormRequest
         $user = auth()->user();
 
         $user->update([
-            'name' => $this->validated('username'),
-            'date_of_birth' => $this->validated('date_of_birth'),
+            'name'           => $this->validated('username'),
+            'date_of_birth'  => $this->validated('date_of_birth'),
             'forum_password' => $this->validated('password'),
         ]);
 
@@ -77,7 +77,7 @@ class DiscordRegistrationRequest extends FormRequest
             ]);
         }
 
-        $forumService = app(AODForumService::class);
+        $forumService      = app(AODForumService::class);
         $existingForumUser = $forumService->getUserByEmail($user->email);
 
         if ($existingForumUser) {

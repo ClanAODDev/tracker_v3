@@ -13,7 +13,7 @@ class TrainingModule extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'is_active'            => 'boolean',
         'show_completion_form' => 'boolean',
     ];
 

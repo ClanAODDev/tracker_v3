@@ -36,8 +36,8 @@ function getThemedLogoPath()
 
     $logos = [
         'traditional' => 'images/logo_v2.svg',
-        'shattrath' => 'images/logo-shattrath.svg',
-        'aod' => 'images/logo-aod.svg',
+        'shattrath'   => 'images/logo-shattrath.svg',
+        'aod'         => 'images/logo-aod.svg',
     ];
 
     return asset($logos[$theme] ?? $logos['traditional']);
@@ -75,8 +75,8 @@ function bungieMemberType($type)
 function ordSuffix($n)
 {
     $str = "{$n}";
-    $t = $n > 9 ? substr($str, -2, 1) : 0;
-    $u = substr($str, -1);
+    $t   = $n > 9 ? substr($str, -2, 1) : 0;
+    $u   = substr($str, -1);
     if ($t === 1) {
         return $str . 'th';
     }
@@ -106,38 +106,38 @@ function doForumFunction(array $ids, $action)
 {
     switch ($action) {
         case 'email':
-            $path = 'https://www.clanaod.net/forums/sendmessage.php?';
+            $path   = 'https://www.clanaod.net/forums/sendmessage.php?';
             $params = ['do' => 'mailmember', 'u' => Arr::first($ids)];
 
             break;
 
         case 'showThread':
-            $path = 'https://www.clanaod.net/forums/showthread.php?';
+            $path   = 'https://www.clanaod.net/forums/showthread.php?';
             $params = ['t' => Arr::first($ids)];
 
             break;
 
         case 'forumProfile':
-            $path = 'https://www.clanaod.net/forums/member.php?';
+            $path   = 'https://www.clanaod.net/forums/member.php?';
             $params = ['u' => Arr::first($ids)];
 
             break;
 
         case 'pm':
             $params = ['do' => 'newpm', 'u' => $ids];
-            $path = 'https://www.clanaod.net/forums/private.php?';
+            $path   = 'https://www.clanaod.net/forums/private.php?';
 
             break;
 
         case 'createThread':
             $params = ['do' => 'newthread', 'f' => Arr::first($ids)];
-            $path = 'https://www.clanaod.net/forums/newthread.php?';
+            $path   = 'https://www.clanaod.net/forums/newthread.php?';
 
             break;
 
         case 'replyToThread':
             $params = ['do' => 'postreply', 't' => Arr::first($ids)];
-            $path = 'https://www.clanaod.net/forums/newreply.php?';
+            $path   = 'https://www.clanaod.net/forums/newreply.php?';
 
             break;
 
@@ -334,9 +334,9 @@ function approveMemberPath(MemberRequest $memberRequest)
     $base = 'http://www.clanaod.net/forums/modcp/aodmember.php?do=addaod&';
 
     $args = [
-        'userid' => $memberRequest->member->clan_id,
+        'userid'   => $memberRequest->member->clan_id,
         'division' => $memberRequest->division->name,
-        'rank' => $memberRequest->member->rank->getLabel(),
+        'rank'     => $memberRequest->member->rank->getLabel(),
         // left empty and at the end so it can be adjusted
         'aodname' => '',
     ];
@@ -351,8 +351,8 @@ function gcd($a, $b)
 
     while ($_b !== 0) {
         $remainder = $_a % $_b;
-        $_a = $_b;
-        $_b = $remainder;
+        $_a        = $_b;
+        $_b        = $remainder;
     }
 
     return $a;
@@ -361,7 +361,7 @@ function gcd($a, $b)
 function ratio()
 {
     $inputs = func_get_args();
-    $c = func_num_args();
+    $c      = func_num_args();
     if ($c < 1) {
         return '';
     }
@@ -394,7 +394,7 @@ function ratio()
  */
 function remove_query_params(array $params = [])
 {
-    $url = url()->current();
+    $url   = url()->current();
     $query = request()->query();
 
     foreach ($params as $param) {

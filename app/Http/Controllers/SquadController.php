@@ -26,9 +26,9 @@ class SquadController extends Controller
     {
         $platoon->load('squads.leader');
 
-        $members = $this->memberQuery->loadSortedMembers($squad->members(), $division);
+        $members            = $this->memberQuery->loadSortedMembers($squad->members(), $division);
         $voiceActivityGraph = $this->squadRepository->getSquadVoiceActivity($squad);
-        $unitStats = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
+        $unitStats          = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
 
         return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'unitStats'));
     }
@@ -49,7 +49,7 @@ class SquadController extends Controller
             $member->save();
             $member->recordActivity(ActivityType::ASSIGNED_SQUAD, [
                 'platoon' => $squad->platoon->name,
-                'squad' => $squad->name,
+                'squad'   => $squad->name,
             ]);
         }
 

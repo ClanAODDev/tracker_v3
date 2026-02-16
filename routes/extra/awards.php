@@ -21,7 +21,7 @@ Route::get('members/{identifier}/my-awards-cluster.png', function (string $ident
 function handleAwardImage(string $identifier, string $cachePrefix, callable $generateCallback)
 {
     $memberId = (int) explode('-', $identifier)[0];
-    $member = Member::where('clan_id', $memberId)->firstOrFail();
+    $member   = Member::where('clan_id', $memberId)->firstOrFail();
 
     $generateResponse = fn () => response($generateCallback($member))->header('Content-Type', 'image/png');
 

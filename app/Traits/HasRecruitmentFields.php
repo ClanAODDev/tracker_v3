@@ -32,7 +32,7 @@ trait HasRecruitmentFields
         $handle = $this->getMemberHandle($member);
 
         return [
-            'name' => $handle->label ?? 'In-Game Handle',
+            'name'  => $handle->label ?? 'In-Game Handle',
             'value' => $handle?->pivot?->value ?? 'N/A',
         ];
     }

@@ -48,9 +48,9 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
             ));
         }
 
-        $this->member = $member;
+        $this->member              = $member;
         $this->destinationDivision = $destinationDivision;
-        $this->type = $type;
+        $this->type                = $type;
     }
 
     /**
@@ -77,14 +77,14 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
             'filters[incomplete][isActive]' => 'true',
         ];
 
-        $direction = ($this->type === 'INCOMING') ? 'to' : 'from';
+        $direction                                            = ($this->type === 'INCOMING') ? 'to' : 'from';
         $filters["filters[transferring_{$direction}][value]"] = $divisionId;
 
         $label = strtolower($this->type);
 
         $queryString = '?' . http_build_query($filters);
 
-        $baseUrl = route('filament.mod.resources.transfers.index');
+        $baseUrl   = route('filament.mod.resources.transfers.index');
         $manageUrl = $baseUrl . $queryString;
 
         return new BotChannelMessage($notifiable)
@@ -93,7 +93,7 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
-                    'name' => '**MEMBER TRANSFER REQUEST**',
+                    'name'  => '**MEMBER TRANSFER REQUEST**',
                     'value' => sprintf(
                         ':recycle: A transfer request for %s [%s] to %s has been created. [Manage %s transfer requests](%s)',
                         $this->member->name,

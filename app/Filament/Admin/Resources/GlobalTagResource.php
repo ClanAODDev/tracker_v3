@@ -65,8 +65,8 @@ class GlobalTagResource extends Resource
                     ->badge()
                     ->formatStateUsing(fn (TagVisibility $state) => $state->label())
                     ->color(fn (TagVisibility $state) => match ($state) {
-                        TagVisibility::PUBLIC => 'success',
-                        TagVisibility::OFFICERS => 'warning',
+                        TagVisibility::PUBLIC         => 'success',
+                        TagVisibility::OFFICERS       => 'warning',
                         TagVisibility::SENIOR_LEADERS => 'danger',
                     }),
                 TextColumn::make('members_count')
@@ -98,9 +98,9 @@ class GlobalTagResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListGlobalTags::route('/'),
+            'index'  => ListGlobalTags::route('/'),
             'create' => CreateGlobalTag::route('/create'),
-            'edit' => EditGlobalTag::route('/{record}/edit'),
+            'edit'   => EditGlobalTag::route('/{record}/edit'),
         ];
     }
 }

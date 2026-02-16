@@ -17,9 +17,9 @@ class ActivityReminderTest extends TestCase
 
     public function test_officer_can_set_activity_reminder()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $response = $this->actingAs($officer)
             ->postJson(route('member.set-activity-reminder', $member->clan_id));
@@ -28,8 +28,8 @@ class ActivityReminderTest extends TestCase
         $response->assertJson(['success' => true]);
 
         $this->assertDatabaseHas('activity_reminders', [
-            'member_id' => $member->clan_id,
-            'division_id' => $division->id,
+            'member_id'      => $member->clan_id,
+            'division_id'    => $division->id,
             'reminded_by_id' => $officer->id,
         ]);
 
@@ -50,13 +50,13 @@ class ActivityReminderTest extends TestCase
 
     public function test_cannot_remind_same_member_twice_in_one_day()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         ActivityReminder::create([
-            'member_id' => $member->clan_id,
-            'division_id' => $division->id,
+            'member_id'      => $member->clan_id,
+            'division_id'    => $division->id,
             'reminded_by_id' => $officer->id,
         ]);
 
@@ -69,25 +69,25 @@ class ActivityReminderTest extends TestCase
 
     public function test_sr_ldr_can_clear_activity_reminders()
     {
-        $srLdr = $this->createSeniorLeader();
+        $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         ActivityReminder::create([
-            'member_id' => $member->clan_id,
-            'division_id' => $division->id,
+            'member_id'      => $member->clan_id,
+            'division_id'    => $division->id,
             'reminded_by_id' => $srLdr->id,
         ]);
         ActivityReminder::create([
-            'member_id' => $member->clan_id,
-            'division_id' => $division->id,
+            'member_id'      => $member->clan_id,
+            'division_id'    => $division->id,
             'reminded_by_id' => $srLdr->id,
-            'created_at' => now()->subDays(7),
+            'created_at'     => now()->subDays(7),
         ]);
 
         $member->update([
             'last_activity_reminder_at' => now(),
-            'activity_reminded_by_id' => $srLdr->id,
+            'activity_reminded_by_id'   => $srLdr->id,
         ]);
 
         $response = $this->actingAs($srLdr)
@@ -107,13 +107,13 @@ class ActivityReminderTest extends TestCase
 
     public function test_officer_cannot_clear_activity_reminders()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         ActivityReminder::create([
-            'member_id' => $member->clan_id,
-            'division_id' => $division->id,
+            'member_id'      => $member->clan_id,
+            'division_id'    => $division->id,
             'reminded_by_id' => $officer->id,
         ]);
 
@@ -128,8 +128,8 @@ class ActivityReminderTest extends TestCase
         $srLdr = $this->createSeniorLeader();
 
         ActivityReminder::create([
-            'member_id' => $srLdr->member->clan_id,
-            'division_id' => $srLdr->member->division_id,
+            'member_id'      => $srLdr->member->clan_id,
+            'division_id'    => $srLdr->member->division_id,
             'reminded_by_id' => $srLdr->id,
         ]);
 
@@ -142,17 +142,17 @@ class ActivityReminderTest extends TestCase
 
     public function test_bulk_reminder_creates_reminders_for_multiple_members()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member1 = $this->createMember(['division_id' => $division->id]);
-        $member2 = $this->createMember(['division_id' => $division->id]);
-        $member3 = $this->createMember(['division_id' => $division->id]);
+        $member1  = $this->createMember(['division_id' => $division->id]);
+        $member2  = $this->createMember(['division_id' => $division->id]);
+        $member3  = $this->createMember(['division_id' => $division->id]);
 
         $response = $this->actingAs($officer)
             ->post(route('bulk-reminder.store', $division->slug), [
                 'member_ids' => implode(',', [$member1->clan_id, $member2->clan_id, $member3->clan_id]),
-                'confirm' => true,
-                'redirect' => route('division.inactive-members', $division->slug),
+                'confirm'    => true,
+                'redirect'   => route('division.inactive-members', $division->slug),
             ]);
 
         $response->assertRedirect();
@@ -164,22 +164,22 @@ class ActivityReminderTest extends TestCase
 
     public function test_bulk_reminder_skips_members_already_reminded_today()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member1 = $this->createMember(['division_id' => $division->id]);
-        $member2 = $this->createMember(['division_id' => $division->id]);
+        $member1  = $this->createMember(['division_id' => $division->id]);
+        $member2  = $this->createMember(['division_id' => $division->id]);
 
         ActivityReminder::create([
-            'member_id' => $member1->clan_id,
-            'division_id' => $division->id,
+            'member_id'      => $member1->clan_id,
+            'division_id'    => $division->id,
             'reminded_by_id' => $officer->id,
         ]);
 
         $response = $this->actingAs($officer)
             ->post(route('bulk-reminder.store', $division->slug), [
                 'member_ids' => implode(',', [$member1->clan_id, $member2->clan_id]),
-                'confirm' => true,
-                'redirect' => route('division.inactive-members', $division->slug),
+                'confirm'    => true,
+                'redirect'   => route('division.inactive-members', $division->slug),
             ]);
 
         $response->assertRedirect();
@@ -190,7 +190,7 @@ class ActivityReminderTest extends TestCase
     public function test_unauthenticated_user_cannot_set_reminder()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $response = $this->postJson(route('member.set-activity-reminder', $member->clan_id));
 
@@ -199,8 +199,8 @@ class ActivityReminderTest extends TestCase
 
     public function test_regular_member_cannot_set_activity_reminder()
     {
-        $division = $this->createActiveDivision();
-        $user = $this->createMemberWithUser(['division_id' => $division->id], ['role' => Role::MEMBER]);
+        $division     = $this->createActiveDivision();
+        $user         = $this->createMemberWithUser(['division_id' => $division->id], ['role' => Role::MEMBER]);
         $targetMember = $this->createMember(['division_id' => $division->id]);
 
         $response = $this->actingAs($user)

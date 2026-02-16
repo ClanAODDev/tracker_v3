@@ -14,10 +14,10 @@ class CreateLeave extends CreateRecord
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         $note = Note::create([
-            'body' => 'Leave of absence requested. Reason: ' . $data['note']['body'],
+            'body'      => 'Leave of absence requested. Reason: ' . $data['note']['body'],
             'member_id' => Member::whereClanId($data['member_id'])->first()->id,
             'author_id' => auth()->id(),
-            'type' => 'misc',
+            'type'      => 'misc',
         ]);
 
         $data['requester_id'] = auth()->id();

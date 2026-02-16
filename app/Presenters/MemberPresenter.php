@@ -69,8 +69,8 @@ class MemberPresenter extends Presenter
     public function coloredName($showRank = false)
     {
         if ($this->member->position) {
-            $title = $this->member->position->getLabel() ?: null;
-            $name = $showRank ? $this->rankName() : $this->member->name;
+            $title  = $this->member->position->getLabel() ?: null;
+            $name   = $showRank ? $this->rankName() : $this->member->name;
             $prefix = $this->member->position->getAbbreviation();
 
             return strtr(
@@ -80,7 +80,7 @@ class MemberPresenter extends Presenter
                         ? "<strong>{$prefix}</strong>"
                         : null,
                     '{title}' => $title,
-                    '{name}' => $name,
+                    '{name}'  => $name,
                 ]
             );
         }

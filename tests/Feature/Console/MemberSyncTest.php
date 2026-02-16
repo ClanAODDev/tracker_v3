@@ -19,10 +19,10 @@ class MemberSyncTest extends TestCase
         $mockService->shouldReceive('onRemove')->andReturnSelf();
         $mockService->shouldReceive('sync')->andReturn(true);
         $mockService->shouldReceive('getStats')->andReturn([
-            'added' => 0,
+            'added'   => 0,
             'updated' => 0,
             'removed' => 0,
-            'errors' => 0,
+            'errors'  => 0,
         ]);
 
         $this->app->instance(MemberSyncService::class, $mockService);

@@ -13,12 +13,12 @@ class AwardFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->words(3, true),
-            'description' => $this->faker->sentence,
-            'division_id' => Division::factory(),
-            'active' => true,
+            'name'          => $this->faker->words(3, true),
+            'description'   => $this->faker->sentence,
+            'division_id'   => Division::factory(),
+            'active'        => true,
             'allow_request' => true,
-            'repeatable' => false,
+            'repeatable'    => false,
             'display_order' => $this->faker->numberBetween(1, 100),
         ];
     }

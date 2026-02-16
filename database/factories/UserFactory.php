@@ -25,9 +25,9 @@ class UserFactory extends Factory
         $name = $this->faker->userName;
 
         return [
-            'name' => $name,
-            'email' => $this->faker->email,
-            'role' => Role::MEMBER,
+            'name'      => $name,
+            'email'     => $this->faker->email,
+            'role'      => Role::MEMBER,
             'member_id' => Member::factory([
                 'name' => $name,
             ]),
@@ -41,7 +41,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'role' => Role::ADMIN,
+                'role'      => Role::ADMIN,
                 'developer' => true,
                 'member_id' => Member::factory([
                     'rank' => Rank::MASTER_SERGEANT,
@@ -57,7 +57,7 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'role' => Role::OFFICER,
+                'role'      => Role::OFFICER,
                 'member_id' => Member::factory([
                     'rank' => Rank::LANCE_CORPORAL,
                 ]),
@@ -69,11 +69,11 @@ class UserFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             return [
-                'member_id' => null,
-                'discord_id' => $this->faker->numerify('#########'),
+                'member_id'        => null,
+                'discord_id'       => $this->faker->numerify('#########'),
                 'discord_username' => $this->faker->userName,
-                'date_of_birth' => $this->faker->dateTimeBetween('-50 years', '-18 years')->format('Y-m-d'),
-                'forum_password' => null,
+                'date_of_birth'    => $this->faker->dateTimeBetween('-50 years', '-18 years')->format('Y-m-d'),
+                'forum_password'   => null,
             ];
         });
     }

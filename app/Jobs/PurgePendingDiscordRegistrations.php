@@ -37,9 +37,9 @@ class PurgePendingDiscordRegistrations implements ShouldQueue
             ->delete();
 
         Log::info('Purged old pending Discord registrations', [
-            'users' => $userCount,
+            'users'        => $userCount,
             'applications' => $applicationCount,
-            'days_old' => $this->daysOld,
+            'days_old'     => $this->daysOld,
         ]);
     }
 }

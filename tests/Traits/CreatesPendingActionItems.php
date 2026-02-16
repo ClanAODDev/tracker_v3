@@ -19,19 +19,19 @@ trait CreatesPendingActionItems
         $maxDays = config('aod.maximum_days_inactive', 14);
 
         Member::factory()->count($count)->create([
-            'division_id' => $division->id,
+            'division_id'         => $division->id,
             'last_voice_activity' => now()->subDays($maxDays + 5),
         ]);
     }
 
     protected function createDivisionAwardRequests(Division $division, int $count = 2): void
     {
-        $award = Award::factory()->create(['division_id' => $division->id]);
+        $award   = Award::factory()->create(['division_id' => $division->id]);
         $members = Member::factory()->count($count)->create(['division_id' => $division->id]);
 
         foreach ($members as $member) {
             MemberAward::factory()->pending()->create([
-                'award_id' => $award->id,
+                'award_id'  => $award->id,
                 'member_id' => $member->clan_id,
             ]);
         }
@@ -55,14 +55,14 @@ trait CreatesPendingActionItems
         $members = Member::where('division_id', $division->id)->take($count)->get();
 
         if ($members->count() < $count) {
-            $needed = $count - $members->count();
+            $needed     = $count - $members->count();
             $newMembers = Member::factory()->count($needed)->create(['division_id' => $division->id]);
-            $members = $members->merge($newMembers);
+            $members    = $members->merge($newMembers);
         }
 
         foreach ($members as $member) {
             Leave::factory()->create([
-                'member_id' => $member->clan_id,
+                'member_id'   => $member->clan_id,
                 'approver_id' => null,
             ]);
         }
@@ -71,7 +71,7 @@ trait CreatesPendingActionItems
     protected function createVoiceIssues(Division $division, int $count = 2): void
     {
         Member::factory()->count($count)->create([
-            'division_id' => $division->id,
+            'division_id'       => $division->id,
             'last_voice_status' => DiscordStatus::NEVER_CONNECTED,
         ]);
     }
@@ -80,7 +80,7 @@ trait CreatesPendingActionItems
     {
         Member::factory()->count($count)->create([
             'division_id' => $division->id,
-            'platoon_id' => 0,
+            'platoon_id'  => 0,
         ]);
     }
 
@@ -94,9 +94,9 @@ trait CreatesPendingActionItems
 
         Member::factory()->count($count)->create([
             'division_id' => $division->id,
-            'platoon_id' => $platoon->id,
-            'squad_id' => 0,
-            'position' => Position::MEMBER,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => 0,
+            'position'    => Position::MEMBER,
         ]);
     }
 

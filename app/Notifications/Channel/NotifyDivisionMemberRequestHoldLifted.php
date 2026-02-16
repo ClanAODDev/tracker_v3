@@ -25,7 +25,7 @@ class NotifyDivisionMemberRequestHoldLifted extends Notification implements Shou
     public function __construct(MemberRequest $memberRequest, Member $member)
     {
         $this->request = $memberRequest;
-        $this->member = $member;
+        $this->member  = $member;
     }
 
     /**

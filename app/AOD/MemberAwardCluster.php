@@ -42,27 +42,27 @@ class MemberAwardCluster
 
     private function generateSvg(array $awards): string
     {
-        $count = count($awards);
-        $rows = (int) ceil($count / self::COLUMNS);
+        $count     = count($awards);
+        $rows      = (int) ceil($count / self::COLUMNS);
         $awardSize = $this->awardSize;
-        $padding = self::PADDING;
-        $columns = self::COLUMNS;
+        $padding   = self::PADDING;
+        $columns   = self::COLUMNS;
 
-        $width = ($columns * $awardSize) + (($columns - 1) * $padding);
+        $width  = ($columns * $awardSize) + (($columns - 1) * $padding);
         $height = ($rows * $awardSize) + (($rows - 1) * $padding);
 
         $awardsContent = '';
-        $y = 0;
+        $y             = 0;
 
         $awardChunks = array_chunk($awards, $columns);
 
         foreach ($awardChunks as $rowAwards) {
             $rowCount = count($rowAwards);
             $rowWidth = ($rowCount * $awardSize) + (($rowCount - 1) * $padding);
-            $xOffset = ($width - $rowWidth) / 2;
+            $xOffset  = ($width - $rowWidth) / 2;
 
             foreach ($rowAwards as $colIndex => $imagePath) {
-                $x = $xOffset + ($colIndex * ($awardSize + $padding));
+                $x           = $xOffset + ($colIndex * ($awardSize + $padding));
                 $imageBase64 = $this->getAwardImageBase64($imagePath);
                 if ($imageBase64) {
                     $awardsContent .= <<<IMAGE

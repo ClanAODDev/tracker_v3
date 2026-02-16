@@ -40,10 +40,10 @@ class TagUsageWidget extends BaseWidget
                     ->label('Tag')
                     ->badge()
                     ->color(fn (DivisionTag $record) => match ($record->visibility->value) {
-                        'public' => 'success',
-                        'officers' => 'warning',
+                        'public'         => 'success',
+                        'officers'       => 'warning',
                         'senior_leaders' => 'danger',
-                        default => 'gray',
+                        default          => 'gray',
                     })
                     ->searchable(),
 
@@ -52,10 +52,10 @@ class TagUsageWidget extends BaseWidget
                     ->formatStateUsing(fn ($state) => $state->label())
                     ->badge()
                     ->color(fn ($state) => match ($state->value) {
-                        'public' => 'success',
-                        'officers' => 'warning',
+                        'public'         => 'success',
+                        'officers'       => 'warning',
                         'senior_leaders' => 'danger',
-                        default => 'gray',
+                        default          => 'gray',
                     }),
 
                 TextColumn::make('members_count')
@@ -82,8 +82,8 @@ class TagUsageWidget extends BaseWidget
                 SelectFilter::make('visibility')
                     ->label('Visibility')
                     ->options([
-                        TagVisibility::PUBLIC->value => TagVisibility::PUBLIC->label(),
-                        TagVisibility::OFFICERS->value => TagVisibility::OFFICERS->label(),
+                        TagVisibility::PUBLIC->value         => TagVisibility::PUBLIC->label(),
+                        TagVisibility::OFFICERS->value       => TagVisibility::OFFICERS->label(),
                         TagVisibility::SENIOR_LEADERS->value => TagVisibility::SENIOR_LEADERS->label(),
                     ]),
             ])

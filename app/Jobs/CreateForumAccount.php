@@ -42,9 +42,9 @@ class CreateForumAccount implements ShouldQueue
 
         if (! $result['success']) {
             Log::error('Forum account creation failed', [
-                'user_id' => $this->user->id,
+                'user_id'  => $this->user->id,
                 'username' => $this->username,
-                'error' => $result['error'],
+                'error'    => $result['error'],
             ]);
 
             throw new RuntimeException("Forum account creation failed for {$this->username}: {$result['error']}");

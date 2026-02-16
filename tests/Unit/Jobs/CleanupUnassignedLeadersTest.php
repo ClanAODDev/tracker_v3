@@ -21,7 +21,7 @@ class CleanupUnassignedLeadersTest extends TestCase
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'position' => Position::SQUAD_LEADER,
+            'position'    => Position::SQUAD_LEADER,
         ]);
 
         (new CleanupUnassignedLeaders)->handle();
@@ -37,7 +37,7 @@ class CleanupUnassignedLeadersTest extends TestCase
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'position' => Position::PLATOON_LEADER,
+            'position'    => Position::PLATOON_LEADER,
         ]);
 
         (new CleanupUnassignedLeaders)->handle();
@@ -50,8 +50,8 @@ class CleanupUnassignedLeadersTest extends TestCase
     public function test_does_not_affect_assigned_squad_leaders()
     {
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
-        $squad = $this->createSquad($platoon);
+        $platoon  = $this->createPlatoon($division);
+        $squad    = $this->createSquad($platoon);
 
         $leader = $this->createSquadLeader($squad);
 
@@ -65,7 +65,7 @@ class CleanupUnassignedLeadersTest extends TestCase
     public function test_does_not_affect_assigned_platoon_leaders()
     {
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
+        $platoon  = $this->createPlatoon($division);
 
         $leader = $this->createPlatoonLeader($platoon);
 
@@ -82,7 +82,7 @@ class CleanupUnassignedLeadersTest extends TestCase
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'position' => Position::MEMBER,
+            'position'    => Position::MEMBER,
         ]);
 
         (new CleanupUnassignedLeaders)->handle();
@@ -98,12 +98,12 @@ class CleanupUnassignedLeadersTest extends TestCase
 
         $xo = $this->createMember([
             'division_id' => $division->id,
-            'position' => Position::EXECUTIVE_OFFICER,
+            'position'    => Position::EXECUTIVE_OFFICER,
         ]);
 
         $co = $this->createMember([
             'division_id' => $division->id,
-            'position' => Position::COMMANDING_OFFICER,
+            'position'    => Position::COMMANDING_OFFICER,
         ]);
 
         (new CleanupUnassignedLeaders)->handle();

@@ -39,10 +39,10 @@ class CleanupUnassignedLeadersAction extends Action
                         }
 
                         $html = match ($rule) {
-                            'squad_pos2' => "Will update <b>{$c2}</b> unassigned squad leaders",
+                            'squad_pos2'   => "Will update <b>{$c2}</b> unassigned squad leaders",
                             'platoon_pos3' => "Will update <b>{$c3}</b> unassigned platoon leaders.",
-                            'both' => "Will update: <br /><b>{$c2}</b> unassigned squad leaders <br /><b>{$c3}</b> unassigned platoon leaders.",
-                            default => '<span class="text-gray-500">Select a rule to see how many members will be affected.</span>',
+                            'both'         => "Will update: <br /><b>{$c2}</b> unassigned squad leaders <br /><b>{$c3}</b> unassigned platoon leaders.",
+                            default        => '<span class="text-gray-500">Select a rule to see how many members will be affected.</span>',
                         };
 
                         return new HtmlString($html);
@@ -51,9 +51,9 @@ class CleanupUnassignedLeadersAction extends Action
                 Select::make('rule')
                     ->label('Which rule to run?')
                     ->options([
-                        'squad_pos2' => 'Unassigned squad leaders',
+                        'squad_pos2'   => 'Unassigned squad leaders',
                         'platoon_pos3' => 'Unassigned platoon leaders',
-                        'both' => 'Run both rules',
+                        'both'         => 'Run both rules',
                     ])
                     ->required()
                     ->reactive()
@@ -78,10 +78,10 @@ class CleanupUnassignedLeadersAction extends Action
                 });
 
                 $summary = match ($rule) {
-                    'squad_pos2' => "Updated {$updated2} member(s) from position 2 → 1.",
+                    'squad_pos2'   => "Updated {$updated2} member(s) from position 2 → 1.",
                     'platoon_pos3' => "Updated {$updated3} member(s) from position 3 → 1.",
-                    'both' => "Updated {$updated2} member(s) (pos=2 → 1) and {$updated3} member(s) (pos=3 → 1).",
-                    default => 'No changes performed.',
+                    'both'         => "Updated {$updated2} member(s) (pos=2 → 1) and {$updated3} member(s) (pos=3 → 1).",
+                    default        => 'No changes performed.',
                 };
 
                 Notification::make()

@@ -17,7 +17,7 @@ class SyncDiscordMemberTest extends TestCase
     public function test_job_can_be_instantiated()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $job = new SyncDiscordMember($member);
 
@@ -27,7 +27,7 @@ class SyncDiscordMemberTest extends TestCase
     public function test_job_stores_member_reference()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $job = new SyncDiscordMember($member);
 
@@ -37,7 +37,7 @@ class SyncDiscordMemberTest extends TestCase
     public function test_job_is_queueable()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $job = new SyncDiscordMember($member);
 
@@ -50,14 +50,14 @@ class SyncDiscordMemberTest extends TestCase
     public function test_member_discord_fields_can_be_updated()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'discord_id' => null,
-            'discord' => null,
+            'discord_id'  => null,
+            'discord'     => null,
         ]);
 
         $member->discord_id = '123456789012345678';
-        $member->discord = 'TestUser#1234';
+        $member->discord    = 'TestUser#1234';
         $member->save();
 
         $member->refresh();
@@ -68,14 +68,14 @@ class SyncDiscordMemberTest extends TestCase
     public function test_member_is_dirty_when_discord_fields_change()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'discord_id' => 'old_id',
-            'discord' => 'old_tag',
+            'discord_id'  => 'old_id',
+            'discord'     => 'old_tag',
         ]);
 
         $member->discord_id = 'new_id';
-        $member->discord = 'new_tag';
+        $member->discord    = 'new_tag';
 
         $this->assertTrue($member->isDirty());
     }
@@ -83,10 +83,10 @@ class SyncDiscordMemberTest extends TestCase
     public function test_member_is_not_dirty_when_no_changes()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'discord_id' => 'same_id',
-            'discord' => 'same_tag',
+            'discord_id'  => 'same_id',
+            'discord'     => 'same_tag',
         ]);
 
         $member->refresh();

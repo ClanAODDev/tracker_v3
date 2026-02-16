@@ -71,29 +71,29 @@ return [
     'renderer' => [
         'block_separator' => "\n\n",
         'inner_separator' => "\n",
-        'soft_break' => "\n",
+        'soft_break'      => "\n",
     ],
 
     'commonmark' => [
-        'enable_em' => true,
-        'enable_strong' => true,
-        'use_asterisk' => true,
-        'use_underscore' => true,
+        'enable_em'              => true,
+        'enable_strong'          => true,
+        'use_asterisk'           => true,
+        'use_underscore'         => true,
         'unordered_list_markers' => ['-', '+', '*'],
     ],
 
     'heading_permalink' => [
-        'html_class' => 'heading-permalink smooth-scroll',
-        'id_prefix' => 'content',
+        'html_class'          => 'heading-permalink smooth-scroll',
+        'id_prefix'           => 'content',
         'apply_id_to_heading' => false,
-        'heading_class' => '',
-        'fragment_prefix' => 'content',
-        'insert' => 'after',
-        'min_heading_level' => 1,
-        'max_heading_level' => 6,
-        'title' => 'Permalink',
-        'symbol' => HeadingPermalinkRenderer::DEFAULT_SYMBOL,
-        'aria_hidden' => true,
+        'heading_class'       => '',
+        'fragment_prefix'     => 'content',
+        'insert'              => 'after',
+        'min_heading_level'   => 1,
+        'max_heading_level'   => 6,
+        'title'               => 'Permalink',
+        'symbol'              => HeadingPermalinkRenderer::DEFAULT_SYMBOL,
+        'aria_hidden'         => true,
     ],
 
     'default_attributes' => [
@@ -133,16 +133,16 @@ return [
     ],
 
     'embed' => [
-        'adapter' => new OscaroteroEmbedAdapter,
+        'adapter'         => new OscaroteroEmbedAdapter,
         'allowed_domains' => ['youtube.com'],
-        'fallback' => 'link',
+        'fallback'        => 'link',
     ],
 
     'table' => [
         'alignment_attributes' => [
-            'left' => ['class' => 'text-start'],
+            'left'   => ['class' => 'text-start'],
             'center' => ['class' => 'text-center'],
-            'right' => ['class' => 'text-end'],
+            'right'  => ['class' => 'text-end'],
         ],
     ],
 
@@ -201,7 +201,7 @@ return [
 
     'slug_normalizer' => [
         'max_length' => 255,
-        'unique' => 'document',
+        'unique'     => 'document',
     ],
 
 ];

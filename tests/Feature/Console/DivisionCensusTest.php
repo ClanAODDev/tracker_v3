@@ -31,7 +31,7 @@ class DivisionCensusTest extends TestCase
 
         Census::factory()->create([
             'division_id' => $division->id,
-            'created_at' => now(),
+            'created_at'  => now(),
         ]);
 
         $this->artisan('tracker:census')
@@ -47,7 +47,7 @@ class DivisionCensusTest extends TestCase
 
         Census::factory()->create([
             'division_id' => $division->id,
-            'created_at' => now(),
+            'created_at'  => now(),
         ]);
 
         $this->artisan('tracker:census --force')
@@ -63,7 +63,7 @@ class DivisionCensusTest extends TestCase
 
         Census::factory()->create([
             'division_id' => $division->id,
-            'created_at' => now()->subDay(),
+            'created_at'  => now()->subDay(),
         ]);
 
         $this->artisan('tracker:census')

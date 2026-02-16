@@ -16,8 +16,8 @@ readonly class TenureData
 
     public static function fromMember(Member $member): self
     {
-        $years = $member->join_date ? (int) floor($member->join_date->diffInYears()) : 0;
-        $months = $member->join_date ? (int) $member->join_date->diffInMonths() % 12 : 0;
+        $years     = $member->join_date ? (int) floor($member->join_date->diffInYears()) : 0;
+        $months    = $member->join_date ? (int) $member->join_date->diffInMonths() % 12 : 0;
         $totalDays = $member->join_date ? (int) $member->join_date->diffInDays() : 0;
 
         return new self(

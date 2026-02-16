@@ -39,9 +39,9 @@ class DiscordController extends Controller
             ]);
         }
 
-        $discordId = $discordUser->getId();
+        $discordId       = $discordUser->getId();
         $discordUsername = $discordUser->getNickname() ?? $discordUser->getName();
-        $email = $discordUser->getEmail();
+        $email           = $discordUser->getEmail();
 
         if ($user = User::where('discord_id', $discordId)->first()) {
             return $this->loginExistingUser($user);
@@ -65,7 +65,7 @@ class DiscordController extends Controller
 
     public function pending(): RedirectResponse|View
     {
-        $user = auth()->user();
+        $user        = auth()->user();
         $previewSlug = request('preview');
 
         if ($previewSlug) {
@@ -80,7 +80,7 @@ class DiscordController extends Controller
 
         if ($user->date_of_birth && ! $user->forum_password && ! $user->divisionApplication) {
             $divisionId = session('pending_division_id');
-            $division = $divisionId ? Division::find($divisionId) : null;
+            $division   = $divisionId ? Division::find($divisionId) : null;
         }
 
         return view('auth.discord-pending', $this->buildPendingViewData($division));
@@ -109,11 +109,11 @@ class DiscordController extends Controller
             ->get(['id', 'name', 'abbreviation']);
 
         $applicationFields = null;
-        $needsApplication = false;
+        $needsApplication  = false;
 
         if ($division && $division->settings()->get('application_required', false)) {
             $applicationFields = $division->applicationFields;
-            $needsApplication = $applicationFields->isNotEmpty();
+            $needsApplication  = $applicationFields->isNotEmpty();
         }
 
         return compact('divisions', 'applicationFields', 'needsApplication');
@@ -128,7 +128,7 @@ class DiscordController extends Controller
 
     public function submitApplication(Request $request): RedirectResponse
     {
-        $user = auth()->user();
+        $user       = auth()->user();
         $divisionId = session('pending_division_id');
 
         if (! $user->isPendingRegistration() || ! $divisionId) {
@@ -136,11 +136,11 @@ class DiscordController extends Controller
         }
 
         $division = Division::findOrFail($divisionId);
-        $fields = $division->applicationFields;
+        $fields   = $division->applicationFields;
 
         $rules = [];
         foreach ($fields as $field) {
-            $key = "field_{$field->id}";
+            $key            = "field_{$field->id}";
             $allowedOptions = collect($field->options ?? [])->pluck('label')->all();
 
             $rules[$key] = match ($field->type) {
@@ -170,7 +170,7 @@ class DiscordController extends Controller
 
         $responses = [];
         foreach ($fields as $field) {
-            $key = "field_{$field->id}";
+            $key                   = "field_{$field->id}";
             $responses[$field->id] = [
                 'label' => $field->label,
                 'value' => $validated[$key] ?? null,
@@ -178,9 +178,9 @@ class DiscordController extends Controller
         }
 
         $application = DivisionApplication::create([
-            'user_id' => $user->id,
+            'user_id'     => $user->id,
             'division_id' => $division->id,
-            'responses' => $responses,
+            'responses'   => $responses,
         ]);
 
         session()->forget('pending_division_id');
@@ -211,7 +211,7 @@ class DiscordController extends Controller
     ): RedirectResponse {
         $user = User::findOrCreateForMember($member, $email);
         $user->update([
-            'discord_id' => $discordId,
+            'discord_id'       => $discordId,
             'discord_username' => $discordUsername,
         ]);
 
@@ -248,9 +248,9 @@ class DiscordController extends Controller
         }
 
         $user = User::create([
-            'name' => $sanitizedName,
-            'email' => $email,
-            'discord_id' => $discordId,
+            'name'             => $sanitizedName,
+            'email'            => $email,
+            'discord_id'       => $discordId,
             'discord_username' => $discordUsername,
         ]);
 

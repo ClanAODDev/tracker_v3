@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('requests-count.png', function () {
     date_default_timezone_set('America/New_York');
 
-    $tinyfont = public_path('fonts/copy0855.ttf');
+    $tinyfont     = public_path('fonts/copy0855.ttf');
     $tinyboldfont = public_path('fonts/copy0866.ttf');
-    $bigfont = public_path('fonts/din-black.otf');
+    $bigfont      = public_path('fonts/din-black.otf');
 
     if (! file_exists($tinyfont) || ! file_exists($bigfont)) {
         return response('Font file missing', 500)
@@ -29,7 +29,7 @@ Route::get('requests-count.png', function () {
     }
 
     $orange = imagecolorallocate($im, 255, 108, 0);
-    $red = imagecolorallocate($im, 153, 26, 34);
+    $red    = imagecolorallocate($im, 153, 26, 34);
 
     $requestsCountQuery = MemberRequest::pending()->pastGracePeriod();
     if (request()->has('division')) {
@@ -38,19 +38,19 @@ Route::get('requests-count.png', function () {
     }
 
     $requestsCount = $requestsCountQuery->count();
-    $errors = MemberRequest::errors()->count();
+    $errors        = MemberRequest::errors()->count();
 
     $dimensionsRequests = imagettfbbox(20, 0, $bigfont, $requestsCount);
-    $textWidthRequests = abs($dimensionsRequests[4] - $dimensionsRequests[0]);
-    $xRequests = imagesx($im) - $textWidthRequests;
+    $textWidthRequests  = abs($dimensionsRequests[4] - $dimensionsRequests[0]);
+    $xRequests          = imagesx($im) - $textWidthRequests;
 
     imagettftext($im, 20, 0, $xRequests - 10, 25, $orange, $bigfont, $requestsCount);
 
     if ($errors > 0) {
-        $errorText = "({$errors} ERR)";
+        $errorText       = "({$errors} ERR)";
         $dimensionsError = imagettfbbox(6, 0, $tinyfont, $errorText);
-        $textWidthError = abs($dimensionsError[4] - $dimensionsError[0]);
-        $xError = $xRequests - $textWidthError - 15;
+        $textWidthError  = abs($dimensionsError[4] - $dimensionsError[0]);
+        $xError          = $xRequests - $textWidthError - 15;
 
         imagettftext($im, 6, 0, $xError, 20, $red, $tinyfont, $errorText);
     }

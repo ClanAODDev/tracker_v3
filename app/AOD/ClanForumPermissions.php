@@ -38,11 +38,11 @@ class ClanForumPermissions
             ->toArray();
 
         $newRole = match (true) {
-            $this->inGroup($groupIds, [ForumGroup::BANNED->value]) => Role::BANNED,
-            $this->inGroup($groupIds, [ForumGroup::ADMIN->value]) => Role::ADMIN,
+            $this->inGroup($groupIds, [ForumGroup::BANNED->value])      => Role::BANNED,
+            $this->inGroup($groupIds, [ForumGroup::ADMIN->value])       => Role::ADMIN,
             $this->inGroup($groupIds, ForumGroup::seniorLeaderGroups()) => Role::SENIOR_LEADER,
-            $this->inGroup($groupIds, $officerRoleIds) => Role::OFFICER,
-            default => Role::MEMBER,
+            $this->inGroup($groupIds, $officerRoleIds)                  => Role::OFFICER,
+            default                                                     => Role::MEMBER,
         };
 
         if ($user->role !== $newRole) {

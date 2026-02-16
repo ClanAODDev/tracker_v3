@@ -24,16 +24,16 @@ readonly class DivisionShowData
     public function toArray(): array
     {
         return [
-            'division' => $this->division,
-            'stats' => $this->stats,
-            'chartData' => $this->chartData->toArray(),
-            'platoons' => $this->platoons,
-            'divisionLeaders' => $this->divisionLeaders,
-            'generalSergeants' => $this->generalSergeants,
-            'divisionAnniversaries' => $this->divisionAnniversaries,
-            'previousCensus' => $this->previousCensus,
-            'pendingActions' => $this->pendingActions,
-            'recentActivity' => $this->recentActivity,
+            'division'                => $this->division,
+            'stats'                   => $this->stats,
+            'chartData'               => $this->chartData->toArray(),
+            'platoons'                => $this->platoons,
+            'divisionLeaders'         => $this->divisionLeaders,
+            'generalSergeants'        => $this->generalSergeants,
+            'divisionAnniversaries'   => $this->divisionAnniversaries,
+            'previousCensus'          => $this->previousCensus,
+            'pendingActions'          => $this->pendingActions,
+            'recentActivity'          => $this->recentActivity,
             'pendingApplicationCount' => $this->pendingApplicationCount,
         ];
     }

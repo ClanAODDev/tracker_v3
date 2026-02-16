@@ -71,7 +71,7 @@ class MemberAwardImage
         $backgroundPath = public_path('images/dynamic-images/bgs/awards_base_image.png');
 
         $background = new \Imagick($backgroundPath);
-        $overlay = new \Imagick;
+        $overlay    = new \Imagick;
         $overlay->readImageBlob($overlayPng);
 
         $background->compositeImage($overlay, \Imagick::COMPOSITE_OVER, 0, 0);
@@ -96,7 +96,7 @@ class MemberAwardImage
         }
 
         $this->options = $this->parseOptions(count($awardsData));
-        $awards = array_slice($awardsData, 0, $this->options['count']);
+        $awards        = array_slice($awardsData, 0, $this->options['count']);
 
         return $this->generateSvg($awards);
     }
@@ -104,16 +104,16 @@ class MemberAwardImage
     private function parseOptions(int $availableCount): array
     {
         $requestedCount = (int) request('award_count', $availableCount);
-        $count = min(max($requestedCount, 1), self::MAX_AWARDS, $availableCount);
+        $count          = min(max($requestedCount, 1), self::MAX_AWARDS, $availableCount);
 
         $defaultFontSize = $count >= 4 ? 10 : 11;
 
         return [
-            'count' => $count,
-            'textOffset' => 25,
+            'count'       => $count,
+            'textOffset'  => 25,
             'imageOffset' => 20,
-            'fontSize' => $this->clampInt(request('font_size'), 8, 14, $defaultFontSize),
-            'maxLines' => $count >= 4 ? 2 : 3,
+            'fontSize'    => $this->clampInt(request('font_size'), 8, 14, $defaultFontSize),
+            'maxLines'    => $count >= 4 ? 2 : 3,
         ];
     }
 
@@ -140,11 +140,11 @@ class MemberAwardImage
                     ->count();
 
                 return [
-                    'image' => $item->image,
-                    'name' => $item->name,
+                    'image'    => $item->image,
+                    'name'     => $item->name,
                     'division' => $item->abbreviation ? strtoupper($item->abbreviation) : null,
-                    'rarity' => $this->calculateRarity($recipientCount),
-                    'count' => $memberAwardCounts->get($item->id, 1),
+                    'rarity'   => $this->calculateRarity($recipientCount),
+                    'count'    => $memberAwardCounts->get($item->id, 1),
                 ];
             })
             ->values()
@@ -153,21 +153,21 @@ class MemberAwardImage
 
     private function generateSvg(array $awards): string
     {
-        $count = count($awards);
+        $count   = count($awards);
         $spacing = (self::CANVAS_WIDTH - ($count * $this->awardSize)) / ($count + 1);
 
-        $defs = $this->generateDefs();
+        $defs          = $this->generateDefs();
         $awardsContent = '';
-        $x = $spacing;
+        $x             = $spacing;
 
         foreach ($awards as $award) {
             $centerX = $x + ($this->awardSize / 2);
-            $y = (self::CANVAS_HEIGHT - $this->awardSize) / 2 - $this->options['imageOffset'];
+            $y       = (self::CANVAS_HEIGHT - $this->awardSize) / 2 - $this->options['imageOffset'];
             $awardsContent .= $this->renderAward($award, $x, $y, $centerX);
             $x += $this->awardSize + $spacing;
         }
 
-        $width = self::CANVAS_WIDTH;
+        $width  = self::CANVAS_WIDTH;
         $height = self::CANVAS_HEIGHT;
 
         return <<<SVG
@@ -210,7 +210,7 @@ SVG;
 
     private function generateDefs(): string
     {
-        return <<<DEFS
+        return <<<'DEFS'
         <linearGradient id="bgGradient" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
             <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
@@ -220,25 +220,25 @@ DEFS;
 
     private function renderAward(array $award, float $x, float $y, float $slotCenterX): string
     {
-        $rgb = config("aod.awards.rarity.{$award['rarity']}.color", [128, 128, 128]);
+        $rgb       = config("aod.awards.rarity.{$award['rarity']}.color", [128, 128, 128]);
         $textColor = "rgb({$rgb[0]},{$rgb[1]},{$rgb[2]})";
-        $rarity = $award['rarity'];
+        $rarity    = $award['rarity'];
 
         $imageBase64 = $this->getAwardImageBase64($award['image']);
-        $centerX = $slotCenterX;
-        $textY = $y + $this->awardSize + $this->options['textOffset'];
+        $centerX     = $slotCenterX;
+        $textY       = $y + $this->awardSize + $this->options['textOffset'];
 
         $label = strtoupper($award['name']);
         $lines = $this->wrapText($label, 100);
         if (count($lines) > $this->options['maxLines']) {
-            $lines = array_slice($lines, 0, $this->options['maxLines']);
+            $lines                    = array_slice($lines, 0, $this->options['maxLines']);
             $lines[count($lines) - 1] = rtrim($lines[count($lines) - 1]) . '...';
         }
 
         $textElements = '';
         foreach ($lines as $i => $line) {
             $lineY = $textY + ($i * ($this->options['fontSize'] + 2));
-            $line = htmlspecialchars($line, ENT_XML1);
+            $line  = htmlspecialchars($line, ENT_XML1);
             $textElements .= <<<TEXT
         <text x="{$centerX}" y="{$lineY}" class="award-text award-shadow" dx="1" dy="1">{$line}</text>
         <text x="{$centerX}" y="{$lineY}" class="award-text" fill="{$textColor}">{$line}</text>
@@ -249,7 +249,7 @@ TEXT;
         if ($award['count'] > 1) {
             $badgeX = $x + $this->awardSize - 8;
             $badgeY = $y + $this->awardSize - 8;
-            $badge = <<<BADGE
+            $badge  = <<<BADGE
         <circle cx="{$badgeX}" cy="{$badgeY}" r="9" fill="rgb(40,40,50)" stroke="gold" stroke-width="1"/>
         <text x="{$badgeX}" y="{$badgeY}" class="badge-text">x{$award['count']}</text>
 BADGE;
@@ -286,14 +286,14 @@ AWARD;
 
     private function wrapText(string $text, int $maxWidth): array
     {
-        $words = explode(' ', $text);
-        $lines = [];
+        $words       = explode(' ', $text);
+        $lines       = [];
         $currentLine = '';
-        $charWidth = $this->options['fontSize'] * 0.6;
+        $charWidth   = $this->options['fontSize'] * 0.6;
 
         foreach ($words as $word) {
             $testLine = $currentLine ? "$currentLine $word" : $word;
-            $width = strlen($testLine) * $charWidth;
+            $width    = strlen($testLine) * $charWidth;
 
             if ($width <= $maxWidth) {
                 $currentLine = $testLine;

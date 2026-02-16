@@ -38,12 +38,12 @@ class DivisionStatsWidget extends BaseWidget
 
         $voicePercent = $memberCount > 0 ? round(($weeklyVoice / $memberCount) * 100) : 0;
 
-        $tagCount = DivisionTag::forDivision($division->id)->count();
+        $tagCount          = DivisionTag::forDivision($division->id)->count();
         $taggedMemberCount = $division->members()->whereHas('tags')->count();
 
         $populationTrend = $this->getPopulationTrend($division);
-        $voiceTrend = $this->getVoiceTrend($division);
-        $recruitsTrend = $this->getRecruitsTrend($division);
+        $voiceTrend      = $this->getVoiceTrend($division);
+        $recruitsTrend   = $this->getRecruitsTrend($division);
 
         $recruitsThisMonth = Member::where('division_id', $division->id)
             ->where('join_date', '>=', now()->subDays(30))
@@ -106,8 +106,8 @@ class DivisionStatsWidget extends BaseWidget
     {
         $data = [];
         for ($i = 13; $i >= 0; $i--) {
-            $start = now()->subDays(($i + 1) * 7);
-            $end = now()->subDays($i * 7);
+            $start  = now()->subDays(($i + 1) * 7);
+            $end    = now()->subDays($i * 7);
             $data[] = Member::where('division_id', $division->id)
                 ->whereBetween('join_date', [$start, $end])
                 ->count();

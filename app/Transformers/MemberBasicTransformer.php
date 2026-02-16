@@ -11,9 +11,9 @@ class MemberBasicTransformer extends Transformer
     public function transform($item): array
     {
         return [
-            'name' => $item->name,
+            'name'     => $item->name,
             'position' => $item->position->getLabel(),
-            'rank' => [
+            'rank'     => [
                 'label' => $item->rank->getAbbreviation(),
                 'color' => $item->rank->getColorHex(),
             ],

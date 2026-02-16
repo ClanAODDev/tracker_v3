@@ -24,16 +24,16 @@ class LeaveControllerTest extends TestCase
 
     public function test_store_validates_member_belongs_to_division()
     {
-        $srLdr = $this->createSeniorLeader();
-        $division = $srLdr->member->division;
+        $srLdr         = $this->createSeniorLeader();
+        $division      = $srLdr->member->division;
         $otherDivision = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $otherDivision->id]);
+        $member        = $this->createMember(['division_id' => $otherDivision->id]);
 
         $response = $this->actingAs($srLdr)
             ->post(route('leave.store', $division->slug), [
                 'member_id' => $member->clan_id,
-                'end_date' => now()->addMonth()->format('Y-m-d'),
-                'reason' => 'Test reason',
+                'end_date'  => now()->addMonth()->format('Y-m-d'),
+                'reason'    => 'Test reason',
             ]);
 
         $response->assertSessionHasErrors('member_id');

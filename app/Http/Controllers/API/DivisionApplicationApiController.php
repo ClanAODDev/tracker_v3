@@ -32,11 +32,11 @@ class DivisionApplicationApiController extends Controller
             ->latest()
             ->get()
             ->map(fn ($app) => [
-                'id' => $app->id,
+                'id'               => $app->id,
                 'discord_username' => $app->user->discord_username,
-                'created_at' => $app->created_at->toIso8601String(),
-                'comments_count' => $app->comments_count,
-                'responses' => collect($app->responses)->map(fn ($response) => [
+                'created_at'       => $app->created_at->toIso8601String(),
+                'comments_count'   => $app->comments_count,
+                'responses'        => collect($app->responses)->map(fn ($response) => [
                     'label' => $response['label'] ?? 'Unknown',
                     'value' => is_array($response['value'] ?? null)
                         ? implode(', ', $response['value'])
@@ -55,20 +55,20 @@ class DivisionApplicationApiController extends Controller
 
         return response()->json([
             'application' => [
-                'id' => $application->id,
+                'id'               => $application->id,
                 'discord_username' => $application->user->discord_username,
-                'created_at' => $application->created_at->toIso8601String(),
-                'responses' => collect($application->responses)->map(fn ($response) => [
+                'created_at'       => $application->created_at->toIso8601String(),
+                'responses'        => collect($application->responses)->map(fn ($response) => [
                     'label' => $response['label'] ?? 'Unknown',
                     'value' => is_array($response['value'] ?? null)
                         ? implode(', ', $response['value'])
                         : ($response['value'] ?: '—'),
                 ])->values(),
                 'comments' => $application->comments->map(fn ($comment) => [
-                    'id' => $comment->id,
+                    'id'   => $comment->id,
                     'body' => $comment->body,
                     'user' => $comment->author ? [
-                        'id' => $comment->author->id,
+                        'id'   => $comment->author->id,
                         'name' => $comment->author->member?->present()->rankName() ?? $comment->author->name,
                     ] : null,
                     'created_at' => $comment->created_at->toIso8601String(),
@@ -104,10 +104,10 @@ class DivisionApplicationApiController extends Controller
 
         return response()->json([
             'comment' => [
-                'id' => $comment->id,
+                'id'   => $comment->id,
                 'body' => $comment->body,
                 'user' => [
-                    'id' => $comment->author->id,
+                    'id'   => $comment->author->id,
                     'name' => $comment->author->member?->present()->rankName() ?? $comment->author->name,
                 ],
                 'created_at' => $comment->created_at->toIso8601String(),

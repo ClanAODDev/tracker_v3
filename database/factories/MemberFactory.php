@@ -23,18 +23,18 @@ class MemberFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->userName,
-            'clan_id' => $this->faker->numberBetween(1000, 999999),
-            'rank' => Rank::from(rand(1, 10)),
-            'position' => Position::MEMBER,
-            'division_id' => Division::factory(),
-            'join_date' => $this->faker->dateTimeThisDecade,
-            'last_activity' => $this->faker->dateTimeThisMonth,
-            'last_ts_activity' => $this->faker->dateTimeThisMonth,
+            'name'                => $this->faker->userName,
+            'clan_id'             => $this->faker->numberBetween(1000, 999999),
+            'rank'                => Rank::from(rand(1, 10)),
+            'position'            => Position::MEMBER,
+            'division_id'         => Division::factory(),
+            'join_date'           => $this->faker->dateTimeThisDecade,
+            'last_activity'       => $this->faker->dateTimeThisMonth,
+            'last_ts_activity'    => $this->faker->dateTimeThisMonth,
             'last_voice_activity' => $this->faker->dateTimeThisMonth,
-            'last_promoted_at' => $this->faker->dateTimeThisYear,
-            'allow_pm' => array_rand([0, 1], 1),
-            'privacy_flag' => array_rand([0, 1], 1),
+            'last_promoted_at'    => $this->faker->dateTimeThisYear,
+            'allow_pm'            => array_rand([0, 1], 1),
+            'privacy_flag'        => array_rand([0, 1], 1),
         ];
     }
 
@@ -43,7 +43,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::MEMBER,
-                'rank' => rand(Rank::RECRUIT->value, Rank::SPECIALIST->value),
+                'rank'     => rand(Rank::RECRUIT->value, Rank::SPECIALIST->value),
             ];
         });
     }
@@ -53,7 +53,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::SQUAD_LEADER,
-                'rank' => rand(Rank::TRAINER->value, Rank::CORPORAL->value),
+                'rank'     => rand(Rank::TRAINER->value, Rank::CORPORAL->value),
             ];
         });
     }
@@ -63,7 +63,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::PLATOON_LEADER,
-                'rank' => rand(Rank::LANCE_CORPORAL->value, Rank::SERGEANT->value),
+                'rank'     => rand(Rank::LANCE_CORPORAL->value, Rank::SERGEANT->value),
             ];
         });
     }
@@ -73,7 +73,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::COMMANDING_OFFICER,
-                'rank' => Rank::SERGEANT,
+                'rank'     => Rank::SERGEANT,
             ];
         });
     }
@@ -83,7 +83,7 @@ class MemberFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'position' => Position::EXECUTIVE_OFFICER,
-                'rank' => Rank::SERGEANT,
+                'rank'     => Rank::SERGEANT,
             ];
         });
     }

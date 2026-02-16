@@ -284,7 +284,7 @@ class MemberResource extends Resource
     {
         return [
             'index' => ListMembers::route('/'),
-            'edit' => EditMember::route('/{record}/edit'),
+            'edit'  => EditMember::route('/{record}/edit'),
         ];
     }
 }

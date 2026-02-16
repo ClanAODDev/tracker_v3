@@ -43,10 +43,10 @@ class MemberSyncService
     protected ?Closure $onRemove = null;
 
     protected array $stats = [
-        'added' => 0,
+        'added'   => 0,
         'updated' => 0,
         'removed' => 0,
-        'errors' => 0,
+        'errors'  => 0,
     ];
 
     protected ?string $lastError = null;
@@ -164,10 +164,10 @@ class MemberSyncService
             ));
         } catch (Exception $exception) {
             Log::error('Failed to send removal notification', [
-                'division' => $member->division->name,
-                'member' => $member->name,
+                'division'     => $member->division->name,
+                'member'       => $member->name,
                 'notification' => NotifyDivisionMemberRemoved::class,
-                'error' => $exception->getMessage(),
+                'error'        => $exception->getMessage(),
             ]);
         }
 
@@ -227,17 +227,17 @@ class MemberSyncService
     protected function extractMemberData(Member $member): array
     {
         return [
-            'allow_pm' => $member->allow_pm,
-            'discord' => $member->discord,
-            'discord_id' => (int) $member->discord_id,
-            'division_id' => $member->division_id,
-            'name' => $member->name,
-            'posts' => $member->posts,
-            'privacy_flag' => $member->privacy_flag,
-            'ts_unique_id' => $member->ts_unique_id,
-            'last_voice_status' => $member->last_voice_status?->value,
-            'rank' => $member->rank->value,
-            'last_activity' => $this->extractTimestamp($member->last_activity),
+            'allow_pm'            => $member->allow_pm,
+            'discord'             => $member->discord,
+            'discord_id'          => (int) $member->discord_id,
+            'division_id'         => $member->division_id,
+            'name'                => $member->name,
+            'posts'               => $member->posts,
+            'privacy_flag'        => $member->privacy_flag,
+            'ts_unique_id'        => $member->ts_unique_id,
+            'last_voice_status'   => $member->last_voice_status?->value,
+            'rank'                => $member->rank->value,
+            'last_activity'       => $this->extractTimestamp($member->last_activity),
             'last_voice_activity' => $this->extractTimestamp($member->last_voice_activity),
         ];
     }
@@ -260,19 +260,19 @@ class MemberSyncService
     protected function transformForumData(object $forumData): array
     {
         return [
-            'allow_pm' => $forumData->allow_pm,
-            'discord' => $forumData->discordtag,
-            'discord_id' => $this->normalizeDiscordId($forumData->discordid),
-            'division_id' => $this->divisionIds[$forumData->aoddivision],
-            'join_date' => $forumData->joindate,
-            'name' => str_replace('AOD_', '', $forumData->username),
-            'posts' => $forumData->postcount,
-            'privacy_flag' => $forumData->allow_export === 'yes' ? 1 : 0,
-            'ts_unique_id' => $forumData->tsid,
-            'last_voice_status' => $this->normalizeDiscordStatus($forumData->lastdiscord_status),
-            'last_activity' => $this->normalizeTimestamp($forumData->lastactivity),
+            'allow_pm'            => $forumData->allow_pm,
+            'discord'             => $forumData->discordtag,
+            'discord_id'          => $this->normalizeDiscordId($forumData->discordid),
+            'division_id'         => $this->divisionIds[$forumData->aoddivision],
+            'join_date'           => $forumData->joindate,
+            'name'                => str_replace('AOD_', '', $forumData->username),
+            'posts'               => $forumData->postcount,
+            'privacy_flag'        => $forumData->allow_export === 'yes' ? 1 : 0,
+            'ts_unique_id'        => $forumData->tsid,
+            'last_voice_status'   => $this->normalizeDiscordStatus($forumData->lastdiscord_status),
+            'last_activity'       => $this->normalizeTimestamp($forumData->lastactivity),
             'last_voice_activity' => $this->normalizeTimestamp($forumData->lastdiscord_connect),
-            'rank' => $this->calculateRank($forumData->aodrankval),
+            'rank'                => $this->calculateRank($forumData->aodrankval),
         ];
     }
 
@@ -374,13 +374,13 @@ class MemberSyncService
 
             Log::info('Member added', [
                 'name' => $forumMember->username,
-                'id' => $forumMember->userid,
+                'id'   => $forumMember->userid,
             ]);
 
             $this->stats['added']++;
         } catch (Exception $exception) {
             Log::error('Failed to create member', [
-                'user' => $forumMember->userid,
+                'user'      => $forumMember->userid,
                 'exception' => $exception->getMessage(),
             ]);
             $this->stats['errors']++;

@@ -15,8 +15,8 @@ readonly class RecruitingData
 
     public static function fromRecruits(Collection $recruits): self
     {
-        $total = $recruits->count();
-        $active = $recruits->filter(fn ($r) => $r->division_id !== 0)->count();
+        $total         = $recruits->count();
+        $active        = $recruits->filter(fn ($r) => $r->division_id !== 0)->count();
         $retentionRate = $total > 0 ? (int) round($active / $total * 100) : null;
 
         return new self(

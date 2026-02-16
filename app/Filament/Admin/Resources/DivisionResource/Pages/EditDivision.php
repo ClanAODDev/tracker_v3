@@ -72,16 +72,16 @@ class EditDivision extends EditRecord
                     'position' => Position::MEMBER]);
             Member::where('id', $newCoId)
                 ->update([
-                    'position' => Position::COMMANDING_OFFICER,
+                    'position'   => Position::COMMANDING_OFFICER,
                     'platoon_id' => 0,
-                    'squad_id' => 0,
+                    'squad_id'   => 0,
                 ]);
         } elseif (! $previousCoId) {
             Member::where('id', $newCoId)
                 ->update([
-                    'position' => Position::COMMANDING_OFFICER,
+                    'position'   => Position::COMMANDING_OFFICER,
                     'platoon_id' => 0,
-                    'squad_id' => 0,
+                    'squad_id'   => 0,
                 ]);
         }
 
@@ -106,9 +106,9 @@ class EditDivision extends EditRecord
         if ($toAdd->isNotEmpty()) {
             Member::whereIn('id', $toAdd)
                 ->update([
-                    'position' => Position::EXECUTIVE_OFFICER,
+                    'position'   => Position::EXECUTIVE_OFFICER,
                     'platoon_id' => 0,
-                    'squad_id' => 0,
+                    'squad_id'   => 0,
                 ]);
         }
 

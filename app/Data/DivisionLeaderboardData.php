@@ -24,7 +24,7 @@ readonly class DivisionLeaderboardData
     public static function forUser(User $user): self
     {
         $userDivisionId = $user->member->division_id;
-        $cached = self::getCachedLeaderboards();
+        $cached         = self::getCachedLeaderboards();
 
         return new self(
             voiceLeaders: $cached['voiceLeaders'],
@@ -52,8 +52,8 @@ readonly class DivisionLeaderboardData
                 ->get();
 
             return [
-                'voiceLeaders' => self::calculateVoiceLeaders($divisions),
-                'growthLeaders' => self::calculateGrowthLeaders($divisions),
+                'voiceLeaders'   => self::calculateVoiceLeaders($divisions),
+                'growthLeaders'  => self::calculateGrowthLeaders($divisions),
                 'recruitLeaders' => self::calculateRecruitLeaders($divisions),
             ];
         });
@@ -69,8 +69,8 @@ readonly class DivisionLeaderboardData
         return $divisions
             ->map(function (Division $division) {
                 $censusRecords = $division->census->sortBy('created_at')->values();
-                $latest = $censusRecords->last();
-                $previous = $censusRecords->count() > 1 ? $censusRecords->get($censusRecords->count() - 2) : null;
+                $latest        = $censusRecords->last();
+                $previous      = $censusRecords->count() > 1 ? $censusRecords->get($censusRecords->count() - 2) : null;
 
                 $voiceRate = 0;
                 if ($latest && $latest->count > 0) {
@@ -87,14 +87,14 @@ readonly class DivisionLeaderboardData
                 })->values()->toArray();
 
                 return [
-                    'id' => $division->id,
-                    'name' => $division->name,
-                    'slug' => $division->slug,
-                    'logo' => self::getDivisionLogo($division),
-                    'value' => (int) $voiceRate,
+                    'id'        => $division->id,
+                    'name'      => $division->name,
+                    'slug'      => $division->slug,
+                    'logo'      => self::getDivisionLogo($division),
+                    'value'     => (int) $voiceRate,
                     'formatted' => $voiceRate . '%',
-                    'trend' => $trend,
-                    'trending' => $voiceRate >= $previousVoiceRate ? 'up' : 'down',
+                    'trend'     => $trend,
+                    'trending'  => $voiceRate >= $previousVoiceRate ? 'up' : 'down',
                 ];
             })
             ->sortByDesc('value')
@@ -106,26 +106,26 @@ readonly class DivisionLeaderboardData
         return $divisions
             ->map(function (Division $division) {
                 $censusRecords = $division->census->sortBy('created_at')->values();
-                $currentCount = $division->members_count;
+                $currentCount  = $division->members_count;
                 $previousCount = $censusRecords->last()?->count ?? 0;
 
                 $growthRate = 0;
                 if ($previousCount > 0 && $currentCount > 0) {
-                    $rawChange = (1 - $previousCount / $currentCount) * 100;
+                    $rawChange  = (1 - $previousCount / $currentCount) * 100;
                     $growthRate = round($rawChange, 1);
                 }
 
-                $trend = $censusRecords->pluck('count')->values()->toArray();
+                $trend   = $censusRecords->pluck('count')->values()->toArray();
                 $trend[] = $currentCount;
 
                 return [
-                    'id' => $division->id,
-                    'name' => $division->name,
-                    'slug' => $division->slug,
-                    'logo' => self::getDivisionLogo($division),
-                    'value' => $growthRate,
+                    'id'        => $division->id,
+                    'name'      => $division->name,
+                    'slug'      => $division->slug,
+                    'logo'      => self::getDivisionLogo($division),
+                    'value'     => $growthRate,
                     'formatted' => ($growthRate >= 0 ? '+' : '') . $growthRate . '%',
-                    'trend' => $trend,
+                    'trend'     => $trend,
                 ];
             })
             ->sortByDesc('value')
@@ -137,11 +137,11 @@ readonly class DivisionLeaderboardData
         return $divisions
             ->map(function (Division $division) {
                 return [
-                    'id' => $division->id,
-                    'name' => $division->name,
-                    'slug' => $division->slug,
-                    'logo' => self::getDivisionLogo($division),
-                    'value' => $division->recruits_count,
+                    'id'        => $division->id,
+                    'name'      => $division->name,
+                    'slug'      => $division->slug,
+                    'logo'      => self::getDivisionLogo($division),
+                    'value'     => $division->recruits_count,
                     'formatted' => $division->recruits_count,
                 ];
             })

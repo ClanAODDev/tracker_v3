@@ -238,9 +238,9 @@ class DivisionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListDivisions::route('/'),
+            'index'  => ListDivisions::route('/'),
             'create' => CreateDivision::route('/create'),
-            'edit' => EditDivision::route('/{record}/edit'),
+            'edit'   => EditDivision::route('/{record}/edit'),
         ];
     }
 }

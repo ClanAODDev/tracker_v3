@@ -27,10 +27,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_returns_object_with_required_properties()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
-            'join_date' => Carbon::now()->subYears(2),
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
+            'join_date'   => Carbon::now()->subYears(2),
         ]);
 
         $result = $this->service->buildTimeline($member, collect());
@@ -44,10 +44,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_has_history_is_true_when_join_date_exists()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
-            'join_date' => Carbon::now()->subYears(2),
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
+            'join_date'   => Carbon::now()->subYears(2),
         ]);
 
         $result = $this->service->buildTimeline($member, collect());
@@ -58,10 +58,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_has_history_is_true_when_rank_history_exists()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::SPECIALIST,
-            'join_date' => Carbon::now()->subYears(2),
+            'rank'        => Rank::SPECIALIST,
+            'join_date'   => Carbon::now()->subYears(2),
         ]);
 
         $rankHistory = collect([
@@ -76,10 +76,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_has_history_is_false_when_no_history()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
-            'join_date' => null,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
+            'join_date'   => null,
         ]);
 
         $result = $this->service->buildTimeline($member, collect());
@@ -91,10 +91,10 @@ class RankTimelineServiceTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $joinDate = Carbon::now()->subYears(2);
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
-            'join_date' => $joinDate,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
+            'join_date'   => $joinDate,
         ]);
 
         $result = $this->service->buildTimeline($member, collect());
@@ -108,10 +108,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_creates_promotion_nodes_for_rank_history()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::CORPORAL,
-            'join_date' => Carbon::now()->subYears(2),
+            'rank'        => Rank::CORPORAL,
+            'join_date'   => Carbon::now()->subYears(2),
         ]);
 
         $rankHistory = collect([
@@ -128,10 +128,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_filters_demotions_from_progression_nodes()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::CORPORAL,
-            'join_date' => Carbon::now()->subYears(2),
+            'rank'        => Rank::CORPORAL,
+            'join_date'   => Carbon::now()->subYears(2),
         ]);
 
         $rankHistory = collect([
@@ -150,10 +150,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_history_items_include_demotions()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
-            'join_date' => Carbon::now()->subYears(2),
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
+            'join_date'   => Carbon::now()->subYears(2),
         ]);
 
         $rankHistory = collect([
@@ -170,10 +170,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_nodes_alternate_positions()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::SERGEANT,
-            'join_date' => Carbon::now()->subYears(3),
+            'rank'        => Rank::SERGEANT,
+            'join_date'   => Carbon::now()->subYears(3),
         ]);
 
         $rankHistory = collect([
@@ -195,10 +195,10 @@ class RankTimelineServiceTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $joinDate = Carbon::now()->subYears(2);
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::CORPORAL,
-            'join_date' => $joinDate,
+            'rank'        => Rank::CORPORAL,
+            'join_date'   => $joinDate,
         ]);
 
         $result = $this->service->buildTimeline($member, collect());
@@ -211,10 +211,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_returns_nodes_as_collection()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
-            'join_date' => Carbon::now()->subYears(1),
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
+            'join_date'   => Carbon::now()->subYears(1),
         ]);
 
         $result = $this->service->buildTimeline($member, collect());
@@ -225,10 +225,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_returns_history_items_as_collection()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
-            'join_date' => Carbon::now()->subYears(1),
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
+            'join_date'   => Carbon::now()->subYears(1),
         ]);
 
         $result = $this->service->buildTimeline($member, collect());
@@ -239,10 +239,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_promotion_node_has_rank_abbreviation()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::CORPORAL,
-            'join_date' => Carbon::now()->subYears(2),
+            'rank'        => Rank::CORPORAL,
+            'join_date'   => Carbon::now()->subYears(2),
         ]);
 
         $rankHistory = collect([
@@ -259,10 +259,10 @@ class RankTimelineServiceTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $joinDate = Carbon::parse('2020-01-15');
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::SPECIALIST,
-            'join_date' => $joinDate,
+            'rank'        => Rank::SPECIALIST,
+            'join_date'   => $joinDate,
         ]);
 
         $rankHistory = collect([
@@ -285,10 +285,10 @@ class RankTimelineServiceTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $joinDate = Carbon::parse('2005-01-01');
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::CORPORAL,
-            'join_date' => $joinDate,
+            'rank'        => Rank::CORPORAL,
+            'join_date'   => $joinDate,
         ]);
 
         $rankHistory = collect([
@@ -307,10 +307,10 @@ class RankTimelineServiceTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $joinDate = Carbon::parse('2025-01-01');
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::SPECIALIST,
-            'join_date' => $joinDate,
+            'rank'        => Rank::SPECIALIST,
+            'join_date'   => $joinDate,
         ]);
 
         $rankHistory = collect([
@@ -328,10 +328,10 @@ class RankTimelineServiceTest extends TestCase
     public function test_build_timeline_progression_includes_current_rank_even_if_below_historical_high()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember([
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::SPECIALIST,
-            'join_date' => Carbon::parse('2004-06-07'),
+            'rank'        => Rank::SPECIALIST,
+            'join_date'   => Carbon::parse('2004-06-07'),
         ]);
 
         $rankHistory = collect([
@@ -344,7 +344,7 @@ class RankTimelineServiceTest extends TestCase
         $result = $this->service->buildTimeline($member, $rankHistory);
 
         $promotionNodes = $result->nodes->filter(fn ($n) => $n->type === 'promotion');
-        $ranks = $promotionNodes->pluck('rank')->toArray();
+        $ranks          = $promotionNodes->pluck('rank')->toArray();
 
         $this->assertContains('Sgt', $ranks);
         $this->assertContains('Spec', $ranks);
@@ -354,7 +354,7 @@ class RankTimelineServiceTest extends TestCase
     private function createRankEntry(Rank $rank, Carbon $createdAt): object
     {
         return (object) [
-            'rank' => $rank,
+            'rank'       => $rank,
             'created_at' => $createdAt,
         ];
     }

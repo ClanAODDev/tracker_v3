@@ -44,7 +44,7 @@ class NotifyDivisionMemberAwarded extends Notification implements ShouldQueue
             ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail(asset(Storage::url($this->award->image)))->fields([
                 [
-                    'name' => sprintf('%s received an award!', $this->member),
+                    'name'  => sprintf('%s received an award!', $this->member),
                     'value' => sprintf(
                         '%s - %s',
                         $this->award->name,

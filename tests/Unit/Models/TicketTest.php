@@ -15,19 +15,19 @@ class TicketTest extends TestCase
 
     public function test_scope_new_returns_only_new_tickets()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $newTicket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'new',
+            'state'          => 'new',
         ]);
 
         $assignedTicket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'assigned',
+            'state'          => 'assigned',
         ]);
 
         $results = Ticket::new()->get();
@@ -38,19 +38,19 @@ class TicketTest extends TestCase
 
     public function test_scope_assigned_returns_only_assigned_tickets()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $newTicket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'new',
+            'state'          => 'new',
         ]);
 
         $assignedTicket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'assigned',
+            'state'          => 'assigned',
         ]);
 
         $results = Ticket::assigned()->get();
@@ -61,19 +61,19 @@ class TicketTest extends TestCase
 
     public function test_scope_resolved_returns_only_resolved_tickets()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $newTicket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'new',
+            'state'          => 'new',
         ]);
 
         $resolvedTicket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'resolved',
+            'state'          => 'resolved',
         ]);
 
         $results = Ticket::resolved()->get();
@@ -84,19 +84,19 @@ class TicketTest extends TestCase
 
     public function test_state_color_attribute_returns_correct_color()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $newTicket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'new',
+            'state'          => 'new',
         ]);
 
         $assignedTicket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'assigned',
+            'state'          => 'assigned',
         ]);
 
         $this->assertEquals('info', $newTicket->stateColor);
@@ -105,16 +105,16 @@ class TicketTest extends TestCase
 
     public function test_own_to_assigns_owner_and_changes_state()
     {
-        $caller = $this->createMemberWithUser();
-        $owner = $this->createMemberWithUser();
+        $caller     = $this->createMemberWithUser();
+        $owner      = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $this->actingAs($owner);
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $caller->id,
+            'caller_id'      => $caller->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'new',
+            'state'          => 'new',
         ]);
 
         $ticket->ownTo($owner);
@@ -126,15 +126,15 @@ class TicketTest extends TestCase
 
     public function test_resolve_sets_state_and_timestamps()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $this->actingAs($user);
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'assigned',
+            'state'          => 'assigned',
         ]);
 
         $ticket->resolve();
@@ -147,16 +147,16 @@ class TicketTest extends TestCase
 
     public function test_reopen_clears_resolved_at_and_sets_state()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $this->actingAs($user);
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'resolved',
-            'resolved_at' => now(),
+            'state'          => 'resolved',
+            'resolved_at'    => now(),
         ]);
 
         $ticket->reopen();
@@ -168,15 +168,15 @@ class TicketTest extends TestCase
 
     public function test_reject_sets_state_and_timestamps()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $this->actingAs($user);
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'state' => 'new',
+            'state'          => 'new',
         ]);
 
         $ticket->reject();
@@ -188,19 +188,19 @@ class TicketTest extends TestCase
 
     public function test_is_resolved_returns_correct_value()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $unresolvedTicket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'resolved_at' => null,
+            'resolved_at'    => null,
         ]);
 
         $resolvedTicket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
-            'resolved_at' => now(),
+            'resolved_at'    => now(),
         ]);
 
         $this->assertFalse((bool) $unresolvedTicket->isResolved());
@@ -209,13 +209,13 @@ class TicketTest extends TestCase
 
     public function test_say_creates_comment()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $this->actingAs($user);
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
         ]);
 
@@ -227,18 +227,18 @@ class TicketTest extends TestCase
 
     public function test_has_external_message_id_returns_correct_value()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $ticketWithId = Ticket::factory()->create([
-            'caller_id' => $user->id,
-            'ticket_type_id' => $ticketType->id,
+            'caller_id'           => $user->id,
+            'ticket_type_id'      => $ticketType->id,
             'external_message_id' => '123456',
         ]);
 
         $ticketWithoutId = Ticket::factory()->create([
-            'caller_id' => $user->id,
-            'ticket_type_id' => $ticketType->id,
+            'caller_id'           => $user->id,
+            'ticket_type_id'      => $ticketType->id,
             'external_message_id' => '',
         ]);
 
@@ -248,11 +248,11 @@ class TicketTest extends TestCase
 
     public function test_type_relationship_returns_correct_ticket_type()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create(['name' => 'Test Type']);
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
         ]);
 
@@ -261,11 +261,11 @@ class TicketTest extends TestCase
 
     public function test_caller_relationship_returns_correct_user()
     {
-        $user = $this->createMemberWithUser();
+        $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
 
         $ticket = Ticket::factory()->create([
-            'caller_id' => $user->id,
+            'caller_id'      => $user->id,
             'ticket_type_id' => $ticketType->id,
         ]);
 

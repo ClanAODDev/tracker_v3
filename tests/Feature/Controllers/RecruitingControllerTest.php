@@ -28,7 +28,7 @@ class RecruitingControllerTest extends TestCase
     protected function mockForumUserLookup(int $clanId): void
     {
         $forumUser = (object) ['userid' => $clanId, 'username' => 'TestUser'];
-        $mock = Mockery::mock(AODForumService::class);
+        $mock      = Mockery::mock(AODForumService::class);
         $mock->shouldReceive('getUserByEmail')->andReturn($forumUser);
         $this->app->instance(AODForumService::class, $mock);
     }
@@ -61,8 +61,8 @@ class RecruitingControllerTest extends TestCase
 
     public function test_member_cannot_access_recruitment()
     {
-        $division = $this->createActiveDivision();
-        $user = $this->createMemberWithUser(['division_id' => $division->id]);
+        $division   = $this->createActiveDivision();
+        $user       = $this->createMemberWithUser(['division_id' => $division->id]);
         $user->role = Role::MEMBER;
         $user->save();
 
@@ -74,7 +74,7 @@ class RecruitingControllerTest extends TestCase
 
     public function test_form_displays_for_active_division()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
 
         $response = $this->actingAs($officer)
@@ -87,8 +87,8 @@ class RecruitingControllerTest extends TestCase
 
     public function test_form_redirects_for_shutdown_division()
     {
-        $officer = $this->createOfficer();
-        $division = $this->createActiveDivision();
+        $officer               = $this->createOfficer();
+        $division              = $this->createActiveDivision();
         $division->shutdown_at = now()->subDay();
         $division->save();
 
@@ -100,9 +100,9 @@ class RecruitingControllerTest extends TestCase
 
     public function test_get_division_recruit_data_returns_json()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
+        $platoon  = $this->createPlatoon($division);
         $this->createSquad($platoon);
 
         $response = $this->actingAs($officer)
@@ -122,41 +122,41 @@ class RecruitingControllerTest extends TestCase
 
     public function test_submit_recruitment_creates_member()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
-        $squad = $this->createSquad($platoon);
+        $platoon  = $this->createPlatoon($division);
+        $squad    = $this->createSquad($platoon);
 
         $response = $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division' => $division->slug,
-                'member_id' => 99999,
+                'division'   => $division->slug,
+                'member_id'  => 99999,
                 'forum_name' => 'TestRecruit',
-                'rank' => Rank::RECRUIT->value,
-                'platoon' => $platoon->id,
-                'squad' => $squad->id,
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+                'squad'      => $squad->id,
             ]);
 
         $this->assertDatabaseHas('members', [
-            'clan_id' => 99999,
-            'name' => 'TestRecruit',
+            'clan_id'     => 99999,
+            'name'        => 'TestRecruit',
             'division_id' => $division->id,
         ]);
     }
 
     public function test_submit_recruitment_creates_transfer_record()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
+        $platoon  = $this->createPlatoon($division);
 
         $response = $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division' => $division->slug,
-                'member_id' => 88888,
+                'division'   => $division->slug,
+                'member_id'  => 88888,
                 'forum_name' => 'TransferTestRecruit',
-                'rank' => Rank::RECRUIT->value,
-                'platoon' => $platoon->id,
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
             ]);
 
         $this->assertDatabaseHas('transfers', [
@@ -166,33 +166,33 @@ class RecruitingControllerTest extends TestCase
 
     public function test_submit_recruitment_creates_rank_action()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
+        $platoon  = $this->createPlatoon($division);
 
         $response = $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division' => $division->slug,
-                'member_id' => 77777,
+                'division'   => $division->slug,
+                'member_id'  => 77777,
                 'forum_name' => 'RankTestRecruit',
-                'rank' => Rank::RECRUIT->value,
-                'platoon' => $platoon->id,
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
             ]);
 
         $this->assertDatabaseHas('rank_actions', [
-            'rank' => Rank::RECRUIT->value,
+            'rank'          => Rank::RECRUIT->value,
             'justification' => 'New recruit',
         ]);
     }
 
     public function test_get_division_recruit_data_excludes_pending_users_without_dob(): void
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
 
         User::factory()->pending()->create([
             'discord_username' => 'PendingUser1',
-            'date_of_birth' => null,
+            'date_of_birth'    => null,
         ]);
 
         $response = $this->actingAs($officer)
@@ -204,7 +204,7 @@ class RecruitingControllerTest extends TestCase
 
     public function test_get_division_recruit_data_includes_pending_users_with_dob(): void
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
 
         $pendingUser = User::factory()->pending()->create([
@@ -223,24 +223,24 @@ class RecruitingControllerTest extends TestCase
     {
         $this->mockForumUserLookup(12345);
 
-        $officer = $this->createOfficer();
-        $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
+        $officer     = $this->createOfficer();
+        $division    = $this->createActiveDivision();
+        $platoon     = $this->createPlatoon($division);
         $pendingUser = User::factory()->pending()->create();
 
         $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division' => $division->slug,
+                'division'        => $division->slug,
                 'pending_user_id' => $pendingUser->id,
-                'forum_name' => 'DiscordRecruit',
-                'rank' => Rank::RECRUIT->value,
-                'platoon' => $platoon->id,
-                'ingame_name' => 'GameHandle',
+                'forum_name'      => 'DiscordRecruit',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
+                'ingame_name'     => 'GameHandle',
             ]);
 
         $this->assertDatabaseHas('members', [
-            'clan_id' => 12345,
-            'name' => 'DiscordRecruit',
+            'clan_id'     => 12345,
+            'name'        => 'DiscordRecruit',
             'division_id' => $division->id,
         ]);
 
@@ -252,19 +252,19 @@ class RecruitingControllerTest extends TestCase
     {
         $this->mockForumUserLookupFailure();
 
-        $officer = $this->createOfficer();
-        $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
+        $officer     = $this->createOfficer();
+        $division    = $this->createActiveDivision();
+        $platoon     = $this->createPlatoon($division);
         $pendingUser = User::factory()->pending()->create();
 
         $response = $this->actingAs($officer)
             ->postJson(route('recruiting.addMember'), [
-                'division' => $division->slug,
+                'division'        => $division->slug,
                 'pending_user_id' => $pendingUser->id,
-                'forum_name' => 'TakenName',
-                'rank' => Rank::RECRUIT->value,
-                'platoon' => $platoon->id,
-                'ingame_name' => 'GameHandle',
+                'forum_name'      => 'TakenName',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
+                'ingame_name'     => 'GameHandle',
             ]);
 
         $response->assertStatus(422);
@@ -273,18 +273,18 @@ class RecruitingControllerTest extends TestCase
 
     public function test_submit_discord_recruitment_rejects_invalid_pending_user(): void
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
+        $platoon  = $this->createPlatoon($division);
 
         $response = $this->actingAs($officer)
             ->postJson(route('recruiting.addMember'), [
-                'division' => $division->slug,
+                'division'        => $division->slug,
                 'pending_user_id' => 99999,
-                'forum_name' => 'TestRecruit',
-                'rank' => Rank::RECRUIT->value,
-                'platoon' => $platoon->id,
-                'ingame_name' => 'GameHandle',
+                'forum_name'      => 'TestRecruit',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
+                'ingame_name'     => 'GameHandle',
             ]);
 
         $response->assertStatus(422);
@@ -295,22 +295,22 @@ class RecruitingControllerTest extends TestCase
     {
         $this->mockForumUserLookup(67890);
 
-        $officer = $this->createOfficer();
-        $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
+        $officer     = $this->createOfficer();
+        $division    = $this->createActiveDivision();
+        $platoon     = $this->createPlatoon($division);
         $pendingUser = User::factory()->pending()->create([
-            'discord_id' => '123456789',
+            'discord_id'       => '123456789',
             'discord_username' => 'TestDiscord',
         ]);
 
         $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division' => $division->slug,
+                'division'        => $division->slug,
                 'pending_user_id' => $pendingUser->id,
-                'forum_name' => 'LinkedRecruit',
-                'rank' => Rank::RECRUIT->value,
-                'platoon' => $platoon->id,
-                'ingame_name' => 'GameHandle',
+                'forum_name'      => 'LinkedRecruit',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
+                'ingame_name'     => 'GameHandle',
             ]);
 
         $pendingUser->refresh();
@@ -322,25 +322,25 @@ class RecruitingControllerTest extends TestCase
     {
         $this->mockForumUserLookup(54321);
 
-        $officer = $this->createOfficer();
-        $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
+        $officer     = $this->createOfficer();
+        $division    = $this->createActiveDivision();
+        $platoon     = $this->createPlatoon($division);
         $pendingUser = User::factory()->pending()->create([
             'email' => 'existing@example.com',
         ]);
 
         $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division' => $division->slug,
+                'division'        => $division->slug,
                 'pending_user_id' => $pendingUser->id,
-                'forum_name' => 'NewForumName',
-                'rank' => Rank::RECRUIT->value,
-                'platoon' => $platoon->id,
+                'forum_name'      => 'NewForumName',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
             ]);
 
         $this->assertDatabaseHas('members', [
-            'clan_id' => 54321,
-            'name' => 'NewForumName',
+            'clan_id'     => 54321,
+            'name'        => 'NewForumName',
             'division_id' => $division->id,
         ]);
 

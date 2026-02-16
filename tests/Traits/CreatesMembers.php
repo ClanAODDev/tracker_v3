@@ -24,21 +24,21 @@ trait CreatesMembers
 
         return User::factory()->create(array_merge([
             'member_id' => $member->id,
-            'name' => $member->name,
+            'name'      => $member->name,
         ], $userAttributes));
     }
 
     protected function createAdmin(array $memberAttributes = [], array $userAttributes = []): User
     {
         $member = Member::factory()->create(array_merge([
-            'rank' => Rank::MASTER_SERGEANT,
+            'rank'     => Rank::MASTER_SERGEANT,
             'position' => Position::COMMANDING_OFFICER,
         ], $memberAttributes));
 
         return User::factory()->create(array_merge([
             'member_id' => $member->id,
-            'name' => $member->name,
-            'role' => Role::ADMIN,
+            'name'      => $member->name,
+            'role'      => Role::ADMIN,
             'developer' => true,
         ], $userAttributes));
     }
@@ -48,15 +48,15 @@ trait CreatesMembers
         $division = $division ?? Division::factory()->create();
 
         $member = Member::factory()->create(array_merge([
-            'rank' => Rank::SERGEANT,
-            'position' => Position::COMMANDING_OFFICER,
+            'rank'        => Rank::SERGEANT,
+            'position'    => Position::COMMANDING_OFFICER,
             'division_id' => $division->id,
         ], $memberAttributes));
 
         return User::factory()->create(array_merge([
             'member_id' => $member->id,
-            'name' => $member->name,
-            'role' => Role::SENIOR_LEADER,
+            'name'      => $member->name,
+            'role'      => Role::SENIOR_LEADER,
         ], $userAttributes));
     }
 
@@ -65,15 +65,15 @@ trait CreatesMembers
         $division = $division ?? Division::factory()->create();
 
         $member = Member::factory()->create(array_merge([
-            'rank' => Rank::STAFF_SERGEANT,
-            'position' => Position::EXECUTIVE_OFFICER,
+            'rank'        => Rank::STAFF_SERGEANT,
+            'position'    => Position::EXECUTIVE_OFFICER,
             'division_id' => $division->id,
         ], $memberAttributes));
 
         return User::factory()->create(array_merge([
             'member_id' => $member->id,
-            'name' => $member->name,
-            'role' => Role::OFFICER,
+            'name'      => $member->name,
+            'role'      => Role::OFFICER,
         ], $userAttributes));
     }
 
@@ -81,8 +81,8 @@ trait CreatesMembers
     {
         $member = Member::factory()->ofTypeSquadLeader()->create(array_merge([
             'division_id' => $squad->platoon->division_id,
-            'platoon_id' => $squad->platoon_id,
-            'squad_id' => $squad->id,
+            'platoon_id'  => $squad->platoon_id,
+            'squad_id'    => $squad->id,
         ], $memberAttributes));
 
         $squad->update(['leader_id' => $member->clan_id]);
@@ -94,7 +94,7 @@ trait CreatesMembers
     {
         $member = Member::factory()->ofTypePlatoonLeader()->create(array_merge([
             'division_id' => $platoon->division_id,
-            'platoon_id' => $platoon->id,
+            'platoon_id'  => $platoon->id,
         ], $memberAttributes));
 
         $platoon->update(['leader_id' => $member->clan_id]);
@@ -106,7 +106,7 @@ trait CreatesMembers
     {
         return Member::factory()->ofTypeCommander()->create(array_merge([
             'division_id' => $division->id,
-            'co_at' => now(),
+            'co_at'       => now(),
         ], $memberAttributes));
     }
 
@@ -114,7 +114,7 @@ trait CreatesMembers
     {
         return Member::factory()->ofTypeExecutiveOfficer()->create(array_merge([
             'division_id' => $division->id,
-            'xo_at' => now(),
+            'xo_at'       => now(),
         ], $memberAttributes));
     }
 
@@ -122,8 +122,8 @@ trait CreatesMembers
     {
         return Member::factory()->count($count)->create(array_merge([
             'division_id' => $squad->platoon->division_id,
-            'platoon_id' => $squad->platoon_id,
-            'squad_id' => $squad->id,
+            'platoon_id'  => $squad->platoon_id,
+            'squad_id'    => $squad->id,
         ], $attributes));
     }
 
@@ -131,7 +131,7 @@ trait CreatesMembers
     {
         return Member::factory()->count($count)->create(array_merge([
             'division_id' => $platoon->division_id,
-            'platoon_id' => $platoon->id,
+            'platoon_id'  => $platoon->id,
         ], $attributes));
     }
 

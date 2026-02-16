@@ -14,9 +14,9 @@ class RankActionFactory extends Factory
     public function definition(): array
     {
         return [
-            'member_id' => Member::factory(),
+            'member_id'    => Member::factory(),
             'requester_id' => Member::factory(),
-            'rank' => Rank::from(rand(2, 10)),
+            'rank'         => Rank::from(rand(2, 10)),
         ];
     }
 
@@ -45,7 +45,7 @@ class RankActionFactory extends Factory
     public function denied(): self
     {
         return $this->state(fn (array $attributes) => [
-            'denied_at' => now(),
+            'denied_at'   => now(),
             'deny_reason' => $this->faker->sentence,
         ]);
     }
@@ -63,7 +63,7 @@ class RankActionFactory extends Factory
             'approved_at' => null,
             'accepted_at' => null,
             'declined_at' => null,
-            'denied_at' => null,
+            'denied_at'   => null,
         ]);
     }
 

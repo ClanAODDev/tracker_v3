@@ -117,18 +117,18 @@ class ActivityResource extends Resource
                             ->label('Time Period')
                             ->options([
                                 'today' => 'Today',
-                                '7' => 'Last 7 days',
-                                '30' => 'Last 30 days',
-                                '90' => 'Last 90 days',
+                                '7'     => 'Last 7 days',
+                                '30'    => 'Last 30 days',
+                                '90'    => 'Last 90 days',
                             ])
                             ->live()
                             ->afterStateUpdated(function (Set $set, ?string $state) {
                                 $until = Carbon::today();
-                                $from = match ($state) {
+                                $from  = match ($state) {
                                     'today' => Carbon::today(),
-                                    '7' => Carbon::now()->subDays(7),
-                                    '30' => Carbon::now()->subDays(30),
-                                    '90' => Carbon::now()->subDays(90),
+                                    '7'     => Carbon::now()->subDays(7),
+                                    '30'    => Carbon::now()->subDays(30),
+                                    '90'    => Carbon::now()->subDays(90),
                                     default => null,
                                 };
                                 $set('from', $from?->format('Y-m-d'));
@@ -168,7 +168,7 @@ class ActivityResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $user = auth()->user();
+        $user  = auth()->user();
         $query = parent::getEloquentQuery()
             ->whereIn('name', ActivityType::values())
             ->with(['user', 'subject', 'division']);

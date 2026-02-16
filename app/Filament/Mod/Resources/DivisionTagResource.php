@@ -32,7 +32,7 @@ class DivisionTagResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $user = auth()->user();
+        $user       = auth()->user();
         $divisionId = $user->member?->division_id;
 
         return parent::getEloquentQuery()
@@ -47,7 +47,7 @@ class DivisionTagResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        $user = auth()->user();
+        $user           = auth()->user();
         $isSeniorLeader = $user?->isRole(['admin', 'sr_ldr']) ?? false;
 
         $visibilityOptions = collect(TagVisibility::cases())
@@ -84,8 +84,8 @@ class DivisionTagResource extends Resource
                     ->badge()
                     ->formatStateUsing(fn (TagVisibility $state) => $state->label())
                     ->color(fn (TagVisibility $state) => match ($state) {
-                        TagVisibility::PUBLIC => 'success',
-                        TagVisibility::OFFICERS => 'warning',
+                        TagVisibility::PUBLIC         => 'success',
+                        TagVisibility::OFFICERS       => 'warning',
                         TagVisibility::SENIOR_LEADERS => 'danger',
                     }),
                 TextColumn::make('members_count')
@@ -124,10 +124,10 @@ class DivisionTagResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListDivisionTags::route('/'),
+            'index'  => ListDivisionTags::route('/'),
             'create' => CreateDivisionTag::route('/create'),
-            'view' => ViewDivisionTag::route('/{record}'),
-            'edit' => EditDivisionTag::route('/{record}/edit'),
+            'view'   => ViewDivisionTag::route('/{record}'),
+            'edit'   => EditDivisionTag::route('/{record}/edit'),
         ];
     }
 }

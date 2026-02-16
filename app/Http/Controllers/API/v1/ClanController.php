@@ -41,9 +41,9 @@ class ClanController extends ApiController
         $client = new Google_Client;
         $client->setApplicationName('AOD Stream Calendar');
         $client->setDeveloperKey(config('services.google.apiKey'));
-        $service = new Google_Service_Calendar($client);
+        $service     = new Google_Service_Calendar($client);
         $eventStream = $service->events->listEvents(config('aod.stream_calendar'), [
-            'timeMin' => now()->format(self::RFC3339), 'timeMax' => now()->addDays(7)->format(self::RFC3339),
+            'timeMin'      => now()->format(self::RFC3339), 'timeMax' => now()->addDays(7)->format(self::RFC3339),
             'singleEvents' => true, 'orderBy' => 'startTime',
         ]);
         $events = [];
@@ -51,11 +51,11 @@ class ClanController extends ApiController
             /** @var Google_Service_Calendar_Event $event */
             foreach ($eventStream->getItems() as $event) {
                 if ($event->summary || $event->description) {
-                    $start = Carbon::parse($event->start->dateTime ?? $event->start->date);
-                    $end = Carbon::parse($event->end->dateTime ?? $event->end->date);
+                    $start    = Carbon::parse($event->start->dateTime ?? $event->start->date);
+                    $end      = Carbon::parse($event->end->dateTime ?? $event->end->date);
                     $events[] = [
-                        'event' => $event->summary ?? $event->description,
-                        'time' => "{$start->format('M d @ h:i A')} - {$end->format('M d @ h:i A')}",
+                        'event'           => $event->summary ?? $event->description,
+                        'time'            => "{$start->format('M d @ h:i A')} - {$end->format('M d @ h:i A')}",
                         'timestamp-start' => $start->timestamp, 'timestamp-end' => $end->timestamp,
                     ];
                 }
@@ -63,7 +63,7 @@ class ClanController extends ApiController
             $pageToken = $eventStream->getNextPageToken();
             if ($pageToken) {
                 $optParams = ['pageToken' => $pageToken];
-                $events = $service->events->listEvents('primary', $optParams);
+                $events    = $service->events->listEvents('primary', $optParams);
             } else {
                 break;
             }

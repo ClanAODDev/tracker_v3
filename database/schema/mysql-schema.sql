@@ -38,9 +38,10 @@ CREATE TABLE `activities` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `subject_id` int(11) NOT NULL,
   `subject_type` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` tinyint(3) unsigned NOT NULL,
   `user_id` int(11) NOT NULL,
   `division_id` int(11) NOT NULL,
+  `properties` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`properties`)),
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -49,6 +50,25 @@ CREATE TABLE `activities` (
   KEY `activities_user_id_index` (`user_id`),
   KEY `activities_division_id_index` (`division_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `activity_reminders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `activity_reminders` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `member_id` mediumint(8) unsigned NOT NULL,
+  `division_id` int(10) unsigned NOT NULL,
+  `reminded_by_id` int(10) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `activity_reminders_member_id_created_at_index` (`member_id`,`created_at`),
+  KEY `activity_reminders_division_id_created_at_index` (`division_id`,`created_at`),
+  KEY `activity_reminders_reminded_by_id_created_at_index` (`reminded_by_id`,`created_at`),
+  CONSTRAINT `activity_reminders_division_id_foreign` FOREIGN KEY (`division_id`) REFERENCES `divisions` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `activity_reminders_member_id_foreign` FOREIGN KEY (`member_id`) REFERENCES `members` (`clan_id`) ON DELETE CASCADE,
+  CONSTRAINT `activity_reminders_reminded_by_id_foreign` FOREIGN KEY (`reminded_by_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `award_member`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -62,7 +82,9 @@ CREATE TABLE `award_member` (
   `reason` varchar(191) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `award_member_award_id_index` (`award_id`),
+  KEY `award_member_member_id_index` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `awards`;
@@ -75,13 +97,19 @@ CREATE TABLE `awards` (
   `image` varchar(191) DEFAULT NULL,
   `display_order` int(11) NOT NULL DEFAULT 100,
   `division_id` int(11) DEFAULT NULL,
+  `prerequisite_award_id` bigint(20) unsigned DEFAULT NULL,
+  `tiered_group_name` varchar(191) DEFAULT NULL,
+  `tiered_group_description` text DEFAULT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1 COMMENT 'For awards given during certain periods of time',
   `allow_request` tinyint(1) NOT NULL DEFAULT 0,
+  `repeatable` tinyint(1) NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `instructions` varchar(191) DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `awards_prerequisite_award_id_foreign` (`prerequisite_award_id`),
+  CONSTRAINT `awards_prerequisite_award_id_foreign` FOREIGN KEY (`prerequisite_award_id`) REFERENCES `awards` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `censuses`;
@@ -97,8 +125,98 @@ CREATE TABLE `censuses` (
   `notes` text DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `censuses_division_id_index` (`division_id`),
+  KEY `censuses_division_id_created_at_index` (`division_id`,`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `comment_reactions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `comment_reactions` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `comment_id` bigint(20) unsigned NOT NULL,
+  `reactor_type` varchar(191) NOT NULL,
+  `reactor_id` bigint(20) unsigned NOT NULL,
+  `reaction` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `comment_reactions_comment_id_foreign` (`comment_id`),
+  KEY `comment_reactions_reactor_type_reactor_id_index` (`reactor_type`,`reactor_id`),
+  CONSTRAINT `comment_reactions_comment_id_foreign` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `comment_subscriptions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `comment_subscriptions` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `subscribable_type` varchar(191) NOT NULL,
+  `subscribable_id` bigint(20) unsigned NOT NULL,
+  `subscriber_type` varchar(191) NOT NULL,
+  `subscriber_id` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `commentions_subscriptions_unique` (`subscribable_type`,`subscribable_id`,`subscriber_type`,`subscriber_id`),
+  KEY `comment_subscriptions_subscribable_type_subscribable_id_index` (`subscribable_type`,`subscribable_id`),
+  KEY `comment_subscriptions_subscriber_type_subscriber_id_index` (`subscriber_type`,`subscriber_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `comments` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `author_type` varchar(191) NOT NULL,
+  `author_id` bigint(20) unsigned NOT NULL,
+  `commentable_type` varchar(191) NOT NULL,
+  `commentable_id` bigint(20) unsigned NOT NULL,
+  `body` text NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `comments_author_type_author_id_index` (`author_type`,`author_id`),
+  KEY `comments_commentable_type_commentable_id_index` (`commentable_type`,`commentable_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `division_application_fields`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `division_application_fields` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `division_id` int(10) unsigned NOT NULL,
+  `type` varchar(191) NOT NULL,
+  `label` varchar(191) NOT NULL,
+  `helper_text` varchar(191) DEFAULT NULL,
+  `options` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`options`)),
+  `required` tinyint(1) NOT NULL DEFAULT 1,
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `division_application_fields_division_id_foreign` (`division_id`),
+  CONSTRAINT `division_application_fields_division_id_foreign` FOREIGN KEY (`division_id`) REFERENCES `divisions` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `division_applications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `division_applications` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `division_id` int(10) unsigned NOT NULL,
+  `responses` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`responses`)),
+  `recruited_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `division_applications_user_id_foreign` (`user_id`),
+  KEY `division_applications_division_id_foreign` (`division_id`),
+  CONSTRAINT `division_applications_division_id_foreign` FOREIGN KEY (`division_id`) REFERENCES `divisions` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `division_applications_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `division_handle`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -130,6 +248,21 @@ CREATE TABLE `division_parttimer` (
   CONSTRAINT `division_parttimer_member_id_foreign` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `division_tags`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `division_tags` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `division_id` int(10) unsigned DEFAULT NULL,
+  `name` varchar(50) NOT NULL,
+  `visibility` varchar(20) NOT NULL DEFAULT 'public',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `division_tags_division_id_name_unique` (`division_id`,`name`),
+  CONSTRAINT `division_tags_division_id_foreign` FOREIGN KEY (`division_id`) REFERENCES `divisions` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `divisions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -151,6 +284,7 @@ CREATE TABLE `divisions` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `logo` varchar(191) DEFAULT NULL,
   `site_content` text DEFAULT NULL,
+  `screenshots` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`screenshots`)),
   `show_on_site` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `divisions_abbreviation_unique` (`abbreviation`)
@@ -169,22 +303,6 @@ CREATE TABLE `failed_jobs` (
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `filament_comments`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `filament_comments` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) unsigned NOT NULL,
-  `subject_type` varchar(191) NOT NULL,
-  `subject_id` bigint(20) unsigned NOT NULL,
-  `comment` longtext NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `filament_comments_subject_type_subject_id_index` (`subject_type`,`subject_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `handle_member`;
@@ -358,6 +476,25 @@ CREATE TABLE `member_requests` (
   KEY `member_requests_member_id_index` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `member_tag`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `member_tag` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `member_id` int(10) unsigned NOT NULL,
+  `division_tag_id` bigint(20) unsigned NOT NULL,
+  `assigned_by` int(10) unsigned DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_tag_member_id_division_tag_id_unique` (`member_id`,`division_tag_id`),
+  KEY `member_tag_division_tag_id_foreign` (`division_tag_id`),
+  KEY `member_tag_assigned_by_foreign` (`assigned_by`),
+  CONSTRAINT `member_tag_assigned_by_foreign` FOREIGN KEY (`assigned_by`) REFERENCES `members` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `member_tag_division_tag_id_foreign` FOREIGN KEY (`division_tag_id`) REFERENCES `division_tags` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `member_tag_member_id_foreign` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `members`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -376,6 +513,8 @@ CREATE TABLE `members` (
   `last_voice_status` varchar(191) DEFAULT NULL,
   `discord_id` bigint(20) DEFAULT NULL,
   `flagged_for_inactivity` tinyint(1) NOT NULL,
+  `last_activity_reminder_at` timestamp NULL DEFAULT NULL,
+  `activity_reminded_by_id` int(10) unsigned DEFAULT NULL,
   `posts` int(10) unsigned NOT NULL DEFAULT 0,
   `privacy_flag` tinyint(1) NOT NULL,
   `allow_pm` tinyint(1) NOT NULL DEFAULT 1,
@@ -393,7 +532,17 @@ CREATE TABLE `members` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `groups` mediumtext DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `members_clan_id_unique` (`clan_id`)
+  UNIQUE KEY `members_clan_id_unique` (`clan_id`),
+  KEY `members_division_id_index` (`division_id`),
+  KEY `members_platoon_id_index` (`platoon_id`),
+  KEY `members_squad_id_index` (`squad_id`),
+  KEY `members_recruiter_id_index` (`recruiter_id`),
+  KEY `members_last_voice_activity_index` (`last_voice_activity`),
+  KEY `members_join_date_index` (`join_date`),
+  KEY `members_division_id_join_date_index` (`division_id`,`join_date`),
+  KEY `members_division_id_last_voice_activity_index` (`division_id`,`last_voice_activity`),
+  KEY `members_activity_reminded_by_id_foreign` (`activity_reminded_by_id`),
+  CONSTRAINT `members_activity_reminded_by_id_foreign` FOREIGN KEY (`activity_reminded_by_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `migrations`;
@@ -405,6 +554,24 @@ CREATE TABLE `migrations` (
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `model_reactions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `model_reactions` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `reactable_type` varchar(191) NOT NULL,
+  `reactable_id` bigint(20) unsigned NOT NULL,
+  `reactor_type` varchar(191) NOT NULL,
+  `reactor_id` bigint(20) unsigned NOT NULL,
+  `reaction` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `model_reactions_unique` (`reactable_type`,`reactable_id`,`reactor_type`,`reactor_id`,`reaction`),
+  KEY `model_reactions_reactable_type_reactable_id_index` (`reactable_type`,`reactable_id`),
+  KEY `model_reactions_reactor_type_reactor_id_index` (`reactor_type`,`reactor_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `notes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -419,7 +586,9 @@ CREATE TABLE `notes` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `notes_member_id_index` (`member_id`),
+  KEY `notes_author_id_index` (`author_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `password_resets`;
@@ -459,27 +628,15 @@ CREATE TABLE `platoons` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `order` int(11) NOT NULL DEFAULT 0,
   `name` varchar(255) NOT NULL,
+  `description` varchar(191) DEFAULT NULL,
   `logo` varchar(255) DEFAULT NULL,
   `division_id` mediumint(9) NOT NULL,
   `leader_id` mediumint(9) DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `positions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `positions` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `icon` varchar(255) NOT NULL,
-  `class` varchar(255) NOT NULL,
-  `order` tinyint(4) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `platoons_division_id_index` (`division_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `rank_actions`;
@@ -503,31 +660,6 @@ CREATE TABLE `rank_actions` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `ranks`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `ranks` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `abbreviation` varchar(255) NOT NULL,
-  `color` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `roles`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `roles` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `label` varchar(255) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `squads`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -541,7 +673,8 @@ CREATE TABLE `squads` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
   `gen_pop` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `squads_platoon_id_index` (`platoon_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `ticket_comments`;
@@ -567,6 +700,9 @@ CREATE TABLE `ticket_types` (
   `description` varchar(191) NOT NULL,
   `auto_assign_to_id` int(11) DEFAULT NULL,
   `boilerplate` text DEFAULT NULL,
+  `notification_channel` varchar(191) DEFAULT NULL,
+  `include_content_in_notification` tinyint(1) NOT NULL DEFAULT 0,
+  `minimum_rank` tinyint(3) unsigned DEFAULT NULL,
   `role_access` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
   `display_order` int(11) NOT NULL DEFAULT 100,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -592,6 +728,57 @@ CREATE TABLE `tickets` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `training_checkpoints`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `training_checkpoints` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `training_section_id` bigint(20) unsigned NOT NULL,
+  `label` varchar(191) NOT NULL,
+  `description` text DEFAULT NULL,
+  `display_order` int(10) unsigned NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `training_checkpoints_training_section_id_foreign` (`training_section_id`),
+  CONSTRAINT `training_checkpoints_training_section_id_foreign` FOREIGN KEY (`training_section_id`) REFERENCES `training_sections` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `training_modules`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `training_modules` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(191) NOT NULL,
+  `slug` varchar(191) NOT NULL,
+  `description` text DEFAULT NULL,
+  `display_order` int(10) unsigned NOT NULL DEFAULT 0,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `show_completion_form` tinyint(1) NOT NULL DEFAULT 1,
+  `checkpoint_label` varchar(191) NOT NULL DEFAULT 'Talking Points',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `training_modules_slug_unique` (`slug`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `training_sections`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `training_sections` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `training_module_id` bigint(20) unsigned NOT NULL,
+  `title` varchar(191) NOT NULL,
+  `icon` varchar(191) DEFAULT NULL,
+  `content` longtext NOT NULL,
+  `display_order` int(10) unsigned NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `training_sections_training_module_id_foreign` (`training_module_id`),
+  CONSTRAINT `training_sections_training_module_id_foreign` FOREIGN KEY (`training_module_id`) REFERENCES `training_modules` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `transfers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -600,10 +787,15 @@ CREATE TABLE `transfers` (
   `division_id` int(11) NOT NULL,
   `member_id` int(11) NOT NULL,
   `approved_at` datetime DEFAULT NULL,
+  `approved_by` int(10) unsigned DEFAULT NULL,
   `hold_placed_at` datetime DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `transfers_member_id_index` (`member_id`),
+  KEY `transfers_division_id_index` (`division_id`),
+  KEY `transfers_approved_by_foreign` (`approved_by`),
+  CONSTRAINT `transfers_approved_by_foreign` FOREIGN KEY (`approved_by`) REFERENCES `users` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `users`;
@@ -613,8 +805,12 @@ CREATE TABLE `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `role_id` tinyint(4) NOT NULL DEFAULT 1,
-  `member_id` mediumint(9) NOT NULL,
+  `role` tinyint(4) NOT NULL DEFAULT 1,
+  `member_id` int(10) unsigned DEFAULT NULL,
+  `discord_id` varchar(191) DEFAULT NULL,
+  `discord_username` varchar(191) DEFAULT NULL,
+  `date_of_birth` date DEFAULT NULL,
+  `forum_password` text DEFAULT NULL,
   `settings` text NOT NULL,
   `developer` tinyint(1) NOT NULL DEFAULT 0,
   `remember_token` varchar(100) DEFAULT NULL,
@@ -624,25 +820,9 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_name_unique` (`name`),
   UNIQUE KEY `users_email_unique` (`email`),
-  UNIQUE KEY `users_member_id_unique` (`member_id`)
+  UNIQUE KEY `users_member_id_unique` (`member_id`),
+  UNIQUE KEY `users_discord_id_unique` (`discord_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-DROP TABLE IF EXISTS `versions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `versions` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) unsigned DEFAULT NULL,
-  `versionable_type` varchar(191) NOT NULL,
-  `versionable_id` bigint(20) unsigned NOT NULL,
-  `contents` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `deleted_at` timestamp NULL DEFAULT NULL,
-  `approver_id` tinyint(1) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `versions_versionable_type_versionable_id_index` (`versionable_type`,`versionable_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -803,3 +983,48 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (162,'2025_12_01_13
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (163,'2025_12_04_165900_update_user_settings_snow_value',83);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (164,'2025_12_04_171021_fix_ticket_notifications_string_values',84);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (165,'2025_12_17_181807_convert_members_and_handles_tables_to_utf8mb4',85);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (166,'2025_12_20_095510_add_screenshots_to_divisions_table',86);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (167,'2025_12_21_112435_create_division_tags_table',87);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (168,'2025_12_21_112510_create_member_tag_table',87);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (169,'2025_12_21_200200_modify_division_tags_add_visibility',87);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (170,'2025_12_21_214028_make_division_tags_division_id_nullable',87);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (171,'2025_12_24_193322_add_performance_indexes_to_tables',88);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (172,'2025_12_25_101651_drop_versions_table',89);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (173,'2025_12_26_093714_drop_unused_enum_tables',90);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (174,'2025_12_27_063206_create_training_modules_table',91);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (175,'2025_12_27_063212_create_training_sections_table',91);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (176,'2025_12_27_063213_create_training_checkpoints_table',91);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (177,'2025_12_27_111635_add_description_to_training_checkpoints_table',92);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (178,'2025_12_28_132732_add_activity_reminder_fields_to_members_table',93);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (179,'2025_12_28_145550_create_activity_reminders_table',93);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (180,'2025_12_28_224833_convert_activity_names_to_enum_values',93);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (181,'2025_12_28_231136_add_properties_to_activities_table',93);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (182,'2025_12_29_184316_add_repeatable_to_awards_table',94);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (183,'2025_12_29_185607_add_prerequisite_award_id_to_awards_table',94);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (184,'2025_12_29_190058_backfill_missing_prerequisite_awards',94);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (185,'2025_12_29_224033_add_tiered_description_to_awards_table',94);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (186,'2025_12_29_231114_import_tenure_award_data',94);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (187,'2025_12_30_212326_update_role_values_after_jr_ldr_removal',95);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (188,'2025_12_31_191101_rename_role_id',96);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (189,'2026_01_02_193642_add_approved_by_to_transfers_table',97);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (190,'2026_01_03_120114_add_discord_fields_to_users_table',98);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (191,'2026_01_03_120424_make_member_id_nullable_on_users_table',98);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (192,'2026_01_06_093529_remove_thread_id_from_division_recruiting_threads',99);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (193,'2026_01_11_173228_add_notification_channel_and_minimum_rank_to_ticket_types',100);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (194,'2026_01_11_181049_cleanup_orphaned_tickets',101);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (195,'2026_01_14_195416_add_creation_data_to_users_table',102);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (196,'2026_01_16_154630_add_description_to_platoons_table',102);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (197,'2026_01_18_145823_cleanup_incorrect_transferred_activities',102);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (198,'2026_01_25_150212_set_welcomed_for_officers',103);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (199,'2026_02_01_120000_create_division_application_fields_table',104);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (200,'2026_02_01_120001_create_division_applications_table',104);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (201,'2026_02_01_170517_add_recruited_at_to_division_applications_table',104);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (202,'2026_02_02_104817_drop_division_id_from_users_table',104);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (203,'2026_02_07_141750_create_commentions_tables',105);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (204,'2026_02_07_141751_create_commentions_reactions_table',105);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (205,'2026_02_07_141752_create_commentions_subscriptions_table',105);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (206,'2026_02_07_141753_migrate_filament_comments_to_commentions',105);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (207,'2026_02_08_000000_create_model_reactions_table',105);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (208,'2026_02_08_100129_create_model_reactions_table',106);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (209,'2026_02_08_100129_create_model_reactions_table',107);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (210,'2026_02_11_105144_add_include_content_in_notification_to_ticket_types_table',108);

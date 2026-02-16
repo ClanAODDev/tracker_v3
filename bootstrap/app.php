@@ -54,14 +54,14 @@ return Application::configure(basePath: dirname(__DIR__))
         ])->appendToGroup('api', 'auth:sanctum');
 
         $middleware->alias([
-            'developer' => MustBeDeveloper::class,
-            'admin' => MustBeAdmin::class,
+            'developer'      => MustBeDeveloper::class,
+            'admin'          => MustBeAdmin::class,
             'activeDivision' => DivisionMustBeActive::class,
-            'banned' => IsBanned::class,
-            'bot' => VerifyBotToken::class,
-            'guest' => RedirectIfAuthenticated::class,
-            'abilities' => CheckAbilities::class,
-            'ability' => CheckForAnyAbility::class,
+            'banned'         => IsBanned::class,
+            'bot'            => VerifyBotToken::class,
+            'guest'          => RedirectIfAuthenticated::class,
+            'abilities'      => CheckAbilities::class,
+            'ability'        => CheckForAnyAbility::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

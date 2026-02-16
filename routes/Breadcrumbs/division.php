@@ -26,10 +26,10 @@ Breadcrumbs::for('division.reports', function ($breadcrumbs, $division) {
 });
 
 $reportPages = [
-    'division-census' => 'Census',
+    'division-census'  => 'Census',
     'retention-report' => 'Retention',
-    'voice-report' => 'Voice',
-    'promotions' => 'Promotions',
+    'voice-report'     => 'Voice',
+    'promotions'       => 'Promotions',
 ];
 
 foreach ($reportPages as $route => $label) {
@@ -40,18 +40,18 @@ foreach ($reportPages as $route => $label) {
 }
 
 $divisionPages = [
-    'squads' => 'Squads',
-    'part-timers' => 'Part Timers',
-    'statistics' => 'Statistics',
-    'create-platoon' => 'Create Platoon',
-    'manage-division' => 'Manage Division',
-    'division-structure' => 'Structure',
-    'leaves-of-absence' => 'Leaves of Absence',
-    'inactive-members' => 'Inactive Members',
-    'members' => 'Members',
-    'member-requests' => 'Member Requests',
+    'squads'               => 'Squads',
+    'part-timers'          => 'Part Timers',
+    'statistics'           => 'Statistics',
+    'create-platoon'       => 'Create Platoon',
+    'manage-division'      => 'Manage Division',
+    'division-structure'   => 'Structure',
+    'leaves-of-absence'    => 'Leaves of Absence',
+    'inactive-members'     => 'Inactive Members',
+    'members'              => 'Members',
+    'member-requests'      => 'Member Requests',
     'send-private-message' => 'Send Private Message',
-    'division-notes' => 'Notes',
+    'division-notes'       => 'Notes',
 ];
 
 foreach ($divisionPages as $route => $label) {

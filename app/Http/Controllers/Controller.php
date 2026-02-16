@@ -32,7 +32,7 @@ class Controller extends BaseController
     protected function showImportantToast($message, $title)
     {
         Toastr::info($message, $title, [
-            'timeOut' => 0,
+            'timeOut'         => 0,
             'extendedTimeOut' => 0,
         ]);
     }

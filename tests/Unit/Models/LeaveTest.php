@@ -32,7 +32,7 @@ class LeaveTest extends TestCase
 
         $leave = Leave::factory()->create([
             'member_id' => $member->clan_id,
-            'end_date' => Carbon::now()->addDays(30),
+            'end_date'  => Carbon::now()->addDays(30),
         ]);
 
         $this->assertFalse($leave->expired);
@@ -40,12 +40,12 @@ class LeaveTest extends TestCase
 
     public function test_date_attribute_returns_formatted_end_date()
     {
-        $member = $this->createMember();
+        $member  = $this->createMember();
         $endDate = Carbon::parse('2025-06-15');
 
         $leave = Leave::factory()->create([
             'member_id' => $member->clan_id,
-            'end_date' => $endDate,
+            'end_date'  => $endDate,
         ]);
 
         $this->assertEquals('2025-06-15', $leave->date);

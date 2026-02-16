@@ -36,7 +36,7 @@ class NotifyAdminTicketCreated extends Notification implements ShouldQueue
 
         if ($notifiable->type->include_content_in_notification) {
             $fields[] = [
-                'name' => 'Description',
+                'name'  => 'Description',
                 'value' => str($notifiable->description)->limit(1024),
             ];
         }

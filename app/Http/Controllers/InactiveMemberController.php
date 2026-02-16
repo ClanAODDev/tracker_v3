@@ -25,7 +25,7 @@ class InactiveMemberController extends Controller
         $inactivityDays = $division->settings()->inactivity_days;
 
         $inactiveDiscordMembers = $this->getInactiveMembers($division, $inactivityDays);
-        $allInactiveMembers = $inactiveDiscordMembers;
+        $allInactiveMembers     = $inactiveDiscordMembers;
 
         if (request()->platoon) {
             $inactiveDiscordMembers = $inactiveDiscordMembers->where('platoon_id', request()->platoon->id);
@@ -37,12 +37,12 @@ class InactiveMemberController extends Controller
             ->get();
 
         return view('division.inactive-members', [
-            'division' => $division,
+            'division'               => $division,
             'inactiveDiscordMembers' => $inactiveDiscordMembers,
-            'flaggedMembers' => $flaggedMembers,
-            'flagActivity' => $this->getRecentFlagActivity($division),
-            'requestPath' => 'division.' . explode('/', request()->path())[2],
-            'stats' => $this->buildStats($allInactiveMembers, $flaggedMembers, $inactivityDays),
+            'flaggedMembers'         => $flaggedMembers,
+            'flagActivity'           => $this->getRecentFlagActivity($division),
+            'requestPath'            => 'division.' . explode('/', request()->path())[2],
+            'stats'                  => $this->buildStats($allInactiveMembers, $flaggedMembers, $inactivityDays),
         ]);
     }
 
@@ -116,10 +116,10 @@ class InactiveMemberController extends Controller
         $severeThreshold = now()->subDays($inactivityDays * 2);
 
         return [
-            'total' => $inactive->count(),
-            'flagged' => $flagged->count(),
+            'total'     => $inactive->count(),
+            'flagged'   => $flagged->count(),
             'byPlatoon' => $inactive->groupBy('platoon_id')->map->count(),
-            'severe' => $inactive->filter(
+            'severe'    => $inactive->filter(
                 fn ($m) => $m->last_voice_activity === null || $m->last_voice_activity < $severeThreshold
             )->count(),
         ];
@@ -137,7 +137,7 @@ class InactiveMemberController extends Controller
         $this->authorize('flag-inactive', Member::class);
 
         $validated = $request->validate([
-            'member_ids' => 'required|array',
+            'member_ids'   => 'required|array',
             'member_ids.*' => 'integer',
         ]);
 
@@ -153,13 +153,13 @@ class InactiveMemberController extends Controller
         }
 
         $action = $flag ? 'flagged for removal' : 'unflagged';
-        $count = count($updatedIds);
+        $count  = count($updatedIds);
 
         return response()->json([
-            'success' => true,
-            'count' => $count,
+            'success'                             => true,
+            'count'                               => $count,
             $flag ? 'flaggedIds' : 'unflaggedIds' => $updatedIds,
-            'message' => $count . ' member' . ($count !== 1 ? 's' : '') . ' ' . $action,
+            'message'                             => $count . ' member' . ($count !== 1 ? 's' : '') . ' ' . $action,
         ]);
     }
 }

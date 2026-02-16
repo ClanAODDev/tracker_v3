@@ -28,10 +28,10 @@ class MemberQueryServiceTest extends TestCase
     public function test_with_standard_relations_includes_handles()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
         $member->handles()->attach($division->handle_id, ['value' => 'testhandle', 'primary' => true]);
 
-        $query = Member::where('id', $member->id);
+        $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
 
         $this->assertTrue($result->relationLoaded('handles'));
@@ -40,9 +40,9 @@ class MemberQueryServiceTest extends TestCase
     public function test_with_standard_relations_includes_leave()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
-        $query = Member::where('id', $member->id);
+        $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
 
         $this->assertTrue($result->relationLoaded('leave'));
@@ -51,9 +51,9 @@ class MemberQueryServiceTest extends TestCase
     public function test_with_standard_relations_includes_tags()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
-        $query = Member::where('id', $member->id);
+        $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
 
         $this->assertTrue($result->relationLoaded('tags'));
@@ -62,13 +62,13 @@ class MemberQueryServiceTest extends TestCase
     public function test_with_standard_relations_includes_platoon()
     {
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
-        $member = $this->createMember([
+        $platoon  = $this->createPlatoon($division);
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id' => $platoon->id,
+            'platoon_id'  => $platoon->id,
         ]);
 
-        $query = Member::where('id', $member->id);
+        $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
 
         $this->assertTrue($result->relationLoaded('platoon'));
@@ -77,15 +77,15 @@ class MemberQueryServiceTest extends TestCase
     public function test_with_standard_relations_includes_squad()
     {
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
-        $squad = $this->createSquad($platoon);
-        $member = $this->createMember([
+        $platoon  = $this->createPlatoon($division);
+        $squad    = $this->createSquad($platoon);
+        $member   = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id' => $platoon->id,
-            'squad_id' => $squad->id,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => $squad->id,
         ]);
 
-        $query = Member::where('id', $member->id);
+        $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
 
         $this->assertTrue($result->relationLoaded('squad'));
@@ -93,14 +93,14 @@ class MemberQueryServiceTest extends TestCase
 
     public function test_primary_handle_constraint_filters_to_division_handle()
     {
-        $division = $this->createActiveDivision();
+        $division    = $this->createActiveDivision();
         $otherHandle = Handle::factory()->create();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member      = $this->createMember(['division_id' => $division->id]);
 
         $member->handles()->attach($division->handle_id, ['value' => 'primary_handle', 'primary' => true]);
         $member->handles()->attach($otherHandle->id, ['value' => 'other_handle', 'primary' => false]);
 
-        $query = Member::where('id', $member->id);
+        $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
 
         $this->assertCount(1, $result->handles);
@@ -110,12 +110,12 @@ class MemberQueryServiceTest extends TestCase
     public function test_extract_handles_sets_handle_attribute_on_members()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
         $member->handles()->attach($division->handle_id, ['value' => 'testhandle', 'primary' => true]);
 
-        $query = Member::where('id', $member->id);
+        $query   = Member::where('id', $member->id);
         $members = $this->service->withStandardRelations($query, $division)->get();
-        $result = $this->service->extractHandles($members);
+        $result  = $this->service->extractHandles($members);
 
         $this->assertNotNull($result->first()->handle);
         $this->assertEquals($division->handle_id, $result->first()->handle->id);
@@ -127,17 +127,17 @@ class MemberQueryServiceTest extends TestCase
 
         $corporal = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::CORPORAL,
+            'rank'        => Rank::CORPORAL,
         ]);
 
         $sergeant = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::SERGEANT,
+            'rank'        => Rank::SERGEANT,
         ]);
 
         $private = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::PRIVATE_FIRST_CLASS,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);
 
         $result = $this->service->loadSortedMembers($division->members(), $division);
@@ -149,7 +149,7 @@ class MemberQueryServiceTest extends TestCase
     public function test_load_sorted_members_extracts_handles()
     {
         $division = $this->createActiveDivision();
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
         $member->handles()->attach($division->handle_id, ['value' => 'testhandle', 'primary' => true]);
 
         $result = $this->service->loadSortedMembers($division->members(), $division);

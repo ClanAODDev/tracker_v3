@@ -40,7 +40,7 @@ class TrainingController extends Controller
     {
         $request->validate(['clan_id' => 'required|exists:members,clan_id'], [
             'clan_id.required' => 'Please select a member',
-            'clan_id.exists' => 'That member appears to be invalid',
+            'clan_id.exists'   => 'That member appears to be invalid',
         ]);
 
         Member::whereClanId($request->clan_id)->update([

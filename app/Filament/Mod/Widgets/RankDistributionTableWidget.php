@@ -21,7 +21,7 @@ class RankDistributionTableWidget extends BaseWidget
 
     public function table(Table $table): Table
     {
-        $division = $this->getDivision();
+        $division   = $this->getDivision();
         $divisionId = $division?->id;
 
         return $table

@@ -42,7 +42,7 @@ class DivisionTest extends TestCase
 
     public function test_scope_active_returns_only_active_divisions()
     {
-        $activeDivision = $this->createActiveDivision();
+        $activeDivision   = $this->createActiveDivision();
         $inactiveDivision = $this->createInactiveDivision();
 
         $results = Division::active()->get();
@@ -64,7 +64,7 @@ class DivisionTest extends TestCase
 
     public function test_scope_shutting_down_excludes_shutdown_divisions_by_default()
     {
-        $activeDivision = Division::factory()->create(['shutdown_at' => null]);
+        $activeDivision       = Division::factory()->create(['shutdown_at' => null]);
         $shuttingDownDivision = Division::factory()->create(['shutdown_at' => now()]);
 
         $results = Division::shuttingDown()->get();
@@ -75,7 +75,7 @@ class DivisionTest extends TestCase
 
     public function test_scope_shutting_down_includes_shutdown_divisions_when_flag_set()
     {
-        $activeDivision = Division::factory()->create(['shutdown_at' => null]);
+        $activeDivision       = Division::factory()->create(['shutdown_at' => null]);
         $shuttingDownDivision = Division::factory()->create(['shutdown_at' => now()]);
 
         $results = Division::shuttingDown(true)->get();
@@ -89,12 +89,12 @@ class DivisionTest extends TestCase
         $division = $this->createActiveDivision();
 
         $activeRecently = $this->createMember([
-            'division_id' => $division->id,
+            'division_id'   => $division->id,
             'last_activity' => Carbon::now()->subDays(5),
         ]);
 
         $inactiveOld = $this->createMember([
-            'division_id' => $division->id,
+            'division_id'   => $division->id,
             'last_activity' => Carbon::now()->subDays(45),
         ]);
 
@@ -109,12 +109,12 @@ class DivisionTest extends TestCase
         $division = $this->createActiveDivision();
 
         $activeRecently = $this->createMember([
-            'division_id' => $division->id,
+            'division_id'      => $division->id,
             'last_ts_activity' => Carbon::now()->subDays(5),
         ]);
 
         $inactiveOld = $this->createMember([
-            'division_id' => $division->id,
+            'division_id'      => $division->id,
             'last_ts_activity' => Carbon::now()->subDays(45),
         ]);
 
@@ -129,12 +129,12 @@ class DivisionTest extends TestCase
         $division = $this->createActiveDivision();
 
         $activeRecently = $this->createMember([
-            'division_id' => $division->id,
+            'division_id'         => $division->id,
             'last_voice_activity' => Carbon::now()->subDays(5),
         ]);
 
         $inactiveOld = $this->createMember([
-            'division_id' => $division->id,
+            'division_id'         => $division->id,
             'last_voice_activity' => Carbon::now()->subDays(45),
         ]);
 
@@ -150,12 +150,12 @@ class DivisionTest extends TestCase
 
         $sergeant = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::SERGEANT,
+            'rank'        => Rank::SERGEANT,
         ]);
 
         $corporal = $this->createMember([
             'division_id' => $division->id,
-            'rank' => Rank::CORPORAL,
+            'rank'        => Rank::CORPORAL,
         ]);
 
         $results = $division->sergeants()->get();
@@ -168,8 +168,8 @@ class DivisionTest extends TestCase
     {
         $division = $this->createActiveDivision();
 
-        $co = $this->createCommander($division);
-        $xo = $this->createExecutiveOfficer($division);
+        $co            = $this->createCommander($division);
+        $xo            = $this->createExecutiveOfficer($division);
         $regularMember = $this->createMember(['division_id' => $division->id]);
 
         $results = $division->leaders()->get();
@@ -182,18 +182,18 @@ class DivisionTest extends TestCase
     public function test_unassigned_returns_members_without_platoon()
     {
         $division = $this->createActiveDivision();
-        $platoon = $this->createPlatoon($division);
+        $platoon  = $this->createPlatoon($division);
 
         $unassigned = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id' => 0,
-            'position' => Position::MEMBER,
+            'platoon_id'  => 0,
+            'position'    => Position::MEMBER,
         ]);
 
         $assigned = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id' => $platoon->id,
-            'position' => Position::MEMBER,
+            'platoon_id'  => $platoon->id,
+            'position'    => Position::MEMBER,
         ]);
 
         $results = $division->unassigned()->get();
@@ -204,7 +204,7 @@ class DivisionTest extends TestCase
 
     public function test_is_active_returns_correct_value()
     {
-        $activeDivision = $this->createActiveDivision();
+        $activeDivision   = $this->createActiveDivision();
         $inactiveDivision = $this->createInactiveDivision();
 
         $this->assertTrue($activeDivision->isActive());
@@ -213,7 +213,7 @@ class DivisionTest extends TestCase
 
     public function test_is_shutdown_returns_correct_value()
     {
-        $normalDivision = Division::factory()->create(['shutdown_at' => null]);
+        $normalDivision   = Division::factory()->create(['shutdown_at' => null]);
         $shutdownDivision = Division::factory()->create(['shutdown_at' => now()]);
 
         $this->assertFalse((bool) $normalDivision->isShutdown());
@@ -222,7 +222,7 @@ class DivisionTest extends TestCase
 
     public function test_locality_returns_correct_translation()
     {
-        $division = $this->createActiveDivision();
+        $division           = $this->createActiveDivision();
         $division->settings = array_merge($division->defaultSettings, [
             'locality' => [
                 ['old-string' => 'squad', 'new-string' => 'team'],
@@ -248,12 +248,12 @@ class DivisionTest extends TestCase
 
         $recentMember = $this->createMember([
             'division_id' => $division->id,
-            'join_date' => Carbon::now()->subDays(10),
+            'join_date'   => Carbon::now()->subDays(10),
         ]);
 
         $oldMember = $this->createMember([
             'division_id' => $division->id,
-            'join_date' => Carbon::now()->subDays(45),
+            'join_date'   => Carbon::now()->subDays(45),
         ]);
 
         $results = $division->newMembersLast30()->get();

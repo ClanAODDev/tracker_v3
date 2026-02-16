@@ -108,9 +108,9 @@ class NoteResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListNotes::route('/'),
+            'index'  => ListNotes::route('/'),
             'create' => CreateNote::route('/create'),
-            'edit' => EditNote::route('/{record}/edit'),
+            'edit'   => EditNote::route('/{record}/edit'),
         ];
     }
 }

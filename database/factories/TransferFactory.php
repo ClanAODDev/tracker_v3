@@ -14,7 +14,7 @@ class TransferFactory extends Factory
     public function definition(): array
     {
         return [
-            'member_id' => Member::factory(),
+            'member_id'   => Member::factory(),
             'division_id' => Division::factory(),
         ];
     }

@@ -20,8 +20,7 @@ class EditLeave extends EditRecord
             Action::make('approve')
                 ->label('Approve Leave')
                 ->action(fn (Leave $leave) => $leave->update(['approver_id' => auth()->id()]))
-                ->hidden(fn ($action) =>
-                        // already approved
+                ->hidden(fn ($action) => // already approved
                     $action->getRecord()->approver_id
                         // leave request for the current user
                     || $action->getRecord()->member_id === auth()->user()->member->clan_id

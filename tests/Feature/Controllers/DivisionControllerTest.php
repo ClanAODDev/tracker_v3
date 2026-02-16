@@ -15,7 +15,7 @@ class DivisionControllerTest extends TestCase
 
     public function test_show_displays_division_page()
     {
-        $officer = $this->createOfficer();
+        $officer  = $this->createOfficer();
         $division = $officer->member->division;
 
         $response = $this->actingAs($officer)

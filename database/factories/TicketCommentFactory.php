@@ -15,8 +15,8 @@ class TicketCommentFactory extends Factory
     {
         return [
             'ticket_id' => Ticket::factory(),
-            'user_id' => User::factory(),
-            'body' => $this->faker->paragraph,
+            'user_id'   => User::factory(),
+            'body'      => $this->faker->paragraph,
         ];
     }
 }

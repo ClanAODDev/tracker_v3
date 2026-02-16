@@ -16,11 +16,11 @@ class ForumLoginTest extends TestCase
     {
         $member1 = Member::factory()->create([
             'clan_id' => 11111,
-            'name' => 'DuplicateName',
+            'name'    => 'DuplicateName',
         ]);
         $member2 = Member::factory()->create([
             'clan_id' => 22222,
-            'name' => 'DuplicateName',
+            'name'    => 'DuplicateName',
         ]);
 
         $user1 = User::factory()->create(['member_id' => $member1->id]);
@@ -30,8 +30,8 @@ class ForumLoginTest extends TestCase
             ->shouldReceive('authenticate')
             ->andReturn([
                 'clan_id' => 22222,
-                'email' => 'test@example.com',
-                'roles' => [2],
+                'email'   => 'test@example.com',
+                'roles'   => [2],
             ]);
 
         $this->post('/login', [

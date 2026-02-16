@@ -36,7 +36,7 @@ class GetDivisionInfo
         $data = AODForumService::fetchInfo([
             'extra' => true,
             'epoch' => true,
-            'type' => 'json',
+            'type'  => 'json',
         ]);
 
         if (! is_array($data)) {
@@ -59,7 +59,7 @@ class GetDivisionInfo
      */
     protected function prepareData($data): array
     {
-        $prepared = [];
+        $prepared    = [];
         $memberCount = 0;
 
         foreach ($data['data'] as $member) {

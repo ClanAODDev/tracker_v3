@@ -157,7 +157,7 @@ class PlatoonResource extends Resource
     {
         return [
             'index' => ListPlatoons::route('/'),
-            'edit' => EditPlatoon::route('/{record}/edit'),
+            'edit'  => EditPlatoon::route('/{record}/edit'),
         ];
     }
 

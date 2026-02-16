@@ -16,17 +16,17 @@ class BulkTagControllerTest extends TestCase
 
     public function test_bulk_store_assigns_tags_to_multiple_members()
     {
-        $srLdr = $this->createSeniorLeader();
+        $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member1 = $this->createMember(['division_id' => $division->id]);
-        $member2 = $this->createMember(['division_id' => $division->id]);
-        $tag = DivisionTag::factory()->create(['division_id' => $division->id]);
+        $member1  = $this->createMember(['division_id' => $division->id]);
+        $member2  = $this->createMember(['division_id' => $division->id]);
+        $tag      = DivisionTag::factory()->create(['division_id' => $division->id]);
 
         $response = $this->actingAs($srLdr)
             ->postJson(route('bulk-tags.store', $division->slug), [
                 'member_ids' => [$member1->clan_id, $member2->clan_id],
-                'tags' => [$tag->id],
-                'action' => 'assign',
+                'tags'       => [$tag->id],
+                'action'     => 'assign',
             ]);
 
         $response->assertOk();
@@ -37,11 +37,11 @@ class BulkTagControllerTest extends TestCase
 
     public function test_bulk_store_removes_tags_from_multiple_members()
     {
-        $srLdr = $this->createSeniorLeader();
+        $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member1 = $this->createMember(['division_id' => $division->id]);
-        $member2 = $this->createMember(['division_id' => $division->id]);
-        $tag = DivisionTag::factory()->create(['division_id' => $division->id]);
+        $member1  = $this->createMember(['division_id' => $division->id]);
+        $member2  = $this->createMember(['division_id' => $division->id]);
+        $tag      = DivisionTag::factory()->create(['division_id' => $division->id]);
 
         $member1->tags()->attach($tag->id);
         $member2->tags()->attach($tag->id);
@@ -49,8 +49,8 @@ class BulkTagControllerTest extends TestCase
         $response = $this->actingAs($srLdr)
             ->postJson(route('bulk-tags.store', $division->slug), [
                 'member_ids' => [$member1->clan_id, $member2->clan_id],
-                'tags' => [$tag->id],
-                'action' => 'remove',
+                'tags'       => [$tag->id],
+                'action'     => 'remove',
             ]);
 
         $response->assertOk();
@@ -64,8 +64,8 @@ class BulkTagControllerTest extends TestCase
 
         $response = $this->postJson(route('bulk-tags.store', $division->slug), [
             'member_ids' => [1],
-            'tags' => [1],
-            'action' => 'assign',
+            'tags'       => [1],
+            'action'     => 'assign',
         ]);
 
         $response->assertForbidden();
