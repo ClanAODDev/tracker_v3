@@ -14,7 +14,7 @@ const LAYOUT = {
     PLATOON_COLS: 2,
     ROW_SPACING: 90,
     PLATOON_ROW_SPACING: 110,
-    COL_SPACING: 24,
+    COL_SPACING: 48,
     MOBILE_BREAKPOINT: 768,
     MOBILE_NODE_WIDTH: 150,
     MOBILE_LOGO_SIZE: 40
@@ -73,10 +73,17 @@ function getPlatoonCols() {
     return isMobile ? 1 : LAYOUT.PLATOON_COLS;
 }
 
+function getPlatoonAboveHeight(data) {
+    const logoSize = getLogoSize();
+    let above = 14;
+    if (data.description) above += 16;
+    if (data.logo) above += logoSize + 20;
+    return above;
+}
+
 function getNodeHeight(d) {
     if (d.data.type === 'platoon') {
-        const descExtra = d.data.description ? 18 : 0;
-        return LAYOUT.LEADER_BOX_HEIGHT + LAYOUT.PLATOON_EXTRA_HEIGHT + descExtra;
+        return LAYOUT.LEADER_BOX_HEIGHT + getPlatoonAboveHeight(d.data) + 40;
     }
     if (d.data.type === 'squad') {
         return LAYOUT.LEADER_BOX_HEIGHT + LAYOUT.SQUAD_EXTRA_HEIGHT;
@@ -510,22 +517,23 @@ function renderPlatoonNode(nodeGroup, d, colors) {
     const logoSize = getLogoSize();
     const memberCount = countChildMembers(data);
 
-    if (data.logo) {
-        nodeGroup.append('image')
-            .attr('x', -logoSize / 2)
-            .attr('y', -height / 2 - logoSize - LAYOUT.LOGO_GAP)
-            .attr('width', logoSize)
-            .attr('height', logoSize)
-            .attr('href', data.logo)
-            .style('pointer-events', 'none');
+    const hasDescription = !!data.description;
+    let cursor = -height / 2 - 8;
+
+    if (hasDescription) {
+        nodeGroup.append('text')
+            .attr('y', cursor)
+            .attr('text-anchor', 'middle')
+            .attr('fill', colors.textMuted)
+            .attr('font-size', FONT.SQUAD_NAME)
+            .text(truncate(data.description, 30));
+        cursor -= 16;
+    } else {
+        cursor -= 6;
     }
 
-    const hasDescription = !!data.description;
-    const descriptionOffset = hasDescription ? 16 : 0;
-    const logoOffset = data.logo ? 16 : 14;
-
     nodeGroup.append('text')
-        .attr('y', -height / 2 - logoOffset - descriptionOffset)
+        .attr('y', cursor)
         .attr('text-anchor', 'middle')
         .attr('fill', colors.accent)
         .attr('font-size', FONT.PLATOON_NAME)
@@ -533,13 +541,15 @@ function renderPlatoonNode(nodeGroup, d, colors) {
         .attr('letter-spacing', '1px')
         .text(data.name.toUpperCase());
 
-    if (hasDescription) {
-        nodeGroup.append('text')
-            .attr('y', -height / 2 - logoOffset + 2)
-            .attr('text-anchor', 'middle')
-            .attr('fill', colors.textMuted)
-            .attr('font-size', FONT.SQUAD_NAME)
-            .text(truncate(data.description, 30));
+    if (data.logo) {
+        cursor -= 20;
+        nodeGroup.append('image')
+            .attr('x', -logoSize / 2)
+            .attr('y', cursor - logoSize)
+            .attr('width', logoSize)
+            .attr('height', logoSize)
+            .attr('href', data.logo)
+            .style('pointer-events', 'none');
     }
 
     const leaderColor = hasLeader ? data.leader.rankColor : null;
