@@ -75,7 +75,8 @@ function getPlatoonCols() {
 
 function getNodeHeight(d) {
     if (d.data.type === 'platoon') {
-        return LAYOUT.LEADER_BOX_HEIGHT + LAYOUT.PLATOON_EXTRA_HEIGHT;
+        const descExtra = d.data.description ? 18 : 0;
+        return LAYOUT.LEADER_BOX_HEIGHT + LAYOUT.PLATOON_EXTRA_HEIGHT + descExtra;
     }
     if (d.data.type === 'squad') {
         return LAYOUT.LEADER_BOX_HEIGHT + LAYOUT.SQUAD_EXTRA_HEIGHT;
@@ -520,10 +521,11 @@ function renderPlatoonNode(nodeGroup, d, colors) {
     }
 
     const hasDescription = !!data.description;
-    const descriptionOffset = hasDescription ? 14 : 0;
+    const descriptionOffset = hasDescription ? 16 : 0;
+    const logoOffset = data.logo ? 16 : 14;
 
     nodeGroup.append('text')
-        .attr('y', -height / 2 - (data.logo ? 6 : 14) - descriptionOffset)
+        .attr('y', -height / 2 - logoOffset - descriptionOffset)
         .attr('text-anchor', 'middle')
         .attr('fill', colors.accent)
         .attr('font-size', FONT.PLATOON_NAME)
@@ -533,7 +535,7 @@ function renderPlatoonNode(nodeGroup, d, colors) {
 
     if (hasDescription) {
         nodeGroup.append('text')
-            .attr('y', -height / 2 - (data.logo ? 6 : 14) + 2)
+            .attr('y', -height / 2 - logoOffset + 2)
             .attr('text-anchor', 'middle')
             .attr('fill', colors.textMuted)
             .attr('font-size', FONT.SQUAD_NAME)
