@@ -67,7 +67,6 @@ class ActivityResource extends Resource
                 TextColumn::make('subject.name')
                     ->label('Subject')
                     ->default('—')
-                    ->searchable()
                     ->url(fn ($record) => $record->subject instanceof \App\Models\Member ? route('member', $record->subject->getUrlParams()) : null)
                     ->openUrlInNewTab(),
                 TextColumn::make('properties')

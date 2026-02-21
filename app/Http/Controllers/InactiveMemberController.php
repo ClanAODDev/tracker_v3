@@ -68,9 +68,9 @@ class InactiveMemberController extends Controller
     {
         $this->authorize('separate', $member);
         $division = $member->division;
+        $member->recordActivity(ActivityType::REMOVED);
         $form->persist();
         $this->showSuccessToast(ucwords($member->name) . " has been removed from the {$division->name} Division!");
-        $member->recordActivity(ActivityType::REMOVED);
 
         return redirect(route('division.inactive-members', [$division->slug]) . '#flagged');
     }
