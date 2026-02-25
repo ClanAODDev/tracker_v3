@@ -166,7 +166,6 @@
                 $count = $group['count'];
                 $latestRecord = $group['latest'];
                 $rarity = $award->getRarity();
-                $dates = $group['records']->map(fn($r) => $r->created_at->format('M d, Y'))->join("\n");
                 $tieredAwards = $tieredGroups[$awardId] ?? [];
                 $isTiered = count($tieredAwards) > 1;
                 $tieredSlug = $isTiered ? $award->getTieredGroupSlug() : null;
@@ -177,7 +176,7 @@
                    class="member-award-card member-award-card-{{ $rarity }}"
                    title="{{ $latestRecord->reason ?? $award->description }}">
                     @if($count > 1)
-                        <span class="award-count-badge" data-toggle="tooltip" data-placement="top" data-html="true" title="Earned {{ $count }} times:<br>{{ nl2br(e($dates)) }}">
+                        <span class="award-count-badge" data-toggle="tooltip" data-placement="top" title="{{ $member->name }} earned this {{ $count }} times">
                             x{{ $count }}
                         </span>
                     @endif
