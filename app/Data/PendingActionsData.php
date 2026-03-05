@@ -49,10 +49,9 @@ readonly class PendingActionsData
                 $actions->push(new PendingAction(
                     key: 'pending-applications',
                     count: $count,
-                    url: '#',
+                    url: route('division', $division->slug) . '?applications=1',
                     icon: 'fab fa-discord',
                     label: 'Application',
-                    modalTarget: 'applicationsModal',
                 ));
             }
         }
