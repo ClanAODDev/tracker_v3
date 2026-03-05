@@ -226,7 +226,6 @@ store.validateForumName = (name, memberId) => {
 
                 if (existingAccount && response.data.existingUserId) {
                     store.member.id = String(response.data.existingUserId);
-                    store.selectedPendingUser = null;
                     store.validation.memberId = {
                         valid: true,
                         verifiedEmail: true,
