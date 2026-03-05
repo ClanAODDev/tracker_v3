@@ -4,5 +4,5 @@
 <p>
     <strong>New recruit information</strong>
     {{ $recruit->name }} ({{ $recruit->clan_id }}) - <a
-            href="{{ route('member', $recruit->clan_id) }}">View profile on tracker</a>
+            href="{{ route('member', $recruit->getUrlParams()) }}">View profile on tracker</a>
 </p>

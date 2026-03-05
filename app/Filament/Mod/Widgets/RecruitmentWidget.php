@@ -60,7 +60,7 @@ class RecruitmentWidget extends BaseWidget
                 TextColumn::make('name')
                     ->label('Member')
                     ->searchable()
-                    ->url(fn (Member $record) => $record->clan_id ? route('member', $record->clan_id) : null),
+                    ->url(fn (Member $record) => $record->clan_id ? route('member', $record->getUrlParams()) : null),
 
                 TextColumn::make('rank')
                     ->label('Rank')
@@ -70,7 +70,7 @@ class RecruitmentWidget extends BaseWidget
                 TextColumn::make('recruiter.name')
                     ->label('Recruited By')
                     ->default('Unknown')
-                    ->url(fn (Member $record) => $record->recruiter ? route('member', $record->recruiter->clan_id) : null),
+                    ->url(fn (Member $record) => $record->recruiter ? route('member', $record->recruiter->getUrlParams()) : null),
 
                 TextColumn::make('join_date')
                     ->label('Joined')
@@ -124,7 +124,7 @@ class RecruitmentWidget extends BaseWidget
                 TextColumn::make('name')
                     ->label('Recruiter')
                     ->searchable()
-                    ->url(fn (Member $record) => route('member', $record->clan_id)),
+                    ->url(fn (Member $record) => route('member', $record->getUrlParams())),
 
                 TextColumn::make('rank')
                     ->label('Rank')
