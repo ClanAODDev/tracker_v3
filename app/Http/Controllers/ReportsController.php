@@ -8,7 +8,9 @@ use App\Exceptions\FactoryMissingException;
 use App\Models\Division;
 use App\Models\Member;
 use App\Repositories\ClanRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 
 class ReportsController extends Controller
 {
@@ -17,22 +19,51 @@ class ReportsController extends Controller
         $this->middleware('auth');
     }
 
-    public function clanCensusReport()
+    public function clanCensusReport(Request $request)
     {
-        $censusCounts = $this->clan->censusCounts();
+        $defaultStart = now()->subWeeks(52)->format('Y-m-d');
+        $defaultEnd   = now()->format('Y-m-d');
 
-        if ($censusCounts->isEmpty()) {
+        $start = $request->filled('start') ? $request->input('start') : $defaultStart;
+        $end   = $request->filled('end') ? $request->input('end') : $defaultEnd;
+
+        $hasDateFilter = $request->filled('start') || $request->filled('end');
+
+        $defaultCensus = $this->clan->censusCounts(52);
+
+        if ($defaultCensus->isEmpty()) {
             throw new FactoryMissingException('You might need to run the `census` factory');
         }
 
+        $censusCounts = $hasDateFilter
+            ? $this->clan->censusCountsBetween($start, $end)
+            : $defaultCensus;
+
         $memberCount    = $this->clan->totalActiveMembers();
-        $previousCensus = $censusCounts->first();
-        $lastYearCensus = $censusCounts->reverse();
+        $previousCensus = $defaultCensus->first();
+        $lastYearCensus = $defaultCensus->reverse()->values();
+
+        $milestones = $this->clan->censusMilestones();
+
+        $filteredCensus = $censusCounts->reverse()->values();
+
+        $populations = $filteredCensus->map(fn ($row) => [
+            Carbon::parse($row->date)->subDay()->valueOf(),
+            (int) $row->count,
+        ]);
+
+        $weeklyVoiceActive = $filteredCensus->map(fn ($row) => [
+            Carbon::parse($row->date)->subDay()->valueOf(),
+            (int) $row->weekly_voice_active,
+        ]);
 
         $censuses = Division::active()
             ->orderBy('name')
             ->withoutFloaters()
-            ->with('census')
+            ->with(['census' => fn ($q) => $q->whereBetween(
+                \DB::raw('DATE(created_at)'),
+                [$start, $end]
+            )->orderBy('created_at')])
             ->get()
             ->filter(fn ($division) => $division->census->isNotEmpty())
             ->each(function ($division) {
@@ -54,14 +85,22 @@ class ReportsController extends Controller
             return $rank;
         });
 
+        $dateRange = ['start' => $start, 'end' => $end];
+
         return view('reports.clan-statistics', compact(
             'memberCount',
             'previousCensus',
             'lastYearCensus',
+            'filteredCensus',
             'censuses',
             'rankDemographic',
             'totalPopulation',
             'totalVoiceActive',
+            'milestones',
+            'populations',
+            'weeklyVoiceActive',
+            'dateRange',
+            'hasDateFilter',
         ));
     }
 

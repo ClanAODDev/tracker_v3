@@ -1,7 +1,9 @@
 <div class="panel table-responsive">
     <div class="panel-heading">
-        Weekly Census Data
-        <span class="text-muted pull-right">{{ $previousCensus->date }}</span>
+        Division Populations
+        @if($previousCensus)
+            <span class="text-muted pull-right">{{ $previousCensus->date }}</span>
+        @endif
     </div>
 
     <table class="table table-hover basic-datatable">

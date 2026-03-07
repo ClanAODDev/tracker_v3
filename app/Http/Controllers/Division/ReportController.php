@@ -179,7 +179,11 @@ class ReportController extends Controller
      */
     public function censusReport(Division $division)
     {
-        $censuses = $division->census->sortByDesc('created_at')->take(52)->values();
+        $censuses = $division->census
+            ->sortByDesc('created_at')
+            ->unique(fn ($c) => $c->created_at->toDateString())
+            ->take(52)
+            ->values();
 
         $populations = $censuses->values()->map(fn ($census, $key) => [
             $census->javascriptTimestamp, $census->count,
@@ -223,6 +227,14 @@ class ReportController extends Controller
         if ($recentWithPop->count() > 0) {
             $stats['avgVoice'] = round($recentWithPop->avg(fn ($c) => $c->weekly_voice_count / $c->count * 100), 1);
         }
+
+        $peakCensus = $division->census
+            ->unique(fn ($c) => $c->created_at->toDateString())
+            ->sortByDesc('count')
+            ->first();
+
+        $stats['peakCount'] = $peakCensus?->count ?? 0;
+        $stats['peakDate']  = $peakCensus?->created_at?->format('M j, Y');
 
         return view('division.reports.census', compact(
             'division',

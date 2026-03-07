@@ -42,6 +42,15 @@
                 <div class="report-stat-value">{{ $stats['avgVoice'] }}<span class="report-stat-unit">%</span></div>
                 <div class="report-stat-label">4-Week Avg Voice</div>
             </div>
+            @if($stats['peakCount'] > 0)
+                <div class="report-stat">
+                    <div class="report-stat-value">{{ $stats['peakCount'] }}</div>
+                    <div class="report-stat-label">Peak Population</div>
+                    <div class="report-stat-change">
+                        {{ $stats['peakDate'] }}
+                    </div>
+                </div>
+            @endif
         </div>
 
         <div class="census-schedule-note text-muted">
