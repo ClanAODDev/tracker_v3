@@ -45,6 +45,10 @@
                 <i class="fab fa-discord" style="color: #5865F2;"></i>
                 <span>No, they registered via Discord</span>
               </button>
+              <a href="https://www.clanaod.net/forums/memberlist.php?order=desc&sort=joindate&pp=30" target="_blank" class="btn btn-default recruit-path-btn">
+                <i class="fa fa-search"></i>
+                <span>I need to look up their account</span>
+              </a>
             </div>
           </div>
 
