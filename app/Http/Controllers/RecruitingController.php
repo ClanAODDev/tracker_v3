@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ForumGroup;
-use App\Enums\Position;
 use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
 use App\Models\DivisionApplication;
@@ -66,16 +65,29 @@ class RecruitingController extends Controller
                 ], 422);
             }
 
-            $forumService = app(AODForumService::class);
-            $forumUser    = $forumService->getUserByEmail($pendingUser->email);
+            $forumService        = app(AODForumService::class);
+            $forumUser           = $forumService->getUserByEmail($pendingUser->email);
+            $reusingForumAccount = $forumUser !== null;
 
             if (! $forumUser && $pendingUser->forum_password) {
-                $forumUser = $this->createLegacyForumAccount($pendingUser, $division, $forumService);
+                $forumUser = $this->createForumAccountForPendingUser(
+                    $pendingUser,
+                    $request->forum_name,
+                    $recruiterId,
+                    $forumService,
+                );
+
+                if (! $forumUser) {
+                    return response()->json([
+                        'message' => 'Failed to create forum account. Please try again or contact an administrator.',
+                    ], 422);
+                }
             }
 
             if (! $forumUser) {
                 return response()->json([
-                    'message' => 'Forum account not found for this user. Registration may not have completed.',
+                    'message' => 'No forum account found for this user and no password is available to create one. '
+                        . 'The user may need to re-register through Discord.',
                 ], 422);
             }
 
@@ -90,6 +102,14 @@ class RecruitingController extends Controller
                         'message' => $group->recruitmentRejectionReason(),
                     ], 422);
                 }
+            }
+
+            if ($reusingForumAccount && $pendingUser->discord_id) {
+                $this->procedureService->setDiscordInfo(
+                    userId: $clanId,
+                    discordId: $pendingUser->discord_id,
+                    discordTag: $pendingUser->discord_username ?? '',
+                );
             }
 
             $member = $this->recruitmentService->createMember(
@@ -366,6 +386,50 @@ class RecruitingController extends Controller
         }
     }
 
+    public function checkForumEmail(Request $request): JsonResponse
+    {
+        $this->authorize('recruit', Member::class);
+
+        $request->validate(['email' => 'required|email']);
+
+        if (app()->environment() === 'local') {
+            return response()->json([
+                'found' => false,
+            ]);
+        }
+
+        $forumService = app(AODForumService::class);
+        $forumUser    = $forumService->getUserByEmail($request->email);
+
+        if (! $forumUser) {
+            return response()->json([
+                'found' => false,
+            ]);
+        }
+
+        $userId       = (int) $forumUser->userid;
+        $forumProfile = $this->procedureService->getUser($userId);
+
+        if (! $forumProfile || ! property_exists($forumProfile, 'usergroupid')) {
+            return response()->json([
+                'found' => false,
+            ]);
+        }
+
+        $groupId  = (int) $forumProfile->usergroupid;
+        $group    = ForumGroup::tryFrom($groupId);
+        $eligible = $group?->isEligibleForRecruitment() ?? false;
+
+        return response()->json([
+            'found'            => true,
+            'user_id'          => $userId,
+            'username'         => $forumProfile->username ?? $forumUser->username,
+            'group_id'         => $groupId,
+            'eligible'         => $eligible,
+            'rejection_reason' => $eligible ? null : $group?->recruitmentRejectionReason(),
+        ]);
+    }
+
     public function pendingDiscord(Division $division): JsonResponse
     {
         $this->authorize('recruit', Member::class);
@@ -415,19 +479,15 @@ class RecruitingController extends Controller
             });
     }
 
-    private function createLegacyForumAccount(User $pendingUser, Division $division, AODForumService $forumService): ?object
-    {
-        $co = $division->members()
-            ->where('position', Position::COMMANDING_OFFICER)
-            ->first();
-
-        if (! $co) {
-            return null;
-        }
-
+    private function createForumAccountForPendingUser(
+        User $pendingUser,
+        string $forumName,
+        int $recruiterId,
+        AODForumService $forumService,
+    ): ?object {
         $result = AODForumService::createForumAccount(
-            impersonatingMemberId: $co->clan_id,
-            username: $pendingUser->name,
+            impersonatingMemberId: $recruiterId,
+            username: $forumName,
             email: $pendingUser->email,
             dateOfBirth: $pendingUser->date_of_birth->format('Y-m-d'),
             password: $pendingUser->forum_password,
@@ -436,6 +496,18 @@ class RecruitingController extends Controller
         );
 
         if (! $result['success']) {
+            \Log::warning('Forum account creation failed', [
+                'error'   => $result['error'] ?? 'Unknown error',
+                'payload' => [
+                    'aod_userid'  => $recruiterId,
+                    'username'    => $forumName,
+                    'email'       => $pendingUser->email,
+                    'dob'         => $pendingUser->date_of_birth->format('Y-m-d'),
+                    'discord_id'  => $pendingUser->discord_id,
+                    'usergroupid' => ForumGroup::AWAITING_MODERATION->value,
+                ],
+            ]);
+
             return null;
         }
 

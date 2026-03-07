@@ -32,53 +32,86 @@
           <StepIndicator :step="1" :complete="isMemberVerificationComplete" />
         </div>
         <div class="recruit-section-body">
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group" :class="memberIdValidationClass">
-                <label for="member_id">Forum Member ID <span class="text-danger" v-if="!store.selectedPendingUser">*</span></label>
-                <div class="input-with-status">
-                  <input type="number" class="form-control" id="member_id"
-                         v-model="store.member.id"
-                         @input="onMemberIdChange"
-                         :disabled="store.inDemoMode || store.selectedPendingUser || store.validation.forumName.existingAccount"
-                         :placeholder="store.selectedPendingUser ? 'Will be created' : 'e.g. 12345'" />
-                  <span class="input-status" v-if="store.member.id">
-                    <i class="fa fa-spinner fa-spin" v-if="store.validation.loading"></i>
-                    <i class="fa fa-check text-success" v-else-if="store.validation.memberId.valid && store.validation.memberId.verifiedEmail"></i>
-                    <i class="fa fa-times text-danger" v-else-if="store.member.id.length > 0"></i>
+
+          <!-- Path Selection -->
+          <div v-if="!store.recruitPath" class="recruit-path-selection">
+            <p class="text-muted" style="margin-bottom: 12px;">Does the recruit have a forum account?</p>
+            <div class="recruit-path-buttons">
+              <button type="button" class="btn btn-default recruit-path-btn" @click="selectPath('forum')">
+                <i class="fa fa-id-card"></i>
+                <span>Yes, I have their member ID</span>
+              </button>
+              <button type="button" class="btn btn-default recruit-path-btn" @click="selectPath('discord')">
+                <i class="fab fa-discord" style="color: #5865F2;"></i>
+                <span>No, they registered via Discord</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Forum Member ID Path -->
+          <div v-else-if="store.recruitPath === 'forum'">
+            <a href="#" @click.prevent="resetPath" class="recruit-path-back"><i class="fa fa-arrow-left"></i> Back</a>
+            <div class="row" style="margin-top: 10px;">
+              <div class="col-md-6">
+                <div class="form-group" :class="memberIdValidationClass">
+                  <label for="member_id">Forum Member ID <span class="text-danger">*</span></label>
+                  <div class="input-with-status">
+                    <input type="number" class="form-control" id="member_id"
+                           v-model="store.member.id"
+                           @input="onMemberIdChange"
+                           :disabled="store.inDemoMode"
+                           placeholder="e.g. 12345" />
+                    <span class="input-status" v-if="store.member.id">
+                      <i class="fa fa-spinner fa-spin" v-if="store.validation.loading"></i>
+                      <i class="fa fa-check text-success" v-else-if="store.validation.memberId.valid && store.validation.memberId.verifiedEmail"></i>
+                      <i class="fa fa-times text-danger" v-else-if="store.member.id.length > 0"></i>
+                    </span>
+                  </div>
+                  <span class="help-block text-danger" v-if="store.member.id && !store.validation.memberId.valid && !store.validation.loading">
+                    Member ID not found on forums
+                  </span>
+                  <span class="help-block text-warning" v-else-if="store.member.id && store.validation.memberId.valid && !store.validation.memberId.verifiedEmail && !store.validation.loading">
+                    <template v-if="store.validation.memberId.groupId === 3">
+                      Member needs to validate their email address before they can be recruited.
+                    </template>
+                    <template v-else>
+                      Member is not in the <code>Registered Users</code> group.
+                    </template>
                   </span>
                 </div>
-                <span class="help-block text-danger" v-if="store.member.id && !store.validation.memberId.valid && !store.validation.loading">
-                  Member ID not found on forums
-                </span>
-                <span class="help-block text-warning" v-else-if="store.member.id && store.validation.memberId.valid && !store.validation.memberId.verifiedEmail && !store.validation.loading">
-                  <template v-if="store.validation.memberId.groupId === 3">
-                    Member needs to validate their email address before they can be recruited.
-                  </template>
-                  <template v-else-if="store.validation.memberId.groupId === 4">
-                    Member needs to complete the AuthLink process before they can be recruited.
-                  </template>
-                  <template v-else>
-                    Member is not in the <code>Registered Users</code> group.
-                  </template>
-                </span>
-                <span class="help-block text-success" v-else-if="store.validation.forumName.existingAccount">
-                  <i class="fa fa-check"></i> Existing forum account found
-                </span>
-                <span class="help-block text-muted" v-else-if="store.selectedPendingUser">
-                  <i class="fab fa-discord" style="color: #5865F2;"></i> Forum account will be created for <strong>{{ store.selectedPendingUser.discord_username }}</strong>
-                  <a href="#" @click.prevent="clearPendingUser" class="text-muted" style="margin-left: 0.5rem;"><i class="fa fa-times"></i></a>
-                </span>
+              </div>
+              <div class="col-md-6" v-if="store.validation.memberId.currentUsername">
+                <div class="form-group">
+                  <label>Current Forum Username</label>
+                  <div class="current-username">
+                    <i class="fa fa-user"></i> {{ store.validation.memberId.currentUsername }}
+                    <span v-if="store.validation.memberId.existsInTracker" class="existing-member-badge">
+                      <i class="fa fa-history"></i> Previous Member
+                    </span>
+                  </div>
+                  <div class="member-tags-display" v-if="store.validation.memberId.tags.length">
+                    <span v-for="(tag, index) in store.validation.memberId.tags" :key="index" class="badge badge-tag" :title="tag.division">
+                      {{ tag.name }}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-md-6" v-if="(store.division.pending_discord.length || store.loading.pendingDiscord) && !store.validation.memberId.currentUsername">
+          </div>
+
+          <!-- Discord Registration Path -->
+          <div v-else-if="store.recruitPath === 'discord'">
+            <a href="#" @click.prevent="resetPath" class="recruit-path-back"><i class="fa fa-arrow-left"></i> Back</a>
+
+            <!-- Pending user selection -->
+            <div v-if="!store.selectedPendingUser" style="margin-top: 10px;">
               <div class="form-group">
                 <label for="pending_user">
                   <i class="fab fa-discord" style="color: #5865F2;"></i> Pending Discord Registrations
                   <span class="text-muted" style="font-weight: normal;">({{ store.division.pending_discord.length }})</span>
                 </label>
-                <select id="pending_user" class="form-control" @change="onPendingUserSelect" :disabled="store.inDemoMode || store.loading.pendingDiscord">
-                  <option value="" style="color: #888;">{{ store.loading.pendingDiscord ? 'Loading...' : 'Select from pending...' }}</option>
+                <select id="pending_user" class="form-control" @change="onPendingUserSelect" :disabled="store.loading.pendingDiscord">
+                  <option value="" style="color: #888;">{{ store.loading.pendingDiscord ? 'Loading...' : 'Select a pending registration...' }}</option>
                   <option v-for="user in store.division.pending_discord" :key="user.id" :value="user.id">
                     {{ user.discord_username }} ({{ user.created_at }}){{ user.application_division ? ' — ' + user.application_division : '' }}
                   </option>
@@ -88,41 +121,78 @@
                   <span style="line-height: 1;">Show all pending registrations</span>
                 </label>
               </div>
+              <div v-if="!store.division.pending_discord.length && !store.loading.pendingDiscord" class="text-muted" style="font-size: 13px;">
+                No pending Discord registrations found for this division.
+              </div>
             </div>
-            <div class="col-md-6" v-else-if="store.validation.memberId.currentUsername">
-              <div class="form-group">
-                <label>Current Forum Username</label>
-                <div class="current-username">
-                  <i class="fa fa-user"></i> {{ store.validation.memberId.currentUsername }}
-                  <span v-if="store.validation.memberId.existsInTracker" class="existing-member-badge">
-                    <i class="fa fa-history"></i> Previous Member
-                  </span>
+
+            <!-- Pending user selected — checking email -->
+            <div v-else>
+              <div class="recruit-pending-selected">
+                <div class="recruit-pending-selected-header">
+                  <i class="fab fa-discord" style="color: #5865F2;"></i>
+                  <strong>{{ store.selectedPendingUser.discord_username }}</strong>
+                  <a href="#" @click.prevent="clearPendingUser" class="text-muted" style="margin-left: auto; font-size: 12px;"><i class="fa fa-times"></i> Change</a>
                 </div>
-                <div class="member-tags-display" v-if="store.validation.memberId.tags.length">
-                  <span v-for="(tag, index) in store.validation.memberId.tags" :key="index" class="badge badge-tag" :title="tag.division">
-                    {{ tag.name }}
+
+                <!-- Loading email check -->
+                <div v-if="store.forumEmailCheck.loading" class="recruit-email-check-status">
+                  <span class="themed-spinner spinner-sm"></span> Checking for existing forum account...
+                </div>
+
+                <!-- Email check: found + eligible -->
+                <div v-else-if="store.forumEmailCheck.checked && store.forumEmailCheck.found && store.forumEmailCheck.eligible" class="recruit-email-check-status recruit-email-check-success">
+                  <i class="fa fa-check-circle"></i>
+                  <div>
+                    <div>Existing forum account found: <strong>{{ store.forumEmailCheck.username }}</strong> (ID: {{ store.forumEmailCheck.userId }})</div>
+                    <div class="text-muted" style="font-size: 12px; margin-top: 2px;">This account will be used for recruitment. The name can be changed below if desired.</div>
+                  </div>
+                </div>
+
+                <!-- Email check: found + ineligible -->
+                <div v-else-if="store.forumEmailCheck.checked && store.forumEmailCheck.found && !store.forumEmailCheck.eligible" class="recruit-email-check-status recruit-email-check-blocked">
+                  <i class="fa fa-exclamation-triangle"></i>
+                  <div>
+                    <div>A forum account was found for this email: <strong>{{ store.forumEmailCheck.username }}</strong></div>
+                    <div class="text-muted" style="font-size: 12px; margin-top: 2px;">
+                      <template v-if="store.forumEmailCheck.groupId === 3">
+                        This account is pending email verification. The recruit needs to complete the email verification process on the forums before they can be recruited.
+                      </template>
+                      <template v-else>
+                        {{ store.forumEmailCheck.rejectionReason }}
+                      </template>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Email check: not found -->
+                <div v-else-if="store.forumEmailCheck.checked && !store.forumEmailCheck.found" class="recruit-email-check-status recruit-email-check-info">
+                  <i class="fa fa-info-circle"></i>
+                  <div>No existing forum account found. One will be created during recruitment.</div>
+                </div>
+              </div>
+
+              <!-- Application responses -->
+              <div v-if="store.selectedPendingUser.application" class="application-responses" style="margin-top: 8px;">
+                <div class="application-responses-header" @click="sections.application = !sections.application">
+                  <i class="fa fa-file-alt"></i> Application Submitted
+                  <span v-if="store.selectedPendingUser.application_division" class="text-muted" style="font-size: 12px; font-weight: normal; margin-left: 6px;">
+                    ({{ store.selectedPendingUser.application_division }})
                   </span>
+                  <i class="fa" :class="sections.application ? 'fa-chevron-up' : 'fa-chevron-down'" style="margin-left: auto;"></i>
+                </div>
+                <div v-show="sections.application" class="application-responses-body">
+                  <div class="row">
+                    <div v-for="(item, index) in store.selectedPendingUser.application" :key="index" class="col-md-4 application-field">
+                      <div class="application-field-label">{{ item.label }}</div>
+                      <div class="application-field-value">{{ item.value || '—' }}</div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div v-if="store.selectedPendingUser?.application" class="application-responses" style="margin-top: 8px;">
-            <div class="application-responses-header" @click="sections.application = !sections.application">
-              <i class="fa fa-file-alt"></i> Application Submitted
-              <span v-if="store.selectedPendingUser.application_division" class="text-muted" style="font-size: 12px; font-weight: normal; margin-left: 6px;">
-                ({{ store.selectedPendingUser.application_division }})
-              </span>
-              <i class="fa" :class="sections.application ? 'fa-chevron-up' : 'fa-chevron-down'" style="margin-left: auto;"></i>
-            </div>
-            <div v-show="sections.application" class="application-responses-body">
-              <div class="row">
-                <div v-for="(item, index) in store.selectedPendingUser.application" :key="index" class="col-md-4 application-field">
-                  <div class="application-field-label">{{ item.label }}</div>
-                  <div class="application-field-value">{{ item.value || '—' }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
 
@@ -347,7 +417,11 @@ export default {
     },
 
     isMemberVerificationComplete() {
-      if (store.selectedPendingUser) return true;
+      if (store.recruitPath === 'discord' && store.selectedPendingUser) {
+        if (store.forumEmailCheck.found && !store.forumEmailCheck.eligible) return false;
+        if (store.forumEmailCheck.found && store.forumEmailCheck.eligible) return true;
+        return store.forumEmailCheck.checked && !store.forumEmailCheck.found;
+      }
       return store.validation.memberId.valid && store.validation.memberId.verifiedEmail;
     },
 
@@ -394,6 +468,21 @@ export default {
   },
 
   methods: {
+    selectPath(path) {
+      store.recruitPath = path;
+    },
+
+    resetPath() {
+      store.recruitPath = null;
+      store.selectedPendingUser = null;
+      store.member.id = '';
+      store.member.forum_name = '';
+      store.member.rank = '';
+      store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null };
+      store.validation.forumName = { valid: false, available: false };
+      store.resetForumEmailCheck();
+    },
+
     toggleDemoMode() {
       store.toggleDemoMode();
     },
@@ -425,9 +514,7 @@ export default {
 
     clearPendingUser() {
       store.clearPendingUser();
-      store.member.forum_name = '';
       store.member.rank = '';
-      document.getElementById('pending_user').value = '';
     },
 
     onShowAllPendingChange() {

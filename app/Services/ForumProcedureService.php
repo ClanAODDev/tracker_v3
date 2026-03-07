@@ -19,6 +19,8 @@ class ForumProcedureService
 
     private const SET_USER_DIVISION = 'set_user_division';
 
+    private const SET_DISCORD_INFO = 'set_discord_info';
+
     public function checkSession(string $sessionHash): ?object
     {
         return $this->call(self::CHECK_SESSION, ['session' => $sessionHash]);
@@ -42,6 +44,15 @@ class ForumProcedureService
         return $this->call(self::SET_USER_DIVISION, [
             'userid'   => $userId,
             'division' => $division,
+        ]);
+    }
+
+    public function setDiscordInfo(int $userId, string $discordId, string $discordTag): void
+    {
+        $this->call(self::SET_DISCORD_INFO, [
+            'user_id'     => $userId,
+            'discord_id'  => $discordId,
+            'discord_tag' => $discordTag,
         ]);
     }
 

@@ -10798,6 +10798,96 @@ pre.code-toolbar > .toolbar span:focus {
     padding: 6px 8px;
 }
 
+.recruit-path-selection {
+    text-align: center;
+    padding: 8px 0;
+}
+
+.recruit-path-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.recruit-path-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    transition: all 0.15s ease;
+
+    &:hover {
+        border-color: var(--color-accent);
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    i {
+        font-size: 16px;
+    }
+}
+
+.recruit-path-back {
+    font-size: 12px;
+    color: var(--color-muted);
+
+    &:hover {
+        color: var(--color-white);
+    }
+}
+
+.recruit-pending-selected {
+    margin-top: 10px;
+}
+
+.recruit-pending-selected-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: rgba(88, 101, 242, 0.1);
+    border: 1px solid rgba(88, 101, 242, 0.2);
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.recruit-email-check-status {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 12px;
+    margin-top: 10px;
+    border-radius: 6px;
+    font-size: 13px;
+
+    > i {
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+}
+
+.recruit-email-check-success {
+    background: rgba(46, 204, 113, 0.1);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.recruit-email-check-blocked {
+    background: rgba(231, 76, 60, 0.1);
+    border: 1px solid rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+.recruit-email-check-info {
+    background: rgba(52, 152, 219, 0.1);
+    border: 1px solid rgba(52, 152, 219, 0.2);
+    color: #3498db;
+}
+
 .application-responses {
     margin-top: 10px;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -11122,6 +11212,15 @@ pre.code-toolbar > .toolbar span:focus {
         .btn {
             width: 100%;
         }
+    }
+
+    .recruit-path-buttons {
+        flex-direction: column;
+    }
+
+    .recruit-path-btn {
+        width: 100%;
+        justify-content: center;
     }
 
     .housekeeping-action {

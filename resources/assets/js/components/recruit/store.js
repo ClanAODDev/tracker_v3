@@ -9,6 +9,8 @@ const store = reactive({
     recruiter_id: null,
     rankLabels: {},
 
+    recruitPath: null,
+
     member: {
         id: '',
         forum_name: '',
@@ -33,6 +35,17 @@ const store = reactive({
             valid: false,
             available: false,
         },
+    },
+
+    forumEmailCheck: {
+        loading: false,
+        checked: false,
+        found: false,
+        userId: null,
+        username: null,
+        groupId: null,
+        eligible: false,
+        rejectionReason: null,
     },
 
     division: {
@@ -122,16 +135,97 @@ store.selectPendingUser = (userId) => {
     const user = store.division.pending_discord.find(u => u.id === parseInt(userId));
     if (user) {
         store.selectedPendingUser = user;
-        const name = user.forum_name || user.discord_username;
-        store.member.forum_name = name;
         store.member.rank = '1';
-        store.validation.forumName = { valid: false, available: false };
-        store.validateForumName(name, store.member.id);
+        store.resetForumEmailCheck();
+        store.checkForumEmail(user.email);
     }
+};
+
+store.resetForumEmailCheck = () => {
+    store.forumEmailCheck = {
+        loading: false,
+        checked: false,
+        found: false,
+        userId: null,
+        username: null,
+        groupId: null,
+        eligible: false,
+        rejectionReason: null,
+    };
+};
+
+store.checkForumEmail = (email) => {
+    if (!email) {
+        store.forumEmailCheck.checked = true;
+        store.forumEmailCheck.found = false;
+        store.applyPendingUserDefaults();
+        return;
+    }
+
+    store.forumEmailCheck.loading = true;
+
+    axios.post(`${store.base_url}/check-forum-email`, { email })
+        .then((response) => {
+            const data = response.data;
+            store.forumEmailCheck = {
+                loading: false,
+                checked: true,
+                found: data.found,
+                userId: data.user_id || null,
+                username: data.username || null,
+                groupId: data.group_id || null,
+                eligible: data.eligible || false,
+                rejectionReason: data.rejection_reason || null,
+            };
+
+            if (data.found && data.eligible) {
+                store.member.id = String(data.user_id);
+                store.validation.memberId = {
+                    valid: true,
+                    verifiedEmail: true,
+                    groupId: data.group_id,
+                    currentUsername: data.username,
+                    existsInTracker: false,
+                    tags: [],
+                    division: null,
+                };
+                const name = (data.username || '').replace(/^AOD_/i, '').replace(/\b\w/g, c => c.toUpperCase());
+                store.member.forum_name = name;
+                store.validateForumName(name, store.member.id);
+            } else if (!data.found) {
+                store.applyPendingUserDefaults();
+            }
+        })
+        .catch(() => {
+            store.forumEmailCheck = {
+                loading: false,
+                checked: true,
+                found: false,
+                userId: null,
+                username: null,
+                groupId: null,
+                eligible: false,
+                rejectionReason: null,
+            };
+            store.applyPendingUserDefaults();
+        });
+};
+
+store.applyPendingUserDefaults = () => {
+    if (!store.selectedPendingUser) return;
+    const name = store.selectedPendingUser.forum_name || store.selectedPendingUser.discord_username;
+    store.member.forum_name = name;
+    store.validation.forumName = { valid: false, available: false };
+    store.validateForumName(name, store.member.id);
 };
 
 store.clearPendingUser = () => {
     store.selectedPendingUser = null;
+    store.member.id = '';
+    store.member.forum_name = '';
+    store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null };
+    store.validation.forumName = { valid: false, available: false };
+    store.resetForumEmailCheck();
 };
 
 store.getSquadsForPlatoon = (platoonId) => {
@@ -252,6 +346,11 @@ store.isFormValid = () => {
     const squadValid = !hasSquads || store.member.squad;
 
     const hasPendingUser = store.selectedPendingUser !== null;
+
+    if (hasPendingUser && store.forumEmailCheck.found && !store.forumEmailCheck.eligible) {
+        return false;
+    }
+
     const memberIdValid = hasPendingUser || (store.member.id && store.validation.memberId.valid && store.validation.memberId.verifiedEmail);
 
     return memberIdValid &&
@@ -312,6 +411,7 @@ store.resetForNewRecruit = () => {
     store.submitted = false;
     store.errors.submission = null;
     store.selectedPendingUser = null;
+    store.recruitPath = null;
 
     store.member.id = '';
     store.member.forum_name = '';
@@ -323,11 +423,13 @@ store.resetForNewRecruit = () => {
     store.validation.loading = false;
     store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null };
     store.validation.forumName = { valid: false, available: false };
+    store.resetForumEmailCheck();
 };
 
 store.toggleDemoMode = () => {
     store.inDemoMode = !store.inDemoMode;
     if (store.inDemoMode) {
+        store.recruitPath = 'forum';
         store.member.id = '99999';
         store.member.forum_name = 'TestRecruit';
         store.member.ingame_name = 'TestHandle';

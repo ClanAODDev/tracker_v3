@@ -268,7 +268,7 @@ class RecruitingControllerTest extends TestCase
             ]);
 
         $response->assertStatus(422);
-        $response->assertJsonPath('message', 'Forum account not found for this user. Registration may not have completed.');
+        $response->assertJsonPath('message', 'No forum account found for this user and no password is available to create one. The user may need to re-register through Discord.');
     }
 
     public function test_submit_discord_recruitment_rejects_invalid_pending_user(): void

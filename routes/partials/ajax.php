@@ -13,6 +13,7 @@ Route::controller(RecruitingController::class)->group(function () {
     Route::get('division-platoons/{abbreviation}', 'searchPlatoons')->name('divisionPlatoons');
     Route::post('validate-id/{memberId}', 'validateMemberId')->name('validate-id');
     Route::post('validate-name', 'validateMemberName')->name('validate-name');
+    Route::post('check-forum-email', 'checkForumEmail')->name('check-forum-email');
     Route::post('division-tasks', 'getTasks')->name('divisionTasks');
     Route::post('platoon-squads', 'searchPlatoonForSquads')->name('getPlatoonSquads');
     Route::post('search-division-threads', 'doThreadCheck')->name('divisionThreadCheck');

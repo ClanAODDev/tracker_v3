@@ -138,7 +138,7 @@ class AODForumService
         $error = is_string($response) ? $response : 'Unknown error';
 
         if (str_contains($error, 'invalid_user_specified')) {
-            $error = 'Invalid user. Email may already be registered on the forums.';
+            $error = "Forum rejected the request (invalid_user_specified). The username '{$username}' may already be taken, or the impersonating user ({$impersonatingMemberId}) may be invalid.";
         }
 
         return [
