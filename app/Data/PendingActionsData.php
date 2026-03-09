@@ -42,8 +42,7 @@ readonly class PendingActionsData
         }
 
         if ($user->can('recruit', Member::class) && $division->settings()->get('application_required', false)) {
-            $count = DivisionApplication::pending()
-                ->where('division_id', $division->id)
+            $count = DivisionApplication::where('division_id', $division->id)
                 ->count();
             if ($count > 0) {
                 $actions->push(new PendingAction(

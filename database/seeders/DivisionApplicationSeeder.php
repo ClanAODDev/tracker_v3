@@ -157,7 +157,7 @@ class DivisionApplicationSeeder extends Seeder
     {
         $division = Division::active()
             ->whereHas('applicationFields')
-            ->whereDoesntHave('applications', fn ($q) => $q->whereNull('recruited_at'))
+            ->whereDoesntHave('applications')
             ->first();
 
         if (! $division) {

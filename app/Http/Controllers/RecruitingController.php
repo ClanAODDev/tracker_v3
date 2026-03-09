@@ -128,7 +128,6 @@ class RecruitingController extends Controller
             $pendingUser->update(['member_id' => $member->id]);
 
             DivisionApplication::where('user_id', $pendingUser->id)
-                ->pending()
                 ->get()
                 ->each->delete();
 

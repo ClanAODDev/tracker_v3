@@ -25,8 +25,7 @@ class DivisionApplicationApiController extends Controller
             return response()->json(['applications' => []]);
         }
 
-        $applications = DivisionApplication::pending()
-            ->where('division_id', $division->id)
+        $applications = DivisionApplication::where('division_id', $division->id)
             ->with('user')
             ->withCount('comments')
             ->latest()

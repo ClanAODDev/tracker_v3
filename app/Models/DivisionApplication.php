@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Kirschbaum\Commentions\Contracts\Commentable;
@@ -22,8 +21,7 @@ class DivisionApplication extends Model implements Commentable
     }
 
     protected $casts = [
-        'responses'    => 'array',
-        'recruited_at' => 'datetime',
+        'responses' => 'array',
     ];
 
     public function user(): BelongsTo
@@ -34,10 +32,5 @@ class DivisionApplication extends Model implements Commentable
     public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
-    }
-
-    public function scopePending(Builder $query): Builder
-    {
-        return $query->whereNull('recruited_at');
     }
 }

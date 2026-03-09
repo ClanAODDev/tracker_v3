@@ -21,8 +21,7 @@ class PurgePendingDiscordRegistrations implements ShouldQueue
     {
         $cutoff = now()->subDays($this->daysOld);
 
-        $applicationIds = DivisionApplication::pending()
-            ->where('created_at', '<', $cutoff)
+        $applicationIds = DivisionApplication::where('created_at', '<', $cutoff)
             ->pluck('id');
 
         Comment::where('commentable_type', (new DivisionApplication)->getMorphClass())

@@ -34,7 +34,7 @@ class DivisionShowService
             pendingActions: PendingActionsData::forDivision($division, auth()->user()),
             recentActivity: $this->getRecentActivity($division),
             pendingApplicationCount: $division->settings()->get('application_required', false)
-                ? DivisionApplication::pending()->where('division_id', $division->id)->count()
+                ? DivisionApplication::where('division_id', $division->id)->count()
                 : 0,
         );
     }
