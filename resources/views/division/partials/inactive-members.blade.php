@@ -48,6 +48,7 @@
                             <button type="button"
                                     class="btn btn-sm activity-reminder-toggle {{ $remindedToday ? 'btn-default' : 'btn-success' }}"
                                     data-member-id="{{ $member->clan_id }}"
+                                    data-original-title="{{ $member->last_activity_reminder_at ? 'Reminded ' . $member->last_activity_reminder_at->diffForHumans() : 'Not reminded' }}"
                                     title="{{ $member->last_activity_reminder_at ? 'Reminded ' . $member->last_activity_reminder_at->diffForHumans() : 'Not reminded' }}"
                                     {{ $remindedToday ? 'disabled' : '' }}>
                                 <i class="fa fa-bell"></i>

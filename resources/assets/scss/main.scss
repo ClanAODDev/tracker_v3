@@ -538,12 +538,28 @@ input[type="checkbox"] {
         margin-left: 2px;
     }
 
+    i {
+        display: inline-block;
+        transition: transform 0.3s ease;
+    }
+
+    &.activity-reminder-armed i,
+    &.activity-reminder-disarming i {
+        animation: reminder-flip 0.3s ease;
+    }
+
     &:disabled,
     &[disabled] {
         opacity: 0.5;
         cursor: not-allowed;
         pointer-events: none;
     }
+}
+
+@keyframes reminder-flip {
+    0% { transform: rotateY(0deg); }
+    50% { transform: rotateY(90deg); }
+    100% { transform: rotateY(0deg); }
 }
 
 .bulk-pm-options {
