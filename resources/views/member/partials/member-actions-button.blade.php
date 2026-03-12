@@ -45,8 +45,10 @@
             </li>
         @endcan
         @can('remindActivity', $member)
-            <li>
-                <a href="#" class="set-activity-reminder-btn" data-url="{{ route('member.set-activity-reminder', $member->clan_id) }}">
+            <li class="{{ $member->last_activity_reminder_at?->isToday() ? 'disabled' : '' }}">
+                <a href="#" class="set-activity-reminder-btn"
+                   data-url="{{ route('member.set-activity-reminder', $member->clan_id) }}"
+                   {!! $member->last_activity_reminder_at?->isToday() ? 'disabled title="Already reminded today"' : '' !!}>
                     Mark Sent Reminder
                 </a>
             </li>

@@ -1307,10 +1307,11 @@ var Tracker = Tracker || {};
 
             $(document).on('click', '.set-activity-reminder-btn', function(e) {
                 e.preventDefault();
+                e.stopPropagation();
                 const $btn = $(this);
                 const url = $btn.data('url');
 
-                if ($btn.prop('disabled') || $btn.hasClass('reminder-sent')) {
+                if ($btn.attr('disabled') || $btn.hasClass('reminder-sent')) {
                     return;
                 }
 
@@ -1330,7 +1331,6 @@ var Tracker = Tracker || {};
 
                 clearTimeout($btn.data('arm-timer'));
                 $btn.removeClass('activity-reminder-armed');
-                $btn.prop('disabled', true);
                 $btn.html('<i class="fa fa-spinner fa-spin"></i> Sending...');
 
                 $.ajax({
@@ -1338,14 +1338,14 @@ var Tracker = Tracker || {};
                     method: 'POST',
                     data: { _token: csrfToken },
                     success: (response) => {
-                        $btn.addClass('reminder-sent');
+                        $btn.addClass('reminder-sent').attr('disabled', true);
+                        $btn.closest('li').addClass('disabled');
                         $btn.html(`<i class="fa fa-check"></i> Reminded ${response.date}`);
                         toastr.success('Activity reminder marked');
                     },
                     error: (xhr) => {
                         const message = xhr.responseJSON?.message || 'Failed to set reminder';
                         toastr.error(message);
-                        $btn.prop('disabled', false);
                         $btn.html($btn.data('original-btn-html'));
                     }
                 });
