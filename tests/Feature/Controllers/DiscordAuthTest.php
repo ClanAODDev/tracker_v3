@@ -446,6 +446,139 @@ class DiscordAuthTest extends TestCase
         Notification::assertNothingSent();
     }
 
+    public function test_discord_registration_rejects_date_of_birth_under_13(): void
+    {
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '123456789',
+            'date_of_birth'  => null,
+            'forum_password' => null,
+        ]);
+
+        $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'username'              => 'YoungUser',
+                'date_of_birth'         => now()->subYears(12)->format('Y-m-d'),
+                'password'              => 'password123',
+                'password_confirmation' => 'password123',
+                'division_id'           => $division->id,
+            ])
+            ->assertSessionHasErrors('date_of_birth');
+    }
+
+    public function test_discord_registration_rejects_unrealistically_old_date_of_birth(): void
+    {
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '123456789',
+            'date_of_birth'  => null,
+            'forum_password' => null,
+        ]);
+
+        $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'username'              => 'AncientUser',
+                'date_of_birth'         => '1850-01-01',
+                'password'              => 'password123',
+                'password_confirmation' => 'password123',
+                'division_id'           => $division->id,
+            ])
+            ->assertSessionHasErrors('date_of_birth');
+    }
+
+    public function test_discord_registration_rejects_future_date_of_birth(): void
+    {
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '123456789',
+            'date_of_birth'  => null,
+            'forum_password' => null,
+        ]);
+
+        $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'username'              => 'FutureUser',
+                'date_of_birth'         => now()->addYear()->format('Y-m-d'),
+                'password'              => 'password123',
+                'password_confirmation' => 'password123',
+                'division_id'           => $division->id,
+            ])
+            ->assertSessionHasErrors('date_of_birth');
+    }
+
+    public function test_discord_registration_accepts_valid_date_of_birth(): void
+    {
+        Notification::fake();
+
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '123456789',
+            'date_of_birth'  => null,
+            'forum_password' => null,
+        ]);
+
+        $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+        ]);
+
+        $forumServiceMock = Mockery::mock(AODForumService::class);
+        $forumServiceMock->shouldReceive('getUserByEmail')
+            ->andReturn((object) ['userid' => 99999]);
+        $this->app->instance(AODForumService::class, $forumServiceMock);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'username'              => 'ValidUser',
+                'date_of_birth'         => '1995-06-15',
+                'password'              => 'password123',
+                'password_confirmation' => 'password123',
+                'division_id'           => $division->id,
+            ])
+            ->assertSessionHasNoErrors()
+            ->assertRedirect();
+    }
+
+    public function test_discord_registration_rejects_invalid_date_format(): void
+    {
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '123456789',
+            'date_of_birth'  => null,
+            'forum_password' => null,
+        ]);
+
+        $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'username'              => 'BadDateUser',
+                'date_of_birth'         => 'not-a-date',
+                'password'              => 'password123',
+                'password_confirmation' => 'password123',
+                'division_id'           => $division->id,
+            ])
+            ->assertSessionHasErrors('date_of_birth');
+    }
+
     public function test_discord_callback_handles_oauth_failure_gracefully(): void
     {
         $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');

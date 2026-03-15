@@ -41,7 +41,11 @@ class DiscordRegistrationRequest extends FormRequest
                     }
                 },
             ],
-            'date_of_birth' => ['required', 'date', 'before:' . now()->subYears(13)->format('Y-m-d')],
+            'date_of_birth' => [
+                'required', 'date',
+                'after:' . now()->subYears(120)->format('Y-m-d'),
+                'before:' . now()->subYears(13)->format('Y-m-d'),
+            ],
             'password'      => ['required', 'string', 'min:8', 'confirmed'],
             'division_id'   => ['required', 'exists:divisions,id'],
         ];
@@ -51,6 +55,7 @@ class DiscordRegistrationRequest extends FormRequest
     {
         return [
             'username.regex'       => 'Username may only contain letters, numbers, and underscores.',
+            'date_of_birth.after'  => 'Please provide a valid date of birth.',
             'date_of_birth.before' => 'You must be at least 13 years old to join.',
         ];
     }
