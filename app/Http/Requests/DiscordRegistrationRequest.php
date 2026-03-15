@@ -46,8 +46,8 @@ class DiscordRegistrationRequest extends FormRequest
                 'after:' . now()->subYears(120)->format('Y-m-d'),
                 'before:' . now()->subYears(13)->format('Y-m-d'),
             ],
-            'password'      => ['required', 'string', 'min:8', 'confirmed'],
-            'division_id'   => ['required', 'exists:divisions,id'],
+            'password'    => ['required', 'string', 'min:8', 'confirmed'],
+            'division_id' => ['required', 'exists:divisions,id'],
         ];
     }
 
