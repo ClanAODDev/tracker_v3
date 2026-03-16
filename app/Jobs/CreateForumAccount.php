@@ -49,5 +49,7 @@ class CreateForumAccount implements ShouldQueue
 
             throw new RuntimeException("Forum account creation failed for {$this->username}: {$result['error']}");
         }
+
+        $this->user->update(['forum_password' => null]);
     }
 }
