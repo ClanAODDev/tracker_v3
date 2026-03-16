@@ -97,7 +97,6 @@ class DiscordRegistrationRequest extends FormRequest
             $user->update(['forum_password' => null]);
         } else {
             $password = $this->validated('password');
-            $user->update(['forum_password' => null]);
 
             CreateForumAccount::dispatch(
                 user: $user,
