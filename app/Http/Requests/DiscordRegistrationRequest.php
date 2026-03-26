@@ -62,7 +62,8 @@ class DiscordRegistrationRequest extends FormRequest
 
     public function persist(): void
     {
-        $user = auth()->user();
+        $user             = auth()->user();
+        $isFirstSubmission = ! $user->date_of_birth;
 
         $user->update([
             'name'           => $this->validated('username'),
@@ -72,6 +73,17 @@ class DiscordRegistrationRequest extends FormRequest
 
         $division = Division::findOrFail($this->validated('division_id'));
 
+        $this->handleForumAccount($user, $division, $isFirstSubmission);
+
+        session(['pending_division_id' => $division->id]);
+
+        if ($isFirstSubmission && ! $division->settings()->get('application_required', false)) {
+            $division->notify(new NotifyDivisionPendingDiscordRegistration($user));
+        }
+    }
+
+    private function handleForumAccount($user, Division $division, bool $isFirstSubmission): void
+    {
         $co = $division->members()
             ->where('position', Position::COMMANDING_OFFICER)
             ->first();
@@ -82,37 +94,30 @@ class DiscordRegistrationRequest extends FormRequest
             ]);
         }
 
-        $forumService      = app(AODForumService::class);
-        $existingForumUser = $forumService->getUserByEmail($user->email);
+        $existingForumUser = app(AODForumService::class)->getUserByEmail($user->email);
 
         if ($existingForumUser) {
-            $clanId = (int) $existingForumUser->userid;
-
-            if (Member::where('clan_id', $clanId)->exists()) {
+            if (Member::where('clan_id', (int) $existingForumUser->userid)->exists()) {
                 throw ValidationException::withMessages([
                     'division_id' => 'A member with this forum account already exists. Please contact an administrator.',
                 ]);
             }
 
             $user->update(['forum_password' => null]);
-        } else {
-            $password = $this->validated('password');
 
+            return;
+        }
+
+        if ($isFirstSubmission) {
             CreateForumAccount::dispatch(
                 user: $user,
                 impersonatingMemberId: $co->clan_id,
                 username: $this->validated('username'),
                 email: $user->email,
                 dateOfBirth: $this->validated('date_of_birth'),
-                password: $password,
+                password: $this->validated('password'),
                 discordId: $user->discord_id,
             );
-        }
-
-        session(['pending_division_id' => $division->id]);
-
-        if (! $division->settings()->get('application_required', false)) {
-            $division->notify(new NotifyDivisionPendingDiscordRegistration($user));
         }
     }
 }
