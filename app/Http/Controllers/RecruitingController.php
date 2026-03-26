@@ -17,7 +17,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class RecruitingController extends Controller
@@ -362,27 +361,22 @@ class RecruitingController extends Controller
         $memberId = request('member_id', 0);
         $email    = request('email');
 
-        try {
-            $result      = DB::connection('aod_forums')->select('CALL user_exists(?, ?)', [$name, $memberId]);
-            $nameIsTaken = ! empty($result);
+        $forumService = app(AODForumService::class);
+        $nameIsTaken  = $forumService->userExists($name, $memberId);
 
-            if ($nameIsTaken && $email) {
-                $forumService = app(\App\Services\AODForumService::class);
-                $existingUser = $forumService->getUserByEmail($email);
+        if ($nameIsTaken && $email) {
+            $existingUser = $forumService->getUserByEmail($email);
 
-                if ($existingUser && strcasecmp($existingUser->username, $name) === 0) {
-                    return response()->json([
-                        'memberExists'    => false,
-                        'existingAccount' => true,
-                        'existingUserId'  => (int) $existingUser->userid,
-                    ]);
-                }
+            if ($existingUser && strcasecmp($existingUser->username, $name) === 0) {
+                return response()->json([
+                    'memberExists'    => false,
+                    'existingAccount' => true,
+                    'existingUserId'  => (int) $existingUser->userid,
+                ]);
             }
-
-            return response()->json(['memberExists' => $nameIsTaken]);
-        } catch (\Exception $e) {
-            return response()->json(['memberExists' => false]);
         }
+
+        return response()->json(['memberExists' => $nameIsTaken]);
     }
 
     public function checkForumEmail(Request $request): JsonResponse
