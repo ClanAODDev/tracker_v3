@@ -404,6 +404,7 @@ class DiscordAuthTest extends TestCase
         ]);
 
         $forumServiceMock = Mockery::mock(AODForumService::class);
+        $forumServiceMock->shouldReceive('userExists')->andReturn(false);
         $forumServiceMock->shouldReceive('getUserByEmail')
             ->andReturn((object) ['userid' => 99999]);
         $this->app->instance(AODForumService::class, $forumServiceMock);
@@ -540,6 +541,7 @@ class DiscordAuthTest extends TestCase
         ]);
 
         $forumServiceMock = Mockery::mock(AODForumService::class);
+        $forumServiceMock->shouldReceive('userExists')->andReturn(false);
         $forumServiceMock->shouldReceive('getUserByEmail')
             ->andReturn((object) ['userid' => 99999]);
         $this->app->instance(AODForumService::class, $forumServiceMock);
@@ -579,6 +581,74 @@ class DiscordAuthTest extends TestCase
                 'division_id'           => $division->id,
             ])
             ->assertSessionHasErrors('date_of_birth');
+    }
+
+    public function test_discord_registration_rejects_username_already_taken_on_forums(): void
+    {
+        $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'clan_id'     => 12345,
+        ]);
+
+        $forumServiceMock = Mockery::mock(AODForumService::class);
+        $forumServiceMock->shouldReceive('userExists')
+            ->with('TakenName', 12345)
+            ->andReturn(true);
+        $this->app->instance(AODForumService::class, $forumServiceMock);
+
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '123456789',
+            'date_of_birth'  => null,
+            'forum_password' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'username'              => 'TakenName',
+                'date_of_birth'         => '2000-01-15',
+                'password'              => 'password123',
+                'password_confirmation' => 'password123',
+                'division_id'           => $division->id,
+            ])
+            ->assertSessionHasErrors('username');
+    }
+
+    public function test_discord_registration_accepts_username_not_taken_on_forums(): void
+    {
+        Notification::fake();
+
+        $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'clan_id'     => 12345,
+        ]);
+
+        $forumServiceMock = Mockery::mock(AODForumService::class);
+        $forumServiceMock->shouldReceive('userExists')
+            ->with('AvailableName', 12345)
+            ->andReturn(false);
+        $forumServiceMock->shouldReceive('getUserByEmail')
+            ->andReturn((object) ['userid' => 99999]);
+        $this->app->instance(AODForumService::class, $forumServiceMock);
+
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '123456789',
+            'date_of_birth'  => null,
+            'forum_password' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'username'              => 'AvailableName',
+                'date_of_birth'         => '2000-01-15',
+                'password'              => 'password123',
+                'password_confirmation' => 'password123',
+                'division_id'           => $division->id,
+            ])
+            ->assertSessionHasNoErrors();
     }
 
     public function test_discord_registration_does_not_send_duplicate_notification_on_resubmit(): void

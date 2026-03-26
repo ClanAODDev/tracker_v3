@@ -234,6 +234,23 @@ class AODForumService
         return Arr::first($results);
     }
 
+    public function userExists(string $username, int $adminUserId): bool
+    {
+        try {
+            $results = DB::connection('aod_forums')
+                ->select('CALL user_exists(:user_name, :user_id)', [
+                    'user_name' => $username,
+                    'user_id'   => $adminUserId,
+                ]);
+        } catch (Exception $exception) {
+            Log::error('userExists check failed: ' . $exception->getMessage());
+
+            return false;
+        }
+
+        return ! empty($results);
+    }
+
     private static function generateToken(): string
     {
         $currentMinute = (int) floor(time() / 60) * 60;

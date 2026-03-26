@@ -39,6 +39,15 @@ class DiscordRegistrationRequest extends FormRequest
                             return;
                         }
                     }
+
+                    $division = Division::find($this->input('division_id'));
+                    $co       = $division?->members()
+                        ->where('position', Position::COMMANDING_OFFICER)
+                        ->first();
+
+                    if ($co && app(AODForumService::class)->userExists($value, $co->clan_id)) {
+                        $fail('This username is already taken on the forums. Please choose a different one.');
+                    }
                 },
             ],
             'date_of_birth' => [
