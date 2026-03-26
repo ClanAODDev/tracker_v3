@@ -185,28 +185,9 @@ class AODForumService
 
     public function authenticate(string $username, string $password): ?array
     {
-        try {
-            $results = DB::connection('aod_forums')
-                ->select(
-                    'CALL check_user(:username, :password)',
-                    [
-                        'username' => $username,
-                        'password' => md5($password),
-                    ]
-                );
-        } catch (Exception $exception) {
-            Log::error('AOD Authentication failed: ' . $exception->getMessage());
+        $member = app(ForumProcedureService::class)->checkUser($username, $password);
 
-            return null;
-        }
-
-        if (empty($results)) {
-            return null;
-        }
-
-        $member = Arr::first($results);
-
-        if (! ($member->valid ?? false)) {
+        if (! $member || ! ($member->valid ?? false)) {
             return null;
         }
 
