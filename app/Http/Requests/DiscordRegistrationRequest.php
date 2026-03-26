@@ -62,7 +62,7 @@ class DiscordRegistrationRequest extends FormRequest
 
     public function persist(): void
     {
-        $user             = auth()->user();
+        $user              = auth()->user();
         $isFirstSubmission = ! $user->date_of_birth;
 
         $user->update([
