@@ -60,7 +60,7 @@
         <div class="section-card">
           <div class="section-header">
             <i class="fa fa-comments-o m-r-sm"></i>
-            Comments
+            Internal Comments (not visible to member)
             <span class="comment-count">{{ commentCount }}</span>
           </div>
           <div class="section-content">

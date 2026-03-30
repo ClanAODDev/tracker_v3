@@ -15,7 +15,7 @@
     "name": "chart-utils"
   },
   "resources/assets/js/applications.js": {
-    "file": "assets/applications-T6yBtMzp.js",
+    "file": "assets/applications-JDCLExU1.js",
     "name": "applications",
     "src": "resources/assets/js/applications.js",
     "isEntry": true,
@@ -24,7 +24,7 @@
       "__commonjsHelpers-Cpj98o6Y.js"
     ],
     "css": [
-      "assets/applications-BQIBqhZc.css"
+      "assets/applications-Css7kV5j.css"
     ]
   },
   "resources/assets/js/census-graph.js": {
