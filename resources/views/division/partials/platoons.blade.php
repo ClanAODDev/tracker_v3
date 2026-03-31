@@ -24,44 +24,54 @@
                 : 0;
             $voiceClass = $voiceRate >= 30 ? 'voice-high' : ($voiceRate >= 15 ? 'voice-mid' : 'voice-low');
         @endphp
-        <div class="col-md-6">
+        <div class="col-xs-12 col-md-6">
             <a href="{{ route('platoon', [$division->slug, $platoon->id]) }}"
-               class="panel panel-filled platoon" data-platoon-id="{{ $platoon->id }}">
-                <div class="panel-body platoon-card-layout">
-                    <div class="platoon-card-info">
-                        <h4 class="m-b-none">
-                            @if ($platoon->logo)
-                                <img src="{{ $platoon->logo }}"
-                                     class="pull-right platoon-icon-xl"/>
+               class="panel panel-filled platoon w-100" data-platoon-id="{{ $platoon->id }}">
+                <div class="panel-body platoon-card-body">
+                    <div class="platoon-section platoon-section-header">
+                        <div>
+                            <h4 class="m-b-none">{{ $platoon->name }}</h4>
+                            @if ($platoon->description)
+                                <p class="platoon-description m-b-none m-t-xs">{{ $platoon->description }}</p>
                             @endif
-                            {{ $platoon->name }}
-                        </h4>
-
-                        @if ($platoon->description)
-                            <p class="platoon-description text-muted m-b-sm">{{ $platoon->description }}</p>
+                        </div>
+                        @if ($platoon->logo)
+                            <img src="{{ $platoon->logo }}" class="platoon-icon-xl"/>
                         @endif
+                    </div>
 
-                        @if ($platoon->leader)
-                            <p class="list-group-item-text">
+                    <div class="platoon-section platoon-section-leader">
+                        <span class="platoon-section-label">Platoon Leader</span>
+                        <div class="platoon-leader-info">
+                            @if ($platoon->leader)
+                                <span class="rank-dot" style="background-color: {{ $platoon->leader->rank->getColorHex() }}"></span>
                                 {{ $platoon->leader->present()->rankName }}
-                            </p>
-                        @else
-                            <p class="list-group-item-text">TBA</p>
-                        @endif
+                            @else
+                                <span class="text-muted">TBA</span>
+                            @endif
+                        </div>
+                    </div>
 
-                        <div class="m-t-lg">
+                    <div class="platoon-section platoon-section-squads">
+                        <span class="platoon-section-label">Squads ({{ $platoon->squads->count() }})</span>
+                        <div class="platoon-squads-grid">
                             @foreach ($platoon->squads as $squad)
-                                <div class="squad label label-default m-2"
-                                     style="margin-right:15px;"
-                                     data-squad-id="{{ $squad->id }}"
-                                >
-                                    {{ $squad->leader ? $squad->leader->present()->rankName : "TBA" }}
+                                <div class="squad-card" data-squad-id="{{ $squad->id }}">
+                                    <div class="squad-name">{{ $squad->name }}</div>
+                                    <div class="squad-leader">
+                                        @if ($squad->leader)
+                                            <span class="rank-dot rank-dot-sm" style="background-color: {{ $squad->leader->rank->getColorHex() }}"></span>
+                                            {{ $squad->leader->present()->rankName }}
+                                        @else
+                                            <span class="text-muted">TBA</span>
+                                        @endif
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
                     </div>
 
-                    <div class="platoon-card-stats">
+                    <div class="platoon-section platoon-section-stats {{ $voiceClass }}" style="--voice-rate: {{ $voiceRate }}%">
                         <div class="platoon-stat {{ $voiceClass }}" title="Voice active ({{ $stats->activityThresholdDays }} days)">
                             <span class="platoon-stat-value">{{ $voiceRate }}%</span>
                             <span class="platoon-stat-label">Voice</span>

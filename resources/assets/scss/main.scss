@@ -4190,29 +4190,160 @@ a.squad-drop-target {
     }
 }
 
-.platoon-card-layout {
+.platoon-drop-targets {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
+    flex-wrap: wrap;
+
+    > .col-md-6 {
+        display: flex;
+        flex-direction: column;
+        float: none;
+    }
 }
 
-.platoon-card-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.platoon-card-stats {
+a.panel.platoon {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    align-items: flex-end;
+    flex: 1;
+}
+
+.panel.panel-filled .panel-body.platoon-card-body {
+    padding: 0;
+    overflow: hidden;
+    flex: 1;
+}
+
+.platoon-card-body {
+    display: flex;
+    flex-direction: column;
+}
+
+.platoon-section {
+    padding: 14px 18px;
+
+    & + .platoon-section {
+        border-top: 1px solid var(--overlay-light);
+    }
+}
+
+.platoon-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.15);
+
+    h4 {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--color-text);
+    }
+}
+
+.platoon-section-label {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--color-muted);
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+
+.platoon-section-leader {
+    flex: 1;
+    font-size: 13px;
+}
+
+.platoon-leader-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-white);
+}
+
+.rank-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
     flex-shrink: 0;
-    margin-left: auto;
+    display: inline-block;
+
+    &.rank-dot-sm {
+        width: 6px;
+        height: 6px;
+    }
+}
+
+.platoon-section-squads {
+    display: flex;
+    flex-direction: column;
+    min-height: 60px;
+}
+
+.platoon-squads-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.squad-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    padding: 6px 10px;
+    min-width: 110px;
+    flex: 1;
+}
+
+.squad-name {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-muted);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.squad-leader {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--color-white);
+}
+
+.platoon-section-stats {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        width: var(--voice-rate, 0%);
+        background: var(--voice-fill-color, var(--color-danger));
+        opacity: 0.15;
+        pointer-events: none;
+        transition: width 0.6s ease;
+    }
+
+    &.voice-high { --voice-fill-color: var(--color-success); }
+    &.voice-mid { --voice-fill-color: var(--color-accent-light); }
+
+    > * {
+        position: relative;
+    }
 }
 
 .platoon-stat {
-    text-align: right;
+    text-align: left;
 }
 
 .platoon-stat-value {
@@ -4247,7 +4378,8 @@ a.squad-drop-target {
 .platoon-description {
     font-size: 12px;
     font-style: italic;
-    opacity: 0.8;
+    opacity: 0.7;
+    margin-bottom: 6px;
 }
 
 .member-stat-card .panel-footer.milestone-badges {
