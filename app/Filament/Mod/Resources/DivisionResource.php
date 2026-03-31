@@ -13,6 +13,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -179,16 +180,22 @@ class DivisionResource extends Resource
                                                         'radio'    => 'Radio Buttons',
                                                     ])
                                                     ->required()
-                                                    ->live(),
-                                                TextInput::make('label')
-                                                    ->required()
-                                                    ->live(onBlur: true),
-                                                TextInput::make('helper_text')
-                                                    ->label('Helper Text')
-                                                    ->live(onBlur: true),
+                                                    ->live()
+                                                    ->columnSpan(2),
                                                 Toggle::make('required')
                                                     ->default(true)
-                                                    ->live(),
+                                                    ->live()
+                                                    ->columnSpan(1),
+                                                RichEditor::make('label')
+                                                    ->required()
+                                                    ->toolbarButtons(['bold', 'italic', 'underline', 'link'])
+                                                    ->live(onBlur: true)
+                                                    ->columnSpanFull(),
+                                                RichEditor::make('helper_text')
+                                                    ->label('Helper Text')
+                                                    ->toolbarButtons(['bold', 'italic', 'underline', 'link'])
+                                                    ->live(onBlur: true)
+                                                    ->columnSpanFull(),
                                                 Repeater::make('options')
                                                     ->schema([
                                                         TextInput::make('label')
@@ -200,9 +207,10 @@ class DivisionResource extends Resource
                                                     ->live()
                                                     ->columnSpanFull(),
                                             ])
-                                            ->columns(2)
+                                            ->columns(3)
                                             ->collapsible()
-                                            ->itemLabel(fn (array $state): ?string => $state['label'] ?? null),
+                                            ->collapsed()
+                                            ->itemLabel(fn (array $state): ?string => isset($state['label']) ? strip_tags($state['label']) : null),
                                     ]),
 
                             ]),

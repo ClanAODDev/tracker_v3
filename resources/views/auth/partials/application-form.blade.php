@@ -20,14 +20,14 @@
             @foreach ($applicationFields as $field)
                 <div class="form-group">
                     <label for="field_{{ $field->id }}">
-                        {{ $field->label }}
+                        {!! strip_tags($field->label, '<strong><em><u><a>') !!}
                         @if ($field->required)
                             <span class="text-danger">*</span>
                         @endif
                     </label>
 
                     @if ($field->helper_text)
-                        <p class="help-block text-muted m-b-sm">{{ $field->helper_text }}</p>
+                        <p class="help-block text-muted m-b-sm">{!! strip_tags($field->helper_text, '<strong><em><u><a>') !!}</p>
                     @endif
 
                     @if ($field->type === 'text')

@@ -51,7 +51,7 @@
               :key="index"
               class="response-item"
             >
-              <div class="response-label">{{ response.label }}</div>
+              <div class="response-label" v-html="response.label"></div>
               <div class="response-value" v-html="autolink(response.value)"></div>
             </div>
           </div>
