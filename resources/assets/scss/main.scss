@@ -4205,6 +4205,16 @@ a.panel.platoon {
     display: flex;
     flex-direction: column;
     flex: 1;
+    border-left: 3px solid transparent;
+    transition: border-color 0.2s, background-color 0.2s, transform 0.15s;
+
+    &.voice-high { border-left-color: var(--color-success); }
+    &.voice-mid  { border-left-color: var(--color-accent-light); }
+    &.voice-low  { border-left-color: var(--color-danger); }
+
+    &:hover {
+        transform: translateY(-2px);
+    }
 }
 
 .panel.panel-filled .panel-body.platoon-card-body {
@@ -4229,13 +4239,14 @@ a.panel.platoon {
 .platoon-section-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    background: rgba(0, 0, 0, 0.15);
+    align-items: flex-start;
+    background: rgba(0, 0, 0, 0.2);
 
     h4 {
         font-size: 15px;
-        font-weight: 600;
-        color: var(--color-text);
+        font-weight: 700;
+        color: var(--color-white);
+        letter-spacing: 0.2px;
     }
 }
 
@@ -4289,8 +4300,9 @@ a.panel.platoon {
 }
 
 .squad-card {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.04);
     border-radius: 4px;
+    border-left: 2px solid var(--rank-color, var(--overlay-light));
     padding: 6px 10px;
     min-width: 110px;
     flex: 1;

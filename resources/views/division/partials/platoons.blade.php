@@ -26,7 +26,7 @@
         @endphp
         <div class="col-xs-12 col-md-6">
             <a href="{{ route('platoon', [$division->slug, $platoon->id]) }}"
-               class="panel panel-filled platoon w-100" data-platoon-id="{{ $platoon->id }}">
+               class="panel panel-filled platoon w-100 {{ $voiceClass }}" data-platoon-id="{{ $platoon->id }}">
                 <div class="panel-body platoon-card-body">
                     <div class="platoon-section platoon-section-header">
                         <div>
@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="platoon-section platoon-section-leader">
-                        <span class="platoon-section-label">Platoon Leader</span>
+                        <span class="platoon-section-label">{{ $division->locality('platoon') }} Leader</span>
                         <div class="platoon-leader-info">
                             @if ($platoon->leader)
                                 <span class="rank-dot" style="background-color: {{ $platoon->leader->rank->getColorHex() }}"></span>
@@ -53,10 +53,11 @@
                     </div>
 
                     <div class="platoon-section platoon-section-squads">
-                        <span class="platoon-section-label">Squads ({{ $platoon->squads->count() }})</span>
+                        <span class="platoon-section-label">{{ Str::plural($division->locality('squad')) }} ({{ $platoon->squads->count() }})</span>
                         <div class="platoon-squads-grid">
                             @foreach ($platoon->squads as $squad)
-                                <div class="squad-card" data-squad-id="{{ $squad->id }}">
+                                <div class="squad-card" data-squad-id="{{ $squad->id }}"
+                                     @if ($squad->leader) style="--rank-color: {{ $squad->leader->rank->getColorHex() }}" @endif>
                                     <div class="squad-name">{{ $squad->name }}</div>
                                     <div class="squad-leader">
                                         @if ($squad->leader)
