@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\MemberResource\Pages;
 
+use App\Enums\ActivityType;
 use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Filament\Forms\Components\PartTimeDivisionsForm;
 use App\Filament\Mod\Resources\MemberResource;
@@ -113,6 +114,8 @@ class EditMember extends EditRecord
                         impersonatingMemberId: auth()->user()->member->clan_id,
                         memberIdBeingRemoved: $member->clan_id,
                     );
+
+                    $member->recordActivity(ActivityType::REMOVED);
 
                     $member->reset();
 

@@ -4238,15 +4238,28 @@ a.panel.platoon {
 
 .platoon-section-header {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    align-items: baseline;
+    gap: 10px;
     background: rgba(0, 0, 0, 0.2);
+    flex-wrap: wrap;
 
     h4 {
         font-size: 15px;
         font-weight: 700;
         color: var(--color-white);
         letter-spacing: 0.2px;
+        flex-shrink: 0;
+    }
+}
+
+.platoon-header-description {
+    flex: 1;
+    text-align: right;
+    min-width: 0;
+
+    @media (max-width: 767px) {
+        flex-basis: 100%;
+        text-align: left;
     }
 }
 
