@@ -2,10 +2,12 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\ForumGroup;
 use App\Enums\Rank;
 use App\Enums\Role;
 use App\Models\User;
 use App\Services\AODForumService;
+use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Mockery;
@@ -38,6 +40,20 @@ class RecruitingControllerTest extends TestCase
         $mock = Mockery::mock(AODForumService::class);
         $mock->shouldReceive('getUserByEmail')->andReturn(null);
         $this->app->instance(AODForumService::class, $mock);
+    }
+
+    protected function mockProcedureService(array $overrides = []): Mockery\MockInterface
+    {
+        $mock = Mockery::mock(ForumProcedureService::class);
+        $mock->shouldReceive('getUser')->byDefault()->andReturn(
+            array_key_exists('getUser', $overrides) ? $overrides['getUser'] : null
+        );
+        $mock->shouldReceive('setDiscordInfo')->byDefault()->andReturn(
+            array_key_exists('setDiscordInfo', $overrides) ? $overrides['setDiscordInfo'] : (object) ['success' => true]
+        );
+        $this->app->instance(ForumProcedureService::class, $mock);
+
+        return $mock;
     }
 
     public function test_index_displays_recruit_page()
@@ -222,6 +238,7 @@ class RecruitingControllerTest extends TestCase
     public function test_submit_discord_recruitment_creates_member(): void
     {
         $this->mockForumUserLookup(12345);
+        $this->mockProcedureService();
 
         $officer     = $this->createOfficer();
         $division    = $this->createActiveDivision();
@@ -294,6 +311,7 @@ class RecruitingControllerTest extends TestCase
     public function test_submit_discord_recruitment_links_user_to_member(): void
     {
         $this->mockForumUserLookup(67890);
+        $this->mockProcedureService();
 
         $officer     = $this->createOfficer();
         $division    = $this->createActiveDivision();
@@ -321,6 +339,7 @@ class RecruitingControllerTest extends TestCase
     public function test_submit_discord_recruitment_uses_existing_forum_account(): void
     {
         $this->mockForumUserLookup(54321);
+        $this->mockProcedureService();
 
         $officer     = $this->createOfficer();
         $division    = $this->createActiveDivision();
@@ -346,5 +365,86 @@ class RecruitingControllerTest extends TestCase
 
         $pendingUser->refresh();
         $this->assertNotNull($pendingUser->member_id);
+    }
+
+    public function test_discord_recruitment_calls_set_discord_info(): void
+    {
+        $this->mockForumUserLookup(11111);
+
+        $mock = $this->mockProcedureService();
+        $mock->shouldReceive('setDiscordInfo')
+            ->once()
+            ->with(11111, '555666777', 'DiscordUser#0001')
+            ->andReturn((object) ['success' => true]);
+
+        $officer     = $this->createOfficer();
+        $division    = $this->createActiveDivision();
+        $platoon     = $this->createPlatoon($division);
+        $pendingUser = User::factory()->pending()->create([
+            'discord_id'       => '555666777',
+            'discord_username' => 'DiscordUser#0001',
+        ]);
+
+        $this->actingAs($officer)
+            ->post(route('recruiting.addMember'), [
+                'division'        => $division->slug,
+                'pending_user_id' => $pendingUser->id,
+                'forum_name'      => 'DiscordRecruit',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
+            ]);
+    }
+
+    public function test_discord_recruitment_aborts_when_set_discord_info_fails(): void
+    {
+        $this->mockForumUserLookup(33333);
+        $this->mockProcedureService(['setDiscordInfo' => null]);
+
+        $officer     = $this->createOfficer();
+        $division    = $this->createActiveDivision();
+        $platoon     = $this->createPlatoon($division);
+        $pendingUser = User::factory()->pending()->create([
+            'discord_id' => '111222333',
+        ]);
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'        => $division->slug,
+                'pending_user_id' => $pendingUser->id,
+                'forum_name'      => 'FailedDiscordRecruit',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
+            ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('message', 'Failed to link Discord account on the forums. Please try again or contact an administrator.');
+        $this->assertDatabaseMissing('members', ['name' => 'FailedDiscordRecruit']);
+    }
+
+    public function test_discord_recruitment_blocked_by_ineligible_forum_group(): void
+    {
+        $this->mockForumUserLookup(44444);
+        $this->mockProcedureService([
+            'getUser' => (object) ['usergroupid' => ForumGroup::BANNED->value],
+        ]);
+
+        $officer     = $this->createOfficer();
+        $division    = $this->createActiveDivision();
+        $platoon     = $this->createPlatoon($division);
+        $pendingUser = User::factory()->pending()->create([
+            'discord_id' => '444555666',
+        ]);
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'        => $division->slug,
+                'pending_user_id' => $pendingUser->id,
+                'forum_name'      => 'BlockedRecruit',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
+            ]);
+
+        $response->assertStatus(422);
+        $this->assertDatabaseMissing('members', ['name' => 'BlockedRecruit']);
     }
 }

@@ -26,6 +26,7 @@ class AddClanMemberTest extends TestCase
         config(['aod.token' => 'test-token']);
         $this->procedureService = Mockery::mock(ForumProcedureService::class);
         $this->procedureService->shouldReceive('getUser')->byDefault()->andReturn(null);
+        $this->procedureService->shouldReceive('setDiscordInfo')->byDefault()->andReturn(null);
     }
 
     public function test_job_can_be_instantiated()
@@ -113,6 +114,38 @@ class AddClanMemberTest extends TestCase
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('banned');
         $job->handle($this->procedureService);
+    }
+
+    public function test_job_sets_discord_info_before_adding_member(): void
+    {
+        Http::fake([
+            '*' => Http::response('saved_user_x_successfully', 200),
+        ]);
+
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember([
+            'division_id' => $division->id,
+            'discord_id'  => '987654321',
+            'discord'     => 'TestUser#1234',
+        ]);
+
+        $callOrder = [];
+
+        $this->procedureService->shouldReceive('setDiscordInfo')
+            ->once()
+            ->with($member->clan_id, '987654321', 'TestUser#1234')
+            ->andReturnUsing(function () use (&$callOrder) {
+                $callOrder[] = 'setDiscordInfo';
+            });
+
+        Http::assertNothingSent();
+
+        $job = new AddClanMember($member, 12345);
+        $job->handle($this->procedureService);
+
+        $this->assertContains('setDiscordInfo', $callOrder);
+
+        Http::assertSent(fn ($req) => str_contains($req->url(), 'do=addaod'));
     }
 
     public function test_job_diagnoses_awaiting_email_on_failure()
