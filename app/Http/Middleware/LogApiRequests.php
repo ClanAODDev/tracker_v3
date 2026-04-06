@@ -15,7 +15,7 @@ class LogApiRequests
 
         $response = $next($request);
 
-        if ($this->shouldIgnore($request)) {
+        if (! config('logging.channels.api.enabled', true) || $this->shouldIgnore($request)) {
             return $response;
         }
 
