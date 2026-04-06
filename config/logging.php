@@ -92,6 +92,13 @@ return [
             'level'  => 'debug',
         ],
 
+        'recruiting' => [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/recruiting.log'),
+            'level'  => 'debug',
+            'days'   => 30,
+        ],
+
         'api' => [
             'driver' => 'daily',
             'path'   => storage_path('logs/api.log'),
