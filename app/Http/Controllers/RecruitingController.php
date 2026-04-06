@@ -66,8 +66,6 @@ class RecruitingController extends Controller
 
             $forumService        = app(AODForumService::class);
             $forumUser           = $forumService->getUserByEmail($pendingUser->email);
-            $reusingForumAccount = $forumUser !== null;
-
             if (! $forumUser && $pendingUser->forum_password) {
                 $forumUser = $this->createForumAccountForPendingUser(
                     $pendingUser,
@@ -103,7 +101,7 @@ class RecruitingController extends Controller
                 }
             }
 
-            if ($reusingForumAccount && $pendingUser->discord_id) {
+            if ($pendingUser->discord_id) {
                 $this->procedureService->setDiscordInfo(
                     userId: $clanId,
                     discordId: $pendingUser->discord_id,
