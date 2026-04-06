@@ -141,27 +141,42 @@ class RecruitingController extends Controller
                 }
             }
 
-            if ($pendingUser->discord_id) {
-                \Log::info('Setting discord info on forum profile', [
-                    'clan_id'          => $clanId,
-                    'discord_id'       => $pendingUser->discord_id,
-                    'discord_username' => $pendingUser->discord_username,
-                ]);
-
-                $discordResult = $this->procedureService->setDiscordInfo(
-                    userId: $clanId,
-                    discordId: $pendingUser->discord_id,
-                    discordTag: $pendingUser->discord_username ?? '',
-                );
-
-                \Log::info('Discord info set on forum profile', [
-                    'clan_id'        => $clanId,
-                    'procedure_result' => $discordResult ? (array) $discordResult : null,
-                ]);
-            } else {
-                \Log::warning('Skipping setDiscordInfo — pending user has no discord_id', [
+            if (! $pendingUser->discord_id) {
+                \Log::warning('Discord recruitment aborted — pending user has no discord_id', [
                     'pending_user_id' => $pendingUser->id,
                 ]);
+
+                return response()->json([
+                    'message' => 'This user has no Discord ID on record. They may need to re-authenticate via Discord.',
+                ], 422);
+            }
+
+            \Log::info('Setting discord info on forum profile', [
+                'clan_id'          => $clanId,
+                'discord_id'       => $pendingUser->discord_id,
+                'discord_username' => $pendingUser->discord_username,
+            ]);
+
+            $discordResult = $this->procedureService->setDiscordInfo(
+                userId: $clanId,
+                discordId: $pendingUser->discord_id,
+                discordTag: $pendingUser->discord_username ?? '',
+            );
+
+            \Log::info('setDiscordInfo procedure result', [
+                'clan_id'          => $clanId,
+                'procedure_result' => $discordResult ? (array) $discordResult : null,
+            ]);
+
+            if (! $discordResult) {
+                \Log::error('Discord recruitment aborted — setDiscordInfo returned null', [
+                    'clan_id'    => $clanId,
+                    'discord_id' => $pendingUser->discord_id,
+                ]);
+
+                return response()->json([
+                    'message' => 'Failed to link Discord account on the forums. Please try again or contact an administrator.',
+                ], 422);
             }
 
             $member = $this->recruitmentService->createMember(

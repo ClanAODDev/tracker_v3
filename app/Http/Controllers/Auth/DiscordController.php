@@ -10,6 +10,7 @@ use App\Models\DivisionApplication;
 use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
+use App\Services\ForumProcedureService;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,7 +22,8 @@ use Laravel\Socialite\Two\InvalidStateException;
 class DiscordController extends Controller
 {
     public function __construct(
-        protected ClanForumPermissions $forumPermissions
+        protected ClanForumPermissions $forumPermissions,
+        protected ForumProcedureService $procedureService,
     ) {}
 
     public function redirect()
@@ -196,6 +198,14 @@ class DiscordController extends Controller
 
         if ($user->member) {
             $this->forumPermissions->handleAccountRoles($user->member->clan_id);
+
+            if ($user->discord_id) {
+                $this->procedureService->setDiscordInfo(
+                    userId: $user->member->clan_id,
+                    discordId: $user->discord_id,
+                    discordTag: $user->discord_username ?? '',
+                );
+            }
         }
 
         return $user->isPendingRegistration()
@@ -218,6 +228,12 @@ class DiscordController extends Controller
         Auth::login(user: $user, remember: true);
 
         $this->forumPermissions->handleAccountRoles($member->clan_id);
+
+        $this->procedureService->setDiscordInfo(
+            userId: $member->clan_id,
+            discordId: $discordId,
+            discordTag: $discordUsername,
+        );
 
         return redirect()->intended('/');
     }
