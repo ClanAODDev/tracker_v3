@@ -21,6 +21,12 @@ class AddClanMember implements ShouldQueue
 
     public function handle(ForumProcedureService $procedureService): void
     {
+        $procedureService->setDiscordInfo(
+            userId: $this->member->clan_id,
+            discordId: $this->member->discord_id ?? '',
+            discordTag: $this->member->discord ?? '',
+        );
+
         try {
             AODForumService::addForumMember(
                 impersonatingMemberId: $this->admin_id,
