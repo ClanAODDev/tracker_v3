@@ -64,15 +64,39 @@ class RecruitingController extends Controller
                 ], 422);
             }
 
-            $forumService        = app(AODForumService::class);
-            $forumUser           = $forumService->getUserByEmail($pendingUser->email);
+            \Log::info('Discord recruitment started', [
+                'pending_user_id'  => $pendingUser->id,
+                'discord_id'       => $pendingUser->discord_id,
+                'discord_username' => $pendingUser->discord_username,
+                'email'            => $pendingUser->email,
+                'has_password'     => ! empty($pendingUser->forum_password),
+                'recruiter_id'     => $recruiterId,
+            ]);
+
+            $forumService = app(AODForumService::class);
+            $forumUser    = $forumService->getUserByEmail($pendingUser->email);
+
+            \Log::info('Forum account lookup by email', [
+                'found'   => $forumUser !== null,
+                'user_id' => $forumUser ? $forumUser->userid : null,
+            ]);
+
             if (! $forumUser && $pendingUser->forum_password) {
+                \Log::info('No existing forum account — creating new account', [
+                    'forum_name' => $request->forum_name,
+                ]);
+
                 $forumUser = $this->createForumAccountForPendingUser(
                     $pendingUser,
                     $request->forum_name,
                     $recruiterId,
                     $forumService,
                 );
+
+                \Log::info('Forum account creation result', [
+                    'success' => $forumUser !== null,
+                    'user_id' => $forumUser ? $forumUser->userid : null,
+                ]);
 
                 if (! $forumUser) {
                     return response()->json([
@@ -82,6 +106,10 @@ class RecruitingController extends Controller
             }
 
             if (! $forumUser) {
+                \Log::warning('Discord recruitment aborted — no forum account and no password', [
+                    'pending_user_id' => $pendingUser->id,
+                ]);
+
                 return response()->json([
                     'message' => 'No forum account found for this user and no password is available to create one. '
                         . 'The user may need to re-register through Discord.',
@@ -91,10 +119,22 @@ class RecruitingController extends Controller
             $clanId       = (int) $forumUser->userid;
             $forumProfile = $this->procedureService->getUser($clanId);
 
+            \Log::info('Forum profile fetched', [
+                'clan_id'      => $clanId,
+                'found'        => $forumProfile !== null,
+                'usergroupid'  => $forumProfile->usergroupid ?? null,
+                'membergroupids' => $forumProfile->membergroupids ?? null,
+            ]);
+
             if ($forumProfile && property_exists($forumProfile, 'usergroupid')) {
                 $group = ForumGroup::tryFrom((int) $forumProfile->usergroupid);
 
                 if ($group && ! $group->isEligibleForRecruitment()) {
+                    \Log::warning('Discord recruitment blocked — ineligible forum group', [
+                        'clan_id' => $clanId,
+                        'group'   => $group->name,
+                    ]);
+
                     return response()->json([
                         'message' => $group->recruitmentRejectionReason(),
                     ], 422);
@@ -102,11 +142,26 @@ class RecruitingController extends Controller
             }
 
             if ($pendingUser->discord_id) {
-                $this->procedureService->setDiscordInfo(
+                \Log::info('Setting discord info on forum profile', [
+                    'clan_id'          => $clanId,
+                    'discord_id'       => $pendingUser->discord_id,
+                    'discord_username' => $pendingUser->discord_username,
+                ]);
+
+                $discordResult = $this->procedureService->setDiscordInfo(
                     userId: $clanId,
                     discordId: $pendingUser->discord_id,
                     discordTag: $pendingUser->discord_username ?? '',
                 );
+
+                \Log::info('Discord info set on forum profile', [
+                    'clan_id'        => $clanId,
+                    'procedure_result' => $discordResult ? (array) $discordResult : null,
+                ]);
+            } else {
+                \Log::warning('Skipping setDiscordInfo — pending user has no discord_id', [
+                    'pending_user_id' => $pendingUser->id,
+                ]);
             }
 
             $member = $this->recruitmentService->createMember(
@@ -119,6 +174,11 @@ class RecruitingController extends Controller
                 $request->ingame_name,
                 $recruiterId
             );
+
+            \Log::info('Member created via Discord recruitment', [
+                'member_id' => $member->id,
+                'clan_id'   => $clanId,
+            ]);
 
             $this->recruitmentService->createMemberRequest($member, $division, $recruiterId);
 
