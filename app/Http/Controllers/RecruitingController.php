@@ -512,16 +512,28 @@ class RecruitingController extends Controller
             'discord_username' => $pendingUser->discord_username,
         ]);
 
-        $this->procedureService->setDiscordInfo(
+        $discordResult = $this->procedureService->setDiscordInfo(
             userId: $clanId,
             discordId: $pendingUser->discord_id,
             discordTag: $pendingUser->discord_username ?? '',
         );
 
         \Log::channel('recruiting')->info('Discord info set on forum profile', [
-            'clan_id'    => $clanId,
-            'discord_id' => $pendingUser->discord_id,
+            'clan_id'       => $clanId,
+            'discord_id'    => $pendingUser->discord_id,
+            'rows_matched'  => $discordResult?->rows_matched,
+            'rows_affected' => $discordResult?->rows_affected,
         ]);
+
+        if (! $discordResult || ! $discordResult->rows_matched) {
+            \Log::channel('recruiting')->error('Discord recruitment aborted — forum account not found', [
+                'clan_id' => $clanId,
+            ]);
+
+            return response()->json([
+                'message' => 'Forum account not found for this user. Please contact an administrator.',
+            ], 422);
+        }
 
         $member = $this->recruitmentService->createMember(
             $clanId,

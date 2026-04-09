@@ -49,7 +49,7 @@ class RecruitingControllerTest extends TestCase
             array_key_exists('getUser', $overrides) ? $overrides['getUser'] : null
         );
         $mock->shouldReceive('setDiscordInfo')->byDefault()->andReturn(
-            array_key_exists('setDiscordInfo', $overrides) ? $overrides['setDiscordInfo'] : (object) ['success' => true]
+            array_key_exists('setDiscordInfo', $overrides) ? $overrides['setDiscordInfo'] : (object) ['rows_matched' => 1, 'rows_affected' => 1]
         );
         $this->app->instance(ForumProcedureService::class, $mock);
 
@@ -393,6 +393,32 @@ class RecruitingControllerTest extends TestCase
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
             ]);
+    }
+
+    public function test_discord_recruitment_aborts_when_forum_account_not_found(): void
+    {
+        $this->mockForumUserLookup(33333);
+        $this->mockProcedureService(['setDiscordInfo' => (object) ['rows_matched' => 0, 'rows_affected' => 0]]);
+
+        $officer     = $this->createOfficer();
+        $division    = $this->createActiveDivision();
+        $platoon     = $this->createPlatoon($division);
+        $pendingUser = User::factory()->pending()->create([
+            'discord_id' => '111222333',
+        ]);
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'        => $division->slug,
+                'pending_user_id' => $pendingUser->id,
+                'forum_name'      => 'MissingForumRecruit',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
+            ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonPath('message', 'Forum account not found for this user. Please contact an administrator.');
+        $this->assertDatabaseMissing('members', ['name' => 'MissingForumRecruit']);
     }
 
     public function test_discord_recruitment_blocked_by_ineligible_forum_group(): void

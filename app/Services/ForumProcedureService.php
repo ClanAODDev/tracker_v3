@@ -47,9 +47,9 @@ class ForumProcedureService
         ]);
     }
 
-    public function setDiscordInfo(int $userId, string $discordId, string $discordTag): void
+    public function setDiscordInfo(int $userId, string $discordId, string $discordTag): ?object
     {
-        $this->call(self::SET_DISCORD_INFO, [
+        return $this->call(self::SET_DISCORD_INFO, [
             'user_id'     => $userId,
             'discord_id'  => $discordId,
             'discord_tag' => $discordTag,

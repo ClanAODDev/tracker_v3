@@ -26,7 +26,7 @@ class AddClanMemberTest extends TestCase
         config(['aod.token' => 'test-token']);
         $this->procedureService = Mockery::mock(ForumProcedureService::class);
         $this->procedureService->shouldReceive('getUser')->byDefault()->andReturn(null);
-        $this->procedureService->shouldReceive('setDiscordInfo')->byDefault()->andReturn(null);
+        $this->procedureService->shouldReceive('setDiscordInfo')->byDefault()->andReturn((object) ['rows_matched' => 1, 'rows_affected' => 1]);
     }
 
     public function test_job_can_be_instantiated()
