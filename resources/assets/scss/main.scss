@@ -4238,29 +4238,39 @@ a.panel.platoon {
 
 .platoon-section-header {
     display: flex;
-    align-items: baseline;
-    gap: 10px;
+    align-items: center;
+    gap: 12px;
     background: rgba(0, 0, 0, 0.2);
-    flex-wrap: wrap;
 
     h4 {
         font-size: 15px;
         font-weight: 700;
         color: var(--color-white);
         letter-spacing: 0.2px;
-        flex-shrink: 0;
     }
 }
 
-.platoon-header-description {
-    flex: 1;
-    text-align: right;
-    min-width: 0;
+.platoon-logo-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid var(--overlay-light);
+}
 
-    @media (max-width: 767px) {
-        flex-basis: 100%;
-        text-align: left;
-    }
+.platoon-header-text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.platoon-description {
+    font-size: 12px;
+    font-style: italic;
+    opacity: 0.7;
 }
 
 .platoon-section-label {
@@ -4400,12 +4410,6 @@ a.panel.platoon {
     color: var(--color-danger);
 }
 
-.platoon-description {
-    font-size: 12px;
-    font-style: italic;
-    opacity: 0.7;
-    margin-bottom: 6px;
-}
 
 .member-stat-card .panel-footer.milestone-badges {
     background: rgba(0,0,0,0.2);

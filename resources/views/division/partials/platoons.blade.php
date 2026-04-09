@@ -29,13 +29,15 @@
                class="panel panel-filled platoon w-100 {{ $voiceClass }}" data-platoon-id="{{ $platoon->id }}">
                 <div class="panel-body platoon-card-body">
                     <div class="platoon-section platoon-section-header">
-                        <h4 class="m-b-none platoon-header-name">{{ $platoon->name }}</h4>
-                        @if ($platoon->description)
-                            <p class="platoon-description platoon-header-description m-b-none">{{ $platoon->description }}</p>
-                        @endif
                         @if ($platoon->logo)
-                            <img src="{{ $platoon->logo }}" class="platoon-icon-xl"/>
+                            <img src="{{ $platoon->logo }}" class="platoon-logo-avatar"/>
                         @endif
+                        <div class="platoon-header-text">
+                            <h4 class="m-b-none platoon-header-name">{{ $platoon->name }}</h4>
+                            @if ($platoon->description)
+                                <p class="platoon-description m-b-none">{{ $platoon->description }}</p>
+                            @endif
+                        </div>
                     </div>
 
                     <div class="platoon-section platoon-section-leader">
