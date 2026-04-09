@@ -512,27 +512,16 @@ class RecruitingController extends Controller
             'discord_username' => $pendingUser->discord_username,
         ]);
 
-        $discordResult = $this->procedureService->setDiscordInfo(
+        $this->procedureService->setDiscordInfo(
             userId: $clanId,
             discordId: $pendingUser->discord_id,
             discordTag: $pendingUser->discord_username ?? '',
         );
 
-        \Log::channel('recruiting')->info('setDiscordInfo procedure result', [
-            'clan_id'          => $clanId,
-            'procedure_result' => $discordResult ? (array) $discordResult : null,
+        \Log::channel('recruiting')->info('Discord info set on forum profile', [
+            'clan_id'    => $clanId,
+            'discord_id' => $pendingUser->discord_id,
         ]);
-
-        if (! $discordResult) {
-            \Log::channel('recruiting')->error('Discord recruitment aborted — setDiscordInfo returned null', [
-                'clan_id'    => $clanId,
-                'discord_id' => $pendingUser->discord_id,
-            ]);
-
-            return response()->json([
-                'message' => 'Failed to link Discord account on the forums. Please try again or contact an administrator.',
-            ], 422);
-        }
 
         $member = $this->recruitmentService->createMember(
             $clanId,

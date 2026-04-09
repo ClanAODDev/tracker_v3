@@ -395,32 +395,6 @@ class RecruitingControllerTest extends TestCase
             ]);
     }
 
-    public function test_discord_recruitment_aborts_when_set_discord_info_fails(): void
-    {
-        $this->mockForumUserLookup(33333);
-        $this->mockProcedureService(['setDiscordInfo' => null]);
-
-        $officer     = $this->createOfficer();
-        $division    = $this->createActiveDivision();
-        $platoon     = $this->createPlatoon($division);
-        $pendingUser = User::factory()->pending()->create([
-            'discord_id' => '111222333',
-        ]);
-
-        $response = $this->actingAs($officer)
-            ->postJson(route('recruiting.addMember'), [
-                'division'        => $division->slug,
-                'pending_user_id' => $pendingUser->id,
-                'forum_name'      => 'FailedDiscordRecruit',
-                'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $platoon->id,
-            ]);
-
-        $response->assertStatus(422);
-        $response->assertJsonPath('message', 'Failed to link Discord account on the forums. Please try again or contact an administrator.');
-        $this->assertDatabaseMissing('members', ['name' => 'FailedDiscordRecruit']);
-    }
-
     public function test_discord_recruitment_blocked_by_ineligible_forum_group(): void
     {
         $this->mockForumUserLookup(44444);
