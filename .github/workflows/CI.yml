@@ -109,6 +109,10 @@ jobs:
 
   code-quality:
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
