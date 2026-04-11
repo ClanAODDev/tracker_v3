@@ -30,7 +30,7 @@ class TicketReaction extends Notification implements ShouldQueue
     public function via($notifiable)
     {
         if (empty($notifiable->external_message_id)) {
-            return [];
+            throw new \RuntimeException('Ticket external_message_id not yet set — will retry');
         }
 
         return [BotChannel::class];

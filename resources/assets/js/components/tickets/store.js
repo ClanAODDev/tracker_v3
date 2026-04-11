@@ -204,13 +204,15 @@ store.refreshTicket = () => {
     if (!store.selectedTicketId) return;
 
     const previousCommentCount = store.currentTicket?.comments?.length || 0;
+    const previousOwnerId = store.currentTicket?.owner?.id || null;
 
     axios.get(`${store.base_url}/api/tickets/${store.selectedTicketId}`)
         .then((response) => {
             if (store.currentTicket && response.data.ticket) {
                 const newCommentCount = response.data.ticket.comments?.length || 0;
+                const newOwnerId = response.data.ticket.owner?.id || null;
 
-                if (newCommentCount > previousCommentCount) {
+                if (newCommentCount > previousCommentCount || newOwnerId !== previousOwnerId) {
                     store.playNotificationSound();
                 }
 
