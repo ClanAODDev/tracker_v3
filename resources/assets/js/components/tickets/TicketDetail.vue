@@ -142,7 +142,7 @@
             Description
           </div>
           <div class="section-content">
-            <p class="description-text" v-html="autolink(store.currentTicket.description)"></p>
+            <p class="description-text" v-html="renderText(store.currentTicket.description)"></p>
           </div>
         </div>
 
@@ -180,7 +180,7 @@
                   </div>
                 </div>
 
-                <div v-else class="comment-item" :class="{ 'comment-admin': comment.user?.is_admin }">
+                <div v-else class="comment-item" :class="{ 'comment-admin': comment.user?.id === store.currentTicket.owner?.id }">
                   <div class="comment-avatar">
                     <i class="fa fa-user"></i>
                   </div>
@@ -188,11 +188,11 @@
                     <div class="comment-header">
                       <span class="comment-author">
                         {{ comment.user?.name ?? 'Unknown' }}
-                        <span v-if="comment.user?.is_admin" class="admin-badge">Admin</span>
+                        <span v-if="comment.user?.id === store.currentTicket.owner?.id" class="admin-badge">Support</span>
                       </span>
                       <span class="comment-time">{{ store.formatRelativeDate(comment.created_at) }}</span>
                     </div>
-                    <div class="comment-body" v-html="autolink(comment.body)"></div>
+                    <div class="comment-body" v-html="renderText(comment.body)"></div>
                   </div>
                 </div>
               </template>
@@ -243,6 +243,59 @@
 
 <script>
 import store from './store.js';
+
+function escapeAndLink(text) {
+  const escaped = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+  return escaped.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+}
+
+function renderInline(text) {
+  const result = [];
+  const inlineRegex = /`([^`\n]+)`/g;
+  let lastIndex = 0;
+  let match;
+  while ((match = inlineRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      result.push(escapeAndLink(text.slice(lastIndex, match.index)));
+    }
+    const code = match[1]
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    result.push(`<code>${code}</code>`);
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    result.push(escapeAndLink(text.slice(lastIndex)));
+  }
+  return result.join('');
+}
+
+function renderText(text) {
+  if (!text) return '';
+  const result = [];
+  const fenceRegex = /```(?:\w*)\n?([\s\S]*?)```/g;
+  let lastIndex = 0;
+  let match;
+  while ((match = fenceRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      result.push(renderInline(text.slice(lastIndex, match.index)));
+    }
+    const code = match[1]
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+    result.push(`<pre><code>${code}</code></pre>`);
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    result.push(renderInline(text.slice(lastIndex)));
+  }
+  return result.join('');
+}
 
 const SYSTEM_PATTERNS = [
   'owned the ticket',
@@ -400,15 +453,6 @@ export default {
       return body;
     },
 
-    autolink(text) {
-      if (!text) return '';
-      const escaped = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
-      const urlRegex = /(https?:\/\/[^\s<]+)/g;
-      return escaped.replace(urlRegex, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-    },
   },
 };
 </script>
@@ -720,6 +764,36 @@ export default {
 .comment-body :deep(a):hover,
 .description-text :deep(a):hover {
   text-decoration: underline;
+}
+
+.comment-body :deep(pre),
+.description-text :deep(pre) {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--overlay-light);
+  border-radius: 4px;
+  padding: 10px 12px;
+  margin: 8px 0;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.comment-body :deep(pre code),
+.description-text :deep(pre code) {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 12px;
+  color: var(--color-gray-300);
+}
+
+.comment-body :deep(code),
+.description-text :deep(code) {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--overlay-light);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 12px;
+  color: var(--color-gray-300);
 }
 
 .comment-form {
