@@ -42,7 +42,7 @@ class SgtTrainings implements Report
         }
 
         $separator = '+' . implode('+', array_map(fn ($w) => str_repeat('-', $w), $widths)) . '+';
-        $header = '|' . implode('|', array_map(fn ($key, $label) => str_pad($label, $widths[$key]), array_keys($columns), $columns)) . '|';
+        $header    = '|' . implode('|', array_map(fn ($key, $label) => str_pad($label, $widths[$key]), array_keys($columns), $columns)) . '|';
 
         $lines = [$separator, $header, $separator];
 
