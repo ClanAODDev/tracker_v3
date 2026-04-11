@@ -365,6 +365,7 @@ export default {
   },
 
   methods: {
+    renderText,
     reload() {
       if (store.selectedTicketId) {
         store.loadTicket(store.selectedTicketId);
