@@ -506,23 +506,18 @@ class RecruitingController extends Controller
             }
         }
 
-        \Log::channel('recruiting')->info('Setting discord info on forum profile', [
-            'clan_id'          => $clanId,
-            'discord_id'       => $pendingUser->discord_id,
-            'discord_username' => $pendingUser->discord_username,
-        ]);
-
         $discordResult = $this->procedureService->setDiscordInfo(
             userId: $clanId,
             discordId: $pendingUser->discord_id,
             discordTag: $pendingUser->discord_username ?? '',
         );
 
-        \Log::channel('recruiting')->info('Discord info set on forum profile', [
-            'clan_id'       => $clanId,
-            'discord_id'    => $pendingUser->discord_id,
-            'rows_matched'  => $discordResult?->rows_matched,
-            'rows_affected' => $discordResult?->rows_affected,
+        \Log::channel('recruiting')->info('Set discord info on forum profile', [
+            'clan_id'          => $clanId,
+            'discord_id'       => $pendingUser->discord_id,
+            'discord_username' => $pendingUser->discord_username,
+            'rows_matched'     => $discordResult?->rows_matched,
+            'rows_affected'    => $discordResult?->rows_affected,
         ]);
 
         if (! $discordResult || ! $discordResult->rows_matched) {
