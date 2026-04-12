@@ -5,7 +5,7 @@ namespace App\Models\Bot\Reports;
 use App\Models\Bot\Report;
 use Illuminate\Support\Facades\DB;
 
-class SgtTrainings implements Report
+class SgtTraining implements Report
 {
     public function handle(): string
     {
