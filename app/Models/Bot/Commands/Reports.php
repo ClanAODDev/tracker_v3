@@ -22,7 +22,7 @@ class Reports extends Base implements Command
         $class = sprintf('App\Models\Bot\Reports\%s', Str::studly($validated['value']));
 
         if (! class_exists($class)) {
-            return ['message' => "Report '{$validated['name']}' not found."];
+            return ['message' => "Report '{$validated['value']}' not found."];
         }
 
         $result = (new $class)->handle();
