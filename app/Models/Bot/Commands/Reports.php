@@ -16,10 +16,10 @@ class Reports extends Base implements Command
     public function handle()
     {
         $validated = $this->request->validate([
-            'name' => 'required|string',
+            'value' => 'required|string',
         ]);
 
-        $class = sprintf('App\Models\Bot\Reports\%s', Str::studly($validated['name']));
+        $class = sprintf('App\Models\Bot\Reports\%s', Str::studly($validated['value']));
 
         if (! class_exists($class)) {
             return ['message' => "Report '{$validated['name']}' not found."];
