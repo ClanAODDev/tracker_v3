@@ -22,7 +22,7 @@ class NotifyNewTicketOwner extends BaseNotification
 
         return new BotDMMessage()
             ->to($this->owner->member?->discord)
-            ->message('You were assigned to a ticket (' . route('help.tickets.show', $ticket) . "){$attribution}")
+            ->message("You were assigned a {$ticket->type->name} ticket (" . route('help.tickets.show', $ticket) . "){$attribution}")
             ->send();
     }
 }
