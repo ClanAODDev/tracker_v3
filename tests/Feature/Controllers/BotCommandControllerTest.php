@@ -6,6 +6,7 @@ use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\Member;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class BotCommandControllerTest extends TestCase
@@ -20,7 +21,7 @@ class BotCommandControllerTest extends TestCase
         config(['aod.bot_cmd_tokens' => $this->token]);
     }
 
-    private function botGet(string $command, array $params = []): \Illuminate\Testing\TestResponse
+    private function botGet(string $command, array $params = []): TestResponse
     {
         return $this->getJson(route('bot.commands', ['command' => $command]) . '?' . http_build_query(
             array_merge(['token' => $this->token], $params)

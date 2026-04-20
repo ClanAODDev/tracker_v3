@@ -6,6 +6,7 @@ use App\Enums\Rank;
 use App\Services\RankTimelineService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -219,7 +220,7 @@ class RankTimelineServiceTest extends TestCase
 
         $result = $this->service->buildTimeline($member, collect());
 
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result->nodes);
+        $this->assertInstanceOf(Collection::class, $result->nodes);
     }
 
     public function test_build_timeline_returns_history_items_as_collection()
@@ -233,7 +234,7 @@ class RankTimelineServiceTest extends TestCase
 
         $result = $this->service->buildTimeline($member, collect());
 
-        $this->assertInstanceOf(\Illuminate\Support\Collection::class, $result->historyItems);
+        $this->assertInstanceOf(Collection::class, $result->historyItems);
     }
 
     public function test_build_timeline_promotion_node_has_rank_abbreviation()

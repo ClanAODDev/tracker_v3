@@ -6,6 +6,7 @@ use App\Http\Responses\LogoutResponse;
 use App\Models\Observers\TicketTypeObserver;
 use App\Models\TicketType;
 use App\Settings\UserSettings;
+use Filament\Actions\Action;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
@@ -36,7 +37,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         if (! class_exists(\Filament\Tables\Actions\Action::class)) {
-            class_alias(\Filament\Actions\Action::class, \Filament\Tables\Actions\Action::class);
+            class_alias(Action::class, \Filament\Tables\Actions\Action::class);
         }
 
         $this->app->singleton(UserSettings::class, fn () => Auth::user()->settings());

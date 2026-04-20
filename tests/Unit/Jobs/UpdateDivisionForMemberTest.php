@@ -4,6 +4,7 @@ namespace Tests\Unit\Jobs;
 
 use App\Jobs\UpdateDivisionForMember;
 use App\Models\Transfer;
+use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -96,7 +97,7 @@ class UpdateDivisionForMemberTest extends TestCase
         $job = new UpdateDivisionForMember($transfer);
 
         $this->assertTrue(in_array(
-            \Illuminate\Foundation\Queue\Queueable::class,
+            Queueable::class,
             class_uses_recursive($job)
         ));
     }

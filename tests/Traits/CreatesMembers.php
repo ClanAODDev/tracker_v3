@@ -10,6 +10,7 @@ use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
 use App\Models\User;
+use Illuminate\Support\Collection;
 
 trait CreatesMembers
 {
@@ -118,7 +119,7 @@ trait CreatesMembers
         ], $memberAttributes));
     }
 
-    protected function createMembersInSquad(Squad $squad, int $count = 3, array $attributes = []): \Illuminate\Support\Collection
+    protected function createMembersInSquad(Squad $squad, int $count = 3, array $attributes = []): Collection
     {
         return Member::factory()->count($count)->create(array_merge([
             'division_id' => $squad->platoon->division_id,
@@ -127,7 +128,7 @@ trait CreatesMembers
         ], $attributes));
     }
 
-    protected function createMembersInPlatoon(Platoon $platoon, int $count = 3, array $attributes = []): \Illuminate\Support\Collection
+    protected function createMembersInPlatoon(Platoon $platoon, int $count = 3, array $attributes = []): Collection
     {
         return Member::factory()->count($count)->create(array_merge([
             'division_id' => $platoon->division_id,
@@ -135,7 +136,7 @@ trait CreatesMembers
         ], $attributes));
     }
 
-    protected function createMembersInDivision(Division $division, int $count = 3, array $attributes = []): \Illuminate\Support\Collection
+    protected function createMembersInDivision(Division $division, int $count = 3, array $attributes = []): Collection
     {
         return Member::factory()->count($count)->create(array_merge([
             'division_id' => $division->id,

@@ -4,6 +4,7 @@ namespace App\AOD;
 
 use App\AOD\Traits\GeneratesAwardImages;
 use App\Models\Member;
+use App\Models\MemberAward;
 
 class MemberAwardImage
 {
@@ -126,7 +127,7 @@ class MemberAwardImage
 
     private function fetchAwardsData(Member $member): array
     {
-        $memberAwardCounts = \App\Models\MemberAward::where('member_id', $member->clan_id)
+        $memberAwardCounts = MemberAward::where('member_id', $member->clan_id)
             ->where('approved', true)
             ->selectRaw('award_id, COUNT(*) as count')
             ->groupBy('award_id')
@@ -134,7 +135,7 @@ class MemberAwardImage
 
         return $this->fetchMemberAwardsCollapseTiered($member, ['awards.image', 'awards.name', 'divisions.abbreviation'])
             ->map(function ($item) use ($memberAwardCounts) {
-                $recipientCount = \App\Models\MemberAward::where('award_id', $item->id)
+                $recipientCount = MemberAward::where('award_id', $item->id)
                     ->where('approved', true)
                     ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
                     ->count();

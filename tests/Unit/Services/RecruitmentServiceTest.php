@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Models\Handle;
 use App\Models\Member;
 use App\Services\RecruitmentService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -75,7 +76,7 @@ class RecruitmentServiceTest extends TestCase
     {
         $division            = $this->createActiveDivision();
         $platoon             = $this->createPlatoon($division);
-        $handle              = \App\Models\Handle::factory()->create();
+        $handle              = Handle::factory()->create();
         $division->handle_id = $handle->id;
         $division->save();
 

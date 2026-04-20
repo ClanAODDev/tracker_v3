@@ -9,6 +9,7 @@ use App\Models\Division;
 use App\Models\Leave;
 use App\Models\Member;
 use App\Models\MemberAward;
+use App\Models\Platoon;
 use App\Models\Ticket;
 use App\Models\Transfer;
 
@@ -89,7 +90,7 @@ trait CreatesPendingActionItems
         $platoon = $division->platoons()->first();
 
         if (! $platoon) {
-            $platoon = \App\Models\Platoon::factory()->create(['division_id' => $division->id]);
+            $platoon = Platoon::factory()->create(['division_id' => $division->id]);
         }
 
         Member::factory()->count($count)->create([

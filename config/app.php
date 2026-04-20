@@ -1,6 +1,14 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\AuthServiceProvider;
+use App\Providers\EventServiceProvider;
+use App\Providers\Filament\AdminPanelProvider;
+use App\Providers\Filament\ModPanelProvider;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use Whossun\Toastr\Facades\Toastr;
 
 return [
     /*
@@ -141,12 +149,12 @@ return [
     */
 
     'providers' => ServiceProvider::defaultProviders()->merge([
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
-        App\Providers\Filament\AdminPanelProvider::class,
-        App\Providers\Filament\ModPanelProvider::class,
-        App\Providers\RouteServiceProvider::class,
+        AppServiceProvider::class,
+        AuthServiceProvider::class,
+        EventServiceProvider::class,
+        AdminPanelProvider::class,
+        ModPanelProvider::class,
+        RouteServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -160,8 +168,8 @@ return [
     |
     */
 
-    'aliases' => Illuminate\Support\Facades\Facade::defaultAliases()->merge([
+    'aliases' => Facade::defaultAliases()->merge([
         'Carbon' => Carbon\Carbon::class,
-        'Toastr' => Whossun\Toastr\Facades\Toastr::class,
+        'Toastr' => Toastr::class,
     ])->toArray(),
 ];
