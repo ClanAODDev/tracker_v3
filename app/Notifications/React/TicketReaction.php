@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 
 class TicketReaction extends Notification implements ShouldQueue
 {
@@ -33,6 +34,13 @@ class TicketReaction extends Notification implements ShouldQueue
         if (empty($notifiable->external_message_id)) {
             throw new MessageIdNotYetAvailableException;
         }
+
+        Log::info('TicketReaction firing', [
+            'ticket_id'           => $notifiable->id,
+            'external_message_id' => $notifiable->external_message_id,
+            'status'              => $this->status,
+            'attempt'             => $this->attempts(),
+        ]);
 
         return [BotChannel::class];
     }

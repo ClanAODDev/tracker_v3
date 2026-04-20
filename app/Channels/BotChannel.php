@@ -5,6 +5,7 @@ namespace App\Channels;
 use App\Notifications\Channel\NotifyAdminTicketCreated;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Log\Logger;
 use Illuminate\Notifications\Notification;
@@ -49,11 +50,18 @@ class BotChannel
         try {
             $response = $this->client->send($request, ['verify' => false]);
         } catch (GuzzleException $e) {
-            $this->logger->error('BotChannel request failed', [
+            $context = [
                 'url'          => $url,
                 'notification' => get_class($notification),
                 'error'        => $e->getMessage(),
-            ]);
+            ];
+
+            if ($e instanceof RequestException && $e->hasResponse()) {
+                $context['response_status'] = $e->getResponse()->getStatusCode();
+                $context['response_body']   = (string) $e->getResponse()->getBody();
+            }
+
+            $this->logger->error('BotChannel request failed', $context);
 
             throw $e;
         }

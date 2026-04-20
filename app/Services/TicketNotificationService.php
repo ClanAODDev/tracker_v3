@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Jobs\DeferredTicketReact;
 use App\Models\Ticket;
 use App\Models\TicketComment;
 use App\Models\User;
@@ -21,11 +22,12 @@ class TicketNotificationService
 
         if ($ticket->type->auto_assign_to) {
             $ticket->ownTo($ticket->type->auto_assign_to);
-            $this->notifyTicketAssigned($ticket, $ticket->type->auto_assign_to, reactionDelay: 60);
+            $this->notifyTicketAssigned($ticket, $ticket->type->auto_assign_to, sendReaction: false);
+            DeferredTicketReact::dispatch($ticket, 'assigned');
         }
     }
 
-    public function notifyTicketAssigned(Ticket $ticket, User $assignee, ?User $assignedBy = null, int $reactionDelay = 0): void
+    public function notifyTicketAssigned(Ticket $ticket, User $assignee, ?User $assignedBy = null, bool $sendReaction = true): void
     {
         $ticket->notify(new NotifyCallerTicketUpdated($ticket, "Ticket has been assigned to {$assignee->name}"));
 
@@ -35,13 +37,9 @@ class TicketNotificationService
             $ticket->notify(new NotifyNewTicketOwner($assignee, $assignedBy));
         }
 
-        $reaction = (new TicketReaction('assigned'));
-
-        if ($reactionDelay > 0) {
-            $reaction->delay(now()->addSeconds($reactionDelay));
+        if ($sendReaction) {
+            $ticket->notify(new TicketReaction('assigned'));
         }
-
-        $ticket->notify($reaction);
     }
 
     public function notifyTicketResolved(Ticket $ticket): void

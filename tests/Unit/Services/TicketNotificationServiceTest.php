@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Jobs\DeferredTicketReact;
 use App\Models\Ticket;
 use App\Models\TicketComment;
 use App\Models\TicketType;
@@ -14,6 +15,7 @@ use App\Notifications\React\TicketReaction;
 use App\Services\TicketNotificationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -84,8 +86,10 @@ class TicketNotificationServiceTest extends TestCase
         $this->assertEquals('assigned', $ticket->state);
     }
 
-    public function test_notify_ticket_created_sends_delayed_reaction_when_auto_assigned()
+    public function test_notify_ticket_created_dispatches_deferred_react_when_auto_assigned()
     {
+        Queue::fake();
+
         $user       = $this->createMemberWithUser();
         $assignee   = $this->createAdmin();
         $ticketType = TicketType::factory()->create([
@@ -102,9 +106,8 @@ class TicketNotificationServiceTest extends TestCase
 
         $this->service->notifyTicketCreated($ticket);
 
-        Notification::assertSentTo($ticket, function (TicketReaction $notification) {
-            return $notification->delay !== null;
-        });
+        Queue::assertPushed(DeferredTicketReact::class, fn ($job) => $job->ticket->id === $ticket->id);
+        Notification::assertNotSentTo($ticket, TicketReaction::class);
     }
 
     public function test_notify_ticket_created_notifies_caller_when_auto_assigned()
