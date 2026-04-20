@@ -18,7 +18,7 @@ trait RetryableNotification
         ];
     }
 
-    public function handleFailure($exception)
+    public function failed($exception)
     {
         Log::error('Notification failed:', ['error' => $exception->getMessage()]);
     }
