@@ -57,7 +57,7 @@ class TicketApiController extends Controller
         }
 
         $ticket->ownTo($user);
-        $this->notificationService->notifyTicketAssigned($ticket, auth()->user());
+        $this->notificationService->notifyTicketAssigned($ticket, assignee: $user, assignedBy: $user);
 
         $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user']);
 

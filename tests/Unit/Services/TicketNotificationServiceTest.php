@@ -105,6 +105,48 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, TicketReaction::class);
     }
 
+    public function test_notify_ticket_created_notifies_caller_when_auto_assigned()
+    {
+        $user       = $this->createMemberWithUser();
+        $assignee   = $this->createAdmin();
+        $ticketType = TicketType::factory()->create([
+            'auto_assign_to_id' => $assignee->id,
+        ]);
+
+        $this->actingAs($user);
+
+        $ticket = Ticket::factory()->create([
+            'caller_id'      => $user->id,
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'new',
+        ]);
+
+        $this->service->notifyTicketCreated($ticket);
+
+        Notification::assertSentTo($ticket, NotifyCallerTicketUpdated::class);
+    }
+
+    public function test_notify_ticket_created_notifies_new_owner_when_auto_assigned()
+    {
+        $user       = $this->createMemberWithUser();
+        $assignee   = $this->createAdmin();
+        $ticketType = TicketType::factory()->create([
+            'auto_assign_to_id' => $assignee->id,
+        ]);
+
+        $this->actingAs($user);
+
+        $ticket = Ticket::factory()->create([
+            'caller_id'      => $user->id,
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'new',
+        ]);
+
+        $this->service->notifyTicketCreated($ticket);
+
+        Notification::assertSentTo($ticket, NotifyNewTicketOwner::class);
+    }
+
     public function test_notify_ticket_assigned_sends_caller_notification()
     {
         $caller     = $this->createMemberWithUser();
@@ -133,9 +175,7 @@ class TicketNotificationServiceTest extends TestCase
             'ticket_type_id' => $ticketType->id,
         ]);
 
-        $this->actingAs($assigner);
-
-        $this->service->notifyTicketAssigned($ticket, $assignee);
+        $this->service->notifyTicketAssigned($ticket, $assignee, assignedBy: $assigner);
 
         Notification::assertSentTo($ticket, NotifyNewTicketOwner::class);
     }
@@ -150,9 +190,7 @@ class TicketNotificationServiceTest extends TestCase
             'ticket_type_id' => $ticketType->id,
         ]);
 
-        $this->actingAs($assignee);
-
-        $this->service->notifyTicketAssigned($ticket, $assignee);
+        $this->service->notifyTicketAssigned($ticket, $assignee, assignedBy: $assignee);
 
         Notification::assertNotSentTo($ticket, NotifyNewTicketOwner::class);
     }

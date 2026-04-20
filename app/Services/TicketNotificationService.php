@@ -21,22 +21,18 @@ class TicketNotificationService
 
         if ($ticket->type->auto_assign_to) {
             $ticket->ownTo($ticket->type->auto_assign_to);
-            $this->notifyTicketAssigned(
-                $ticket,
-                $ticket->type->auto_assign_to,
-                auth()->user(),
-            );
+            $this->notifyTicketAssigned($ticket, $ticket->type->auto_assign_to);
         }
     }
 
-    public function notifyTicketAssigned(Ticket $ticket, User $assignee, ?User $assigner = null): void
+    public function notifyTicketAssigned(Ticket $ticket, User $assignee, ?User $assignedBy = null): void
     {
-        $assigner = $assigner ?? auth()->user();
-
         $ticket->notify(new NotifyCallerTicketUpdated($ticket, "Ticket has been assigned to {$assignee->name}"));
 
-        if ($assignee->id !== $assigner->id) {
-            $ticket->notify(new NotifyNewTicketOwner($assignee, $assigner));
+        $isSelfAssign = $assignedBy && $assignee->id === $assignedBy->id;
+
+        if (! $isSelfAssign) {
+            $ticket->notify(new NotifyNewTicketOwner($assignee, $assignedBy));
         }
 
         $ticket->notify(new TicketReaction('assigned'));
