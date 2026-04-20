@@ -4,6 +4,7 @@ namespace App\Notifications\React;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotReactMessage;
+use App\Exceptions\MessageIdNotYetAvailableException;
 use App\Traits\RetryableNotification;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -30,7 +31,7 @@ class TicketReaction extends Notification implements ShouldQueue
     public function via($notifiable)
     {
         if (empty($notifiable->external_message_id)) {
-            throw new \RuntimeException('Ticket external_message_id not set');
+            throw new MessageIdNotYetAvailableException;
         }
 
         return [BotChannel::class];

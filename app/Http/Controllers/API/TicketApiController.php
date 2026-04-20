@@ -8,6 +8,7 @@ use App\Models\TicketType;
 use App\Services\TicketNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TicketApiController extends Controller
 {
@@ -185,7 +186,14 @@ class TicketApiController extends Controller
             'division_id'    => auth()->user()->member?->division_id ?? 1,
         ]);
 
-        $this->notificationService->notifyTicketCreated($ticket);
+        try {
+            $this->notificationService->notifyTicketCreated($ticket);
+        } catch (\Throwable $e) {
+            Log::error('Failed to send ticket created notifications', [
+                'ticket_id' => $ticket->id,
+                'error'     => $e->getMessage(),
+            ]);
+        }
 
         $ticket->load(['type', 'owner', 'division']);
 
