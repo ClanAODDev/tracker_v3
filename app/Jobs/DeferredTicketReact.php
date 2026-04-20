@@ -19,8 +19,8 @@ class DeferredTicketReact implements ShouldQueue
     public int $maxExceptions = 3;
 
     public function __construct(
-        private Ticket $ticket,
-        private readonly string $status
+        public Ticket $ticket,
+        public readonly string $status
     ) {}
 
     public function backoff(): array
