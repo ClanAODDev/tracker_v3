@@ -55,7 +55,7 @@ class BotChannel
                 'error'        => $e->getMessage(),
             ]);
 
-            return;
+            throw $e;
         }
 
         if ($notification instanceof NotifyAdminTicketCreated) {
