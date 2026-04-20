@@ -84,6 +84,27 @@ class TicketNotificationServiceTest extends TestCase
         $this->assertEquals('assigned', $ticket->state);
     }
 
+    public function test_notify_ticket_created_sends_reaction_when_auto_assigned()
+    {
+        $user       = $this->createMemberWithUser();
+        $assignee   = $this->createAdmin();
+        $ticketType = TicketType::factory()->create([
+            'auto_assign_to_id' => $assignee->id,
+        ]);
+
+        $this->actingAs($user);
+
+        $ticket = Ticket::factory()->create([
+            'caller_id'      => $user->id,
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'new',
+        ]);
+
+        $this->service->notifyTicketCreated($ticket);
+
+        Notification::assertSentTo($ticket, TicketReaction::class);
+    }
+
     public function test_notify_ticket_assigned_sends_caller_notification()
     {
         $caller     = $this->createMemberWithUser();
