@@ -6,12 +6,13 @@ use App\Models\Ticket;
 use App\Notifications\React\TicketReaction;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
 class DeferredTicketReact implements ShouldQueue
 {
-    use Queueable, SerializesModels;
+    use Dispatchable, Queueable, SerializesModels;
 
     public int $tries = 20;
 
