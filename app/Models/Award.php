@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Award extends Model
 {
@@ -136,7 +137,7 @@ class Award extends Model
         $baseTier = $chain->sortBy('display_order')->first();
 
         if ($baseTier->tiered_group_name) {
-            return \Illuminate\Support\Str::slug($baseTier->tiered_group_name);
+            return Str::slug($baseTier->tiered_group_name);
         }
 
         $names = $chain->pluck('name')->toArray();
@@ -155,6 +156,6 @@ class Award extends Model
 
         $groupName = ! empty($commonWords) ? implode(' ', $commonWords) : $chain->first()->name . ' Series';
 
-        return \Illuminate\Support\Str::slug($groupName);
+        return Str::slug($groupName);
     }
 }

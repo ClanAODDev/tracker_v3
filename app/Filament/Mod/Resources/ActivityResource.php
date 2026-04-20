@@ -5,6 +5,9 @@ namespace App\Filament\Mod\Resources;
 use App\Enums\ActivityType;
 use App\Filament\Mod\Resources\ActivityResource\Pages\ListActivities;
 use App\Models\Activity;
+use App\Models\Division;
+use App\Models\Member;
+use App\Models\User;
 use Carbon\Carbon;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -67,7 +70,7 @@ class ActivityResource extends Resource
                 TextColumn::make('subject.name')
                     ->label('Subject')
                     ->default('—')
-                    ->url(fn ($record) => $record->subject instanceof \App\Models\Member ? route('member', $record->subject->getUrlParams()) : null)
+                    ->url(fn ($record) => $record->subject instanceof Member ? route('member', $record->subject->getUrlParams()) : null)
                     ->openUrlInNewTab(),
                 TextColumn::make('properties')
                     ->label('Details')
@@ -88,7 +91,7 @@ class ActivityResource extends Resource
             ->filters([
                 SelectFilter::make('division_id')
                     ->label('Division')
-                    ->options(fn () => \App\Models\Division::active()->orderBy('name')->pluck('name', 'id'))
+                    ->options(fn () => Division::active()->orderBy('name')->pluck('name', 'id'))
                     ->searchable()
                     ->visible(fn () => auth()->user()->isRole('admin')),
                 SelectFilter::make('name')
@@ -99,13 +102,13 @@ class ActivityResource extends Resource
                     ->options(function () {
                         $user = auth()->user();
                         if ($user->isRole('admin')) {
-                            return \App\Models\User::whereHas('member')
+                            return User::whereHas('member')
                                 ->orderBy('name')
                                 ->pluck('name', 'id');
                         }
                         $divisionId = $user->member?->division_id;
 
-                        return \App\Models\User::whereHas('member', fn ($q) => $q->where('division_id', $divisionId))
+                        return User::whereHas('member', fn ($q) => $q->where('division_id', $divisionId))
                             ->orderBy('name')
                             ->pluck('name', 'id');
                     })

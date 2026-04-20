@@ -8,6 +8,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 use Tests\Traits\CreatesMembers;
 
@@ -57,7 +58,7 @@ class AODBotServiceTest extends TestCase
 
         $response = $service->getForumMember(12345);
 
-        $this->assertInstanceOf(\Psr\Http\Message\ResponseInterface::class, $response);
+        $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
     public function test_get_forum_member_response_body_contains_member_data()

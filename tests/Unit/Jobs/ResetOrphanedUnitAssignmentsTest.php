@@ -3,6 +3,7 @@
 namespace Tests\Unit\Jobs;
 
 use App\Jobs\ResetOrphanedUnitAssignments;
+use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -81,7 +82,7 @@ class ResetOrphanedUnitAssignmentsTest extends TestCase
         $job = new ResetOrphanedUnitAssignments;
 
         $this->assertTrue(in_array(
-            \Illuminate\Foundation\Queue\Queueable::class,
+            Queueable::class,
             class_uses_recursive($job)
         ));
     }

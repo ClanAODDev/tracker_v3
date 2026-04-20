@@ -11,13 +11,19 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
+use League\CommonMark\Extension\Autolink\AutolinkExtension;
+use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\CommonMark\Node\Block\BlockQuote;
 use League\CommonMark\Extension\CommonMark\Node\Block\Heading;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Link;
+use League\CommonMark\Extension\DefaultAttributes\DefaultAttributesExtension;
 use League\CommonMark\Extension\Embed\Bridge\OscaroteroEmbedAdapter;
+use League\CommonMark\Extension\Embed\EmbedExtension;
+use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkRenderer;
 use League\CommonMark\Extension\Table\Table;
+use League\CommonMark\Extension\Table\TableExtension;
 use League\CommonMark\Node\Block\Paragraph;
 
 return [
@@ -54,12 +60,12 @@ return [
     */
 
     'extensions' => [
-        League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension::class,
-        League\CommonMark\Extension\Table\TableExtension::class,
-        League\CommonMark\Extension\DefaultAttributes\DefaultAttributesExtension::class,
-        League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension::class,
-        League\CommonMark\Extension\Autolink\AutolinkExtension::class,
-        League\CommonMark\Extension\Embed\EmbedExtension::class,
+        CommonMarkCoreExtension::class,
+        TableExtension::class,
+        DefaultAttributesExtension::class,
+        HeadingPermalinkExtension::class,
+        AutolinkExtension::class,
+        EmbedExtension::class,
     ],
 
     /*

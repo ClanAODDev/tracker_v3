@@ -1,5 +1,6 @@
 <?php
 
+use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\Bot\BotCommandController;
 use App\Http\Controllers\DeveloperController;
@@ -84,7 +85,7 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
         }
 
         $handles = $request->input('handles', []);
-        \App\Filament\Forms\Components\IngameHandlesForm::saveHandles($member, $handles);
+        IngameHandlesForm::saveHandles($member, $handles);
 
         return response()->json(['success' => true, 'count' => $member->memberHandles()->count()]);
     })->name('ingame-handles');

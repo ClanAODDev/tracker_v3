@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Census;
+use App\Models\Division;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CensusFactory extends Factory
@@ -20,7 +21,7 @@ class CensusFactory extends Factory
     public function definition(): array
     {
         return [
-            'division_id'         => \App\Models\Division::factory(),
+            'division_id'         => Division::factory(),
             'count'               => rand(100, 500),
             'weekly_active_count' => rand(50, 100),
             'weekly_ts_count'     => rand(50, 100),

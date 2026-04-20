@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Data\PendingActionsData;
+use App\Enums\DiscordStatus;
 use App\Enums\Position;
 use App\Enums\Role;
 use App\Models\Award;
@@ -174,7 +175,7 @@ final class PendingActionsDataTest extends TestCase
 
         Member::factory()->create([
             'division_id'       => $this->division->id,
-            'last_voice_status' => \App\Enums\DiscordStatus::NEVER_CONNECTED,
+            'last_voice_status' => DiscordStatus::NEVER_CONNECTED,
         ]);
 
         $pendingActions = PendingActionsData::forDivision($this->division, $user);

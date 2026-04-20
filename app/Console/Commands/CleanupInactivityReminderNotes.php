@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\ActivityReminder;
 use App\Models\Member;
 use App\Models\Note;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class CleanupInactivityReminderNotes extends Command
@@ -676,7 +677,7 @@ class CleanupInactivityReminderNotes extends Command
         return $count;
     }
 
-    protected function getLastRemovalDate(int $memberId): ?\Carbon\Carbon
+    protected function getLastRemovalDate(int $memberId): ?Carbon
     {
         $removalNote = Note::withTrashed()
             ->where('member_id', $memberId)

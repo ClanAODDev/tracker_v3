@@ -3,6 +3,7 @@
 namespace Tests\Unit\Jobs;
 
 use App\Jobs\PartTimeMemberCleanup;
+use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -115,7 +116,7 @@ class PartTimeMemberCleanupTest extends TestCase
         $job = new PartTimeMemberCleanup;
 
         $this->assertTrue(in_array(
-            \Illuminate\Foundation\Queue\Queueable::class,
+            Queueable::class,
             class_uses_recursive($job)
         ));
     }
