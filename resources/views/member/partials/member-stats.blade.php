@@ -319,6 +319,22 @@
                                 </span>
                             </div>
                         @endif
+                        @if($member->last_trained_at)
+                            <div class="tenure-detail-item">
+                                <span class="tenure-detail-label">Trained On</span>
+                                <span class="tenure-detail-value">{{ $member->last_trained_at->format('F j, Y') }}</span>
+                            </div>
+                            @if($member->trainer)
+                                <div class="tenure-detail-item">
+                                    <span class="tenure-detail-label">Trained By</span>
+                                    <span class="tenure-detail-value">
+                                        <a href="{{ route('member', $member->trainer->getUrlParams()) }}">
+                                            {{ $member->trainer->present()->rankName }}
+                                        </a>
+                                    </span>
+                                </div>
+                            @endif
+                        @endif
                         <div class="tenure-detail-item">
                             <span class="tenure-detail-label">Forum ID</span>
                             <span class="tenure-detail-value">{{ $member->clan_id }}</span>
