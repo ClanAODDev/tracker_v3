@@ -84,7 +84,7 @@ class TicketNotificationServiceTest extends TestCase
         $this->assertEquals('assigned', $ticket->state);
     }
 
-    public function test_notify_ticket_created_sends_reaction_when_auto_assigned()
+    public function test_notify_ticket_created_sends_delayed_reaction_when_auto_assigned()
     {
         $user       = $this->createMemberWithUser();
         $assignee   = $this->createAdmin();
@@ -102,7 +102,9 @@ class TicketNotificationServiceTest extends TestCase
 
         $this->service->notifyTicketCreated($ticket);
 
-        Notification::assertSentTo($ticket, TicketReaction::class);
+        Notification::assertSentTo($ticket, function (TicketReaction $notification) {
+            return $notification->delay !== null;
+        });
     }
 
     public function test_notify_ticket_created_notifies_caller_when_auto_assigned()
