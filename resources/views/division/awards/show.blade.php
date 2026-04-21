@@ -161,12 +161,7 @@
                             <th>Member</th>
                             <th class="text-center hidden-xs">Division</th>
                             <th class="text-center hidden-xs">Rank</th>
-                            @if ($award->repeatable)
-                                <th class="text-center">Times</th>
-                                <th class="text-center">Most Recent</th>
-                            @else
-                                <th class="text-center">Awarded</th>
-                            @endif
+                            <th class="text-center">{{ $award->repeatable ? 'Most Recent' : 'Awarded' }}</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -182,6 +177,9 @@
                                         <a href="{{ route('member', $record->member->getUrlParams()) }}">
                                             {{ $record->member->name }}
                                         </a>
+                                        @if ($award->repeatable && $record->times_received > 1)
+                                            <span class="text-muted" style="font-size:12px;">×{{ $record->times_received }}</span>
+                                        @endif
                                     @else
                                         <span class="text-muted">Unknown Member</span>
                                     @endif
@@ -203,9 +201,6 @@
                                     @endif
                                 </td>
                                 @if ($award->repeatable)
-                                    <td class="text-center">
-                                        <span class="badge">{{ $record->times_received }}</span>
-                                    </td>
                                     <td class="text-center">{{ \Carbon\Carbon::parse($record->last_awarded_at)->format('M j, Y') }}</td>
                                 @else
                                     <td class="text-center">{{ $record->created_at->format('M j, Y') }}</td>
