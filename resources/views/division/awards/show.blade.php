@@ -90,7 +90,7 @@
                         <h3>{{ $award->name }}</h3>
                         <span class="award-pill pill-{{ $stats->rarity }}" style="margin-left: 5px;">{{ ucfirst($stats->rarity) }}</span>
                         @if($award->repeatable)
-                            <span class="label label-info" style="margin-left: 5px;"><i class="fa fa-repeat"></i> Repeatable</span>
+                            <span class="award-pill pill-repeatable" style="margin-left: 5px;"><i class="fa fa-refresh"></i> Repeatable</span>
                         @endif
                         <p style="max-width:500px; margin-top: 15px;">{{ $award->description }}</p>
                     </div>
