@@ -125,12 +125,12 @@
                     </div>
                     <h3>{{ $award->name }}</h3>
                     @if ($award->division)
-                        <span class="label label-default">{{ $award->division->name }}</span>
+                        <span class="award-pill pill-division">{{ $award->division->name }}</span>
                         @unless($award->division->active)
-                            <span class="label label-warning">Legacy</span>
+                            <span class="award-pill pill-legacy">Legacy</span>
                         @endunless
                     @else
-                        <span class="label label-warning">Clan-Wide</span>
+                        <span class="award-pill pill-clan-wide">Clan-Wide</span>
                     @endif
                     <span class="award-pill pill-{{ $stats->rarity }}">{{ ucfirst($stats->rarity) }}</span>
                     @if($award->repeatable)

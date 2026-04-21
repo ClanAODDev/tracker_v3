@@ -5424,6 +5424,24 @@ a.org-node:hover {
     border-color: rgba(99, 179, 237, 0.35);
 }
 
+.pill-division {
+    background: rgba(160, 160, 180, 0.1);
+    color: var(--color-muted);
+    border-color: rgba(160, 160, 180, 0.25);
+}
+
+.pill-legacy {
+    background: rgba(237, 170, 99, 0.12);
+    color: #edaa63;
+    border-color: rgba(237, 170, 99, 0.35);
+}
+
+.pill-clan-wide {
+    background: rgba(160, 160, 180, 0.1);
+    color: var(--color-muted);
+    border-color: rgba(160, 160, 180, 0.25);
+}
+
 .award-grid {
     display: flex;
     flex-wrap: wrap;
