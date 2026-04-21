@@ -60,7 +60,7 @@ class TicketApiController extends Controller
         $ticket->ownTo($user);
         $this->notificationService->notifyTicketAssigned($ticket, assignee: $user, assignedBy: $user);
 
-        $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user.member']);
+        $ticket->load(['type', 'owner.member', 'division', 'caller.member', 'comments.user.member']);
 
         return response()->json([
             'message' => 'Ticket assigned to you',
@@ -79,7 +79,7 @@ class TicketApiController extends Controller
         $ticket->resolve();
         $this->notificationService->notifyTicketResolved($ticket);
 
-        $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user.member']);
+        $ticket->load(['type', 'owner.member', 'division', 'caller.member', 'comments.user.member']);
 
         return response()->json([
             'message' => 'Ticket resolved',
@@ -102,7 +102,7 @@ class TicketApiController extends Controller
         $ticket->reject();
         $this->notificationService->notifyTicketRejected($ticket, $validated['reason']);
 
-        $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user.member']);
+        $ticket->load(['type', 'owner.member', 'division', 'caller.member', 'comments.user.member']);
 
         return response()->json([
             'message' => 'Ticket rejected',
@@ -120,7 +120,7 @@ class TicketApiController extends Controller
 
         $ticket->reopen();
 
-        $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user.member']);
+        $ticket->load(['type', 'owner.member', 'division', 'caller.member', 'comments.user.member']);
 
         return response()->json([
             'message' => 'Ticket reopened',
@@ -164,7 +164,7 @@ class TicketApiController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $ticket->load(['type', 'owner', 'division', 'caller', 'comments.user.member']);
+        $ticket->load(['type', 'owner.member', 'division', 'caller.member', 'comments.user.member']);
 
         return response()->json([
             'ticket' => $this->transformTicket($ticket, true, $canWork),
@@ -261,8 +261,9 @@ class TicketApiController extends Controller
                 'name' => $division->name,
             ] : null,
             'owner' => $owner ? [
-                'id'   => $owner->id,
-                'name' => $owner->name,
+                'id'     => $owner->id,
+                'name'   => $owner->name,
+                'avatar' => $owner->member?->getDiscordAvatarUrl(),
             ] : null,
             'created_at'  => $ticket->created_at->toIso8601String(),
             'updated_at'  => $ticket->updated_at->toIso8601String(),
@@ -271,8 +272,9 @@ class TicketApiController extends Controller
 
         if ($includeCaller) {
             $data['caller'] = $caller ? [
-                'id'   => $caller->id,
-                'name' => $caller->name,
+                'id'     => $caller->id,
+                'name'   => $caller->name,
+                'avatar' => $caller->member?->getDiscordAvatarUrl(),
             ] : null;
         }
 

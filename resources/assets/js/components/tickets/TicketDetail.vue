@@ -31,7 +31,11 @@
           <div class="meta-block" v-if="store.currentTicket.caller">
             <div class="meta-label">Submitted By</div>
             <div class="meta-value">
-              <i class="fa fa-user m-r-xs"></i>
+              <img v-if="store.currentTicket.caller.avatar"
+                   :src="store.currentTicket.caller.avatar"
+                   :alt="store.currentTicket.caller.name"
+                   class="meta-avatar" />
+              <i v-else class="fa fa-user m-r-xs"></i>
               {{ store.currentTicket.caller.name }}
               <span v-if="store.currentTicket.division" class="division-tag">
                 {{ store.currentTicket.division.name }}
@@ -41,7 +45,11 @@
           <div class="meta-block" v-if="store.currentTicket.owner">
             <div class="meta-label">Assigned To</div>
             <div class="meta-value">
-              <i class="fa fa-user-circle m-r-xs"></i>
+              <img v-if="store.currentTicket.owner.avatar"
+                   :src="store.currentTicket.owner.avatar"
+                   :alt="store.currentTicket.owner.name"
+                   class="meta-avatar" />
+              <i v-else class="fa fa-user-circle m-r-xs"></i>
               {{ store.currentTicket.owner.name }}
             </div>
           </div>
@@ -705,6 +713,15 @@ export default {
   height: 36px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.meta-avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+  vertical-align: middle;
+  margin-right: 6px;
 }
 
 .comment-admin .comment-avatar {

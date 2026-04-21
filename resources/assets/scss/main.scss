@@ -2284,6 +2284,84 @@ body.no-animations {
     margin: 0;
 }
 
+.award-stat-value {
+    margin: 0;
+}
+
+.award-detail-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.award-detail-image {
+    margin-right: 50px;
+}
+
+.award-detail-action {
+    margin-left: 50px;
+}
+
+.award-detail-description {
+    max-width: 500px;
+    margin-top: 15px;
+}
+
+.award-received-label {
+    font-size: 14px;
+    padding: 8px 12px;
+    display: inline-block;
+}
+
+.award-image-mobile {
+    display: inline-flex;
+    margin-bottom: 15px;
+}
+
+.recipient-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.repeat-count {
+    font-size: 12px;
+}
+
+.award-pill + .award-pill {
+    margin-left: 5px;
+}
+
+.panel-division-logo {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.legacy-panel {
+    opacity: 0.75;
+}
+
+.legacy-division-logo {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    vertical-align: middle;
+    opacity: 0.7;
+}
+
+.filter-select {
+    width: auto;
+}
+
+.tiered-icon {
+    font-size: 11px;
+}
+
 .member-award-description {
     height: 100%;
     display: flex;
@@ -2482,6 +2560,8 @@ body.no-animations {
     border-radius: 10px;
     background: linear-gradient(145deg, rgba(30, 30, 40, 0.95), rgba(20, 20, 28, 0.98));
     border: 1px solid rgba(255, 255, 255, 0.06);
+    position: relative;
+    overflow: hidden;
 }
 
 .panel.panel-filled.award-detail .panel-body {
