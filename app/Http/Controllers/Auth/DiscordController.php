@@ -44,9 +44,10 @@ class DiscordController extends Controller
         $discordId       = $discordUser->getId();
         $discordUsername = $discordUser->getNickname() ?? $discordUser->getName();
         $email           = $discordUser->getEmail();
+        $avatarHash      = $discordUser->getRaw()['avatar'] ?? null;
 
         if ($user = User::where('discord_id', $discordId)->first()) {
-            return $this->loginExistingUser($user);
+            return $this->loginExistingUser($user, $avatarHash);
         }
 
         if ($member = Member::where('discord_id', $discordId)->first()) {
@@ -54,7 +55,8 @@ class DiscordController extends Controller
                 member: $member,
                 discordId: $discordId,
                 discordUsername: $discordUsername,
-                email: $email
+                email: $email,
+                avatarHash: $avatarHash
             );
         }
 
@@ -192,7 +194,7 @@ class DiscordController extends Controller
         return redirect()->route('auth.discord.pending');
     }
 
-    protected function loginExistingUser(User $user): RedirectResponse
+    protected function loginExistingUser(User $user, ?string $avatarHash): RedirectResponse
     {
         Auth::login(user: $user, remember: true);
 
@@ -206,6 +208,10 @@ class DiscordController extends Controller
                     discordTag: $user->discord_username ?? '',
                 );
             }
+
+            if ($avatarHash !== null) {
+                $user->member->update(['discord_avatar' => $avatarHash]);
+            }
         }
 
         return $user->isPendingRegistration()
@@ -217,13 +223,18 @@ class DiscordController extends Controller
         Member $member,
         string $discordId,
         string $discordUsername,
-        ?string $email
+        ?string $email,
+        ?string $avatarHash = null
     ): RedirectResponse {
         $user = User::findOrCreateForMember($member, $email);
         $user->update([
             'discord_id'       => $discordId,
             'discord_username' => $discordUsername,
         ]);
+
+        if ($avatarHash !== null) {
+            $member->update(['discord_avatar' => $avatarHash]);
+        }
 
         Auth::login(user: $user, remember: true);
 

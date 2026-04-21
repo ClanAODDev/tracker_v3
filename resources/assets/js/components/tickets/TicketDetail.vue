@@ -182,7 +182,8 @@
 
                 <div v-else class="comment-item" :class="{ 'comment-admin': comment.user?.id === store.currentTicket.owner?.id }">
                   <div class="comment-avatar">
-                    <i class="fa fa-user"></i>
+                    <img v-if="comment.user?.avatar" :src="comment.user.avatar" :alt="comment.user.name" class="avatar-img" />
+                    <i v-else class="fa fa-user"></i>
                   </div>
                   <div class="comment-bubble">
                     <div class="comment-header">
@@ -696,6 +697,14 @@ export default {
   justify-content: center;
   flex-shrink: 0;
   color: var(--color-muted);
+  overflow: hidden;
+}
+
+.avatar-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .comment-admin .comment-avatar {

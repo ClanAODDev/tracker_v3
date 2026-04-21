@@ -43,6 +43,7 @@ class DiscordAuthTest extends TestCase
         $socialiteUser->shouldReceive('getNickname')->andReturn($attributes['nickname']);
         $socialiteUser->shouldReceive('getName')->andReturn($attributes['name']);
         $socialiteUser->shouldReceive('getEmail')->andReturn($attributes['email']);
+        $socialiteUser->shouldReceive('getRaw')->andReturn(['avatar' => $attributes['avatar'] ?? null]);
 
         $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
         $provider->shouldReceive('user')->andReturn($socialiteUser);

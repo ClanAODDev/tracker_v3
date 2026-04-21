@@ -318,6 +318,19 @@ class Member extends Model
         return sprintf('https://discordapp.com/users/%d', $this->discord_id);
     }
 
+    public function getDiscordAvatarUrl(): ?string
+    {
+        if (! $this->discord_id) {
+            return null;
+        }
+
+        if ($this->discord_avatar) {
+            return sprintf('https://cdn.discordapp.com/avatars/%s/%s.png?size=64', $this->discord_id, $this->discord_avatar);
+        }
+
+        return sprintf('https://cdn.discordapp.com/embed/avatars/%d.png', abs((int) $this->discord_id >> 22) % 6);
+    }
+
     public function isRank(array|Rank $rank): bool
     {
         if (! $this->rank instanceof Rank) {
