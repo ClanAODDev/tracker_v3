@@ -2,7 +2,8 @@
 
 @section('content')
 
-    @component ('application.components.division-heading', ['division' => $division])
+    @php $discordAvatar = $member->getDiscordAvatarUrl(); @endphp
+    @component ('application.components.division-heading', ['division' => $division, 'logo' => $discordAvatar, 'logoClass' => $discordAvatar ? 'rounded-avatar' : ''])
         @slot ('heading')
             <div class="member-header-info">
                 <span class="member-name">{!! $member->present()->rankName !!}</span>

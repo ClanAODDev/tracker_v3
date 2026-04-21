@@ -8393,6 +8393,12 @@ img.division-icon-large {
     width: 48px;
 }
 
+img.division-icon-large.rounded-avatar {
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 img.division-icon-medium {
     width: 32px;
 }
