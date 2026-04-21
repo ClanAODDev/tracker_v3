@@ -174,6 +174,11 @@
                             <tr>
                                 <td>
                                     @if ($record->member)
+                                        @php $avatarUrl = $record->member->getDiscordAvatarUrl(); @endphp
+                                        @if ($avatarUrl)
+                                            <img src="{{ $avatarUrl }}" alt="{{ $record->member->name }}"
+                                                 style="width:24px;height:24px;border-radius:50%;object-fit:cover;margin-right:6px;vertical-align:middle;">
+                                        @endif
                                         <a href="{{ route('member', $record->member->getUrlParams()) }}">
                                             {{ $record->member->name }}
                                         </a>
