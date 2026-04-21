@@ -148,6 +148,11 @@ class MemberAwardResource extends Resource
                             ->required()
                             ->rows(3)
                             ->helperText('Explain why this member should receive this award'),
+
+                        DateTimePicker::make('created_at')
+                            ->label('Awarded Date')
+                            ->default(now())
+                            ->required(),
                     ]),
 
                 Section::make('Options')
@@ -164,7 +169,6 @@ class MemberAwardResource extends Resource
                     ->columns(2)
                     ->hiddenOn(['edit', 'create'])
                     ->schema([
-                        DateTimePicker::make('created_at')->default(now()),
                         DateTimePicker::make('updated_at')->default(now()),
                     ]),
             ]);
@@ -188,9 +192,9 @@ class MemberAwardResource extends Resource
                     ->label('Division'),
 
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->label('Awarded')
+                    ->date()
+                    ->sortable(),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -227,7 +231,7 @@ class MemberAwardResource extends Resource
                         ->modalDescription('This will generate a notification for every award approved.')
                         ->after(function (Collection $records) {
                             foreach ($records as $memberAward) {
-                                if ($memberAward->member->division->settings()->get('chat_alerts.member_awarded')) {
+                                if ($memberAward->member->division?->settings()->get('chat_alerts.member_awarded')) {
                                     $memberAward->member->division->notify(new NotifyDivisionMemberAwarded(
                                         $memberAward->member->name,
                                         $memberAward->award

@@ -58,10 +58,14 @@ class MemberAwardsRelationManager extends RelationManager
 
                 Toggle::make('approved')->hiddenOn('create'),
 
+                DateTimePicker::make('created_at')
+                    ->label('Awarded Date')
+                    ->default(now())
+                    ->required(),
+
                 Section::make('Metadata')
                     ->columnSpanFull()
                     ->schema([
-                        DateTimePicker::make('created_at')->default(now()),
                         DateTimePicker::make('updated_at')->default(now()),
                     ])->columns(),
             ]);

@@ -52,10 +52,14 @@ class AwardsRelationManager extends RelationManager
 
                 Toggle::make('approved')->hiddenOn('create'),
 
+                DateTimePicker::make('created_at')
+                    ->label('Awarded Date')
+                    ->default(now())
+                    ->required(),
+
                 Section::make('Metadata')
                     ->columnSpanFull()
                     ->schema([
-                        DateTimePicker::make('created_at')->default(now()),
                         DateTimePicker::make('updated_at')->default(now()),
                     ])->columns(),
             ]);
@@ -68,7 +72,7 @@ class AwardsRelationManager extends RelationManager
             ->columns([
                 ImageColumn::make('award.image'),
                 TextColumn::make('award.name'),
-                TextColumn::make('created_at'),
+                TextColumn::make('created_at')->label('Awarded')->date(),
             ])
             ->filters([
                 //
