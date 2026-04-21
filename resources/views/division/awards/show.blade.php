@@ -134,7 +134,7 @@
                     @endif
                     <span class="award-pill pill-{{ $stats->rarity }}">{{ ucfirst($stats->rarity) }}</span>
                     @if($award->repeatable)
-                        <span class="label label-info"><i class="fa fa-repeat"></i> Repeatable</span>
+                        <span class="award-pill pill-repeatable"><i class="fa fa-refresh"></i> Repeatable</span>
                     @endif
                     <p>{{ $award->description }}</p>
                     @if ($userHasAward && !$award->repeatable)
