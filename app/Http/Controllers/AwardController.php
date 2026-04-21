@@ -262,12 +262,23 @@ class AwardController extends Controller
         $award->load(['division']);
         $award->loadCount('recipients');
 
-        $recipients = MemberAward::where('award_id', $award->id)
-            ->where('approved', true)
-            ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
-            ->with(['member:clan_id,name,rank,division_id', 'member.division:id,name,slug'])
-            ->orderByDesc('created_at')
-            ->paginate(50);
+        if ($award->repeatable) {
+            $recipients = MemberAward::where('award_id', $award->id)
+                ->where('approved', true)
+                ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
+                ->selectRaw('member_id, COUNT(*) as times_received, MAX(created_at) as last_awarded_at')
+                ->groupBy('member_id')
+                ->orderByDesc('times_received')
+                ->with(['member:clan_id,name,rank,division_id', 'member.division:id,name,slug'])
+                ->paginate(50);
+        } else {
+            $recipients = MemberAward::where('award_id', $award->id)
+                ->where('approved', true)
+                ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
+                ->with(['member:clan_id,name,rank,division_id', 'member.division:id,name,slug'])
+                ->orderByDesc('created_at')
+                ->paginate(50);
+        }
 
         $userMember   = auth()->user()?->member;
         $userHasAward = $userMember
