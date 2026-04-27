@@ -208,7 +208,6 @@ CREATE TABLE `division_applications` (
   `user_id` int(10) unsigned NOT NULL,
   `division_id` int(10) unsigned NOT NULL,
   `responses` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`responses`)),
-  `recruited_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -512,6 +511,7 @@ CREATE TABLE `members` (
   `last_voice_activity` datetime DEFAULT NULL,
   `last_voice_status` varchar(191) DEFAULT NULL,
   `discord_id` bigint(20) DEFAULT NULL,
+  `discord_avatar` varchar(191) DEFAULT NULL,
   `flagged_for_inactivity` tinyint(1) NOT NULL,
   `last_activity_reminder_at` timestamp NULL DEFAULT NULL,
   `activity_reminded_by_id` int(10) unsigned DEFAULT NULL,
@@ -754,6 +754,7 @@ CREATE TABLE `training_modules` (
   `description` text DEFAULT NULL,
   `display_order` int(10) unsigned NOT NULL DEFAULT 0,
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `minimum_rank` tinyint(3) unsigned DEFAULT NULL,
   `show_completion_form` tinyint(1) NOT NULL DEFAULT 1,
   `checkpoint_label` varchar(191) NOT NULL DEFAULT 'Talking Points',
   `created_at` timestamp NULL DEFAULT NULL,
@@ -1024,7 +1025,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (203,'2026_02_07_14
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (204,'2026_02_07_141751_create_commentions_reactions_table',105);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (205,'2026_02_07_141752_create_commentions_subscriptions_table',105);
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (206,'2026_02_07_141753_migrate_filament_comments_to_commentions',105);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (207,'2026_02_08_000000_create_model_reactions_table',105);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (208,'2026_02_08_100129_create_model_reactions_table',106);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (209,'2026_02_08_100129_create_model_reactions_table',107);
-INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (210,'2026_02_11_105144_add_include_content_in_notification_to_ticket_types_table',108);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (207,'2026_02_08_100129_create_model_reactions_table',106);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (208,'2026_02_11_105144_add_include_content_in_notification_to_ticket_types_table',107);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (209,'2026_03_09_120819_drop_recruited_at_from_division_applications_table',108);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (210,'2026_03_31_000000_add_allow_html_to_division_application_fields_table',109);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (211,'2026_03_31_000001_drop_allow_html_from_division_application_fields_table',110);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (212,'2026_04_20_000001_add_discord_avatar_to_members_table',111);
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES (213,'2026_04_27_153413_add_minimum_rank_to_training_modules',112);
