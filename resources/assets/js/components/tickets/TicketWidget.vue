@@ -61,62 +61,7 @@
       </div>
     </div>
 
-    <div v-if="store.currentView === 'list' && displayTickets.length > 0" class="row quick-stats m-b-md">
-      <div class="col-md-3 col-sm-6">
-        <div class="panel panel-filled">
-          <div class="panel-body">
-            <div class="stat-icon">
-              <i class="fa fa-life-ring text-info"></i>
-            </div>
-            <div class="stat-content">
-              <span class="stat-value">{{ displayTickets.length }}</span>
-              <span class="stat-label">Total</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-6">
-        <div class="panel panel-filled">
-          <div class="panel-body">
-            <div class="stat-icon">
-              <i class="fa fa-envelope-open text-primary"></i>
-            </div>
-            <div class="stat-content">
-              <span class="stat-value">{{ openCount }}</span>
-              <span class="stat-label">Open</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-6">
-        <div class="panel panel-filled">
-          <div class="panel-body">
-            <div class="stat-icon">
-              <i class="fa fa-spinner text-warning"></i>
-            </div>
-            <div class="stat-content">
-              <span class="stat-value">{{ assignedCount }}</span>
-              <span class="stat-label">In Progress</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 col-sm-6">
-        <div class="panel panel-filled">
-          <div class="panel-body">
-            <div class="stat-icon">
-              <i class="fa fa-check-circle text-success"></i>
-            </div>
-            <div class="stat-content">
-              <span class="stat-value">{{ resolvedCount }}</span>
-              <span class="stat-label">Resolved</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel panel-filled">
+<div class="panel panel-filled">
       <div class="panel-body">
         <transition name="fade" mode="out-in">
           <ticket-type-select
@@ -166,20 +111,6 @@ export default {
   },
 
   computed: {
-    displayTickets() {
-      if (store.viewMode === 'all') return store.allTickets;
-      if (store.viewMode === 'assigned') return store.assignedTickets;
-      return store.tickets;
-    },
-    openCount() {
-      return this.displayTickets.filter(t => t.state === 'new').length;
-    },
-    assignedCount() {
-      return this.displayTickets.filter(t => t.state === 'assigned').length;
-    },
-    resolvedCount() {
-      return this.displayTickets.filter(t => t.state === 'resolved' || t.state === 'rejected').length;
-    },
     indicatorStyle() {
       const tabRefs = {
         user: this.$refs.tabUser,
@@ -246,49 +177,6 @@ export default {
   clear: both;
 }
 
-.quick-stats .panel {
-  margin-bottom: 15px;
-}
-
-.quick-stats .panel-body {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-}
-
-.quick-stats .stat-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: var(--overlay-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 15px;
-}
-
-.quick-stats .stat-icon i {
-  font-size: 20px;
-}
-
-.quick-stats .stat-content {
-  flex: 1;
-}
-
-.quick-stats .stat-value {
-  display: block;
-  font-size: 24px;
-  font-weight: 600;
-  color: var(--color-white);
-  line-height: 1.2;
-}
-
-.quick-stats .stat-label {
-  font-size: 12px;
-  text-transform: uppercase;
-  color: var(--color-muted);
-  letter-spacing: 0.5px;
-}
 
 .fade-enter-active,
 .fade-leave-active {

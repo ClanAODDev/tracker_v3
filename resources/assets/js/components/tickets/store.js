@@ -14,7 +14,11 @@ const store = reactive({
     assignedTickets: [],
     filters: {
         state: null,
+        type: null,
         search: '',
+        hideResolved: true,
+        sortBy: 'created_at',
+        sortDir: 'desc',
     },
 
     loading: {
@@ -164,6 +168,7 @@ store.setView = (view, data = null, updateUrl = true) => {
     store.currentView = view;
     if (view === 'detail' && data) {
         store.selectedTicketId = data;
+        store.markViewed(data);
         store.loadTicket(data);
         store.startPolling();
         if (updateUrl) {
@@ -368,24 +373,47 @@ store.loadAllTickets = () => {
         });
 };
 
-store.getFilteredTickets = () => {
-    let tickets = store.viewMode === 'assigned' ? store.assignedTickets : store.allTickets;
-
+store.applyFilters = (tickets, includeCaller = false) => {
     if (store.filters.state) {
         tickets = tickets.filter(t => t.state === store.filters.state);
+    } else if (store.filters.hideResolved) {
+        tickets = tickets.filter(t => t.state !== 'resolved' && t.state !== 'rejected');
+    }
+
+    if (store.filters.type) {
+        tickets = tickets.filter(t => t.type?.id === store.filters.type);
     }
 
     if (store.filters.search) {
         const search = store.filters.search.toLowerCase();
-        tickets = tickets.filter(t =>
-            t.description?.toLowerCase().includes(search) ||
-            t.caller?.name?.toLowerCase().includes(search) ||
-            t.type?.name?.toLowerCase().includes(search)
-        );
+        tickets = tickets.filter(t => {
+            const matches = t.description?.toLowerCase().includes(search) ||
+                t.type?.name?.toLowerCase().includes(search);
+            return includeCaller
+                ? matches || t.caller?.name?.toLowerCase().includes(search)
+                : matches;
+        });
     }
 
-    return tickets;
+    return store.applySort(tickets);
 };
+
+store.applySort = (tickets) => {
+    const { sortBy, sortDir } = store.filters;
+    return [...tickets].sort((a, b) => {
+        const aVal = a[sortBy] || '';
+        const bVal = b[sortBy] || '';
+        const cmp = aVal < bVal ? -1 : aVal > bVal ? 1 : 0;
+        return sortDir === 'desc' ? -cmp : cmp;
+    });
+};
+
+store.getFilteredTickets = () => {
+    const tickets = store.viewMode === 'assigned' ? store.assignedTickets : store.allTickets;
+    return store.applyFilters(tickets, true);
+};
+
+store.getUserFilteredTickets = () => store.applyFilters(store.tickets);
 
 store.performAction = (ticketId, action, data = {}, errorMessage = 'Action failed.') => {
     if (store.loading.action) return Promise.reject('Action in progress');
@@ -441,5 +469,26 @@ store.updateTicketInLists = (ticket) => {
 store.getCurrentUserId = () => {
     return window.Laravel?.userId || null;
 };
+
+store.getViewedKey = () => `tc_viewed_${window.Laravel?.userId || 'guest'}`;
+
+store.markViewed = (ticketId) => {
+    try {
+        const viewed = JSON.parse(localStorage.getItem(store.getViewedKey()) || '{}');
+        viewed[ticketId] = new Date().toISOString();
+        localStorage.setItem(store.getViewedKey(), JSON.stringify(viewed));
+    } catch (e) {}
+};
+
+store.isUnread = (ticket) => {
+    try {
+        const viewed = JSON.parse(localStorage.getItem(store.getViewedKey()) || '{}');
+        const viewedAt = viewed[ticket.id];
+        return viewedAt ? ticket.updated_at > viewedAt : false;
+    } catch (e) {
+        return false;
+    }
+};
+
 
 export default store;

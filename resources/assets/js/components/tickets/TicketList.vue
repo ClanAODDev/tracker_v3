@@ -27,28 +27,67 @@
     </div>
 
     <div v-else>
-      <div v-if="isWorkView" class="filters m-b-md">
-        <div class="filter-row">
-          <select
-            v-model="store.filters.state"
-            class="form-control filter-select"
-          >
-            <option :value="null">All States</option>
-            <option value="new">Open</option>
-            <option value="assigned">In Progress</option>
-            <option value="resolved">Resolved</option>
-            <option value="rejected">Rejected</option>
-          </select>
+      <div class="filters m-b-md">
+        <div class="search-bar">
+          <i class="fa fa-search"></i>
           <input
             v-model="store.filters.search"
             type="text"
-            class="form-control filter-search"
+            class="filter-search-input"
             placeholder="Search tickets..."
           />
+          <button v-if="store.filters.search" class="search-clear" @click="store.filters.search = ''">
+            <i class="fa fa-times"></i>
+          </button>
+        </div>
+        <div class="filter-pills">
+          <div class="select-wrap">
+            <select
+              v-model="store.filters.state"
+              class="filter-pill-select"
+              :class="{ 'is-active': !!store.filters.state }"
+            >
+              <option :value="null">All States</option>
+              <option value="new">Open</option>
+              <option value="assigned">In Progress</option>
+              <option value="resolved">Resolved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+          <div v-if="store.ticketTypes.length" class="select-wrap">
+            <select
+              v-model="store.filters.type"
+              class="filter-pill-select"
+              :class="{ 'is-active': !!store.filters.type }"
+            >
+              <option :value="null">All Types</option>
+              <option v-for="type in store.ticketTypes" :key="type.id" :value="type.id">{{ type.name }}</option>
+            </select>
+          </div>
+          <button
+            class="filter-pill-btn"
+            :class="{ 'is-active': store.filters.hideResolved }"
+            :disabled="!!store.filters.state"
+            @click="store.filters.hideResolved = !store.filters.hideResolved"
+          >
+            Active only
+          </button>
+          <div class="select-wrap">
+            <select
+              v-model="sortOption"
+              class="filter-pill-select"
+              :class="{ 'is-active': sortOption !== 'created_desc' }"
+            >
+              <option value="created_desc">Newest</option>
+              <option value="created_asc">Oldest</option>
+              <option value="updated_desc">Last Updated</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <div v-if="displayTickets.length === 0 && isWorkView" class="text-center p-lg empty-results">
+
+<div v-if="displayTickets.length === 0" class="text-center p-lg empty-results">
         <div class="empty-icon">
           <i class="fa fa-filter"></i>
         </div>
@@ -66,10 +105,11 @@
           @click.prevent="viewTicket(ticket)"
         >
           <div class="panel-body">
-            <div class="ticket-main">
+<div class="ticket-main">
               <div class="ticket-header-row">
                 <span class="ticket-id">#{{ ticket.id }}</span>
                 <span class="ticket-type-badge">{{ ticket.type?.name ?? 'Unknown' }}</span>
+                <span v-if="store.isUnread(ticket)" class="unread-dot" title="Updated since last viewed"></span>
               </div>
               <p class="ticket-preview">{{ truncateDescription(ticket.description) }}</p>
               <div class="ticket-meta">
@@ -118,6 +158,10 @@ export default {
       return store.viewMode === 'all' || store.viewMode === 'assigned';
     },
 
+    isAdminView() {
+      return store.viewMode === 'all';
+    },
+
     isLoading() {
       return this.isWorkView ? store.loading.allTickets : store.loading.tickets;
     },
@@ -140,10 +184,24 @@ export default {
     },
 
     displayTickets() {
-      if (this.isWorkView) {
-        return store.getFilteredTickets();
-      }
-      return store.tickets;
+      return this.isWorkView ? store.getFilteredTickets() : store.getUserFilteredTickets();
+    },
+
+    sortOption: {
+      get() {
+        const { sortBy, sortDir } = store.filters;
+        if (sortBy === 'updated_at') return 'updated_desc';
+        return sortDir === 'asc' ? 'created_asc' : 'created_desc';
+      },
+      set(val) {
+        if (val === 'updated_desc') {
+          store.filters.sortBy = 'updated_at';
+          store.filters.sortDir = 'desc';
+        } else {
+          store.filters.sortBy = 'created_at';
+          store.filters.sortDir = val === 'created_asc' ? 'asc' : 'desc';
+        }
+      },
     },
   },
 
@@ -345,43 +403,145 @@ export default {
   padding: 40px;
 }
 
-.admin-filters {
-  background: var(--overlay-dark);
-  border-radius: 6px;
-  padding: 12px;
-}
-
-.filter-row {
+.filters {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.filter-select {
-  flex: 0 0 150px;
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: var(--color-bg-input);
   border: 1px solid var(--overlay-light);
-  color: var(--color-white);
-  font-size: 13px;
+  border-radius: 6px;
+  padding: 0 12px;
+  transition: border-color 0.15s;
 }
 
-.filter-search {
+.search-bar:focus-within {
+  border-color: var(--color-accent);
+}
+
+.search-bar > i {
+  color: var(--color-muted);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.filter-search-input {
   flex: 1;
-  background: var(--color-bg-input);
-  border: 1px solid var(--overlay-light);
+  background: transparent;
+  border: none;
   color: var(--color-white);
+  padding: 9px 0;
   font-size: 13px;
+  outline: none;
 }
 
-.filter-select:focus,
-.filter-search:focus {
-  background: var(--color-bg-input);
+.filter-search-input::placeholder {
+  color: var(--color-muted);
+}
+
+.search-clear {
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.search-clear:hover {
+  color: var(--color-white);
+}
+
+.filter-pills {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.select-wrap::after {
+  content: '▾';
+  position: absolute;
+  right: 9px;
+  pointer-events: none;
+  color: var(--color-muted);
+  font-size: 10px;
+  line-height: 1;
+}
+
+.filter-pill-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: var(--overlay-dark);
+  border: 1px solid var(--overlay-light);
+  color: var(--color-muted);
+  border-radius: 20px;
+  padding: 5px 26px 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  line-height: 1.4;
+  transition: border-color 0.15s, color 0.15s;
+  height: auto;
+}
+
+.filter-pill-select:focus {
+  outline: none;
   border-color: var(--color-accent);
   color: var(--color-white);
   box-shadow: none;
 }
 
-.filter-search::placeholder {
+.filter-pill-select.is-active {
+  border-color: var(--color-accent);
+  color: var(--color-white);
+}
+
+.filter-pill-btn {
+  background: var(--overlay-dark);
+  border: 1px solid var(--overlay-light);
   color: var(--color-muted);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  line-height: 1.4;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.filter-pill-btn:hover:not(:disabled) {
+  color: var(--color-white);
+}
+
+.filter-pill-btn.is-active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.filter-pill-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+
+.unread-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: var(--color-info);
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .empty-results {

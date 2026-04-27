@@ -10,18 +10,23 @@
     </li>
 
     <li class="{{ set_active('members/' . auth()->user()->member->clan_id) }}">
-        <a href="#{{ $idPrefix }}user-cp" data-toggle="collapse" aria-expanded="false">
-            @if(auth()->user()->member?->getDiscordAvatarUrl())
-                <img src="{{ auth()->user()->member->getDiscordAvatarUrl() }}" alt="{{ auth()->user()->name }}" class="nav-user-avatar">
-            @endif
-            {{ auth()->user()->name }}
-            @if (session('impersonating'))
-                <i class="fa fa-user-secret text-accent" title="Currently Impersonating"></i>
-            @endif
-            @if (auth()->user()->isDeveloper())
-                <i class="fa fa-user-shield text-danger" title="Dev mode enabled"></i>
-            @endif
-            <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
+        <a href="#{{ $idPrefix }}user-cp" data-toggle="collapse" aria-expanded="false" class="nav-user-link">
+            <span class="nav-avatar-wrap">
+                <i class="fa fa-user-circle"></i>
+                @if(auth()->user()->member?->getDiscordAvatarUrl())
+                    <img src="{{ auth()->user()->member->getDiscordAvatarUrl() }}" alt="" class="nav-user-avatar" onerror="this.style.display='none'">
+                @endif
+            </span>
+            <span class="nav-user-name">
+                {{ auth()->user()->name }}
+                @if (session('impersonating'))
+                    <i class="fa fa-user-secret text-accent" title="Currently Impersonating"></i>
+                @endif
+                @if (auth()->user()->isDeveloper())
+                    <i class="fa fa-user-shield text-danger" title="Dev mode enabled"></i>
+                @endif
+            </span>
+            <span class="sub-nav-icon"><i class="stroke-arrow"></i></span>
         </a>
 
         <ul id="{{ $idPrefix }}user-cp" class="nav nav-second collapse">
@@ -94,8 +99,14 @@
     @endunless
 
     @if(Auth::user()->isRole(['admin', 'sr_ldr', 'officer']))
+        @php $activeTicketCount = \App\Models\Ticket::whereIn('state', ['new', 'assigned'])->count(); @endphp
         <li class="{{ set_active('help/tickets*') }}">
-            <a href="{{ route('help.tickets.widget') }}">Get Help</a>
+            <a href="{{ route('help.tickets.widget') }}">
+                Get Help
+                @if($activeTicketCount > 0)
+                    <span class="nav-ticket-badge">{{ $activeTicketCount }}</span>
+                @endif
+            </a>
         </li>
     @endif
 
