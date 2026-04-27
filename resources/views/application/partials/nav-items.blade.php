@@ -14,7 +14,7 @@
             <span class="nav-avatar-wrap">
                 <i class="fa fa-user-circle"></i>
                 @if(auth()->user()->member?->getDiscordAvatarUrl())
-                    <img src="{{ auth()->user()->member->getDiscordAvatarUrl() }}" alt="" class="nav-user-avatar" onerror="this.style.display='none'">
+                    <img src="{{ auth()->user()->member->getDiscordAvatarUrl() }}" alt="" class="nav-user-avatar" onerror="this.remove()">
                 @endif
             </span>
             <span class="nav-user-name">

@@ -366,13 +366,16 @@ body.nav-toggle {
             flex-shrink: 0;
             width: 22px;
             height: 22px;
-            overflow: hidden;
 
             > i {
                 display: block;
                 font-size: 22px;
                 line-height: 1;
                 color: var(--color-muted);
+            }
+
+            &:has(img) > i {
+                display: none;
             }
 
             .nav-user-avatar {
