@@ -9153,13 +9153,17 @@ pre.code-toolbar > .toolbar span:focus {
         list-style: none;
     }
 
-    ul li, ol li {
+    li {
         position: relative;
         padding-left: 1.5rem;
         margin-bottom: 0.5rem;
+
+        > ul, > ol {
+            margin: 0.4rem 0 0.25rem 0.5rem;
+        }
     }
 
-    ul li::before {
+    ul > li::before {
         content: '';
         position: absolute;
         left: 0.25rem;
@@ -9170,10 +9174,18 @@ pre.code-toolbar > .toolbar span:focus {
         background: var(--color-accent);
     }
 
+    ul ul > li::before {
+        width: 4px;
+        height: 4px;
+        background: transparent;
+        border: 1px solid var(--color-accent);
+        top: 0.7em;
+    }
+
     ol {
         counter-reset: md-ol;
 
-        li {
+        > li {
             counter-increment: md-ol;
 
             &::before {
