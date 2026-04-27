@@ -10,6 +10,9 @@
             <div class="note-author">
                 @if ($note->author && $note->author->member)
                     <a href="{{ route('member', $note->author->member->getUrlParams()) }}">
+                        @if($note->author->member->getDiscordAvatarUrl())
+                            <img src="{{ $note->author->member->getDiscordAvatarUrl() }}" alt="{{ $note->author->name }}" class="note-author-avatar">
+                        @endif
                         {{ $note->author->name }}
                     </a>
                 @else

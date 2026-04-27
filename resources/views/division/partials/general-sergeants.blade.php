@@ -5,6 +5,9 @@
     @forelse ($generalSergeants as $member)
         <a href="{{ route('member', $member->getUrlParams()) }}" class="list-group-item">
             <h4 class="list-group-item-heading">
+                @if($member->getDiscordAvatarUrl())
+                    <img src="{{ $member->getDiscordAvatarUrl() }}" alt="{{ $member->name }}" class="leader-avatar">
+                @endif
                 <strong>{{ $member->rank->getAbbreviation() }} {{ $member->name }}</strong></h4>
             <p class="list-group-item-text text-muted"><?php echo $member->position->getLabel(); ?></p>
         </a>

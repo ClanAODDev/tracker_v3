@@ -11,6 +11,9 @@
 
     <li class="{{ set_active('members/' . auth()->user()->member->clan_id) }}">
         <a href="#{{ $idPrefix }}user-cp" data-toggle="collapse" aria-expanded="false">
+            @if(auth()->user()->member?->getDiscordAvatarUrl())
+                <img src="{{ auth()->user()->member->getDiscordAvatarUrl() }}" alt="{{ auth()->user()->name }}" class="nav-user-avatar">
+            @endif
             {{ auth()->user()->name }}
             @if (session('impersonating'))
                 <i class="fa fa-user-secret text-accent" title="Currently Impersonating"></i>

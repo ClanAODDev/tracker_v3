@@ -21,7 +21,7 @@ class TicketApiController extends Controller
     public function index(): JsonResponse
     {
         $tickets = Ticket::where('caller_id', auth()->id())
-            ->with(['type', 'owner', 'division'])
+            ->with(['type', 'owner.member', 'division'])
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(fn ($ticket) => $this->transformTicket($ticket));
@@ -39,7 +39,7 @@ class TicketApiController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $tickets = Ticket::with(['type', 'owner', 'division', 'caller'])
+        $tickets = Ticket::with(['type', 'owner.member', 'division', 'caller.member'])
             ->orderBy('created_at', 'desc')
             ->get()
             ->filter(fn ($ticket) => $ticket->type?->userCanWork($user) ?? $user->isRole('admin'))

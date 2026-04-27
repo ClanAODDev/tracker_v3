@@ -75,6 +75,10 @@
                 :key="comment.id"
                 class="comment-item"
               >
+                <div class="comment-avatar">
+                  <img v-if="comment.user?.avatar" :src="comment.user.avatar" :alt="comment.user?.name" class="avatar-img" />
+                  <i v-else class="fa fa-user"></i>
+                </div>
                 <div class="comment-bubble">
                   <div class="comment-header">
                     <span class="comment-author">{{ comment.user?.name ?? 'Unknown' }}</span>
@@ -293,6 +297,31 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 15px;
+}
+
+.comment-item {
+  display: flex;
+  gap: 12px;
+}
+
+.comment-avatar {
+  width: 36px;
+  height: 36px;
+  background: var(--overlay-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--color-muted);
+  overflow: hidden;
+}
+
+.avatar-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .comment-bubble {

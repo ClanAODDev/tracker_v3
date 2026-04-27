@@ -13,7 +13,12 @@
     @foreach($activityLog as $event)
         <tr>
             <td class="text-muted">{{ $event->id }}</td>
-            <td>{{ $event->user->name ?? "Somebody" }}</td>
+            <td>
+                @if($event->user?->member?->getDiscordAvatarUrl())
+                    <img src="{{ $event->user->member->getDiscordAvatarUrl() }}" alt="{{ $event->user->name }}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:5px;">
+                @endif
+                {{ $event->user->name ?? "Somebody" }}
+            </td>
             <td>{{ $event->name }}</td>
             <td>{{ $event->subject->name ?? "ID #" . $event->subject_id }}</td>
             <td>{{ $event->created_at->format('Y-m-d H:i A') }}</td>

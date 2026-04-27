@@ -67,8 +67,9 @@ class DivisionApplicationApiController extends Controller
                     'id'   => $comment->id,
                     'body' => $comment->body,
                     'user' => $comment->author ? [
-                        'id'   => $comment->author->id,
-                        'name' => $comment->author->member?->present()->rankName() ?? $comment->author->name,
+                        'id'     => $comment->author->id,
+                        'name'   => $comment->author->member?->present()->rankName() ?? $comment->author->name,
+                        'avatar' => $comment->author->member?->getDiscordAvatarUrl(),
                     ] : null,
                     'created_at' => $comment->created_at->toIso8601String(),
                 ]),
@@ -106,8 +107,9 @@ class DivisionApplicationApiController extends Controller
                 'id'   => $comment->id,
                 'body' => $comment->body,
                 'user' => [
-                    'id'   => $comment->author->id,
-                    'name' => $comment->author->member?->present()->rankName() ?? $comment->author->name,
+                    'id'     => $comment->author->id,
+                    'name'   => $comment->author->member?->present()->rankName() ?? $comment->author->name,
+                    'avatar' => $comment->author->member?->getDiscordAvatarUrl(),
                 ],
                 'created_at' => $comment->created_at->toIso8601String(),
             ],

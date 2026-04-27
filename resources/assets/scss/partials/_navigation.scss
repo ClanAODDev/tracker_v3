@@ -342,4 +342,13 @@ body.nav-toggle {
         float: right;
         transform: rotate(90deg);
     }
+
+    .nav-user-avatar {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        object-fit: cover;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
 }

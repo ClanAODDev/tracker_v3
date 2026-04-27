@@ -78,11 +78,13 @@
                   {{ formatStatus(ticket.state) }}
                 </span>
                 <span v-if="isAdminView && ticket.caller" class="meta-item">
-                  <i class="fa fa-user text-muted m-r-xs"></i>
+                  <img v-if="ticket.caller.avatar" :src="ticket.caller.avatar" :alt="ticket.caller.name" class="meta-avatar" />
+                  <i v-else class="fa fa-user text-muted m-r-xs"></i>
                   {{ ticket.caller.name }}
                 </span>
                 <span v-if="ticket.owner" class="meta-item">
-                  <i class="fa fa-user-circle text-muted m-r-xs"></i>
+                  <img v-if="ticket.owner.avatar" :src="ticket.owner.avatar" :alt="ticket.owner.name" class="meta-avatar" />
+                  <i v-else class="fa fa-user-circle text-muted m-r-xs"></i>
                   {{ ticket.owner.name }}
                 </span>
                 <span class="meta-item meta-time">
@@ -284,6 +286,14 @@ export default {
   align-items: center;
   font-size: 12px;
   color: var(--color-muted);
+}
+
+.meta-avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 5px;
 }
 
 .meta-time {
