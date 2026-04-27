@@ -172,14 +172,14 @@
         Application
     </li>
 
-    <li class="{{ set_active(['help/docs/*', 'help/docs']) }}">
+    <li class="{{ set_active(['help/docs/*', 'help/docs', 'training/division-checklist']) }}">
         <a href="#{{ $idPrefix }}docs" data-toggle="collapse" aria-expanded="false">
             Documentation
             <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
         </a>
 
         <ul id="{{ $idPrefix }}docs"
-            class="nav nav-second {{ request()->is(['help/docs/*', 'help/docs']) ? 'expanded' : 'collapse' }}">
+            class="nav nav-second {{ request()->is(['help/docs/*', 'help/docs', 'training/division-checklist']) ? 'expanded' : 'collapse' }}">
             <li class="{{ set_active(['help/docs']) }}">
                 <a href="{{ route('help') }}">General</a>
             </li>
