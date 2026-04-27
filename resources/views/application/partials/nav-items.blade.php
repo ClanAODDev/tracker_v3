@@ -196,6 +196,14 @@
                 </a>
             </li>
 
+            @if(Auth::user()->isRole(['admin', 'sr_ldr', 'officer']))
+                <li class="{{ set_active(['help/docs/recruiting']) }}">
+                    <a href="{{ route('help.recruiting') }}">
+                        Recruiting
+                    </a>
+                </li>
+            @endif
+
             @if(Auth::user()->isRole('admin'))
 
                 <li class="{{ set_active(['help/docs/admin/division-checklist']) }}">

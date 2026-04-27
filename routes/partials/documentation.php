@@ -10,6 +10,7 @@ Route::prefix('help/docs')->group(function () {
     Route::get('/', [HelpController::class, 'index'])->name('help');
     Route::view('member-awards', 'help.member-awards')->name('help.member-awards');
     Route::view('managing-rank', 'help.managing-rank')->name('help.managing-rank');
+    Route::view('recruiting', 'help.recruiting')->name('help.recruiting');
 
     Route::middleware('admin')->prefix('admin')->name('help.admin.')->group(function () {
         Route::view('/', 'help.admin.index')->name('home');
