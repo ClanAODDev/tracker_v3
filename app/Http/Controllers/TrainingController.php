@@ -14,6 +14,15 @@ class TrainingController extends Controller
         $this->middleware('auth');
     }
 
+    public function index()
+    {
+        $this->authorize('train', auth()->user());
+
+        $modules = TrainingModule::active()->ordered()->withCount('sections')->get();
+
+        return view('training.index', compact('modules'));
+    }
+
     public function show(string $slug, Request $request)
     {
         $this->authorize('train', auth()->user());

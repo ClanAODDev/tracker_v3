@@ -172,14 +172,14 @@
         Application
     </li>
 
-    <li class="{{ set_active(['help/docs/*', 'help/docs', 'training/division-checklist', 'training/sgt']) }}">
+    <li class="{{ set_active(['help/docs/*', 'help/docs']) }}">
         <a href="#{{ $idPrefix }}docs" data-toggle="collapse" aria-expanded="false">
             Documentation
             <span class="sub-nav-icon"> <i class="stroke-arrow"></i> </span>
         </a>
 
         <ul id="{{ $idPrefix }}docs"
-            class="nav nav-second {{ request()->is(['help/docs/*', 'help/docs', 'training/division-checklist', 'training/sgt']) ? 'expanded' : 'collapse' }}">
+            class="nav nav-second {{ request()->is(['help/docs/*', 'help/docs']) ? 'expanded' : 'collapse' }}">
             <li class="{{ set_active(['help/docs']) }}">
                 <a href="{{ route('help') }}">General</a>
             </li>
@@ -196,12 +196,6 @@
                 </a>
             </li>
 
-            <li class="{{ set_active(['training/sgt']) }}">
-                <a href="{{ route('training.sgt') }}">
-                    SGT Training
-                </a>
-            </li>
-
             @if(Auth::user()->isRole(['admin', 'sr_ldr', 'officer']))
                 <li class="{{ set_active(['help/docs/recruiting']) }}">
                     <a href="{{ route('help.recruiting') }}">
@@ -211,24 +205,20 @@
             @endif
 
             @if(Auth::user()->isRole('admin'))
-
-                <li class="{{ set_active(['training/division-checklist']) }}">
-                    <a href="{{ route('training.show', 'division-checklist') }}">
-                        Division Checklist
-                    </a>
-                </li>
-
                 <li class="{{ set_active(['help/docs/admin']) }}">
                     <a href="{{ route('help.admin.home') }}">
                         Contributing
                     </a>
                 </li>
-
             @endif
-
-
         </ul>
     </li>
+
+    @can('train', Auth::user())
+        <li class="{{ set_active(['training', 'training/*']) }}">
+            <a href="{{ route('training.index') }}">Training</a>
+        </li>
+    @endcan
 
     <li><a href="https://github.com/clanaoddev/tracker_v3" target="_blank">Contribute <span class="pull-right"><i
                         class="fab
