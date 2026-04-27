@@ -71,7 +71,7 @@ The forum account exists but is not in an eligible group. Specific reasons:
 ### "User not found" / invalid ID
 
 The forum member ID does not correspond to an active account. Double-check the ID from the recruit's forum
-profile URL (`/members/username.XXXXX/` — the number at the end is their ID).
+profile URL (`https://clanaod.net/forums/member.php?u=XXXXX` — the number after `u=` is their ID).
 
 ### Forum account not found for Discord user
 
