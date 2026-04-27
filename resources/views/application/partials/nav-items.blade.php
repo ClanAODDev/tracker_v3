@@ -206,8 +206,8 @@
 
             @if(Auth::user()->isRole('admin'))
 
-                <li class="{{ set_active(['help/docs/admin/division-checklist']) }}">
-                    <a href="{{ route('help.admin.division-checklist') }}">
+                <li class="{{ set_active(['training/division-checklist']) }}">
+                    <a href="{{ route('training.show', 'division-checklist') }}">
                         Division Checklist
                     </a>
                 </li>
