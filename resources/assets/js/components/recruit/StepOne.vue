@@ -98,6 +98,15 @@
                       {{ tag.name }}
                     </span>
                   </div>
+                  <div v-if="store.validation.memberId.discordMatches.length" class="discord-match-notice">
+                    <i class="fab fa-discord"></i>
+                    Discord ID matches existing member<span v-if="store.validation.memberId.discordMatches.length > 1">s</span>:
+                    <span
+                      v-for="match in store.validation.memberId.discordMatches"
+                      :key="match.clan_id"
+                      class="discord-match-member"
+                    >{{ match.name }}<span v-if="match.division"> ({{ match.division }})</span></span>
+                  </div>
                 </div>
               </div>
             </div>

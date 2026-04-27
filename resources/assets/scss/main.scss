@@ -11099,6 +11099,31 @@ pre.code-toolbar > .toolbar span:focus {
     }
 }
 
+.discord-match-notice {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: rgba(88, 101, 242, 0.12);
+    border: 1px solid rgba(88, 101, 242, 0.3);
+    border-radius: 4px;
+    font-size: 12px;
+    color: #8b9cf4;
+
+    i {
+        margin-right: 5px;
+    }
+}
+
+.discord-match-member {
+    font-weight: 600;
+    color: #aab4f7;
+    margin-left: 4px;
+
+    &:not(:last-child)::after {
+        content: ',';
+        font-weight: normal;
+    }
+}
+
 #pending_user option {
     padding: 6px 8px;
 }

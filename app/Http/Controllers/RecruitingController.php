@@ -236,6 +236,7 @@ class RecruitingController extends Controller
                 'exists_in_tracker' => $existsInTracker,
                 'tags'              => $tags,
                 'division'          => $division,
+                'discord_matches'   => [],
             ];
         }
 
@@ -249,8 +250,11 @@ class RecruitingController extends Controller
                 'exists_in_tracker' => $existsInTracker,
                 'tags'              => $tags,
                 'division'          => $division,
+                'discord_matches'   => [],
             ];
         }
+
+        $discordMatches = $this->findDiscordMatches($member_id, $result, $member);
 
         return [
             'is_member'         => true,
@@ -260,6 +264,7 @@ class RecruitingController extends Controller
             'exists_in_tracker' => $existsInTracker,
             'tags'              => $tags,
             'division'          => $division,
+            'discord_matches'   => $discordMatches,
         ];
     }
 
@@ -571,6 +576,30 @@ class RecruitingController extends Controller
         }
 
         return $division->notify(new NotifyDivisionNewMemberRecruited($member, auth()->user()));
+    }
+
+    private function findDiscordMatches(int $memberId, object $result, ?Member $existingMember): array
+    {
+        $discordId = property_exists($result, 'discord_id') ? $result->discord_id : null;
+
+        if (! $discordId && $existingMember?->discord_id) {
+            $discordId = $existingMember->discord_id;
+        }
+
+        if (! $discordId) {
+            return [];
+        }
+
+        return Member::where('discord_id', $discordId)
+            ->where('clan_id', '!=', $memberId)
+            ->with('division:id,abbreviation')
+            ->get()
+            ->map(fn ($m) => [
+                'name'     => $m->name,
+                'clan_id'  => $m->clan_id,
+                'division' => $m->division?->abbreviation,
+            ])
+            ->toArray();
     }
 
     /**

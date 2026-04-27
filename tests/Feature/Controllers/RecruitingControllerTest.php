@@ -447,4 +447,98 @@ class RecruitingControllerTest extends TestCase
         $response->assertStatus(422);
         $this->assertDatabaseMissing('members', ['name' => 'BlockedRecruit']);
     }
+
+    public function test_validate_member_id_returns_not_found_for_unknown_id(): void
+    {
+        $this->mockProcedureService(['getUser' => null]);
+
+        $officer  = $this->createOfficer();
+        $response = $this->actingAs($officer)->post(route('validate-id', 99999));
+
+        $response->assertOk()->assertJson([
+            'is_member'         => false,
+            'exists_in_tracker' => false,
+            'discord_matches'   => [],
+        ]);
+    }
+
+    public function test_validate_member_id_flags_existing_tracker_member(): void
+    {
+        $existing = $this->createMember(['clan_id' => 1234]);
+        $this->mockProcedureService(['getUser' => (object) [
+            'usergroupid' => ForumGroup::REGISTERED_USER->value,
+            'username'    => $existing->name,
+        ]]);
+
+        $officer  = $this->createOfficer();
+        $response = $this->actingAs($officer)->post(route('validate-id', 1234));
+
+        $response->assertOk()->assertJson([
+            'is_member'         => true,
+            'exists_in_tracker' => true,
+            'discord_matches'   => [],
+        ]);
+    }
+
+    public function test_validate_member_id_returns_discord_matches_from_forum_profile(): void
+    {
+        $existingMember = $this->createMember(['discord_id' => '111222333']);
+        $this->mockProcedureService(['getUser' => (object) [
+            'usergroupid' => ForumGroup::REGISTERED_USER->value,
+            'username'    => 'NewRecruit',
+            'discord_id'  => '111222333',
+        ]]);
+
+        $officer  = $this->createOfficer();
+        $response = $this->actingAs($officer)->post(route('validate-id', 9999));
+
+        $response->assertOk()
+            ->assertJson(['discord_matches' => [['clan_id' => $existingMember->clan_id]]])
+            ->assertJsonCount(1, 'discord_matches');
+    }
+
+    public function test_validate_member_id_returns_discord_matches_from_existing_tracker_member(): void
+    {
+        $existing = $this->createMember(['clan_id' => 5678, 'discord_id' => '999888777']);
+        $this->mockProcedureService(['getUser' => (object) [
+            'usergroupid' => ForumGroup::REGISTERED_USER->value,
+            'username'    => $existing->name,
+        ]]);
+
+        $officer  = $this->createOfficer();
+        $response = $this->actingAs($officer)->post(route('validate-id', 5678));
+
+        $response->assertOk()->assertJson([
+            'exists_in_tracker' => true,
+            'discord_matches'   => [],
+        ]);
+    }
+
+    public function test_validate_member_id_excludes_self_from_discord_matches(): void
+    {
+        $this->createMember(['clan_id' => 7777, 'discord_id' => '777666555']);
+        $this->mockProcedureService(['getUser' => (object) [
+            'usergroupid' => ForumGroup::REGISTERED_USER->value,
+            'username'    => 'SomeMember',
+            'discord_id'  => '777666555',
+        ]]);
+
+        $officer  = $this->createOfficer();
+        $response = $this->actingAs($officer)->post(route('validate-id', 7777));
+
+        $response->assertOk()->assertJson(['discord_matches' => []]);
+    }
+
+    public function test_validate_member_id_returns_empty_discord_matches_when_no_discord_id(): void
+    {
+        $this->mockProcedureService(['getUser' => (object) [
+            'usergroupid' => ForumGroup::REGISTERED_USER->value,
+            'username'    => 'NewUser',
+        ]]);
+
+        $officer  = $this->createOfficer();
+        $response = $this->actingAs($officer)->post(route('validate-id', 8888));
+
+        $response->assertOk()->assertJson(['discord_matches' => []]);
+    }
 }
