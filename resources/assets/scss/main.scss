@@ -9071,6 +9071,17 @@ pre.code-toolbar > .toolbar span:focus {
     line-height: 1.75;
     font-size: 1.35rem;
 
+    h1, h2, h3, h4 {
+        .heading-permalink {
+            opacity: 0;
+            transition: opacity 0.15s;
+        }
+
+        &:hover .heading-permalink {
+            opacity: 1;
+        }
+    }
+
     h1 {
         font-size: 2.4rem;
         font-weight: 700;
