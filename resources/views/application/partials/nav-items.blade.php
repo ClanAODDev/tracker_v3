@@ -99,14 +99,8 @@
     @endunless
 
     @if(Auth::user()->isRole(['admin', 'sr_ldr', 'officer']))
-        @php $activeTicketCount = \App\Models\Ticket::whereIn('state', ['new', 'assigned'])->count(); @endphp
         <li class="{{ set_active('help/tickets*') }}">
-            <a href="{{ route('help.tickets.widget') }}">
-                Get Help
-                @if($activeTicketCount > 0)
-                    <span class="nav-ticket-badge">{{ $activeTicketCount }}</span>
-                @endif
-            </a>
+            <a href="{{ route('help.tickets.widget') }}">Get Help</a>
         </li>
     @endif
 
