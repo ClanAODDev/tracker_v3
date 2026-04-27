@@ -18,7 +18,11 @@ class TrainingController extends Controller
     {
         $this->authorize('train', auth()->user());
 
-        $modules = TrainingModule::active()->ordered()->withCount('sections')->get();
+        $member = auth()->user()->member;
+
+        $modules = TrainingModule::active()->ordered()->withCount('sections')->get()
+            ->filter(fn ($module) => $module->isAccessibleBy($member))
+            ->values();
 
         return view('training.index', compact('modules'));
     }
@@ -31,6 +35,8 @@ class TrainingController extends Controller
             ->where('is_active', true)
             ->with(['sections.checkpoints'])
             ->firstOrFail();
+
+        abort_unless($module->isAccessibleBy(auth()->user()->member), 403);
 
         $trainee = null;
         if ($request->has('clan_id')) {

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources;
 
+use App\Enums\Rank;
 use App\Filament\Admin\Resources\TrainingModuleResource\Pages\CreateTrainingModule;
 use App\Filament\Admin\Resources\TrainingModuleResource\Pages\EditTrainingModule;
 use App\Filament\Admin\Resources\TrainingModuleResource\Pages\ListTrainingModules;
@@ -10,6 +11,7 @@ use App\Models\TrainingModule;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -57,6 +59,11 @@ class TrainingModuleResource extends Resource
                     ->default('Talking Points')
                     ->maxLength(50)
                     ->helperText('Label shown above checkpoints (e.g., "Talking Points", "Tasks")'),
+                Select::make('minimum_rank')
+                    ->label('Minimum Rank')
+                    ->options(collect(Rank::cases())->mapWithKeys(fn ($r) => [$r->value => $r->getLabel()]))
+                    ->placeholder('No restriction')
+                    ->nullable(),
                 Toggle::make('is_active')
                     ->default(true),
                 Toggle::make('show_completion_form')
@@ -85,6 +92,11 @@ class TrainingModuleResource extends Resource
                 TextInputColumn::make('display_order')
                     ->rules(['required', 'numeric'])
                     ->sortable(),
+                TextColumn::make('minimum_rank')
+                    ->label('Min Rank')
+                    ->formatStateUsing(fn ($state) => $state?->getLabel() ?? '—')
+                    ->badge()
+                    ->color(fn ($state) => $state?->getColor() ?? 'gray'),
                 IconColumn::make('is_active')
                     ->boolean()
                     ->label('Active'),
