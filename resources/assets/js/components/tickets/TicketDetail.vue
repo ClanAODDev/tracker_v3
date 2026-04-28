@@ -108,79 +108,81 @@
         </div>
       </div>
 
-      <div v-if="showRejectModal" class="reject-modal-overlay" @click.self="showRejectModal = false">
-        <div class="reject-modal">
-          <div class="reject-modal-header">
-            <h5>Reject Ticket</h5>
-            <button type="button" class="close-btn" @click="showRejectModal = false">
-              <i class="fa fa-times"></i>
-            </button>
-          </div>
-          <div class="reject-modal-body">
-            <div class="form-group">
-              <label>Reason for rejection</label>
-              <textarea
-                v-model="rejectReason"
-                class="form-control"
-                rows="3"
-                placeholder="Explain why this ticket is being rejected..."
-              ></textarea>
+      <Teleport to="body">
+        <div v-if="showRejectModal" class="reject-modal-overlay" @click.self="showRejectModal = false">
+          <div class="reject-modal">
+            <div class="reject-modal-header">
+              <h5>Reject Ticket</h5>
+              <button type="button" class="close-btn" @click="showRejectModal = false">
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+            <div class="reject-modal-body">
+              <div class="form-group">
+                <label>Reason for rejection</label>
+                <textarea
+                  v-model="rejectReason"
+                  class="form-control"
+                  rows="3"
+                  placeholder="Explain why this ticket is being rejected..."
+                ></textarea>
+              </div>
+            </div>
+            <div class="reject-modal-footer">
+              <button class="btn btn-default btn-sm" @click="showRejectModal = false">Cancel</button>
+              <button
+                class="btn btn-danger btn-sm"
+                :disabled="rejectReason.length < 5 || store.loading.action"
+                @click="rejectTicket"
+              >
+                <span v-if="store.loading.action">
+                  <span class="themed-spinner spinner-sm"></span> Rejecting...
+                </span>
+                <span v-else>Reject Ticket</span>
+              </button>
             </div>
           </div>
-          <div class="reject-modal-footer">
-            <button class="btn btn-default btn-sm" @click="showRejectModal = false">Cancel</button>
-            <button
-              class="btn btn-danger btn-sm"
-              :disabled="rejectReason.length < 5 || store.loading.action"
-              @click="rejectTicket"
-            >
-              <span v-if="store.loading.action">
-                <span class="themed-spinner spinner-sm"></span> Rejecting...
-              </span>
-              <span v-else>Reject Ticket</span>
-            </button>
-          </div>
         </div>
-      </div>
 
-      <div v-if="showReassignModal" class="reject-modal-overlay" @click.self="showReassignModal = false">
-        <div class="reject-modal">
-          <div class="reject-modal-header">
-            <h5>Assign Ticket</h5>
-            <button type="button" class="close-btn" @click="showReassignModal = false">
-              <i class="fa fa-times"></i>
-            </button>
-          </div>
-          <div class="reject-modal-body">
-            <div class="form-group m-b-none">
-              <label>Assign to</label>
-              <select v-model="reassignUserId" class="form-control">
-                <option value="">Select a member...</option>
-                <option :value="currentUserId">Me</option>
-                <option disabled>──────────────</option>
-                <template v-for="worker in store.workers" :key="worker.id">
-                  <option v-if="worker.id !== currentUserId" :value="worker.id">
-                    {{ worker.name }}
-                  </option>
-                </template>
-              </select>
+        <div v-if="showReassignModal" class="reject-modal-overlay" @click.self="showReassignModal = false">
+          <div class="reject-modal">
+            <div class="reject-modal-header">
+              <h5>Assign Ticket</h5>
+              <button type="button" class="close-btn" @click="showReassignModal = false">
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+            <div class="reject-modal-body">
+              <div class="form-group m-b-none">
+                <label>Assign to</label>
+                <select v-model="reassignUserId" class="form-control">
+                  <option value="">Select a member...</option>
+                  <option :value="currentUserId">Me</option>
+                  <option disabled>──────────────</option>
+                  <template v-for="worker in store.workers" :key="worker.id">
+                    <option v-if="worker.id !== currentUserId" :value="worker.id">
+                      {{ worker.name }}
+                    </option>
+                  </template>
+                </select>
+              </div>
+            </div>
+            <div class="reject-modal-footer">
+              <button class="btn btn-default btn-sm" @click="showReassignModal = false">Cancel</button>
+              <button
+                class="btn btn-primary btn-sm"
+                :disabled="!reassignUserId || store.loading.action"
+                @click="doReassign"
+              >
+                <span v-if="store.loading.action">
+                  <span class="themed-spinner spinner-sm"></span> Reassigning...
+                </span>
+                <span v-else>Reassign</span>
+              </button>
             </div>
           </div>
-          <div class="reject-modal-footer">
-            <button class="btn btn-default btn-sm" @click="showReassignModal = false">Cancel</button>
-            <button
-              class="btn btn-primary btn-sm"
-              :disabled="!reassignUserId || store.loading.action"
-              @click="doReassign"
-            >
-              <span v-if="store.loading.action">
-                <span class="themed-spinner spinner-sm"></span> Reassigning...
-              </span>
-              <span v-else>Reassign</span>
-            </button>
-          </div>
         </div>
-      </div>
+      </Teleport>
 
       <div class="ticket-sections">
         <div class="section-card">
