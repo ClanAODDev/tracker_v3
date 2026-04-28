@@ -156,16 +156,13 @@
               <label>Assign to</label>
               <select v-model="reassignUserId" class="form-control">
                 <option value="">Select a member...</option>
-                <optgroup label="───">
-                  <option :value="currentUserId">Me</option>
-                </optgroup>
-                <optgroup label="───────────────">
-                  <template v-for="worker in store.workers" :key="worker.id">
-                    <option v-if="worker.id !== currentUserId" :value="worker.id">
-                      {{ worker.name }}
-                    </option>
-                  </template>
-                </optgroup>
+                <option :value="currentUserId">Me</option>
+                <option disabled>──────────────</option>
+                <template v-for="worker in store.workers" :key="worker.id">
+                  <option v-if="worker.id !== currentUserId" :value="worker.id">
+                    {{ worker.name }}
+                  </option>
+                </template>
               </select>
             </div>
           </div>
