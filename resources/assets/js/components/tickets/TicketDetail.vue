@@ -74,12 +74,12 @@
         </div>
         <div class="action-buttons">
           <button
-            v-if="canAssign"
+            v-if="canReassign"
             class="btn btn-info btn-sm"
             :disabled="store.loading.action"
-            @click="assignToMe"
+            @click="openReassignModal"
           >
-            <i class="fa fa-hand-paper-o m-r-xs"></i> Assign to Me
+            <i class="fa fa-exchange m-r-xs"></i> Assign to
           </button>
           <button
             v-if="canResolve"
@@ -138,6 +138,48 @@
                 <span class="themed-spinner spinner-sm"></span> Rejecting...
               </span>
               <span v-else>Reject Ticket</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="showReassignModal" class="reject-modal-overlay" @click.self="showReassignModal = false">
+        <div class="reject-modal">
+          <div class="reject-modal-header">
+            <h5>Assign Ticket</h5>
+            <button type="button" class="close-btn" @click="showReassignModal = false">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+          <div class="reject-modal-body">
+            <div class="form-group m-b-none">
+              <label>Assign to</label>
+              <select v-model="reassignUserId" class="form-control">
+                <option value="">Select a member...</option>
+                <optgroup label="───">
+                  <option :value="currentUserId">Me</option>
+                </optgroup>
+                <optgroup label="───────────────">
+                  <template v-for="worker in store.workers" :key="worker.id">
+                    <option v-if="worker.id !== currentUserId" :value="worker.id">
+                      {{ worker.name }}
+                    </option>
+                  </template>
+                </optgroup>
+              </select>
+            </div>
+          </div>
+          <div class="reject-modal-footer">
+            <button class="btn btn-default btn-sm" @click="showReassignModal = false">Cancel</button>
+            <button
+              class="btn btn-primary btn-sm"
+              :disabled="!reassignUserId || store.loading.action"
+              @click="doReassign"
+            >
+              <span v-if="store.loading.action">
+                <span class="themed-spinner spinner-sm"></span> Reassigning...
+              </span>
+              <span v-else>Reassign</span>
             </button>
           </div>
         </div>
@@ -320,6 +362,8 @@ export default {
       store,
       showRejectModal: false,
       rejectReason: '',
+      showReassignModal: false,
+      reassignUserId: '',
     };
   },
 
@@ -352,6 +396,12 @@ export default {
       const ticket = store.currentTicket;
       if (!ticket) return false;
       return ticket.state === 'new' || (ticket.state === 'assigned' && ticket.owner?.id !== this.currentUserId);
+    },
+
+    canReassign() {
+      const ticket = store.currentTicket;
+      if (!ticket) return false;
+      return ticket.state === 'new' || ticket.state === 'assigned';
     },
 
     canResolve() {
@@ -388,6 +438,23 @@ export default {
 
     assignToMe() {
       store.ownTicket(store.currentTicket.id)
+        .catch(() => {});
+    },
+
+    openReassignModal() {
+      this.reassignUserId = '';
+      this.showReassignModal = true;
+      if (store.workers.length === 0) {
+        store.loadWorkers();
+      }
+    },
+
+    doReassign() {
+      store.reassignTicket(store.currentTicket.id, this.reassignUserId)
+        .then(() => {
+          this.showReassignModal = false;
+          this.reassignUserId = '';
+        })
         .catch(() => {});
     },
 

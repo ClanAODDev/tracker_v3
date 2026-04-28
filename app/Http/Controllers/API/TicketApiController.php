@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Enums\Rank;
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Models\TicketType;
+use App\Models\User;
 use App\Services\TicketNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -124,6 +126,56 @@ class TicketApiController extends Controller
 
         return response()->json([
             'message' => 'Ticket reopened',
+            'ticket'  => $this->transformTicket($ticket, true, true),
+        ]);
+    }
+
+    public function workers(): JsonResponse
+    {
+        if (! TicketType::get()->contains(fn ($type) => $type->userCanWork(auth()->user()))) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $workers = User::whereHas('member', fn ($q) => $q
+                ->where('rank', '>=', Rank::MASTER_SERGEANT->value)
+                ->whereNotNull('division_id')
+            )
+            ->with('member')
+            ->orderBy('name')
+            ->get()
+            ->map(fn ($u) => [
+                'id'     => $u->id,
+                'name'   => $u->name,
+                'avatar' => $u->member?->getDiscordAvatarUrl(),
+            ])
+            ->values();
+
+        return response()->json(['workers' => $workers]);
+    }
+
+    public function reassign(Request $request, Ticket $ticket): JsonResponse
+    {
+        $user = auth()->user();
+
+        if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $validated = $request->validate(['user_id' => 'required|exists:users,id']);
+
+        $assignee = User::with('member')->findOrFail($validated['user_id']);
+
+        if (! $assignee->member || $assignee->member->rank->value < Rank::MASTER_SERGEANT->value) {
+            return response()->json(['error' => 'Target must be MSgt or higher'], 422);
+        }
+
+        $ticket->ownTo($assignee);
+        $this->notificationService->notifyTicketAssigned($ticket, assignee: $assignee, assignedBy: $user);
+
+        $ticket->load(['type', 'owner.member', 'division', 'caller.member', 'comments.user.member']);
+
+        return response()->json([
+            'message' => 'Ticket reassigned',
             'ticket'  => $this->transformTicket($ticket, true, true),
         ]);
     }

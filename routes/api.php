@@ -35,10 +35,12 @@ Route::prefix('tickets')->middleware(['web', 'auth'])->name('tickets.')->group(f
     Route::get('/', [TicketApiController::class, 'index'])->name('index');
     Route::get('/types', [TicketApiController::class, 'types'])->name('types');
     Route::get('/workable', [TicketApiController::class, 'workableIndex'])->name('workable');
+    Route::get('/workers', [TicketApiController::class, 'workers'])->name('workers');
     Route::post('/', [TicketApiController::class, 'store'])->name('store');
     Route::get('/{ticket}', [TicketApiController::class, 'show'])->name('show');
     Route::post('/{ticket}/comments', [TicketApiController::class, 'addComment'])->name('comments.store');
     Route::post('/{ticket}/own', [TicketApiController::class, 'own'])->name('own');
+    Route::post('/{ticket}/reassign', [TicketApiController::class, 'reassign'])->name('reassign');
     Route::post('/{ticket}/resolve', [TicketApiController::class, 'resolve'])->name('resolve');
     Route::post('/{ticket}/reject', [TicketApiController::class, 'reject'])->name('reject');
     Route::post('/{ticket}/reopen', [TicketApiController::class, 'reopen'])->name('reopen');
