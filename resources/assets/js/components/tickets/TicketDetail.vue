@@ -93,7 +93,7 @@
             v-if="canReject"
             class="btn btn-danger btn-sm"
             :disabled="store.loading.action"
-            @click="showRejectModal = true"
+            @click="openRejectModal"
           >
             <i class="fa fa-times m-r-xs"></i> Reject
           </button>
@@ -108,18 +108,16 @@
         </div>
       </div>
 
-      <Teleport to="body">
-        <div v-if="showRejectModal" class="reject-modal-overlay" @click.self="showRejectModal = false">
-          <div class="reject-modal">
-            <div class="reject-modal-header">
-              <h5>Reject Ticket</h5>
-              <button type="button" class="close-btn" @click="showRejectModal = false">
-                <i class="fa fa-times"></i>
-              </button>
+      <div class="modal fade" id="ticket-reject-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+              <h4 class="modal-title">Reject Ticket</h4>
             </div>
-            <div class="reject-modal-body">
+            <div class="modal-body">
               <div class="form-group">
-                <label>Reason for rejection</label>
+                <label class="control-label">Reason for rejection</label>
                 <textarea
                   v-model="rejectReason"
                   class="form-control"
@@ -128,10 +126,11 @@
                 ></textarea>
               </div>
             </div>
-            <div class="reject-modal-footer">
-              <button class="btn btn-default btn-sm" @click="showRejectModal = false">Cancel</button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
               <button
-                class="btn btn-danger btn-sm"
+                type="button"
+                class="btn btn-danger"
                 :disabled="rejectReason.length < 5 || store.loading.action"
                 @click="rejectTicket"
               >
@@ -143,18 +142,18 @@
             </div>
           </div>
         </div>
+      </div>
 
-        <div v-if="showReassignModal" class="reject-modal-overlay" @click.self="showReassignModal = false">
-          <div class="reject-modal">
-            <div class="reject-modal-header">
-              <h5>Assign Ticket</h5>
-              <button type="button" class="close-btn" @click="showReassignModal = false">
-                <i class="fa fa-times"></i>
-              </button>
+      <div class="modal fade" id="ticket-reassign-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+              <h4 class="modal-title">Assign Ticket</h4>
             </div>
-            <div class="reject-modal-body">
+            <div class="modal-body">
               <div class="form-group m-b-none">
-                <label>Assign to</label>
+                <label class="control-label">Assign to</label>
                 <select v-model="reassignUserId" class="form-control">
                   <option value="">Select a member...</option>
                   <option :value="currentUserId">Me</option>
@@ -167,10 +166,11 @@
                 </select>
               </div>
             </div>
-            <div class="reject-modal-footer">
-              <button class="btn btn-default btn-sm" @click="showReassignModal = false">Cancel</button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
               <button
-                class="btn btn-primary btn-sm"
+                type="button"
+                class="btn btn-primary"
                 :disabled="!reassignUserId || store.loading.action"
                 @click="doReassign"
               >
@@ -182,7 +182,7 @@
             </div>
           </div>
         </div>
-      </Teleport>
+      </div>
 
       <div class="ticket-sections">
         <div class="section-card">
@@ -359,9 +359,7 @@ export default {
   data() {
     return {
       store,
-      showRejectModal: false,
       rejectReason: '',
-      showReassignModal: false,
       reassignUserId: '',
     };
   },
@@ -442,19 +440,23 @@ export default {
 
     openReassignModal() {
       this.reassignUserId = '';
-      this.showReassignModal = true;
       if (store.workers.length === 0) {
         store.loadWorkers();
       }
+      window.jQuery('#ticket-reassign-modal').modal('show');
     },
 
     doReassign() {
       store.reassignTicket(store.currentTicket.id, this.reassignUserId)
         .then(() => {
-          this.showReassignModal = false;
           this.reassignUserId = '';
+          window.jQuery('#ticket-reassign-modal').modal('hide');
         })
         .catch(() => {});
+    },
+
+    openRejectModal() {
+      window.jQuery('#ticket-reject-modal').modal('show');
     },
 
     resolveTicket() {
@@ -465,8 +467,8 @@ export default {
     rejectTicket() {
       store.rejectTicket(store.currentTicket.id, this.rejectReason)
         .then(() => {
-          this.showRejectModal = false;
           this.rejectReason = '';
+          window.jQuery('#ticket-reject-modal').modal('hide');
         })
         .catch(() => {});
     },
@@ -953,87 +955,4 @@ export default {
   flex-wrap: wrap;
 }
 
-.reject-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1060;
-}
-
-.reject-modal {
-  background: var(--color-bg-secondary);
-  border-radius: 8px;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-}
-
-.reject-modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 15px 20px;
-  border-bottom: 1px solid var(--overlay-light);
-}
-
-.reject-modal-header h5 {
-  margin: 0;
-  color: var(--color-white);
-}
-
-.close-btn {
-  background: transparent;
-  border: none;
-  color: var(--color-muted);
-  cursor: pointer;
-  font-size: 18px;
-}
-
-.close-btn:hover {
-  color: var(--color-white);
-}
-
-.reject-modal-body {
-  padding: 20px;
-}
-
-.reject-modal-body textarea {
-  background: var(--color-bg-input);
-  border: 1px solid var(--overlay-light);
-  color: var(--color-white);
-  resize: none;
-}
-
-.reject-modal-body textarea:focus {
-  background: var(--color-bg-input);
-  border-color: var(--color-accent);
-  color: var(--color-white);
-  box-shadow: none;
-}
-
-.reject-modal-body textarea::placeholder {
-  color: var(--color-muted);
-}
-
-.reject-modal-body label {
-  color: var(--color-muted);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 8px;
-}
-
-.reject-modal-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 15px 20px;
-  border-top: 1px solid var(--overlay-light);
-}
 </style>
