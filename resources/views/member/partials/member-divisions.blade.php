@@ -96,13 +96,10 @@
             @endforeach
         </div>
 
-        @if($partTimeDivisions->count() === 0)
-            <p class="division-empty-state">Not currently a part-time member of any division.</p>
-        @endif
     @endif
 
-    <div class="division-section-label">Past</div>
     @if($pastGrouped->count() > 0)
+        <div class="division-section-label">Past</div>
         <div class="division-chips">
             @foreach($pastGrouped as $item)
                 <a href="{{ route('division', $item['division']->slug) }}" class="division-chip">
@@ -115,7 +112,5 @@
                 </a>
             @endforeach
         </div>
-    @else
-        <p class="division-empty-state">No division history on record.</p>
     @endif
 @endif
