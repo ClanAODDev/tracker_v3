@@ -5135,6 +5135,22 @@ a.org-node:hover {
     float: none;
 }
 
+.division-empty-state {
+    font-size: 13px;
+    color: rgba(255,255,255,0.25);
+    font-style: italic;
+    margin: 8px 0 0;
+}
+
+.division-section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 20px 0 10px;
+}
+
 .division-chips {
     display: flex;
     flex-wrap: wrap;
@@ -5203,9 +5219,8 @@ a.org-node:hover {
     background: rgba(255,255,255,0.03);
     border: 1px solid rgba(255,255,255,0.08);
     border-radius: 8px;
-    flex: 1 1 calc(25% - 9px);
-    min-width: 200px;
-    max-width: calc(25% - 9px);
+    flex: 1 1 calc(33.333% - 8px);
+    max-width: calc(33.333% - 8px);
     min-height: 60px;
     box-sizing: border-box;
     color: var(--color-white);
@@ -5221,18 +5236,37 @@ a.org-node:hover {
     text-decoration: none;
 }
 
-@media (max-width: 992px) {
-    .division-card {
-        flex: 1 1 calc(33.333% - 8px);
-        max-width: calc(50% - 6px);
-    }
+.division-card--primary {
+    border-left: 3px solid var(--color-accent);
 }
 
-@media (max-width: 768px) {
+.division-card--primary:hover {
+    border-left-color: var(--color-accent);
+}
+
+.division-card-badge {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-accent) 25%, transparent);
+    border-radius: 3px;
+    padding: 1px 5px;
+    flex-shrink: 0;
+}
+
+.division-card-badge--secondary {
+    color: rgba(255,255,255,0.45);
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.1);
+}
+
+@media (max-width: 992px) {
     .division-card {
         flex: 1 1 calc(50% - 6px);
-        max-width: 100%;
-        min-width: 160px;
+        max-width: calc(50% - 6px);
     }
 }
 
