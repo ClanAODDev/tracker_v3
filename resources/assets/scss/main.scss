@@ -5182,6 +5182,14 @@ a.org-node:hover {
     border-left: 1px solid rgba(255,255,255,0.1);
 }
 
+.division-chip-visits {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--color-accent);
+    padding-left: 6px;
+    opacity: 0.8;
+}
+
 .handles-grid {
     display: flex;
     flex-wrap: wrap;
