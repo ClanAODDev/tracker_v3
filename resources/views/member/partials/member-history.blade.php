@@ -35,15 +35,21 @@
 
     <h4 class="m-t-xl">Past Divisions</h4>
     <hr/>
-    <div class="division-chips">
+    <div class="division-cards">
         @foreach($grouped as $item)
-            <a href="{{ route('division', $item['division']->slug) }}" class="division-chip">
-                <img src="{{ $item['division']->getLogoPath() }}" alt="{{ $item['division']->name }}" class="division-chip-icon">
-                <span class="division-chip-name">{{ $item['division']->name }}</span>
-                <span class="division-chip-date">{{ $item['duration'] }}</span>
-                @if($item['visits'] > 1)
-                    <span class="division-chip-visits">×{{ $item['visits'] }}</span>
-                @endif
+            <a href="{{ route('division', $item['division']->slug) }}" class="division-card">
+                <div class="division-card-logo">
+                    <img src="{{ $item['division']->getLogoPath() }}" alt="{{ $item['division']->name }}">
+                </div>
+                <div class="division-card-info">
+                    <div class="division-card-name">{{ $item['division']->name }}</div>
+                    <div class="division-card-meta">
+                        <span class="division-card-duration">{{ $item['duration'] }}</span>
+                        @if($item['visits'] > 1)
+                            <span class="division-card-visits">×{{ $item['visits'] }}</span>
+                        @endif
+                    </div>
+                </div>
             </a>
         @endforeach
     </div>
