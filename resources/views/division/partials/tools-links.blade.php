@@ -13,7 +13,7 @@
         @endif
         @if($division->settings()->get('application_required', false))
             <a href="#" class="tool-card collapse-at-sm" id="open-applications-modal">
-                <i class="fab fa-discord"></i>
+                <i class="fa fa-inbox"></i>
                 <span>Applications</span>
                 @if($pendingApplicationCount > 0)
                     <span class="label label-info">{{ $pendingApplicationCount }}</span>
@@ -68,7 +68,7 @@
             @can('recruit', App\Models\Member::class)
                 @if($division->settings()->get('application_required', false))
                     <a href="#" class="tool-card-menu-item show-at-sm" onclick="$('#applicationsModal').modal('show'); return false;">
-                        <i class="fab fa-discord"></i> Applications
+                        <i class="fa fa-inbox"></i> Applications
                     </a>
                 @endif
             @endcan

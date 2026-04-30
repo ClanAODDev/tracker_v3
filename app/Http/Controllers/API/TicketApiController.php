@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Enums\Rank;
 use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use App\Models\TicketType;
+use App\Models\User;
 use App\Services\TicketNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -58,7 +60,7 @@ class TicketApiController extends Controller
         }
 
         $ticket->ownTo($user);
-        $this->notificationService->notifyTicketAssigned($ticket, assignee: $user, assignedBy: $user);
+        $this->silentNotify(fn () => $this->notificationService->notifyTicketAssigned($ticket, assignee: $user, assignedBy: $user));
 
         $ticket->load(['type', 'owner.member', 'division', 'caller.member', 'comments.user.member']);
 
@@ -77,7 +79,7 @@ class TicketApiController extends Controller
         }
 
         $ticket->resolve();
-        $this->notificationService->notifyTicketResolved($ticket);
+        $this->silentNotify(fn () => $this->notificationService->notifyTicketResolved($ticket));
 
         $ticket->load(['type', 'owner.member', 'division', 'caller.member', 'comments.user.member']);
 
@@ -100,7 +102,7 @@ class TicketApiController extends Controller
         ]);
 
         $ticket->reject();
-        $this->notificationService->notifyTicketRejected($ticket, $validated['reason']);
+        $this->silentNotify(fn () => $this->notificationService->notifyTicketRejected($ticket, $validated['reason']));
 
         $ticket->load(['type', 'owner.member', 'division', 'caller.member', 'comments.user.member']);
 
@@ -124,6 +126,56 @@ class TicketApiController extends Controller
 
         return response()->json([
             'message' => 'Ticket reopened',
+            'ticket'  => $this->transformTicket($ticket, true, true),
+        ]);
+    }
+
+    public function workers(): JsonResponse
+    {
+        if (! TicketType::get()->contains(fn ($type) => $type->userCanWork(auth()->user()))) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $workers = User::whereHas('member', fn ($q) => $q
+            ->where('rank', '>=', Rank::MASTER_SERGEANT->value)
+            ->whereNotNull('division_id')
+        )
+            ->with('member')
+            ->orderBy('name')
+            ->get()
+            ->map(fn ($u) => [
+                'id'     => $u->id,
+                'name'   => $u->name,
+                'avatar' => $u->member?->getDiscordAvatarUrl(),
+            ])
+            ->values();
+
+        return response()->json(['workers' => $workers]);
+    }
+
+    public function reassign(Request $request, Ticket $ticket): JsonResponse
+    {
+        $user = auth()->user();
+
+        if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $validated = $request->validate(['user_id' => 'required|exists:users,id']);
+
+        $assignee = User::with('member')->findOrFail($validated['user_id']);
+
+        if (! $assignee->member || $assignee->member->rank->value < Rank::MASTER_SERGEANT->value) {
+            return response()->json(['error' => 'Target must be MSgt or higher'], 422);
+        }
+
+        $ticket->ownTo($assignee);
+        $this->silentNotify(fn () => $this->notificationService->notifyTicketAssigned($ticket, assignee: $assignee, assignedBy: $user));
+
+        $ticket->load(['type', 'owner.member', 'division', 'caller.member', 'comments.user.member']);
+
+        return response()->json([
+            'message' => 'Ticket reassigned',
             'ticket'  => $this->transformTicket($ticket, true, true),
         ]);
     }
@@ -186,14 +238,7 @@ class TicketApiController extends Controller
             'division_id'    => auth()->user()->member?->division_id ?? 1,
         ]);
 
-        try {
-            $this->notificationService->notifyTicketCreated($ticket);
-        } catch (\Throwable $e) {
-            Log::error('Failed to send ticket created notifications', [
-                'ticket_id' => $ticket->id,
-                'error'     => $e->getMessage(),
-            ]);
-        }
+        $this->silentNotify(fn () => $this->notificationService->notifyTicketCreated($ticket), $ticket->id);
 
         $ticket->load(['type', 'owner', 'division']);
 
@@ -238,6 +283,18 @@ class TicketApiController extends Controller
             ],
             'message' => 'Comment added successfully',
         ], 201);
+    }
+
+    protected function silentNotify(callable $fn, ?int $ticketId = null): void
+    {
+        try {
+            $fn();
+        } catch (\Throwable $e) {
+            Log::error('Failed to send ticket notification', array_filter([
+                'ticket_id' => $ticketId,
+                'error'     => $e->getMessage(),
+            ]));
+        }
     }
 
     protected function transformTicket(Ticket $ticket, bool $includeComments = false, bool $includeCaller = false): array

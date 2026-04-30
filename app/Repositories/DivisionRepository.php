@@ -7,6 +7,7 @@ use App\Models\Census;
 use App\Models\Division;
 use App\Models\Member;
 use App\Traits\HasActivityGraph;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Collection;
 
@@ -46,7 +47,7 @@ class DivisionRepository
         return DB::table('activities')
             ->where('name', ActivityType::RECRUITED->value)
             ->where('division_id', $divisionId)
-            ->whereBetween('created_at', [$startDate, $endDate ?? now()->endOfMonth()->toDateString()])
+            ->whereBetween('created_at', [$startDate, Carbon::parse($endDate ?? now()->endOfMonth()->toDateString())->endOfDay()])
             ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bucket')
             ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
             ->selectRaw('COUNT(*) as recruits')
@@ -60,7 +61,7 @@ class DivisionRepository
         return DB::table('activities')
             ->where('name', ActivityType::REMOVED->value)
             ->where('division_id', $divisionId)
-            ->whereBetween('created_at', [$startDate, $endDate ?? now()->endOfMonth()->toDateString()])
+            ->whereBetween('created_at', [$startDate, Carbon::parse($endDate ?? now()->endOfMonth()->toDateString())->endOfDay()])
             ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bucket')
             ->selectRaw('DATE_FORMAT(created_at, "%b %y") as date')
             ->selectRaw('COUNT(*) as removals')
@@ -73,7 +74,7 @@ class DivisionRepository
     {
         $sub = DB::table('censuses')
             ->where('division_id', $divisionId)
-            ->whereBetween('created_at', [$startDate, $endDate ?? now()->endOfMonth()->toDateString()])
+            ->whereBetween('created_at', [$startDate, Carbon::parse($endDate ?? now()->endOfMonth()->toDateString())->endOfDay()])
             ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as bucket, `count`');
 
         return DB::query()

@@ -438,9 +438,21 @@ store.performAction = (ticketId, action, data = {}, errorMessage = 'Action faile
 };
 
 store.ownTicket = (ticketId) => store.performAction(ticketId, 'own', {}, 'Failed to assign ticket.');
+store.reassignTicket = (ticketId, userId) => store.performAction(ticketId, 'reassign', { user_id: userId }, 'Failed to reassign ticket.');
 store.resolveTicket = (ticketId) => store.performAction(ticketId, 'resolve', {}, 'Failed to resolve ticket.');
 store.rejectTicket = (ticketId, reason) => store.performAction(ticketId, 'reject', { reason }, 'Failed to reject ticket.');
 store.reopenTicket = (ticketId) => store.performAction(ticketId, 'reopen', {}, 'Failed to reopen ticket.');
+
+store.workers = [];
+store.loadWorkers = () => {
+    return axios.get(`${store.base_url}/api/tickets/workers`)
+        .then((response) => {
+            store.workers = response.data.workers || [];
+        })
+        .catch(() => {
+            store.workers = [];
+        });
+};
 
 store.updateTicketInLists = (ticket) => {
     const userIndex = store.tickets.findIndex(t => t.id === ticket.id);

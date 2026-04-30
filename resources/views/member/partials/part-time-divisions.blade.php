@@ -13,12 +13,18 @@
         @endcan
     </h4>
     <hr/>
-    <div class="division-chips">
+    <div class="division-cards">
         @foreach($partTimeDivisions as $division)
-            <a href="{{ route('division', $division->slug) }}" class="division-chip">
-                <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" class="division-chip-icon">
-                <span class="division-chip-name">{{ $division->name }}</span>
-                <span class="division-chip-date">{{ $division->pivot->created_at->format('M Y') }}</span>
+            <a href="{{ route('division', $division->slug) }}" class="division-card">
+                <div class="division-card-logo">
+                    <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}">
+                </div>
+                <div class="division-card-info">
+                    <div class="division-card-name">{{ $division->name }}</div>
+                    <div class="division-card-meta">
+                        <span class="division-card-since">Since {{ $division->pivot->created_at->format('M Y') }}</span>
+                    </div>
+                </div>
             </a>
         @endforeach
     </div>
