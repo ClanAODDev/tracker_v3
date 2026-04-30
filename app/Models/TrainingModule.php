@@ -19,7 +19,7 @@ class TrainingModule extends Model
         'minimum_rank'         => Rank::class,
     ];
 
-    public function isAccessibleBy(\App\Models\Member $member): bool
+    public function isAccessibleBy(Member $member): bool
     {
         if (! $this->minimum_rank) {
             return true;

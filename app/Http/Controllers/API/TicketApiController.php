@@ -144,10 +144,10 @@ class TicketApiController extends Controller
             ->orderBy('name')
             ->get()
             ->map(fn ($u) => [
-            'id'     => $u->id,
-            'name'   => $u->name,
-            'avatar' => $u->member?->getDiscordAvatarUrl(),
-        ])
+                'id'     => $u->id,
+                'name'   => $u->name,
+                'avatar' => $u->member?->getDiscordAvatarUrl(),
+            ])
             ->values();
 
         return response()->json(['workers' => $workers]);

@@ -29,9 +29,9 @@ class MemberDivisionDisplayTest extends TestCase
 
     public function test_part_time_divisions_are_shown()
     {
-        $user      = $this->createMemberWithUser();
-        $member    = $user->member;
-        $partTime  = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser();
+        $member   = $user->member;
+        $partTime = $this->createActiveDivision();
 
         $member->partTimeDivisions()->attach($partTime->id);
 
@@ -54,9 +54,9 @@ class MemberDivisionDisplayTest extends TestCase
 
     public function test_past_divisions_are_shown_from_transfer_history()
     {
-        $user       = $this->createMemberWithUser();
-        $member     = $user->member;
-        $pastDiv    = $this->createActiveDivision();
+        $user    = $this->createMemberWithUser();
+        $member  = $user->member;
+        $pastDiv = $this->createActiveDivision();
 
         Transfer::factory()->create([
             'member_id'   => $member->id,
