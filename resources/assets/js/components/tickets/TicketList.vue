@@ -21,7 +21,7 @@
       </div>
       <h4 class="text-white">No Tickets Yet</h4>
       <p class="text-muted m-b-lg">You haven't submitted any support requests yet.</p>
-      <button class="btn btn-primary" @click="$parent.showTypeSelector()">
+      <button class="btn btn-primary" @click="store.setView('select-type')">
         <i class="fa fa-plus m-r-xs"></i> Create Your First Ticket
       </button>
     </div>
