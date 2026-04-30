@@ -357,4 +357,60 @@ class TicketNotificationServiceTest extends TestCase
 
         Notification::assertNotSentTo($ticket, NotifyAdminTicketUpdated::class);
     }
+
+    public function test_notify_new_ticket_owner_uses_discord_id_in_bot_payload()
+    {
+        $owner      = $this->createMemberWithUser();
+        $ticketType = TicketType::factory()->create();
+        $ticket     = Ticket::factory()->create([
+            'caller_id'      => $owner->id,
+            'ticket_type_id' => $ticketType->id,
+        ]);
+
+        $owner->member->update(['discord_id' => '123456789012345678', 'discord' => 'someusername']);
+
+        $notification = new NotifyNewTicketOwner($owner, null);
+        $payload      = $notification->toBot($ticket);
+
+        $this->assertStringContainsString('123456789012345678', $payload['api_uri']);
+        $this->assertStringNotContainsString('someusername', $payload['api_uri']);
+    }
+
+    public function test_notify_user_ticket_created_uses_discord_id_in_bot_payload()
+    {
+        $caller     = $this->createMemberWithUser();
+        $ticketType = TicketType::factory()->create();
+        $ticket     = Ticket::factory()->create([
+            'caller_id'      => $caller->id,
+            'ticket_type_id' => $ticketType->id,
+        ]);
+
+        $caller->member->update(['discord_id' => '111222333444555666', 'discord' => 'someusername']);
+        $ticket->load('caller.member');
+
+        $notification = new NotifyUserTicketCreated;
+        $payload      = $notification->toBot($ticket);
+
+        $this->assertStringContainsString('111222333444555666', $payload['api_uri']);
+        $this->assertStringNotContainsString('someusername', $payload['api_uri']);
+    }
+
+    public function test_notify_caller_ticket_updated_uses_discord_id_in_bot_payload()
+    {
+        $caller     = $this->createMemberWithUser();
+        $ticketType = TicketType::factory()->create();
+        $ticket     = Ticket::factory()->create([
+            'caller_id'      => $caller->id,
+            'ticket_type_id' => $ticketType->id,
+        ]);
+
+        $caller->member->update(['discord_id' => '999888777666555444', 'discord' => 'someusername']);
+        $ticket->load('caller.member');
+
+        $notification = new NotifyCallerTicketUpdated($ticket, 'assigned');
+        $payload      = $notification->toBot($caller);
+
+        $this->assertStringContainsString('999888777666555444', $payload['api_uri']);
+        $this->assertStringNotContainsString('someusername', $payload['api_uri']);
+    }
 }
