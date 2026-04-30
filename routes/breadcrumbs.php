@@ -1,9 +1,9 @@
 <?php
 
-require_once 'Breadcrumbs/division.php';
+require 'Breadcrumbs/division.php';
 
-require_once 'Breadcrumbs/member.php';
+require 'Breadcrumbs/member.php';
 
-require_once 'Breadcrumbs/user.php';
+require 'Breadcrumbs/user.php';
 
-require_once 'Breadcrumbs/clan.php';
+require 'Breadcrumbs/clan.php';
