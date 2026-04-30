@@ -80,14 +80,13 @@ Applies to the Discord path only. Occurs when:
 - No forum account matches the email they registered with, **and**
 - No date of birth was provided (so a new account cannot be created automatically).
 
-**Resolution:** Have the recruit re-register through Discord and ensure they provide a date of birth, or
-create a forum account for them manually and then recruit via the Forum path.
+**Resolution:** Have the recruit re-register through Discord and ensure they provide a date of birth. 
 
 ### Forum account creation failed (Discord path)
 
 The automatic forum account creation step failed. This is logged in the recruiting log channel.
 
-**Resolution:** Create the forum account manually and recruit via the Forum path instead.
+**Resolution:** Report this to an admin, as there may be an issue preventing account creation. 
 
 ### Discord info could not be set on forum profile
 
