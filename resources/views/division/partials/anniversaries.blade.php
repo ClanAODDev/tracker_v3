@@ -5,18 +5,24 @@
     </h3>
     <hr/>
 
-    @foreach($divisionAnniversaries as $anniversary)
-        @php $trophy = getAnniversaryTrophy($anniversary->years_since_joined); @endphp
-        <a href="{{ route('member', [$anniversary->clan_id, $anniversary->name]) }}"
-           class="btn btn-default anniversary-btn">
-            @if($trophy)
-                <i class="{{ $trophy['class'] }}" style="color: {{ $trophy['color'] }};"></i>
-            @endif
-            {{ $anniversary->rank?->getAbbreviation() }} {{ $anniversary->name }}
-            <span class="label label-default">
-                {{ $anniversary->years_since_joined }} {{ str('yr')->plural($anniversary->years_since_joined) }}
-            </span>
-        </a>
-    @endforeach
+    <div class="milestone-grid">
+        @foreach($divisionAnniversaries as $anniversary)
+            @php $trophy = getAnniversaryTrophy($anniversary->years_since_joined); @endphp
+            <a href="{{ route('member', [$anniversary->clan_id, $anniversary->name]) }}"
+               class="milestone-chip {{ $trophy ? 'milestone-chip--featured' : '' }}">
+                <div class="milestone-icon">
+                    @if($trophy)
+                        <i class="{{ $trophy['class'] }}" style="color: {{ $trophy['color'] }}"></i>
+                    @else
+                        <i class="fa fa-star"></i>
+                    @endif
+                </div>
+                <div class="milestone-info">
+                    <span class="milestone-name">{{ $anniversary->rank?->getAbbreviation() }} {{ $anniversary->name }}</span>
+                    <span class="milestone-years">{{ $anniversary->years_since_joined }} {{ str('yr')->plural($anniversary->years_since_joined) }}</span>
+                </div>
+            </a>
+        @endforeach
+    </div>
 </div>
 @endif

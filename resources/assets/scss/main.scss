@@ -3573,8 +3573,12 @@ body.no-animations {
 }
 
 .division-section-title {
-    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-muted);
+    margin-bottom: 0;
 
     &::after {
         content: "";
@@ -3583,13 +3587,18 @@ body.no-animations {
     }
 
     .btn {
-        margin-top: -5px;
+        margin-top: -3px;
+    }
+
+    span.text-muted {
+        color: rgba(255, 255, 255, 0.25) !important;
     }
 }
 
 .division-section-title + hr {
-    margin-top: 0;
+    margin-top: 10px;
     margin-bottom: 20px;
+    border-color: rgba(255, 255, 255, 0.07);
 }
 
 #activityFeedModal .modal-body {
@@ -3830,8 +3839,64 @@ body.no-animations {
     background: var(--color-success);
 }
 
-.anniversary-btn {
-    margin: 0 8px 8px 0;
+.milestone-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.milestone-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.14);
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+}
+
+.milestone-chip--featured {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.milestone-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    width: 20px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.25);
+}
+
+.milestone-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.milestone-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-white);
+    white-space: nowrap;
+}
+
+.milestone-years {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-muted);
 }
 
 .unit-stats-total {
@@ -4481,7 +4546,7 @@ a.panel.platoon {
         inset: 0;
         width: var(--voice-rate, 0%);
         background: var(--voice-fill-color, var(--color-danger));
-        opacity: 0.15;
+        opacity: 0.22;
         pointer-events: none;
         transition: width 0.6s ease;
     }
@@ -4527,6 +4592,20 @@ a.panel.platoon {
     color: var(--color-danger);
 }
 
+.voice-status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+
+    &.voice-high { background-color: var(--color-success); }
+    &.voice-mid  { background-color: var(--color-accent-light); }
+    &.voice-low  { background-color: var(--color-danger); }
+}
 
 .member-stat-card .panel-footer.milestone-badges {
     background: rgba(0,0,0,0.2);
@@ -5543,8 +5622,10 @@ a.org-node:hover {
 
 .award-card-name {
     color: var(--color-white);
-    font-weight: 600;
-    font-size: 12px;
+    font-weight: 300;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     margin-bottom: 6px;
     line-height: 1.35;
     max-height: 2.7em;
@@ -5931,6 +6012,127 @@ a.org-node:hover {
         flex-direction: column;
         gap: 18px;
     }
+}
+
+.awards-stat-bar {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, rgba(30, 30, 45, 0.6), rgba(20, 20, 35, 0.8));
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 18px 30px;
+    gap: 0;
+}
+
+.awards-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.awards-stat-value {
+    font-size: 28px;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--color-white);
+}
+
+.awards-stat-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--color-muted);
+}
+
+.awards-stat-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.08);
+    flex-shrink: 0;
+}
+
+.award-section {
+    margin-bottom: 40px;
+}
+
+.award-section-legacy {
+    opacity: 0.7;
+}
+
+.award-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.award-section-logo {
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    opacity: 0.9;
+}
+
+.award-section-icon {
+    font-size: 16px;
+    color: var(--color-muted);
+    width: 26px;
+    text-align: center;
+}
+
+.award-section-name {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-muted);
+    flex: 1;
+}
+
+.award-section-count {
+    font-size: 11px;
+    color: var(--color-muted);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    padding: 2px 8px;
+}
+
+.award-section-subheader {
+    font-size: 11px;
+    color: var(--color-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 16px 0 10px;
+}
+
+.rarity-legend-item {
+    border-radius: 20px;
+    padding: 6px 12px;
+    gap: 6px;
+}
+
+.rarity-legend-item.rarity-filter:not(.active) .rarity-label {
+    text-decoration: none;
+}
+
+.rarity-legend-item.rarity-mythic-filter { border-color: rgba(255, 107, 107, 0.3); }
+.rarity-legend-item.rarity-legendary-filter { border-color: rgba(255, 159, 67, 0.3); }
+.rarity-legend-item.rarity-epic-filter { border-color: rgba(165, 94, 234, 0.3); }
+.rarity-legend-item.rarity-rare-filter { border-color: rgba(69, 170, 242, 0.3); }
+.rarity-legend-item.rarity-common-filter { border-color: rgba(119, 140, 163, 0.2); }
+
+.rarity-label {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.rarity-range {
+    font-size: 10px;
 }
 
 @media (max-width: 767px) {

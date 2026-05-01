@@ -20,34 +20,20 @@
 
         {!! Breadcrumbs::render('awards.index') !!}
 
-        <div class="row m-b-lg">
-            <div class="col-md-4">
-                <div class="panel panel-filled">
-                    <div class="panel-body text-center">
-                        <h1 style="margin: 0;">{{ $totals->awards }}</h1>
-                        <div class="text-muted">Total Awards</div>
-                    </div>
-                </div>
+        <div class="awards-stat-bar m-b-lg">
+            <div class="awards-stat">
+                <span class="awards-stat-value">{{ $totals->awards }}</span>
+                <span class="awards-stat-label">Total Awards</span>
             </div>
-            <div class="col-md-4">
-                <div class="panel panel-filled">
-                    <div class="panel-body text-center">
-                        <h1 style="margin: 0;">
-                            <span class="text-warning">{{ number_format($totals->recipients) }}</span>
-                        </h1>
-                        <div class="text-muted">Awards Given</div>
-                    </div>
-                </div>
+            <div class="awards-stat-divider"></div>
+            <div class="awards-stat">
+                <span class="awards-stat-value text-warning">{{ number_format($totals->recipients) }}</span>
+                <span class="awards-stat-label">Times Awarded</span>
             </div>
-            <div class="col-md-4">
-                <div class="panel panel-filled">
-                    <div class="panel-body text-center">
-                        <h1 style="margin: 0;">
-                            <span class="text-success">{{ $totals->requestable }}</span>
-                        </h1>
-                        <div class="text-muted"><i class="fa fa-hand-pointer"></i> Requestable</div>
-                    </div>
-                </div>
+            <div class="awards-stat-divider"></div>
+            <div class="awards-stat">
+                <span class="awards-stat-value text-success">{{ $totals->requestable }}</span>
+                <span class="awards-stat-label">Requestable</span>
             </div>
         </div>
 
@@ -59,7 +45,7 @@
                         <span class="filter-label">Rarity</span>
                         <div class="rarity-legend">
                             @foreach (config('aod.awards.rarity') as $key => $rarity)
-                                <div class="rarity-legend-item rarity-filter active" data-rarity="{{ $key }}">
+                                <div class="rarity-legend-item rarity-filter rarity-{{ $key }}-filter active" data-rarity="{{ $key }}">
                                     <span class="rarity-dot rarity-{{ $key }}"></span>
                                     <span class="rarity-label">{{ $rarity['label'] }}</span>
                                     <span class="rarity-range">
@@ -105,20 +91,19 @@
         @endphp
 
         @if (($clanAwards->isNotEmpty() || $clanTieredGroups->isNotEmpty()) && !$divisionSlug)
-            <div class="panel panel-filled">
-                <div class="panel-heading">
-                    <i class="fa fa-globe"></i> Clan-Wide Awards
-                    <span class="badge pull-right">{{ $clanAwards->count() + $clanTieredGroups->count() }}</span>
+            <div class="award-section">
+                <div class="award-section-header">
+                    <i class="fa fa-globe award-section-icon"></i>
+                    <span class="award-section-name">Clan-Wide Awards</span>
+                    <span class="award-section-count">{{ $clanAwards->count() + $clanTieredGroups->count() }}</span>
                 </div>
-                <div class="panel-body">
-                    <div class="row award-grid">
-                        @foreach($clanTieredGroups as $group)
-                            @include('division.awards.partials.tiered-card', ['group' => $group])
-                        @endforeach
-                        @foreach ($clanAwards as $award)
-                            @include('division.awards.partials.award-card', ['award' => $award])
-                        @endforeach
-                    </div>
+                <div class="row award-grid">
+                    @foreach($clanTieredGroups as $group)
+                        @include('division.awards.partials.tiered-card', ['group' => $group])
+                    @endforeach
+                    @foreach ($clanAwards as $award)
+                        @include('division.awards.partials.award-card', ['award' => $award])
+                    @endforeach
                 </div>
             </div>
         @endif
@@ -128,21 +113,19 @@
                 $division = $awards->first()->division;
                 $divisionTieredGroups = collect($tieredGroups)->where('division_id', $division->id);
             @endphp
-            <div class="panel panel-filled">
-                <div class="panel-heading">
-                    <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" style="width: 20px; height: 20px; margin-right: 8px; vertical-align: middle;">
-                    {{ $divisionName }}
-                    <span class="badge pull-right">{{ $awards->count() + $divisionTieredGroups->count() }}</span>
+            <div class="award-section">
+                <div class="award-section-header">
+                    <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" class="award-section-logo">
+                    <span class="award-section-name">{{ $divisionName }}</span>
+                    <span class="award-section-count">{{ $awards->count() + $divisionTieredGroups->count() }}</span>
                 </div>
-                <div class="panel-body">
-                    <div class="row award-grid">
-                        @foreach($divisionTieredGroups as $group)
-                            @include('division.awards.partials.tiered-card', ['group' => $group])
-                        @endforeach
-                        @foreach ($awards as $award)
-                            @include('division.awards.partials.award-card', ['award' => $award])
-                        @endforeach
-                    </div>
+                <div class="row award-grid">
+                    @foreach($divisionTieredGroups as $group)
+                        @include('division.awards.partials.tiered-card', ['group' => $group])
+                    @endforeach
+                    @foreach ($awards as $award)
+                        @include('division.awards.partials.award-card', ['award' => $award])
+                    @endforeach
                 </div>
             </div>
         @empty
@@ -154,26 +137,25 @@
         @endforelse
 
         @if ($legacyAwards->isNotEmpty() && !$divisionSlug)
-            <div class="panel panel-filled" style="opacity: 0.75;">
-                <div class="panel-heading">
-                    <i class="fa fa-archive text-muted"></i> Legacy Awards
-                    <span class="badge pull-right">{{ $legacyAwards->flatten()->count() }}</span>
+            <div class="award-section award-section-legacy">
+                <div class="award-section-header">
+                    <i class="fa fa-archive award-section-icon"></i>
+                    <span class="award-section-name">Legacy Awards</span>
+                    <span class="award-section-count">{{ $legacyAwards->flatten()->count() }}</span>
                 </div>
-                <div class="panel-body">
-                    <p class="text-muted m-b-md">Awards from divisions that are no longer active. These awards are no longer requestable but remain on member profiles.</p>
-                    @foreach ($legacyAwards as $divisionName => $awards)
-                        @php $division = $awards->first()->division; @endphp
-                        <h5 class="text-muted m-t-md">
-                            <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" style="width: 16px; height: 16px; margin-right: 6px; vertical-align: middle; opacity: 0.7;">
-                            {{ $divisionName }}
-                        </h5>
-                        <div class="row award-grid">
-                            @foreach ($awards as $award)
-                                @include('division.awards.partials.award-card', ['award' => $award, 'legacy' => true, 'small' => true])
-                            @endforeach
-                        </div>
-                    @endforeach
-                </div>
+                <p class="text-muted m-b-md" style="font-size: 12px;">Awards from divisions that are no longer active. No longer requestable but remain on member profiles.</p>
+                @foreach ($legacyAwards as $divisionName => $awards)
+                    @php $division = $awards->first()->division; @endphp
+                    <div class="award-section-subheader">
+                        <img src="{{ $division->getLogoPath() }}" alt="{{ $division->name }}" style="width: 14px; height: 14px; opacity: 0.5; vertical-align: middle; margin-right: 6px;">
+                        <span>{{ $divisionName }}</span>
+                    </div>
+                    <div class="row award-grid">
+                        @foreach ($awards as $award)
+                            @include('division.awards.partials.award-card', ['award' => $award, 'legacy' => true, 'small' => true])
+                        @endforeach
+                    </div>
+                @endforeach
             </div>
         @endif
 

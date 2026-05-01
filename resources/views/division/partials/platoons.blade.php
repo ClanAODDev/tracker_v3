@@ -85,7 +85,7 @@
                     <div class="platoon-section platoon-section-stats {{ $voiceClass }}" style="--voice-rate: {{ $voiceRate }}%">
                         <div class="platoon-stat {{ $voiceClass }}" title="Voice active ({{ $stats->activityThresholdDays }} days)">
                             <span class="platoon-stat-value">{{ $voiceRate }}%</span>
-                            <span class="platoon-stat-label">Voice</span>
+                            <span class="platoon-stat-label"><span class="voice-status-dot {{ $voiceClass }}"></span>Voice</span>
                         </div>
                         <div class="platoon-stat">
                             <span class="platoon-stat-value">{{ $platoon->members_count }}</span>

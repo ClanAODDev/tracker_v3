@@ -1,4 +1,4 @@
-<div class="{{ !empty($small) ? 'col-lg-2 col-md-3 col-sm-4' : 'col-lg-3 col-md-4 col-sm-6' }}">
+<div class="{{ !empty($small) ? 'col-xl-2 col-lg-2 col-md-3 col-sm-4' : 'col-xl-2 col-lg-3 col-md-4 col-sm-6' }}">
     <a class="award-card award-card-{{ $award->rarity }}" href="{{ route('awards.show', $award) }}">
         <div class="rarity-indicator rarity-{{ $award->rarity }}" title="{{ ucfirst($award->rarity) }}"></div>
         <div class="panel-body text-center">

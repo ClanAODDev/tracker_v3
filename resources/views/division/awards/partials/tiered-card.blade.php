@@ -1,4 +1,4 @@
-<div class="col-lg-3 col-md-4 col-sm-6">
+<div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
     <a class="award-card award-card-legendary" href="{{ route('awards.tiered', $group['slug']) }}">
         <div class="rarity-indicator rarity-legendary" title="Tiered Award"></div>
         <div class="panel-body text-center">
