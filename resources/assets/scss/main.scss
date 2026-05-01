@@ -4536,7 +4536,8 @@ a.panel.platoon {
 .squad-count-bg {
     position: absolute;
     right: -4px;
-    bottom: -8px;
+    top: 50%;
+    transform: translateY(-50%);
     font-size: 42px;
     font-weight: 800;
     line-height: 1;
