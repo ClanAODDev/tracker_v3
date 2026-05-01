@@ -139,6 +139,7 @@ class TicketApiController extends Controller
         $workers = User::whereHas('member', fn ($q) => $q
             ->where('rank', '>=', Rank::MASTER_SERGEANT->value)
             ->whereNotNull('division_id')
+            ->where('division_id', '!=', 0)
         )
             ->with('member')
             ->orderBy('name')

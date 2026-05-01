@@ -90,7 +90,10 @@ class TicketResource extends Resource
                         Select::make('owner_id')
                             ->label('Assigned To')
                             ->searchable()
-                            ->options(fn () => User::whereHas('member', fn ($q) => $q->where('rank', '>=', Rank::SERGEANT->value))
+                            ->options(fn () => User::whereHas('member', fn ($q) => $q
+                                    ->where('rank', '>=', Rank::STAFF_SERGEANT->value)
+                                    ->whereNotNull('division_id')
+                                    ->where('division_id', '!=', 0))
                                 ->orderBy('name')
                                 ->pluck('name', 'id'))
                             ->placeholder('Unassigned'),
