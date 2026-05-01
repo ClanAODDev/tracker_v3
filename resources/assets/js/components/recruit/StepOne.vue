@@ -101,11 +101,13 @@
                   <div v-if="store.validation.memberId.discordMatches.length" class="discord-match-notice">
                     <i class="fab fa-discord"></i>
                     Discord ID matches existing member<span v-if="store.validation.memberId.discordMatches.length > 1">s</span>:
-                    <span
+                    <a
                       v-for="match in store.validation.memberId.discordMatches"
                       :key="match.clan_id"
+                      :href="match.url"
+                      target="_blank"
                       class="discord-match-member"
-                    >{{ match.name }}<span v-if="match.division"> ({{ match.division }})</span></span>
+                    >{{ match.name }} ({{ match.division ?? 'Ex-AOD' }})</a>
                   </div>
                 </div>
               </div>

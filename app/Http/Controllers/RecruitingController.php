@@ -592,12 +592,13 @@ class RecruitingController extends Controller
 
         return Member::where('discord_id', $discordId)
             ->where('clan_id', '!=', $memberId)
-            ->with('division:id,abbreviation')
+            ->with('division:id,name')
             ->get()
             ->map(fn ($m) => [
                 'name'     => $m->name,
                 'clan_id'  => $m->clan_id,
-                'division' => $m->division?->abbreviation,
+                'division' => $m->division?->name,
+                'url'      => route('member', [$m->clan_id, $m->rank->getAbbreviation() . '-' . $m->name]),
             ])
             ->toArray();
     }
