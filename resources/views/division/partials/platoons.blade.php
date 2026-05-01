@@ -59,6 +59,7 @@
                                 <div class="squad-card {{ !$squad->leader ? 'squad-card--vacant' : '' }}"
                                      data-squad-id="{{ $squad->id }}"
                                      @if ($squad->leader) style="--rank-color: {{ $squad->leader->rank->getColorHex() }}" @endif>
+                                    <span class="squad-count-bg">{{ $squad->members_count }}</span>
                                     <div class="squad-name">{{ $squad->name }}</div>
                                     <div class="squad-leader">
                                         @if ($squad->leader)
@@ -72,7 +73,6 @@
                                         @else
                                             <span class="text-muted">TBA</span>
                                         @endif
-                                        <span class="squad-member-count">{{ $squad->members_count }}</span>
                                     </div>
                                 </div>
                             @endforeach
