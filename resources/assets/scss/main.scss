@@ -3899,6 +3899,12 @@ body.no-animations {
     color: var(--color-muted);
 }
 
+.milestone-award-missing {
+    color: var(--color-accent-light);
+    margin-left: 3px;
+    opacity: 0.8;
+}
+
 .unit-stats-total {
     margin: unset;
 }

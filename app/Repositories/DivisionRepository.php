@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Enums\ActivityType;
+use App\Models\Award;
 use App\Models\Census;
 use App\Models\Division;
 use App\Models\Member;
@@ -32,7 +33,7 @@ class DivisionRepository
 
     public function getDivisionAnniversaries(Division $division): Collection
     {
-        return Member::select('name', 'join_date', 'clan_id', 'rank')
+        $anniversaries = Member::select('name', 'join_date', 'clan_id', 'rank')
             ->selectRaw('TIMESTAMPDIFF(YEAR, join_date, CURRENT_DATE()) + IF(DAY(join_date) > DAY(CURRENT_DATE()), 1, 0) AS years_since_joined')
             ->whereMonth('join_date', now()->month)
             ->whereRaw('TIMESTAMPDIFF(YEAR, join_date, CURRENT_DATE()) + IF(DAY(join_date) > DAY(CURRENT_DATE()), 1, 0) IN (5, 10, 15, 20)')
@@ -40,6 +41,33 @@ class DivisionRepository
             ->orderByDesc('years_since_joined')
             ->orderBy('name')
             ->get();
+
+        if ($anniversaries->isEmpty()) {
+            return $anniversaries;
+        }
+
+        $milestoneYears = $anniversaries->pluck('years_since_joined')->unique();
+
+        $tenureAwardIds = Award::whereIn('name', $milestoneYears->map(fn ($y) => "{$y} Years of Service"))
+            ->pluck('id', 'name');
+
+        $earnedAwards = DB::table('award_member')
+            ->whereIn('member_id', $anniversaries->pluck('clan_id'))
+            ->whereIn('award_id', $tenureAwardIds->values())
+            ->where('approved', 1)
+            ->get(['member_id', 'award_id'])
+            ->groupBy('member_id');
+
+        return $anniversaries->map(function ($anniversary) use ($tenureAwardIds, $earnedAwards) {
+            $awardId = $tenureAwardIds->get("{$anniversary->years_since_joined} Years of Service");
+            $memberAwards = $earnedAwards->get($anniversary->clan_id);
+
+            $anniversary->has_tenure_award = $awardId
+                && $memberAwards
+                && $memberAwards->contains('award_id', $awardId);
+
+            return $anniversary;
+        });
     }
 
     public function recruitsLast6Months(int $divisionId, string $startDate, ?string $endDate = null): Collection

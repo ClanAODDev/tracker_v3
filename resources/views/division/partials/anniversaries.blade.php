@@ -9,7 +9,7 @@
         @foreach($divisionAnniversaries as $anniversary)
             @php $trophy = getAnniversaryTrophy($anniversary->years_since_joined); @endphp
             <a href="{{ route('member', [$anniversary->clan_id, $anniversary->name]) }}"
-               class="milestone-chip {{ $trophy ? 'milestone-chip--featured' : '' }}">
+               class="milestone-chip {{ $trophy ? 'milestone-chip--featured' : '' }} {{ isset($anniversary->has_tenure_award) && !$anniversary->has_tenure_award ? 'milestone-chip--missing-award' : '' }}">
                 <div class="milestone-icon">
                     @if($trophy)
                         <i class="{{ $trophy['class'] }}" style="color: {{ $trophy['color'] }}"></i>
@@ -19,7 +19,12 @@
                 </div>
                 <div class="milestone-info">
                     <span class="milestone-name">{{ $anniversary->rank?->getAbbreviation() }} {{ $anniversary->name }}</span>
-                    <span class="milestone-years">{{ $anniversary->years_since_joined }} {{ str('yr')->plural($anniversary->years_since_joined) }}</span>
+                    <span class="milestone-years">
+                        {{ $anniversary->years_since_joined }} {{ str('yr')->plural($anniversary->years_since_joined) }}
+                        @if(isset($anniversary->has_tenure_award) && !$anniversary->has_tenure_award)
+                            <i class="fa fa-exclamation-circle milestone-award-missing" title="Tenure award not yet granted"></i>
+                        @endif
+                    </span>
                 </div>
             </a>
         @endforeach
