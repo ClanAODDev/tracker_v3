@@ -10,7 +10,7 @@
         <th data-col="assignment" class='text-center hidden-xs hidden-sm'><strong>{{ $division->locality('Platoon') }}</strong></th>
     @endif
     <th data-col="joined" class='text-center hidden-xs hidden-sm'><strong>Joined</strong></th>
-    <th data-col="discord-activity" class='text-center hidden-xs'><strong>Discord Activity</strong></th>
+    <th data-col="discord-activity" class='text-center'><strong>Discord Activity</strong></th>
     <th data-col="last-promoted" class='text-center hidden-xs'><strong>Last Promoted</strong></th>
     @if(!auth()->user()->isRole('member'))
         <th data-col="inactivity-reminder" class='text-center hidden-xs hidden-sm no-search'><strong>Inactivity Reminder</strong></th>

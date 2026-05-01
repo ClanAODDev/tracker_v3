@@ -48,7 +48,7 @@
         </td>
     @endif
     <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
-    <td class="text-center hidden-xs">
+    <td class="text-center">
                     <span class="{{ getActivityClass($member->last_voice_activity, $division) }}"
                           title="{{$member->last_voice_activity}}">
                         {{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks', 'months']) }}
