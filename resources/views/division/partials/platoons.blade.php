@@ -59,7 +59,7 @@
                                 <div class="squad-card {{ !$squad->leader ? 'squad-card--vacant' : '' }}"
                                      data-squad-id="{{ $squad->id }}"
                                      @if ($squad->leader) style="--rank-color: {{ $squad->leader->rank->getColorHex() }}" @endif>
-                                    <span class="squad-count-bg" data-count-target="{{ $squad->members_count }}">{{ $squad->members_count }}</span>
+                                    <span class="squad-count-bg">{{ $squad->members_count }}</span>
                                     <div class="squad-name">{{ $squad->name }}</div>
                                     <div class="squad-leader">
                                         @if ($squad->leader)
@@ -81,11 +81,11 @@
 
                     <div class="platoon-section platoon-section-stats {{ $voiceClass }}" style="--voice-rate: {{ $voiceRate }}%">
                         <div class="platoon-stat {{ $voiceClass }}" title="Voice active ({{ $stats->activityThresholdDays }} days)">
-                            <span class="platoon-stat-value" data-count-target="{{ $voiceRate }}" data-count-suffix="%">{{ $voiceRate }}%</span>
+                            <span class="platoon-stat-value">{{ $voiceRate }}%</span>
                             <span class="platoon-stat-label"><span class="voice-status-dot {{ $voiceClass }}"></span>Voice</span>
                         </div>
                         <div class="platoon-stat">
-                            <span class="platoon-stat-value" data-count-target="{{ $platoon->members_count }}">{{ $platoon->members_count }}</span>
+                            <span class="platoon-stat-value">{{ $platoon->members_count }}</span>
                             <span class="platoon-stat-label">Members</span>
                         </div>
                     </div>

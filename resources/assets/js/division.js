@@ -232,40 +232,6 @@ var Division = Division || {};
   };
 })(window.jQuery);
 
-function countUp(el, target, suffix, duration) {
-    const start = performance.now();
-    const from = 0;
-
-    function tick(now) {
-        const elapsed = now - start;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        el.textContent = Math.round(from + (target - from) * eased) + suffix;
-        if (progress < 1) requestAnimationFrame(tick);
-    }
-
-    requestAnimationFrame(tick);
-}
-
-function initCountUps() {
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            observer.unobserve(entry.target);
-
-            const el = entry.target;
-            const raw = el.dataset.countTarget;
-            const suffix = el.dataset.countSuffix || '';
-            countUp(el, parseInt(raw, 10), suffix, 600);
-        });
-    }, { threshold: 0.2 });
-
-    document.querySelectorAll('[data-count-target]').forEach((el) => {
-        el.textContent = '0' + (el.dataset.countSuffix || '');
-        observer.observe(el);
-    });
-}
-
 function initDivision() {
     const $ = window.jQuery;
     if (!$ || typeof $.fn.DataTable !== 'function' || typeof $.fn.bootcomplete !== 'function') {
@@ -273,7 +239,6 @@ function initDivision() {
         return;
     }
     Division.setup();
-    initCountUps();
 }
 
 initDivision();
