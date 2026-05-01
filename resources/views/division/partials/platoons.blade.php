@@ -80,8 +80,7 @@
                                         @endif
                                     </div>
                                     <div class="squad-meta">
-                                        <span class="squad-meta-count">{{ $squad->members_count }}</span>
-                                        <span class="voice-status-dot {{ $squadVoiceClass }}"></span>
+                                        <span class="squad-stat-badge {{ $squadVoiceClass }}">{{ $squad->members_count }} mbr &middot; {{ $squadVoiceRate }}%</span>
                                     </div>
                                 </div>
                             @endforeach
