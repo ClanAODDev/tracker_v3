@@ -4397,6 +4397,35 @@ a.panel.platoon {
         width: 18px;
         height: 18px;
     }
+
+    &.leader-avatar-md {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+.leader-card-body {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 15px !important;
+}
+
+.leader-card-text {
+    flex: 1;
+    min-width: 0;
+
+    h4 {
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.leader-card-icon {
+    flex-shrink: 0;
+    margin-left: auto;
 }
 
 .platoon-section-squads {

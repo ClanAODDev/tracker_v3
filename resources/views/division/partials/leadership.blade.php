@@ -6,15 +6,15 @@
     @forelse($divisionLeaders as $leader)
         <div class="col-md-4">
             <a href="{{ route('member', $leader->getUrlParams()) }}" class="panel panel-filled panel-c-danger">
-                <div class="panel-body">
-                    <h4 class="m-b-none">
-                        @if($leader->getDiscordAvatarUrl())
-                            <img src="{{ $leader->getDiscordAvatarUrl() }}" alt="{{ $leader->name }}" class="leader-avatar">
-                        @endif
-                        {!! $leader->present()->rankName !!}
-                        <span class="pull-right"><i class="pe pe-2x pe-7s-shield text-muted"></i></span>
-                    </h4>
-                    <small>{{ $leader->position->getLabel() }}</small>
+                <div class="panel-body leader-card-body">
+                    @if($leader->getDiscordAvatarUrl())
+                        <img src="{{ $leader->getDiscordAvatarUrl() }}" alt="{{ $leader->name }}" class="leader-avatar leader-avatar-md">
+                    @endif
+                    <div class="leader-card-text">
+                        <h4 class="m-b-none">{!! $leader->present()->rankName !!}</h4>
+                        <small>{{ $leader->position->getLabel() }}</small>
+                    </div>
+                    <span class="leader-card-icon"><i class="pe pe-2x pe-7s-shield text-muted"></i></span>
                 </div>
             </a>
         </div>
