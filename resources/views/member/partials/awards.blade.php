@@ -6,12 +6,13 @@
         $clusterImageUrl = url("members/{$memberSlug}/my-awards-cluster.png");
     @endphp
     <div class="achievements-header m-t-xl" id="achievements">
-        <h4>
+        <h3 class="division-section-title">
             Achievements
             <button type="button" class="btn btn-sm btn-default" data-toggle="modal" data-target="#share-awards-modal" title="Share awards">
                 <i class="fa fa-share-alt"></i> Share
             </button>
-        </h4>
+        </h3>
+        <hr/>
         <div class="rarity-summary">
             @foreach(['mythic', 'legendary', 'epic', 'rare', 'common'] as $rarity)
                 @if($memberStats->awards->byRarity->get($rarity, 0) > 0)

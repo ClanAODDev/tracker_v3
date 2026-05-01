@@ -25,10 +25,8 @@
         </div>
 
         <div class="divisions-section animate-fade-in-up" style="animation-delay: 0.4s">
-            <h4 class="section-title">
-                <i class="fa fa-gamepad"></i>
-                All Divisions
-            </h4>
+            <h3 class="division-section-title">All <span class="text-muted">Divisions</span></h3>
+            <hr/>
             @include('home.partials.divisions')
         </div>
     </div>

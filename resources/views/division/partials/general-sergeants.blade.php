@@ -1,6 +1,7 @@
+<h3 class="division-section-title">General <span class="text-muted">Sergeants</span> <span style="font-size:10px;font-weight:400;letter-spacing:0;margin-left:6px;opacity:0.5;">{{ $generalSergeants->count() }}</span></h3>
+<hr/>
 <div class="panel panel-filled">
-    <div class="panel-heading">General Sergeants <span class="pull-right badge">{{ $generalSergeants->count() }}</span>
-    </div>
+    <div>
 
     @forelse ($generalSergeants as $member)
         <a href="{{ route('member', $member->getUrlParams()) }}" class="list-group-item">

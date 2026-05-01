@@ -1165,22 +1165,6 @@ body.no-animations {
     margin-top: 30px;
 }
 
-.section-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--color-white);
-    font-size: 14px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--overlay-light);
-
-    i {
-        color: var(--color-accent);
-    }
-}
 
 .divisions-grid {
     display: grid;
@@ -3961,17 +3945,6 @@ body.no-animations {
     align-items: center;
     justify-content: space-between;
     margin-bottom: 15px;
-}
-
-.squad-assignments-title {
-    margin: 0;
-    font-size: 16px;
-    text-transform: uppercase;
-    color: var(--color-gray-300);
-
-    i {
-        margin-right: 8px;
-    }
 }
 
 .unassigned-organizer {

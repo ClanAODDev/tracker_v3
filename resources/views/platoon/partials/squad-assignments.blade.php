@@ -22,10 +22,7 @@
     @endcan
 
     <div class="squad-assignments-header">
-        <h4 class="squad-assignments-title">
-            <i class="fa fa-th-large text-muted"></i>
-            {{ Str::plural($division->locality('squad')) }}
-        </h4>
+        <h3 class="division-section-title">{{ Str::plural($division->locality('squad')) }}</h3>
         @can('update', $platoon)
             <a href="{{ route('filament.mod.resources.platoons.edit', [$platoon]) }}" class="btn btn-sm btn-default">
                 <i class="fa fa-plus text-success"></i> Create {{ $division->locality('squad') }}

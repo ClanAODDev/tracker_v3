@@ -46,19 +46,16 @@
 @endphp
 
 @if($showSection)
-    <h4 class="m-t-xl">
+    <h3 class="division-section-title m-t-xl">
         Divisions
         @can('managePartTime', $member)
             @if($member->id === auth()->user()->member_id)
-                <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#part-time-divisions-modal">
-                    <i class="fa fa-cog"></i> Manage
-                </button>
+                <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#part-time-divisions-modal"><i class="fa fa-cog"></i> Manage</button>
             @else
-                <a href="{{ route('filament.mod.resources.members.edit', $member) }}#part-time-divisions"
-                   class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>
+                <a href="{{ route('filament.mod.resources.members.edit', $member) }}#part-time-divisions" class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>
             @endif
         @endcan
-    </h4>
+    </h3>
     <hr/>
 
     @if($hasActiveDivision || $partTimeDivisions->count() > 0)

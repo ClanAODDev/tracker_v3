@@ -1,17 +1,14 @@
 @if($member->discord || $member->handles->count())
-    <h4 class="m-t-xl">
+    <h3 class="division-section-title m-t-xl">
         Handles
         @can('manageIngameHandles', $member)
             @if($member->id === auth()->user()->member_id)
-                <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#ingame-handles-modal">
-                    <i class="fa fa-cog"></i> Manage
-                </button>
+                <a class="btn btn-default btn-xs" data-toggle="modal" data-target="#ingame-handles-modal"><i class="fa fa-cog"></i> Manage</a>
             @else
-                <a href="{{ route('filament.mod.resources.members.edit', $member) }}#ingame-handles"
-                   class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>
+                <a href="{{ route('filament.mod.resources.members.edit', $member) }}#ingame-handles" class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>
             @endif
         @endcan
-    </h4>
+    </h3>
     <hr/>
 
     @php

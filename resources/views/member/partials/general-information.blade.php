@@ -1,4 +1,4 @@
-<h4>General Info</h4>
+<h3 class="division-section-title">General <span class="text-muted">Info</span></h3>
 <hr/>
 
 <div class="row">
