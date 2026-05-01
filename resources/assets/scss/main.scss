@@ -4095,7 +4095,7 @@ a.squad-drop-target {
 .squad-drop-target-leader {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
     font-size: 12px;
     color: var(--color-muted);
     margin-bottom: 12px;
@@ -4413,7 +4413,7 @@ a.panel.platoon {
 .platoon-header-leader {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
     font-size: 12px;
     color: var(--color-muted);
     margin-top: 2px;
@@ -4443,7 +4443,7 @@ a.panel.platoon {
 .platoon-leader-info {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
     font-size: 14px;
     font-weight: 500;
     color: var(--color-white);
@@ -4483,7 +4483,7 @@ a.panel.platoon {
 .leader-card-body {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     padding-top: 15px !important;
 }
 
@@ -4545,7 +4545,7 @@ a.panel.platoon {
 .squad-leader {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 3px;
     font-size: 12px;
     color: var(--color-white);
 }
