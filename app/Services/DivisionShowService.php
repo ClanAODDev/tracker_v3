@@ -43,12 +43,7 @@ class DivisionShowService
     {
         return $division->platoons()
             ->with([
-                'squads' => fn ($q) => $q
-                    ->withCount('members')
-                    ->withCount(['members as voice_active_count' => fn ($q) => $q
-                        ->where('last_voice_activity', '>=', now()->subDays($activityThresholdDays)),
-                    ])
-                    ->with('leader'),
+                'squads' => fn ($q) => $q->withCount('members')->with('leader'),
                 'leader',
             ])
             ->withCount([

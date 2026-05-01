@@ -56,12 +56,6 @@
                     <div class="platoon-section platoon-section-squads">
                         <div class="platoon-squads-grid">
                             @foreach ($platoon->squads as $squad)
-                                @php
-                                    $squadVoiceRate = $squad->members_count > 0
-                                        ? round(($squad->voice_active_count / $squad->members_count) * 100)
-                                        : 0;
-                                    $squadVoiceClass = $squadVoiceRate >= 30 ? 'voice-high' : ($squadVoiceRate >= 15 ? 'voice-mid' : 'voice-low');
-                                @endphp
                                 <div class="squad-card {{ !$squad->leader ? 'squad-card--vacant' : '' }}"
                                      data-squad-id="{{ $squad->id }}"
                                      @if ($squad->leader) style="--rank-color: {{ $squad->leader->rank->getColorHex() }}" @endif>
@@ -78,9 +72,7 @@
                                         @else
                                             <span class="text-muted">TBA</span>
                                         @endif
-                                    </div>
-                                    <div class="squad-meta">
-                                        <span class="squad-stat-badge {{ $squadVoiceClass }}">{{ $squad->members_count }} mbr &middot; {{ $squadVoiceRate }}%</span>
+                                        <span class="squad-member-count">{{ $squad->members_count }}</span>
                                     </div>
                                 </div>
                             @endforeach
