@@ -4367,7 +4367,7 @@ a.panel.platoon {
 .platoon-leader-info {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 5px;
     font-size: 14px;
     font-weight: 500;
     color: var(--color-white);
@@ -4383,6 +4383,19 @@ a.panel.platoon {
     &.rank-dot-sm {
         width: 6px;
         height: 6px;
+    }
+}
+
+.leader-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+
+    &.leader-avatar-sm {
+        width: 18px;
+        height: 18px;
     }
 }
 
@@ -4421,7 +4434,7 @@ a.panel.platoon {
 .squad-leader {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     font-size: 12px;
     color: var(--color-white);
 }

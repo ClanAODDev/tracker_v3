@@ -4,6 +4,24 @@
         <span class="settings-title">Settings</span>
         <button class="settings-close"><i class="fa fa-times"></i></button>
     </div>
+    @php $settingsAvatar = auth()->user()->member?->getDiscordAvatarUrl(); @endphp
+    <div class="settings-profile">
+        <div class="settings-profile-avatar">
+            @if ($settingsAvatar)
+                <img src="{{ $settingsAvatar }}" alt="{{ auth()->user()->name }}" class="settings-avatar-img" />
+            @else
+                <div class="settings-avatar-placeholder">
+                    <i class="fab fa-discord"></i>
+                </div>
+            @endif
+        </div>
+        <div class="settings-profile-info">
+            <span class="settings-profile-name">{{ auth()->user()->name }}</span>
+            @if (!$settingsAvatar)
+                <span class="settings-profile-hint">Log-in with Discord to load avatar</span>
+            @endif
+        </div>
+    </div>
     <div class="settings-content">
         <form id="user-settings-form">
             @csrf

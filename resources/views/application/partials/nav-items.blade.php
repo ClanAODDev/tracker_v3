@@ -11,12 +11,6 @@
 
     <li class="{{ set_active('members/' . auth()->user()->member->clan_id) }}">
         <a href="#{{ $idPrefix }}user-cp" data-toggle="collapse" aria-expanded="false" class="nav-user-link">
-            <span class="nav-avatar-wrap">
-                <i class="fa fa-user-circle"></i>
-                @if(auth()->user()->member?->getDiscordAvatarUrl())
-                    <img src="{{ auth()->user()->member->getDiscordAvatarUrl() }}" alt="" class="nav-user-avatar" onerror="this.remove()">
-                @endif
-            </span>
             <span class="nav-user-name">
                 {{ auth()->user()->name }}
                 @if (session('impersonating'))

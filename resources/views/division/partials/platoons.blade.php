@@ -44,7 +44,12 @@
                         <span class="platoon-section-label">{{ $division->locality('platoon') }} Leader</span>
                         <div class="platoon-leader-info">
                             @if ($platoon->leader)
-                                <span class="rank-dot" style="background-color: {{ $platoon->leader->rank->getColorHex() }}"></span>
+                                @php $avatar = $platoon->leader->getDiscordAvatarUrl(); @endphp
+                                @if ($avatar)
+                                    <img src="{{ $avatar }}" class="leader-avatar" alt="{{ $platoon->leader->name }}" />
+                                @else
+                                    <span class="rank-dot" style="background-color: {{ $platoon->leader->rank->getColorHex() }}"></span>
+                                @endif
                                 {{ $platoon->leader->present()->rankName }}
                             @else
                                 <span class="text-muted">TBA</span>
@@ -61,7 +66,12 @@
                                     <div class="squad-name">{{ $squad->name }}</div>
                                     <div class="squad-leader">
                                         @if ($squad->leader)
-                                            <span class="rank-dot rank-dot-sm" style="background-color: {{ $squad->leader->rank->getColorHex() }}"></span>
+                                            @php $squadAvatar = $squad->leader->getDiscordAvatarUrl(); @endphp
+                                            @if ($squadAvatar)
+                                                <img src="{{ $squadAvatar }}" class="leader-avatar leader-avatar-sm" alt="{{ $squad->leader->name }}" />
+                                            @else
+                                                <span class="rank-dot rank-dot-sm" style="background-color: {{ $squad->leader->rank->getColorHex() }}"></span>
+                                            @endif
                                             {{ $squad->leader->present()->rankName }}
                                         @else
                                             <span class="text-muted">TBA</span>
