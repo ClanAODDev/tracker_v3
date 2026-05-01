@@ -34,34 +34,36 @@
                         @endif
                         <div class="platoon-header-text">
                             <h4 class="m-b-none platoon-header-name">{{ $platoon->name }}</h4>
+                            <div class="platoon-header-leader">
+                                @if ($platoon->leader)
+                                    @php $avatar = $platoon->leader->getDiscordAvatarUrl(); @endphp
+                                    @if ($avatar)
+                                        <img src="{{ $avatar }}" class="leader-avatar leader-avatar-sm" alt="{{ $platoon->leader->name }}" />
+                                    @else
+                                        <span class="rank-dot rank-dot-sm" style="background-color: {{ $platoon->leader->rank->getColorHex() }}"></span>
+                                    @endif
+                                    {{ $platoon->leader->present()->rankName }}
+                                @else
+                                    <span class="text-muted">No leader</span>
+                                @endif
+                            </div>
                             @if ($platoon->description)
                                 <p class="platoon-description m-b-none">{{ $platoon->description }}</p>
                             @endif
                         </div>
                     </div>
 
-                    <div class="platoon-section platoon-section-leader">
-                        <span class="platoon-section-label">{{ $division->locality('platoon') }} Leader</span>
-                        <div class="platoon-leader-info">
-                            @if ($platoon->leader)
-                                @php $avatar = $platoon->leader->getDiscordAvatarUrl(); @endphp
-                                @if ($avatar)
-                                    <img src="{{ $avatar }}" class="leader-avatar" alt="{{ $platoon->leader->name }}" />
-                                @else
-                                    <span class="rank-dot" style="background-color: {{ $platoon->leader->rank->getColorHex() }}"></span>
-                                @endif
-                                {{ $platoon->leader->present()->rankName }}
-                            @else
-                                <span class="text-muted">TBA</span>
-                            @endif
-                        </div>
-                    </div>
-
                     <div class="platoon-section platoon-section-squads">
-                        <span class="platoon-section-label">{{ Str::plural($division->locality('squad')) }} ({{ $platoon->squads->count() }})</span>
                         <div class="platoon-squads-grid">
                             @foreach ($platoon->squads as $squad)
-                                <div class="squad-card" data-squad-id="{{ $squad->id }}"
+                                @php
+                                    $squadVoiceRate = $squad->members_count > 0
+                                        ? round(($squad->voice_active_count / $squad->members_count) * 100)
+                                        : 0;
+                                    $squadVoiceClass = $squadVoiceRate >= 30 ? 'voice-high' : ($squadVoiceRate >= 15 ? 'voice-mid' : 'voice-low');
+                                @endphp
+                                <div class="squad-card {{ !$squad->leader ? 'squad-card--vacant' : '' }}"
+                                     data-squad-id="{{ $squad->id }}"
                                      @if ($squad->leader) style="--rank-color: {{ $squad->leader->rank->getColorHex() }}" @endif>
                                     <div class="squad-name">{{ $squad->name }}</div>
                                     <div class="squad-leader">
@@ -76,6 +78,10 @@
                                         @else
                                             <span class="text-muted">TBA</span>
                                         @endif
+                                    </div>
+                                    <div class="squad-meta">
+                                        <span class="squad-meta-count">{{ $squad->members_count }}</span>
+                                        <span class="voice-status-dot {{ $squadVoiceClass }}"></span>
                                     </div>
                                 </div>
                             @endforeach

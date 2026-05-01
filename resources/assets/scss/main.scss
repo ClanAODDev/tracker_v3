@@ -4093,6 +4093,9 @@ a.squad-drop-target {
 }
 
 .squad-drop-target-leader {
+    display: flex;
+    align-items: center;
+    gap: 5px;
     font-size: 12px;
     color: var(--color-muted);
     margin-bottom: 12px;
@@ -4407,6 +4410,15 @@ a.panel.platoon {
     gap: 2px;
 }
 
+.platoon-header-leader {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--color-muted);
+    margin-top: 2px;
+}
+
 .platoon-description {
     font-size: 12px;
     font-style: italic;
@@ -4511,6 +4523,12 @@ a.panel.platoon {
     padding: 6px 10px;
     min-width: 110px;
     flex: 1;
+
+    &.squad-card--vacant {
+        border-left-style: dashed;
+        border-left-color: rgba(255, 255, 255, 0.15);
+        opacity: 0.65;
+    }
 }
 
 .squad-name {
@@ -4530,6 +4548,21 @@ a.panel.platoon {
     gap: 4px;
     font-size: 12px;
     color: var(--color-white);
+}
+
+.squad-meta {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+    padding-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.squad-meta-count {
+    font-size: 10px;
+    color: var(--color-muted);
+    flex: 1;
 }
 
 .platoon-section-stats {

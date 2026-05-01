@@ -42,7 +42,15 @@ class DivisionShowService
     private function getPlatoons(Division $division, int $activityThresholdDays)
     {
         return $division->platoons()
-            ->with(['squads.leader', 'leader'])
+            ->with([
+                'squads' => fn ($q) => $q
+                    ->withCount('members')
+                    ->withCount(['members as voice_active_count' => fn ($q) => $q
+                        ->where('last_voice_activity', '>=', now()->subDays($activityThresholdDays)),
+                    ])
+                    ->with('leader'),
+                'leader',
+            ])
             ->withCount([
                 'members',
                 'members as voice_active_count' => function ($query) use ($activityThresholdDays) {

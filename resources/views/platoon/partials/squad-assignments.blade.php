@@ -49,6 +49,12 @@
                 </div>
                 <div class="squad-drop-target-leader">
                     @if($squad->leader)
+                        @php $squadDropAvatar = $squad->leader->getDiscordAvatarUrl(); @endphp
+                        @if($squadDropAvatar)
+                            <img src="{{ $squadDropAvatar }}" class="leader-avatar leader-avatar-sm" alt="{{ $squad->leader->name }}" />
+                        @else
+                            <span class="rank-dot rank-dot-sm" style="background-color: {{ $squad->leader->rank->getColorHex() }}"></span>
+                        @endif
                         {{ $squad->leader->present()->rankName }}
                     @else
                         <span class="text-muted">TBA</span>
