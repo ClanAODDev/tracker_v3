@@ -6,7 +6,7 @@
             v3
         @endslot
         @slot ('icon')
-            <img src="{{ getThemedLogoPath() }}" width="50px" />
+            <img src="{{ getThemedLogoPath() }}" class="division-icon-large" />
         @endslot
         @slot ('heading')
             AOD Tracker

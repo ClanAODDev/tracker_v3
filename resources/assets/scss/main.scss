@@ -7041,15 +7041,7 @@ a.panel:hover, a.panel:active, a.panel:focus, .panel.note:hover {
     background-size: cover;
 }
 
-.view-header .header-icon {
-    font-size: 60px;
-    color: var(--color-accent);
-    width: 68px;
-    float: left;
-    margin-top: -8px;
-    line-height: 0;
-}
-
+.view-header .header-icon,
 .division-header .header-icon {
     font-size: 60px;
     color: var(--color-accent);
