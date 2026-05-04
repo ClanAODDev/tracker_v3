@@ -4553,6 +4553,7 @@ a.panel.platoon {
     align-items: center;
     background: rgba(0, 0, 0, 0.15);
     overflow: hidden;
+    margin-top: auto;
 
     &::before {
         content: '';
