@@ -215,7 +215,7 @@
             <div class="col-md-12">
                 <div class="panel panel-filled division-comparison-panel animate-fade-in-up" style="animation-delay: 0.5s">
                     <div class="panel-body">
-                    <h3 class="division-section-title" style="margin-bottom: 16px;">Division <span class="text-muted">Comparison</span> <span style="font-size:10px;font-weight:400;letter-spacing:0;margin-left:6px;opacity:0.5;">vs {{ $division->name }} avg</span></h3>
+                    <h3 class="division-section-title" style="margin-bottom: 16px;">Division <span class="text-muted">Comparison</span> <span class="pull-right" style="font-size:10px;font-weight:400;letter-spacing:0;opacity:0.5;">vs {{ $division->name }} avg</span></h3>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="comparison-metric" style="--i: 0">
