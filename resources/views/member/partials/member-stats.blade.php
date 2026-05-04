@@ -230,7 +230,9 @@
                                         </span>
                                     </div>
                                     <div class="comparison-bar-container">
-                                        <div class="comparison-bar">
+                                        <div class="comparison-bar"
+                                             style="--member-pos: {{ min(95, max(5, $memberStats->divisionComparison->tenurePercentile)) }}%; --bar-color: {{ $memberStats->divisionComparison->tenureBetter ? 'var(--color-success)' : 'var(--color-accent-light)' }}">
+                                            <div class="comparison-fill"></div>
                                             <div class="comparison-avg" style="left: 50%;" title="Division avg: {{ $memberStats->divisionComparison->avgTenureYears }}y"></div>
                                             <div class="comparison-member {{ $memberStats->divisionComparison->tenureBetter ? 'better' : 'worse' }}"
                                                  style="--final-pos: {{ min(95, max(5, $memberStats->divisionComparison->tenurePercentile)) }}%"
@@ -261,7 +263,9 @@
                                         </span>
                                     </div>
                                     <div class="comparison-bar-container">
-                                        <div class="comparison-bar">
+                                        <div class="comparison-bar"
+                                             style="--member-pos: {{ min(95, max(5, $memberStats->divisionComparison->activityPercentile)) }}%; --bar-color: {{ $memberStats->divisionComparison->activityBetter ? 'var(--color-success)' : 'var(--color-accent-light)' }}">
+                                            <div class="comparison-fill"></div>
                                             <div class="comparison-avg" style="left: 50%;" title="Division avg: {{ $memberStats->divisionComparison->avgVoiceDays }}d"></div>
                                             @if($memberStats->activity->daysSinceVoice !== null)
                                                 <div class="comparison-member {{ $memberStats->divisionComparison->activityBetter ? 'better' : 'worse' }}"

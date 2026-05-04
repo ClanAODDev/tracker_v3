@@ -4,15 +4,15 @@
     @include('division.partials.unassigned-members')
 @endcan
 
-<div class="division-section-title">
+<h3 class="division-section-title">
     {{ Str::plural($division->locality('platoon')) }}
 
     @can('create', [App\Models\Platoon::class, $division])
         <a href="{{ route('filament.mod.resources.divisions.edit', $division) }}"
-           class="btn btn-default pull-right"><i class="fa fa-plus text-success"></i> Create {{ $division->locality('platoon') }}
+           class="btn btn-xs btn-default pull-right"><i class="fa fa-plus text-success"></i> Create {{ $division->locality('platoon') }}
         </a>
     @endcan
-</div>
+</h3>
 <hr/>
 
 <div class="row platoon-drop-targets">

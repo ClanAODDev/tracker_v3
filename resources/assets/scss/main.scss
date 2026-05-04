@@ -5155,46 +5155,95 @@ a.org-node:hover {
 }
 
 .comparison-bar-container {
-    padding: 0 10px;
+    padding: 0 4px;
 }
 
 .comparison-bar {
     position: relative;
-    height: 8px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 4px;
+    height: 20px;
+    border-radius: 2px;
+    overflow: hidden;
+    background-color: rgba(0, 0, 0, 0.35);
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 5px,
+        rgba(255, 255, 255, 0.025) 5px,
+        rgba(255, 255, 255, 0.025) 6px
+    );
+}
+
+.comparison-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 0;
+    background-color: var(--bar-color, var(--color-success));
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 5px,
+        rgba(255, 255, 255, 0.12) 5px,
+        rgba(255, 255, 255, 0.12) 6px
+    );
+    opacity: 0.35;
+    animation: bar-fill 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: calc(1.8s + var(--i, 0) * 0.2s);
+}
+
+@keyframes bar-fill {
+    from { width: 0; }
+    to   { width: var(--member-pos, 50%); }
 }
 
 .comparison-avg {
     position: absolute;
-    top: -4px;
-    width: 2px;
-    height: 16px;
-    background: rgba(255,255,255,0.3);
+    top: 0;
+    height: 100%;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.35);
     transform: translateX(-50%);
 }
 
 .comparison-member {
     position: absolute;
-    top: -3px;
+    top: 50%;
     left: var(--final-pos, 50%);
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    transform: translateX(-50%);
-    border: 2px solid var(--color-bg-panel);
+    width: 9px;
+    height: 9px;
+    transform: translateX(-50%) translateY(-50%) rotate(45deg);
+    border-radius: 1px;
     opacity: 0;
-    animation: comparison-marker-slide 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    animation-delay: calc(1.8s + var(--i, 0) * 0.2s);
+    animation: comparison-marker-slide 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation-delay: calc(1.9s + var(--i, 0) * 0.2s);
+
+    &.better {
+        background: var(--color-success);
+        box-shadow: 0 0 10px 2px rgba(27, 191, 137, 0.7);
+    }
+
+    &.worse {
+        background: var(--color-accent-light);
+        box-shadow: 0 0 10px 2px rgba(247, 175, 62, 0.7);
+    }
 }
 
-.comparison-member.better {
-    background: var(--color-green);
-    box-shadow: 0 0 6px rgba(76, 175, 80, 0.5);
-}
-
-.comparison-member.worse {
-    background: var(--color-orange);
+@keyframes comparison-marker-slide {
+    0% {
+        left: 5%;
+        opacity: 0;
+        transform: translateX(-50%) translateY(-50%) rotate(45deg) scale(0.4);
+    }
+    20% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-50%) rotate(45deg) scale(1);
+    }
+    100% {
+        left: var(--final-pos, 50%);
+        opacity: 1;
+        transform: translateX(-50%) translateY(-50%) rotate(45deg) scale(1);
+    }
 }
 
 .comparison-legend {
