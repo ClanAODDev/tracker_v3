@@ -31,6 +31,13 @@ class Member extends Model
     use RecordsActivity;
     use SoftDeletes;
 
+    protected static function booted(): void
+    {
+        static::deleting(function (Member $member) {
+            $member->transfers()->pending()->delete();
+        });
+    }
+
     public function routeNotificationForBot()
     {
         return $this->discord;
