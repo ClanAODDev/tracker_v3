@@ -49,7 +49,7 @@ readonly class PendingActionsData
                     key: 'pending-applications',
                     count: $count,
                     url: route('division', $division->slug) . '?applications=1',
-                    icon: 'fab fa-discord',
+                    icon: 'fa-clipboard-list',
                     label: 'Application',
                 ));
             }

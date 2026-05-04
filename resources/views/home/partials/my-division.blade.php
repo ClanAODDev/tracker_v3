@@ -31,7 +31,7 @@
             @endif
             @if($myDivision->settings()->get('application_required', false))
                 <a href="{{ route('division', $myDivision->slug) }}?applications" class="action-card">
-                    <i class="fa fa-inbox"></i>
+                    <i class="fas fa-clipboard-list"></i>
                     <span>Applications</span>
                 </a>
             @endif
