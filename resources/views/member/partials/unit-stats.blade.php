@@ -43,10 +43,8 @@
     </div>
 </div>
 
+<h3 class="division-section-title hidden-xs hidden-sm">Discord <span class="text-muted">Activity</span></h3>
 <div class="panel panel-filled hidden-xs hidden-sm">
-    <div class="panel-heading" title="Days since last Discord voice activity (includes members on leave)">
-        Discord Activity
-    </div>
     <div class="panel-body">
         <div class="chart-wrapper" style="height: 180px;">
             <canvas id="voice-activity-chart"

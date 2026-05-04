@@ -1,3 +1,7 @@
+<div class="panel-body" style="padding-bottom: 0;">
+    <h3 class="division-section-title">Members</h3>
+    <hr/>
+</div>
 <div class='panel-body border-bottom'>
     <div id='playerFilter'></div>
     @include('member.partials.tag-filter')

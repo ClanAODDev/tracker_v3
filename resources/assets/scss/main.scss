@@ -2056,15 +2056,16 @@ body.no-animations {
     align-items: center;
     gap: 8px;
     padding: 14px 16px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--color-white);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-muted);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid var(--overlay-light);
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 
     i {
-        color: var(--color-accent);
+        color: var(--color-muted);
+        opacity: 0.6;
     }
 }
 
@@ -3562,6 +3563,7 @@ body.no-animations {
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--color-muted);
+    margin-top: 0;
     margin-bottom: 0;
 
     &::after {
@@ -4387,6 +4389,8 @@ a.panel.platoon {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    min-height: 52px;
+    justify-content: center;
 }
 
 .platoon-header-leader {
@@ -11314,13 +11318,16 @@ pre.code-toolbar > .toolbar span:focus {
 
 .breadcrumb {
     background: var(--panel-filled-bg);
-    padding: 12px 15px;
+    padding: 8px 15px;
     margin-bottom: 20px;
     border-radius: 6px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .breadcrumb-item a {
-    color: var(--color-gray-300);
+    color: var(--color-muted);
     text-decoration: none;
 
     &:hover {
@@ -11329,11 +11336,12 @@ pre.code-toolbar > .toolbar span:focus {
 }
 
 .breadcrumb-item.active {
-    color: var(--color-muted);
+    color: rgba(255, 255, 255, 0.35);
 }
 
 .breadcrumb-item + .breadcrumb-item::before {
     color: var(--color-muted);
+    opacity: 0.4;
 }
 
 .breadcrumb-dropdown {

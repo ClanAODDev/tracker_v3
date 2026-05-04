@@ -194,15 +194,15 @@
     @endphp
     <div class="row">
         <div class="col-md-12">
+            <h3 class="division-section-title">Rank <span class="text-muted">Progression</span>
+                @if($canViewFullHistory && $rankTimeline->historyItems->count() > 1)
+                    <button class="btn btn-xs btn-default pull-right" data-toggle="modal" data-target="#rank-history-modal">
+                        <i class="fa fa-list"></i> Full History
+                    </button>
+                @endif
+            </h3>
+            <hr/>
             <div class="panel panel-filled animate-fade-in-up" style="animation-delay: 0.4s">
-                <div class="panel-heading">
-                    <i class="fa fa-line-chart text-accent"></i> Rank Progression
-                    @if($canViewFullHistory && $rankTimeline->historyItems->count() > 1)
-                        <button class="btn btn-xs btn-default pull-right" data-toggle="modal" data-target="#rank-history-modal">
-                            <i class="fa fa-list"></i> Full History
-                        </button>
-                    @endif
-                </div>
                 <div class="panel-body">
                     @include('member.partials.rank-timeline')
                 </div>
@@ -214,11 +214,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="panel panel-filled division-comparison-panel animate-fade-in-up" style="animation-delay: 0.5s">
-                    <div class="panel-heading">
-                        <i class="fa fa-bar-chart text-accent"></i> Division Comparison
-                        <span class="text-muted pull-right">vs {{ $division->name }} average</span>
-                    </div>
                     <div class="panel-body">
+                    <h3 class="division-section-title" style="margin-bottom: 16px;">Division <span class="text-muted">Comparison</span> <span style="font-size:10px;font-weight:400;letter-spacing:0;margin-left:6px;opacity:0.5;">vs {{ $division->name }} avg</span></h3>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="comparison-metric" style="--i: 0">
