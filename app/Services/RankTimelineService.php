@@ -149,11 +149,12 @@ class RankTimelineService
     private function createRankNode(object $entry, int $nodeIndex, ?string $duration): object
     {
         return (object) [
-            'type'     => 'promotion',
-            'rank'     => $entry->rank->getAbbreviation(),
-            'date'     => $entry->created_at->format('M Y'),
-            'position' => $nodeIndex % 2 === 0 ? 'left' : 'right',
-            'duration' => $duration,
+            'type'      => 'promotion',
+            'rank'      => $entry->rank->getAbbreviation(),
+            'rankColor' => $entry->rank->getColorHex(),
+            'date'      => $entry->created_at->format('M Y'),
+            'position'  => $nodeIndex % 2 === 0 ? 'left' : 'right',
+            'duration'  => $duration,
         ];
     }
 

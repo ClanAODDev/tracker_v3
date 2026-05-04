@@ -15,7 +15,7 @@
                 @elseif($node->type === 'consolidated')
                     <div class="timeline-duration-connector" style="--i: {{ $index }}">{{ $rankTimeline->nodes[$index - 1]->duration ?? '' }}</div>
                     <div class="timeline-node timeline-{{ $node->position }}" style="--i: {{ $index }}">
-                        <div class="timeline-marker marker-promotion"></div>
+                        <div class="timeline-marker marker-consolidated"></div>
                         <div class="timeline-content">
                             <div class="timeline-rank timeline-rank-consolidated">{{ $node->label }}</div>
                             <div class="timeline-date">{{ $node->dateRange }}</div>
@@ -23,7 +23,7 @@
                     </div>
                 @elseif($node->type === 'promotion')
                     <div class="timeline-duration-connector" style="--i: {{ $index }}">{{ $rankTimeline->nodes[$index - 1]->duration ?? '' }}</div>
-                    <div class="timeline-node timeline-{{ $node->position }}" style="--i: {{ $index }}">
+                    <div class="timeline-node timeline-{{ $node->position }}" style="--i: {{ $index }}; --rank-color: {{ $node->rankColor }}">
                         <div class="timeline-marker marker-promotion"></div>
                         <div class="timeline-content">
                             <div class="timeline-rank">{{ $node->rank }}</div>

@@ -213,15 +213,16 @@
     @if($memberStats->divisionComparison)
         <div class="row">
             <div class="col-md-12">
+                <h3 class="division-section-title">Division <span class="text-muted">Comparison</span> <span class="pull-right" style="font-size:10px;font-weight:400;letter-spacing:0;opacity:0.5;">vs {{ $division->name }} avg</span></h3>
+                <hr/>
                 <div class="panel panel-filled division-comparison-panel animate-fade-in-up" style="animation-delay: 0.5s">
                     <div class="panel-body">
-                    <h3 class="division-section-title" style="margin-bottom: 16px;">Division <span class="text-muted">Comparison</span> <span class="pull-right" style="font-size:10px;font-weight:400;letter-spacing:0;opacity:0.5;">vs {{ $division->name }} avg</span></h3>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="comparison-metric" style="--i: 0">
                                     <div class="comparison-header">
                                         <span class="comparison-label">Tenure</span>
-                                        <span class="comparison-percentile {{ $memberStats->divisionComparison->tenureBetter ? 'text-success' : '' }}">
+                                        <span class="comparison-percentile {{ $memberStats->divisionComparison->tenureBetter ? 'text-green' : '' }}">
                                             @if($memberStats->divisionComparison->tenurePercentile >= 50)
                                                 Top {{ max(1, 100 - $memberStats->divisionComparison->tenurePercentile) }}%
                                             @else
@@ -231,7 +232,7 @@
                                     </div>
                                     <div class="comparison-bar-container">
                                         <div class="comparison-bar"
-                                             style="--member-pos: {{ min(95, max(5, $memberStats->divisionComparison->tenurePercentile)) }}%; --bar-color: {{ $memberStats->divisionComparison->tenureBetter ? 'var(--color-success)' : 'var(--color-accent-light)' }}">
+                                             style="--member-pos: {{ min(95, max(5, $memberStats->divisionComparison->tenurePercentile)) }}%; --bar-color: {{ $memberStats->divisionComparison->tenureBetter ? 'var(--color-green)' : 'var(--color-accent-light)' }}">
                                             <div class="comparison-fill"></div>
                                             <div class="comparison-avg" style="left: 50%;" title="Division avg: {{ $memberStats->divisionComparison->avgTenureYears }}y"></div>
                                             <div class="comparison-member {{ $memberStats->divisionComparison->tenureBetter ? 'better' : 'worse' }}"
@@ -250,7 +251,7 @@
                                 <div class="comparison-metric" style="--i: 1">
                                     <div class="comparison-header">
                                         <span class="comparison-label">Voice Activity</span>
-                                        <span class="comparison-percentile {{ $memberStats->divisionComparison->activityBetter ? 'text-success' : '' }}">
+                                        <span class="comparison-percentile {{ $memberStats->divisionComparison->activityBetter ? 'text-green' : '' }}">
                                             @if($memberStats->activity->daysSinceVoice !== null)
                                                 @if($memberStats->divisionComparison->activityPercentile >= 50)
                                                     Top {{ max(1, 100 - $memberStats->divisionComparison->activityPercentile) }}%
@@ -264,7 +265,7 @@
                                     </div>
                                     <div class="comparison-bar-container">
                                         <div class="comparison-bar"
-                                             style="--member-pos: {{ min(95, max(5, $memberStats->divisionComparison->activityPercentile)) }}%; --bar-color: {{ $memberStats->divisionComparison->activityBetter ? 'var(--color-success)' : 'var(--color-accent-light)' }}">
+                                             style="--member-pos: {{ min(95, max(5, $memberStats->divisionComparison->activityPercentile)) }}%; --bar-color: {{ $memberStats->divisionComparison->activityBetter ? 'var(--color-green)' : 'var(--color-accent-light)' }}">
                                             <div class="comparison-fill"></div>
                                             <div class="comparison-avg" style="left: 50%;" title="Division avg: {{ $memberStats->divisionComparison->avgVoiceDays }}d"></div>
                                             @if($memberStats->activity->daysSinceVoice !== null)

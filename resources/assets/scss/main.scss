@@ -4802,6 +4802,18 @@ a.org-node:hover {
 
 .rank-timeline-wrapper {
     position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 48px;
+        height: 100%;
+        background: linear-gradient(to right, transparent, var(--color-bg-panel));
+        pointer-events: none;
+        border-radius: 0 8px 8px 0;
+    }
 }
 
 .rank-history-list {
@@ -4882,10 +4894,10 @@ a.org-node:hover {
 
 @keyframes timeline-pulse {
     0%, 100% {
-        box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 40%, transparent);
+        box-shadow: 0 0 10px color-mix(in srgb, var(--rank-color, var(--color-accent)) 40%, transparent);
     }
     50% {
-        box-shadow: 0 0 18px color-mix(in srgb, var(--color-accent) 70%, transparent);
+        box-shadow: 0 0 18px color-mix(in srgb, var(--rank-color, var(--color-accent)) 70%, transparent);
     }
 }
 
@@ -4958,23 +4970,34 @@ a.org-node:hover {
 }
 
 .rank-timeline .timeline-marker.marker-promotion {
-    border-color: var(--color-accent);
+    border-color: var(--rank-color, var(--color-accent));
     background: var(--color-bg-dark);
 }
 
 .rank-timeline .timeline-node:hover .timeline-marker.marker-promotion {
-    background: var(--color-accent);
+    background: var(--rank-color, var(--color-accent));
 }
 
 .rank-timeline .timeline-node:last-child .timeline-marker.marker-promotion {
     width: 16px;
     height: 16px;
     border-width: 4px;
-    border-color: var(--color-accent);
-    background: var(--color-accent);
-    box-shadow: 0 0 10px color-mix(in srgb, var(--color-accent) 40%, transparent);
+    border-color: var(--rank-color, var(--color-accent));
+    background: var(--rank-color, var(--color-accent));
+    box-shadow: 0 0 10px color-mix(in srgb, var(--rank-color, var(--color-accent)) 40%, transparent);
     animation: timeline-pulse 2s ease-in-out infinite;
     animation-delay: calc(1.2s + var(--i, 0) * 0.12s);
+}
+
+.rank-timeline .timeline-marker.marker-consolidated {
+    border-color: rgba(255, 255, 255, 0.25);
+    border-style: dashed;
+    background: var(--color-bg-dark);
+}
+
+.rank-timeline .timeline-node:hover .timeline-marker.marker-consolidated {
+    background: var(--color-bg-panel);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 .rank-timeline .timeline-duration-connector {
@@ -4982,7 +5005,7 @@ a.org-node:hover {
     align-items: center;
     justify-content: center;
     font-size: 9px;
-    color: rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.4);
     padding: 0 4px;
     min-width: 30px;
     margin-top: 18px;
@@ -5005,8 +5028,8 @@ a.org-node:hover {
     font-size: 14px;
     font-weight: 700;
     color: var(--color-white);
-    background: color-mix(in srgb, var(--color-accent) 15%, transparent);
-    border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
+    background: color-mix(in srgb, var(--rank-color, var(--color-accent)) 15%, transparent);
+    border: 1px solid color-mix(in srgb, var(--rank-color, var(--color-accent)) 30%, transparent);
     padding: 4px 10px;
     border-radius: 12px;
     margin-bottom: 4px;
@@ -5014,9 +5037,17 @@ a.org-node:hover {
 }
 
 .rank-timeline .timeline-node:hover .timeline-rank {
-    background: color-mix(in srgb, var(--color-accent) 25%, transparent);
-    border-color: color-mix(in srgb, var(--color-accent) 50%, transparent);
+    background: color-mix(in srgb, var(--rank-color, var(--color-accent)) 25%, transparent);
+    border-color: color-mix(in srgb, var(--rank-color, var(--color-accent)) 50%, transparent);
     transform: scale(1.05);
+}
+
+.rank-timeline .timeline-rank-consolidated {
+    font-style: italic;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
 }
 
 .rank-timeline .timeline-rank.timeline-rank-consolidated {
@@ -5113,7 +5144,9 @@ a.org-node:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .comparison-label {
@@ -5160,17 +5193,10 @@ a.org-node:hover {
 
 .comparison-bar {
     position: relative;
-    height: 20px;
+    height: 10px;
     border-radius: 2px;
     overflow: hidden;
     background-color: rgba(0, 0, 0, 0.35);
-    background-image: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 5px,
-        rgba(255, 255, 255, 0.025) 5px,
-        rgba(255, 255, 255, 0.025) 6px
-    );
 }
 
 .comparison-fill {
@@ -5179,17 +5205,21 @@ a.org-node:hover {
     top: 0;
     height: 100%;
     width: 0;
-    background-color: var(--bar-color, var(--color-success));
     background-image: repeating-linear-gradient(
         -45deg,
-        transparent,
+        transparent 0,
         transparent 5px,
-        rgba(255, 255, 255, 0.12) 5px,
-        rgba(255, 255, 255, 0.12) 6px
+        var(--bar-color, var(--color-success)) 5px,
+        var(--bar-color, var(--color-success)) 10px
     );
-    opacity: 0.35;
-    animation: bar-fill 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: calc(1.8s + var(--i, 0) * 0.2s);
+    background-size: 14.14px 14.14px;
+    opacity: 0.05;
+    animation:
+        bar-fill 1s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+        stripe-march 0.8s linear infinite;
+    animation-delay:
+        calc(1.8s + var(--i, 0) * 0.2s),
+        calc(1.8s + var(--i, 0) * 0.2s);
 }
 
 @keyframes bar-fill {
@@ -5197,12 +5227,18 @@ a.org-node:hover {
     to   { width: var(--member-pos, 50%); }
 }
 
+@keyframes stripe-march {
+    from { background-position: 0 0; }
+    to   { background-position: 14.14px 14.14px; }
+}
+
 .comparison-avg {
     position: absolute;
     top: 0;
     height: 100%;
-    width: 1px;
-    background: rgba(255, 255, 255, 0.35);
+    width: 2px;
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.2);
     transform: translateX(-50%);
 }
 
@@ -5210,8 +5246,8 @@ a.org-node:hover {
     position: absolute;
     top: 50%;
     left: var(--final-pos, 50%);
-    width: 9px;
-    height: 9px;
+    width: 6px;
+    height: 6px;
     transform: translateX(-50%) translateY(-50%) rotate(45deg);
     border-radius: 1px;
     opacity: 0;
@@ -5219,13 +5255,13 @@ a.org-node:hover {
     animation-delay: calc(1.9s + var(--i, 0) * 0.2s);
 
     &.better {
-        background: var(--color-success);
-        box-shadow: 0 0 10px 2px rgba(27, 191, 137, 0.7);
+        background: var(--color-green);
+        box-shadow: 0 0 10px 2px color-mix(in srgb, var(--color-green) 70%, transparent);
     }
 
     &.worse {
         background: var(--color-accent-light);
-        box-shadow: 0 0 10px 2px rgba(247, 175, 62, 0.7);
+        box-shadow: 0 0 10px 2px color-mix(in srgb, var(--color-accent-light) 70%, transparent);
     }
 }
 
@@ -6350,6 +6386,10 @@ a.org-node:hover {
 
 .text-success {
     color: var(--color-success);
+}
+
+.text-green {
+    color: var(--color-green);
 }
 
 .text-info {
