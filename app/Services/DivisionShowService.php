@@ -20,7 +20,7 @@ class DivisionShowService
     public function getShowData(Division $division): DivisionShowData
     {
         $latestCensus = $division->latestCensus;
-        $stats        = DivisionStatsData::fromDivision($division, $latestCensus);
+        $stats        = DivisionStatsData::fromDivision($division);
 
         return new DivisionShowData(
             division: $division,

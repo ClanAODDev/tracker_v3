@@ -2,7 +2,6 @@
 
 namespace App\Data;
 
-use App\Models\Census;
 use App\Models\Division;
 
 readonly class DivisionStatsData
@@ -15,15 +14,18 @@ readonly class DivisionStatsData
         public int $activityThresholdDays,
     ) {}
 
-    public static function fromDivision(Division $division, ?Census $latestCensus): self
+    public static function fromDivision(Division $division): self
     {
         $activityThresholdDays = $division->settings()->get('inactivity_days') ?? 30;
 
+        $memberCount     = $division->members()->count();
+        $voiceActiveCount = $division->membersActiveOnDiscordSinceDaysAgo($activityThresholdDays)->count();
+
         return new self(
-            memberCount: $division->members()->count(),
-            voiceActiveCount: $latestCensus?->weekly_voice_count ?? 0,
-            voiceRate: $latestCensus && $latestCensus->count > 0
-                ? (int) round(($latestCensus->weekly_voice_count / $latestCensus->count) * 100)
+            memberCount: $memberCount,
+            voiceActiveCount: $voiceActiveCount,
+            voiceRate: $memberCount > 0
+                ? (int) round(($voiceActiveCount / $memberCount) * 100)
                 : 0,
             recruitsLast30Days: $division->members()
                 ->where('join_date', '>=', now()->subDays(30))

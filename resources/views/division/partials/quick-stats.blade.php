@@ -60,7 +60,7 @@
                             {{ $stats->voiceRate }}%
                         </small>
                     </span>
-                    <span class="stat-label">Voice Active</span>
+                    <span class="stat-label">Voice Active <small class="text-muted">({{ $stats->activityThresholdDays }} days)</small></span>
                 </div>
                 @if(count($voiceRateTrend) > 1)
                     <div class="stat-sparkline">
