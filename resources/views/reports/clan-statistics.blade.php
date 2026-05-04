@@ -41,10 +41,7 @@
                         {{ \Carbon\Carbon::parse($milestones->peak->date)->format('M j, Y') }}
                     </div>
                 </div>
-                <div class="report-stat">
-                    <div class="report-stat-value">{{ number_format($memberCount) }}</div>
-                    <div class="report-stat-label">Current Members</div>
-                </div>
+
             </div>
         @endif
 
