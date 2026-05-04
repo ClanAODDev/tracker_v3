@@ -141,6 +141,7 @@ class Member extends Model
             'groups'                 => null,
         ]);
 
+        $this->transfers()->pending()->delete();
         $this->partTimeDivisions()->detach();
 
         $divisionSpecificTagIds = $this->tags()->whereNotNull('division_tags.division_id')->pluck('division_tags.id');
