@@ -21,6 +21,16 @@ readonly class CensusChartData
             ->reverse()
             ->values();
 
+        $restartIndex = 0;
+        for ($i = 1; $i < $census->count(); $i++) {
+            $gap = $census[$i - 1]->created_at->diffInDays($census[$i]->created_at);
+            if ($gap > 28) {
+                $restartIndex = $i;
+            }
+        }
+
+        $census = $census->slice($restartIndex)->values();
+
         return new self(
             labels: $census->map(fn ($c) => $c->created_at->format('M j'))->toArray(),
             population: $census->pluck('count')->toArray(),
