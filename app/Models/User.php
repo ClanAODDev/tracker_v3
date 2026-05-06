@@ -9,6 +9,7 @@ use App\Enums\Role;
 use App\Settings\UserSettings;
 use Exception;
 use Filament\Models\Contracts\FilamentUser;
+use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,7 +22,7 @@ use Laravel\Sanctum\HasApiTokens;
 /**
  * Class User.
  */
-class User extends Authenticatable implements Commenter, FilamentUser
+class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 {
     use HasApiTokens;
     use HasFactory;
@@ -298,6 +299,11 @@ class User extends Authenticatable implements Commenter, FilamentUser
     public function getCommenterName(): string
     {
         return $this->member?->present()->rankName() ?? $this->name;
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->member?->getDiscordAvatarUrl();
     }
 
     public function canAccessPanel(Panel $panel): bool
