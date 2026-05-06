@@ -59,7 +59,7 @@ class DivisionRepository
             ->groupBy('member_id');
 
         return $anniversaries->map(function ($anniversary) use ($tenureAwardIds, $earnedAwards) {
-            $awardId = $tenureAwardIds->get("{$anniversary->years_since_joined} Years of Service");
+            $awardId      = $tenureAwardIds->get("{$anniversary->years_since_joined} Years of Service");
             $memberAwards = $earnedAwards->get($anniversary->clan_id);
 
             $anniversary->has_tenure_award = $awardId

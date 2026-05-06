@@ -18,7 +18,7 @@ readonly class DivisionStatsData
     {
         $activityThresholdDays = $division->settings()->get('inactivity_days') ?? 30;
 
-        $memberCount     = $division->members()->count();
+        $memberCount      = $division->members()->count();
         $voiceActiveCount = $division->membersActiveOnDiscordSinceDaysAgo($activityThresholdDays)->count();
 
         return new self(

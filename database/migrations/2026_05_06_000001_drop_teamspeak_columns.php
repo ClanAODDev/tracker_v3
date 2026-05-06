@@ -16,5 +16,4 @@ return new class extends Migration
             $table->dropColumn('weekly_ts_count');
         });
     }
-
 };

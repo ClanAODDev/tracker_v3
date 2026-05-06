@@ -11,10 +11,10 @@ class MemberFullTransformer extends Transformer
     public function transform($item): array
     {
         return array_merge([
-            'name'             => $item->name,
-            'join_date'        => $item->join_date,
-            'last_activity'    => $item->last_activity,
-            'rank'             => [
+            'name'          => $item->name,
+            'join_date'     => $item->join_date,
+            'last_activity' => $item->last_activity,
+            'rank'          => [
                 'label' => $item->rank->getAbbreviation(),
                 'color' => $item->rank->getColorHex(),
             ],
