@@ -41,10 +41,6 @@ class CensusResource extends Resource
                 TextInput::make('weekly_active_count')
                     ->required()
                     ->numeric(),
-                TextInput::make('weekly_ts_count')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
                 TextInput::make('weekly_voice_count')
                     ->required()
                     ->numeric()
@@ -68,9 +64,6 @@ class CensusResource extends Resource
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('weekly_active_count')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('weekly_ts_count')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('weekly_voice_count')

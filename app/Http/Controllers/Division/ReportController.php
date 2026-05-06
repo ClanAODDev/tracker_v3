@@ -193,10 +193,6 @@ class ReportController extends Controller
             $census->javascriptTimestamp, $census->weekly_active_count,
         ]);
 
-        $weeklyTsActive = $censuses->values()->map(fn ($census, $key) => [
-            $census->javascriptTimestamp, $census->weekly_ts_count,
-        ]);
-
         $weeklyDiscordActive = $censuses->values()->map(fn ($census, $key) => [
             $census->javascriptTimestamp, $census->weekly_voice_count,
         ]);
@@ -242,7 +238,6 @@ class ReportController extends Controller
             'weeklyActive',
             'comments',
             'censuses',
-            'weeklyTsActive',
             'weeklyDiscordActive',
             'stats',
         ));

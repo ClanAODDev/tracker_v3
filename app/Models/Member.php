@@ -48,7 +48,6 @@ class Member extends Model
         'flagged_for_inactivity'    => 'boolean',
         'join_date'                 => 'datetime',
         'last_activity'             => 'datetime',
-        'last_ts_activity'          => 'datetime',
         'last_voice_activity'       => 'datetime',
         'last_promoted_at'          => 'datetime',
         'last_trained_at'           => 'datetime',
@@ -382,7 +381,6 @@ class Member extends Model
         ];
 
         $properties = [
-            "TeamSpeak activity: {$this->present()->lastActive('last_ts_activity', ['weeks', 'months'])}",
             "Discord activity: {$this->present()->lastActive('last_voice_activity', ['weeks', 'months'])}",
             'Discord Username: ' . ($this->discord ?? 'Not set'),
         ];

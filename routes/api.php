@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('v1.')->group(function () {
     Route::controller(ClanController::class)->middleware('abilities:clan:read')->group(function () {
-        Route::get('ts-count', 'teamspeakPopulationCount')->name('ts_population');
         Route::get('discord-count', 'discordPopulationCount')->name('discord_population');
         Route::get('stream-events', 'streamEvents')->name('stream_events');
     });

@@ -24,7 +24,6 @@ class CensusFactory extends Factory
             'division_id'         => Division::factory(),
             'count'               => rand(100, 500),
             'weekly_active_count' => rand(50, 100),
-            'weekly_ts_count'     => rand(50, 100),
         ];
     }
 }

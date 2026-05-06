@@ -21,7 +21,7 @@ class Member extends Base implements Command
     public function handle()
     {
         $validated = $this->request->validate([
-            'field' => 'required|in:name,discord,ts_unique_id',
+            'field' => 'required|in:name,discord',
             'value' => 'required|min:3',
         ]);
 
