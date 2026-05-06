@@ -103,7 +103,6 @@ export default {
         'forum-change': 'fa fa-edit',
         'awards-medals': 'fa fa-trophy',
         'member-rename': 'fa fa-id-card',
-        'teamspeak-change': 'fa fa-headphones',
         'misc': 'fa fa-question-circle',
       };
       return icons[slug] || 'fa fa-tag';

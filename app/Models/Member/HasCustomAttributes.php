@@ -15,13 +15,6 @@ trait HasCustomAttributes
         );
     }
 
-    public function tsInvalid(): Attribute
-    {
-        return new Attribute(
-            fn ($value, $attributes) => carbon_date_or_null_if_zero($attributes['last_ts_activity']) === null
-        );
-    }
-
     public function voiceInvalid(): Attribute
     {
         return new Attribute(

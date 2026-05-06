@@ -53,7 +53,6 @@ class DivisionCensus extends BaseCommand
                 'division_id'         => $division->id,
                 'count'               => $division->members()->count(),
                 'weekly_active_count' => $division->membersActiveSinceDaysAgo(8)->count(),
-                'weekly_ts_count'     => $division->membersActiveOnTsSinceDaysAgo(8)->count(),
                 'weekly_voice_count'  => $division->membersActiveOnDiscordSinceDaysAgo(8)->count(),
             ]);
 

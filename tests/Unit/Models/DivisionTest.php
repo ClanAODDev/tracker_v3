@@ -104,26 +104,6 @@ class DivisionTest extends TestCase
         $this->assertFalse($results->contains($inactiveOld));
     }
 
-    public function test_members_active_on_ts_since_days_ago_filters_correctly()
-    {
-        $division = $this->createActiveDivision();
-
-        $activeRecently = $this->createMember([
-            'division_id'      => $division->id,
-            'last_ts_activity' => Carbon::now()->subDays(5),
-        ]);
-
-        $inactiveOld = $this->createMember([
-            'division_id'      => $division->id,
-            'last_ts_activity' => Carbon::now()->subDays(45),
-        ]);
-
-        $results = $division->membersActiveOnTsSinceDaysAgo(30)->get();
-
-        $this->assertTrue($results->contains($activeRecently));
-        $this->assertFalse($results->contains($inactiveOld));
-    }
-
     public function test_members_active_on_discord_since_days_ago_filters_correctly()
     {
         $division = $this->createActiveDivision();

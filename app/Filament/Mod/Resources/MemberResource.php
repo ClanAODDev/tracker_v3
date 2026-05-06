@@ -80,8 +80,6 @@ class MemberResource extends Resource
                 Section::make('Communications')
                     ->columnSpanFull()
                     ->schema([
-                        TextInput::make('ts_unique_id')
-                            ->disabled(),
                         TextInput::make('discord')
                             ->disabled(),
                         TextInput::make('discord_id')

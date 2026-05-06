@@ -283,16 +283,6 @@ class Division extends Model
     /**
      * @return $this
      */
-    public function membersActiveOnTsSinceDaysAgo($days)
-    {
-        $date = Carbon::now()->subDays($days)->format('Y-m-d');
-
-        return $this->members()->where('last_ts_activity', '>=', $date);
-    }
-
-    /**
-     * @return $this
-     */
     public function membersActiveOnDiscordSinceDaysAgo($days)
     {
         $date = Carbon::now()->subDays($days)->format('Y-m-d');

@@ -74,9 +74,6 @@ class MemberResource extends Resource
                 Section::make('Communications')
                     ->columnSpanFull()
                     ->schema([
-                        TextInput::make('ts_unique_id')
-                            ->maxLength(255)
-                            ->default(null),
                         TextInput::make('discord')
                             ->maxLength(191)
                             ->default(null),
@@ -93,7 +90,6 @@ class MemberResource extends Resource
                     ->schema([
                         DateTimePicker::make('last_voice_activity'),
                         DateTimePicker::make('last_activity'),
-                        DateTimePicker::make('last_ts_activity'),
                     ])->columns(3),
 
                 Section::make('Dates')
@@ -154,10 +150,6 @@ class MemberResource extends Resource
                 TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
-                TextColumn::make('ts_unique_id')
-                    ->toggleable()
-                    ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('discord')
                     ->toggleable()
                     ->searchable(),
@@ -190,10 +182,6 @@ class MemberResource extends Resource
                     ->toggleable()
                     ->dateTime()
                     ->sortable(),
-                TextColumn::make('last_ts_activity')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('last_promoted_at')
                     ->dateTime()
                     ->sortable(),

@@ -35,7 +35,6 @@ class MemberPresenter extends Presenter
     public function lastActive($activityType, array $skipUnits = [])
     {
         if (! in_array($activityType, [
-            'last_ts_activity',
             'last_voice_activity',
         ])) {
             throw new Exception('Invalid activity type provided to `lastActive()`');

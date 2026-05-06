@@ -30,7 +30,6 @@ class MemberFactory extends Factory
             'division_id'         => Division::factory(),
             'join_date'           => $this->faker->dateTimeThisDecade,
             'last_activity'       => $this->faker->dateTimeThisMonth,
-            'last_ts_activity'    => $this->faker->dateTimeThisMonth,
             'last_voice_activity' => $this->faker->dateTimeThisMonth,
             'last_promoted_at'    => $this->faker->dateTimeThisYear,
             'allow_pm'            => array_rand([0, 1], 1),
