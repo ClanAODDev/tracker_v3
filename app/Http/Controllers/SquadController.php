@@ -35,6 +35,8 @@ class SquadController extends Controller
 
     public function assignMember(Request $request): JsonResponse
     {
+        $this->authorize('recruit', Member::class);
+
         $member = Member::find($request->member_id);
 
         if ((int) $request->squad_id === 0) {

@@ -46,9 +46,15 @@ class DivisionApplicationApiController extends Controller
         return response()->json(['applications' => $applications]);
     }
 
+    private function assertBelongsToDivision(Division $division, DivisionApplication $application): void
+    {
+        abort_if($application->division_id !== $division->id, 403);
+    }
+
     public function show(Division $division, DivisionApplication $application): JsonResponse
     {
         $this->authorize('recruit', Member::class);
+        $this->assertBelongsToDivision($division, $application);
 
         $application->load(['user', 'comments.author.member']);
 
@@ -80,6 +86,7 @@ class DivisionApplicationApiController extends Controller
     public function destroy(Division $division, DivisionApplication $application): JsonResponse
     {
         $this->authorize('recruit', Member::class);
+        $this->assertBelongsToDivision($division, $application);
 
         if (! auth()->user()->isRole(['sr_ldr', 'admin'])) {
             return response()->json(['error' => 'Unauthorized'], 403);
@@ -93,6 +100,7 @@ class DivisionApplicationApiController extends Controller
     public function addComment(Request $request, Division $division, DivisionApplication $application): JsonResponse
     {
         $this->authorize('recruit', Member::class);
+        $this->assertBelongsToDivision($division, $application);
 
         $validated = $request->validate([
             'body' => 'required|string|min:5',
@@ -120,6 +128,7 @@ class DivisionApplicationApiController extends Controller
     public function deleteComment(Division $division, DivisionApplication $application, Comment $comment): JsonResponse
     {
         $this->authorize('recruit', Member::class);
+        $this->assertBelongsToDivision($division, $application);
 
         if ((int) $comment->author_id !== (int) auth()->id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
