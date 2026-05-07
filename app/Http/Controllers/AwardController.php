@@ -122,8 +122,14 @@ class AwardController extends Controller
                     ->orWhereHas('dependents');
             })
             ->withCount('recipients')
+            ->with('division')
             ->orderBy('display_order')
             ->get();
+
+        $awardsById   = $awardsWithChains->keyBy('id');
+        $dependentMap = $awardsWithChains
+            ->filter(fn ($a) => $a->prerequisite_award_id !== null)
+            ->keyBy('prerequisite_award_id');
 
         $processed = [];
         $groups    = [];
@@ -134,16 +140,16 @@ class AwardController extends Controller
             }
 
             $chain   = collect([$award]);
-            $current = $award->prerequisite;
+            $current = $awardsById->get($award->prerequisite_award_id);
             while ($current) {
                 $chain->push($current);
-                $current = $current->prerequisite;
+                $current = $awardsById->get($current->prerequisite_award_id);
             }
 
             $current = $award;
-            while ($dependent = Award::where('prerequisite_award_id', $current->id)->first()) {
-                $chain->push($dependent);
-                $current = $dependent;
+            while ($next = $dependentMap->get($current->id)) {
+                $chain->push($next);
+                $current = $next;
             }
 
             $chain = $chain->unique('id')->sortBy('display_order')->values();
