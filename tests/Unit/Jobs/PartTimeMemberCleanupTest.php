@@ -5,6 +5,7 @@ namespace Tests\Unit\Jobs;
 use App\Jobs\PartTimeMemberCleanup;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -15,7 +16,8 @@ class PartTimeMemberCleanupTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_removes_part_time_entry_matching_full_time_division()
+    #[Test]
+    public function removes_part_time_entry_matching_full_time_division()
     {
         $division = $this->createActiveDivision();
 
@@ -34,7 +36,8 @@ class PartTimeMemberCleanupTest extends TestCase
         $this->assertCount(0, $member->partTimeDivisions);
     }
 
-    public function test_keeps_part_time_entries_for_different_divisions()
+    #[Test]
+    public function keeps_part_time_entries_for_different_divisions()
     {
         $fullTimeDivision = $this->createActiveDivision();
         $partTimeDivision = $this->createActiveDivision();
@@ -53,7 +56,8 @@ class PartTimeMemberCleanupTest extends TestCase
         $this->assertEquals($partTimeDivision->id, $member->partTimeDivisions->first()->id);
     }
 
-    public function test_removes_only_matching_division_keeps_others()
+    #[Test]
+    public function removes_only_matching_division_keeps_others()
     {
         $fullTimeDivision = $this->createActiveDivision();
         $partTimeDivision = $this->createActiveDivision();
@@ -77,7 +81,8 @@ class PartTimeMemberCleanupTest extends TestCase
         $this->assertEquals($partTimeDivision->id, $member->partTimeDivisions->first()->id);
     }
 
-    public function test_does_not_affect_members_without_division()
+    #[Test]
+    public function does_not_affect_members_without_division()
     {
         $tempDivision     = $this->createActiveDivision();
         $partTimeDivision = $this->createActiveDivision();
@@ -96,7 +101,8 @@ class PartTimeMemberCleanupTest extends TestCase
         $this->assertCount(1, $member->partTimeDivisions);
     }
 
-    public function test_does_not_affect_members_without_part_time_divisions()
+    #[Test]
+    public function does_not_affect_members_without_part_time_divisions()
     {
         $division = $this->createActiveDivision();
 
@@ -111,7 +117,8 @@ class PartTimeMemberCleanupTest extends TestCase
         $this->assertCount(0, $member->partTimeDivisions);
     }
 
-    public function test_job_is_queueable()
+    #[Test]
+    public function job_is_queueable()
     {
         $job = new PartTimeMemberCleanup;
 

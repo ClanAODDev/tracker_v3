@@ -7,6 +7,7 @@ use App\Enums\Rank;
 use App\Models\Division;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -17,14 +18,16 @@ class DivisionTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_it_has_a_lowercase_abbreviation()
+    #[Test]
+    public function it_has_a_lowercase_abbreviation()
     {
         $division = Division::factory(['abbreviation' => 'UPPERCASE'])->make();
 
         $this->assertSame($division->abbreviation, 'uppercase');
     }
 
-    public function test_creating_division_sets_default_settings()
+    #[Test]
+    public function creating_division_sets_default_settings()
     {
         $division = Division::factory()->create(['name' => 'Test Division']);
 
@@ -33,14 +36,16 @@ class DivisionTest extends TestCase
         $this->assertArrayHasKey('chat_alerts', $division->settings);
     }
 
-    public function test_creating_division_generates_slug_from_name()
+    #[Test]
+    public function creating_division_generates_slug_from_name()
     {
         $division = Division::factory()->create(['name' => 'Test Division Name']);
 
         $this->assertEquals('test-division-name', $division->slug);
     }
 
-    public function test_scope_active_returns_only_active_divisions()
+    #[Test]
+    public function scope_active_returns_only_active_divisions()
     {
         $activeDivision   = $this->createActiveDivision();
         $inactiveDivision = $this->createInactiveDivision();
@@ -51,7 +56,8 @@ class DivisionTest extends TestCase
         $this->assertFalse($results->contains($inactiveDivision));
     }
 
-    public function test_scope_without_floaters_excludes_floater_division()
+    #[Test]
+    public function scope_without_floaters_excludes_floater_division()
     {
         $regularDivision = Division::factory()->create(['name' => 'Regular', 'slug' => 'regular']);
         $floaterDivision = Division::factory()->create(['name' => 'Floater', 'slug' => 'floater']);
@@ -62,7 +68,8 @@ class DivisionTest extends TestCase
         $this->assertFalse($results->contains($floaterDivision));
     }
 
-    public function test_scope_shutting_down_excludes_shutdown_divisions_by_default()
+    #[Test]
+    public function scope_shutting_down_excludes_shutdown_divisions_by_default()
     {
         $activeDivision       = Division::factory()->create(['shutdown_at' => null]);
         $shuttingDownDivision = Division::factory()->create(['shutdown_at' => now()]);
@@ -73,7 +80,8 @@ class DivisionTest extends TestCase
         $this->assertFalse($results->contains($shuttingDownDivision));
     }
 
-    public function test_scope_shutting_down_includes_shutdown_divisions_when_flag_set()
+    #[Test]
+    public function scope_shutting_down_includes_shutdown_divisions_when_flag_set()
     {
         $activeDivision       = Division::factory()->create(['shutdown_at' => null]);
         $shuttingDownDivision = Division::factory()->create(['shutdown_at' => now()]);
@@ -84,7 +92,8 @@ class DivisionTest extends TestCase
         $this->assertTrue($results->contains($shuttingDownDivision));
     }
 
-    public function test_members_active_since_days_ago_filters_correctly()
+    #[Test]
+    public function members_active_since_days_ago_filters_correctly()
     {
         $division = $this->createActiveDivision();
 
@@ -104,7 +113,8 @@ class DivisionTest extends TestCase
         $this->assertFalse($results->contains($inactiveOld));
     }
 
-    public function test_members_active_on_discord_since_days_ago_filters_correctly()
+    #[Test]
+    public function members_active_on_discord_since_days_ago_filters_correctly()
     {
         $division = $this->createActiveDivision();
 
@@ -124,7 +134,8 @@ class DivisionTest extends TestCase
         $this->assertFalse($results->contains($inactiveOld));
     }
 
-    public function test_sergeants_returns_members_with_rank_sergeant_or_higher()
+    #[Test]
+    public function sergeants_returns_members_with_rank_sergeant_or_higher()
     {
         $division = $this->createActiveDivision();
 
@@ -144,7 +155,8 @@ class DivisionTest extends TestCase
         $this->assertFalse($results->contains($corporal));
     }
 
-    public function test_leaders_returns_co_and_xo()
+    #[Test]
+    public function leaders_returns_co_and_xo()
     {
         $division = $this->createActiveDivision();
 
@@ -159,7 +171,8 @@ class DivisionTest extends TestCase
         $this->assertFalse($results->contains($regularMember));
     }
 
-    public function test_unassigned_returns_members_without_platoon()
+    #[Test]
+    public function unassigned_returns_members_without_platoon()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -182,7 +195,8 @@ class DivisionTest extends TestCase
         $this->assertFalse($results->contains($assigned));
     }
 
-    public function test_is_active_returns_correct_value()
+    #[Test]
+    public function is_active_returns_correct_value()
     {
         $activeDivision   = $this->createActiveDivision();
         $inactiveDivision = $this->createInactiveDivision();
@@ -191,7 +205,8 @@ class DivisionTest extends TestCase
         $this->assertFalse($inactiveDivision->isActive());
     }
 
-    public function test_is_shutdown_returns_correct_value()
+    #[Test]
+    public function is_shutdown_returns_correct_value()
     {
         $normalDivision   = Division::factory()->create(['shutdown_at' => null]);
         $shutdownDivision = Division::factory()->create(['shutdown_at' => now()]);
@@ -200,7 +215,8 @@ class DivisionTest extends TestCase
         $this->assertTrue((bool) $shutdownDivision->isShutdown());
     }
 
-    public function test_locality_returns_correct_translation()
+    #[Test]
+    public function locality_returns_correct_translation()
     {
         $division           = $this->createActiveDivision();
         $division->settings = array_merge($division->defaultSettings, [
@@ -215,14 +231,16 @@ class DivisionTest extends TestCase
         $this->assertEquals('Company', $division->locality('platoon'));
     }
 
-    public function test_locality_returns_ucwords_for_missing_translation()
+    #[Test]
+    public function locality_returns_ucwords_for_missing_translation()
     {
         $division = $this->createActiveDivision();
 
         $this->assertEquals('Unknown Term', $division->locality('unknown term'));
     }
 
-    public function test_new_members_last_30_returns_recent_joins()
+    #[Test]
+    public function new_members_last_30_returns_recent_joins()
     {
         $division = $this->createActiveDivision();
 

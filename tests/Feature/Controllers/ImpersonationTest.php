@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers;
 
 use App\Enums\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -14,7 +15,8 @@ class ImpersonationTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_admin_can_impersonate_regular_user()
+    #[Test]
+    public function admin_can_impersonate_regular_user()
     {
         $admin   = $this->createAdmin();
         $officer = $this->createOfficer();
@@ -27,7 +29,8 @@ class ImpersonationTest extends TestCase
         $this->assertTrue(session('impersonating'));
     }
 
-    public function test_admin_cannot_impersonate_developer()
+    #[Test]
+    public function admin_cannot_impersonate_developer()
     {
         $admin     = $this->createAdmin([], ['developer' => false]);
         $developer = $this->createAdmin([], ['developer' => true]);
@@ -39,7 +42,8 @@ class ImpersonationTest extends TestCase
         $this->assertAuthenticatedAs($admin);
     }
 
-    public function test_admin_cannot_impersonate_themselves()
+    #[Test]
+    public function admin_cannot_impersonate_themselves()
     {
         $admin = $this->createAdmin();
 
@@ -49,7 +53,8 @@ class ImpersonationTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_officer_cannot_impersonate()
+    #[Test]
+    public function officer_cannot_impersonate()
     {
         $officer = $this->createOfficer();
         $member  = $this->createMemberWithUser();
@@ -60,7 +65,8 @@ class ImpersonationTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_cannot_impersonate_while_already_impersonating()
+    #[Test]
+    public function cannot_impersonate_while_already_impersonating()
     {
         $admin    = $this->createAdmin();
         $officer1 = $this->createOfficer();
@@ -72,7 +78,8 @@ class ImpersonationTest extends TestCase
             ->assertForbidden();
     }
 
-    public function test_developer_can_impersonate_in_local_environment()
+    #[Test]
+    public function developer_can_impersonate_in_local_environment()
     {
         $this->app->detectEnvironment(fn () => 'local');
 
@@ -86,7 +93,8 @@ class ImpersonationTest extends TestCase
         $this->assertAuthenticatedAs($otherDeveloper);
     }
 
-    public function test_developer_can_impersonate_in_testing_environment()
+    #[Test]
+    public function developer_can_impersonate_in_testing_environment()
     {
         $this->app->detectEnvironment(fn () => 'testing');
 
@@ -100,7 +108,8 @@ class ImpersonationTest extends TestCase
         $this->assertAuthenticatedAs($officer);
     }
 
-    public function test_developer_cannot_impersonate_in_production()
+    #[Test]
+    public function developer_cannot_impersonate_in_production()
     {
         $this->app->detectEnvironment(fn () => 'production');
 
@@ -113,7 +122,8 @@ class ImpersonationTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_end_impersonation_returns_to_original_user()
+    #[Test]
+    public function end_impersonation_returns_to_original_user()
     {
         $admin   = $this->createAdmin();
         $officer = $this->createOfficer();

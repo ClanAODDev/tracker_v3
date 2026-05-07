@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -13,7 +14,8 @@ class LogViewerAccessTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_developer_can_access_log_viewer()
+    #[Test]
+    public function developer_can_access_log_viewer()
     {
         $developer = $this->createMemberWithUser([], ['developer' => true]);
 
@@ -23,7 +25,8 @@ class LogViewerAccessTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_admin_with_developer_flag_can_access_log_viewer()
+    #[Test]
+    public function admin_with_developer_flag_can_access_log_viewer()
     {
         $admin = $this->createAdmin([], ['developer' => true]);
 
@@ -33,7 +36,8 @@ class LogViewerAccessTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_admin_without_developer_flag_cannot_access_log_viewer()
+    #[Test]
+    public function admin_without_developer_flag_cannot_access_log_viewer()
     {
         $admin = $this->createAdmin([], ['developer' => false]);
 
@@ -43,7 +47,8 @@ class LogViewerAccessTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_senior_leader_cannot_access_log_viewer()
+    #[Test]
+    public function senior_leader_cannot_access_log_viewer()
     {
         $seniorLeader = $this->createSeniorLeader();
 
@@ -53,7 +58,8 @@ class LogViewerAccessTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_officer_cannot_access_log_viewer()
+    #[Test]
+    public function officer_cannot_access_log_viewer()
     {
         $officer = $this->createOfficer();
 
@@ -63,7 +69,8 @@ class LogViewerAccessTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_regular_member_cannot_access_log_viewer()
+    #[Test]
+    public function regular_member_cannot_access_log_viewer()
     {
         $member = $this->createMemberWithUser();
 
@@ -73,7 +80,8 @@ class LogViewerAccessTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_unauthenticated_user_cannot_access_log_viewer()
+    #[Test]
+    public function unauthenticated_user_cannot_access_log_viewer()
     {
         $response = $this->get('/log-viewer');
 

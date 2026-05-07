@@ -6,6 +6,7 @@ use App\Models\Ticket;
 use App\Models\TicketType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -22,14 +23,16 @@ class TicketApiTest extends TestCase
         Notification::fake();
     }
 
-    public function test_index_requires_authentication()
+    #[Test]
+    public function index_requires_authentication()
     {
         $response = $this->getJson('/api/tickets');
 
         $response->assertUnauthorized();
     }
 
-    public function test_index_returns_user_tickets()
+    #[Test]
+    public function index_returns_user_tickets()
     {
         $officer    = $this->createOfficer();
         $division   = $officer->member->division;
@@ -56,7 +59,8 @@ class TicketApiTest extends TestCase
         $response->assertJsonMissing(['id' => $otherTicket->id]);
     }
 
-    public function test_types_returns_available_ticket_types()
+    #[Test]
+    public function types_returns_available_ticket_types()
     {
         $officer    = $this->createOfficer();
         $ticketType = TicketType::factory()->create([
@@ -74,7 +78,8 @@ class TicketApiTest extends TestCase
         ]);
     }
 
-    public function test_store_creates_ticket()
+    #[Test]
+    public function store_creates_ticket()
     {
         $officer    = $this->createOfficer();
         $ticketType = TicketType::factory()->create();
@@ -93,7 +98,8 @@ class TicketApiTest extends TestCase
         ]);
     }
 
-    public function test_store_validates_minimum_description_length()
+    #[Test]
+    public function store_validates_minimum_description_length()
     {
         $officer    = $this->createOfficer();
         $ticketType = TicketType::factory()->create();
@@ -108,7 +114,8 @@ class TicketApiTest extends TestCase
         $response->assertJsonValidationErrors('description');
     }
 
-    public function test_show_returns_ticket_for_owner()
+    #[Test]
+    public function show_returns_ticket_for_owner()
     {
         $officer    = $this->createOfficer();
         $division   = $officer->member->division;
@@ -127,7 +134,8 @@ class TicketApiTest extends TestCase
         $response->assertJsonPath('ticket.id', $ticket->id);
     }
 
-    public function test_show_returns_403_for_non_owner()
+    #[Test]
+    public function show_returns_403_for_non_owner()
     {
         $officer    = $this->createOfficer();
         $division   = $officer->member->division;
@@ -147,7 +155,8 @@ class TicketApiTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_admin_can_view_any_ticket()
+    #[Test]
+    public function admin_can_view_any_ticket()
     {
         $admin      = $this->createAdmin();
         $division   = $admin->member->division;
@@ -166,7 +175,8 @@ class TicketApiTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_add_comment_to_ticket()
+    #[Test]
+    public function add_comment_to_ticket()
     {
         $officer    = $this->createOfficer();
         $division   = $officer->member->division;
@@ -191,7 +201,8 @@ class TicketApiTest extends TestCase
         ]);
     }
 
-    public function test_cannot_add_comment_to_others_ticket()
+    #[Test]
+    public function cannot_add_comment_to_others_ticket()
     {
         $officer    = $this->createOfficer();
         $division   = $officer->member->division;
@@ -213,7 +224,8 @@ class TicketApiTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_deleting_ticket_type_deletes_associated_tickets()
+    #[Test]
+    public function deleting_ticket_type_deletes_associated_tickets()
     {
         $officer    = $this->createOfficer();
         $division   = $officer->member->division;

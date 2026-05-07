@@ -4,6 +4,7 @@ namespace Tests\Feature\Reports;
 
 use App\Exceptions\FactoryMissingException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -14,14 +15,16 @@ class ReportsControllerTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_clan_census_report_requires_authentication()
+    #[Test]
+    public function clan_census_report_requires_authentication()
     {
         $response = $this->get(route('reports.clan-census'));
 
         $response->assertRedirect('/login');
     }
 
-    public function test_clan_census_throws_exception_without_census_data()
+    #[Test]
+    public function clan_census_throws_exception_without_census_data()
     {
         $officer = $this->createOfficer();
 
@@ -32,7 +35,8 @@ class ReportsControllerTest extends TestCase
             ->get(route('reports.clan-census'));
     }
 
-    public function test_outstanding_inactives_report_displays()
+    #[Test]
+    public function outstanding_inactives_report_displays()
     {
         $officer = $this->createOfficer();
 
@@ -42,14 +46,16 @@ class ReportsControllerTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_outstanding_inactives_requires_authentication()
+    #[Test]
+    public function outstanding_inactives_requires_authentication()
     {
         $response = $this->get(route('reports.outstanding-inactives'));
 
         $response->assertRedirect('/login');
     }
 
-    public function test_leadership_report_displays()
+    #[Test]
+    public function leadership_report_displays()
     {
         $officer = $this->createOfficer();
 
@@ -59,14 +65,16 @@ class ReportsControllerTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_leadership_report_requires_authentication()
+    #[Test]
+    public function leadership_report_requires_authentication()
     {
         $response = $this->get(route('leadership'));
 
         $response->assertRedirect('/login');
     }
 
-    public function test_division_turnover_report_displays_for_admin()
+    #[Test]
+    public function division_turnover_report_displays_for_admin()
     {
         $admin = $this->createAdmin();
 
@@ -76,7 +84,8 @@ class ReportsControllerTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_division_turnover_requires_admin_role()
+    #[Test]
+    public function division_turnover_requires_admin_role()
     {
         $officer = $this->createOfficer();
 

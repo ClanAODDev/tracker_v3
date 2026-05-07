@@ -11,6 +11,7 @@ use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -56,7 +57,8 @@ class RecruitingControllerTest extends TestCase
         return $mock;
     }
 
-    public function test_index_displays_recruit_page()
+    #[Test]
+    public function index_displays_recruit_page()
     {
         $officer = $this->createOfficer();
 
@@ -68,14 +70,16 @@ class RecruitingControllerTest extends TestCase
         $response->assertViewHas('divisions');
     }
 
-    public function test_index_requires_authentication()
+    #[Test]
+    public function index_requires_authentication()
     {
         $response = $this->get(route('recruiting.initial'));
 
         $response->assertRedirect('/login');
     }
 
-    public function test_member_cannot_access_recruitment()
+    #[Test]
+    public function member_cannot_access_recruitment()
     {
         $division   = $this->createActiveDivision();
         $user       = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -88,7 +92,8 @@ class RecruitingControllerTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_form_displays_for_active_division()
+    #[Test]
+    public function form_displays_for_active_division()
     {
         $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -101,7 +106,8 @@ class RecruitingControllerTest extends TestCase
         $response->assertViewHas('division');
     }
 
-    public function test_form_redirects_for_shutdown_division()
+    #[Test]
+    public function form_redirects_for_shutdown_division()
     {
         $officer               = $this->createOfficer();
         $division              = $this->createActiveDivision();
@@ -114,7 +120,8 @@ class RecruitingControllerTest extends TestCase
         $response->assertRedirect();
     }
 
-    public function test_get_division_recruit_data_returns_json()
+    #[Test]
+    public function get_division_recruit_data_returns_json()
     {
         $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -136,7 +143,8 @@ class RecruitingControllerTest extends TestCase
         ]);
     }
 
-    public function test_submit_recruitment_creates_member()
+    #[Test]
+    public function submit_recruitment_creates_member()
     {
         $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -160,7 +168,8 @@ class RecruitingControllerTest extends TestCase
         ]);
     }
 
-    public function test_submit_recruitment_creates_transfer_record()
+    #[Test]
+    public function submit_recruitment_creates_transfer_record()
     {
         $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -180,7 +189,8 @@ class RecruitingControllerTest extends TestCase
         ]);
     }
 
-    public function test_submit_recruitment_creates_rank_action()
+    #[Test]
+    public function submit_recruitment_creates_rank_action()
     {
         $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -201,7 +211,8 @@ class RecruitingControllerTest extends TestCase
         ]);
     }
 
-    public function test_get_division_recruit_data_excludes_pending_users_without_dob(): void
+    #[Test]
+    public function get_division_recruit_data_excludes_pending_users_without_dob(): void
     {
         $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -218,7 +229,8 @@ class RecruitingControllerTest extends TestCase
         $response->assertJsonPath('pending_discord', []);
     }
 
-    public function test_get_division_recruit_data_includes_pending_users_with_dob(): void
+    #[Test]
+    public function get_division_recruit_data_includes_pending_users_with_dob(): void
     {
         $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -235,7 +247,8 @@ class RecruitingControllerTest extends TestCase
         $response->assertJsonPath('pending_discord.0.discord_username', 'ReadyUser');
     }
 
-    public function test_submit_discord_recruitment_creates_member(): void
+    #[Test]
+    public function submit_discord_recruitment_creates_member(): void
     {
         $this->mockForumUserLookup(12345);
         $this->mockProcedureService();
@@ -265,7 +278,8 @@ class RecruitingControllerTest extends TestCase
         $this->assertNotNull($pendingUser->member_id);
     }
 
-    public function test_submit_discord_recruitment_returns_error_when_forum_account_missing(): void
+    #[Test]
+    public function submit_discord_recruitment_returns_error_when_forum_account_missing(): void
     {
         $this->mockForumUserLookupFailure();
 
@@ -288,7 +302,8 @@ class RecruitingControllerTest extends TestCase
         $response->assertJsonPath('message', 'No forum account found for this user and no password is available to create one. The user may need to re-register through Discord.');
     }
 
-    public function test_submit_discord_recruitment_rejects_invalid_pending_user(): void
+    #[Test]
+    public function submit_discord_recruitment_rejects_invalid_pending_user(): void
     {
         $officer  = $this->createOfficer();
         $division = $this->createActiveDivision();
@@ -308,7 +323,8 @@ class RecruitingControllerTest extends TestCase
         $response->assertJsonPath('message', 'Pending Discord user not found.');
     }
 
-    public function test_submit_discord_recruitment_links_user_to_member(): void
+    #[Test]
+    public function submit_discord_recruitment_links_user_to_member(): void
     {
         $this->mockForumUserLookup(67890);
         $this->mockProcedureService();
@@ -336,7 +352,8 @@ class RecruitingControllerTest extends TestCase
         $this->assertFalse($pendingUser->isPendingRegistration());
     }
 
-    public function test_submit_discord_recruitment_uses_existing_forum_account(): void
+    #[Test]
+    public function submit_discord_recruitment_uses_existing_forum_account(): void
     {
         $this->mockForumUserLookup(54321);
         $this->mockProcedureService();
@@ -367,7 +384,8 @@ class RecruitingControllerTest extends TestCase
         $this->assertNotNull($pendingUser->member_id);
     }
 
-    public function test_discord_recruitment_calls_set_discord_info(): void
+    #[Test]
+    public function discord_recruitment_calls_set_discord_info(): void
     {
         $this->mockForumUserLookup(11111);
 
@@ -395,7 +413,8 @@ class RecruitingControllerTest extends TestCase
             ]);
     }
 
-    public function test_discord_recruitment_aborts_when_forum_account_not_found(): void
+    #[Test]
+    public function discord_recruitment_aborts_when_forum_account_not_found(): void
     {
         $this->mockForumUserLookup(33333);
         $this->mockProcedureService(['setDiscordInfo' => (object) ['rows_matched' => 0, 'rows_affected' => 0]]);
@@ -421,7 +440,8 @@ class RecruitingControllerTest extends TestCase
         $this->assertDatabaseMissing('members', ['name' => 'MissingForumRecruit']);
     }
 
-    public function test_discord_recruitment_blocked_by_ineligible_forum_group(): void
+    #[Test]
+    public function discord_recruitment_blocked_by_ineligible_forum_group(): void
     {
         $this->mockForumUserLookup(44444);
         $this->mockProcedureService([
@@ -448,7 +468,8 @@ class RecruitingControllerTest extends TestCase
         $this->assertDatabaseMissing('members', ['name' => 'BlockedRecruit']);
     }
 
-    public function test_validate_member_id_returns_not_found_for_unknown_id(): void
+    #[Test]
+    public function validate_member_id_returns_not_found_for_unknown_id(): void
     {
         $this->mockProcedureService(['getUser' => null]);
 
@@ -462,7 +483,8 @@ class RecruitingControllerTest extends TestCase
         ]);
     }
 
-    public function test_validate_member_id_flags_existing_tracker_member(): void
+    #[Test]
+    public function validate_member_id_flags_existing_tracker_member(): void
     {
         $existing = $this->createMember(['clan_id' => 1234]);
         $this->mockProcedureService(['getUser' => (object) [
@@ -480,7 +502,8 @@ class RecruitingControllerTest extends TestCase
         ]);
     }
 
-    public function test_validate_member_id_returns_discord_matches_from_forum_profile(): void
+    #[Test]
+    public function validate_member_id_returns_discord_matches_from_forum_profile(): void
     {
         $existingMember = $this->createMember(['discord_id' => '111222333']);
         $this->mockProcedureService(['getUser' => (object) [
@@ -497,7 +520,8 @@ class RecruitingControllerTest extends TestCase
             ->assertJsonCount(1, 'discord_matches');
     }
 
-    public function test_validate_member_id_returns_discord_matches_from_existing_tracker_member(): void
+    #[Test]
+    public function validate_member_id_returns_discord_matches_from_existing_tracker_member(): void
     {
         $existing = $this->createMember(['clan_id' => 5678, 'discord_id' => '999888777']);
         $this->mockProcedureService(['getUser' => (object) [
@@ -514,7 +538,8 @@ class RecruitingControllerTest extends TestCase
         ]);
     }
 
-    public function test_validate_member_id_excludes_self_from_discord_matches(): void
+    #[Test]
+    public function validate_member_id_excludes_self_from_discord_matches(): void
     {
         $this->createMember(['clan_id' => 7777, 'discord_id' => '777666555']);
         $this->mockProcedureService(['getUser' => (object) [
@@ -529,7 +554,8 @@ class RecruitingControllerTest extends TestCase
         $response->assertOk()->assertJson(['discord_matches' => []]);
     }
 
-    public function test_validate_member_id_returns_empty_discord_matches_when_no_discord_id(): void
+    #[Test]
+    public function validate_member_id_returns_empty_discord_matches_when_no_discord_id(): void
     {
         $this->mockProcedureService(['getUser' => (object) [
             'usergroupid' => ForumGroup::REGISTERED_USER->value,

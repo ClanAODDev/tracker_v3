@@ -6,6 +6,7 @@ use App\Models\Handle;
 use App\Models\Member;
 use App\Services\RecruitmentService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 
@@ -23,7 +24,8 @@ class RecruitmentServiceTest extends TestCase
         $this->service = new RecruitmentService;
     }
 
-    public function test_create_member_creates_new_member(): void
+    #[Test]
+    public function create_member_creates_new_member(): void
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -47,7 +49,8 @@ class RecruitmentServiceTest extends TestCase
         ]);
     }
 
-    public function test_create_member_updates_existing_member(): void
+    #[Test]
+    public function create_member_updates_existing_member(): void
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -72,7 +75,8 @@ class RecruitmentServiceTest extends TestCase
         $this->assertEquals('NewName', $member->fresh()->name);
     }
 
-    public function test_create_member_attaches_ingame_handle(): void
+    #[Test]
+    public function create_member_attaches_ingame_handle(): void
     {
         $division            = $this->createActiveDivision();
         $platoon             = $this->createPlatoon($division);
@@ -98,7 +102,8 @@ class RecruitmentServiceTest extends TestCase
         ]);
     }
 
-    public function test_create_member_request_creates_pending_request(): void
+    #[Test]
+    public function create_member_request_creates_pending_request(): void
     {
         $division = $this->createActiveDivision();
         $member   = Member::factory()->create(['division_id' => $division->id]);
@@ -112,7 +117,8 @@ class RecruitmentServiceTest extends TestCase
         ]);
     }
 
-    public function test_create_member_request_skips_if_pending_exists(): void
+    #[Test]
+    public function create_member_request_skips_if_pending_exists(): void
     {
         $division = $this->createActiveDivision();
         $member   = Member::factory()->create(['division_id' => $division->id]);

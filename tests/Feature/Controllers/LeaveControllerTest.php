@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -13,7 +14,8 @@ class LeaveControllerTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_index_requires_authentication()
+    #[Test]
+    public function index_requires_authentication()
     {
         $division = $this->createActiveDivision();
 
@@ -22,7 +24,8 @@ class LeaveControllerTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    public function test_store_validates_member_belongs_to_division()
+    #[Test]
+    public function store_validates_member_belongs_to_division()
     {
         $srLdr         = $this->createSeniorLeader();
         $division      = $srLdr->member->division;

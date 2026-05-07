@@ -8,6 +8,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 use Tests\Traits\CreatesMembers;
@@ -33,7 +34,8 @@ class AODBotServiceTest extends TestCase
         return $service;
     }
 
-    public function test_get_forum_member_makes_request_to_correct_url()
+    #[Test]
+    public function get_forum_member_makes_request_to_correct_url()
     {
         config(['aod.bot_api_base_url' => 'https://bot.example.com']);
         config(['aod.discord_bot_token' => 'test-token']);
@@ -47,7 +49,8 @@ class AODBotServiceTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function test_get_forum_member_returns_response_interface()
+    #[Test]
+    public function get_forum_member_returns_response_interface()
     {
         config(['aod.bot_api_base_url' => 'https://bot.example.com']);
         config(['aod.discord_bot_token' => 'test-token']);
@@ -61,7 +64,8 @@ class AODBotServiceTest extends TestCase
         $this->assertInstanceOf(ResponseInterface::class, $response);
     }
 
-    public function test_get_forum_member_response_body_contains_member_data()
+    #[Test]
+    public function get_forum_member_response_body_contains_member_data()
     {
         config(['aod.bot_api_base_url' => 'https://bot.example.com']);
         config(['aod.discord_bot_token' => 'test-token']);
@@ -78,7 +82,8 @@ class AODBotServiceTest extends TestCase
         $this->assertEquals($expectedData, $body);
     }
 
-    public function test_update_discord_member_makes_request()
+    #[Test]
+    public function update_discord_member_makes_request()
     {
         config(['aod.bot_api_base_url' => 'https://bot.example.com']);
         config(['aod.discord_bot_token' => 'test-token']);
@@ -92,7 +97,8 @@ class AODBotServiceTest extends TestCase
         $this->assertEquals(200, $response->getStatusCode());
     }
 
-    public function test_update_discord_member_returns_response_with_status()
+    #[Test]
+    public function update_discord_member_returns_response_with_status()
     {
         config(['aod.bot_api_base_url' => 'https://bot.example.com']);
         config(['aod.discord_bot_token' => 'test-token']);
@@ -108,7 +114,8 @@ class AODBotServiceTest extends TestCase
         $this->assertTrue($body['updated']);
     }
 
-    public function test_service_includes_authorization_header()
+    #[Test]
+    public function service_includes_authorization_header()
     {
         config(['aod.bot_api_base_url' => 'https://bot.example.com']);
         config(['aod.discord_bot_token' => 'test-bot-token']);
@@ -138,7 +145,8 @@ class AODBotServiceTest extends TestCase
         $this->assertStringContainsString('Bearer', $requestedHeaders['Authorization'][0]);
     }
 
-    public function test_service_includes_content_type_header()
+    #[Test]
+    public function service_includes_content_type_header()
     {
         config(['aod.bot_api_base_url' => 'https://bot.example.com']);
         config(['aod.discord_bot_token' => 'test-bot-token']);

@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -13,7 +14,8 @@ class DivisionControllerTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_show_displays_division_page()
+    #[Test]
+    public function show_displays_division_page()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -24,7 +26,8 @@ class DivisionControllerTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_show_requires_authentication()
+    #[Test]
+    public function show_requires_authentication()
     {
         $division = $this->createActiveDivision();
 

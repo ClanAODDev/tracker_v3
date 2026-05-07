@@ -10,6 +10,7 @@ use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -32,7 +33,8 @@ class UpdateRankForMemberTest extends TestCase
         $this->procedureService->shouldReceive('setUserRank')->andReturn(null);
     }
 
-    public function test_job_can_be_instantiated()
+    #[Test]
+    public function job_can_be_instantiated()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -50,7 +52,8 @@ class UpdateRankForMemberTest extends TestCase
         $this->assertInstanceOf(UpdateRankForMember::class, $job);
     }
 
-    public function test_job_updates_member_rank()
+    #[Test]
+    public function job_updates_member_rank()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -70,7 +73,8 @@ class UpdateRankForMemberTest extends TestCase
         $this->assertEquals(Rank::CORPORAL, $member->rank);
     }
 
-    public function test_job_updates_last_promoted_at_on_promotion()
+    #[Test]
+    public function job_updates_last_promoted_at_on_promotion()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -91,7 +95,8 @@ class UpdateRankForMemberTest extends TestCase
         $this->assertNotNull($member->last_promoted_at);
     }
 
-    public function test_job_does_not_update_last_promoted_at_on_demotion()
+    #[Test]
+    public function job_does_not_update_last_promoted_at_on_demotion()
     {
         $division     = $this->createActiveDivision();
         $originalDate = now()->subYear();
@@ -116,7 +121,8 @@ class UpdateRankForMemberTest extends TestCase
         );
     }
 
-    public function test_job_sends_division_notification_on_promotion()
+    #[Test]
+    public function job_sends_division_notification_on_promotion()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -135,7 +141,8 @@ class UpdateRankForMemberTest extends TestCase
         Notification::assertSentTo($division, NotifyDivisionMemberPromotion::class);
     }
 
-    public function test_job_does_not_send_promotion_notification_on_demotion()
+    #[Test]
+    public function job_does_not_send_promotion_notification_on_demotion()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([

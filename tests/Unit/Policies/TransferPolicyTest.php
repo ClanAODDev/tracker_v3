@@ -6,6 +6,7 @@ use App\Enums\Position;
 use App\Models\Transfer;
 use App\Policies\TransferPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -24,14 +25,16 @@ class TransferPolicyTest extends TestCase
         $this->policy = new TransferPolicy;
     }
 
-    public function test_admin_bypasses_all_checks()
+    #[Test]
+    public function admin_bypasses_all_checks()
     {
         $admin = $this->createAdmin();
 
         $this->assertTrue($this->policy->before($admin));
     }
 
-    public function test_developer_bypasses_all_checks()
+    #[Test]
+    public function developer_bypasses_all_checks()
     {
         $division  = $this->createActiveDivision();
         $developer = $this->createMemberWithUser([
@@ -43,7 +46,8 @@ class TransferPolicyTest extends TestCase
         $this->assertTrue($this->policy->before($developer));
     }
 
-    public function test_regular_user_does_not_bypass_checks()
+    #[Test]
+    public function regular_user_does_not_bypass_checks()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -51,7 +55,8 @@ class TransferPolicyTest extends TestCase
         $this->assertNull($this->policy->before($user));
     }
 
-    public function test_user_can_create_transfer_in_active_division()
+    #[Test]
+    public function user_can_create_transfer_in_active_division()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -59,7 +64,8 @@ class TransferPolicyTest extends TestCase
         $this->assertTrue($this->policy->create($user));
     }
 
-    public function test_user_cannot_create_transfer_in_inactive_division()
+    #[Test]
+    public function user_cannot_create_transfer_in_inactive_division()
     {
         $division         = $this->createActiveDivision();
         $division->active = false;
@@ -71,7 +77,8 @@ class TransferPolicyTest extends TestCase
         $this->assertFalse($this->policy->create($user));
     }
 
-    public function test_division_leader_can_approve_transfer_to_their_division()
+    #[Test]
+    public function division_leader_can_approve_transfer_to_their_division()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -93,7 +100,8 @@ class TransferPolicyTest extends TestCase
         $this->assertTrue($this->policy->approve($leader, $transfer));
     }
 
-    public function test_division_leader_cannot_approve_transfer_to_other_division()
+    #[Test]
+    public function division_leader_cannot_approve_transfer_to_other_division()
     {
         $fromDivision   = $this->createActiveDivision();
         $toDivision     = $this->createActiveDivision();
@@ -116,7 +124,8 @@ class TransferPolicyTest extends TestCase
         $this->assertFalse($this->policy->approve($leader, $transfer));
     }
 
-    public function test_non_division_leader_cannot_approve_transfer()
+    #[Test]
+    public function non_division_leader_cannot_approve_transfer()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -138,7 +147,8 @@ class TransferPolicyTest extends TestCase
         $this->assertFalse($this->policy->approve($user, $transfer));
     }
 
-    public function test_executive_officer_can_approve_transfer()
+    #[Test]
+    public function executive_officer_can_approve_transfer()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -160,7 +170,8 @@ class TransferPolicyTest extends TestCase
         $this->assertTrue($this->policy->approve($xo, $transfer));
     }
 
-    public function test_division_leader_can_delete_pending_transfer()
+    #[Test]
+    public function division_leader_can_delete_pending_transfer()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -180,7 +191,8 @@ class TransferPolicyTest extends TestCase
         $this->assertTrue($this->policy->delete($leader, $transfer));
     }
 
-    public function test_division_leader_cannot_delete_approved_transfer()
+    #[Test]
+    public function division_leader_cannot_delete_approved_transfer()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -200,7 +212,8 @@ class TransferPolicyTest extends TestCase
         $this->assertFalse($this->policy->delete($leader, $transfer));
     }
 
-    public function test_division_leader_cannot_delete_transfer_to_other_division()
+    #[Test]
+    public function division_leader_cannot_delete_transfer_to_other_division()
     {
         $fromDivision   = $this->createActiveDivision();
         $toDivision     = $this->createActiveDivision();
@@ -221,7 +234,8 @@ class TransferPolicyTest extends TestCase
         $this->assertFalse($this->policy->delete($leader, $transfer));
     }
 
-    public function test_losing_division_leader_can_hold_pending_transfer()
+    #[Test]
+    public function losing_division_leader_can_hold_pending_transfer()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -241,7 +255,8 @@ class TransferPolicyTest extends TestCase
         $this->assertTrue($this->policy->hold($leader, $transfer));
     }
 
-    public function test_losing_division_leader_can_delete_pending_transfer()
+    #[Test]
+    public function losing_division_leader_can_delete_pending_transfer()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -261,7 +276,8 @@ class TransferPolicyTest extends TestCase
         $this->assertTrue($this->policy->delete($leader, $transfer));
     }
 
-    public function test_gaining_division_leader_can_hold_pending_transfer()
+    #[Test]
+    public function gaining_division_leader_can_hold_pending_transfer()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -281,7 +297,8 @@ class TransferPolicyTest extends TestCase
         $this->assertTrue($this->policy->hold($leader, $transfer));
     }
 
-    public function test_cannot_hold_approved_transfer()
+    #[Test]
+    public function cannot_hold_approved_transfer()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -301,7 +318,8 @@ class TransferPolicyTest extends TestCase
         $this->assertFalse($this->policy->hold($leader, $transfer));
     }
 
-    public function test_unrelated_division_leader_cannot_hold_transfer()
+    #[Test]
+    public function unrelated_division_leader_cannot_hold_transfer()
     {
         $fromDivision  = $this->createActiveDivision();
         $toDivision    = $this->createActiveDivision();

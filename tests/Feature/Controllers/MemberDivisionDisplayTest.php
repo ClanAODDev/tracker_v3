@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\Transfer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -14,7 +15,8 @@ class MemberDivisionDisplayTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_primary_division_card_is_shown()
+    #[Test]
+    public function primary_division_card_is_shown()
     {
         $user   = $this->createMemberWithUser();
         $member = $user->member;
@@ -27,7 +29,8 @@ class MemberDivisionDisplayTest extends TestCase
             ->assertSee('Primary');
     }
 
-    public function test_part_time_divisions_are_shown()
+    #[Test]
+    public function part_time_divisions_are_shown()
     {
         $user     = $this->createMemberWithUser();
         $member   = $user->member;
@@ -42,7 +45,8 @@ class MemberDivisionDisplayTest extends TestCase
             ->assertSee('Part-Time');
     }
 
-    public function test_part_time_badge_is_absent_when_none_assigned()
+    #[Test]
+    public function part_time_badge_is_absent_when_none_assigned()
     {
         $user = $this->createMemberWithUser();
 
@@ -52,7 +56,8 @@ class MemberDivisionDisplayTest extends TestCase
             ->assertDontSee('division-card-badge--secondary', false);
     }
 
-    public function test_past_divisions_are_shown_from_transfer_history()
+    #[Test]
+    public function past_divisions_are_shown_from_transfer_history()
     {
         $user    = $this->createMemberWithUser();
         $member  = $user->member;
@@ -76,7 +81,8 @@ class MemberDivisionDisplayTest extends TestCase
             ->assertSee('division-chip', false);
     }
 
-    public function test_past_section_is_absent_with_no_transfer_history()
+    #[Test]
+    public function past_section_is_absent_with_no_transfer_history()
     {
         $user = $this->createMemberWithUser();
 
@@ -86,7 +92,8 @@ class MemberDivisionDisplayTest extends TestCase
             ->assertDontSee('division-chip', false);
     }
 
-    public function test_repeated_past_division_visits_are_grouped_with_count_badge()
+    #[Test]
+    public function repeated_past_division_visits_are_grouped_with_count_badge()
     {
         $user         = $this->createMemberWithUser();
         $member       = $user->member;
@@ -105,7 +112,8 @@ class MemberDivisionDisplayTest extends TestCase
         $response->assertSee($returningDiv->name);
     }
 
-    public function test_current_division_is_excluded_from_past_section()
+    #[Test]
+    public function current_division_is_excluded_from_past_section()
     {
         $user    = $this->createMemberWithUser();
         $member  = $user->member;

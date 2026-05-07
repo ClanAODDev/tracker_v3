@@ -9,6 +9,7 @@ use App\Models\Census;
 use App\Services\DivisionShowService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -27,7 +28,8 @@ class DivisionShowServiceTest extends TestCase
         $this->service = app(DivisionShowService::class);
     }
 
-    public function test_get_show_data_returns_division_show_data_object()
+    #[Test]
+    public function get_show_data_returns_division_show_data_object()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -38,7 +40,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertInstanceOf(DivisionShowData::class, $result);
     }
 
-    public function test_get_show_data_includes_division()
+    #[Test]
+    public function get_show_data_includes_division()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -49,7 +52,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertTrue($result->division->is($division));
     }
 
-    public function test_get_show_data_includes_stats()
+    #[Test]
+    public function get_show_data_includes_stats()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -60,7 +64,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertNotNull($result->stats);
     }
 
-    public function test_get_show_data_includes_chart_data()
+    #[Test]
+    public function get_show_data_includes_chart_data()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -71,7 +76,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertNotNull($result->chartData);
     }
 
-    public function test_get_show_data_includes_platoons()
+    #[Test]
+    public function get_show_data_includes_platoons()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -83,7 +89,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertCount(1, $result->platoons);
     }
 
-    public function test_get_show_data_platoons_ordered_by_order_field()
+    #[Test]
+    public function get_show_data_platoons_ordered_by_order_field()
     {
         $division = $this->createActiveDivision();
         $platoon2 = $this->createPlatoon($division, ['order' => 2, 'name' => 'Second Platoon']);
@@ -97,7 +104,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertEquals('Second Platoon', $result->platoons->last()->name);
     }
 
-    public function test_get_show_data_platoons_include_member_count()
+    #[Test]
+    public function get_show_data_platoons_include_member_count()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -117,7 +125,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertEquals(2, $result->platoons->first()->members_count);
     }
 
-    public function test_get_show_data_platoons_include_voice_active_count()
+    #[Test]
+    public function get_show_data_platoons_include_voice_active_count()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -140,7 +149,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertEquals(1, $result->platoons->first()->voice_active_count);
     }
 
-    public function test_get_show_data_includes_division_leaders()
+    #[Test]
+    public function get_show_data_includes_division_leaders()
     {
         $division = $this->createActiveDivision();
         $co       = $this->createCommander($division);
@@ -153,7 +163,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertCount(2, $result->divisionLeaders);
     }
 
-    public function test_get_show_data_includes_general_sergeants()
+    #[Test]
+    public function get_show_data_includes_general_sergeants()
     {
         $division  = $this->createActiveDivision();
         $clanAdmin = $this->createMember([
@@ -169,7 +180,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertCount(1, $result->generalSergeants);
     }
 
-    public function test_get_show_data_includes_pending_actions()
+    #[Test]
+    public function get_show_data_includes_pending_actions()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -180,7 +192,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertNotNull($result->pendingActions);
     }
 
-    public function test_get_show_data_includes_division_anniversaries()
+    #[Test]
+    public function get_show_data_includes_division_anniversaries()
     {
         $division = $this->createActiveDivision();
         $this->createMember([
@@ -195,7 +208,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertNotNull($result->divisionAnniversaries);
     }
 
-    public function test_get_show_data_includes_previous_census()
+    #[Test]
+    public function get_show_data_includes_previous_census()
     {
         $division = $this->createActiveDivision();
         Census::factory()->create([
@@ -211,7 +225,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertNotNull($result->previousCensus);
     }
 
-    public function test_get_show_data_platoons_load_squads()
+    #[Test]
+    public function get_show_data_platoons_load_squads()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -225,7 +240,8 @@ class DivisionShowServiceTest extends TestCase
         $this->assertCount(1, $result->platoons->first()->squads);
     }
 
-    public function test_get_show_data_platoons_load_leaders()
+    #[Test]
+    public function get_show_data_platoons_load_leaders()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);

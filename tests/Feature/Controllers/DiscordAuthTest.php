@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Notification;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DiscordAuthTest extends TestCase
@@ -53,7 +54,8 @@ class DiscordAuthTest extends TestCase
             ->andReturn($provider);
     }
 
-    public function test_discord_redirect_redirects_to_discord(): void
+    #[Test]
+    public function discord_redirect_redirects_to_discord(): void
     {
         $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
         $provider->shouldReceive('redirect')
@@ -68,7 +70,8 @@ class DiscordAuthTest extends TestCase
         $response->assertRedirect();
     }
 
-    public function test_discord_callback_creates_pending_user_for_unknown_discord_id(): void
+    #[Test]
+    public function discord_callback_creates_pending_user_for_unknown_discord_id(): void
     {
         $this->mockDiscordUser([
             'id'       => '999888777',
@@ -88,7 +91,8 @@ class DiscordAuthTest extends TestCase
         $response->assertRedirect(route('auth.discord.pending'));
     }
 
-    public function test_discord_callback_finds_existing_member_by_discord_id(): void
+    #[Test]
+    public function discord_callback_finds_existing_member_by_discord_id(): void
     {
         $member = Member::factory()->create(['discord_id' => '111222333']);
 
@@ -108,7 +112,8 @@ class DiscordAuthTest extends TestCase
         $response->assertRedirect('/');
     }
 
-    public function test_discord_callback_uses_existing_user_with_discord_id(): void
+    #[Test]
+    public function discord_callback_uses_existing_user_with_discord_id(): void
     {
         $member = Member::factory()->create(['discord_id' => '777888999']);
         $user   = User::factory()->create([
@@ -128,7 +133,8 @@ class DiscordAuthTest extends TestCase
         $response->assertRedirect('/');
     }
 
-    public function test_discord_callback_redirects_pending_user_to_pending_page(): void
+    #[Test]
+    public function discord_callback_redirects_pending_user_to_pending_page(): void
     {
         $user = User::factory()->pending()->create([
             'discord_id'       => '555666777',
@@ -146,7 +152,8 @@ class DiscordAuthTest extends TestCase
         $response->assertRedirect(route('auth.discord.pending'));
     }
 
-    public function test_discord_callback_rejects_new_user_without_email(): void
+    #[Test]
+    public function discord_callback_rejects_new_user_without_email(): void
     {
         $this->mockDiscordUser([
             'id'       => '123123123',
@@ -162,7 +169,8 @@ class DiscordAuthTest extends TestCase
         $this->assertDatabaseMissing('users', ['discord_id' => '123123123']);
     }
 
-    public function test_discord_callback_rejects_duplicate_email(): void
+    #[Test]
+    public function discord_callback_rejects_duplicate_email(): void
     {
         User::factory()->create(['email' => 'taken@example.com']);
 
@@ -180,7 +188,8 @@ class DiscordAuthTest extends TestCase
         $this->assertDatabaseMissing('users', ['discord_id' => '321321321']);
     }
 
-    public function test_discord_callback_sanitizes_username(): void
+    #[Test]
+    public function discord_callback_sanitizes_username(): void
     {
         $this->mockDiscordUser([
             'id'       => '444555666',
@@ -196,7 +205,8 @@ class DiscordAuthTest extends TestCase
         $response->assertRedirect(route('auth.discord.pending'));
     }
 
-    public function test_discord_callback_uses_name_when_nickname_null(): void
+    #[Test]
+    public function discord_callback_uses_name_when_nickname_null(): void
     {
         $this->mockDiscordUser([
             'id'       => '666777888',
@@ -213,7 +223,8 @@ class DiscordAuthTest extends TestCase
         $response->assertRedirect(route('auth.discord.pending'));
     }
 
-    public function test_discord_callback_links_discord_to_existing_member_user(): void
+    #[Test]
+    public function discord_callback_links_discord_to_existing_member_user(): void
     {
         $member = Member::factory()->create(['discord_id' => '888999000']);
         $user   = User::factory()->create([
@@ -234,14 +245,16 @@ class DiscordAuthTest extends TestCase
         $this->assertEquals('LinkedUser', $user->discord_username);
     }
 
-    public function test_pending_page_requires_authentication(): void
+    #[Test]
+    public function pending_page_requires_authentication(): void
     {
         $response = $this->get(route('auth.discord.pending'));
 
         $response->assertRedirect(route('login'));
     }
 
-    public function test_pending_page_redirects_completed_users_to_home(): void
+    #[Test]
+    public function pending_page_redirects_completed_users_to_home(): void
     {
         $member = Member::factory()->create();
         $user   = User::factory()->create([
@@ -254,7 +267,8 @@ class DiscordAuthTest extends TestCase
         $response->assertRedirect('/');
     }
 
-    public function test_pending_page_displays_for_pending_users(): void
+    #[Test]
+    public function pending_page_displays_for_pending_users(): void
     {
         $user = User::factory()->pending()->create([
             'discord_id'       => '123456789',
@@ -268,7 +282,8 @@ class DiscordAuthTest extends TestCase
         $response->assertSee('ClanAOD Registration');
     }
 
-    public function test_user_is_pending_registration_returns_true_for_discord_only(): void
+    #[Test]
+    public function user_is_pending_registration_returns_true_for_discord_only(): void
     {
         $user = User::factory()->pending()->create([
             'discord_id' => '123456789',
@@ -277,7 +292,8 @@ class DiscordAuthTest extends TestCase
         $this->assertTrue($user->isPendingRegistration());
     }
 
-    public function test_user_is_pending_registration_returns_false_for_linked_member(): void
+    #[Test]
+    public function user_is_pending_registration_returns_false_for_linked_member(): void
     {
         $member = Member::factory()->create();
         $user   = User::factory()->create([
@@ -288,7 +304,8 @@ class DiscordAuthTest extends TestCase
         $this->assertFalse($user->isPendingRegistration());
     }
 
-    public function test_user_has_member_returns_correct_value(): void
+    #[Test]
+    public function user_has_member_returns_correct_value(): void
     {
         $member            = Member::factory()->create();
         $userWithMember    = User::factory()->create(['member_id' => $member->id]);
@@ -298,7 +315,8 @@ class DiscordAuthTest extends TestCase
         $this->assertFalse($userWithoutMember->hasMember());
     }
 
-    public function test_pending_user_is_redirected_to_pending_page_on_other_routes(): void
+    #[Test]
+    public function pending_user_is_redirected_to_pending_page_on_other_routes(): void
     {
         $user = User::factory()->pending()->create();
 
@@ -307,7 +325,8 @@ class DiscordAuthTest extends TestCase
         $response->assertRedirect(route('auth.discord.pending'));
     }
 
-    public function test_pending_user_can_logout(): void
+    #[Test]
+    public function pending_user_can_logout(): void
     {
         $user = User::factory()->pending()->create();
 
@@ -317,7 +336,8 @@ class DiscordAuthTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_pending_discord_scope_returns_only_pending_users(): void
+    #[Test]
+    public function pending_discord_scope_returns_only_pending_users(): void
     {
         $member = Member::factory()->create();
         User::factory()->create(['member_id' => $member->id, 'discord_id' => '111']);
@@ -332,7 +352,8 @@ class DiscordAuthTest extends TestCase
         $this->assertTrue($pendingUsers->contains($pendingUser2));
     }
 
-    public function test_discord_callback_syncs_forum_roles_for_new_user(): void
+    #[Test]
+    public function discord_callback_syncs_forum_roles_for_new_user(): void
     {
         $member = Member::factory()->create([
             'discord_id' => '123456789',
@@ -361,7 +382,8 @@ class DiscordAuthTest extends TestCase
         $this->assertEquals(Role::SENIOR_LEADER, $user->role);
     }
 
-    public function test_discord_callback_syncs_forum_roles_for_existing_user(): void
+    #[Test]
+    public function discord_callback_syncs_forum_roles_for_existing_user(): void
     {
         $member = Member::factory()->create([
             'discord_id' => '987654321',
@@ -394,7 +416,8 @@ class DiscordAuthTest extends TestCase
         $this->assertEquals(Role::ADMIN, $user->role);
     }
 
-    public function test_discord_registration_queues_notification_when_division_selected(): void
+    #[Test]
+    public function discord_registration_queues_notification_when_division_selected(): void
     {
         Notification::fake();
 
@@ -430,7 +453,8 @@ class DiscordAuthTest extends TestCase
         Notification::assertSentTo($division, NotifyDivisionPendingDiscordRegistration::class);
     }
 
-    public function test_discord_registration_does_not_queue_notification_without_division(): void
+    #[Test]
+    public function discord_registration_does_not_queue_notification_without_division(): void
     {
         Notification::fake();
 
@@ -450,7 +474,8 @@ class DiscordAuthTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    public function test_discord_registration_rejects_date_of_birth_under_13(): void
+    #[Test]
+    public function discord_registration_rejects_date_of_birth_under_13(): void
     {
         $user = User::factory()->pending()->create([
             'discord_id'     => '123456789',
@@ -475,7 +500,8 @@ class DiscordAuthTest extends TestCase
             ->assertSessionHasErrors('date_of_birth');
     }
 
-    public function test_discord_registration_rejects_unrealistically_old_date_of_birth(): void
+    #[Test]
+    public function discord_registration_rejects_unrealistically_old_date_of_birth(): void
     {
         $user = User::factory()->pending()->create([
             'discord_id'     => '123456789',
@@ -500,7 +526,8 @@ class DiscordAuthTest extends TestCase
             ->assertSessionHasErrors('date_of_birth');
     }
 
-    public function test_discord_registration_rejects_future_date_of_birth(): void
+    #[Test]
+    public function discord_registration_rejects_future_date_of_birth(): void
     {
         $user = User::factory()->pending()->create([
             'discord_id'     => '123456789',
@@ -525,7 +552,8 @@ class DiscordAuthTest extends TestCase
             ->assertSessionHasErrors('date_of_birth');
     }
 
-    public function test_discord_registration_accepts_valid_date_of_birth(): void
+    #[Test]
+    public function discord_registration_accepts_valid_date_of_birth(): void
     {
         Notification::fake();
 
@@ -559,7 +587,8 @@ class DiscordAuthTest extends TestCase
             ->assertRedirect();
     }
 
-    public function test_discord_registration_rejects_invalid_date_format(): void
+    #[Test]
+    public function discord_registration_rejects_invalid_date_format(): void
     {
         $user = User::factory()->pending()->create([
             'discord_id'     => '123456789',
@@ -584,7 +613,8 @@ class DiscordAuthTest extends TestCase
             ->assertSessionHasErrors('date_of_birth');
     }
 
-    public function test_discord_registration_rejects_username_already_taken_on_forums(): void
+    #[Test]
+    public function discord_registration_rejects_username_already_taken_on_forums(): void
     {
         $division = Division::factory()->create(['active' => true]);
         Member::factory()->create([
@@ -616,7 +646,8 @@ class DiscordAuthTest extends TestCase
             ->assertSessionHasErrors('username');
     }
 
-    public function test_discord_registration_accepts_username_not_taken_on_forums(): void
+    #[Test]
+    public function discord_registration_accepts_username_not_taken_on_forums(): void
     {
         Notification::fake();
 
@@ -652,7 +683,8 @@ class DiscordAuthTest extends TestCase
             ->assertSessionHasNoErrors();
     }
 
-    public function test_discord_registration_does_not_send_duplicate_notification_on_resubmit(): void
+    #[Test]
+    public function discord_registration_does_not_send_duplicate_notification_on_resubmit(): void
     {
         Notification::fake();
 
@@ -685,7 +717,8 @@ class DiscordAuthTest extends TestCase
         Notification::assertNothingSent();
     }
 
-    public function test_discord_registration_does_not_dispatch_duplicate_forum_account_job_on_resubmit(): void
+    #[Test]
+    public function discord_registration_does_not_dispatch_duplicate_forum_account_job_on_resubmit(): void
     {
         Bus::fake();
 
@@ -717,7 +750,8 @@ class DiscordAuthTest extends TestCase
         Bus::assertNotDispatched(CreateForumAccount::class);
     }
 
-    public function test_discord_callback_handles_oauth_failure_gracefully(): void
+    #[Test]
+    public function discord_callback_handles_oauth_failure_gracefully(): void
     {
         $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
         $provider->shouldReceive('user')
