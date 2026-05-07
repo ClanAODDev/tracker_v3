@@ -75,12 +75,26 @@ return new class extends Migration
             WHERE mr.holder_id IS NOT NULL AND mr.holder_id != m.id
         ');
 
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropUnique(['member_id']);
+        });
+
         DB::statement('
             UPDATE users u
             JOIN members m ON m.clan_id = u.member_id
             SET u.member_id = m.id
             WHERE u.member_id != m.id
         ');
+
+        DB::statement('
+            DELETE u1 FROM users u1
+            INNER JOIN users u2 ON u2.member_id = u1.member_id AND u2.id < u1.id
+            WHERE u1.member_id IS NOT NULL
+        ');
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->unique('member_id');
+        });
 
         Schema::table('activity_reminders', function (Blueprint $table) {
             $table->foreign('member_id')->references('id')->on('members')->cascadeOnDelete();
