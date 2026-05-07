@@ -94,19 +94,19 @@ class AwardTest extends TestCase
         $member2 = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member1->clan_id,
+            'member_id' => $member1->id,
             'award_id'  => $award->id,
         ]);
 
         MemberAward::factory()->pending()->create([
-            'member_id' => $member2->clan_id,
+            'member_id' => $member2->id,
             'award_id'  => $award->id,
         ]);
 
         $recipients = $award->recipients;
 
         $this->assertCount(1, $recipients);
-        $this->assertEquals($member1->clan_id, $recipients->first()->member_id);
+        $this->assertEquals($member1->id, $recipients->first()->member_id);
     }
 
     public function test_unapproved_recipients_returns_only_pending_awards()
@@ -118,19 +118,19 @@ class AwardTest extends TestCase
         $member2 = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member1->clan_id,
+            'member_id' => $member1->id,
             'award_id'  => $award->id,
         ]);
 
         MemberAward::factory()->pending()->create([
-            'member_id' => $member2->clan_id,
+            'member_id' => $member2->id,
             'award_id'  => $award->id,
         ]);
 
         $unapproved = $award->unapprovedRecipients;
 
         $this->assertCount(1, $unapproved);
-        $this->assertEquals($member2->clan_id, $unapproved->first()->member_id);
+        $this->assertEquals($member2->id, $unapproved->first()->member_id);
     }
 
     public function test_division_relationship_returns_correct_division()
@@ -148,7 +148,7 @@ class AwardTest extends TestCase
         $member   = $this->createMember(['division_id' => $division->id]);
 
         $memberAward = MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $award->id,
         ]);
 
@@ -187,7 +187,7 @@ class AwardTest extends TestCase
         $member = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $award->id,
         ]);
 
@@ -210,7 +210,7 @@ class AwardTest extends TestCase
         $member = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $award->id,
         ]);
 
@@ -249,16 +249,16 @@ class AwardTest extends TestCase
         $member = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $award->id,
         ]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $award->id,
         ]);
 
-        $this->assertCount(2, MemberAward::where('member_id', $member->clan_id)
+        $this->assertCount(2, MemberAward::where('member_id', $member->id)
             ->where('award_id', $award->id)
             ->get());
     }
@@ -359,7 +359,7 @@ class AwardTest extends TestCase
         $member = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $tier2->id,
         ]);
 
@@ -381,19 +381,19 @@ class AwardTest extends TestCase
         $memberWithoutDivision->update(['division_id' => 0]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $memberWithDivision->clan_id,
+            'member_id' => $memberWithDivision->id,
             'award_id'  => $award->id,
         ]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $memberWithoutDivision->clan_id,
+            'member_id' => $memberWithoutDivision->id,
             'award_id'  => $award->id,
         ]);
 
         $recipients = $award->recipients;
 
         $this->assertCount(1, $recipients);
-        $this->assertEquals($memberWithDivision->clan_id, $recipients->first()->member_id);
+        $this->assertEquals($memberWithDivision->id, $recipients->first()->member_id);
     }
 
     public function test_recipients_count_excludes_members_without_division()
@@ -406,12 +406,12 @@ class AwardTest extends TestCase
         $memberWithoutDivision->update(['division_id' => 0]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $memberWithDivision->clan_id,
+            'member_id' => $memberWithDivision->id,
             'award_id'  => $award->id,
         ]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $memberWithoutDivision->clan_id,
+            'member_id' => $memberWithoutDivision->id,
             'award_id'  => $award->id,
         ]);
 

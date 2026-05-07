@@ -20,7 +20,7 @@ class LeaveTest extends TestCase
         $member = $this->createMember();
 
         $leave = Leave::factory()->expired()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
         ]);
 
         $this->assertTrue($leave->expired);
@@ -31,7 +31,7 @@ class LeaveTest extends TestCase
         $member = $this->createMember();
 
         $leave = Leave::factory()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'end_date'  => Carbon::now()->addDays(30),
         ]);
 
@@ -44,7 +44,7 @@ class LeaveTest extends TestCase
         $endDate = Carbon::parse('2025-06-15');
 
         $leave = Leave::factory()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'end_date'  => $endDate,
         ]);
 
@@ -56,10 +56,10 @@ class LeaveTest extends TestCase
         $member = $this->createMember();
 
         $leave = Leave::factory()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
         ]);
 
-        $this->assertEquals($member->clan_id, $leave->member->clan_id);
+        $this->assertEquals($member->id, $leave->member->id);
     }
 
     public function test_static_reasons_array_contains_expected_values()
@@ -76,7 +76,7 @@ class LeaveTest extends TestCase
         $member = $this->createMember();
 
         $leave = Leave::factory()->military()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
         ]);
 
         $this->assertEquals('military', $leave->reason);
@@ -87,7 +87,7 @@ class LeaveTest extends TestCase
         $member = $this->createMember();
 
         $leave = Leave::factory()->medical()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
         ]);
 
         $this->assertEquals('medical', $leave->reason);

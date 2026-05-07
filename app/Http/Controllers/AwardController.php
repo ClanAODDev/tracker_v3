@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Award;
+use App\Models\Member;
 use App\Models\MemberAward;
 use App\Rules\UniqueAwardForMember;
 use Illuminate\Database\Eloquent\Builder;
@@ -224,7 +225,7 @@ class AwardController extends Controller
         $userMember = auth()->user()?->member;
 
         $userAwards = $userMember
-            ? MemberAward::where('member_id', $userMember->clan_id)
+            ? MemberAward::where('member_id', $userMember->id)
                 ->whereIn('award_id', $tierIds)
                 ->where('approved', true)
                 ->get()
@@ -283,7 +284,7 @@ class AwardController extends Controller
         $userMember   = auth()->user()?->member;
         $userHasAward = $userMember
             ? MemberAward::where('award_id', $award->id)
-                ->where('member_id', $userMember->clan_id)
+                ->where('member_id', $userMember->id)
                 ->where('approved', true)
                 ->exists()
             : false;
@@ -320,10 +321,12 @@ class AwardController extends Controller
             ],
         ]);
 
+        $member = Member::whereClanId($validatedData['member_id'])->firstOrFail();
+
         MemberAward::create([
             'requester_id' => auth()->user()->member_id,
             'award_id'     => $award->id,
-            'member_id'    => $validatedData['member_id'],
+            'member_id'    => $member->id,
             'reason'       => $validatedData['reason'],
         ]);
 

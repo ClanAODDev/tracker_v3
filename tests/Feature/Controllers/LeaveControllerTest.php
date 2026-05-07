@@ -31,7 +31,7 @@ class LeaveControllerTest extends TestCase
 
         $response = $this->actingAs($srLdr)
             ->post(route('leave.store', $division->slug), [
-                'member_id' => $member->clan_id,
+                'member_id' => $member->id,
                 'end_date'  => now()->addMonth()->format('Y-m-d'),
                 'reason'    => 'Test reason',
             ]);

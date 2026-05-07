@@ -3,6 +3,7 @@
 namespace App\Rules;
 
 use App\Models\Award;
+use App\Models\Member;
 use App\Models\MemberAward;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -30,7 +31,9 @@ class UniqueAwardForMember implements ValidationRule
             return;
         }
 
-        if (MemberAward::where('member_id', $value)
+        $member = Member::whereClanId($value)->first();
+
+        if ($member && MemberAward::where('member_id', $member->id)
             ->where('award_id', $this->awardId)
             ->exists()) {
             $fail('This member already has this award.');

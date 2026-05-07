@@ -106,7 +106,7 @@ class RecruitmentServiceTest extends TestCase
         $this->service->createMemberRequest($member, $division, 99999);
 
         $this->assertDatabaseHas('member_requests', [
-            'member_id'    => $member->clan_id,
+            'member_id'    => $member->id,
             'division_id'  => $division->id,
             'requester_id' => 99999,
         ]);

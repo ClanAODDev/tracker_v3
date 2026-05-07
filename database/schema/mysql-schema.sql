@@ -56,7 +56,7 @@ DROP TABLE IF EXISTS `activity_reminders`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `activity_reminders` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `member_id` mediumint(8) unsigned NOT NULL,
+  `member_id` int(10) unsigned NOT NULL,
   `division_id` int(10) unsigned NOT NULL,
   `reminded_by_id` int(10) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE `activity_reminders` (
   KEY `activity_reminders_division_id_created_at_index` (`division_id`,`created_at`),
   KEY `activity_reminders_reminded_by_id_created_at_index` (`reminded_by_id`,`created_at`),
   CONSTRAINT `activity_reminders_division_id_foreign` FOREIGN KEY (`division_id`) REFERENCES `divisions` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `activity_reminders_member_id_foreign` FOREIGN KEY (`member_id`) REFERENCES `members` (`clan_id`) ON DELETE CASCADE,
+  CONSTRAINT `activity_reminders_member_id_foreign` FOREIGN KEY (`member_id`) REFERENCES `members` (`id`) ON DELETE CASCADE,
   CONSTRAINT `activity_reminders_reminded_by_id_foreign` FOREIGN KEY (`reminded_by_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;

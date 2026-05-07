@@ -28,7 +28,7 @@ class CreateLeave extends FormRequest
      */
     public function rules()
     {
-        return ['end_date' => 'date|after:today', 'member_id' => ['exists:members,clan_id', 'unique:leaves,member_id']];
+        return ['end_date' => 'date|after:today', 'member_id' => ['exists:members,id', 'unique:leaves,member_id']];
     }
 
     public function messages()
@@ -44,8 +44,7 @@ class CreateLeave extends FormRequest
      */
     public function persist()
     {
-        // search is by clan id, but we want member id (tracker id)
-        $memberRequestingLeave = Member::whereClanId($this->member_id)->firstOrFail();
+        $memberRequestingLeave = Member::findOrFail($this->member_id);
 
         $note = Note::create([
             'body'            => "Leave of absence requested. Reason: {$this->note_body}",

@@ -64,7 +64,7 @@ class Member extends Model
 
     public function awards()
     {
-        return $this->hasMany(MemberAward::class, 'member_id', 'clan_id')
+        return $this->hasMany(MemberAward::class, 'member_id')
             ->with(['award' => fn ($q) => $q->withCount('recipients')])
             ->where('approved', true);
     }
@@ -86,13 +86,13 @@ class Member extends Model
 
     public function activityReminders()
     {
-        return $this->hasMany(ActivityReminder::class, 'member_id', 'clan_id')
+        return $this->hasMany(ActivityReminder::class, 'member_id')
             ->orderBy('created_at', 'desc');
     }
 
     public function latestActivityReminder()
     {
-        return $this->hasOne(ActivityReminder::class, 'member_id', 'clan_id')
+        return $this->hasOne(ActivityReminder::class, 'member_id')
             ->latestOfMany();
     }
 
@@ -220,7 +220,7 @@ class Member extends Model
      */
     public function leave()
     {
-        return $this->hasOne(Leave::class, 'member_id', 'clan_id');
+        return $this->hasOne(Leave::class, 'member_id');
     }
 
     /**
@@ -236,7 +236,7 @@ class Member extends Model
      */
     public function memberRequest()
     {
-        return $this->hasOne(MemberRequest::class, 'member_id', 'clan_id');
+        return $this->hasOne(MemberRequest::class, 'member_id');
     }
 
     /**
@@ -361,7 +361,7 @@ class Member extends Model
      */
     public function memberRequests()
     {
-        return $this->hasMany(MemberRequest::class, 'requester_id', 'clan_id');
+        return $this->hasMany(MemberRequest::class, 'requester_id');
     }
 
     /**
