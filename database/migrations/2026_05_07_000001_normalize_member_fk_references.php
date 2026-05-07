@@ -9,8 +9,13 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::table('activity_reminders', function (Blueprint $table) {
-            $table->dropForeignIfExists('activity_reminders_member_id_foreign');
+        $hasFk = collect(Schema::getForeignKeys('activity_reminders'))
+            ->contains(fn ($fk) => $fk['name'] === 'activity_reminders_member_id_foreign');
+
+        Schema::table('activity_reminders', function (Blueprint $table) use ($hasFk) {
+            if ($hasFk) {
+                $table->dropForeign('activity_reminders_member_id_foreign');
+            }
             $table->unsignedInteger('member_id')->change();
         });
 
