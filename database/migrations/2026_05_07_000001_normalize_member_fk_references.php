@@ -10,7 +10,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('activity_reminders', function (Blueprint $table) {
-            $table->dropForeign('activity_reminders_member_id_foreign');
+            $table->dropForeignIfExists('activity_reminders_member_id_foreign');
             $table->unsignedInteger('member_id')->change();
         });
 
