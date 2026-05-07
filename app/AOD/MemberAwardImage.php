@@ -127,7 +127,7 @@ class MemberAwardImage
 
     private function fetchAwardsData(Member $member): array
     {
-        $memberAwardCounts = MemberAward::where('member_id', $member->clan_id)
+        $memberAwardCounts = MemberAward::where('member_id', $member->id)
             ->where('approved', true)
             ->selectRaw('award_id, COUNT(*) as count')
             ->groupBy('award_id')

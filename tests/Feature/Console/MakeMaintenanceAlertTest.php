@@ -3,6 +3,7 @@
 namespace Tests\Feature\Console;
 
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MakeMaintenanceAlertTest extends TestCase
@@ -27,7 +28,8 @@ class MakeMaintenanceAlertTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_command_shows_status_when_no_options(): void
+    #[Test]
+    public function command_shows_status_when_no_options(): void
     {
         $this->artisan('tracker:maintenance-alert')
             ->assertSuccessful()
@@ -35,7 +37,8 @@ class MakeMaintenanceAlertTest extends TestCase
             ->expectsOutput('Use --set to create an alert or --clear to remove it.');
     }
 
-    public function test_command_sets_alert_message(): void
+    #[Test]
+    public function command_sets_alert_message(): void
     {
         $this->artisan('tracker:maintenance-alert --set')
             ->expectsQuestion('What would you like the alert set to? (basic HTML allowed)', 'Test maintenance message')
@@ -46,7 +49,8 @@ class MakeMaintenanceAlertTest extends TestCase
         $this->assertEquals('Test maintenance message', File::get($this->alertPath));
     }
 
-    public function test_command_clears_alert(): void
+    #[Test]
+    public function command_clears_alert(): void
     {
         File::put($this->alertPath, 'Existing alert');
 
@@ -57,14 +61,16 @@ class MakeMaintenanceAlertTest extends TestCase
         $this->assertFalse(File::exists($this->alertPath));
     }
 
-    public function test_command_clears_nonexistent_alert(): void
+    #[Test]
+    public function command_clears_nonexistent_alert(): void
     {
         $this->artisan('tracker:maintenance-alert --clear')
             ->assertSuccessful()
             ->expectsOutput('No alert to clear.');
     }
 
-    public function test_command_prompts_before_replacing_existing_alert(): void
+    #[Test]
+    public function command_prompts_before_replacing_existing_alert(): void
     {
         File::put($this->alertPath, 'Existing alert');
 
@@ -77,7 +83,8 @@ class MakeMaintenanceAlertTest extends TestCase
         $this->assertEquals('New message', File::get($this->alertPath));
     }
 
-    public function test_command_does_not_replace_when_declined(): void
+    #[Test]
+    public function command_does_not_replace_when_declined(): void
     {
         File::put($this->alertPath, 'Existing alert');
 

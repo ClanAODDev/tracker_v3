@@ -6,19 +6,22 @@ use App\Models\Division;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class FetchApplicationFeedsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_command_succeeds_with_no_divisions(): void
+    #[Test]
+    public function command_succeeds_with_no_divisions(): void
     {
         $this->artisan('tracker:fetch-applications')
             ->assertSuccessful();
     }
 
-    public function test_command_skips_divisions_without_rss_feed(): void
+    #[Test]
+    public function command_skips_divisions_without_rss_feed(): void
     {
         Division::factory()->create();
 
@@ -26,7 +29,8 @@ class FetchApplicationFeedsTest extends TestCase
             ->assertSuccessful();
     }
 
-    public function test_command_processes_rss_feed(): void
+    #[Test]
+    public function command_processes_rss_feed(): void
     {
         Http::fake([
             '*' => Http::response($this->sampleRssFeed(), 200),
@@ -41,7 +45,8 @@ class FetchApplicationFeedsTest extends TestCase
         $this->assertTrue(Cache::has('application_item_12345'));
     }
 
-    public function test_command_skips_cached_items(): void
+    #[Test]
+    public function command_skips_cached_items(): void
     {
         Http::fake([
             '*' => Http::response($this->sampleRssFeed(), 200),
@@ -56,7 +61,8 @@ class FetchApplicationFeedsTest extends TestCase
             ->assertSuccessful();
     }
 
-    public function test_fresh_option_clears_cache(): void
+    #[Test]
+    public function fresh_option_clears_cache(): void
     {
         Http::fake([
             '*' => Http::response($this->sampleRssFeed(), 200),
@@ -75,7 +81,8 @@ class FetchApplicationFeedsTest extends TestCase
         $this->assertArrayHasKey('pub_date', $cached);
     }
 
-    public function test_command_skips_excluded_divisions(): void
+    #[Test]
+    public function command_skips_excluded_divisions(): void
     {
         config(['tracker.excluded_divisions' => ['Test Division']]);
 
@@ -90,7 +97,8 @@ class FetchApplicationFeedsTest extends TestCase
         Http::assertNothingSent();
     }
 
-    public function test_command_ignores_invalid_rss_feeds(): void
+    #[Test]
+    public function command_ignores_invalid_rss_feeds(): void
     {
         Http::fake([
             '*' => Http::response('<html><body>Not RSS</body></html>', 200),
@@ -105,7 +113,8 @@ class FetchApplicationFeedsTest extends TestCase
         $this->assertFalse(Cache::has('application_item_12345'));
     }
 
-    public function test_command_handles_empty_rss_feeds(): void
+    #[Test]
+    public function command_handles_empty_rss_feeds(): void
     {
         Http::fake([
             '*' => Http::response($this->emptyRssFeed(), 200),
@@ -118,7 +127,8 @@ class FetchApplicationFeedsTest extends TestCase
             ->assertSuccessful();
     }
 
-    public function test_command_sanitizes_rss_with_trailing_content(): void
+    #[Test]
+    public function command_sanitizes_rss_with_trailing_content(): void
     {
         $rssWithTrailingContent = $this->sampleRssFeed() . "\n\nSome trailing garbage content";
 

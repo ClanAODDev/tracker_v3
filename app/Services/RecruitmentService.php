@@ -71,13 +71,13 @@ class RecruitmentService
 
     public function createMemberRequest(Member $member, Division $division, int $requesterId): void
     {
-        if (MemberRequest::pending()->whereMemberId($member->clan_id)->exists()) {
+        if (MemberRequest::pending()->whereMemberId($member->id)->exists()) {
             return;
         }
 
         MemberRequest::create([
             'requester_id' => $requesterId,
-            'member_id'    => $member->clan_id,
+            'member_id'    => $member->id,
             'division_id'  => $division->id,
         ]);
     }

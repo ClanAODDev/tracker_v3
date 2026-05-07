@@ -41,7 +41,7 @@ class LeaveResource extends Resource
             ->components([
                 Select::make('member_id')
                     ->required()
-                    ->exists('members', 'clan_id')
+                    ->exists('members', 'id')
                     ->unique('leaves', 'member_id')
                     ->validationMessages([
                         'unique' => 'Member has an existing leave of absence',

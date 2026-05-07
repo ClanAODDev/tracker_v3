@@ -21,7 +21,7 @@ class MemberRequest extends Model
      */
     public function member()
     {
-        return $this->belongsTo(Member::class, 'member_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'member_id');
     }
 
     /**
@@ -29,7 +29,7 @@ class MemberRequest extends Model
      */
     public function requester()
     {
-        return $this->belongsTo(Member::class, 'requester_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'requester_id');
     }
 
     /**
@@ -37,7 +37,7 @@ class MemberRequest extends Model
      */
     public function approver()
     {
-        return $this->belongsTo(Member::class, 'approver_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'approver_id');
     }
 
     /**
@@ -106,7 +106,7 @@ class MemberRequest extends Model
     public function approve()
     {
         $this->update([
-            'approver_id' => auth()->user()->member->clan_id, 'approved_at' => now(),
+            'approver_id' => auth()->user()->member_id, 'approved_at' => now(),
         ]);
     }
 
@@ -128,14 +128,14 @@ class MemberRequest extends Model
      */
     public function holder()
     {
-        return $this->belongsTo(Member::class, 'holder_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'holder_id');
     }
 
     public function placeOnHold($notes)
     {
         $this->update([
             'hold_placed_at' => now(),
-            'holder_id'      => auth()->user()->member->clan_id,
+            'holder_id'      => auth()->user()->member_id,
             'notes'          => $notes,
         ]);
     }

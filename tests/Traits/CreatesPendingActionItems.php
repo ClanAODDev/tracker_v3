@@ -33,7 +33,7 @@ trait CreatesPendingActionItems
         foreach ($members as $member) {
             MemberAward::factory()->pending()->create([
                 'award_id'  => $award->id,
-                'member_id' => $member->clan_id,
+                'member_id' => $member->id,
             ]);
         }
     }
@@ -63,7 +63,7 @@ trait CreatesPendingActionItems
 
         foreach ($members as $member) {
             Leave::factory()->create([
-                'member_id'   => $member->clan_id,
+                'member_id'   => $member->id,
                 'approver_id' => null,
             ]);
         }

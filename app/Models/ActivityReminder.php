@@ -11,7 +11,7 @@ class ActivityReminder extends Model
 
     public function member(): BelongsTo
     {
-        return $this->belongsTo(Member::class, 'member_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'member_id');
     }
 
     public function division(): BelongsTo

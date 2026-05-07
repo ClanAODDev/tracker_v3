@@ -8,13 +8,15 @@ use App\Models\Member;
 use App\Services\MemberSyncService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MemberSyncServiceTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_sync_returns_false_when_no_data(): void
+    #[Test]
+    public function sync_returns_false_when_no_data(): void
     {
         $mockInfo       = Mockery::mock(GetDivisionInfo::class);
         $mockInfo->data = null;
@@ -24,7 +26,8 @@ class MemberSyncServiceTest extends TestCase
         $this->assertFalse($service->sync());
     }
 
-    public function test_sync_returns_true_with_valid_data(): void
+    #[Test]
+    public function sync_returns_true_with_valid_data(): void
     {
         $division = Division::factory()->create();
 
@@ -53,7 +56,8 @@ class MemberSyncServiceTest extends TestCase
         $this->assertTrue($service->sync());
     }
 
-    public function test_sync_creates_new_members(): void
+    #[Test]
+    public function sync_creates_new_members(): void
     {
         $division = Division::factory()->create();
 
@@ -89,7 +93,8 @@ class MemberSyncServiceTest extends TestCase
         $this->assertEquals(1, $stats['added']);
     }
 
-    public function test_sync_updates_existing_members(): void
+    #[Test]
+    public function sync_updates_existing_members(): void
     {
         $division = Division::factory()->create();
         $member   = Member::factory()->create([
@@ -130,7 +135,8 @@ class MemberSyncServiceTest extends TestCase
         $this->assertEquals(1, $stats['updated']);
     }
 
-    public function test_callbacks_are_invoked(): void
+    #[Test]
+    public function callbacks_are_invoked(): void
     {
         $division = Division::factory()->create();
 
@@ -167,7 +173,8 @@ class MemberSyncServiceTest extends TestCase
         $this->assertEquals('AOD_CallbackTest', $addedMembers[0]['name']);
     }
 
-    public function test_get_stats_returns_sync_statistics(): void
+    #[Test]
+    public function get_stats_returns_sync_statistics(): void
     {
         $mockInfo       = Mockery::mock(GetDivisionInfo::class);
         $mockInfo->data = [];
@@ -182,7 +189,8 @@ class MemberSyncServiceTest extends TestCase
         $this->assertArrayHasKey('errors', $stats);
     }
 
-    public function test_skips_members_with_none_division(): void
+    #[Test]
+    public function skips_members_with_none_division(): void
     {
         $mockInfo       = Mockery::mock(GetDivisionInfo::class);
         $mockInfo->data = [
@@ -212,7 +220,8 @@ class MemberSyncServiceTest extends TestCase
         ]);
     }
 
-    public function test_handles_zero_date_values(): void
+    #[Test]
+    public function handles_zero_date_values(): void
     {
         $division = Division::factory()->create();
 

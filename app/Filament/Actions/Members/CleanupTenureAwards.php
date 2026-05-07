@@ -90,14 +90,14 @@ class CleanupTenureAwards
         $joinDate = Carbon::parse($member->join_date);
 
         foreach (self::eligibleMilestones($years, $joinDate) as $milestone => $awardId) {
-            $has = MemberAward::where('member_id', $member->clan_id)
+            $has = MemberAward::where('member_id', $member->id)
                 ->where('award_id', $awardId)
                 ->exists();
 
             if (! $has) {
                 if ($persist) {
                     MemberAward::firstOrCreate(
-                        ['member_id' => $member->clan_id, 'award_id' => $awardId],
+                        ['member_id' => $member->id, 'award_id' => $awardId],
                         ['reason' => "Awarded for reaching the {$milestone}-year milestone.", 'approved' => true],
                     );
                 }
@@ -114,7 +114,7 @@ class CleanupTenureAwards
         $joinDate = Carbon::parse($member->join_date);
         $eligible = self::eligibleMilestones($years, $joinDate);
 
-        $awards = MemberAward::where('member_id', $member->clan_id)
+        $awards = MemberAward::where('member_id', $member->id)
             ->whereIn('award_id', array_values(self::TENURE_AWARD_IDS))
             ->get();
 

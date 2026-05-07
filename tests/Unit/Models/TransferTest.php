@@ -5,6 +5,7 @@ namespace Tests\Unit\Models;
 use App\Enums\Position;
 use App\Models\Transfer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -15,7 +16,8 @@ class TransferTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_approve_sets_approved_at()
+    #[Test]
+    public function approve_sets_approved_at()
     {
         $sourceDivision = $this->createActiveDivision();
         $targetDivision = $this->createActiveDivision();
@@ -35,7 +37,8 @@ class TransferTest extends TestCase
         $this->assertNotNull($transfer->approved_at);
     }
 
-    public function test_approve_sets_approved_by_to_authenticated_user()
+    #[Test]
+    public function approve_sets_approved_by_to_authenticated_user()
     {
         $approver = $this->createSeniorLeader();
         $this->actingAs($approver);
@@ -58,7 +61,8 @@ class TransferTest extends TestCase
         $this->assertEquals($approver->id, $transfer->approved_by);
     }
 
-    public function test_approver_relationship_returns_user_who_approved()
+    #[Test]
+    public function approver_relationship_returns_user_who_approved()
     {
         $approver = $this->createSeniorLeader();
         $this->actingAs($approver);
@@ -77,7 +81,8 @@ class TransferTest extends TestCase
         $this->assertTrue($transfer->approver->is($approver));
     }
 
-    public function test_approve_transfers_member_to_new_division()
+    #[Test]
+    public function approve_transfers_member_to_new_division()
     {
         $sourceDivision = $this->createActiveDivision();
         $targetDivision = $this->createActiveDivision();
@@ -106,7 +111,8 @@ class TransferTest extends TestCase
         $this->assertEquals(Position::MEMBER, $member->position);
     }
 
-    public function test_approve_removes_squad_leader_assignment()
+    #[Test]
+    public function approve_removes_squad_leader_assignment()
     {
         $sourceDivision = $this->createActiveDivision();
         $targetDivision = $this->createActiveDivision();
@@ -129,7 +135,8 @@ class TransferTest extends TestCase
         $this->assertEquals(0, $squad->leader_id);
     }
 
-    public function test_approve_removes_platoon_leader_assignment()
+    #[Test]
+    public function approve_removes_platoon_leader_assignment()
     {
         $sourceDivision = $this->createActiveDivision();
         $targetDivision = $this->createActiveDivision();
@@ -150,7 +157,8 @@ class TransferTest extends TestCase
         $this->assertEquals(0, $platoon->leader_id);
     }
 
-    public function test_scope_pending_returns_unapproved_transfers()
+    #[Test]
+    public function scope_pending_returns_unapproved_transfers()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember();
@@ -171,7 +179,8 @@ class TransferTest extends TestCase
         $this->assertFalse($results->contains($approved));
     }
 
-    public function test_member_relationship_returns_correct_member()
+    #[Test]
+    public function member_relationship_returns_correct_member()
     {
         $member   = $this->createMember();
         $division = $this->createActiveDivision();
@@ -184,7 +193,8 @@ class TransferTest extends TestCase
         $this->assertTrue($transfer->member->is($member));
     }
 
-    public function test_division_relationship_returns_target_division()
+    #[Test]
+    public function division_relationship_returns_target_division()
     {
         $member   = $this->createMember();
         $division = $this->createActiveDivision();
@@ -197,7 +207,8 @@ class TransferTest extends TestCase
         $this->assertTrue($transfer->division->is($division));
     }
 
-    public function test_approve_preserves_clan_admin_position()
+    #[Test]
+    public function approve_preserves_clan_admin_position()
     {
         $sourceDivision = $this->createActiveDivision();
         $targetDivision = $this->createActiveDivision();

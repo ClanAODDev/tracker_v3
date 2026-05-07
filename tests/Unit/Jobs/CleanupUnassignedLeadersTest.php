@@ -6,6 +6,7 @@ use App\Enums\Position;
 use App\Jobs\CleanupUnassignedLeaders;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -16,7 +17,8 @@ class CleanupUnassignedLeadersTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_resets_unassigned_squad_leaders_to_member()
+    #[Test]
+    public function resets_unassigned_squad_leaders_to_member()
     {
         $division = $this->createActiveDivision();
 
@@ -32,7 +34,8 @@ class CleanupUnassignedLeadersTest extends TestCase
         $this->assertEquals(Position::MEMBER, $member->position);
     }
 
-    public function test_resets_unassigned_platoon_leaders_to_member()
+    #[Test]
+    public function resets_unassigned_platoon_leaders_to_member()
     {
         $division = $this->createActiveDivision();
 
@@ -48,7 +51,8 @@ class CleanupUnassignedLeadersTest extends TestCase
         $this->assertEquals(Position::MEMBER, $member->position);
     }
 
-    public function test_does_not_affect_assigned_squad_leaders()
+    #[Test]
+    public function does_not_affect_assigned_squad_leaders()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -63,7 +67,8 @@ class CleanupUnassignedLeadersTest extends TestCase
         $this->assertEquals(Position::SQUAD_LEADER, $leader->position);
     }
 
-    public function test_does_not_affect_assigned_platoon_leaders()
+    #[Test]
+    public function does_not_affect_assigned_platoon_leaders()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -77,7 +82,8 @@ class CleanupUnassignedLeadersTest extends TestCase
         $this->assertEquals(Position::PLATOON_LEADER, $leader->position);
     }
 
-    public function test_does_not_affect_regular_members()
+    #[Test]
+    public function does_not_affect_regular_members()
     {
         $division = $this->createActiveDivision();
 
@@ -93,7 +99,8 @@ class CleanupUnassignedLeadersTest extends TestCase
         $this->assertEquals(Position::MEMBER, $member->position);
     }
 
-    public function test_does_not_affect_higher_positions()
+    #[Test]
+    public function does_not_affect_higher_positions()
     {
         $division = $this->createActiveDivision();
 
@@ -116,7 +123,8 @@ class CleanupUnassignedLeadersTest extends TestCase
         $this->assertEquals(Position::COMMANDING_OFFICER, $co->position);
     }
 
-    public function test_job_is_queueable()
+    #[Test]
+    public function job_is_queueable()
     {
         $job = new CleanupUnassignedLeaders;
 

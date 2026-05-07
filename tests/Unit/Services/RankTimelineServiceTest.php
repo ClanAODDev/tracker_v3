@@ -7,6 +7,7 @@ use App\Services\RankTimelineService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -25,7 +26,8 @@ class RankTimelineServiceTest extends TestCase
         $this->service = new RankTimelineService;
     }
 
-    public function test_build_timeline_returns_object_with_required_properties()
+    #[Test]
+    public function build_timeline_returns_object_with_required_properties()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -42,7 +44,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertObjectHasProperty('hasHistory', $result);
     }
 
-    public function test_build_timeline_has_history_is_true_when_join_date_exists()
+    #[Test]
+    public function build_timeline_has_history_is_true_when_join_date_exists()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -56,7 +59,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertTrue($result->hasHistory);
     }
 
-    public function test_build_timeline_has_history_is_true_when_rank_history_exists()
+    #[Test]
+    public function build_timeline_has_history_is_true_when_rank_history_exists()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -74,7 +78,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertTrue($result->hasHistory);
     }
 
-    public function test_build_timeline_has_history_is_false_when_no_history()
+    #[Test]
+    public function build_timeline_has_history_is_false_when_no_history()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -88,7 +93,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertFalse($result->hasHistory);
     }
 
-    public function test_build_timeline_creates_join_node()
+    #[Test]
+    public function build_timeline_creates_join_node()
     {
         $division = $this->createActiveDivision();
         $joinDate = Carbon::now()->subYears(2);
@@ -106,7 +112,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertEquals($joinDate->format('M Y'), $joinNode->date);
     }
 
-    public function test_build_timeline_creates_promotion_nodes_for_rank_history()
+    #[Test]
+    public function build_timeline_creates_promotion_nodes_for_rank_history()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -126,7 +133,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertGreaterThanOrEqual(1, $promotionNodes->count());
     }
 
-    public function test_build_timeline_filters_demotions_from_progression_nodes()
+    #[Test]
+    public function build_timeline_filters_demotions_from_progression_nodes()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -148,7 +156,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertLessThan(4, $promotionNodes->count());
     }
 
-    public function test_build_timeline_history_items_include_demotions()
+    #[Test]
+    public function build_timeline_history_items_include_demotions()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -168,7 +177,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertCount(1, $demotions);
     }
 
-    public function test_build_timeline_nodes_alternate_positions()
+    #[Test]
+    public function build_timeline_nodes_alternate_positions()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -192,7 +202,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertEquals('right', $positions[3]);
     }
 
-    public function test_build_timeline_history_items_include_join_event()
+    #[Test]
+    public function build_timeline_history_items_include_join_event()
     {
         $division = $this->createActiveDivision();
         $joinDate = Carbon::now()->subYears(2);
@@ -209,7 +220,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertEquals($joinDate->format('M j, Y'), $joinItems->first()->date);
     }
 
-    public function test_build_timeline_returns_nodes_as_collection()
+    #[Test]
+    public function build_timeline_returns_nodes_as_collection()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -223,7 +235,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertInstanceOf(Collection::class, $result->nodes);
     }
 
-    public function test_build_timeline_returns_history_items_as_collection()
+    #[Test]
+    public function build_timeline_returns_history_items_as_collection()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -237,7 +250,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertInstanceOf(Collection::class, $result->historyItems);
     }
 
-    public function test_build_timeline_promotion_node_has_rank_abbreviation()
+    #[Test]
+    public function build_timeline_promotion_node_has_rank_abbreviation()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([
@@ -256,7 +270,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertEquals(Rank::CORPORAL->getAbbreviation(), $promotionNode->rank);
     }
 
-    public function test_build_timeline_history_items_orders_join_date_chronologically_with_retroactive_history()
+    #[Test]
+    public function build_timeline_history_items_orders_join_date_chronologically_with_retroactive_history()
     {
         $division = $this->createActiveDivision();
         $joinDate = Carbon::parse('2020-01-15');
@@ -282,7 +297,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertEquals('Jan 15, 2020', $joinItem->date);
     }
 
-    public function test_build_timeline_history_items_puts_join_first_when_before_all_history()
+    #[Test]
+    public function build_timeline_history_items_puts_join_first_when_before_all_history()
     {
         $division = $this->createActiveDivision();
         $joinDate = Carbon::parse('2005-01-01');
@@ -304,7 +320,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertEquals('Jan 1, 2005', $firstItem->date);
     }
 
-    public function test_build_timeline_history_items_puts_join_last_when_after_all_history()
+    #[Test]
+    public function build_timeline_history_items_puts_join_last_when_after_all_history()
     {
         $division = $this->createActiveDivision();
         $joinDate = Carbon::parse('2025-01-01');
@@ -326,7 +343,8 @@ class RankTimelineServiceTest extends TestCase
         $this->assertEquals('Jan 1, 2025', $lastItem->date);
     }
 
-    public function test_build_timeline_progression_includes_current_rank_even_if_below_historical_high()
+    #[Test]
+    public function build_timeline_progression_includes_current_rank_even_if_below_historical_high()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember([

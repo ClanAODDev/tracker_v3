@@ -6,13 +6,15 @@ use App\Models\Member;
 use App\Models\User;
 use App\Services\AODForumService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class ForumLoginTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_login_uses_clan_id_not_name_to_find_member(): void
+    #[Test]
+    public function login_uses_clan_id_not_name_to_find_member(): void
     {
         $member1 = Member::factory()->create([
             'clan_id' => 11111,

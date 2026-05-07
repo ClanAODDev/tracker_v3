@@ -5,6 +5,7 @@ namespace Tests\Feature\API;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Laravel\Sanctum\Sanctum;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -15,14 +16,16 @@ class ClanApiTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_discord_count_requires_authentication()
+    #[Test]
+    public function discord_count_requires_authentication()
     {
         $response = $this->getJson(route('v1.discord_population'));
 
         $response->assertUnauthorized();
     }
 
-    public function test_discord_count_requires_clan_read_ability()
+    #[Test]
+    public function discord_count_requires_clan_read_ability()
     {
         $officer = $this->createOfficer();
 
@@ -33,7 +36,8 @@ class ClanApiTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_discord_count_returns_data_with_clan_read_ability()
+    #[Test]
+    public function discord_count_returns_data_with_clan_read_ability()
     {
         $officer = $this->createOfficer();
 
@@ -48,7 +52,8 @@ class ClanApiTest extends TestCase
         $response->assertOk();
     }
 
-    public function test_stream_events_requires_authentication()
+    #[Test]
+    public function stream_events_requires_authentication()
     {
         $response = $this->getJson(route('v1.stream_events'));
 

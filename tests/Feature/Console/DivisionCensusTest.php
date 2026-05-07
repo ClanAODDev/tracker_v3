@@ -5,13 +5,15 @@ namespace Tests\Feature\Console;
 use App\Models\Census;
 use App\Models\Division;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DivisionCensusTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_census_command_records_data_for_active_divisions(): void
+    #[Test]
+    public function census_command_records_data_for_active_divisions(): void
     {
         $division = Division::factory()->create();
 
@@ -25,7 +27,8 @@ class DivisionCensusTest extends TestCase
         ]);
     }
 
-    public function test_census_command_skips_when_already_performed_today(): void
+    #[Test]
+    public function census_command_skips_when_already_performed_today(): void
     {
         $division = Division::factory()->create();
 
@@ -41,7 +44,8 @@ class DivisionCensusTest extends TestCase
         $this->assertDatabaseCount('censuses', 1);
     }
 
-    public function test_census_command_runs_with_force_option(): void
+    #[Test]
+    public function census_command_runs_with_force_option(): void
     {
         $division = Division::factory()->create();
 
@@ -57,7 +61,8 @@ class DivisionCensusTest extends TestCase
         $this->assertDatabaseCount('censuses', 2);
     }
 
-    public function test_census_command_runs_when_last_census_was_yesterday(): void
+    #[Test]
+    public function census_command_runs_when_last_census_was_yesterday(): void
     {
         $division = Division::factory()->create();
 
@@ -73,7 +78,8 @@ class DivisionCensusTest extends TestCase
         $this->assertDatabaseCount('censuses', 2);
     }
 
-    public function test_census_handles_no_active_divisions(): void
+    #[Test]
+    public function census_handles_no_active_divisions(): void
     {
         Division::factory()->inactive()->create();
 

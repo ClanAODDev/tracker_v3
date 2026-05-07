@@ -5,6 +5,7 @@ namespace Tests\Unit\Jobs;
 use App\Jobs\RemoveClanMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class RemoveClanMemberTest extends TestCase
@@ -17,14 +18,16 @@ class RemoveClanMemberTest extends TestCase
         config(['aod.token' => 'test-token']);
     }
 
-    public function test_job_can_be_instantiated()
+    #[Test]
+    public function job_can_be_instantiated()
     {
         $job = new RemoveClanMember(12345, 67890);
 
         $this->assertInstanceOf(RemoveClanMember::class, $job);
     }
 
-    public function test_job_calls_forum_service_with_correct_parameters()
+    #[Test]
+    public function job_calls_forum_service_with_correct_parameters()
     {
         Http::fake([
             '*' => Http::response('saved_user_x_successfully', 200),
@@ -45,7 +48,8 @@ class RemoveClanMemberTest extends TestCase
         });
     }
 
-    public function test_job_throws_exception_on_failure()
+    #[Test]
+    public function job_throws_exception_on_failure()
     {
         Http::fake([
             '*' => Http::response('error_user_not_found', 200),

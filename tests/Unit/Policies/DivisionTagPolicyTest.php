@@ -7,6 +7,7 @@ use App\Enums\Role;
 use App\Models\DivisionTag;
 use App\Policies\DivisionTagPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -25,14 +26,16 @@ class DivisionTagPolicyTest extends TestCase
         $this->policy = new DivisionTagPolicy;
     }
 
-    public function test_admin_bypasses_all_checks()
+    #[Test]
+    public function admin_bypasses_all_checks()
     {
         $admin = $this->createAdmin();
 
         $this->assertTrue($this->policy->before($admin));
     }
 
-    public function test_regular_user_does_not_bypass_checks()
+    #[Test]
+    public function regular_user_does_not_bypass_checks()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -40,7 +43,8 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertNull($this->policy->before($user));
     }
 
-    public function test_view_any_returns_true()
+    #[Test]
+    public function view_any_returns_true()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -48,7 +52,8 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertTrue($this->policy->viewAny($user));
     }
 
-    public function test_view_returns_true()
+    #[Test]
+    public function view_returns_true()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -57,21 +62,24 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertTrue($this->policy->view($user, $tag));
     }
 
-    public function test_sr_ldr_can_create_tags()
+    #[Test]
+    public function sr_ldr_can_create_tags()
     {
         $srLdr = $this->createSeniorLeader();
 
         $this->assertTrue($this->policy->create($srLdr));
     }
 
-    public function test_officer_cannot_create_tags()
+    #[Test]
+    public function officer_cannot_create_tags()
     {
         $officer = $this->createOfficer();
 
         $this->assertFalse($this->policy->create($officer));
     }
 
-    public function test_member_cannot_create_tags()
+    #[Test]
+    public function member_cannot_create_tags()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser([
@@ -83,7 +91,8 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertFalse($this->policy->create($user));
     }
 
-    public function test_sr_ldr_can_update_own_division_tag()
+    #[Test]
+    public function sr_ldr_can_update_own_division_tag()
     {
         $srLdr = $this->createSeniorLeader();
         $tag   = DivisionTag::factory()->create([
@@ -93,7 +102,8 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertTrue($this->policy->update($srLdr, $tag));
     }
 
-    public function test_sr_ldr_cannot_update_other_division_tag()
+    #[Test]
+    public function sr_ldr_cannot_update_other_division_tag()
     {
         $srLdr         = $this->createSeniorLeader();
         $otherDivision = $this->createActiveDivision();
@@ -104,7 +114,8 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertFalse($this->policy->update($srLdr, $tag));
     }
 
-    public function test_sr_ldr_cannot_update_global_tag()
+    #[Test]
+    public function sr_ldr_cannot_update_global_tag()
     {
         $srLdr = $this->createSeniorLeader();
         $tag   = DivisionTag::factory()->global()->create();
@@ -112,7 +123,8 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertFalse($this->policy->update($srLdr, $tag));
     }
 
-    public function test_sr_ldr_can_delete_own_division_tag()
+    #[Test]
+    public function sr_ldr_can_delete_own_division_tag()
     {
         $srLdr = $this->createSeniorLeader();
         $tag   = DivisionTag::factory()->create([
@@ -122,7 +134,8 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertTrue($this->policy->delete($srLdr, $tag));
     }
 
-    public function test_sr_ldr_cannot_delete_other_division_tag()
+    #[Test]
+    public function sr_ldr_cannot_delete_other_division_tag()
     {
         $srLdr         = $this->createSeniorLeader();
         $otherDivision = $this->createActiveDivision();
@@ -133,7 +146,8 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertFalse($this->policy->delete($srLdr, $tag));
     }
 
-    public function test_sr_ldr_cannot_delete_global_tag()
+    #[Test]
+    public function sr_ldr_cannot_delete_global_tag()
     {
         $srLdr = $this->createSeniorLeader();
         $tag   = DivisionTag::factory()->global()->create();
@@ -141,14 +155,16 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertFalse($this->policy->delete($srLdr, $tag));
     }
 
-    public function test_sr_ldr_can_assign_tags()
+    #[Test]
+    public function sr_ldr_can_assign_tags()
     {
         $srLdr = $this->createSeniorLeader();
 
         $this->assertTrue($this->policy->assign($srLdr, null));
     }
 
-    public function test_platoon_leader_can_assign_tags()
+    #[Test]
+    public function platoon_leader_can_assign_tags()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -161,7 +177,8 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertTrue($this->policy->assign($user, null));
     }
 
-    public function test_squad_leader_can_assign_tags()
+    #[Test]
+    public function squad_leader_can_assign_tags()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -176,14 +193,16 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertTrue($this->policy->assign($user, null));
     }
 
-    public function test_officer_can_assign_tags()
+    #[Test]
+    public function officer_can_assign_tags()
     {
         $officer = $this->createOfficer();
 
         $this->assertTrue($this->policy->assign($officer, null));
     }
 
-    public function test_member_cannot_assign_tags()
+    #[Test]
+    public function member_cannot_assign_tags()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser([
@@ -196,7 +215,8 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertFalse($this->policy->assign($user, null));
     }
 
-    public function test_can_assign_to_member_in_same_division()
+    #[Test]
+    public function can_assign_to_member_in_same_division()
     {
         $srLdr  = $this->createSeniorLeader();
         $member = $this->createMember([
@@ -206,7 +226,8 @@ class DivisionTagPolicyTest extends TestCase
         $this->assertTrue($this->policy->assign($srLdr, $member));
     }
 
-    public function test_cannot_assign_to_member_in_different_division()
+    #[Test]
+    public function cannot_assign_to_member_in_different_division()
     {
         $srLdr         = $this->createSeniorLeader();
         $otherDivision = $this->createActiveDivision();

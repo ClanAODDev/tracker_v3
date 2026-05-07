@@ -7,6 +7,7 @@ use App\Enums\Rank;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -17,7 +18,8 @@ class MemberTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_is_squad_leader_returns_true_when_member_is_squad_leader()
+    #[Test]
+    public function is_squad_leader_returns_true_when_member_is_squad_leader()
     {
         $squad  = $this->createSquad();
         $member = $this->createSquadLeader($squad);
@@ -25,7 +27,8 @@ class MemberTest extends TestCase
         $this->assertTrue($member->isSquadLeader($squad));
     }
 
-    public function test_is_squad_leader_returns_false_when_member_is_not_squad_leader()
+    #[Test]
+    public function is_squad_leader_returns_false_when_member_is_not_squad_leader()
     {
         $squad  = $this->createSquad();
         $member = $this->createMember(['squad_id' => $squad->id]);
@@ -33,7 +36,8 @@ class MemberTest extends TestCase
         $this->assertFalse($member->isSquadLeader($squad));
     }
 
-    public function test_is_platoon_leader_returns_true_when_member_is_platoon_leader()
+    #[Test]
+    public function is_platoon_leader_returns_true_when_member_is_platoon_leader()
     {
         $platoon = $this->createPlatoon();
         $member  = $this->createPlatoonLeader($platoon);
@@ -41,7 +45,8 @@ class MemberTest extends TestCase
         $this->assertTrue($member->isPlatoonLeader($platoon));
     }
 
-    public function test_is_platoon_leader_returns_false_when_member_is_not_platoon_leader()
+    #[Test]
+    public function is_platoon_leader_returns_false_when_member_is_not_platoon_leader()
     {
         $platoon = $this->createPlatoon();
         $member  = $this->createMember(['platoon_id' => $platoon->id]);
@@ -49,7 +54,8 @@ class MemberTest extends TestCase
         $this->assertFalse($member->isPlatoonLeader($platoon));
     }
 
-    public function test_is_division_leader_returns_true_for_commanding_officer()
+    #[Test]
+    public function is_division_leader_returns_true_for_commanding_officer()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createCommander($division);
@@ -57,7 +63,8 @@ class MemberTest extends TestCase
         $this->assertTrue($member->isDivisionLeader($division));
     }
 
-    public function test_is_division_leader_returns_true_for_executive_officer()
+    #[Test]
+    public function is_division_leader_returns_true_for_executive_officer()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createExecutiveOfficer($division);
@@ -65,7 +72,8 @@ class MemberTest extends TestCase
         $this->assertTrue($member->isDivisionLeader($division));
     }
 
-    public function test_is_division_leader_returns_false_for_regular_member()
+    #[Test]
+    public function is_division_leader_returns_false_for_regular_member()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember(['division_id' => $division->id]);
@@ -73,7 +81,8 @@ class MemberTest extends TestCase
         $this->assertFalse($member->isDivisionLeader($division));
     }
 
-    public function test_is_division_leader_returns_false_when_member_in_different_division()
+    #[Test]
+    public function is_division_leader_returns_false_when_member_in_different_division()
     {
         $division1 = $this->createActiveDivision();
         $division2 = $this->createActiveDivision();
@@ -82,7 +91,8 @@ class MemberTest extends TestCase
         $this->assertFalse($member->isDivisionLeader($division2));
     }
 
-    public function test_reset_clears_division_assignments()
+    #[Test]
+    public function reset_clears_division_assignments()
     {
         $division = $this->createDivisionWithFullStructure(1, 1, 1);
         $platoon  = $division->platoons->first();
@@ -106,7 +116,8 @@ class MemberTest extends TestCase
         $this->assertFalse($member->flagged_for_inactivity);
     }
 
-    public function test_reset_detaches_part_time_divisions()
+    #[Test]
+    public function reset_detaches_part_time_divisions()
     {
         $division         = $this->createActiveDivision();
         $partTimeDivision = $this->createActiveDivision();
@@ -122,7 +133,8 @@ class MemberTest extends TestCase
         $this->assertCount(0, $member->partTimeDivisions);
     }
 
-    public function test_reset_detaches_division_specific_tags()
+    #[Test]
+    public function reset_detaches_division_specific_tags()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember(['division_id' => $division->id]);
@@ -142,7 +154,8 @@ class MemberTest extends TestCase
         $this->assertFalse($member->tags->contains($divisionTag));
     }
 
-    public function test_scope_unassigned_squad_leaders_returns_orphaned_leaders()
+    #[Test]
+    public function scope_unassigned_squad_leaders_returns_orphaned_leaders()
     {
         $division = $this->createActiveDivision();
         $squad    = $this->createSquad($this->createPlatoon($division));
@@ -160,7 +173,8 @@ class MemberTest extends TestCase
         $this->assertFalse($results->contains($assignedLeader));
     }
 
-    public function test_scope_unassigned_platoon_leaders_returns_orphaned_leaders()
+    #[Test]
+    public function scope_unassigned_platoon_leaders_returns_orphaned_leaders()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -178,7 +192,8 @@ class MemberTest extends TestCase
         $this->assertFalse($results->contains($assignedLeader));
     }
 
-    public function test_is_rank_with_single_rank_returns_correct_value()
+    #[Test]
+    public function is_rank_with_single_rank_returns_correct_value()
     {
         $member = $this->createMember(['rank' => Rank::SERGEANT]);
 
@@ -186,7 +201,8 @@ class MemberTest extends TestCase
         $this->assertFalse($member->isRank(Rank::CORPORAL));
     }
 
-    public function test_is_rank_with_array_returns_correct_value()
+    #[Test]
+    public function is_rank_with_array_returns_correct_value()
     {
         $member = $this->createMember(['rank' => Rank::SERGEANT]);
 
@@ -194,7 +210,8 @@ class MemberTest extends TestCase
         $this->assertFalse($member->isRank([Rank::CORPORAL, Rank::SPECIALIST]));
     }
 
-    public function test_bot_response_formats_correctly()
+    #[Test]
+    public function bot_response_formats_correctly()
     {
         $division = $this->createActiveDivision(['name' => 'Test Division']);
         $member   = $this->createMember([
@@ -211,7 +228,8 @@ class MemberTest extends TestCase
         $this->assertStringContainsString('testuser#1234', $response['value']);
     }
 
-    public function test_bot_response_shows_ex_aod_for_member_without_division()
+    #[Test]
+    public function bot_response_shows_ex_aod_for_member_without_division()
     {
         $member = $this->createMember(['division_id' => 0]);
         $member->load('division');
@@ -221,7 +239,8 @@ class MemberTest extends TestCase
         $this->assertStringContainsString('Ex-AOD', $response['name']);
     }
 
-    public function test_get_discord_url_returns_url_when_discord_id_set()
+    #[Test]
+    public function get_discord_url_returns_url_when_discord_id_set()
     {
         $member = $this->createMember(['discord_id' => '123456789']);
 
@@ -230,7 +249,8 @@ class MemberTest extends TestCase
         $this->assertEquals('https://discordapp.com/users/123456789', $url);
     }
 
-    public function test_get_discord_url_returns_false_when_no_discord_id()
+    #[Test]
+    public function get_discord_url_returns_false_when_no_discord_id()
     {
         $member = $this->createMember(['discord_id' => null]);
 

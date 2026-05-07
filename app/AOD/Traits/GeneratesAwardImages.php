@@ -49,7 +49,7 @@ trait GeneratesAwardImages
 
     protected function fetchMemberAwardsCollapseTiered(Member $member, array $columns = ['awards.id', 'awards.image', 'awards.prerequisite_award_id']): Collection
     {
-        $memberAwards = MemberAward::where('member_id', $member->clan_id)
+        $memberAwards = MemberAward::where('member_id', $member->id)
             ->join('awards', 'award_member.award_id', '=', 'awards.id')
             ->leftJoin('divisions', 'awards.division_id', '=', 'divisions.id')
             ->where('approved', true)

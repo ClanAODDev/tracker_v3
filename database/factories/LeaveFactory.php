@@ -17,7 +17,7 @@ class LeaveFactory extends Factory
         $member = Member::factory()->create();
 
         return [
-            'member_id'    => $member->clan_id,
+            'member_id'    => $member->id,
             'requester_id' => User::factory(),
             'approver_id'  => User::factory(),
             'reason'       => $this->faker->randomElement(array_keys(Leave::$reasons)),

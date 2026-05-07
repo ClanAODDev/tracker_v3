@@ -5,6 +5,7 @@ namespace Tests\Unit\Jobs;
 use App\Jobs\ResetOrphanedUnitAssignments;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -15,7 +16,8 @@ class ResetOrphanedUnitAssignmentsTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_resets_platoon_and_squad_for_member_with_zero_division()
+    #[Test]
+    public function resets_platoon_and_squad_for_member_with_zero_division()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -37,7 +39,8 @@ class ResetOrphanedUnitAssignmentsTest extends TestCase
         $this->assertEquals(0, $member->squad_id);
     }
 
-    public function test_does_not_affect_members_with_valid_division()
+    #[Test]
+    public function does_not_affect_members_with_valid_division()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -57,7 +60,8 @@ class ResetOrphanedUnitAssignmentsTest extends TestCase
         $this->assertEquals($squad->id, $member->squad_id);
     }
 
-    public function test_does_not_affect_members_without_unit_assignments()
+    #[Test]
+    public function does_not_affect_members_without_unit_assignments()
     {
         $division = $this->createActiveDivision();
 
@@ -77,7 +81,8 @@ class ResetOrphanedUnitAssignmentsTest extends TestCase
         $this->assertEquals(0, $member->squad_id);
     }
 
-    public function test_job_is_queueable()
+    #[Test]
+    public function job_is_queueable()
     {
         $job = new ResetOrphanedUnitAssignments;
 

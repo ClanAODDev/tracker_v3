@@ -7,6 +7,7 @@ use App\Models\Division;
 use App\Models\Member;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class BotCommandControllerTest extends TestCase
@@ -28,13 +29,15 @@ class BotCommandControllerTest extends TestCase
         ));
     }
 
-    public function test_bot_command_requires_valid_token()
+    #[Test]
+    public function bot_command_requires_valid_token()
     {
         $this->getJson(route('bot.commands', ['command' => 'reports']) . '?token=invalid&value=sgt-training')
             ->assertStatus(401);
     }
 
-    public function test_unknown_command_returns_unrecognized_message()
+    #[Test]
+    public function unknown_command_returns_unrecognized_message()
     {
         $response = $this->botGet('nonexistent-command');
 
@@ -42,13 +45,15 @@ class BotCommandControllerTest extends TestCase
             ->assertJson(['message' => 'Unrecognized command. Sorry!']);
     }
 
-    public function test_reports_command_requires_value()
+    #[Test]
+    public function reports_command_requires_value()
     {
         $this->botGet('reports')
             ->assertStatus(422);
     }
 
-    public function test_reports_command_returns_not_found_for_unknown_report()
+    #[Test]
+    public function reports_command_returns_not_found_for_unknown_report()
     {
         $response = $this->botGet('reports', ['value' => 'nonexistent-report']);
 
@@ -56,7 +61,8 @@ class BotCommandControllerTest extends TestCase
             ->assertJson(['message' => "Report 'nonexistent-report' not found."]);
     }
 
-    public function test_sgt_training_report_returns_message_with_table()
+    #[Test]
+    public function sgt_training_report_returns_message_with_table()
     {
         $division = Division::factory()->create(['active' => true]);
 
@@ -84,7 +90,8 @@ class BotCommandControllerTest extends TestCase
         $this->assertStringContainsString('3', $message);
     }
 
-    public function test_sgt_training_report_returns_message_when_no_ssgts()
+    #[Test]
+    public function sgt_training_report_returns_message_when_no_ssgts()
     {
         $response = $this->botGet('reports', ['value' => 'sgt-training']);
 

@@ -14,7 +14,7 @@ class MemberAwardFactory extends Factory
     public function definition(): array
     {
         return [
-            'member_id'    => Member::factory()->create()->clan_id,
+            'member_id'    => Member::factory(),
             'award_id'     => Award::factory(),
             'requester_id' => Member::factory(),
             'approved'     => false,

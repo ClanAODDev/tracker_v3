@@ -7,6 +7,7 @@ use App\Models\Handle;
 use App\Models\Member;
 use App\Services\MemberQueryService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -25,7 +26,8 @@ class MemberQueryServiceTest extends TestCase
         $this->service = new MemberQueryService;
     }
 
-    public function test_with_standard_relations_includes_handles()
+    #[Test]
+    public function with_standard_relations_includes_handles()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember(['division_id' => $division->id]);
@@ -37,7 +39,8 @@ class MemberQueryServiceTest extends TestCase
         $this->assertTrue($result->relationLoaded('handles'));
     }
 
-    public function test_with_standard_relations_includes_leave()
+    #[Test]
+    public function with_standard_relations_includes_leave()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember(['division_id' => $division->id]);
@@ -48,7 +51,8 @@ class MemberQueryServiceTest extends TestCase
         $this->assertTrue($result->relationLoaded('leave'));
     }
 
-    public function test_with_standard_relations_includes_tags()
+    #[Test]
+    public function with_standard_relations_includes_tags()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember(['division_id' => $division->id]);
@@ -59,7 +63,8 @@ class MemberQueryServiceTest extends TestCase
         $this->assertTrue($result->relationLoaded('tags'));
     }
 
-    public function test_with_standard_relations_includes_platoon()
+    #[Test]
+    public function with_standard_relations_includes_platoon()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -74,7 +79,8 @@ class MemberQueryServiceTest extends TestCase
         $this->assertTrue($result->relationLoaded('platoon'));
     }
 
-    public function test_with_standard_relations_includes_squad()
+    #[Test]
+    public function with_standard_relations_includes_squad()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -91,7 +97,8 @@ class MemberQueryServiceTest extends TestCase
         $this->assertTrue($result->relationLoaded('squad'));
     }
 
-    public function test_primary_handle_constraint_filters_to_division_handle()
+    #[Test]
+    public function primary_handle_constraint_filters_to_division_handle()
     {
         $division    = $this->createActiveDivision();
         $otherHandle = Handle::factory()->create();
@@ -107,7 +114,8 @@ class MemberQueryServiceTest extends TestCase
         $this->assertEquals('primary_handle', $result->handles->first()->pivot->value);
     }
 
-    public function test_extract_handles_sets_handle_attribute_on_members()
+    #[Test]
+    public function extract_handles_sets_handle_attribute_on_members()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember(['division_id' => $division->id]);
@@ -121,7 +129,8 @@ class MemberQueryServiceTest extends TestCase
         $this->assertEquals($division->handle_id, $result->first()->handle->id);
     }
 
-    public function test_load_sorted_members_sorts_by_rank_descending()
+    #[Test]
+    public function load_sorted_members_sorts_by_rank_descending()
     {
         $division = $this->createActiveDivision();
 
@@ -146,7 +155,8 @@ class MemberQueryServiceTest extends TestCase
         $this->assertEquals($private->id, $result->last()->id);
     }
 
-    public function test_load_sorted_members_extracts_handles()
+    #[Test]
+    public function load_sorted_members_extracts_handles()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember(['division_id' => $division->id]);

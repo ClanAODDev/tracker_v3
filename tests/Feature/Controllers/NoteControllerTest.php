@@ -7,6 +7,7 @@ use App\Enums\Role;
 use App\Models\DivisionTag;
 use App\Models\Note;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -17,7 +18,8 @@ class NoteControllerTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_sr_ldr_can_restore_soft_deleted_note()
+    #[Test]
+    public function sr_ldr_can_restore_soft_deleted_note()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -43,7 +45,8 @@ class NoteControllerTest extends TestCase
         ]);
     }
 
-    public function test_sr_ldr_can_force_delete_soft_deleted_note()
+    #[Test]
+    public function sr_ldr_can_force_delete_soft_deleted_note()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -64,7 +67,8 @@ class NoteControllerTest extends TestCase
         $this->assertDatabaseMissing('notes', ['id' => $note->id]);
     }
 
-    public function test_division_leader_can_restore_soft_deleted_note()
+    #[Test]
+    public function division_leader_can_restore_soft_deleted_note()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -83,7 +87,8 @@ class NoteControllerTest extends TestCase
         $response->assertJson(['success' => true]);
     }
 
-    public function test_division_leader_can_force_delete_soft_deleted_note()
+    #[Test]
+    public function division_leader_can_force_delete_soft_deleted_note()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -102,7 +107,8 @@ class NoteControllerTest extends TestCase
         $response->assertJson(['success' => true]);
     }
 
-    public function test_regular_user_cannot_restore_soft_deleted_note()
+    #[Test]
+    public function regular_user_cannot_restore_soft_deleted_note()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -120,7 +126,8 @@ class NoteControllerTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_regular_user_cannot_force_delete_soft_deleted_note()
+    #[Test]
+    public function regular_user_cannot_force_delete_soft_deleted_note()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -138,7 +145,8 @@ class NoteControllerTest extends TestCase
         $response->assertForbidden();
     }
 
-    public function test_restore_returns_404_for_nonexistent_note()
+    #[Test]
+    public function restore_returns_404_for_nonexistent_note()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -150,7 +158,8 @@ class NoteControllerTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function test_force_delete_returns_404_for_nonexistent_note()
+    #[Test]
+    public function force_delete_returns_404_for_nonexistent_note()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -162,7 +171,8 @@ class NoteControllerTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function test_cannot_restore_note_belonging_to_different_member()
+    #[Test]
+    public function cannot_restore_note_belonging_to_different_member()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -181,7 +191,8 @@ class NoteControllerTest extends TestCase
         $response->assertNotFound();
     }
 
-    public function test_admin_can_restore_soft_deleted_note()
+    #[Test]
+    public function admin_can_restore_soft_deleted_note()
     {
         $admin    = $this->createAdmin();
         $division = $this->createActiveDivision();
@@ -200,7 +211,8 @@ class NoteControllerTest extends TestCase
         $response->assertJson(['success' => true]);
     }
 
-    public function test_admin_can_force_delete_soft_deleted_note()
+    #[Test]
+    public function admin_can_force_delete_soft_deleted_note()
     {
         $admin    = $this->createAdmin();
         $division = $this->createActiveDivision();
@@ -221,7 +233,8 @@ class NoteControllerTest extends TestCase
         $this->assertDatabaseMissing('notes', ['id' => $note->id]);
     }
 
-    public function test_division_leader_can_soft_delete_note()
+    #[Test]
+    public function division_leader_can_soft_delete_note()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -239,7 +252,8 @@ class NoteControllerTest extends TestCase
         $this->assertSoftDeleted('notes', ['id' => $note->id]);
     }
 
-    public function test_sr_ldr_can_soft_delete_note()
+    #[Test]
+    public function sr_ldr_can_soft_delete_note()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -257,7 +271,8 @@ class NoteControllerTest extends TestCase
         $this->assertSoftDeleted('notes', ['id' => $note->id]);
     }
 
-    public function test_regular_user_cannot_soft_delete_note()
+    #[Test]
+    public function regular_user_cannot_soft_delete_note()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -278,7 +293,8 @@ class NoteControllerTest extends TestCase
         ]);
     }
 
-    public function test_admin_can_soft_delete_note()
+    #[Test]
+    public function admin_can_soft_delete_note()
     {
         $admin    = $this->createAdmin();
         $division = $this->createActiveDivision();
@@ -296,7 +312,8 @@ class NoteControllerTest extends TestCase
         $this->assertSoftDeleted('notes', ['id' => $note->id]);
     }
 
-    public function test_can_create_note_with_tag()
+    #[Test]
+    public function can_create_note_with_tag()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -324,7 +341,8 @@ class NoteControllerTest extends TestCase
         ]);
     }
 
-    public function test_can_create_note_without_tag()
+    #[Test]
+    public function can_create_note_without_tag()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -344,7 +362,8 @@ class NoteControllerTest extends TestCase
         ]);
     }
 
-    public function test_platoon_leader_can_create_note_with_tag()
+    #[Test]
+    public function platoon_leader_can_create_note_with_tag()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -372,7 +391,8 @@ class NoteControllerTest extends TestCase
         ]);
     }
 
-    public function test_officer_can_assign_tag_when_creating_note()
+    #[Test]
+    public function officer_can_assign_tag_when_creating_note()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser([
@@ -405,7 +425,8 @@ class NoteControllerTest extends TestCase
         ]);
     }
 
-    public function test_cannot_assign_tag_from_different_division()
+    #[Test]
+    public function cannot_assign_tag_from_different_division()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -434,7 +455,8 @@ class NoteControllerTest extends TestCase
         ]);
     }
 
-    public function test_can_assign_global_tag_when_creating_note()
+    #[Test]
+    public function can_assign_global_tag_when_creating_note()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
