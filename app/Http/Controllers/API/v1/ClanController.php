@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Services\AODForumService;
-use Carbon;
+use Carbon\Carbon;
 use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
