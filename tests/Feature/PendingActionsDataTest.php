@@ -141,7 +141,7 @@ final class PendingActionsDataTest extends TestCase
 
         $member = Member::factory()->create(['division_id' => $this->division->id]);
         Leave::factory()->create([
-            'member_id'   => $member->clan_id,
+            'member_id'   => $member->id,
             'approver_id' => null,
         ]);
 
@@ -159,7 +159,7 @@ final class PendingActionsDataTest extends TestCase
 
         $member = Member::factory()->create(['division_id' => $this->division->id]);
         Leave::factory()->create([
-            'member_id'   => $member->clan_id,
+            'member_id'   => $member->id,
             'approver_id' => null,
         ]);
 

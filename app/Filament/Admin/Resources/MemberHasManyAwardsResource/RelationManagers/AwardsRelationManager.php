@@ -38,8 +38,7 @@ class AwardsRelationManager extends RelationManager
                             if (! $award || $award->repeatable) {
                                 return;
                             }
-                            $memberId = $this->ownerRecord->clan_id;
-                            if (MemberAward::where('member_id', $memberId)->where('award_id', $value)->exists()) {
+                            if (MemberAward::where('member_id', $this->ownerRecord->id)->where('award_id', $value)->exists()) {
                                 $fail('This member already has this award.');
                             }
                         },

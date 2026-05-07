@@ -117,7 +117,7 @@ class LeaveController extends Controller
      */
     public function isMemberOfDivision(Division $division, $request)
     {
-        $member = Member::whereClanId($request->member_id)->first();
+        $member = Member::find($request->member_id);
 
         return $member->division instanceof Division
             && $member->division->id === $division->id;

@@ -16,6 +16,7 @@ use App\Services\TicketNotificationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Queue;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -35,7 +36,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::fake();
     }
 
-    public function test_notify_ticket_created_sends_user_notification()
+    #[Test]
+    public function notify_ticket_created_sends_user_notification()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -49,7 +51,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, NotifyUserTicketCreated::class);
     }
 
-    public function test_notify_ticket_created_sends_admin_notification()
+    #[Test]
+    public function notify_ticket_created_sends_admin_notification()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -63,7 +66,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, NotifyAdminTicketCreated::class);
     }
 
-    public function test_notify_ticket_created_auto_assigns_when_ticket_type_has_auto_assign()
+    #[Test]
+    public function notify_ticket_created_auto_assigns_when_ticket_type_has_auto_assign()
     {
         $user       = $this->createMemberWithUser();
         $assignee   = $this->createAdmin();
@@ -86,7 +90,8 @@ class TicketNotificationServiceTest extends TestCase
         $this->assertEquals('assigned', $ticket->state);
     }
 
-    public function test_notify_ticket_created_dispatches_deferred_react_when_auto_assigned()
+    #[Test]
+    public function notify_ticket_created_dispatches_deferred_react_when_auto_assigned()
     {
         Queue::fake();
 
@@ -110,7 +115,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertNotSentTo($ticket, TicketReaction::class);
     }
 
-    public function test_notify_ticket_created_notifies_caller_when_auto_assigned()
+    #[Test]
+    public function notify_ticket_created_notifies_caller_when_auto_assigned()
     {
         $user       = $this->createMemberWithUser();
         $assignee   = $this->createAdmin();
@@ -131,7 +137,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, NotifyCallerTicketUpdated::class);
     }
 
-    public function test_notify_ticket_created_notifies_new_owner_when_auto_assigned()
+    #[Test]
+    public function notify_ticket_created_notifies_new_owner_when_auto_assigned()
     {
         $user       = $this->createMemberWithUser();
         $assignee   = $this->createAdmin();
@@ -152,7 +159,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, NotifyNewTicketOwner::class);
     }
 
-    public function test_notify_ticket_assigned_sends_caller_notification()
+    #[Test]
+    public function notify_ticket_assigned_sends_caller_notification()
     {
         $caller     = $this->createMemberWithUser();
         $assignee   = $this->createAdmin();
@@ -169,7 +177,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, NotifyCallerTicketUpdated::class);
     }
 
-    public function test_notify_ticket_assigned_sends_owner_notification_when_assigned_by_another()
+    #[Test]
+    public function notify_ticket_assigned_sends_owner_notification_when_assigned_by_another()
     {
         $caller     = $this->createMemberWithUser();
         $assigner   = $this->createAdmin();
@@ -185,7 +194,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, NotifyNewTicketOwner::class);
     }
 
-    public function test_notify_ticket_assigned_does_not_notify_owner_when_self_assigned()
+    #[Test]
+    public function notify_ticket_assigned_does_not_notify_owner_when_self_assigned()
     {
         $caller     = $this->createMemberWithUser();
         $assignee   = $this->createAdmin();
@@ -200,7 +210,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertNotSentTo($ticket, NotifyNewTicketOwner::class);
     }
 
-    public function test_notify_ticket_assigned_sends_reaction()
+    #[Test]
+    public function notify_ticket_assigned_sends_reaction()
     {
         $caller     = $this->createMemberWithUser();
         $assignee   = $this->createAdmin();
@@ -217,7 +228,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, TicketReaction::class);
     }
 
-    public function test_notify_ticket_resolved_sends_reaction()
+    #[Test]
+    public function notify_ticket_resolved_sends_reaction()
     {
         $caller     = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -231,7 +243,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, TicketReaction::class);
     }
 
-    public function test_notify_ticket_resolved_notifies_caller()
+    #[Test]
+    public function notify_ticket_resolved_notifies_caller()
     {
         $caller     = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -245,7 +258,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, NotifyCallerTicketUpdated::class);
     }
 
-    public function test_notify_ticket_rejected_sends_reaction()
+    #[Test]
+    public function notify_ticket_rejected_sends_reaction()
     {
         $caller     = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -259,7 +273,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, TicketReaction::class);
     }
 
-    public function test_notify_ticket_rejected_notifies_caller_with_reason()
+    #[Test]
+    public function notify_ticket_rejected_notifies_caller_with_reason()
     {
         $caller     = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -273,7 +288,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, NotifyCallerTicketUpdated::class);
     }
 
-    public function test_notify_comment_added_does_not_notify_when_commenter_is_caller()
+    #[Test]
+    public function notify_comment_added_does_not_notify_when_commenter_is_caller()
     {
         $caller     = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -293,7 +309,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertNotSentTo($ticket, NotifyCallerTicketUpdated::class);
     }
 
-    public function test_notify_comment_added_notifies_caller_when_admin_comments()
+    #[Test]
+    public function notify_comment_added_notifies_caller_when_admin_comments()
     {
         $caller     = $this->createMemberWithUser();
         $admin      = $this->createAdmin();
@@ -314,7 +331,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, NotifyCallerTicketUpdated::class);
     }
 
-    public function test_notify_comment_added_notifies_owner_when_caller_comments()
+    #[Test]
+    public function notify_comment_added_notifies_owner_when_caller_comments()
     {
         $caller     = $this->createMemberWithUser();
         $owner      = $this->createAdmin();
@@ -336,7 +354,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertSentTo($ticket, NotifyAdminTicketUpdated::class);
     }
 
-    public function test_notify_comment_added_does_not_notify_owner_when_owner_comments()
+    #[Test]
+    public function notify_comment_added_does_not_notify_owner_when_owner_comments()
     {
         $caller     = $this->createMemberWithUser();
         $owner      = $this->createAdmin();
@@ -358,7 +377,8 @@ class TicketNotificationServiceTest extends TestCase
         Notification::assertNotSentTo($ticket, NotifyAdminTicketUpdated::class);
     }
 
-    public function test_notify_new_ticket_owner_uses_discord_id_in_bot_payload()
+    #[Test]
+    public function notify_new_ticket_owner_uses_discord_id_in_bot_payload()
     {
         $owner      = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -376,7 +396,8 @@ class TicketNotificationServiceTest extends TestCase
         $this->assertStringNotContainsString('someusername', $payload['api_uri']);
     }
 
-    public function test_notify_user_ticket_created_uses_discord_id_in_bot_payload()
+    #[Test]
+    public function notify_user_ticket_created_uses_discord_id_in_bot_payload()
     {
         $caller     = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -395,7 +416,8 @@ class TicketNotificationServiceTest extends TestCase
         $this->assertStringNotContainsString('someusername', $payload['api_uri']);
     }
 
-    public function test_notify_caller_ticket_updated_uses_discord_id_in_bot_payload()
+    #[Test]
+    public function notify_caller_ticket_updated_uses_discord_id_in_bot_payload()
     {
         $caller     = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();

@@ -8,6 +8,7 @@ use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -29,7 +30,8 @@ class AddClanMemberTest extends TestCase
         $this->procedureService->shouldReceive('setDiscordInfo')->byDefault()->andReturn((object) ['rows_matched' => 1, 'rows_affected' => 1]);
     }
 
-    public function test_job_can_be_instantiated()
+    #[Test]
+    public function job_can_be_instantiated()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember(['division_id' => $division->id]);
@@ -39,7 +41,8 @@ class AddClanMemberTest extends TestCase
         $this->assertInstanceOf(AddClanMember::class, $job);
     }
 
-    public function test_job_calls_forum_service_with_correct_parameters()
+    #[Test]
+    public function job_calls_forum_service_with_correct_parameters()
     {
         Http::fake([
             '*' => Http::response('saved_user_x_successfully', 200),
@@ -61,7 +64,8 @@ class AddClanMemberTest extends TestCase
         });
     }
 
-    public function test_job_includes_aod_prefix_in_member_name()
+    #[Test]
+    public function job_includes_aod_prefix_in_member_name()
     {
         Http::fake([
             '*' => Http::response('saved_user_x_successfully', 200),
@@ -81,7 +85,8 @@ class AddClanMemberTest extends TestCase
         });
     }
 
-    public function test_job_throws_exception_on_failure()
+    #[Test]
+    public function job_throws_exception_on_failure()
     {
         Http::fake([
             '*' => Http::response('error_invalid_user', 200),
@@ -96,7 +101,8 @@ class AddClanMemberTest extends TestCase
         $job->handle($this->procedureService);
     }
 
-    public function test_job_diagnoses_banned_user_on_failure()
+    #[Test]
+    public function job_diagnoses_banned_user_on_failure()
     {
         Http::fake([
             '*' => Http::response('error_invalid_user', 200),
@@ -116,7 +122,8 @@ class AddClanMemberTest extends TestCase
         $job->handle($this->procedureService);
     }
 
-    public function test_job_sets_discord_info_before_adding_member(): void
+    #[Test]
+    public function job_sets_discord_info_before_adding_member(): void
     {
         Http::fake([
             '*' => Http::response('saved_user_x_successfully', 200),
@@ -148,7 +155,8 @@ class AddClanMemberTest extends TestCase
         Http::assertSent(fn ($req) => str_contains($req->url(), 'do=addaod'));
     }
 
-    public function test_job_diagnoses_awaiting_email_on_failure()
+    #[Test]
+    public function job_diagnoses_awaiting_email_on_failure()
     {
         Http::fake([
             '*' => Http::response('error_invalid_user', 200),

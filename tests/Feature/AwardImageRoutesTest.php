@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesMembers;
 
@@ -13,7 +14,8 @@ class AwardImageRoutesTest extends TestCase
     use RefreshDatabase;
 
     #[RunInSeparateProcess]
-    public function test_award_image_routes_return_png_images()
+    #[Test]
+    public function award_image_routes_return_png_images()
     {
         $member = $this->createMember();
 
@@ -35,7 +37,8 @@ class AwardImageRoutesTest extends TestCase
     }
 
     #[RunInSeparateProcess]
-    public function test_member_with_no_awards_returns_default_image()
+    #[Test]
+    public function member_with_no_awards_returns_default_image()
     {
         $member = $this->createMember();
 
@@ -48,7 +51,8 @@ class AwardImageRoutesTest extends TestCase
         $this->assertEquals($expectedImage, $response->getContent());
     }
 
-    public function test_award_image_route_returns_404_for_nonexistent_member()
+    #[Test]
+    public function award_image_route_returns_404_for_nonexistent_member()
     {
         $response = $this->get('/members/999999/my-awards.png');
 

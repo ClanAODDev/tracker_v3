@@ -10,6 +10,7 @@ use App\Models\Note;
 use App\Models\Platoon;
 use App\Models\Squad;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -20,7 +21,8 @@ class ActivityLoggingTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_member_activity_records_correct_type_and_subject()
+    #[Test]
+    public function member_activity_records_correct_type_and_subject()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -38,7 +40,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals($division->id, $activity->division_id);
     }
 
-    public function test_activity_records_properties()
+    #[Test]
+    public function activity_records_properties()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -57,7 +60,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals($platoon->name, $activity->properties['platoon']);
     }
 
-    public function test_note_creation_logs_activity_on_member()
+    #[Test]
+    public function note_creation_logs_activity_on_member()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -80,7 +84,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals('positive', $activity->properties['type']);
     }
 
-    public function test_note_update_logs_activity_on_member()
+    #[Test]
+    public function note_update_logs_activity_on_member()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -105,7 +110,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals($member->id, $activity->subject_id);
     }
 
-    public function test_note_deletion_logs_activity_on_member()
+    #[Test]
+    public function note_deletion_logs_activity_on_member()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -131,7 +137,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals('negative', $activity->properties['type']);
     }
 
-    public function test_squad_creation_logs_activity()
+    #[Test]
+    public function squad_creation_logs_activity()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -151,7 +158,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals(Squad::class, $activity->subject_type);
     }
 
-    public function test_platoon_creation_logs_activity()
+    #[Test]
+    public function platoon_creation_logs_activity()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -170,7 +178,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals(Platoon::class, $activity->subject_type);
     }
 
-    public function test_activity_not_recorded_without_authenticated_user()
+    #[Test]
+    public function activity_not_recorded_without_authenticated_user()
     {
         $division = Division::factory()->create();
         $member   = $this->createMember(['division_id' => $division->id]);
@@ -183,7 +192,8 @@ class ActivityLoggingTest extends TestCase
         ]);
     }
 
-    public function test_transfer_activity_includes_destination_properties()
+    #[Test]
+    public function transfer_activity_includes_destination_properties()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -204,7 +214,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals('Echo Squad', $activity->properties['squad']);
     }
 
-    public function test_part_time_activity_includes_division_name()
+    #[Test]
+    public function part_time_activity_includes_division_name()
     {
         $officer       = $this->createOfficer();
         $division      = $officer->member->division;
@@ -222,7 +233,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals('Test Division', $activity->properties['division']);
     }
 
-    public function test_activity_type_enum_casts_correctly()
+    #[Test]
+    public function activity_type_enum_casts_correctly()
     {
         $officer = $this->createOfficer();
         $member  = $this->createMember(['division_id' => $officer->member->division_id]);
@@ -237,7 +249,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals('Flagged', $activity->name->label());
     }
 
-    public function test_activity_belongs_to_user()
+    #[Test]
+    public function activity_belongs_to_user()
     {
         $officer = $this->createOfficer();
         $member  = $this->createMember(['division_id' => $officer->member->division_id]);
@@ -251,7 +264,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals($officer->id, $activity->user->id);
     }
 
-    public function test_activity_morph_to_subject()
+    #[Test]
+    public function activity_morph_to_subject()
     {
         $officer = $this->createOfficer();
         $member  = $this->createMember(['division_id' => $officer->member->division_id]);
@@ -266,7 +280,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertEquals($member->id, $activity->subject->id);
     }
 
-    public function test_member_has_activity_relationship()
+    #[Test]
+    public function member_has_activity_relationship()
     {
         $officer = $this->createOfficer();
         $member  = $this->createMember(['division_id' => $officer->member->division_id]);
@@ -280,7 +295,8 @@ class ActivityLoggingTest extends TestCase
         $this->assertTrue($member->activity->pluck('name')->contains(ActivityType::ASSIGNED_PLATOON));
     }
 
-    public function test_empty_properties_stored_as_null()
+    #[Test]
+    public function empty_properties_stored_as_null()
     {
         $officer = $this->createOfficer();
         $member  = $this->createMember(['division_id' => $officer->member->division_id]);

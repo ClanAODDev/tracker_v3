@@ -12,6 +12,7 @@ use App\Models\RankAction;
 use App\Models\User;
 use App\Repositories\DivisionRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -22,7 +23,8 @@ class DivisionReportControllerTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_census_report_requires_authentication()
+    #[Test]
+    public function census_report_requires_authentication()
     {
         $division = $this->createActiveDivision();
 
@@ -31,7 +33,8 @@ class DivisionReportControllerTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    public function test_retention_report_requires_authentication()
+    #[Test]
+    public function retention_report_requires_authentication()
     {
         $division = $this->createActiveDivision();
 
@@ -40,7 +43,8 @@ class DivisionReportControllerTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    public function test_voice_report_requires_authentication()
+    #[Test]
+    public function voice_report_requires_authentication()
     {
         $division = $this->createActiveDivision();
 
@@ -49,7 +53,8 @@ class DivisionReportControllerTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    public function test_promotions_report_requires_authentication()
+    #[Test]
+    public function promotions_report_requires_authentication()
     {
         $division = $this->createActiveDivision();
 
@@ -58,7 +63,8 @@ class DivisionReportControllerTest extends TestCase
         $response->assertRedirect('/login');
     }
 
-    public function test_division_repository_recruits_query_uses_enum_value()
+    #[Test]
+    public function division_repository_recruits_query_uses_enum_value()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -75,7 +81,8 @@ class DivisionReportControllerTest extends TestCase
         $this->assertEquals(4, $recruits->sum('recruits'));
     }
 
-    public function test_division_repository_removals_query_uses_enum_value()
+    #[Test]
+    public function division_repository_removals_query_uses_enum_value()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -92,7 +99,8 @@ class DivisionReportControllerTest extends TestCase
         $this->assertEquals(3, $removals->sum('removals'));
     }
 
-    public function test_division_repository_population_query_returns_census_data()
+    #[Test]
+    public function division_repository_population_query_returns_census_data()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -118,7 +126,8 @@ class DivisionReportControllerTest extends TestCase
         $this->assertGreaterThan(0, $population->count());
     }
 
-    public function test_activity_queries_work_with_integer_backed_enum()
+    #[Test]
+    public function activity_queries_work_with_integer_backed_enum()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -143,7 +152,8 @@ class DivisionReportControllerTest extends TestCase
         $this->assertEquals(1, $activity->getRawOriginal('name'));
     }
 
-    public function test_activity_removed_enum_stores_correct_integer()
+    #[Test]
+    public function activity_removed_enum_stores_correct_integer()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -167,7 +177,8 @@ class DivisionReportControllerTest extends TestCase
         $this->assertEquals(3, $activity->getRawOriginal('name'));
     }
 
-    public function test_recruits_and_removals_can_be_queried_together()
+    #[Test]
+    public function recruits_and_removals_can_be_queried_together()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -187,7 +198,8 @@ class DivisionReportControllerTest extends TestCase
         $this->assertEquals(3, $recruits->sum('recruits') - $removals->sum('removals'));
     }
 
-    public function test_recruits_query_filters_by_date_range()
+    #[Test]
+    public function recruits_query_filters_by_date_range()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -204,7 +216,8 @@ class DivisionReportControllerTest extends TestCase
         $this->assertEquals(3, $recruits->sum('recruits'));
     }
 
-    public function test_removals_query_filters_by_date_range()
+    #[Test]
+    public function removals_query_filters_by_date_range()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -221,7 +234,8 @@ class DivisionReportControllerTest extends TestCase
         $this->assertEquals(4, $removals->sum('removals'));
     }
 
-    public function test_recruits_query_filters_by_division()
+    #[Test]
+    public function recruits_query_filters_by_division()
     {
         $officer       = $this->createOfficer();
         $division      = $officer->member->division;
@@ -239,7 +253,8 @@ class DivisionReportControllerTest extends TestCase
         $this->assertEquals(3, $recruits->sum('recruits'));
     }
 
-    public function test_rank_action_approved_can_be_queried()
+    #[Test]
+    public function rank_action_approved_can_be_queried()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -257,7 +272,8 @@ class DivisionReportControllerTest extends TestCase
         $this->assertEquals(1, $approvedActions->count());
     }
 
-    public function test_census_data_can_be_created_and_queried()
+    #[Test]
+    public function census_data_can_be_created_and_queried()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -276,7 +292,8 @@ class DivisionReportControllerTest extends TestCase
         $this->assertEquals(75, $census->weekly_voice_count);
     }
 
-    public function test_members_with_discord_issues_can_be_queried()
+    #[Test]
+    public function members_with_discord_issues_can_be_queried()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;

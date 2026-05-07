@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\DivisionTag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -14,7 +15,8 @@ class BulkTagControllerTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_bulk_store_assigns_tags_to_multiple_members()
+    #[Test]
+    public function bulk_store_assigns_tags_to_multiple_members()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -35,7 +37,8 @@ class BulkTagControllerTest extends TestCase
         $this->assertTrue($member2->fresh()->tags->contains($tag));
     }
 
-    public function test_bulk_store_removes_tags_from_multiple_members()
+    #[Test]
+    public function bulk_store_removes_tags_from_multiple_members()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -58,7 +61,8 @@ class BulkTagControllerTest extends TestCase
         $this->assertFalse($member2->fresh()->tags->contains($tag));
     }
 
-    public function test_bulk_store_requires_authentication()
+    #[Test]
+    public function bulk_store_requires_authentication()
     {
         $division = $this->createActiveDivision();
 

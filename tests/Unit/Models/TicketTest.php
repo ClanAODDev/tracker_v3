@@ -5,6 +5,7 @@ namespace Tests\Unit\Models;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesMembers;
 
@@ -13,7 +14,8 @@ class TicketTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_scope_new_returns_only_new_tickets()
+    #[Test]
+    public function scope_new_returns_only_new_tickets()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -36,7 +38,8 @@ class TicketTest extends TestCase
         $this->assertFalse($results->contains($assignedTicket));
     }
 
-    public function test_scope_assigned_returns_only_assigned_tickets()
+    #[Test]
+    public function scope_assigned_returns_only_assigned_tickets()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -59,7 +62,8 @@ class TicketTest extends TestCase
         $this->assertTrue($results->contains($assignedTicket));
     }
 
-    public function test_scope_resolved_returns_only_resolved_tickets()
+    #[Test]
+    public function scope_resolved_returns_only_resolved_tickets()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -82,7 +86,8 @@ class TicketTest extends TestCase
         $this->assertTrue($results->contains($resolvedTicket));
     }
 
-    public function test_state_color_attribute_returns_correct_color()
+    #[Test]
+    public function state_color_attribute_returns_correct_color()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -103,7 +108,8 @@ class TicketTest extends TestCase
         $this->assertEquals('accent', $assignedTicket->stateColor);
     }
 
-    public function test_own_to_assigns_owner_and_changes_state()
+    #[Test]
+    public function own_to_assigns_owner_and_changes_state()
     {
         $caller     = $this->createMemberWithUser();
         $owner      = $this->createMemberWithUser();
@@ -124,7 +130,8 @@ class TicketTest extends TestCase
         $this->assertEquals('assigned', $ticket->state);
     }
 
-    public function test_resolve_sets_state_and_timestamps()
+    #[Test]
+    public function resolve_sets_state_and_timestamps()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -145,7 +152,8 @@ class TicketTest extends TestCase
         $this->assertEquals($user->id, $ticket->owner_id);
     }
 
-    public function test_reopen_clears_resolved_at_and_sets_state()
+    #[Test]
+    public function reopen_clears_resolved_at_and_sets_state()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -166,7 +174,8 @@ class TicketTest extends TestCase
         $this->assertNull($ticket->resolved_at);
     }
 
-    public function test_reject_sets_state_and_timestamps()
+    #[Test]
+    public function reject_sets_state_and_timestamps()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -186,7 +195,8 @@ class TicketTest extends TestCase
         $this->assertNotNull($ticket->resolved_at);
     }
 
-    public function test_is_resolved_returns_correct_value()
+    #[Test]
+    public function is_resolved_returns_correct_value()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -207,7 +217,8 @@ class TicketTest extends TestCase
         $this->assertTrue((bool) $resolvedTicket->isResolved());
     }
 
-    public function test_say_creates_comment()
+    #[Test]
+    public function say_creates_comment()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -225,7 +236,8 @@ class TicketTest extends TestCase
         $this->assertEquals('Test comment', $ticket->comments->first()->body);
     }
 
-    public function test_has_external_message_id_returns_correct_value()
+    #[Test]
+    public function has_external_message_id_returns_correct_value()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();
@@ -246,7 +258,8 @@ class TicketTest extends TestCase
         $this->assertFalse($ticketWithoutId->hasExternalMessageId());
     }
 
-    public function test_type_relationship_returns_correct_ticket_type()
+    #[Test]
+    public function type_relationship_returns_correct_ticket_type()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create(['name' => 'Test Type']);
@@ -259,7 +272,8 @@ class TicketTest extends TestCase
         $this->assertEquals('Test Type', $ticket->type->name);
     }
 
-    public function test_caller_relationship_returns_correct_user()
+    #[Test]
+    public function caller_relationship_returns_correct_user()
     {
         $user       = $this->createMemberWithUser();
         $ticketType = TicketType::factory()->create();

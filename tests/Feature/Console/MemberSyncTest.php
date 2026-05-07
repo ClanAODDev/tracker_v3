@@ -5,13 +5,15 @@ namespace Tests\Feature\Console;
 use App\Services\MemberSyncService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MemberSyncTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_command_succeeds_when_sync_service_succeeds(): void
+    #[Test]
+    public function command_succeeds_when_sync_service_succeeds(): void
     {
         $mockService = Mockery::mock(MemberSyncService::class);
         $mockService->shouldReceive('onUpdate')->andReturnSelf();
@@ -32,7 +34,8 @@ class MemberSyncTest extends TestCase
             ->expectsOutputToContain('Sync complete');
     }
 
-    public function test_command_fails_when_no_data_available(): void
+    #[Test]
+    public function command_fails_when_no_data_available(): void
     {
         $mockService = Mockery::mock(MemberSyncService::class);
         $mockService->shouldReceive('onUpdate')->andReturnSelf();
@@ -48,7 +51,8 @@ class MemberSyncTest extends TestCase
             ->expectsOutput('Member sync failed - No data available from forum');
     }
 
-    public function test_command_shows_error_details_on_failure(): void
+    #[Test]
+    public function command_shows_error_details_on_failure(): void
     {
         $mockService = Mockery::mock(MemberSyncService::class);
         $mockService->shouldReceive('onUpdate')->andReturnSelf();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Award;
+use App\Models\Member;
 use App\Models\MemberAward;
 use App\Rules\UniqueAwardForMember;
 use Illuminate\Database\Eloquent\Builder;
@@ -121,8 +122,14 @@ class AwardController extends Controller
                     ->orWhereHas('dependents');
             })
             ->withCount('recipients')
+            ->with('division')
             ->orderBy('display_order')
             ->get();
+
+        $awardsById   = $awardsWithChains->keyBy('id');
+        $dependentMap = $awardsWithChains
+            ->filter(fn ($a) => $a->prerequisite_award_id !== null)
+            ->keyBy('prerequisite_award_id');
 
         $processed = [];
         $groups    = [];
@@ -133,16 +140,16 @@ class AwardController extends Controller
             }
 
             $chain   = collect([$award]);
-            $current = $award->prerequisite;
+            $current = $awardsById->get($award->prerequisite_award_id);
             while ($current) {
                 $chain->push($current);
-                $current = $current->prerequisite;
+                $current = $awardsById->get($current->prerequisite_award_id);
             }
 
             $current = $award;
-            while ($dependent = Award::where('prerequisite_award_id', $current->id)->first()) {
-                $chain->push($dependent);
-                $current = $dependent;
+            while ($next = $dependentMap->get($current->id)) {
+                $chain->push($next);
+                $current = $next;
             }
 
             $chain = $chain->unique('id')->sortBy('display_order')->values();
@@ -224,7 +231,7 @@ class AwardController extends Controller
         $userMember = auth()->user()?->member;
 
         $userAwards = $userMember
-            ? MemberAward::where('member_id', $userMember->clan_id)
+            ? MemberAward::where('member_id', $userMember->id)
                 ->whereIn('award_id', $tierIds)
                 ->where('approved', true)
                 ->get()
@@ -269,13 +276,13 @@ class AwardController extends Controller
                 ->selectRaw('member_id, COUNT(*) as times_received, MAX(created_at) as last_awarded_at')
                 ->groupBy('member_id')
                 ->orderByDesc('times_received')
-                ->with(['member:clan_id,name,rank,division_id,discord_id,discord_avatar', 'member.division:id,name,slug'])
+                ->with(['member:id,clan_id,name,rank,division_id,discord_id,discord_avatar', 'member.division:id,name,slug'])
                 ->paginate(50);
         } else {
             $recipients = MemberAward::where('award_id', $award->id)
                 ->where('approved', true)
                 ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
-                ->with(['member:clan_id,name,rank,division_id,discord_id,discord_avatar', 'member.division:id,name,slug'])
+                ->with(['member:id,clan_id,name,rank,division_id,discord_id,discord_avatar', 'member.division:id,name,slug'])
                 ->orderByDesc('created_at')
                 ->paginate(50);
         }
@@ -283,7 +290,7 @@ class AwardController extends Controller
         $userMember   = auth()->user()?->member;
         $userHasAward = $userMember
             ? MemberAward::where('award_id', $award->id)
-                ->where('member_id', $userMember->clan_id)
+                ->where('member_id', $userMember->id)
                 ->where('approved', true)
                 ->exists()
             : false;
@@ -320,10 +327,12 @@ class AwardController extends Controller
             ],
         ]);
 
+        $member = Member::whereClanId($validatedData['member_id'])->firstOrFail();
+
         MemberAward::create([
             'requester_id' => auth()->user()->member_id,
             'award_id'     => $award->id,
-            'member_id'    => $validatedData['member_id'],
+            'member_id'    => $member->id,
             'reason'       => $validatedData['reason'],
         ]);
 

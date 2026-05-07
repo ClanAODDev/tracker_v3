@@ -77,6 +77,8 @@ class MemberController extends Controller
 
     public function assignPlatoon(Member $member): JsonResponse
     {
+        $this->authorize('recruit', Member::class);
+
         $platoon            = Platoon::find(request()->platoon_id);
         $member->platoon_id = $platoon->id;
         $member->save();
@@ -113,7 +115,7 @@ class MemberController extends Controller
     {
         $this->authorize('remindActivity', $member);
 
-        $alreadyRemindedToday = ActivityReminder::where('member_id', $member->clan_id)
+        $alreadyRemindedToday = ActivityReminder::where('member_id', $member->id)
             ->whereDate('created_at', today())
             ->exists();
 
@@ -125,7 +127,7 @@ class MemberController extends Controller
         }
 
         $reminder = ActivityReminder::create([
-            'member_id'      => $member->clan_id,
+            'member_id'      => $member->id,
             'division_id'    => $member->division_id,
             'reminded_by_id' => auth()->id(),
         ]);
@@ -157,7 +159,7 @@ class MemberController extends Controller
             ], 403);
         }
 
-        $count = ActivityReminder::where('member_id', $member->clan_id)->delete();
+        $count = ActivityReminder::where('member_id', $member->id)->delete();
 
         $member->last_activity_reminder_at = null;
         $member->activity_reminded_by_id   = null;
@@ -187,18 +189,21 @@ class MemberController extends Controller
             return response()->json(['success' => false, 'message' => 'No members selected'], 400);
         }
 
-        $alreadyRemindedToday = ActivityReminder::whereIn('member_id', $memberIds)
+        $members    = Member::whereIn('clan_id', $memberIds)->get()->keyBy('id');
+        $trackerIds = $members->keys()->toArray();
+
+        $alreadyRemindedIds = ActivityReminder::whereIn('member_id', $trackerIds)
             ->whereDate('created_at', today())
             ->pluck('member_id')
             ->toArray();
 
-        $toUpdate = array_diff($memberIds, $alreadyRemindedToday);
+        $toUpdateIds = array_values(array_diff($trackerIds, $alreadyRemindedIds));
 
-        if (empty($toUpdate)) {
+        if (empty($toUpdateIds)) {
             if ($request->has('redirect')) {
                 return redirect($request->input('redirect'))->with('reminder_result', [
                     'count'   => 0,
-                    'skipped' => count($alreadyRemindedToday),
+                    'skipped' => count($alreadyRemindedIds),
                 ]);
             }
 
@@ -212,28 +217,26 @@ class MemberController extends Controller
         $userId    = auth()->id();
         $reminders = [];
 
-        foreach ($toUpdate as $memberId) {
-            $member = Member::where('clan_id', $memberId)->first();
-            if ($member) {
-                $reminders[] = [
-                    'member_id'      => $memberId,
-                    'division_id'    => $member->division_id,
-                    'reminded_by_id' => $userId,
-                    'created_at'     => $now,
-                    'updated_at'     => $now,
-                ];
-            }
+        foreach ($toUpdateIds as $id) {
+            $member      = $members->get($id);
+            $reminders[] = [
+                'member_id'      => $member->id,
+                'division_id'    => $member->division_id,
+                'reminded_by_id' => $userId,
+                'created_at'     => $now,
+                'updated_at'     => $now,
+            ];
         }
 
         ActivityReminder::insert($reminders);
 
-        $count = Member::whereIn('clan_id', $toUpdate)
+        $count = Member::whereIn('id', $toUpdateIds)
             ->update([
                 'last_activity_reminder_at' => $now,
                 'activity_reminded_by_id'   => $userId,
             ]);
 
-        $skippedCount = count($alreadyRemindedToday);
+        $skippedCount = count($alreadyRemindedIds);
 
         if ($request->has('redirect')) {
             return redirect($request->input('redirect'))->with('reminder_result', [
@@ -246,7 +249,7 @@ class MemberController extends Controller
             'success'    => true,
             'count'      => $count,
             'skipped'    => $skippedCount,
-            'updatedIds' => $toUpdate,
+            'updatedIds' => $toUpdateIds,
             'date'       => $now->format('n/j'),
         ]);
     }

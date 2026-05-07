@@ -4,6 +4,7 @@ namespace Tests\Unit\Models;
 
 use App\Models\DivisionTag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -14,14 +15,16 @@ class DivisionTagTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_is_global_returns_true_for_null_division()
+    #[Test]
+    public function is_global_returns_true_for_null_division()
     {
         $tag = DivisionTag::factory()->global()->create();
 
         $this->assertTrue($tag->isGlobal());
     }
 
-    public function test_is_global_returns_false_for_division_tag()
+    #[Test]
+    public function is_global_returns_false_for_division_tag()
     {
         $division = $this->createActiveDivision();
         $tag      = DivisionTag::factory()->create(['division_id' => $division->id]);
@@ -29,7 +32,8 @@ class DivisionTagTest extends TestCase
         $this->assertFalse($tag->isGlobal());
     }
 
-    public function test_scope_global_returns_only_global_tags()
+    #[Test]
+    public function scope_global_returns_only_global_tags()
     {
         $division    = $this->createActiveDivision();
         $globalTag   = DivisionTag::factory()->global()->create();
@@ -41,7 +45,8 @@ class DivisionTagTest extends TestCase
         $this->assertFalse($results->contains($divisionTag));
     }
 
-    public function test_scope_by_division_returns_only_that_divisions_tags()
+    #[Test]
+    public function scope_by_division_returns_only_that_divisions_tags()
     {
         $division1 = $this->createActiveDivision();
         $division2 = $this->createActiveDivision();
@@ -55,7 +60,8 @@ class DivisionTagTest extends TestCase
         $this->assertFalse($results->contains($tag2));
     }
 
-    public function test_scope_for_division_includes_global_tags()
+    #[Test]
+    public function scope_for_division_includes_global_tags()
     {
         $division = $this->createActiveDivision();
 
@@ -68,7 +74,8 @@ class DivisionTagTest extends TestCase
         $this->assertTrue($results->contains($globalTag));
     }
 
-    public function test_scope_for_division_excludes_other_division_tags()
+    #[Test]
+    public function scope_for_division_excludes_other_division_tags()
     {
         $division1 = $this->createActiveDivision();
         $division2 = $this->createActiveDivision();
@@ -82,21 +89,24 @@ class DivisionTagTest extends TestCase
         $this->assertFalse($results->contains($tag2));
     }
 
-    public function test_is_visible_to_returns_true_for_public_tag_without_user()
+    #[Test]
+    public function is_visible_to_returns_true_for_public_tag_without_user()
     {
         $tag = DivisionTag::factory()->public()->create();
 
         $this->assertTrue($tag->isVisibleTo(null));
     }
 
-    public function test_is_visible_to_returns_false_for_officers_tag_without_user()
+    #[Test]
+    public function is_visible_to_returns_false_for_officers_tag_without_user()
     {
         $tag = DivisionTag::factory()->officersOnly()->create();
 
         $this->assertTrue($tag->isVisibleTo(null) === false);
     }
 
-    public function test_is_visible_to_returns_true_for_admin_on_any_tag()
+    #[Test]
+    public function is_visible_to_returns_true_for_admin_on_any_tag()
     {
         $admin = $this->createAdmin();
 
@@ -109,7 +119,8 @@ class DivisionTagTest extends TestCase
         $this->assertTrue($srLdrsTag->isVisibleTo($admin));
     }
 
-    public function test_is_visible_to_returns_true_for_sr_ldr_on_any_tag()
+    #[Test]
+    public function is_visible_to_returns_true_for_sr_ldr_on_any_tag()
     {
         $srLeader = $this->createSeniorLeader();
 
@@ -122,7 +133,8 @@ class DivisionTagTest extends TestCase
         $this->assertTrue($srLdrsTag->isVisibleTo($srLeader));
     }
 
-    public function test_is_visible_to_returns_correct_values_for_officer()
+    #[Test]
+    public function is_visible_to_returns_correct_values_for_officer()
     {
         $officer = $this->createOfficer();
 
@@ -135,7 +147,8 @@ class DivisionTagTest extends TestCase
         $this->assertFalse($srLdrsTag->isVisibleTo($officer));
     }
 
-    public function test_scope_visible_to_filters_correctly_for_null_user()
+    #[Test]
+    public function scope_visible_to_filters_correctly_for_null_user()
     {
         $publicTag   = DivisionTag::factory()->public()->create();
         $officersTag = DivisionTag::factory()->officersOnly()->create();
@@ -146,7 +159,8 @@ class DivisionTagTest extends TestCase
         $this->assertFalse($results->contains($officersTag));
     }
 
-    public function test_scope_visible_to_returns_all_for_admin()
+    #[Test]
+    public function scope_visible_to_returns_all_for_admin()
     {
         $admin = $this->createAdmin();
 
@@ -161,7 +175,8 @@ class DivisionTagTest extends TestCase
         $this->assertTrue($results->contains($srLdrsTag));
     }
 
-    public function test_scope_visible_to_filters_correctly_for_officer()
+    #[Test]
+    public function scope_visible_to_filters_correctly_for_officer()
     {
         $officer = $this->createOfficer();
 
@@ -176,7 +191,8 @@ class DivisionTagTest extends TestCase
         $this->assertFalse($results->contains($srLdrsTag));
     }
 
-    public function test_scope_assignable_by_returns_none_for_null_user()
+    #[Test]
+    public function scope_assignable_by_returns_none_for_null_user()
     {
         $publicTag = DivisionTag::factory()->public()->create();
 
@@ -185,7 +201,8 @@ class DivisionTagTest extends TestCase
         $this->assertFalse($results->contains($publicTag));
     }
 
-    public function test_scope_assignable_by_returns_all_for_admin()
+    #[Test]
+    public function scope_assignable_by_returns_all_for_admin()
     {
         $admin = $this->createAdmin();
 
@@ -198,7 +215,8 @@ class DivisionTagTest extends TestCase
         $this->assertTrue($results->contains($srLdrsTag));
     }
 
-    public function test_scope_assignable_by_filters_correctly_for_officer()
+    #[Test]
+    public function scope_assignable_by_filters_correctly_for_officer()
     {
         $officer = $this->createOfficer();
 
@@ -213,7 +231,8 @@ class DivisionTagTest extends TestCase
         $this->assertFalse($results->contains($srLdrsTag));
     }
 
-    public function test_members_relationship_returns_tagged_members()
+    #[Test]
+    public function members_relationship_returns_tagged_members()
     {
         $division = $this->createActiveDivision();
         $tag      = DivisionTag::factory()->create(['division_id' => $division->id]);

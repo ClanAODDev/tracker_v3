@@ -147,7 +147,7 @@ class ReportsController extends Controller
      */
     public function usersWithoutDiscordReport()
     {
-        $divisions = Division::active()->get();
+        $divisions = Division::active()->with('members')->get();
         $data      = [];
         foreach ($divisions as $division) {
             foreach ($division->members->where('discord', '') as $member) {

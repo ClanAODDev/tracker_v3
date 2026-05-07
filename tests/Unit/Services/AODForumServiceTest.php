@@ -5,6 +5,7 @@ namespace Tests\Unit\Services;
 use App\Services\AODForumService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 use Tests\TestCase;
 
@@ -18,7 +19,8 @@ class AODForumServiceTest extends TestCase
         config(['aod.token' => 'test-token']);
     }
 
-    public function test_request_makes_http_get_with_auth_token()
+    #[Test]
+    public function request_makes_http_get_with_auth_token()
     {
         Http::fake([
             '*' => Http::response('success', 200),
@@ -31,7 +33,8 @@ class AODForumServiceTest extends TestCase
         });
     }
 
-    public function test_request_uses_custom_token_param()
+    #[Test]
+    public function request_uses_custom_token_param()
     {
         Http::fake([
             '*' => Http::response('success', 200),
@@ -44,7 +47,8 @@ class AODForumServiceTest extends TestCase
         });
     }
 
-    public function test_request_returns_json_when_response_is_json()
+    #[Test]
+    public function request_returns_json_when_response_is_json()
     {
         Http::fake([
             '*' => Http::response(['status' => 'ok', 'data' => 'test'], 200),
@@ -56,7 +60,8 @@ class AODForumServiceTest extends TestCase
         $this->assertEquals('ok', $result['status']);
     }
 
-    public function test_request_returns_last_word_when_response_is_not_json()
+    #[Test]
+    public function request_returns_last_word_when_response_is_not_json()
     {
         Http::fake([
             '*' => Http::response('<html>Some text result</html>', 200),
@@ -67,7 +72,8 @@ class AODForumServiceTest extends TestCase
         $this->assertEquals('result', $result);
     }
 
-    public function test_request_returns_error_message_on_exception()
+    #[Test]
+    public function request_returns_error_message_on_exception()
     {
         Http::fake([
             '*' => Http::response('', 500),
@@ -82,7 +88,8 @@ class AODForumServiceTest extends TestCase
         $this->assertEquals('Error: Invalid user context', $result);
     }
 
-    public function test_add_forum_member_sends_correct_parameters()
+    #[Test]
+    public function add_forum_member_sends_correct_parameters()
     {
         Http::fake([
             '*' => Http::response('saved_user_x_successfully', 200),
@@ -108,7 +115,8 @@ class AODForumServiceTest extends TestCase
         });
     }
 
-    public function test_add_forum_member_does_not_throw_on_success()
+    #[Test]
+    public function add_forum_member_does_not_throw_on_success()
     {
         Http::fake([
             '*' => Http::response('saved_user_x_successfully', 200),
@@ -119,7 +127,8 @@ class AODForumServiceTest extends TestCase
         $this->assertNotNull($result);
     }
 
-    public function test_add_forum_member_throws_exception_on_failure()
+    #[Test]
+    public function add_forum_member_throws_exception_on_failure()
     {
         Http::fake([
             '*' => Http::response('error_invalid_user', 200),
@@ -131,7 +140,8 @@ class AODForumServiceTest extends TestCase
         AODForumService::addForumMember(12345, 67890, 'PFC', 'TestMember', 'Test');
     }
 
-    public function test_remove_forum_member_sends_correct_parameters()
+    #[Test]
+    public function remove_forum_member_sends_correct_parameters()
     {
         Http::fake([
             '*' => Http::response('saved_user_x_successfully', 200),
@@ -151,7 +161,8 @@ class AODForumServiceTest extends TestCase
         });
     }
 
-    public function test_remove_forum_member_does_not_throw_on_success()
+    #[Test]
+    public function remove_forum_member_does_not_throw_on_success()
     {
         Http::fake([
             '*' => Http::response('saved_user_x_successfully', 200),
@@ -162,7 +173,8 @@ class AODForumServiceTest extends TestCase
         $this->assertNotNull($result);
     }
 
-    public function test_remove_forum_member_throws_exception_on_failure()
+    #[Test]
+    public function remove_forum_member_throws_exception_on_failure()
     {
         Http::fake([
             '*' => Http::response('error_user_not_found', 200),
@@ -174,7 +186,8 @@ class AODForumServiceTest extends TestCase
         AODForumService::removeForumMember(67890, 12345);
     }
 
-    public function test_fetch_info_calls_info_url()
+    #[Test]
+    public function fetch_info_calls_info_url()
     {
         Http::fake([
             'https://www.clanaod.net/forums/aodinfo.php*' => Http::response(['status' => 'ok'], 200),
@@ -188,7 +201,8 @@ class AODForumServiceTest extends TestCase
         });
     }
 
-    public function test_fetch_info_passes_params()
+    #[Test]
+    public function fetch_info_passes_params()
     {
         Http::fake([
             '*' => Http::response(['name' => 'TestUser'], 200),

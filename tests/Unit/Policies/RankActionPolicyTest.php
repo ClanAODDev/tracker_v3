@@ -8,6 +8,7 @@ use App\Enums\Role;
 use App\Models\RankAction;
 use App\Policies\RankActionPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -18,7 +19,8 @@ class RankActionPolicyTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_admin_can_view_any_rank_action()
+    #[Test]
+    public function admin_can_view_any_rank_action()
     {
         $admin    = $this->createAdmin();
         $division = $this->createActiveDivision();
@@ -32,7 +34,8 @@ class RankActionPolicyTest extends TestCase
         $this->assertTrue(RankActionPolicy::update($admin, $action));
     }
 
-    public function test_user_cannot_view_own_rank_action()
+    #[Test]
+    public function user_cannot_view_own_rank_action()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser([
@@ -49,7 +52,8 @@ class RankActionPolicyTest extends TestCase
         $this->assertFalse(RankActionPolicy::update($user, $action));
     }
 
-    public function test_requester_can_view_their_request()
+    #[Test]
+    public function requester_can_view_their_request()
     {
         $division  = $this->createActiveDivision();
         $requester = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -64,7 +68,8 @@ class RankActionPolicyTest extends TestCase
         $this->assertTrue(RankActionPolicy::update($requester, $action));
     }
 
-    public function test_division_leader_can_view_division_requests_below_ssgt()
+    #[Test]
+    public function division_leader_can_view_division_requests_below_ssgt()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -88,7 +93,8 @@ class RankActionPolicyTest extends TestCase
         $this->assertTrue(RankActionPolicy::update($leader, $action));
     }
 
-    public function test_division_leader_can_view_staff_sergeant_requests()
+    #[Test]
+    public function division_leader_can_view_staff_sergeant_requests()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -112,7 +118,8 @@ class RankActionPolicyTest extends TestCase
         $this->assertTrue(RankActionPolicy::update($leader, $action));
     }
 
-    public function test_division_leader_cannot_view_master_sergeant_requests()
+    #[Test]
+    public function division_leader_cannot_view_master_sergeant_requests()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -136,7 +143,8 @@ class RankActionPolicyTest extends TestCase
         $this->assertFalse(RankActionPolicy::update($leader, $action));
     }
 
-    public function test_platoon_leader_can_view_platoon_requests_below_their_rank()
+    #[Test]
+    public function platoon_leader_can_view_platoon_requests_below_their_rank()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -161,7 +169,8 @@ class RankActionPolicyTest extends TestCase
         $this->assertTrue(RankActionPolicy::update($leader, $action));
     }
 
-    public function test_platoon_leader_cannot_view_requests_equal_to_their_rank()
+    #[Test]
+    public function platoon_leader_cannot_view_requests_equal_to_their_rank()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -186,7 +195,8 @@ class RankActionPolicyTest extends TestCase
         $this->assertFalse(RankActionPolicy::update($leader, $action));
     }
 
-    public function test_platoon_leader_cannot_view_requests_from_other_platoons()
+    #[Test]
+    public function platoon_leader_cannot_view_requests_from_other_platoons()
     {
         $division = $this->createActiveDivision();
         $platoon1 = $this->createPlatoon($division);
@@ -212,7 +222,8 @@ class RankActionPolicyTest extends TestCase
         $this->assertFalse(RankActionPolicy::update($leader, $action));
     }
 
-    public function test_delete_any_requires_admin_role()
+    #[Test]
+    public function delete_any_requires_admin_role()
     {
         $admin = $this->createAdmin();
         $this->actingAs($admin);
@@ -220,7 +231,8 @@ class RankActionPolicyTest extends TestCase
         $this->assertTrue(RankActionPolicy::deleteAny());
     }
 
-    public function test_non_admin_cannot_delete_any()
+    #[Test]
+    public function non_admin_cannot_delete_any()
     {
         $officer = $this->createOfficer();
         $this->actingAs($officer);

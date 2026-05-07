@@ -33,7 +33,7 @@ class DivisionRepository
 
     public function getDivisionAnniversaries(Division $division): Collection
     {
-        $anniversaries = Member::select('name', 'join_date', 'clan_id', 'rank')
+        $anniversaries = Member::select('id', 'name', 'join_date', 'clan_id', 'rank')
             ->selectRaw('TIMESTAMPDIFF(YEAR, join_date, CURRENT_DATE()) + IF(DAY(join_date) > DAY(CURRENT_DATE()), 1, 0) AS years_since_joined')
             ->whereMonth('join_date', now()->month)
             ->whereRaw('TIMESTAMPDIFF(YEAR, join_date, CURRENT_DATE()) + IF(DAY(join_date) > DAY(CURRENT_DATE()), 1, 0) IN (5, 10, 15, 20)')
@@ -52,7 +52,7 @@ class DivisionRepository
             ->pluck('id', 'name');
 
         $earnedAwards = DB::table('award_member')
-            ->whereIn('member_id', $anniversaries->pluck('clan_id'))
+            ->whereIn('member_id', $anniversaries->pluck('id'))
             ->whereIn('award_id', $tenureAwardIds->values())
             ->where('approved', 1)
             ->get(['member_id', 'award_id'])
@@ -60,7 +60,7 @@ class DivisionRepository
 
         return $anniversaries->map(function ($anniversary) use ($tenureAwardIds, $earnedAwards) {
             $awardId      = $tenureAwardIds->get("{$anniversary->years_since_joined} Years of Service");
-            $memberAwards = $earnedAwards->get($anniversary->clan_id);
+            $memberAwards = $earnedAwards->get($anniversary->id);
 
             $anniversary->has_tenure_award = $awardId
                 && $memberAwards

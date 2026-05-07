@@ -16,7 +16,7 @@ class MemberAward extends Model
 
     public function member()
     {
-        return $this->belongsTo(Member::class, 'member_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'member_id');
     }
 
     public function requester()

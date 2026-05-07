@@ -2,11 +2,13 @@
 
 namespace Tests\Feature\Console;
 
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class MakeAODTokenTest extends TestCase
 {
-    public function test_command_generates_token(): void
+    #[Test]
+    public function command_generates_token(): void
     {
         config(['aod.token' => 'test-secret']);
 
@@ -16,7 +18,8 @@ class MakeAODTokenTest extends TestCase
             ->expectsOutput('Example usage:');
     }
 
-    public function test_token_is_deterministic_within_same_minute(): void
+    #[Test]
+    public function token_is_deterministic_within_same_minute(): void
     {
         config(['aod.token' => 'test-secret']);
 

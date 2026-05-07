@@ -6,6 +6,7 @@ use App\Jobs\UpdateDivisionForMember;
 use App\Models\Transfer;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -16,7 +17,8 @@ class UpdateDivisionForMemberTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_job_can_be_instantiated()
+    #[Test]
+    public function job_can_be_instantiated()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -32,7 +34,8 @@ class UpdateDivisionForMemberTest extends TestCase
         $this->assertInstanceOf(UpdateDivisionForMember::class, $job);
     }
 
-    public function test_job_stores_transfer_reference()
+    #[Test]
+    public function job_stores_transfer_reference()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -48,7 +51,8 @@ class UpdateDivisionForMemberTest extends TestCase
         $this->assertEquals($transfer->id, $job->transfer->id);
     }
 
-    public function test_job_accesses_member_clan_id_from_transfer()
+    #[Test]
+    public function job_accesses_member_clan_id_from_transfer()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();
@@ -67,7 +71,8 @@ class UpdateDivisionForMemberTest extends TestCase
         $this->assertEquals(99999, $job->transfer->member->clan_id);
     }
 
-    public function test_job_accesses_division_name_from_transfer()
+    #[Test]
+    public function job_accesses_division_name_from_transfer()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision(['name' => 'Target Division']);
@@ -83,7 +88,8 @@ class UpdateDivisionForMemberTest extends TestCase
         $this->assertEquals('Target Division', $job->transfer->division->name);
     }
 
-    public function test_job_is_queueable()
+    #[Test]
+    public function job_is_queueable()
     {
         $fromDivision = $this->createActiveDivision();
         $toDivision   = $this->createActiveDivision();

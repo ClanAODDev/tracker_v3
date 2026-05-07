@@ -8,6 +8,7 @@ use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Policies\DivisionTagPolicy;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class BulkTagController extends Controller
 {
@@ -106,7 +107,13 @@ class BulkTagController extends Controller
         $this->authorize('assign', [DivisionTag::class, $member]);
 
         $validated = $request->validate([
-            'tag_id' => 'required|integer|exists:division_tags,id',
+            'tag_id' => [
+                'required',
+                'integer',
+                Rule::exists('division_tags', 'id')->where(
+                    fn ($q) => $q->where('division_id', $division->id)->orWhereNull('division_id')
+                ),
+            ],
         ]);
 
         $member->tags()->detach($validated['tag_id']);

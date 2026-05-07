@@ -7,6 +7,7 @@ use App\Models\MemberAward;
 use App\Rules\UniqueAwardForMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -17,7 +18,8 @@ class AwardTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    public function test_get_rarity_returns_mythic_for_one_recipient()
+    #[Test]
+    public function get_rarity_returns_mythic_for_one_recipient()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -25,7 +27,8 @@ class AwardTest extends TestCase
         $this->assertEquals('mythic', $award->getRarity(1));
     }
 
-    public function test_get_rarity_returns_legendary_for_few_recipients()
+    #[Test]
+    public function get_rarity_returns_legendary_for_few_recipients()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -33,7 +36,8 @@ class AwardTest extends TestCase
         $this->assertEquals('legendary', $award->getRarity(10));
     }
 
-    public function test_get_rarity_returns_epic_for_moderate_recipients()
+    #[Test]
+    public function get_rarity_returns_epic_for_moderate_recipients()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -41,7 +45,8 @@ class AwardTest extends TestCase
         $this->assertEquals('epic', $award->getRarity(25));
     }
 
-    public function test_get_rarity_returns_rare_for_many_recipients()
+    #[Test]
+    public function get_rarity_returns_rare_for_many_recipients()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -49,7 +54,8 @@ class AwardTest extends TestCase
         $this->assertEquals('rare', $award->getRarity(50));
     }
 
-    public function test_get_rarity_returns_common_for_lots_of_recipients()
+    #[Test]
+    public function get_rarity_returns_common_for_lots_of_recipients()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -57,7 +63,8 @@ class AwardTest extends TestCase
         $this->assertEquals('common', $award->getRarity(100));
     }
 
-    public function test_get_rarity_uses_recipients_count_attribute_when_available()
+    #[Test]
+    public function get_rarity_uses_recipients_count_attribute_when_available()
     {
         $division                = $this->createActiveDivision();
         $award                   = Award::factory()->create(['division_id' => $division->id]);
@@ -66,7 +73,8 @@ class AwardTest extends TestCase
         $this->assertEquals('mythic', $award->getRarity());
     }
 
-    public function test_scope_active_returns_only_active_awards()
+    #[Test]
+    public function scope_active_returns_only_active_awards()
     {
         $division = $this->createActiveDivision();
 
@@ -85,7 +93,8 @@ class AwardTest extends TestCase
         $this->assertFalse($results->contains($inactiveAward));
     }
 
-    public function test_recipients_returns_only_approved_awards()
+    #[Test]
+    public function recipients_returns_only_approved_awards()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -94,22 +103,23 @@ class AwardTest extends TestCase
         $member2 = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member1->clan_id,
+            'member_id' => $member1->id,
             'award_id'  => $award->id,
         ]);
 
         MemberAward::factory()->pending()->create([
-            'member_id' => $member2->clan_id,
+            'member_id' => $member2->id,
             'award_id'  => $award->id,
         ]);
 
         $recipients = $award->recipients;
 
         $this->assertCount(1, $recipients);
-        $this->assertEquals($member1->clan_id, $recipients->first()->member_id);
+        $this->assertEquals($member1->id, $recipients->first()->member_id);
     }
 
-    public function test_unapproved_recipients_returns_only_pending_awards()
+    #[Test]
+    public function unapproved_recipients_returns_only_pending_awards()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -118,22 +128,23 @@ class AwardTest extends TestCase
         $member2 = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member1->clan_id,
+            'member_id' => $member1->id,
             'award_id'  => $award->id,
         ]);
 
         MemberAward::factory()->pending()->create([
-            'member_id' => $member2->clan_id,
+            'member_id' => $member2->id,
             'award_id'  => $award->id,
         ]);
 
         $unapproved = $award->unapprovedRecipients;
 
         $this->assertCount(1, $unapproved);
-        $this->assertEquals($member2->clan_id, $unapproved->first()->member_id);
+        $this->assertEquals($member2->id, $unapproved->first()->member_id);
     }
 
-    public function test_division_relationship_returns_correct_division()
+    #[Test]
+    public function division_relationship_returns_correct_division()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -141,14 +152,15 @@ class AwardTest extends TestCase
         $this->assertTrue($award->division->is($division));
     }
 
-    public function test_deleting_award_soft_deletes_and_removes_recipients()
+    #[Test]
+    public function deleting_award_soft_deletes_and_removes_recipients()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
         $member   = $this->createMember(['division_id' => $division->id]);
 
         $memberAward = MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $award->id,
         ]);
 
@@ -158,7 +170,8 @@ class AwardTest extends TestCase
         $this->assertDatabaseMissing('award_member', ['id' => $memberAward->id]);
     }
 
-    public function test_repeatable_attribute_defaults_to_false()
+    #[Test]
+    public function repeatable_attribute_defaults_to_false()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -166,7 +179,8 @@ class AwardTest extends TestCase
         $this->assertFalse($award->repeatable);
     }
 
-    public function test_repeatable_attribute_can_be_set_to_true()
+    #[Test]
+    public function repeatable_attribute_can_be_set_to_true()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create([
@@ -177,7 +191,8 @@ class AwardTest extends TestCase
         $this->assertTrue($award->repeatable);
     }
 
-    public function test_unique_award_rule_fails_for_non_repeatable_award_when_member_already_has_it()
+    #[Test]
+    public function unique_award_rule_fails_for_non_repeatable_award_when_member_already_has_it()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create([
@@ -187,7 +202,7 @@ class AwardTest extends TestCase
         $member = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $award->id,
         ]);
 
@@ -200,7 +215,8 @@ class AwardTest extends TestCase
         $this->assertArrayHasKey('member_id', $validator->errors()->toArray());
     }
 
-    public function test_unique_award_rule_passes_for_repeatable_award_when_member_already_has_it()
+    #[Test]
+    public function unique_award_rule_passes_for_repeatable_award_when_member_already_has_it()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create([
@@ -210,7 +226,7 @@ class AwardTest extends TestCase
         $member = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $award->id,
         ]);
 
@@ -222,7 +238,8 @@ class AwardTest extends TestCase
         $this->assertFalse($validator->fails());
     }
 
-    public function test_unique_award_rule_passes_for_new_member()
+    #[Test]
+    public function unique_award_rule_passes_for_new_member()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create([
@@ -239,7 +256,8 @@ class AwardTest extends TestCase
         $this->assertFalse($validator->fails());
     }
 
-    public function test_member_can_have_multiple_instances_of_repeatable_award()
+    #[Test]
+    public function member_can_have_multiple_instances_of_repeatable_award()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create([
@@ -249,21 +267,22 @@ class AwardTest extends TestCase
         $member = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $award->id,
         ]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $award->id,
         ]);
 
-        $this->assertCount(2, MemberAward::where('member_id', $member->clan_id)
+        $this->assertCount(2, MemberAward::where('member_id', $member->id)
             ->where('award_id', $award->id)
             ->get());
     }
 
-    public function test_is_part_of_tiered_group_returns_true_when_has_prerequisite()
+    #[Test]
+    public function is_part_of_tiered_group_returns_true_when_has_prerequisite()
     {
         $division = $this->createActiveDivision();
         $tier1    = Award::factory()->create(['division_id' => $division->id]);
@@ -275,7 +294,8 @@ class AwardTest extends TestCase
         $this->assertTrue($tier2->isPartOfTieredGroup());
     }
 
-    public function test_is_part_of_tiered_group_returns_true_when_has_dependents()
+    #[Test]
+    public function is_part_of_tiered_group_returns_true_when_has_dependents()
     {
         $division = $this->createActiveDivision();
         $tier1    = Award::factory()->create(['division_id' => $division->id]);
@@ -287,7 +307,8 @@ class AwardTest extends TestCase
         $this->assertTrue($tier1->fresh()->isPartOfTieredGroup());
     }
 
-    public function test_is_part_of_tiered_group_returns_false_for_standalone_award()
+    #[Test]
+    public function is_part_of_tiered_group_returns_false_for_standalone_award()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -295,7 +316,8 @@ class AwardTest extends TestCase
         $this->assertFalse($award->isPartOfTieredGroup());
     }
 
-    public function test_get_prerequisite_chain_returns_all_prerequisites_in_order()
+    #[Test]
+    public function get_prerequisite_chain_returns_all_prerequisites_in_order()
     {
         $division = $this->createActiveDivision();
         $tier1    = Award::factory()->create(['division_id' => $division->id, 'name' => 'Tier 1']);
@@ -317,7 +339,8 @@ class AwardTest extends TestCase
         $this->assertEquals($tier1->id, $chain[1]->id);
     }
 
-    public function test_get_tiered_group_slug_returns_slug_from_base_tier_name()
+    #[Test]
+    public function get_tiered_group_slug_returns_slug_from_base_tier_name()
     {
         $division = $this->createActiveDivision();
         $tier1    = Award::factory()->create([
@@ -336,7 +359,8 @@ class AwardTest extends TestCase
         $this->assertEquals('aod-tenure', $tier2->getTieredGroupSlug());
     }
 
-    public function test_get_tiered_group_slug_returns_null_for_standalone_award()
+    #[Test]
+    public function get_tiered_group_slug_returns_null_for_standalone_award()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -344,7 +368,8 @@ class AwardTest extends TestCase
         $this->assertNull($award->getTieredGroupSlug());
     }
 
-    public function test_tiered_award_cannot_be_repeated_even_if_marked_repeatable()
+    #[Test]
+    public function tiered_award_cannot_be_repeated_even_if_marked_repeatable()
     {
         $division = $this->createActiveDivision();
         $tier1    = Award::factory()->create([
@@ -359,7 +384,7 @@ class AwardTest extends TestCase
         $member = $this->createMember(['division_id' => $division->id]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member->clan_id,
+            'member_id' => $member->id,
             'award_id'  => $tier2->id,
         ]);
 
@@ -371,7 +396,8 @@ class AwardTest extends TestCase
         $this->assertTrue($validator->fails());
     }
 
-    public function test_recipients_excludes_members_without_division()
+    #[Test]
+    public function recipients_excludes_members_without_division()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -381,22 +407,23 @@ class AwardTest extends TestCase
         $memberWithoutDivision->update(['division_id' => 0]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $memberWithDivision->clan_id,
+            'member_id' => $memberWithDivision->id,
             'award_id'  => $award->id,
         ]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $memberWithoutDivision->clan_id,
+            'member_id' => $memberWithoutDivision->id,
             'award_id'  => $award->id,
         ]);
 
         $recipients = $award->recipients;
 
         $this->assertCount(1, $recipients);
-        $this->assertEquals($memberWithDivision->clan_id, $recipients->first()->member_id);
+        $this->assertEquals($memberWithDivision->id, $recipients->first()->member_id);
     }
 
-    public function test_recipients_count_excludes_members_without_division()
+    #[Test]
+    public function recipients_count_excludes_members_without_division()
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
@@ -406,12 +433,12 @@ class AwardTest extends TestCase
         $memberWithoutDivision->update(['division_id' => 0]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $memberWithDivision->clan_id,
+            'member_id' => $memberWithDivision->id,
             'award_id'  => $award->id,
         ]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $memberWithoutDivision->clan_id,
+            'member_id' => $memberWithoutDivision->id,
             'award_id'  => $award->id,
         ]);
 

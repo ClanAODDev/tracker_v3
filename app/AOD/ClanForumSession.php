@@ -101,7 +101,7 @@ class ClanForumSession
         $user            = new User;
         $user->name      = $username;
         $user->email     = $sessionData->email;
-        $user->member_id = $member->clan_id;
+        $user->member_id = $member->id;
         $user->save();
 
         return $user;
