@@ -2,7 +2,7 @@
 
 A member and organizational unit management system for the AOD gaming community.
 
-**Tech Stack:** Laravel 12 · PHP 8.4 · Vue.js 3 · MariaDB · Filament v4
+**Tech Stack:** Laravel 13 · PHP 8.4 · Vue.js 3 · MariaDB · Filament v4
 
 ```mermaid
 graph TD
