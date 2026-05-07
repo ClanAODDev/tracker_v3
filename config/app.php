@@ -5,7 +5,6 @@ use App\Providers\AuthServiceProvider;
 use App\Providers\EventServiceProvider;
 use App\Providers\Filament\AdminPanelProvider;
 use App\Providers\Filament\ModPanelProvider;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 use Whossun\Toastr\Facades\Toastr;
@@ -154,7 +153,6 @@ return [
         EventServiceProvider::class,
         AdminPanelProvider::class,
         ModPanelProvider::class,
-        RouteServiceProvider::class,
     ])->toArray(),
 
     /*
