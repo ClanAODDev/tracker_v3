@@ -7,6 +7,7 @@ use App\Models\MemberAward;
 use App\Rules\UniqueAwardForMember;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -18,49 +19,25 @@ class AwardTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    #[Test]
-    public function get_rarity_returns_mythic_for_one_recipient()
+    public static function rarityProvider(): array
     {
-        $division = $this->createActiveDivision();
-        $award    = Award::factory()->create(['division_id' => $division->id]);
-
-        $this->assertEquals('mythic', $award->getRarity(1));
+        return [
+            'mythic'    => [1,   'mythic'],
+            'legendary' => [10,  'legendary'],
+            'epic'      => [25,  'epic'],
+            'rare'      => [50,  'rare'],
+            'common'    => [100, 'common'],
+        ];
     }
 
     #[Test]
-    public function get_rarity_returns_legendary_for_few_recipients()
+    #[DataProvider('rarityProvider')]
+    public function get_rarity_returns_correct_rarity(int $count, string $expected): void
     {
         $division = $this->createActiveDivision();
         $award    = Award::factory()->create(['division_id' => $division->id]);
 
-        $this->assertEquals('legendary', $award->getRarity(10));
-    }
-
-    #[Test]
-    public function get_rarity_returns_epic_for_moderate_recipients()
-    {
-        $division = $this->createActiveDivision();
-        $award    = Award::factory()->create(['division_id' => $division->id]);
-
-        $this->assertEquals('epic', $award->getRarity(25));
-    }
-
-    #[Test]
-    public function get_rarity_returns_rare_for_many_recipients()
-    {
-        $division = $this->createActiveDivision();
-        $award    = Award::factory()->create(['division_id' => $division->id]);
-
-        $this->assertEquals('rare', $award->getRarity(50));
-    }
-
-    #[Test]
-    public function get_rarity_returns_common_for_lots_of_recipients()
-    {
-        $division = $this->createActiveDivision();
-        $award    = Award::factory()->create(['division_id' => $division->id]);
-
-        $this->assertEquals('common', $award->getRarity(100));
+        $this->assertEquals($expected, $award->getRarity($count));
     }
 
     #[Test]

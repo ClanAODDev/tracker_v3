@@ -5,6 +5,7 @@ namespace Tests\Unit\Models;
 use App\Enums\Rank;
 use App\Models\RankAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -104,94 +105,62 @@ class RankActionTest extends TestCase
         $this->assertNotNull($rankAction->awarded_at);
     }
 
-    #[Test]
-    public function is_approved_returns_truthy_when_approved()
+    public static function approvalStatusProvider(): array
     {
-        $member     = $this->createMember();
-        $rankAction = RankAction::factory()->approved()->create([
-            'member_id' => $member->id,
-        ]);
-
-        $this->assertTrue((bool) $rankAction->isApproved());
+        return [
+            'approved'     => ['approved', true],
+            'not approved' => ['pending',  false],
+        ];
     }
 
     #[Test]
-    public function is_approved_returns_falsy_when_not_approved()
+    #[DataProvider('approvalStatusProvider')]
+    public function is_approved_reflects_approval_state(string $state, bool $expected): void
     {
         $member     = $this->createMember();
-        $rankAction = RankAction::factory()->pending()->create([
-            'member_id' => $member->id,
-        ]);
+        $rankAction = RankAction::factory()->{$state}()->create(['member_id' => $member->id]);
 
-        $this->assertFalse((bool) $rankAction->isApproved());
+        $this->assertSame($expected, (bool) $rankAction->isApproved());
+    }
+
+    public static function actionableProvider(): array
+    {
+        return [
+            'pending'  => ['pending',  true],
+            'approved' => ['approved', false],
+            'denied'   => ['denied',   false],
+        ];
     }
 
     #[Test]
-    public function actionable_returns_true_when_pending()
+    #[DataProvider('actionableProvider')]
+    public function actionable_reflects_action_state(string $state, bool $expected): void
     {
         $member     = $this->createMember();
-        $rankAction = RankAction::factory()->pending()->create([
-            'member_id' => $member->id,
-        ]);
+        $rankAction = RankAction::factory()->{$state}()->create(['member_id' => $member->id]);
 
-        $this->assertTrue($rankAction->actionable());
+        $this->assertSame($expected, $rankAction->actionable());
+    }
+
+    public static function resolvedByRecipientProvider(): array
+    {
+        return [
+            'accepted'           => ['accepted', [],                                            true],
+            'declined'           => ['declined', [],                                            true],
+            'approved not acted' => ['approved', ['accepted_at' => null, 'declined_at' => null], false],
+        ];
     }
 
     #[Test]
-    public function actionable_returns_false_when_approved()
+    #[DataProvider('resolvedByRecipientProvider')]
+    public function resolved_by_recipient_reflects_recipient_resolution(string $state, array $overrides, bool $expected): void
     {
         $member     = $this->createMember();
-        $rankAction = RankAction::factory()->approved()->create([
-            'member_id' => $member->id,
-        ]);
+        $rankAction = RankAction::factory()->{$state}()->create(
+            array_merge(['member_id' => $member->id], $overrides)
+        );
 
-        $this->assertFalse($rankAction->actionable());
-    }
-
-    #[Test]
-    public function actionable_returns_false_when_denied()
-    {
-        $member     = $this->createMember();
-        $rankAction = RankAction::factory()->denied()->create([
-            'member_id' => $member->id,
-        ]);
-
-        $this->assertFalse($rankAction->actionable());
-    }
-
-    #[Test]
-    public function resolved_by_recipient_returns_true_when_accepted()
-    {
-        $member     = $this->createMember();
-        $rankAction = RankAction::factory()->accepted()->create([
-            'member_id' => $member->id,
-        ]);
-
-        $this->assertTrue($rankAction->resolvedByRecipient());
-    }
-
-    #[Test]
-    public function resolved_by_recipient_returns_true_when_declined()
-    {
-        $member     = $this->createMember();
-        $rankAction = RankAction::factory()->declined()->create([
-            'member_id' => $member->id,
-        ]);
-
-        $this->assertTrue($rankAction->resolvedByRecipient());
-    }
-
-    #[Test]
-    public function resolved_by_recipient_returns_false_when_pending()
-    {
-        $member     = $this->createMember();
-        $rankAction = RankAction::factory()->approved()->create([
-            'member_id'   => $member->id,
-            'accepted_at' => null,
-            'declined_at' => null,
-        ]);
-
-        $this->assertFalse($rankAction->resolvedByRecipient());
+        $this->assertSame($expected, $rankAction->resolvedByRecipient());
     }
 
     #[Test]
