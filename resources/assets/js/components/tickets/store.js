@@ -49,6 +49,7 @@ const store = reactive({
     newTicket: {
         ticket_type_id: null,
         description: '',
+        attachments: [],
     },
 
     newComment: '',
@@ -115,9 +116,13 @@ store.submitTicket = () => {
     store.loading.submitting = true;
     store.errors.submission = null;
 
-    return axios.post(`${store.base_url}/api/tickets`, {
-        ticket_type_id: store.newTicket.ticket_type_id,
-        description: store.newTicket.description,
+    const formData = new FormData();
+    formData.append('ticket_type_id', store.newTicket.ticket_type_id);
+    formData.append('description', store.newTicket.description);
+    store.newTicket.attachments.forEach((file) => formData.append('attachments[]', file));
+
+    return axios.post(`${store.base_url}/api/tickets`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
     })
         .then((response) => {
             store.loading.submitting = false;
@@ -266,6 +271,7 @@ store.selectType = (type) => {
 store.resetForm = () => {
     store.newTicket.ticket_type_id = null;
     store.newTicket.description = '';
+    store.newTicket.attachments = [];
     store.selectedType = null;
     store.errors.submission = null;
 };

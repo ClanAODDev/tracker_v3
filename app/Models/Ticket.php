@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * @property string state
@@ -34,7 +35,17 @@ class Ticket extends Model
 
     protected $casts = [
         'resolved_at' => 'datetime',
+        'attachments' => 'array',
     ];
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Ticket $ticket) {
+            foreach ($ticket->attachments ?? [] as $path) {
+                Storage::disk('public')->delete($path);
+            }
+        });
+    }
 
     /**
      * @return BelongsTo

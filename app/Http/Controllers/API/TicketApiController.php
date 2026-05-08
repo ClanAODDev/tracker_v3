@@ -11,6 +11,7 @@ use App\Services\TicketNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class TicketApiController extends Controller
 {
@@ -229,7 +230,14 @@ class TicketApiController extends Controller
         $validated = $request->validate([
             'ticket_type_id' => 'required|exists:ticket_types,id',
             'description'    => 'required|string|min:25',
+            'attachments'    => 'nullable|array|max:3',
+            'attachments.*'  => 'file|image|max:5120',
         ]);
+
+        $paths = collect($request->file('attachments', []))
+            ->map(fn ($file) => $file->store('tickets', 'public'))
+            ->values()
+            ->all();
 
         $ticket = Ticket::create([
             'state'          => 'new',
@@ -237,6 +245,7 @@ class TicketApiController extends Controller
             'description'    => $validated['description'],
             'caller_id'      => auth()->id(),
             'division_id'    => auth()->user()->member?->division_id ?? 1,
+            'attachments'    => $paths ?: null,
         ]);
 
         $this->silentNotify(fn () => $this->notificationService->notifyTicketCreated($ticket), $ticket->id);
@@ -326,6 +335,9 @@ class TicketApiController extends Controller
             'created_at'  => $ticket->created_at->toIso8601String(),
             'updated_at'  => $ticket->updated_at->toIso8601String(),
             'resolved_at' => $ticket->resolved_at?->toIso8601String(),
+            'attachments' => collect($ticket->attachments ?? [])->map(
+                fn ($path) => Storage::disk('public')->url($path)
+            )->all(),
         ];
 
         if ($includeCaller) {

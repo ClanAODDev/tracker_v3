@@ -192,6 +192,16 @@
           </div>
           <div class="section-content">
             <p class="description-text" v-html="renderText(store.currentTicket.description)"></p>
+            <div v-if="store.currentTicket.attachments?.length" class="ticket-attachments">
+              <img
+                v-for="(url, i) in store.currentTicket.attachments"
+                :key="i"
+                :src="url"
+                class="ticket-attachment-thumb"
+                alt="Attachment"
+                @click="openAttachment(url)"
+              >
+            </div>
           </div>
         </div>
 
@@ -422,6 +432,9 @@ export default {
 
   methods: {
     renderText,
+    openAttachment(url) {
+      window.open(url, '_blank');
+    },
     reload() {
       if (store.selectedTicketId) {
         store.loadTicket(store.selectedTicketId);
@@ -703,6 +716,29 @@ export default {
 
 .section-content {
   padding: 20px;
+}
+
+.ticket-attachments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid var(--overlay-light);
+}
+
+.ticket-attachment-thumb {
+  width: 100px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--overlay-light);
+  cursor: zoom-in;
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: var(--color-accent);
+  }
 }
 
 .description-text {

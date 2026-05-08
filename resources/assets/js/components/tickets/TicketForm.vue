@@ -48,6 +48,43 @@
         </div>
       </div>
 
+      <div class="form-group attachment-group">
+        <div class="attachment-row">
+          <label class="attachment-label">
+            <i class="fa fa-paperclip m-r-xs"></i>
+            Attachments
+            <span class="attachment-hint">Images only &middot; max 3 &middot; 5 MB each</span>
+          </label>
+          <label
+            v-if="store.newTicket.attachments.length < 3"
+            class="attachment-add-btn"
+            :class="{ disabled: store.loading.submitting }"
+          >
+            <i class="fa fa-plus"></i> Add Image
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              style="display:none;"
+              :disabled="store.loading.submitting"
+              @change="onFilesSelected"
+            >
+          </label>
+        </div>
+        <div v-if="store.newTicket.attachments.length" class="attachment-thumbs">
+          <div
+            v-for="(file, i) in store.newTicket.attachments"
+            :key="i"
+            class="attachment-thumb"
+          >
+            <img :src="previews[i]" :alt="file.name">
+            <button type="button" class="attachment-thumb-remove" @click="removeAttachment(i)">
+              <i class="fa fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div class="form-actions">
         <button
           type="button"
@@ -84,6 +121,7 @@ export default {
   data() {
     return {
       store,
+      previews: [],
     };
   },
 
@@ -95,7 +133,25 @@ export default {
 
     cancel() {
       store.resetForm();
+      this.previews = [];
       store.setView('select-type');
+    },
+
+    onFilesSelected(e) {
+      const remaining = 3 - store.newTicket.attachments.length;
+      const files = Array.from(e.target.files).slice(0, remaining);
+      files.forEach((file) => {
+        store.newTicket.attachments.push(file);
+        const reader = new FileReader();
+        reader.onload = (ev) => this.previews.push(ev.target.result);
+        reader.readAsDataURL(file);
+      });
+      e.target.value = '';
+    },
+
+    removeAttachment(index) {
+      store.newTicket.attachments.splice(index, 1);
+      this.previews.splice(index, 1);
     },
 
     getIconForType(slug) {
@@ -258,6 +314,100 @@ export default {
 
 .counter-min {
   color: var(--color-muted);
+}
+
+.attachment-group {
+  margin-bottom: 20px;
+}
+
+.attachment-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.attachment-label {
+  font-weight: 600;
+  color: var(--color-white);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.attachment-hint {
+  font-weight: normal;
+  font-size: 12px;
+  color: var(--color-muted);
+}
+
+.attachment-add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: normal;
+  color: var(--color-muted);
+  background: var(--overlay-light);
+  border: 1px solid var(--overlay-light);
+  border-radius: 4px;
+  padding: 4px 10px;
+  cursor: pointer;
+  margin: 0;
+  transition: color 0.15s, background 0.15s;
+
+  &:hover {
+    color: var(--color-white);
+    background: var(--overlay-medium);
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.attachment-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.attachment-thumb {
+  position: relative;
+  display: inline-flex;
+
+  img {
+    width: 100px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--overlay-light);
+    display: block;
+  }
+}
+
+.attachment-thumb-remove {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-danger, #d9534f);
+  color: #fff;
+  border: none;
+  font-size: 10px;
+  line-height: 18px;
+  text-align: center;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .form-actions {
