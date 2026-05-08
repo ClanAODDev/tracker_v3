@@ -206,11 +206,7 @@ readonly class PendingActionsData
                 $actions->push(new PendingAction(
                     key: 'open-tickets',
                     count: $count,
-                    url: route('filament.admin.resources.tickets.index') . '?' . http_build_query([
-                        'filters' => [
-                            'state' => ['values' => ['new', 'assigned']],
-                        ],
-                    ]),
+                    url: route('help.tickets.widget') . '?view=all',
                     icon: 'fa-ticket-alt',
                     label: 'Open Ticket',
                     style: 'warning',
