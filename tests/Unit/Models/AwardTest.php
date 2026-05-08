@@ -144,7 +144,7 @@ class AwardTest extends TestCase
         $award->delete();
 
         $this->assertSoftDeleted($award);
-        $this->assertDatabaseMissing('award_member', ['id' => $memberAward->id]);
+        $this->assertModelMissing($memberAward);
     }
 
     #[Test]
