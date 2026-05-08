@@ -9,8 +9,6 @@
     top: 60px;
     bottom: 0;
     transition: left 0.3s ease-out;
-    display: flex;
-    flex-direction: column;
     overflow: hidden;
 
     nav {
@@ -40,9 +38,9 @@
 }
 
 .nav-scrollable {
-    flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
+    padding-bottom: 45px;
 }
 
 .nav-feedback-btn {
@@ -56,7 +54,10 @@
     font-size: 13px;
     text-decoration: none;
     transition: background-color 0.15s, color 0.15s;
-    flex-shrink: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
 
     i {
         font-size: 13px;
