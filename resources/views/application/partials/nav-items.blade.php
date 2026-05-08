@@ -208,10 +208,11 @@
         </li>
     @endcan
 
-    <li><a href="https://github.com/clanaoddev/tracker_v3" target="_blank">Contribute <span class="pull-right"><i
-                        class="fab
-fa-lg
-fa-github"></i></span></a></li>
+    <li>
+        <a href="#feedback-modal" data-toggle="modal" data-target="#feedback-modal">
+            Feedback <span class="pull-right"><i class="fa fa-comment-alt"></i></span>
+        </a>
+    </li>
 </ul>
 
 <span id="top-link-block">

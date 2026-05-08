@@ -51,6 +51,8 @@
             @include('application.partials.welcome-modal')
         @endif
 
+        @include('application.partials.feedback-modal')
+
         <section class="search-results closed text-center"></section>
         <section class="content">
             @include('application.partials.alert')
