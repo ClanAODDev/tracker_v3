@@ -6757,15 +6757,9 @@ body {
 }
 
 .navigation {
-    margin-top: 60px;
-    background-color: var(--color-nav-active);
-    width: 200px;
-    position: absolute;
-    left: 0;
+    position: fixed;
+    top: 60px;
     bottom: 0;
-    top: 0;
-    transition: left 0.3s ease-out;
-    -webkit-transition: left 0.3s ease-out;
 }
 
 .navigation nav {
@@ -9305,7 +9299,7 @@ pre.code-toolbar > .toolbar span:focus {
 
 #top-link-block {
     position: fixed;
-    bottom: 18px;
+    bottom: 60px;
     left: 10px;
     z-index: 1000;
     opacity: 0;
