@@ -1743,43 +1743,188 @@ var Tracker = Tracker || {};
         },
 
         InitFeedback() {
-            const $modal = $('#feedback-modal');
+            const $modal     = $('#feedback-modal');
             if (!$modal.length) return;
 
-            const $body  = $('#feedback-body');
-            const $count = $('#feedback-char-count');
-            const $btn   = $('#feedback-submit');
+            const $body      = $('#feedback-body');
+            const $count     = $('#feedback-char-count');
+            const $btn       = $('#feedback-submit');
+            const $capture   = $('#feedback-capture-btn');
+            const $thumbs    = $('#feedback-thumbnails');
+            const $overlay   = $('#feedback-selection-overlay');
+            const $rect      = $('#feedback-selection-rect');
+            const $preview   = $('#feedback-preview-overlay');
+            const $previewImg = $('#feedback-preview-img');
+            const MAX        = 3;
 
-            $body.on('input', () => {
-                $count.text($body.val().length);
-            });
+            let screenshots = [];
+            let screenshotCapturing = false;
+
+            const renderThumbs = () => {
+                $thumbs.empty();
+                screenshots.forEach((dataUrl, i) => {
+                    const $wrap = $('<div class="feedback-thumb"></div>');
+                    const $img  = $(`<img src="${dataUrl}" alt="Screenshot ${i + 1}" title="Click to preview">`);
+                    const $rm   = $('<button type="button" class="feedback-thumb-remove" title="Remove"><i class="fa fa-times"></i></button>');
+                    $img.on('click', () => {
+                        $previewImg.attr('src', dataUrl);
+                        $preview.show();
+                    });
+                    $rm.on('click', () => {
+                        screenshots.splice(i, 1);
+                        renderThumbs();
+                        updateCaptureBtn();
+                    });
+                    $wrap.append($img, $rm);
+                    $thumbs.append($wrap);
+                });
+            };
+
+            const updateCaptureBtn = () => {
+                const atMax = screenshots.length >= MAX;
+                $capture.prop('disabled', atMax);
+            };
+
+            $body.on('input', () => $count.text($body.val().length));
+
+            const closePreview = () => { $preview.hide(); };
+            $('#feedback-preview-close').on('click', closePreview);
+            $preview.on('click', (e) => { if (e.target === $preview[0]) closePreview(); });
+            $(document).on('keydown.feedbackPreview', (e) => { if (e.key === 'Escape' && $preview.is(':visible')) closePreview(); });
 
             $modal.on('hidden.bs.modal', () => {
+                if (screenshotCapturing) return;
                 $body.val('');
                 $count.text('0');
+                screenshots = [];
+                renderThumbs();
+                updateCaptureBtn();
             });
 
-            $btn.on('click', () => {
+            $capture.on('click', () => {
+                let startX, startY, dragging = false;
+
+                const cleanup = () => {
+                    $overlay.hide();
+                    $overlay.off('.feedbackSelect');
+                    $(document).off('keydown.feedbackSelect');
+                };
+
+                const cancelSelect = () => {
+                    screenshotCapturing = false;
+                    cleanup();
+                    $modal.modal('show');
+                };
+
+                $modal.one('hidden.bs.modal', () => {
+                    $overlay.show();
+
+                $(document).on('keydown.feedbackSelect', (e) => {
+                    if (e.key === 'Escape') cancelSelect();
+                });
+
+                $overlay.on('mousedown.feedbackSelect', (e) => {
+                    dragging = true;
+                    startX   = e.clientX;
+                    startY   = e.clientY;
+                    $rect.css({ left: startX, top: startY, width: 0, height: 0 }).show();
+                });
+
+                $overlay.on('mousemove.feedbackSelect', (e) => {
+                    if (!dragging) return;
+                    const x = Math.min(e.clientX, startX);
+                    const y = Math.min(e.clientY, startY);
+                    const w = Math.abs(e.clientX - startX);
+                    const h = Math.abs(e.clientY - startY);
+                    $rect.css({ left: x, top: y, width: w, height: h });
+                });
+
+                $overlay.on('mouseup.feedbackSelect', async (e) => {
+                    if (!dragging) return;
+                    dragging = false;
+
+                    const x = Math.min(e.clientX, startX);
+                    const y = Math.min(e.clientY, startY);
+                    const w = Math.abs(e.clientX - startX);
+                    const h = Math.abs(e.clientY - startY);
+
+                    cleanup();
+                    $rect.hide();
+
+                    if (w < 10 || h < 10) {
+                        $modal.modal('show');
+                        return;
+                    }
+
+                    try {
+                        const { toPng } = await import('html-to-image');
+                        const viewportUrl = await toPng(document.body, {
+                            width:      window.innerWidth,
+                            height:     window.innerHeight,
+                            pixelRatio: 1,
+                            skipFonts:  true,
+                            style: {
+                                transform:       `translate(-${window.scrollX}px, -${window.scrollY}px)`,
+                                transformOrigin: 'top left',
+                                overflow:        'hidden',
+                            },
+                            filter: (node) => node.id !== 'feedback-selection-overlay' && node.id !== 'feedback-preview-overlay',
+                        });
+                        const img = new Image();
+                        img.src = viewportUrl;
+                        await new Promise((resolve) => { img.onload = resolve; });
+                        const crop = document.createElement('canvas');
+                        crop.width  = w;
+                        crop.height = h;
+                        crop.getContext('2d').drawImage(img, x, y, w, h, 0, 0, w, h);
+                        screenshots.push(crop.toDataURL('image/jpeg', 0.85));
+                        renderThumbs();
+                        updateCaptureBtn();
+                    } catch (err) {
+                        console.error('Screenshot capture failed:', err);
+                        toastr.warning('Screenshot capture failed.');
+                    }
+
+                    screenshotCapturing = false;
+                    $modal.modal('show');
+                });
+                });  // end hidden.bs.modal
+
+                screenshotCapturing = true;
+                $modal.modal('hide');
+            });
+
+            $btn.on('click', async () => {
                 const text = $body.val().trim();
                 if (!text) return;
 
                 $btn.prop('disabled', true);
 
-                $.ajax({
-                    url:    `${window.Laravel.appPath}/feedback`,
-                    method: 'POST',
-                    data:   { body: text, _token: window.Laravel.csrfToken },
-                    success() {
+                try {
+                    const response = await fetch(`${window.Laravel.appPath}/feedback`, {
+                        method:  'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': window.Laravel.csrfToken,
+                        },
+                        body: JSON.stringify({
+                            body:        text,
+                            url:         $('#feedback-include-url').is(':checked') ? window.location.href : null,
+                            screenshots: screenshots.length ? screenshots : null,
+                        }),
+                    });
+
+                    if (response.ok) {
                         $modal.modal('hide');
                         toastr.success('Feedback submitted — thank you!');
-                    },
-                    error() {
+                    } else {
                         toastr.error('Failed to submit feedback, please try again.');
-                    },
-                    complete() {
-                        $btn.prop('disabled', false);
-                    },
-                });
+                    }
+                } catch {
+                    toastr.error('Failed to submit feedback, please try again.');
+                } finally {
+                    $btn.prop('disabled', false);
+                }
             });
         },
 

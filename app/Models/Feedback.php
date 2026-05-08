@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Feedback extends Model
 {
-    protected $fillable = ['user_id', 'body'];
+    protected $fillable = ['user_id', 'body', 'url', 'screenshots'];
+
+    protected $casts = ['screenshots' => 'array'];
 
     public function user(): BelongsTo
     {

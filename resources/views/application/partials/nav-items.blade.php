@@ -208,11 +208,6 @@
         </li>
     @endcan
 
-    <li>
-        <a href="#feedback-modal" data-toggle="modal" data-target="#feedback-modal">
-            Feedback <span class="pull-right"><i class="fa fa-comment-alt"></i></span>
-        </a>
-    </li>
 </ul>
 
 <span id="top-link-block">

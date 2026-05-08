@@ -94,11 +94,18 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
 });
 
 Route::middleware('auth')->post('feedback', function (Request $request) {
-    $request->validate(['body' => 'required|string|max:2000']);
+    $request->validate([
+        'body'          => 'required|string|max:2000',
+        'url'           => 'nullable|string|max:2048',
+        'screenshots'   => 'nullable|array|max:3',
+        'screenshots.*' => 'nullable|string',
+    ]);
 
     Feedback::create([
-        'user_id' => auth()->id(),
-        'body'    => $request->body,
+        'user_id'     => auth()->id(),
+        'body'        => $request->body,
+        'url'         => $request->url,
+        'screenshots' => $request->screenshots ?: null,
     ]);
 
     return response()->json(['success' => true]);
