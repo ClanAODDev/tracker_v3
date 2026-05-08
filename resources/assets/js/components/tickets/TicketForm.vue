@@ -53,10 +53,10 @@
           <label class="attachment-label">
             <i class="fa fa-paperclip m-r-xs"></i>
             Attachments
-            <span class="attachment-hint">Images only &middot; max 3 &middot; 5 MB each</span>
+            <span class="attachment-hint">Images only &middot; max 5 &middot; 1 MB each</span>
           </label>
           <label
-            v-if="store.newTicket.attachments.length < 3"
+            v-if="store.newTicket.attachments.length < 5"
             class="attachment-add-btn"
             :class="{ disabled: store.loading.submitting }"
           >
@@ -138,7 +138,7 @@ export default {
     },
 
     onFilesSelected(e) {
-      const remaining = 3 - store.newTicket.attachments.length;
+      const remaining = 5 - store.newTicket.attachments.length;
       const files = Array.from(e.target.files).slice(0, remaining);
       files.forEach((file) => {
         store.newTicket.attachments.push(file);

@@ -104,7 +104,7 @@
     ]
   },
   "resources/assets/js/tickets.js": {
-    "file": "assets/tickets-CzR2gS3F.js",
+    "file": "assets/tickets-CZziRYWK.js",
     "name": "tickets",
     "src": "resources/assets/js/tickets.js",
     "isEntry": true,
@@ -113,7 +113,7 @@
       "__commonjsHelpers-Cpj98o6Y.js"
     ],
     "css": [
-      "assets/tickets-BwTDtbXn.css"
+      "assets/tickets-DQ0rjhxl.css"
     ]
   },
   "resources/assets/js/training.js": {
