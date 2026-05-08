@@ -96,7 +96,7 @@ class MemberRequestResource extends Resource
                                     ->content(fn (?Model $record): string => $record ? $record->member->name : ''),
                                 Placeholder::make('Requester')
                                     ->content(fn (?Model $record): string => $record
-                                        ? $record->requester->present()->rankName
+                                        ? $record->requester?->present()->rankName ?? ''
                                         : ''
                                     ),
                                 Placeholder::make('Created At')
@@ -147,7 +147,7 @@ class MemberRequestResource extends Resource
                                         . $record->approved_at?->diffForHumans()),
                                 Placeholder::make('Approver')
                                     ->content(fn (?Model $record): string => $record
-                                        ? $record->approver->present()->rankName
+                                        ? $record->approver?->present()->rankName ?? ''
                                         : ''
                                     ),
                             ]),

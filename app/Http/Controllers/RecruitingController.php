@@ -54,7 +54,7 @@ class RecruitingController extends Controller
         $this->authorize('recruit', Member::class);
 
         $division    = Division::whereSlug($request->division)->first();
-        $recruiterId = auth()->user()->member->clan_id;
+        $recruiterId = auth()->user()->member->id;
 
         if ($request->pending_user_id) {
             return $this->recruitPendingDiscordUser($request, $division, $recruiterId);
