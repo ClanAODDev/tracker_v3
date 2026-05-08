@@ -53,11 +53,11 @@ class RecruitingController extends Controller
     {
         $this->authorize('recruit', Member::class);
 
-        $division    = Division::whereSlug($request->division)->first();
-        $recruiterId = auth()->user()->member->id;
+        $division  = Division::whereSlug($request->division)->first();
+        $recruiter = auth()->user()->member;
 
         if ($request->pending_user_id) {
-            return $this->recruitPendingDiscordUser($request, $division, $recruiterId);
+            return $this->recruitPendingDiscordUser($request, $division, $recruiter);
         }
 
         $member = $this->recruitmentService->createMember(
@@ -68,10 +68,10 @@ class RecruitingController extends Controller
             (int) $request->platoon,
             $request->squad ? (int) $request->squad : null,
             $request->ingame_name,
-            $recruiterId
+            $recruiter
         );
 
-        $this->finalizeRecruitment($member, $division, $recruiterId);
+        $this->finalizeRecruitment($member, $division, $recruiter);
 
         $this->showSuccessToast('Your recruitment has successfully been completed!');
     }
@@ -397,10 +397,10 @@ class RecruitingController extends Controller
     private function createForumAccountForPendingUser(
         User $pendingUser,
         string $forumName,
-        int $recruiterId,
+        int $recruiterClanId,
     ): ?object {
         $result = AODForumService::createForumAccount(
-            impersonatingMemberId: $recruiterId,
+            impersonatingMemberId: $recruiterClanId,
             username: $forumName,
             email: $pendingUser->email,
             dateOfBirth: $pendingUser->date_of_birth->format('Y-m-d'),
@@ -413,7 +413,7 @@ class RecruitingController extends Controller
             \Log::channel('recruiting')->warning('Forum account creation failed', [
                 'error'   => $result['error'] ?? 'Unknown error',
                 'payload' => [
-                    'aod_userid'  => $recruiterId,
+                    'aod_userid'  => $recruiterClanId,
                     'username'    => $forumName,
                     'email'       => $pendingUser->email,
                     'dob'         => $pendingUser->date_of_birth->format('Y-m-d'),
@@ -430,7 +430,7 @@ class RecruitingController extends Controller
         return $this->forumService->getUserByEmail($pendingUser->email);
     }
 
-    private function recruitPendingDiscordUser(Request $request, Division $division, int $recruiterId)
+    private function recruitPendingDiscordUser(Request $request, Division $division, Member $recruiter)
     {
         $pendingUser = User::pendingDiscord()->find($request->pending_user_id);
 
@@ -446,7 +446,7 @@ class RecruitingController extends Controller
             'discord_username' => $pendingUser->discord_username,
             'email'            => $pendingUser->email,
             'has_password'     => ! empty($pendingUser->forum_password),
-            'recruiter_id'     => $recruiterId,
+            'recruiter_id'     => $recruiter->clan_id,
         ]);
 
         $forumUser = $this->forumService->getUserByEmail($pendingUser->email);
@@ -461,7 +461,7 @@ class RecruitingController extends Controller
                 'forum_name' => $request->forum_name,
             ]);
 
-            $forumUser = $this->createForumAccountForPendingUser($pendingUser, $request->forum_name, $recruiterId);
+            $forumUser = $this->createForumAccountForPendingUser($pendingUser, $request->forum_name, $recruiter->clan_id);
 
             \Log::channel('recruiting')->info('Forum account creation result', [
                 'success' => $forumUser !== null,
@@ -543,7 +543,7 @@ class RecruitingController extends Controller
             (int) $request->platoon,
             $request->squad ? (int) $request->squad : null,
             $request->ingame_name,
-            $recruiterId
+            $recruiter
         );
 
         \Log::channel('recruiting')->info('Member created via Discord recruitment', [
@@ -555,14 +555,14 @@ class RecruitingController extends Controller
 
         DivisionApplication::where('user_id', $pendingUser->id)->get()->each->delete();
 
-        $this->finalizeRecruitment($member, $division, $recruiterId);
+        $this->finalizeRecruitment($member, $division, $recruiter);
 
         $this->showSuccessToast('Recruitment completed for Discord user.');
     }
 
-    private function finalizeRecruitment(Member $member, Division $division, int $recruiterId): void
+    private function finalizeRecruitment(Member $member, Division $division, Member $recruiter): void
     {
-        $this->recruitmentService->createMemberRequest($member, $division, $recruiterId);
+        $this->recruitmentService->createMemberRequest($member, $division, $recruiter);
 
         $this->handleNotification($member, $division);
 

@@ -20,7 +20,7 @@ class RecruitmentService
         int $platoonId,
         ?int $squadId,
         ?string $ingameName,
-        int $recruiterId
+        Member $recruiter
     ): Member {
         $member = Member::firstOrNew(['clan_id' => $clanId]);
 
@@ -28,7 +28,7 @@ class RecruitmentService
             'name'                   => $name,
             'join_date'              => now(),
             'last_activity'          => now(),
-            'recruiter_id'           => $recruiterId,
+            'recruiter_id'           => $recruiter->clan_id,
             'rank'                   => $rankId,
             'position'               => Position::MEMBER,
             'division_id'            => $division->id,
@@ -46,7 +46,7 @@ class RecruitmentService
             'member_id'     => $member->id,
             'rank'          => $rankId,
             'justification' => 'New recruit',
-            'requester_id'  => $recruiterId,
+            'requester_id'  => $recruiter->id,
         ])->approveAndAccept();
 
         Transfer::create([
@@ -69,14 +69,14 @@ class RecruitmentService
         ]);
     }
 
-    public function createMemberRequest(Member $member, Division $division, int $requesterId): void
+    public function createMemberRequest(Member $member, Division $division, Member $requester): void
     {
         if (MemberRequest::pending()->whereMemberId($member->id)->exists()) {
             return;
         }
 
         MemberRequest::create([
-            'requester_id' => $requesterId,
+            'requester_id' => $requester->id,
             'member_id'    => $member->id,
             'division_id'  => $division->id,
         ]);

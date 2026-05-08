@@ -21,6 +21,12 @@ class AddClanMember implements ShouldQueue
 
     public function handle(ForumProcedureService $procedureService): void
     {
+        $this->member->loadMissing('division');
+
+        if (! $this->member->division) {
+            throw new RuntimeException("Member {$this->member->clan_id} has no division assigned.");
+        }
+
         $procedureService->setDiscordInfo(
             userId: $this->member->clan_id,
             discordId: $this->member->discord_id ?? '',
