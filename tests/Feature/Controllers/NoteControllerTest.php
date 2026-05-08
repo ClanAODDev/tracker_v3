@@ -31,7 +31,7 @@ class NoteControllerTest extends TestCase
         ]);
         $note->delete();
 
-        $this->assertSoftDeleted('notes', ['id' => $note->id]);
+        $this->assertSoftDeleted($note);
 
         $response = $this->actingAs($srLdr)
             ->postJson(route('restoreNote', [$member->clan_id, $note->id]));
@@ -64,7 +64,7 @@ class NoteControllerTest extends TestCase
         $response->assertOk();
         $response->assertJson(['success' => true]);
 
-        $this->assertDatabaseMissing('notes', ['id' => $note->id]);
+        $this->assertModelMissing($note);
     }
 
     #[Test]
@@ -230,7 +230,7 @@ class NoteControllerTest extends TestCase
         $response->assertOk();
         $response->assertJson(['success' => true]);
 
-        $this->assertDatabaseMissing('notes', ['id' => $note->id]);
+        $this->assertModelMissing($note);
     }
 
     #[Test]
@@ -249,7 +249,7 @@ class NoteControllerTest extends TestCase
             ->delete(route('deleteNote', [$member->clan_id, $note->id]));
 
         $response->assertRedirect();
-        $this->assertSoftDeleted('notes', ['id' => $note->id]);
+        $this->assertSoftDeleted($note);
     }
 
     #[Test]
@@ -268,7 +268,7 @@ class NoteControllerTest extends TestCase
             ->delete(route('deleteNote', [$member->clan_id, $note->id]));
 
         $response->assertRedirect();
-        $this->assertSoftDeleted('notes', ['id' => $note->id]);
+        $this->assertSoftDeleted($note);
     }
 
     #[Test]
@@ -309,7 +309,7 @@ class NoteControllerTest extends TestCase
             ->delete(route('deleteNote', [$member->clan_id, $note->id]));
 
         $response->assertRedirect();
-        $this->assertSoftDeleted('notes', ['id' => $note->id]);
+        $this->assertSoftDeleted($note);
     }
 
     #[Test]
