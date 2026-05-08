@@ -10,6 +10,7 @@ use Filament\Navigation\NavigationItem;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets;
 use Filament\Widgets\AccountWidget;
 use Flashadvocate\FilamentReactions\FilamentReactionsPlugin;
@@ -64,6 +65,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-            ]);
+            ])
+            ->renderHook(
+                PanelsRenderHook::BODY_END,
+                fn () => view('filament.admin.image-preview-modal'),
+            );
     }
 }
