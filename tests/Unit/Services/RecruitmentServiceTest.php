@@ -27,8 +27,9 @@ class RecruitmentServiceTest extends TestCase
     #[Test]
     public function create_member_creates_new_member(): void
     {
-        $division = $this->createActiveDivision();
-        $platoon  = $this->createPlatoon($division);
+        $division  = $this->createActiveDivision();
+        $platoon   = $this->createPlatoon($division);
+        $recruiter = Member::factory()->create(['clan_id' => 99999]);
 
         $member = $this->service->createMember(
             12345,
@@ -38,7 +39,7 @@ class RecruitmentServiceTest extends TestCase
             $platoon->id,
             null,
             'GameHandle',
-            99999
+            $recruiter
         );
 
         $this->assertDatabaseHas('members', [
@@ -52,8 +53,9 @@ class RecruitmentServiceTest extends TestCase
     #[Test]
     public function create_member_updates_existing_member(): void
     {
-        $division = $this->createActiveDivision();
-        $platoon  = $this->createPlatoon($division);
+        $division  = $this->createActiveDivision();
+        $platoon   = $this->createPlatoon($division);
+        $recruiter = Member::factory()->create(['clan_id' => 99999]);
 
         $existingMember = Member::factory()->create([
             'clan_id' => 54321,
@@ -68,7 +70,7 @@ class RecruitmentServiceTest extends TestCase
             $platoon->id,
             null,
             'GameHandle',
-            99999
+            $recruiter
         );
 
         $this->assertEquals($existingMember->id, $member->id);
@@ -83,6 +85,7 @@ class RecruitmentServiceTest extends TestCase
         $handle              = Handle::factory()->create();
         $division->handle_id = $handle->id;
         $division->save();
+        $recruiter = Member::factory()->create(['clan_id' => 99999]);
 
         $member = $this->service->createMember(
             11111,
@@ -92,7 +95,7 @@ class RecruitmentServiceTest extends TestCase
             $platoon->id,
             null,
             'MyGameHandle',
-            99999
+            $recruiter
         );
 
         $this->assertDatabaseHas('handle_member', [
@@ -105,26 +108,29 @@ class RecruitmentServiceTest extends TestCase
     #[Test]
     public function create_member_request_creates_pending_request(): void
     {
-        $division = $this->createActiveDivision();
-        $member   = Member::factory()->create(['division_id' => $division->id]);
+        $division  = $this->createActiveDivision();
+        $member    = Member::factory()->create(['division_id' => $division->id]);
+        $requester = Member::factory()->create();
 
-        $this->service->createMemberRequest($member, $division, 99999);
+        $this->service->createMemberRequest($member, $division, $requester);
 
         $this->assertDatabaseHas('member_requests', [
             'member_id'    => $member->id,
             'division_id'  => $division->id,
-            'requester_id' => 99999,
+            'requester_id' => $requester->id,
         ]);
     }
 
     #[Test]
     public function create_member_request_skips_if_pending_exists(): void
     {
-        $division = $this->createActiveDivision();
-        $member   = Member::factory()->create(['division_id' => $division->id]);
+        $division   = $this->createActiveDivision();
+        $member     = Member::factory()->create(['division_id' => $division->id]);
+        $requester1 = Member::factory()->create();
+        $requester2 = Member::factory()->create();
 
-        $this->service->createMemberRequest($member, $division, 99999);
-        $this->service->createMemberRequest($member, $division, 88888);
+        $this->service->createMemberRequest($member, $division, $requester1);
+        $this->service->createMemberRequest($member, $division, $requester2);
 
         $this->assertDatabaseCount('member_requests', 1);
     }
