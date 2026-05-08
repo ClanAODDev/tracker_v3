@@ -2,13 +2,12 @@
 @use 'mixins' as *;
 
 .navigation {
-    margin-top: 60px;
     background-color: var(--color-nav-active);
     width: 200px;
-    position: absolute;
+    position: fixed;
     left: 0;
+    top: 60px;
     bottom: 0;
-    top: 0;
     transition: left 0.3s ease-out;
     display: flex;
     flex-direction: column;
