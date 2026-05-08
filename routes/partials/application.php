@@ -8,6 +8,7 @@ use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\MemberTransferController;
 use App\Http\Controllers\TrainingController;
 use App\Models\Division;
+use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -91,6 +92,17 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
 
     Route::post('transfer-request', [MemberTransferController::class, 'store'])->name('transfer-request');
 });
+
+Route::middleware('auth')->post('feedback', function (Request $request) {
+    $request->validate(['body' => 'required|string|max:2000']);
+
+    Feedback::create([
+        'user_id' => auth()->id(),
+        'body'    => $request->body,
+    ]);
+
+    return response()->json(['success' => true]);
+})->name('feedback.store');
 
 Route::get('bot/commands/{command}', [BotCommandController::class, 'index'])->name('bot.commands')->middleware('bot');
 Route::get('admin/login', fn () => redirect('login'))->name('filament.admin.auth.login');

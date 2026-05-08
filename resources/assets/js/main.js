@@ -37,6 +37,7 @@ var Tracker = Tracker || {};
             Tracker.InitTrashedNotes();
             Tracker.InitActivityFeedToggle();
             Tracker.InitPopulationMeter();
+            Tracker.InitFeedback();
         },
 
         InitNavToggle() {
@@ -1739,7 +1740,48 @@ var Tracker = Tracker || {};
                     $target.collapse('toggle');
                 }
             });
-        }
+        },
+
+        InitFeedback() {
+            const $modal = $('#feedback-modal');
+            if (!$modal.length) return;
+
+            const $body  = $('#feedback-body');
+            const $count = $('#feedback-char-count');
+            const $btn   = $('#feedback-submit');
+
+            $body.on('input', () => {
+                $count.text($body.val().length);
+            });
+
+            $modal.on('hidden.bs.modal', () => {
+                $body.val('');
+                $count.text('0');
+            });
+
+            $btn.on('click', () => {
+                const text = $body.val().trim();
+                if (!text) return;
+
+                $btn.prop('disabled', true);
+
+                $.ajax({
+                    url:    `${window.Laravel.appPath}/feedback`,
+                    method: 'POST',
+                    data:   { body: text, _token: window.Laravel.csrfToken },
+                    success() {
+                        $modal.modal('hide');
+                        toastr.success('Feedback submitted — thank you!');
+                    },
+                    error() {
+                        toastr.error('Failed to submit feedback, please try again.');
+                    },
+                    complete() {
+                        $btn.prop('disabled', false);
+                    },
+                });
+            });
+        },
 
     };
 
