@@ -42,7 +42,7 @@ class MemberRequestPolicy
             return true;
         }
 
-        if ($memberRequest->requester_id === $user->member->clan_id) {
+        if ($memberRequest->requester_id === $user->member->id) {
             return true;
         }
 
@@ -58,7 +58,7 @@ class MemberRequestPolicy
             return true;
         }
 
-        if ($request->requester_id === $user->member->clan_id) {
+        if ($request->requester_id === $user->member->id) {
             return true;
         }
 
@@ -84,7 +84,7 @@ class MemberRequestPolicy
             return true;
         }
 
-        if ($request->requester_id === $user->member->clan_id) {
+        if ($request->requester_id === $user->member->id) {
             return true;
         }
 
