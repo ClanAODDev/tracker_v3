@@ -8,15 +8,15 @@ use App\Models\Division;
 use App\Models\Platoon;
 use App\Repositories\PlatoonRepository;
 use App\Services\MemberQueryService;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
+#[Middleware('auth')]
 class PlatoonController extends Controller
 {
     public function __construct(
         private PlatoonRepository $platoon,
         private MemberQueryService $memberQuery,
-    ) {
-        $this->middleware('auth');
-    }
+    ) {}
 
     public function show(Division $division, Platoon $platoon)
     {

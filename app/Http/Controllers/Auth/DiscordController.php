@@ -63,7 +63,8 @@ class DiscordController extends Controller
         return $this->createPendingUser(
             discordId: $discordId,
             discordUsername: $discordUsername,
-            email: $email
+            email: $email,
+            avatarHash: $avatarHash
         );
     }
 
@@ -182,9 +183,10 @@ class DiscordController extends Controller
         }
 
         $application = DivisionApplication::create([
-            'user_id'     => $user->id,
-            'division_id' => $division->id,
-            'responses'   => $responses,
+            'user_id'        => $user->id,
+            'division_id'    => $division->id,
+            'discord_avatar' => session()->pull('discord_avatar_hash'),
+            'responses'      => $responses,
         ]);
 
         session()->forget('pending_division_id');
@@ -252,7 +254,8 @@ class DiscordController extends Controller
     protected function createPendingUser(
         string $discordId,
         string $discordUsername,
-        ?string $email
+        ?string $email,
+        ?string $avatarHash = null
     ): RedirectResponse {
         if (! $email) {
             return redirect()->route('login')->withErrors([
@@ -275,9 +278,14 @@ class DiscordController extends Controller
             'email'            => $email,
             'discord_id'       => $discordId,
             'discord_username' => $discordUsername,
+            'discord_avatar'   => $avatarHash,
         ]);
 
         Auth::login(user: $user, remember: true);
+
+        if ($avatarHash !== null) {
+            session(['discord_avatar_hash' => $avatarHash]);
+        }
 
         $redirect = redirect()->route('auth.discord.pending');
 

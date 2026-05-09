@@ -12,10 +12,12 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
+#[Middleware('guest', except: ['logout'])]
 class LoginController extends Controller
 {
     use AuthenticatesWithAOD;
@@ -29,14 +31,6 @@ class LoginController extends Controller
     protected $redirectTo = '/home';
 
     protected $decayMinutes = 5;
-
-    /**
-     * Create a new controller instance.
-     */
-    public function __construct()
-    {
-        $this->middleware('guest', ['except' => 'logout']);
-    }
 
     /**
      * @return Factory|RedirectResponse|Response|View

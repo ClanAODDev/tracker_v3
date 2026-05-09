@@ -14,30 +14,27 @@ use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use App\Services\RecruitmentService;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\View\View;
 
+#[Middleware('auth')]
 class RecruitingController extends Controller
 {
-    use AuthorizesRequests;
-
     public function __construct(
         protected ForumProcedureService $procedureService,
         protected RecruitmentService $recruitmentService,
         protected AODForumService $forumService,
-    ) {
-        $this->middleware('auth');
-    }
+    ) {}
 
     /**
      * @return mixed
      */
+    #[Authorize('recruit', Member::class)]
     public function index()
     {
-        $this->authorize('recruit', Member::class);
-
         $divisions = Division::active()->where('shutdown_at', null)
             ->withoutFloaters()
             ->withoutBR()
@@ -49,9 +46,9 @@ class RecruitingController extends Controller
     /**
      * @throws AuthorizationException
      */
+    #[Authorize('recruit', Member::class)]
     public function submitRecruitment(Request $request)
     {
-        $this->authorize('recruit', Member::class);
 
         $division  = Division::whereSlug($request->division)->first();
         $recruiter = auth()->user()->member;
@@ -76,10 +73,9 @@ class RecruitingController extends Controller
         $this->showSuccessToast('Your recruitment has successfully been completed!');
     }
 
+    #[Authorize('recruit', Member::class)]
     public function form(Division $division)
     {
-
-        $this->authorize('recruit', Member::class);
         if ($division->isShutdown()) {
             $this->showErrorToast('This division has been shutdown and cannot receive new members');
 
@@ -89,9 +85,9 @@ class RecruitingController extends Controller
         return view('recruit.form', compact('division'));
     }
 
+    #[Authorize('recruit', Member::class)]
     public function getDivisionRecruitData(Division $division): JsonResponse
     {
-        $this->authorize('recruit', Member::class);
 
         $settings = $division->settings();
         $threads  = $settings->get('recruiting_threads', []);
@@ -301,9 +297,9 @@ class RecruitingController extends Controller
         return response()->json(['memberExists' => $nameIsTaken]);
     }
 
+    #[Authorize('recruit', Member::class)]
     public function checkForumEmail(Request $request): JsonResponse
     {
-        $this->authorize('recruit', Member::class);
 
         $request->validate(['email' => 'required|email']);
 
@@ -345,9 +341,9 @@ class RecruitingController extends Controller
         ]);
     }
 
+    #[Authorize('recruit', Member::class)]
     public function pendingDiscord(Division $division): JsonResponse
     {
-        $this->authorize('recruit', Member::class);
 
         return response()->json([
             'pending_discord' => $this->getPendingDiscordUsers($division, request()->boolean('all_pending')),

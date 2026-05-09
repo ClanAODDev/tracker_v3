@@ -9,15 +9,14 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Repositories\ClanRepository;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
+#[Middleware('auth')]
 class ReportsController extends Controller
 {
-    public function __construct(private ClanRepository $clan)
-    {
-        $this->middleware('auth');
-    }
+    public function __construct(private ClanRepository $clan) {}
 
     public function clanCensusReport(Request $request)
     {

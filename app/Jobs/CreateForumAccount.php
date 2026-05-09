@@ -7,16 +7,16 @@ use App\Models\User;
 use App\Services\AODForumService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Queue\Attributes\Backoff;
+use Illuminate\Queue\Attributes\Tries;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
+#[Tries(3)]
+#[Backoff([10, 30, 60])]
 class CreateForumAccount implements ShouldQueue
 {
     use Queueable;
-
-    public int $tries = 3;
-
-    public array $backoff = [10, 30, 60];
 
     public function __construct(
         private readonly User $user,

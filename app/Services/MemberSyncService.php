@@ -130,10 +130,10 @@ class MemberSyncService
 
     protected function syncExistingMembers(Collection $forumMemberMap): void
     {
-        $pendingRequestIds = MemberRequest::pending()->pluck('member_id');
+        $unapprovedRequestIds = MemberRequest::whereNull('approved_at')->pluck('member_id');
 
         $members = Member::whereNotIn('division_id', [0])
-            ->whereNotIn('clan_id', $pendingRequestIds)
+            ->whereNotIn('clan_id', $unapprovedRequestIds)
             ->get();
 
         foreach ($members as $member) {

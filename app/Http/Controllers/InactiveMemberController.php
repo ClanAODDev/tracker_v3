@@ -11,15 +11,12 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Collection;
 
+#[Middleware('auth')]
 class InactiveMemberController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index(Division $division): View
     {
         $inactivityDays = $division->settings()->inactivity_days;

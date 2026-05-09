@@ -15,15 +15,16 @@ use App\Services\RankTimelineService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
+#[Middleware('auth')]
 class MemberController extends Controller
 {
     public function __construct(
         private MemberRepository $memberRepository,
         private RankTimelineService $rankTimelineService,
-    ) {
-        $this->middleware('auth');
-    }
+    ) {}
 
     public function search(Request $request)
     {
@@ -75,9 +76,9 @@ class MemberController extends Controller
         ]);
     }
 
+    #[Authorize('recruit', Member::class)]
     public function assignPlatoon(Member $member): JsonResponse
     {
-        $this->authorize('recruit', Member::class);
 
         $platoon            = Platoon::find(request()->platoon_id);
         $member->platoon_id = $platoon->id;
@@ -171,9 +172,9 @@ class MemberController extends Controller
         ]);
     }
 
+    #[Authorize('remindActivity', Member::class)]
     public function bulkReminder(Division $division, Request $request): JsonResponse|RedirectResponse
     {
-        $this->authorize('remindActivity', Member::class);
 
         $memberIds = $request->input('member_ids', []);
 

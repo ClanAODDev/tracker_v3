@@ -10,12 +10,13 @@ use App\Models\Squad;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 
+#[Authorize('manageUnassigned', User::class)]
 class BulkMoveController extends Controller
 {
     public function getPlatoons(Division $division): JsonResponse
     {
-        $this->authorize('manageUnassigned', User::class);
 
         $platoons = $division->platoons()
             ->with('squads:id,platoon_id,name')
@@ -35,7 +36,6 @@ class BulkMoveController extends Controller
 
     public function store(Request $request, Division $division): JsonResponse
     {
-        $this->authorize('manageUnassigned', User::class);
 
         $validated = $request->validate([
             'member_ids'   => 'required|array',

@@ -35,4 +35,17 @@ class DivisionApplication extends Model implements Commentable
     {
         return $this->belongsTo(Division::class);
     }
+
+    public function discordAvatarUrl(): ?string
+    {
+        if (! $this->discord_avatar || ! $this->user?->discord_id) {
+            return null;
+        }
+
+        return sprintf(
+            'https://cdn.discordapp.com/avatars/%s/%s.png?size=64',
+            $this->user->discord_id,
+            $this->discord_avatar
+        );
+    }
 }
