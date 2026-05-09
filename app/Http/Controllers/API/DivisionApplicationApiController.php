@@ -8,18 +8,16 @@ use App\Models\DivisionApplication;
 use App\Models\Member;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Kirschbaum\Commentions\Comment;
 
+#[Middleware('auth')]
+#[Authorize('recruit', Member::class)]
 class DivisionApplicationApiController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index(Division $division): JsonResponse
     {
-        $this->authorize('recruit', Member::class);
 
         if (! $division->settings()->get('application_required', false)) {
             return response()->json(['applications' => []]);
@@ -33,6 +31,7 @@ class DivisionApplicationApiController extends Controller
             ->map(fn ($app) => [
                 'id'               => $app->id,
                 'discord_username' => $app->user->discord_username,
+                'avatar'           => $app->discordAvatarUrl(),
                 'created_at'       => $app->created_at->toIso8601String(),
                 'comments_count'   => $app->comments_count,
                 'responses'        => collect($app->responses)->map(fn ($response) => [
@@ -53,7 +52,6 @@ class DivisionApplicationApiController extends Controller
 
     public function show(Division $division, DivisionApplication $application): JsonResponse
     {
-        $this->authorize('recruit', Member::class);
         $this->assertBelongsToDivision($division, $application);
 
         $application->load(['user', 'comments.author.member']);
@@ -62,6 +60,7 @@ class DivisionApplicationApiController extends Controller
             'application' => [
                 'id'               => $application->id,
                 'discord_username' => $application->user->discord_username,
+                'avatar'           => $application->discordAvatarUrl(),
                 'created_at'       => $application->created_at->toIso8601String(),
                 'responses'        => collect($application->responses)->map(fn ($response) => [
                     'label' => $response['label'] ?? 'Unknown',
@@ -85,7 +84,6 @@ class DivisionApplicationApiController extends Controller
 
     public function destroy(Division $division, DivisionApplication $application): JsonResponse
     {
-        $this->authorize('recruit', Member::class);
         $this->assertBelongsToDivision($division, $application);
 
         if (! auth()->user()->isRole(['sr_ldr', 'admin'])) {
@@ -99,7 +97,6 @@ class DivisionApplicationApiController extends Controller
 
     public function addComment(Request $request, Division $division, DivisionApplication $application): JsonResponse
     {
-        $this->authorize('recruit', Member::class);
         $this->assertBelongsToDivision($division, $application);
 
         $validated = $request->validate([
@@ -127,7 +124,6 @@ class DivisionApplicationApiController extends Controller
 
     public function deleteComment(Division $division, DivisionApplication $application, Comment $comment): JsonResponse
     {
-        $this->authorize('recruit', Member::class);
         $this->assertBelongsToDivision($division, $application);
 
         if ((int) $comment->author_id !== (int) auth()->id()) {

@@ -32,6 +32,10 @@
         @click.prevent="store.setView('detail', app.id)"
       >
         <div class="panel-body">
+          <div class="app-avatar">
+            <img v-if="app.avatar" :src="app.avatar" :alt="app.discord_username" class="app-avatar-img">
+            <div v-else class="app-avatar-placeholder"><i class="fab fa-discord"></i></div>
+          </div>
           <div class="app-main">
             <div class="app-name">{{ app.discord_username }}</div>
             <div class="app-meta">
@@ -98,7 +102,31 @@ export default {
 .application-card .panel-body {
   display: flex;
   align-items: center;
+  gap: 14px;
   padding: 15px 20px;
+}
+
+.app-avatar {
+  flex-shrink: 0;
+}
+
+.app-avatar-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.app-avatar-placeholder {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--overlay-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-muted);
+  font-size: 16px;
 }
 
 .app-main {
@@ -147,10 +175,10 @@ export default {
     -45deg,
     transparent,
     transparent 10px,
-    var(--overlay-light) 10px,
-    var(--overlay-light) 11px
+    color-mix(in srgb, var(--color-danger) 10%, transparent) 10px,
+    color-mix(in srgb, var(--color-danger) 10%, transparent) 11px
   );
-  border: 1px solid var(--overlay-light);
-  color: var(--color-muted);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 35%, transparent);
+  color: var(--color-text);
 }
 </style>

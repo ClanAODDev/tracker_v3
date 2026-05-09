@@ -12,15 +12,16 @@ use App\Repositories\SquadRepository;
 use App\Services\MemberQueryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
+#[Middleware('auth')]
 class SquadController extends Controller
 {
     public function __construct(
         private SquadRepository $squadRepository,
         private MemberQueryService $memberQuery,
-    ) {
-        $this->middleware('auth');
-    }
+    ) {}
 
     public function show(Division $division, Platoon $platoon, Squad $squad)
     {
@@ -33,9 +34,9 @@ class SquadController extends Controller
         return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'unitStats'));
     }
 
+    #[Authorize('recruit', Member::class)]
     public function assignMember(Request $request): JsonResponse
     {
-        $this->authorize('recruit', Member::class);
 
         $member = Member::find($request->member_id);
 

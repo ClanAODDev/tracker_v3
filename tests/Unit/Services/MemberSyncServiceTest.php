@@ -5,6 +5,7 @@ namespace Tests\Unit\Services;
 use App\AOD\MemberSync\GetDivisionInfo;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\MemberRequest;
 use App\Services\MemberSyncService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
@@ -218,6 +219,98 @@ class MemberSyncServiceTest extends TestCase
         $this->assertDatabaseMissing('members', [
             'clan_id' => 88888,
         ]);
+    }
+
+    #[Test]
+    public function members_with_pending_requests_are_not_removed(): void
+    {
+        $division = Division::factory()->create();
+        $member   = Member::factory()->create([
+            'clan_id'     => 22222,
+            'division_id' => $division->id,
+        ]);
+
+        MemberRequest::factory()->create([
+            'member_id'      => $member->clan_id,
+            'approved_at'    => null,
+            'hold_placed_at' => null,
+        ]);
+
+        $mockInfo       = Mockery::mock(GetDivisionInfo::class);
+        $mockInfo->data = [];
+
+        $service = new MemberSyncService($mockInfo);
+        $service->sync();
+
+        $this->assertDatabaseHas('members', ['clan_id' => 22222, 'division_id' => $division->id]);
+        $this->assertEquals(0, $service->getStats()['removed']);
+    }
+
+    #[Test]
+    public function members_with_on_hold_requests_are_not_removed(): void
+    {
+        $division = Division::factory()->create();
+        $member   = Member::factory()->create([
+            'clan_id'     => 33333,
+            'division_id' => $division->id,
+        ]);
+
+        MemberRequest::factory()->create([
+            'member_id'      => $member->clan_id,
+            'approved_at'    => null,
+            'hold_placed_at' => now(),
+        ]);
+
+        $mockInfo       = Mockery::mock(GetDivisionInfo::class);
+        $mockInfo->data = [];
+
+        $service = new MemberSyncService($mockInfo);
+        $service->sync();
+
+        $this->assertDatabaseHas('members', ['clan_id' => 33333, 'division_id' => $division->id]);
+        $this->assertEquals(0, $service->getStats()['removed']);
+    }
+
+    #[Test]
+    public function members_with_approved_requests_are_removed_when_absent_from_forum(): void
+    {
+        $division = Division::factory()->create();
+        $member   = Member::factory()->create([
+            'clan_id'     => 44444,
+            'division_id' => $division->id,
+        ]);
+
+        MemberRequest::factory()->create([
+            'member_id'    => $member->clan_id,
+            'requester_id' => $member->id,
+            'division_id'  => $division->id,
+            'approved_at'  => now(),
+        ]);
+
+        $mockInfo       = Mockery::mock(GetDivisionInfo::class);
+        $mockInfo->data = [
+            [
+                'userid'              => 99991,
+                'username'            => 'AOD_OtherMember',
+                'joindate'            => '2024-01-01',
+                'aoddivision'         => $division->name,
+                'aodrankval'          => 3,
+                'discordtag'          => 'other#1234',
+                'discordid'           => '999910000',
+                'postcount'           => 5,
+                'allow_pm'            => 1,
+                'allow_export'        => 'yes',
+                'tsid'                => 'abc000',
+                'lastdiscord_status'  => 'connected',
+                'lastactivity'        => time(),
+                'lastdiscord_connect' => time(),
+            ],
+        ];
+
+        $service = new MemberSyncService($mockInfo);
+        $service->sync();
+
+        $this->assertEquals(1, $service->getStats()['removed']);
     }
 
     #[Test]

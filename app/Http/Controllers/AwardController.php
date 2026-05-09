@@ -8,15 +8,12 @@ use App\Models\MemberAward;
 use App\Rules\UniqueAwardForMember;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Str;
 
+#[Middleware('auth')]
 class AwardController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         $divisionSlug = request('division');

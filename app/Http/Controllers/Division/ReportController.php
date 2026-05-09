@@ -14,16 +14,17 @@ use DB;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 use Throwable;
 
+#[Middleware('auth')]
 class ReportController extends Controller
 {
     public function __construct(DivisionRepository $division)
     {
         $this->division = $division;
-        $this->middleware('auth');
     }
 
     /**

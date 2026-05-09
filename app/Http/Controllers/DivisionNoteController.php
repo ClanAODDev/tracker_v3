@@ -6,21 +6,19 @@ use App\Models\Division;
 use App\Models\DivisionTag;
 use App\Models\Note;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\View\View;
 
+#[Middleware('auth')]
 class DivisionNoteController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * @return Factory|View
      */
+    #[Authorize('show', Note::class)]
     public function index(Division $division)
     {
-        $this->authorize('show', Note::class);
 
         $type   = request('type');
         $search = request('search');

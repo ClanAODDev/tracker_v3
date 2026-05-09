@@ -10,16 +10,16 @@ use App\Models\User;
 use App\Services\TicketNotificationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
+#[Middleware('auth')]
 class TicketApiController extends Controller
 {
     public function __construct(
         protected TicketNotificationService $notificationService
-    ) {
-        $this->middleware('auth');
-    }
+    ) {}
 
     public function index(): JsonResponse
     {
