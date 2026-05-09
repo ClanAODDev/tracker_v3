@@ -8,7 +8,6 @@ use App\Enums\Role;
 use App\Jobs\CreateForumAccount;
 use App\Models\Division;
 use App\Models\DivisionApplication;
-use App\Models\DivisionApplicationField;
 use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
