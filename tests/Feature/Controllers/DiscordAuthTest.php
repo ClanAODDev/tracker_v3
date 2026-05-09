@@ -751,6 +751,86 @@ class DiscordAuthTest extends TestCase
     }
 
     #[Test]
+    public function discord_callback_generates_unique_name_when_sanitized_username_is_taken(): void
+    {
+        User::factory()->create(['name' => 'TakenUser']);
+
+        $this->mockDiscordUser([
+            'id'       => '111222333444',
+            'nickname' => 'TakenUser',
+            'email'    => 'unique@discord.com',
+        ]);
+
+        $response = $this->get(route('auth.discord.callback'));
+
+        $user = User::where('discord_id', '111222333444')->first();
+        $this->assertNotNull($user);
+        $this->assertEquals('TakenUser_1', $user->name);
+
+        $response->assertRedirect(route('auth.discord.pending'));
+        $response->assertSessionHasErrors('username');
+    }
+
+    #[Test]
+    public function discord_callback_chains_unique_name_suffix_when_multiple_collisions_exist(): void
+    {
+        User::factory()->create(['name' => 'TakenUser']);
+        User::factory()->create(['name' => 'TakenUser_1']);
+
+        $this->mockDiscordUser([
+            'id'       => '555666777888',
+            'nickname' => 'TakenUser',
+            'email'    => 'another@discord.com',
+        ]);
+
+        $response = $this->get(route('auth.discord.callback'));
+
+        $user = User::where('discord_id', '555666777888')->first();
+        $this->assertNotNull($user);
+        $this->assertEquals('TakenUser_2', $user->name);
+
+        $response->assertSessionHasErrors('username');
+    }
+
+    #[Test]
+    public function discord_registration_shows_step_one_when_errors_exist_despite_prior_date_of_birth(): void
+    {
+        $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'clan_id'     => 12345,
+        ]);
+
+        $forumServiceMock = Mockery::mock(AODForumService::class);
+        $forumServiceMock->shouldReceive('userExists')
+            ->with('TakenName', 12345)
+            ->andReturn(true);
+        $this->app->instance(AODForumService::class, $forumServiceMock);
+
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '123456789',
+            'date_of_birth'  => '2000-01-15',
+            'forum_password' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'username'              => 'TakenName',
+                'date_of_birth'         => '2000-01-15',
+                'password'              => 'password123',
+                'password_confirmation' => 'password123',
+                'division_id'           => $division->id,
+            ])
+            ->assertSessionHasErrors('username')
+            ->assertRedirect();
+
+        $this->actingAs($user)
+            ->get(route('auth.discord.pending'))
+            ->assertSee('Before we continue');
+    }
+
+    #[Test]
     public function discord_callback_handles_oauth_failure_gracefully(): void
     {
         $provider = Mockery::mock('Laravel\Socialite\Contracts\Provider');
