@@ -17,11 +17,15 @@
 
     <div v-else-if="store.currentApplication">
       <div class="app-header">
-        <div class="header-main">
-          <div class="app-username">{{ store.currentApplication.discord_username }}</div>
-          <div class="app-date">
-            <i class="fa fa-clock-o m-r-xs"></i>
-            {{ store.formatRelativeDate(store.currentApplication.created_at) }}
+        <div class="header-identity">
+          <img v-if="store.currentApplication.avatar" :src="store.currentApplication.avatar" :alt="store.currentApplication.discord_username" class="header-avatar">
+          <div v-else class="header-avatar-placeholder"><i class="fab fa-discord"></i></div>
+          <div class="header-main">
+            <div class="app-username">{{ store.currentApplication.discord_username }}</div>
+            <div class="app-date">
+              <i class="fa fa-clock-o m-r-xs"></i>
+              {{ store.formatRelativeDate(store.currentApplication.created_at) }}
+            </div>
           </div>
         </div>
         <button
@@ -211,6 +215,33 @@ export default {
   justify-content: space-between;
   align-items: center;
   border-left: 4px solid #5865F2;
+}
+
+.header-identity {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.header-avatar-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--overlay-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-muted);
+  font-size: 20px;
+  flex-shrink: 0;
 }
 
 .app-username {
@@ -439,10 +470,10 @@ export default {
     -45deg,
     transparent,
     transparent 10px,
-    var(--overlay-light) 10px,
-    var(--overlay-light) 11px
+    color-mix(in srgb, var(--color-danger) 10%, transparent) 10px,
+    color-mix(in srgb, var(--color-danger) 10%, transparent) 11px
   );
-  border: 1px solid var(--overlay-light);
-  color: var(--color-muted);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 35%, transparent);
+  color: var(--color-text);
 }
 </style>

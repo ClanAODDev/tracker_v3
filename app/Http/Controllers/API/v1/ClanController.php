@@ -8,18 +8,12 @@ use Google_Client;
 use Google_Service_Calendar;
 use Google_Service_Calendar_Event;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 
+#[Middleware('auth')]
 class ClanController extends ApiController
 {
     public const RFC3339 = 'Y-m-d\\TH:i:sP';
-
-    /**
-     * ClanController constructor.
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     /**
      * Deprecated when website migrates to tracker.

@@ -6,15 +6,12 @@ use App\Models\Division;
 use App\Transformers\OrgChartTransformer;
 use Closure;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\View\View;
 
+#[Middleware('auth')]
 class DivisionOrgChartController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function show(Division $division): View
     {
         return view('division.org-chart', compact('division'));

@@ -13,17 +13,17 @@ use App\Services\MemberQueryService;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\View\View;
 
+#[Middleware('auth')]
 class DivisionController extends Controller
 {
     public function __construct(
         private DivisionRepository $division,
         private DivisionShowService $divisionShow,
         private MemberQueryService $memberQuery,
-    ) {
-        $this->middleware('auth');
-    }
+    ) {}
 
     public function show(Division $division): View
     {

@@ -7,15 +7,12 @@ use App\Data\PendingActionsData;
 use App\Models\Division;
 use Auth;
 use Illuminate\Contracts\View\Factory;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\View\View;
 
+#[Middleware('auth')]
 class AppController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function changeLog()
     {
         return view('application.changelog');

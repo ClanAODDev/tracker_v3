@@ -3,27 +3,25 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Laravel\Sanctum\NewAccessToken;
 
+#[Middleware('auth')]
+#[Middleware('developer')]
 class DeveloperController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth', 'developer']);
-    }
-
+    #[Authorize('create', NewAccessToken::class)]
     public function index(Request $request)
     {
-        $this->authorize('create', NewAccessToken::class);
-
         $tokens = $request->user()->tokens;
 
         return view('developer.index', compact('tokens'));
     }
 
+    #[Authorize('create', NewAccessToken::class)]
     public function generateToken(Request $request)
     {
-        $this->authorize('create', NewAccessToken::class);
 
         request()->validate([
             'token_name' => 'required',

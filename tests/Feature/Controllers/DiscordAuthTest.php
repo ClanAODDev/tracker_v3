@@ -7,6 +7,8 @@ use App\Enums\Position;
 use App\Enums\Role;
 use App\Jobs\CreateForumAccount;
 use App\Models\Division;
+use App\Models\DivisionApplication;
+use App\Models\DivisionApplicationField;
 use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
@@ -828,6 +830,124 @@ class DiscordAuthTest extends TestCase
         $this->actingAs($user)
             ->get(route('auth.discord.pending'))
             ->assertSee('Before we continue');
+    }
+
+    #[Test]
+    public function discord_callback_stores_avatar_hash_in_session_for_pending_user(): void
+    {
+        $this->mockDiscordUser([
+            'id'       => '111999222',
+            'nickname' => 'AvatarUser',
+            'email'    => 'avatar@discord.com',
+            'avatar'   => 'abc123hash',
+        ]);
+
+        $this->get(route('auth.discord.callback'));
+
+        $this->assertEquals('abc123hash', session('discord_avatar_hash'));
+    }
+
+    #[Test]
+    public function discord_callback_does_not_store_avatar_when_none_provided(): void
+    {
+        $this->mockDiscordUser([
+            'id'     => '333444555',
+            'email'  => 'noavatar@discord.com',
+            'avatar' => null,
+        ]);
+
+        $this->get(route('auth.discord.callback'));
+
+        $this->assertNull(session('discord_avatar_hash'));
+    }
+
+    private function buildApplicationPayload(Division $division): array
+    {
+        return $division->applicationFields
+            ->mapWithKeys(function ($f) {
+                $value = $f->type === 'radio'
+                    ? ($f->options[0]['label'] ?? 'Yes')
+                    : 'Test answer';
+
+                return ["field_{$f->id}" => $value];
+            })
+            ->all();
+    }
+
+    #[Test]
+    public function submit_application_stores_avatar_from_session_on_application(): void
+    {
+        $division = Division::factory()->create(['active' => true]);
+
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '987654321',
+            'date_of_birth'  => '2000-01-15',
+            'forum_password' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->withSession([
+                'pending_division_id' => $division->id,
+                'discord_avatar_hash' => 'testhash456',
+            ])
+            ->post(route('auth.discord.application'), $this->buildApplicationPayload($division));
+
+        $application = DivisionApplication::where('user_id', $user->id)->first();
+        $this->assertNotNull($application);
+        $this->assertEquals('testhash456', $application->discord_avatar);
+    }
+
+    #[Test]
+    public function submit_application_clears_avatar_hash_from_session_after_storing(): void
+    {
+        $division = Division::factory()->create(['active' => true]);
+
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '111222333',
+            'date_of_birth'  => '2000-01-15',
+            'forum_password' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->withSession([
+                'pending_division_id' => $division->id,
+                'discord_avatar_hash' => 'clearedHash',
+            ])
+            ->post(route('auth.discord.application'), $this->buildApplicationPayload($division))
+            ->assertSessionMissing('discord_avatar_hash');
+    }
+
+    #[Test]
+    public function discord_avatar_url_is_constructed_from_application_fields(): void
+    {
+        $user = User::factory()->pending()->create([
+            'discord_id' => '123456789',
+        ]);
+
+        $application = DivisionApplication::factory()->create([
+            'user_id'        => $user->id,
+            'discord_avatar' => 'abc123',
+        ]);
+
+        $this->assertEquals(
+            'https://cdn.discordapp.com/avatars/123456789/abc123.png?size=64',
+            $application->discordAvatarUrl()
+        );
+    }
+
+    #[Test]
+    public function discord_avatar_url_returns_null_when_no_avatar_stored(): void
+    {
+        $user = User::factory()->pending()->create([
+            'discord_id' => '123456789',
+        ]);
+
+        $application = DivisionApplication::factory()->create([
+            'user_id'        => $user->id,
+            'discord_avatar' => null,
+        ]);
+
+        $this->assertNull($application->discordAvatarUrl());
     }
 
     #[Test]

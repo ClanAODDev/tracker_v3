@@ -12,22 +12,16 @@ use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
  * Class LeaveController.
  */
+#[Middleware('auth')]
 class LeaveController extends Controller
 {
-    /**
-     * LeaveController constructor.
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * @return Factory|View
      */
