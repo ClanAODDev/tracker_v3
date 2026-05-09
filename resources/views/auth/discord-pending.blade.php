@@ -22,7 +22,7 @@
             <p class="text-muted">Welcome, <strong class="c-white">{{ auth()->user()->discord_username ?? auth()->user()->name }}</strong></p>
         </div>
 
-        @if ($preview || ! auth()->user()->date_of_birth || auth()->user()->forum_password)
+        @if ($preview || ! auth()->user()->date_of_birth || auth()->user()->forum_password || $errors->any())
             <div class="panel panel-filled animate-fade-in-up auth__panel">
                 <div class="auth__pattern"></div>
                 <div class="panel-body">
@@ -30,11 +30,9 @@
                         Before we continue, we need a few more details.
                     </p>
 
-                    @if ($errors->any())
+                    @if ($errors->has('division_id'))
                         <div class="alert alert-danger">
-                            @foreach ($errors->all() as $error)
-                                <p class="m-b-none">{{ $error }}</p>
-                            @endforeach
+                            <p class="m-b-none">{{ $errors->first('division_id') }}</p>
                         </div>
                     @endif
 
@@ -55,31 +53,47 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->has('username') ? 'has-error' : '' }}">
                                 <label for="username">Forum Username <span class="text-danger">*</span></label>
                                 <input type="text" name="username" id="username" class="form-control" value="{{ old('username', auth()->user()->name) }}" required maxlength="50">
-                                <p class="help-block text-muted">This will be your forum account username. Letters, numbers, and underscores only.</p>
+                                @error('username')
+                                    <p class="help-block text-danger">{{ $message }}</p>
+                                @else
+                                    <p class="help-block text-muted">This will be your forum account username. Letters, numbers, and underscores only.</p>
+                                @enderror
                             </div>
-                            <div class="form-group">
+                            <div class="form-group {{ $errors->has('date_of_birth') ? 'has-error' : '' }}">
                                 <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
                                 <input type="date" name="date_of_birth" id="date_of_birth" class="form-control" value="{{ old('date_of_birth') }}" required>
-                                <p class="help-block text-muted">You must be at least 13 years old to join.</p>
+                                @error('date_of_birth')
+                                    <p class="help-block text-danger">{{ $message }}</p>
+                                @else
+                                    <p class="help-block text-muted">You must be at least 13 years old to join.</p>
+                                @enderror
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <div class="form-group">
+                                    <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
                                         <label for="password">Password <span class="text-danger">*</span></label>
                                         <input type="password" name="password" id="password" class="form-control" autocomplete="new-password" required minlength="8">
+                                        @error('password')
+                                            <p class="help-block text-danger">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <div class="form-group">
+                                    <div class="form-group {{ $errors->has('password_confirmation') ? 'has-error' : '' }}">
                                         <label for="password_confirmation">Confirm Password <span class="text-danger">*</span></label>
                                         <input type="password" name="password_confirmation" id="password_confirmation" class="form-control" autocomplete="new-password" required>
+                                        @error('password_confirmation')
+                                            <p class="help-block text-danger">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
-                            <p class="help-block text-muted m-t-none">This will be your forum account password.</p>
+                            @if (! $errors->has('password') && ! $errors->has('password_confirmation'))
+                                <p class="help-block text-muted m-t-none">This will be your forum account password.</p>
+                            @endif
                             @if (! $preview)
                                 <div class="text-center">
                                     <button type="submit" class="btn btn-primary">

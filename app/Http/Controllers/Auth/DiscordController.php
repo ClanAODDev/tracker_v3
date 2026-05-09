@@ -267,15 +267,11 @@ class DiscordController extends Controller
         }
 
         $sanitizedName = $this->sanitizeName($discordUsername);
-
-        if (User::where('name', $sanitizedName)->exists()) {
-            return redirect()->route('login')->withErrors([
-                'discord' => 'An account with this username already exists. Please sign in with your forum credentials or contact an administrator.',
-            ]);
-        }
+        $uniqueName    = $this->makeUniqueName($sanitizedName);
+        $hadCollision  = $uniqueName !== $sanitizedName;
 
         $user = User::create([
-            'name'             => $sanitizedName,
+            'name'             => $uniqueName,
             'email'            => $email,
             'discord_id'       => $discordId,
             'discord_username' => $discordUsername,
@@ -283,7 +279,15 @@ class DiscordController extends Controller
 
         Auth::login(user: $user, remember: true);
 
-        return redirect()->route('auth.discord.pending');
+        $redirect = redirect()->route('auth.discord.pending');
+
+        if ($hadCollision) {
+            $redirect = $redirect->withErrors([
+                'username' => 'Your chosen AOD username is already in use. Please choose a different one.',
+            ]);
+        }
+
+        return $redirect;
     }
 
     protected function sanitizeName(string $name): string
@@ -291,5 +295,18 @@ class DiscordController extends Controller
         $name = preg_replace(pattern: '/[^a-zA-Z0-9_]/', replacement: '', subject: $name);
 
         return substr($name, offset: 0, length: 50) ?: 'discord_user';
+    }
+
+    protected function makeUniqueName(string $base): string
+    {
+        $name = $base;
+        $i    = 1;
+
+        while (User::where('name', $name)->exists()) {
+            $suffix = '_' . $i++;
+            $name   = substr($base, 0, 50 - strlen($suffix)) . $suffix;
+        }
+
+        return $name;
     }
 }
