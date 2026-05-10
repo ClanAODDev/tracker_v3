@@ -22,7 +22,7 @@
             <p class="text-muted">Welcome, <strong class="c-white">{{ auth()->user()->discord_username ?? auth()->user()->name }}</strong></p>
         </div>
 
-        @if ($preview || ! auth()->user()->date_of_birth || auth()->user()->forum_password || $errors->any())
+        @if ($preview || ! auth()->user()->date_of_birth || $errors->any())
             <div class="panel panel-filled animate-fade-in-up auth__panel">
                 <div class="auth__pattern"></div>
                 <div class="panel-body">
