@@ -83,7 +83,7 @@ class DiscordController extends Controller
 
         $division = null;
 
-        if ($user->date_of_birth && ! $user->forum_password && ! $user->divisionApplication) {
+        if ($user->date_of_birth && ! $user->divisionApplication) {
             $divisionId = session('pending_division_id');
             $division   = $divisionId ? Division::find($divisionId) : null;
         }
