@@ -231,7 +231,9 @@ class MemberSyncServiceTest extends TestCase
         ]);
 
         MemberRequest::factory()->create([
-            'member_id'      => $member->clan_id,
+            'member_id'      => $member->id,
+            'requester_id'   => $member->id,
+            'division_id'    => $division->id,
             'approved_at'    => null,
             'hold_placed_at' => null,
         ]);
@@ -256,7 +258,9 @@ class MemberSyncServiceTest extends TestCase
         ]);
 
         MemberRequest::factory()->create([
-            'member_id'      => $member->clan_id,
+            'member_id'      => $member->id,
+            'requester_id'   => $member->id,
+            'division_id'    => $division->id,
             'approved_at'    => null,
             'hold_placed_at' => now(),
         ]);
@@ -281,7 +285,7 @@ class MemberSyncServiceTest extends TestCase
         ]);
 
         MemberRequest::factory()->create([
-            'member_id'    => $member->clan_id,
+            'member_id'    => $member->id,
             'requester_id' => $member->id,
             'division_id'  => $division->id,
             'approved_at'  => now(),
