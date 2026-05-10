@@ -53,14 +53,25 @@
                                     @endforeach
                                 </div>
                             </div>
-                            <div class="form-group {{ $errors->has('username') ? 'has-error' : '' }}">
-                                <label for="username">Forum Username <span class="text-danger">*</span></label>
-                                <input type="text" name="username" id="username" class="form-control" value="{{ old('username', auth()->user()->name) }}" required maxlength="50">
-                                @error('username')
-                                    <p class="help-block text-danger">{{ $message }}</p>
-                                @else
-                                    <p class="help-block text-muted">This will be your forum account username. Letters, numbers, and underscores only.</p>
-                                @enderror
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group {{ $errors->has('username') ? 'has-error' : '' }}">
+                                        <label for="username">Forum Username <span class="text-danger">*</span></label>
+                                        <input type="text" name="username" id="username" class="form-control" value="{{ old('username', auth()->user()->name) }}" required maxlength="50">
+                                        @error('username')
+                                            <p class="help-block text-danger">{{ $message }}</p>
+                                        @else
+                                            <p class="help-block text-muted">Letters, numbers, and underscores only.</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <label>Email</label>
+                                        <input type="text" class="form-control" value="{{ auth()->user()->email }}" readonly>
+                                        <p class="help-block text-muted">From your Discord account.</p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="form-group {{ $errors->has('date_of_birth') ? 'has-error' : '' }}">
                                 <label for="date_of_birth">Date of Birth <span class="text-danger">*</span></label>
