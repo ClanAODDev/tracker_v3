@@ -1352,6 +1352,28 @@ var Tracker = Tracker || {};
                 });
             });
 
+            $(document).on('click', '.settings-sync-avatar-btn', function(e) {
+                e.preventDefault();
+                const $btn = $(this);
+                const url = $btn.data('url');
+                const originalHtml = $btn.html();
+
+                $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Syncing...');
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: { _token: csrfToken },
+                    success: () => {
+                        location.reload();
+                    },
+                    error: (xhr) => {
+                        toastr.error(xhr.responseJSON?.message || 'Failed to sync avatar');
+                        $btn.prop('disabled', false).html(originalHtml);
+                    }
+                });
+            });
+
             $(document).on('click', '.clear-reminders-btn', function(e) {
                 e.preventDefault();
                 const $btn = $(this);

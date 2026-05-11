@@ -19,6 +19,11 @@
             <span class="settings-profile-name">{{ auth()->user()->name }}</span>
             @if (!$settingsAvatar)
                 <span class="settings-profile-hint">Log-in with Discord to load avatar</span>
+            @elseif (auth()->user()->member?->discord_id)
+                <button type="button" class="settings-sync-avatar-btn"
+                        data-url="{{ route('settings.sync-avatar') }}">
+                    <i class="fab fa-discord"></i> Sync avatar
+                </button>
             @endif
         </div>
     </div>

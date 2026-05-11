@@ -9,8 +9,10 @@ use App\Http\Controllers\MemberTransferController;
 use App\Http\Controllers\TrainingController;
 use App\Models\Division;
 use App\Models\Feedback;
+use App\Services\AODBotService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Throwable;
 
 Route::get('/', [AppController::class, 'index'])->name('index');
 Route::get('home', [AppController::class, 'index'])->name('home');
@@ -91,6 +93,25 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
     })->name('ingame-handles');
 
     Route::post('transfer-request', [MemberTransferController::class, 'store'])->name('transfer-request');
+
+    Route::post('sync-avatar', function (AODBotService $botService) {
+        $member = auth()->user()->member;
+
+        if (! $member || ! $member->discord_id) {
+            return response()->json(['message' => 'No Discord account linked'], 400);
+        }
+
+        try {
+            $hash = $botService->getMemberAvatar($member->discord_id);
+        } catch (Throwable) {
+            return response()->json(['message' => 'Failed to reach Discord bot'], 503);
+        }
+
+        $member->timestamps = false;
+        $member->update(['discord_avatar' => $hash]);
+
+        return response()->json(['success' => true]);
+    })->name('sync-avatar');
 });
 
 Route::middleware('auth')->post('feedback', function (Request $request) {
