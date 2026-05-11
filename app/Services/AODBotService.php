@@ -64,4 +64,16 @@ class AODBotService
 
         return $this->send($url);
     }
+
+    /**
+     * @throws GuzzleException
+     */
+    public function getMemberAvatar(string|int $discord_id): ?string
+    {
+        $url      = sprintf('%s/members/%s/avatar', $this->baseUrl, $discord_id);
+        $response = $this->send($url);
+        $data     = json_decode($response->getBody()->getContents(), associative: true);
+
+        return $data['avatarHash'] ?? null;
+    }
 }

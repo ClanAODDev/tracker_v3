@@ -254,4 +254,5 @@ class MemberController extends Controller
             'date'       => $now->format('n/j'),
         ]);
     }
+
 }
