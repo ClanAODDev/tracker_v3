@@ -146,6 +146,36 @@ class AODBotServiceTest extends TestCase
     }
 
     #[Test]
+    public function get_member_avatar_returns_avatar_hash()
+    {
+        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
+        config(['aod.discord_bot_token' => 'test-token']);
+
+        $service = $this->createServiceWithMockedClient([
+            new Response(200, [], json_encode(['avatarHash' => 'abc123def456'])),
+        ]);
+
+        $hash = $service->getMemberAvatar('123456789012345678');
+
+        $this->assertEquals('abc123def456', $hash);
+    }
+
+    #[Test]
+    public function get_member_avatar_returns_null_when_no_avatar()
+    {
+        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
+        config(['aod.discord_bot_token' => 'test-token']);
+
+        $service = $this->createServiceWithMockedClient([
+            new Response(200, [], json_encode(['avatarHash' => null])),
+        ]);
+
+        $hash = $service->getMemberAvatar('123456789012345678');
+
+        $this->assertNull($hash);
+    }
+
+    #[Test]
     public function service_includes_content_type_header()
     {
         config(['aod.bot_api_base_url' => 'https://bot.example.com']);
