@@ -153,5 +153,4 @@ class MemberPolicy
 
         return false;
     }
-
 }
