@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Models\User;
 use App\Services\AODBotService;
 use GuzzleHttp\Exception\TransferException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -47,7 +48,7 @@ class SyncDiscordAvatarTest extends TestCase
     #[Test]
     public function user_without_member_is_blocked_by_middleware(): void
     {
-        $user = \App\Models\User::factory()->create(['member_id' => null]);
+        $user = User::factory()->create(['member_id' => null]);
 
         $response = $this->actingAs($user)
             ->postJson(route('settings.sync-avatar'));
