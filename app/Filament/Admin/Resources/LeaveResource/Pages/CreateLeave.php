@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources\LeaveResource\Pages;
 
 use App\Filament\Admin\Resources\LeaveResource;
-use App\Models\Member;
 use App\Models\Note;
 use Filament\Resources\Pages\CreateRecord;
 
@@ -15,7 +14,7 @@ class CreateLeave extends CreateRecord
     {
         $note = Note::create([
             'body'      => 'Leave of absence requested. Reason: ' . $data['note']['body'],
-            'member_id' => Member::whereClanId($data['member_id'])->first()->id,
+            'member_id' => $data['member_id'],
             'author_id' => auth()->id(),
             'type'      => 'misc',
         ]);
