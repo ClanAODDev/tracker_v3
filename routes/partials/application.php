@@ -12,7 +12,6 @@ use App\Models\Feedback;
 use App\Http\Requests\SyncDiscordAvatar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Throwable;
 
 Route::get('/', [AppController::class, 'index'])->name('index');
 Route::get('home', [AppController::class, 'index'])->name('home');
