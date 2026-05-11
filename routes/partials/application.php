@@ -9,7 +9,7 @@ use App\Http\Controllers\MemberTransferController;
 use App\Http\Controllers\TrainingController;
 use App\Models\Division;
 use App\Models\Feedback;
-use App\Services\AODBotService;
+use App\Http\Requests\SyncDiscordAvatar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Throwable;
@@ -94,21 +94,12 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
 
     Route::post('transfer-request', [MemberTransferController::class, 'store'])->name('transfer-request');
 
-    Route::post('sync-avatar', function (AODBotService $botService) {
-        $member = auth()->user()->member;
-
-        if (! $member || ! $member->discord_id) {
-            return response()->json(['message' => 'No Discord account linked'], 400);
-        }
-
+    Route::post('sync-avatar', function (SyncDiscordAvatar $request) {
         try {
-            $hash = $botService->getMemberAvatar($member->discord_id);
+            $request->persist();
         } catch (Throwable) {
             return response()->json(['message' => 'Failed to reach Discord bot'], 503);
         }
-
-        $member->timestamps = false;
-        $member->update(['discord_avatar' => $hash]);
 
         return response()->json(['success' => true]);
     })->name('sync-avatar');
