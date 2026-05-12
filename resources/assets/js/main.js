@@ -24,6 +24,7 @@ var Tracker = Tracker || {};
             Tracker.InitCollectionSearch();
             Tracker.InitSmoothScroll();
             Tracker.InitSettings();
+            Tracker.InitAvatarSync();
             Tracker.InitProfileModals();
             Tracker.InitNoSquadModal();
             Tracker.InitWelcomeModal();
@@ -1258,6 +1259,65 @@ var Tracker = Tracker || {};
             });
         },
 
+        InitAvatarSync() {
+            const avatarSyncKey = () => `avatar_sync_last_${window.Laravel.userId}`;
+            const avatarSyncCooldownMs = 2 * 60 * 60 * 1000;
+            const $slideover = $('.settings-slideover');
+
+            const checkAvatarSyncCooldown = () => {
+                const $btn = $('.settings-sync-avatar-btn');
+                if (!$btn.length) return;
+
+                const last = parseInt(localStorage.getItem(avatarSyncKey()) || '0', 10);
+                const remaining = avatarSyncCooldownMs - (Date.now() - last);
+
+                if (remaining > 0) {
+                    $btn.hide();
+                } else {
+                    $btn.show();
+                }
+            };
+
+            $slideover.on('transitionend', checkAvatarSyncCooldown);
+
+            $(document).on('click', '.settings-sync-avatar-btn', function(e) {
+                e.preventDefault();
+                const $btn = $(this);
+                const url = $btn.data('url');
+                const originalHtml = $btn.html();
+
+                $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Syncing...');
+
+                $.ajax({
+                    url: url,
+                    method: 'POST',
+                    data: { _token: csrfToken },
+                    success: (response) => {
+                        localStorage.setItem(avatarSyncKey(), Date.now().toString());
+
+                        if (response.avatarUrl) {
+                            const $avatarWrap = $btn.closest('.settings-profile').find('.settings-profile-avatar');
+                            $avatarWrap.find('.settings-avatar-placeholder').remove();
+                            if ($avatarWrap.find('.settings-avatar-img').length) {
+                                $avatarWrap.find('.settings-avatar-img').attr('src', response.avatarUrl);
+                            } else {
+                                $avatarWrap.html(`<img src="${response.avatarUrl}" alt="" class="settings-avatar-img">`);
+                            }
+                            toastr.success('Avatar synced');
+                        } else {
+                            toastr.info('No Discord avatar found');
+                        }
+
+                        $btn.hide();
+                    },
+                    error: (xhr) => {
+                        toastr.error(xhr.responseJSON?.message || 'Failed to sync avatar');
+                        $btn.prop('disabled', false).html(originalHtml);
+                    }
+                });
+            });
+        },
+
         InitActivityReminderToggle() {
             $(document).on('click', '.activity-reminder-toggle', function(e) {
                 e.preventDefault();
@@ -1348,62 +1408,6 @@ var Tracker = Tracker || {};
                         const message = xhr.responseJSON?.message || 'Failed to set reminder';
                         toastr.error(message);
                         $btn.html($btn.data('original-btn-html'));
-                    }
-                });
-            });
-
-            const avatarSyncKey = () => `avatar_sync_last_${window.Laravel.userId}`;
-            const avatarSyncCooldownMs = 2 * 60 * 60 * 1000;
-
-            const checkAvatarSyncCooldown = () => {
-                const $btn = $('.settings-sync-avatar-btn');
-                if (!$btn.length) return;
-
-                const last = parseInt(localStorage.getItem(avatarSyncKey()) || '0', 10);
-                const remaining = avatarSyncCooldownMs - (Date.now() - last);
-
-                if (remaining > 0) {
-                    $btn.hide();
-                } else {
-                    $btn.show();
-                }
-            };
-
-            $slideover.on('transitionend', checkAvatarSyncCooldown);
-
-            $(document).on('click', '.settings-sync-avatar-btn', function(e) {
-                e.preventDefault();
-                const $btn = $(this);
-                const url = $btn.data('url');
-                const originalHtml = $btn.html();
-
-                $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Syncing...');
-
-                $.ajax({
-                    url: url,
-                    method: 'POST',
-                    data: { _token: csrfToken },
-                    success: (response) => {
-                        localStorage.setItem(avatarSyncKey(), Date.now().toString());
-
-                        if (response.avatarUrl) {
-                            const $avatarWrap = $btn.closest('.settings-profile').find('.settings-profile-avatar');
-                            $avatarWrap.find('.settings-avatar-placeholder').remove();
-                            if ($avatarWrap.find('.settings-avatar-img').length) {
-                                $avatarWrap.find('.settings-avatar-img').attr('src', response.avatarUrl);
-                            } else {
-                                $avatarWrap.html(`<img src="${response.avatarUrl}" alt="" class="settings-avatar-img">`);
-                            }
-                            toastr.success('Avatar synced');
-                        } else {
-                            toastr.info('No Discord avatar found');
-                        }
-
-                        $btn.hide();
-                    },
-                    error: (xhr) => {
-                        toastr.error(xhr.responseJSON?.message || 'Failed to sync avatar');
-                        $btn.prop('disabled', false).html(originalHtml);
                     }
                 });
             });
