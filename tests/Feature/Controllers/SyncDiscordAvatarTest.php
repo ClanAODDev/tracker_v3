@@ -29,7 +29,7 @@ class SyncDiscordAvatarTest extends TestCase
             ->postJson(route('settings.sync-avatar'));
 
         $response->assertOk();
-        $response->assertJson(['success' => true]);
+        $response->assertJsonStructure(['avatarUrl']);
 
         $this->assertEquals('newhash123', $user->member->fresh()->discord_avatar);
     }

@@ -229,6 +229,31 @@ body.mobile-nav-left .settings-slideover {
     color: var(--color-muted);
 }
 
+.settings-sync-avatar-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    background: rgba(88, 101, 242, 0.15);
+    border: 1px solid rgba(88, 101, 242, 0.35);
+    border-radius: 4px;
+    color: #7289da;
+    font-size: 11px;
+    cursor: pointer;
+    @include transition(all 0.2s);
+
+    &:hover:not(:disabled) {
+        background: rgba(88, 101, 242, 0.28);
+        border-color: rgba(88, 101, 242, 0.6);
+        color: #8ea1e1;
+    }
+
+    &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+}
+
 .settings-close {
     background: none;
     border: none;

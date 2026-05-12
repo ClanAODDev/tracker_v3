@@ -1364,8 +1364,20 @@ var Tracker = Tracker || {};
                     url: url,
                     method: 'POST',
                     data: { _token: csrfToken },
-                    success: () => {
-                        location.reload();
+                    success: (response) => {
+                        if (response.avatarUrl) {
+                            const $avatarWrap = $btn.closest('.settings-profile').find('.settings-profile-avatar');
+                            $avatarWrap.find('.settings-avatar-placeholder').remove();
+                            if ($avatarWrap.find('.settings-avatar-img').length) {
+                                $avatarWrap.find('.settings-avatar-img').attr('src', response.avatarUrl);
+                            } else {
+                                $avatarWrap.html(`<img src="${response.avatarUrl}" alt="" class="settings-avatar-img">`);
+                            }
+                            toastr.success('Avatar synced');
+                        } else {
+                            toastr.info('No Discord avatar found');
+                        }
+                        $btn.prop('disabled', false).html(originalHtml);
                     },
                     error: (xhr) => {
                         toastr.error(xhr.responseJSON?.message || 'Failed to sync avatar');

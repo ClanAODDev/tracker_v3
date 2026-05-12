@@ -100,7 +100,7 @@ Route::middleware('auth')->prefix('settings')->name('settings.')->group(function
             return response()->json(['message' => 'Failed to reach Discord bot'], 503);
         }
 
-        return response()->json(['success' => true]);
+        return response()->json(['avatarUrl' => $request->user()->member->fresh()->getDiscordAvatarUrl()]);
     })->name('sync-avatar');
 });
 
