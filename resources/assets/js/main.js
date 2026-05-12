@@ -1352,6 +1352,25 @@ var Tracker = Tracker || {};
                 });
             });
 
+            const avatarSyncKey = () => `avatar_sync_last_${window.Laravel.userId}`;
+            const avatarSyncCooldownMs = 2 * 60 * 60 * 1000;
+
+            const checkAvatarSyncCooldown = () => {
+                const $btn = $('.settings-sync-avatar-btn');
+                if (!$btn.length) return;
+
+                const last = parseInt(localStorage.getItem(avatarSyncKey()) || '0', 10);
+                const remaining = avatarSyncCooldownMs - (Date.now() - last);
+
+                if (remaining > 0) {
+                    $btn.hide();
+                } else {
+                    $btn.show();
+                }
+            };
+
+            $slideover.on('transitionend', checkAvatarSyncCooldown);
+
             $(document).on('click', '.settings-sync-avatar-btn', function(e) {
                 e.preventDefault();
                 const $btn = $(this);
@@ -1365,6 +1384,8 @@ var Tracker = Tracker || {};
                     method: 'POST',
                     data: { _token: csrfToken },
                     success: (response) => {
+                        localStorage.setItem(avatarSyncKey(), Date.now().toString());
+
                         if (response.avatarUrl) {
                             const $avatarWrap = $btn.closest('.settings-profile').find('.settings-profile-avatar');
                             $avatarWrap.find('.settings-avatar-placeholder').remove();
@@ -1377,7 +1398,8 @@ var Tracker = Tracker || {};
                         } else {
                             toastr.info('No Discord avatar found');
                         }
-                        $btn.prop('disabled', false).html(originalHtml);
+
+                        $btn.hide();
                     },
                     error: (xhr) => {
                         toastr.error(xhr.responseJSON?.message || 'Failed to sync avatar');
