@@ -63,13 +63,13 @@
 
         <div class="section-card">
           <div class="section-header">
-            <i class="fa fa-comments-o m-r-sm"></i>
+            <i class="fas fa-comments m-r-sm"></i>
             Internal Comments (not visible to member)
             <span class="comment-count">{{ commentCount }}</span>
           </div>
           <div class="section-content">
             <div v-if="!store.currentApplication.comments || store.currentApplication.comments.length === 0" class="text-center p-md">
-              <i class="fa fa-comment-o fa-2x text-muted m-b-sm"></i>
+              <i class="fas fa-comment fa-2x text-muted m-b-sm"></i>
               <p class="text-muted m-b-none">No comments yet</p>
             </div>
 

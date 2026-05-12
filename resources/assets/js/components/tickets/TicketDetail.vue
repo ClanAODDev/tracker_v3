@@ -207,7 +207,7 @@
 
         <div class="section-card">
           <div class="section-header">
-            <i class="fa fa-comments-o m-r-sm"></i>
+            <i class="fas fa-comments m-r-sm"></i>
             Discussion
             <span class="comment-count">{{ userCommentCount }}</span>
             <button
@@ -222,7 +222,7 @@
           </div>
           <div class="section-content">
             <div v-if="!store.currentTicket.comments || store.currentTicket.comments.length === 0" class="text-center p-md">
-              <i class="fa fa-comment-o fa-2x text-muted m-b-sm"></i>
+              <i class="fas fa-comment fa-2x text-muted m-b-sm"></i>
               <p class="text-muted m-b-none">No comments yet</p>
             </div>
 

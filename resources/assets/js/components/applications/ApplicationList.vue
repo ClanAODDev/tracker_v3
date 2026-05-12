@@ -44,8 +44,8 @@
                 {{ store.formatRelativeDate(app.created_at) }}
               </span>
               <span v-if="app.comments_count > 0" class="meta-comments">
-                <i class="fa fa-comment-o text-muted m-r-xs"></i>
-                {{ app.comments_count }}
+                <i class="fas fa-comment"></i>
+                <span class="comment-badge">{{ app.comments_count }}</span>
               </span>
             </div>
           </div>
@@ -151,8 +151,24 @@ export default {
 .meta-comments {
   display: flex;
   align-items: center;
+  gap: 5px;
   font-size: 12px;
   color: var(--color-muted);
+}
+
+.comment-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 9px;
+  line-height: 1;
 }
 
 .app-arrow {
