@@ -70,7 +70,7 @@ class AODBotService
      */
     public function getMemberAvatar(string|int $discord_id): ?string
     {
-        $url      = sprintf('%s/members/%s/avatar', $this->baseUrl, $discord_id);
+        $url      = sprintf('%s/members/%s', $this->baseUrl, $discord_id);
         $response = $this->send($url);
         $data     = json_decode($response->getBody()->getContents(), associative: true);
 
