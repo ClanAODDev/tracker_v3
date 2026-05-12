@@ -20,10 +20,9 @@
             <span class="text-info" title="Part-Timer (Primary: {{ $member->division?->name ?? 'None' }})"><i
                         class="fa fa-clock"></i></span>
         @endif
-        <span class="pull-right" title="View Profile">
-            <a href="{{ route('member', $member->getUrlParams()) }}" class="btn btn-accent btn-xs"><i
-                        class="fa fa-search"></i></a>
-        </span>
+        <a href="{{ route('member', $member->getUrlParams()) }}" class="member-profile-link pull-right" title="View Profile">
+            <i class="fa fa-external-link"></i>
+        </a>
     </td>
     <td class="text-center hidden-xs">{{ $member->rank->getAbbreviation() }}</td>
     @if(isset($platoon))
@@ -47,14 +46,14 @@
             @endif
         </td>
     @endif
-    <td class="text-center hidden-xs hidden-sm">{{ $member->join_date }}</td>
+    <td class="text-center hidden-xs hidden-sm">{{ $member->join_date?->format('Y-m-d') }}</td>
     <td class="text-center">
                     <span class="{{ getActivityClass($member->last_voice_activity, $division) }}"
                           title="{{$member->last_voice_activity}}">
                         {{ $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks', 'months']) }}
                     </span>
     </td>
-    <td class="text-center hidden-xs">{{ $member->last_promoted_at ?? 'Never' }}</td>
+    <td class="text-center hidden-xs">{{ $member->last_promoted_at?->format('Y-m-d') ?? 'Never' }}</td>
     @if(!auth()->user()->isRole('member'))
         @php
             $remindedToday = $member->last_activity_reminder_at?->isToday();

@@ -51,8 +51,30 @@ function initPlatoon() {
             const bgColor = styles.getPropertyValue('--color-bg-panel').trim() || '#1a1d21';
             const total = values.reduce((a, b) => a + b, 0);
 
+            const activePct = total > 0 ? Math.round((values[0] / total) * 100) : 0;
+
+            const centerTextPlugin = {
+                id: 'centerText',
+                afterDraw(chart) {
+                    const { ctx, chartArea: { top, bottom, left, right } } = chart;
+                    const cx = (left + right) / 2;
+                    const cy = (top + bottom) / 2;
+                    ctx.save();
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillStyle = textColor;
+                    ctx.font = 'bold 20px sans-serif';
+                    ctx.fillText(`${activePct}%`, cx, cy - 8);
+                    ctx.font = '10px sans-serif';
+                    ctx.fillStyle = styles.getPropertyValue('--color-muted').trim() || '#6c757d';
+                    ctx.fillText('active', cx, cy + 10);
+                    ctx.restore();
+                }
+            };
+
             new Chart(canvas, {
                 type: 'doughnut',
+                plugins: [centerTextPlugin],
                 data: {
                     labels: labels,
                     datasets: [{
@@ -67,7 +89,7 @@ function initPlatoon() {
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    cutout: '60%',
+                    cutout: '62%',
                     plugins: {
                         legend: {
                             display: true,
@@ -76,12 +98,21 @@ function initPlatoon() {
                                 color: textColor,
                                 usePointStyle: true,
                                 pointStyle: 'circle',
-                                font: {
-                                    size: 11
-                                },
-                                padding: 12,
+                                font: { size: 11 },
+                                padding: 10,
                                 boxWidth: 8,
-                                boxHeight: 8
+                                boxHeight: 8,
+                                generateLabels(chart) {
+                                    const dataset = chart.data.datasets[0];
+                                    return chart.data.labels.map((label, i) => ({
+                                        text: `${label} (${dataset.data[i]})`,
+                                        fillStyle: dataset.backgroundColor[i],
+                                        strokeStyle: dataset.backgroundColor[i],
+                                        pointStyle: 'circle',
+                                        hidden: false,
+                                        index: i
+                                    }));
+                                }
                             }
                         },
                         tooltip: {
@@ -431,6 +462,11 @@ function initPlatoon() {
                 $bulkToggle.on('click', () => {
                     toggleBulkMode();
                 });
+            }
+
+            const $columnToggles = $('.column-toggles');
+            if ($columnToggles.length) {
+                $('#playerFilter').append($columnToggles);
             }
 
             $('.no-sort').removeClass('sorting');

@@ -410,12 +410,20 @@ input[type="checkbox"] {
     }
 }
 
+.member-profile-link {
+    color: var(--color-muted);
+    font-size: 11px;
+    opacity: 0.5;
+    @include transition(opacity 0.15s, color 0.15s);
+
+    &:hover {
+        color: var(--color-accent);
+        opacity: 1;
+    }
+}
+
 .members-table-toggle {
-    margin-top: 15px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 15px;
+    display: none;
     position: relative;
     z-index: 10;
 
@@ -4079,12 +4087,12 @@ a.squad-drop-target {
     gap: 3px;
     font-size: 12px;
     color: var(--color-muted);
-    margin-bottom: 12px;
+    margin-bottom: 6px;
 }
 
 .squad-drop-target-footer {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
 .squad-drop-target-stats {
