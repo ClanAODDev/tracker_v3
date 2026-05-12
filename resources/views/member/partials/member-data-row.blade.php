@@ -20,9 +20,9 @@
             <span class="text-info" title="Part-Timer (Primary: {{ $member->division?->name ?? 'None' }})"><i
                         class="fa fa-clock"></i></span>
         @endif
-        <a href="{{ route('member', $member->getUrlParams()) }}" class="member-profile-link pull-right" title="View Profile">
-            <i class="fa fa-external-link"></i>
-        </a>
+        <span class="pull-right">
+            <a href="{{ route('member', $member->getUrlParams()) }}" class="btn btn-accent btn-xs" title="View Profile"><i class="fa fa-search"></i></a>
+        </span>
     </td>
     <td class="text-center hidden-xs">{{ $member->rank->getAbbreviation() }}</td>
     @if(isset($platoon))

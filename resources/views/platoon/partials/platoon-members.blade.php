@@ -1,9 +1,8 @@
-<div class="panel-body" style="padding-bottom: 0;">
-    <h3 class="division-section-title">Members</h3>
-    <hr/>
-</div>
 <div class='panel-body border-bottom'>
-    <div id='playerFilter'></div>
+    <div class="members-controls-row">
+        <h3 class="division-section-title">Members</h3>
+        <div id='playerFilter'></div>
+    </div>
     @include('member.partials.tag-filter')
     @include ('member.partials.members-table-toggle')
     <div class="table-responsive">
