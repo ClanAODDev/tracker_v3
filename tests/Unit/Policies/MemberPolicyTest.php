@@ -208,13 +208,13 @@ class MemberPolicyTest extends TestCase
     }
 
     #[Test]
-    public function user_can_manage_own_part_time()
+    public function member_cannot_manage_own_part_time_via_policy()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
 
         $this->actingAs($user);
-        $this->assertTrue($this->policy->managePartTime($user, $user->member));
+        $this->assertFalse($this->policy->managePartTime($user, $user->member));
     }
 
     #[Test]
@@ -308,22 +308,22 @@ class MemberPolicyTest extends TestCase
     }
 
     #[Test]
-    public function user_can_manage_own_handles()
+    public function member_cannot_manage_own_handles_via_policy()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
 
         $this->actingAs($user);
-        $this->assertTrue($this->policy->manageIngameHandles($user, $user->member));
+        $this->assertFalse($this->policy->manageIngameHandles($user, $user->member));
     }
 
     #[Test]
-    public function officer_can_manage_others_handles()
+    public function officer_cannot_manage_handles()
     {
         $officer = $this->createOfficer();
         $member  = $this->createMember(['division_id' => $officer->member->division_id]);
 
         $this->actingAs($officer);
-        $this->assertTrue($this->policy->manageIngameHandles($officer, $member));
+        $this->assertFalse($this->policy->manageIngameHandles($officer, $member));
     }
 }

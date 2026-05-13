@@ -1,27 +1,44 @@
-<div class="space-y-4">
-    @if($members->isEmpty())
-        <div class="text-center py-8 text-gray-500 dark:text-gray-400">
-            <x-heroicon-o-user-group class="mx-auto h-12 w-12 text-gray-400" />
-            <p class="mt-2">No members with this rank.</p>
-        </div>
-    @else
-        <div class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            {{ $members->count() }} {{ Str::plural('member', $members->count()) }}
-        </div>
-        <div class="divide-y divide-gray-200 dark:divide-gray-700 max-h-96 overflow-y-auto">
-            @foreach($members as $member)
-                <div class="flex items-center justify-between py-3 px-2 hover:bg-gray-100/50 dark:hover:bg-white/5 rounded">
-                    <div>
-                        <a href="{{ route('filament.mod.resources.members.edit', $member) }}"
-                           class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">
-                            {{ $member->name }}
-                        </a>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
-                            Joined {{ $member->join_date?->diffForHumans() ?? 'Unknown' }}
-                        </p>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-    @endif
-</div>
+<style>
+    .rmm-count { font-size: 0.8125rem; color: #6b7280; margin-bottom: 1rem; }
+    .rmm-list { margin: 0 -1.5rem; border-top: 1px solid #e5e7eb; max-height: 28rem; overflow-y: auto; }
+    .rmm-row { padding: 0.625rem 1.5rem; border-bottom: 1px solid #e5e7eb; }
+    .rmm-name { display: block; font-weight: 500; color: #4f46e5; text-decoration: none; font-size: 0.875rem; }
+    .rmm-name:hover { text-decoration: underline; }
+    .rmm-unit { font-size: 0.75rem; color: #9ca3af; margin: 0.125rem 0 0; }
+    .rmm-empty { display: flex; flex-direction: column; align-items: center; padding: 2.5rem 0; color: #9ca3af; gap: 0.5rem; }
+
+    .dark .rmm-list { border-top-color: #374151; }
+    .dark .rmm-row { border-bottom-color: #374151; }
+    .dark .rmm-row:hover { background: rgba(255,255,255,0.04); }
+    .dark .rmm-name { color: #818cf8; }
+    .dark .rmm-unit { color: #6b7280; }
+</style>
+
+<p class="rmm-count">{{ $members->count() }} {{ Str::plural('member', $members->count()) }}</p>
+
+@if($members->isEmpty())
+    <div class="rmm-empty">
+        <x-heroicon-o-user-group style="width: 2.5rem; height: 2.5rem;" />
+        <p>No members at this rank.</p>
+    </div>
+@else
+    <div class="rmm-list">
+        @foreach($members as $member)
+            <div class="rmm-row">
+                <a href="{{ route('member', $member->getUrlParams()) }}"
+                   target="_blank"
+                   class="rmm-name">
+                    {{ $member->name }}
+                </a>
+                <p class="rmm-unit">
+                    @if($member->platoon)
+                        {{ $member->platoon->name ?? 'Untitled' }}
+                        @if($member->squad) &rsaquo; {{ $member->squad->name ?? 'Untitled' }}@endif
+                    @else
+                        Unassigned
+                    @endif
+                </p>
+            </div>
+        @endforeach
+    </div>
+@endif

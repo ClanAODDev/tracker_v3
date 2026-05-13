@@ -339,19 +339,6 @@ input[type="checkbox"] {
     }
 }
 
-.members-controls-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-
-    > .division-section-title {
-        flex-shrink: 0;
-    }
-
-    > #playerFilter {
-        flex: 1;
-    }
-}
 
 #playerFilter {
     display: flex;
@@ -403,7 +390,8 @@ input[type="checkbox"] {
     }
 }
 
-.panel-body.border-bottom {
+.panel-body.border-bottom,
+.table-responsive.border-bottom {
     border-bottom: 1px solid var(--overlay-light-hover);
 }
 
@@ -3937,6 +3925,10 @@ body.no-animations {
 
 .squad-assignments-section {
     margin-bottom: 30px;
+}
+
+.unit-stats-offset {
+    height: 29px;
 }
 
 .squad-assignments-header {

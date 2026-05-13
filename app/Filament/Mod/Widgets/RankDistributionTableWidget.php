@@ -49,10 +49,12 @@ class RankDistributionTableWidget extends BaseWidget
                 Action::make('viewMembers')
                     ->label('View')
                     ->icon('heroicon-o-users')
-                    ->modalHeading(fn ($record) => 'Members with rank: ' . $record->rank->getLabel())
+                    ->modalHeading(fn ($record) => $record->rank->getLabel())
+                    ->modalWidth('2xl')
                     ->modalContent(function ($record) use ($divisionId) {
                         $members = Member::where('division_id', $divisionId)
                             ->where('rank', $record->rank->value)
+                            ->with(['platoon', 'squad'])
                             ->orderBy('name')
                             ->get();
 

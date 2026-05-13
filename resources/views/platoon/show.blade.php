@@ -23,6 +23,7 @@
 
         <div class="row">
             <div class="col-lg-10 col-md-9">
+                <h3 class="division-section-title m-b">Members</h3>
                 <div class="panel panel-filled ld-loading">
                     <div class="loader">
                         <div class="loader-bar"></div>
@@ -31,6 +32,7 @@
                 </div>
             </div>
             <div class="col-lg-2 col-md-3">
+                <div class="hidden-xs hidden-sm unit-stats-offset"></div>
                 @include('member.partials.unit-stats', ['unitStats' => $unitStats])
             </div>
         </div>

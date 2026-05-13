@@ -105,18 +105,9 @@ class MemberPolicy
         return $member->rank->value < $user->member->rank->value;
     }
 
-    public function managePartTime(User $user, Member $member)
+    public function managePartTime(User $user, Member $member): bool
     {
-        // can edit yourself
-        if ($member->id === auth()->user()->member_id) {
-            return true;
-        }
-
-        if ($user->isRole(['officer', 'sr_ldr'])) {
-            return true;
-        }
-
-        return false;
+        return $user->isRole(['officer', 'sr_ldr']);
     }
 
     public function promote(User $userPromoting, Member $memberBeingPromoted)
@@ -140,17 +131,8 @@ class MemberPolicy
         return true;
     }
 
-    public function manageIngameHandles(User $user, Member $member)
+    public function manageIngameHandles(User $user, Member $member): bool
     {
-        // can edit yourself
-        if ($member->id === auth()->user()->member_id) {
-            return true;
-        }
-
-        if ($user->isRole(['officer', 'sr_ldr'])) {
-            return true;
-        }
-
-        return false;
+        return $user->isRole('sr_ldr');
     }
 }

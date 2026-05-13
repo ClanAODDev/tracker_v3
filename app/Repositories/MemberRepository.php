@@ -11,7 +11,9 @@ class MemberRepository
     public function search(string $name): Collection
     {
         $escaped = $this->escapeLike($name);
-        $byName  = Member::where('name', 'LIKE', "%{$escaped}%")->with('division');
+        $byName  = Member::where('name', 'LIKE', "%{$escaped}%")
+            ->orWhere('discord', 'LIKE', "%{$escaped}%")
+            ->with('division');
 
         return Member::withWhereHas('handles', fn ($query) => $query->where('value', 'LIKE', "%{$escaped}%"))
             ->with('division')
@@ -25,11 +27,14 @@ class MemberRepository
         $escaped = $this->escapeLike($query);
 
         return Member::where('name', 'LIKE', "%{$escaped}%")
+            ->orWhere('discord', 'LIKE', "%{$escaped}%")
             ->take($limit)
             ->get()
             ->map(fn ($member) => [
                 'id'    => $member->clan_id,
-                'label' => $member->name,
+                'label' => $member->discord
+                    ? "{$member->name} ({$member->discord})"
+                    : $member->name,
             ]);
     }
 

@@ -1,23 +1,19 @@
-<div class='panel-body border-bottom'>
-    <div class="members-controls-row">
-        <h3 class="division-section-title">Members</h3>
-        <div id='playerFilter'></div>
-    </div>
+<div class='panel-body' style="padding: 10px 15px;">
+    <div id='playerFilter'></div>
     @include('member.partials.tag-filter')
     @include ('member.partials.members-table-toggle')
-    <div class="table-responsive">
-
-        <table class='table table-hover members-table'>
-            <thead>
-            @include ('member.partials.member-header-row')
-            </thead>
-            <tbody>
-            @foreach ($members as $member)
-                @include ('member.partials.member-data-row')
-            @endforeach
-            </tbody>
-        </table>
-    </div>
+</div>
+<div class="table-responsive border-bottom">
+    <table class='table table-hover members-table'>
+        <thead>
+        @include ('member.partials.member-header-row')
+        </thead>
+        <tbody>
+        @foreach ($members as $member)
+            @include ('member.partials.member-data-row')
+        @endforeach
+        </tbody>
+    </table>
 </div>
 
 <div class="panel-footer m-b-sm">
