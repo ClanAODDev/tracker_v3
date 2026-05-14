@@ -25,8 +25,24 @@
             </div>
         </div>
 
-        @if($milestones->first && $milestones->peak)
-            <div class="report-stats" style="margin-bottom: 20px;">
+        <div class="report-stats" style="margin-bottom: 20px;">
+            @if($previousCensus)
+                @php
+                    $percentChange = $memberCount > 0
+                        ? abs(round((1 - $previousCensus->count / $memberCount) * 100, 2))
+                        : 0;
+                    $isGrowth = $memberCount >= $previousCensus->count;
+                @endphp
+                <div class="report-stat">
+                    <div class="report-stat-value">{{ number_format($memberCount) }}</div>
+                    <div class="report-stat-label">Current Members</div>
+                    <div class="report-stat-change {{ $isGrowth ? 'report-stat-change--up' : 'report-stat-change--down' }}">
+                        <i class="fa fa-arrow-{{ $isGrowth ? 'up' : 'down' }}"></i>
+                        {{ $percentChange }}% from previous census
+                    </div>
+                </div>
+            @endif
+            @if($milestones->first)
                 <div class="report-stat">
                     <div class="report-stat-value">{{ number_format($milestones->first->total) }}</div>
                     <div class="report-stat-label">First Census</div>
@@ -34,6 +50,8 @@
                         {{ \Carbon\Carbon::parse($milestones->first->date)->format('M j, Y') }}
                     </div>
                 </div>
+            @endif
+            @if($milestones->peak)
                 <div class="report-stat">
                     <div class="report-stat-value">{{ number_format($milestones->peak->total) }}</div>
                     <div class="report-stat-label">Peak Census</div>
@@ -41,30 +59,51 @@
                         {{ \Carbon\Carbon::parse($milestones->peak->date)->format('M j, Y') }}
                     </div>
                 </div>
-
-            </div>
-        @endif
+            @endif
+        </div>
 
         <div class="row">
             <div class="col-md-8">
-                @include('reports.partials.member-census-count')
 
-                <div class="census-date-filter" style="margin-bottom: 20px;">
-                    <form method="GET" action="{{ route('reports.clan-census') }}" class="form-inline">
-                        <div class="form-group" style="margin-right: 10px;">
-                            <label for="start" style="margin-right: 5px;">From</label>
-                            <input type="date" class="form-control" id="start" name="start" value="{{ $dateRange['start'] }}">
-                        </div>
-                        <div class="form-group" style="margin-right: 10px;">
-                            <label for="end" style="margin-right: 5px;">To</label>
-                            <input type="date" class="form-control" id="end" name="end" value="{{ $dateRange['end'] }}">
-                        </div>
-                        <button type="submit" class="btn btn-default">Apply</button>
+                @php
+                    $presets = [
+                        '4W'  => now()->subWeeks(4)->format('Y-m-d'),
+                        '3M'  => now()->subMonths(3)->format('Y-m-d'),
+                        '6M'  => now()->subMonths(6)->format('Y-m-d'),
+                        '1Y'  => now()->subWeeks(52)->format('Y-m-d'),
+                        'All' => $milestones->first?->date ?? now()->subYears(20)->format('Y-m-d'),
+                    ];
+                    $today = now()->format('Y-m-d');
+                    $activePreset = null;
+                    if (!$hasDateFilter) {
+                        $activePreset = '1Y';
+                    } elseif ($dateRange['end'] === $today) {
+                        foreach ($presets as $label => $start) {
+                            if ($dateRange['start'] === $start) { $activePreset = $label; break; }
+                        }
+                    }
+                @endphp
+                <form method="GET" action="{{ route('reports.clan-census') }}" class="census-date-filter" id="census-filter-form">
+                    <div class="census-filter-presets">
+                        @foreach($presets as $label => $start)
+                            <button type="button"
+                                    class="census-preset-btn {{ $activePreset === $label ? 'active' : '' }}"
+                                    data-start="{{ $start }}"
+                                    data-end="{{ $today }}">
+                                {{ $label }}
+                            </button>
+                        @endforeach
+                    </div>
+                    <div class="census-filter-custom">
+                        <input type="date" class="census-filter-input" id="start" name="start" value="{{ $dateRange['start'] }}">
+                        <span class="census-filter-sep">to</span>
+                        <input type="date" class="census-filter-input" id="end" name="end" value="{{ $dateRange['end'] }}">
+                        <button type="submit" class="census-filter-apply">Apply</button>
                         @if($hasDateFilter)
-                            <a href="{{ route('reports.clan-census') }}" class="btn btn-link" style="margin-left: 5px;">Reset</a>
+                            <a href="{{ route('reports.clan-census') }}" class="census-filter-reset">Reset</a>
                         @endif
-                    </form>
-                </div>
+                    </div>
+                </form>
 
                 @if($populations->isNotEmpty())
                     <div class="census-chart-container" style="margin-bottom: 20px;">

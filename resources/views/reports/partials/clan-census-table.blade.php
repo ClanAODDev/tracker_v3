@@ -15,9 +15,10 @@
         </tr>
         </thead>
         <tbody>
-        @foreach ($filteredCensus as $index => $row)
+        @php $tableRows = $filteredCensus->reverse()->values(); @endphp
+        @foreach ($tableRows as $index => $row)
             @php
-                $prev = $filteredCensus->get($index - 1);
+                $prev = $tableRows->get($index + 1);
                 $popChange = $prev ? (int) $row->count - (int) $prev->count : 0;
                 $voicePercent = (int) $row->count > 0
                     ? round((int) $row->weekly_voice_active / (int) $row->count * 100, 1)

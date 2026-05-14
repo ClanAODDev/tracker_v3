@@ -10715,6 +10715,99 @@ pre.code-toolbar > .toolbar span:focus {
     }
 }
 
+.census-date-filter {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: var(--color-bg-panel);
+    border: 1px solid var(--overlay-light);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+}
+
+.census-filter-presets {
+    display: flex;
+    gap: 4px;
+}
+
+.census-preset-btn {
+    background: transparent;
+    border: 1px solid var(--overlay-light);
+    border-radius: 4px;
+    color: var(--color-muted);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    cursor: pointer;
+    @include transition(all 0.15s);
+
+    &:hover {
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+    }
+
+    &.active {
+        background: var(--color-accent);
+        border-color: var(--color-accent);
+        color: #fff;
+    }
+}
+
+.census-filter-custom {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.census-filter-sep {
+    font-size: 12px;
+    color: var(--color-muted);
+}
+
+.census-filter-input {
+    background: var(--color-bg-input, var(--color-bg-body));
+    border: 1px solid var(--overlay-light);
+    border-radius: 4px;
+    color: var(--color-white);
+    font-size: 12px;
+    padding: 4px 8px;
+    width: 130px;
+
+    &:focus {
+        outline: none;
+        border-color: var(--color-accent);
+    }
+}
+
+.census-filter-apply {
+    background: transparent;
+    border: 1px solid var(--overlay-light);
+    border-radius: 4px;
+    color: var(--color-muted);
+    font-size: 12px;
+    padding: 4px 12px;
+    cursor: pointer;
+    @include transition(all 0.15s);
+
+    &:hover {
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+    }
+}
+
+.census-filter-reset {
+    font-size: 12px;
+    color: var(--color-muted);
+    text-decoration: none;
+
+    &:hover {
+        color: var(--color-white);
+    }
+}
+
 .census-chart-container {
     background: var(--color-bg-panel);
     border-radius: 8px;

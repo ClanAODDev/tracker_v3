@@ -6,6 +6,9 @@
                 {!! $member->present()->rankName !!}
             </h5>
             <div><small class="slight">{{ $member->division->name ?? "Ex-AOD" }} [{{ $member->clan_id }}]</small></div>
+            @if ($member->discord)
+                <div><small class="slight">{{ $member->discord }} [Discord]</small></div>
+            @endif
             @if (count($member->handles) > 0)
                 <div><small class="slight">{{ $member->handles->first()->pivot->value }}
                         [{{ $member->handles->first()->label }}]</small></div>

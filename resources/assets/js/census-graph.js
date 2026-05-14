@@ -112,3 +112,12 @@ function initCensusGraph() {
 }
 
 initCensusGraph();
+
+document.querySelectorAll('.census-preset-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var form = document.getElementById('census-filter-form');
+        form.querySelector('#start').value = btn.dataset.start;
+        form.querySelector('#end').value = btn.dataset.end;
+        form.submit();
+    });
+});

@@ -40,7 +40,6 @@ class ReportsController extends Controller
 
         $memberCount    = $this->clan->totalActiveMembers();
         $previousCensus = $defaultCensus->first();
-        $lastYearCensus = $defaultCensus->reverse()->values();
 
         $milestones = $this->clan->censusMilestones();
 
@@ -89,7 +88,6 @@ class ReportsController extends Controller
         return view('reports.clan-statistics', compact(
             'memberCount',
             'previousCensus',
-            'lastYearCensus',
             'filteredCensus',
             'censuses',
             'rankDemographic',
