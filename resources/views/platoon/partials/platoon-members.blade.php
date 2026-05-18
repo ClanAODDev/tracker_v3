@@ -1,4 +1,4 @@
-<div class='panel-body' style="padding: 10px 15px;">
+<div class='panel-body border-bottom' style="padding: 10px 15px;">
     <div id='playerFilter'></div>
     @include('member.partials.tag-filter')
     @include ('member.partials.members-table-toggle')
