@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 class NotifyMilestoneAwards extends BaseCommand
 {
     protected $signature = 'tracker:notify-milestone-awards
+                            {--division= : Slug of a specific division to check}
                             {--dry-run : List members with missing awards without sending notifications}';
 
     protected $description = 'Notify division officer channels of members with ungranted milestone tenure awards';
@@ -23,7 +24,7 @@ class NotifyMilestoneAwards extends BaseCommand
 
     public function handle(DivisionRepository $repository): int
     {
-        $divisions = Division::active()->get();
+        $divisions = $this->resolveDivisions();
 
         if ($divisions->isEmpty()) {
             $this->info('No active divisions found.');
@@ -41,6 +42,23 @@ class NotifyMilestoneAwards extends BaseCommand
         $this->logStats($dryRun);
 
         return self::SUCCESS;
+    }
+
+    private function resolveDivisions(): Collection
+    {
+        if ($slug = $this->option('division')) {
+            $division = Division::active()->where('slug', $slug)->first();
+
+            if (! $division) {
+                $this->logWarning("No active division found with slug [{$slug}].");
+
+                return collect();
+            }
+
+            return collect([$division]);
+        }
+
+        return Division::active()->get();
     }
 
     private function processDivision(Division $division, DivisionRepository $repository, string $monthLabel, bool $dryRun): void

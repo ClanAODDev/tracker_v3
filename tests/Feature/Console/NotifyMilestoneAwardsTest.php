@@ -236,6 +236,42 @@ class NotifyMilestoneAwardsTest extends TestCase
     }
 
     #[Test]
+    public function division_option_limits_command_to_a_single_division(): void
+    {
+        $target = $this->createActiveDivision(['name' => 'Target Division']);
+        $other  = $this->createActiveDivision();
+
+        Award::factory()->global()->create(['name' => '5 Years of Service']);
+
+        Member::factory()->create([
+            'division_id' => $target->id,
+            'join_date'   => now()->subYears(5)->startOfMonth(),
+        ]);
+        Member::factory()->create([
+            'division_id' => $other->id,
+            'join_date'   => now()->subYears(5)->startOfMonth(),
+        ]);
+
+        $this->artisan('tracker:notify-milestone-awards', ['--division' => 'target-division'])
+            ->assertSuccessful()
+            ->expectsOutputToContain('Members flagged: 1')
+            ->expectsOutputToContain('Divisions notified: 1');
+
+        Notification::assertSentTo($target, NotifyMilestoneAwardReminder::class);
+        Notification::assertNotSentTo($other, NotifyMilestoneAwardReminder::class);
+    }
+
+    #[Test]
+    public function division_option_warns_when_slug_not_found(): void
+    {
+        $this->artisan('tracker:notify-milestone-awards', ['--division' => 'nonexistent'])
+            ->assertSuccessful()
+            ->expectsOutputToContain('No active division found with slug [nonexistent].');
+
+        Notification::assertNothingSent();
+    }
+
+    #[Test]
     public function command_supports_all_milestone_years(): void
     {
         $division = $this->createActiveDivision();
