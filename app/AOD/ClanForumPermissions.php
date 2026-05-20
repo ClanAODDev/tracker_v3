@@ -20,14 +20,23 @@ class ClanForumPermissions
             $data = $this->procedureService->getUser($clanForumId);
 
             if (! $data) {
-                return;
-            }
+                $cached = auth()->user()->member?->groups;
 
-            $groupIds = array_merge([$data->usergroupid], explode(',', $data->membergroupids));
+                if (empty($cached)) {
+                    Log::warning("Role sync skipped for clan ID {$clanForumId}: forum lookup failed and no cached groups.");
+
+                    return;
+                }
+
+                Log::warning("Role sync for clan ID {$clanForumId} falling back to cached groups.");
+                $groupIds = $cached;
+            } else {
+                $groupIds = array_merge([$data->usergroupid], explode(',', $data->membergroupids));
+            }
         }
 
         $user = auth()->user();
-        $user->member()->update(['groups' => $groupIds]);
+        $user->member?->update(['groups' => $groupIds]);
 
         $officerRoleIds = DB::table('divisions')
             ->select('officer_role_id')

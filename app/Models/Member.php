@@ -58,6 +58,8 @@ class Member extends Model
         'position'          => Position::class,
         'rank'              => Rank::class,
         'last_voice_status' => DiscordStatus::class,
+
+        'groups' => 'array',
     ];
 
     protected $guarded = [];
