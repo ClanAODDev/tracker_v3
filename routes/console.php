@@ -3,6 +3,7 @@
 use App\Console\Commands\DivisionCensus;
 use App\Console\Commands\FetchApplicationFeeds;
 use App\Console\Commands\MemberSync;
+use App\Console\Commands\NotifyMilestoneAwards;
 use App\Jobs\CleanupUnassignedLeaders;
 use App\Jobs\PartTimeMemberCleanup;
 use App\Jobs\PurgePendingDiscordRegistrations;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Schedule;
 Schedule::command(FetchApplicationFeeds::class, ['--notify'])->everyFiveMinutes();
 Schedule::command(MemberSync::class)->hourly();
 Schedule::command(DivisionCensus::class)->weekly();
+Schedule::command(NotifyMilestoneAwards::class)->lastDayOfMonth('08:00');
 
 /**
  * Clean up tasks
