@@ -418,6 +418,94 @@ class DiscordAuthTest extends TestCase
     }
 
     #[Test]
+    public function discord_callback_uses_cached_groups_when_forum_lookup_fails(): void
+    {
+        $member = Member::factory()->create([
+            'discord_id' => '123456789',
+            'clan_id'    => 99998,
+            'groups'     => [ForumGroup::ADMIN->value],
+        ]);
+
+        $this->mockDiscordUser([
+            'id'       => '123456789',
+            'nickname' => 'CachedAdmin',
+            'email'    => 'cached@example.com',
+        ]);
+
+        $this->mock(ForumProcedureService::class, function ($mock) {
+            $mock->shouldReceive('getUser')
+                ->with(99998)
+                ->andReturnNull();
+        });
+
+        $this->get(route('auth.discord.callback'));
+
+        $user = User::where('member_id', $member->id)->first();
+        $this->assertEquals(Role::ADMIN, $user->role);
+    }
+
+    #[Test]
+    public function discord_callback_skips_role_sync_when_forum_fails_and_no_cached_groups(): void
+    {
+        $member = Member::factory()->create([
+            'discord_id' => '111222444',
+            'clan_id'    => 77777,
+            'groups'     => null,
+        ]);
+        $user = User::factory()->create([
+            'member_id'  => $member->id,
+            'discord_id' => '111222444',
+            'role'       => Role::MEMBER,
+        ]);
+
+        $this->mockDiscordUser([
+            'id'    => '111222444',
+            'email' => 'nogroupmember@example.com',
+        ]);
+
+        $this->mock(ForumProcedureService::class, function ($mock) {
+            $mock->shouldReceive('getUser')
+                ->with(77777)
+                ->andReturnNull();
+        });
+
+        $this->get(route('auth.discord.callback'));
+
+        $user->refresh();
+        $this->assertEquals(Role::MEMBER, $user->role);
+    }
+
+    #[Test]
+    public function discord_callback_stores_forum_groups_as_array_on_member(): void
+    {
+        $member = Member::factory()->create([
+            'discord_id' => '444555777',
+            'clan_id'    => 55555,
+        ]);
+
+        $this->mockDiscordUser([
+            'id'       => '444555777',
+            'nickname' => 'StoredGroups',
+            'email'    => 'groups@example.com',
+        ]);
+
+        $this->mock(ForumProcedureService::class, function ($mock) {
+            $mock->shouldReceive('getUser')
+                ->with(55555)
+                ->andReturn((object) [
+                    'usergroupid'    => ForumGroup::ADMIN->value,
+                    'membergroupids' => '',
+                ]);
+        });
+
+        $this->get(route('auth.discord.callback'));
+
+        $member->refresh();
+        $this->assertIsArray($member->groups);
+        $this->assertContains(ForumGroup::ADMIN->value, $member->groups);
+    }
+
+    #[Test]
     public function discord_registration_queues_notification_when_division_selected(): void
     {
         Notification::fake();
