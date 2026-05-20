@@ -40,7 +40,7 @@ class NotifyMilestoneAwardReminder extends Notification implements ShouldQueue
             ->thumbnail($notifiable->getLogoPath())
             ->message(
                 ":trophy: **Tenure Milestone Reminder — {$this->monthLabel}**\n\n"
-                . "The following members have reached a milestone anniversary this month "
+                . 'The following members have reached a milestone anniversary this month '
                 . "but have not yet received their tenure award:\n\n"
                 . $memberList
             )
