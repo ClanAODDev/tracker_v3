@@ -79,7 +79,10 @@ class NotifyMilestoneAwards extends BaseCommand
                 return;
             }
 
-            $division->notify(new NotifyMilestoneAwardReminder($missing, $monthLabel));
+            $division->notify(new NotifyMilestoneAwardReminder(
+                $missing->map(fn ($m) => ['name' => $m->name, 'years_since_joined' => $m->years_since_joined]),
+                $monthLabel
+            ));
             $this->stats['divisions_notified']++;
         } catch (Exception $exception) {
             $this->stats['errors']++;

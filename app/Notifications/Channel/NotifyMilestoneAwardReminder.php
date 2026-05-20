@@ -31,7 +31,7 @@ class NotifyMilestoneAwardReminder extends Notification implements ShouldQueue
     public function toBot($notifiable): array
     {
         $memberList = $this->members
-            ->map(fn ($m) => "• **{$m->name}** — {$m->years_since_joined} Years of Service")
+            ->map(fn ($m) => "• **{$m['name']}** — {$m['years_since_joined']} Years of Service")
             ->join("\n");
 
         return new BotChannelMessage($notifiable)
