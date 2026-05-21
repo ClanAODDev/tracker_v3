@@ -48,10 +48,10 @@
     "src": "resources/assets/js/division.js",
     "isEntry": true
   },
-  "resources/assets/js/error-pong.js": {
-    "file": "assets/error-pong-SObjzkk9.js",
-    "name": "error-pong",
-    "src": "resources/assets/js/error-pong.js",
+  "resources/assets/js/error-gb.js": {
+    "file": "assets/error-gb-DMHVQYQL.js",
+    "name": "error-gb",
+    "src": "resources/assets/js/error-gb.js",
     "isEntry": true
   },
   "resources/assets/js/libs-bundle.js": {
@@ -135,7 +135,7 @@
     "isEntry": true
   },
   "resources/assets/scss/main.scss": {
-    "file": "assets/main-C9W2bqkI.css",
+    "file": "assets/main-Xl4vBtN1.css",
     "src": "resources/assets/scss/main.scss",
     "isEntry": true,
     "name": "main",

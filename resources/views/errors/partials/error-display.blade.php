@@ -14,14 +14,14 @@
         @endif
 
         <div class="err-pong-toggle">
-            <button id="pong-btn">▶ play pong</button>
+            <button id="pong-btn">▶ grog run</button>
         </div>
 
         <div id="err-pong-wrapper" class="err-pong-wrapper">
-            <canvas id="pong-canvas" width="500" height="220"></canvas>
-            <p class="err-pong-hint">move mouse to control left paddle</p>
+            <canvas id="pong-canvas" width="500" height="260"></canvas>
+            <p class="err-pong-hint">space / tap to jump &middot; down to duck</p>
         </div>
     </div>
 </div>
 
-@vite('resources/assets/js/error-pong.js')
+@vite('resources/assets/js/error-gb.js')
