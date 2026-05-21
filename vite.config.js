@@ -20,6 +20,7 @@ export default defineConfig({
                 'resources/assets/js/tickets.js',
                 'resources/assets/js/training.js',
                 'resources/assets/js/org-chart.js',
+                'resources/assets/js/error-pong.js',
             ],
             refresh: true,
         }),

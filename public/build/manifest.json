@@ -48,6 +48,12 @@
     "src": "resources/assets/js/division.js",
     "isEntry": true
   },
+  "resources/assets/js/error-pong.js": {
+    "file": "assets/error-pong-SObjzkk9.js",
+    "name": "error-pong",
+    "src": "resources/assets/js/error-pong.js",
+    "isEntry": true
+  },
   "resources/assets/js/libs-bundle.js": {
     "file": "assets/libs-bundle-CPeYyZgv.js",
     "name": "libs-bundle",
@@ -129,7 +135,7 @@
     "isEntry": true
   },
   "resources/assets/scss/main.scss": {
-    "file": "assets/main-BYbWsc31.css",
+    "file": "assets/main-C9W2bqkI.css",
     "src": "resources/assets/scss/main.scss",
     "isEntry": true,
     "name": "main",

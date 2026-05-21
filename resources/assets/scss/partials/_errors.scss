@@ -1,0 +1,188 @@
+.err-stage {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 48px 48px;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 3px,
+            rgba(0, 0, 0, 0.08) 3px,
+            rgba(0, 0, 0, 0.08) 4px
+        );
+        pointer-events: none;
+        z-index: 0;
+    }
+}
+
+.err-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 640px;
+}
+
+.err-code {
+    font-size: clamp(80px, 14vw, 160px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--color-accent, #f6a821);
+    position: relative;
+    display: inline-block;
+    animation: glitch-skew 6s infinite linear alternate-reverse;
+    user-select: none;
+
+    &::before,
+    &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        color: var(--color-accent, #f6a821);
+    }
+
+    &::before {
+        text-shadow: -3px 0 #ff4444;
+        clip-path: polygon(0 15%, 100% 15%, 100% 35%, 0 35%);
+        animation: glitch-slice-top 5s infinite linear;
+    }
+
+    &::after {
+        text-shadow: 3px 0 #00e5ff;
+        clip-path: polygon(0 60%, 100% 60%, 100% 78%, 0 78%);
+        animation: glitch-slice-bottom 7s infinite linear;
+    }
+}
+
+@keyframes glitch-skew {
+    0%, 97%, 100% { transform: skewX(0deg); }
+    98%            { transform: skewX(-1.5deg); }
+    99%            { transform: skewX(1deg); }
+}
+
+@keyframes glitch-slice-top {
+    0%, 90%, 100% { transform: translateX(0); opacity: 0; }
+    91%            { transform: translateX(-6px); opacity: 1; }
+    92%            { transform: translateX(5px); opacity: 1; }
+    94%            { transform: translateX(-3px); opacity: 0.7; }
+    95%            { transform: translateX(0); opacity: 0; }
+}
+
+@keyframes glitch-slice-bottom {
+    0%, 85%, 100% { transform: translateX(0); opacity: 0; }
+    86%            { transform: translateX(6px); opacity: 1; }
+    88%            { transform: translateX(-5px); opacity: 1; }
+    90%            { transform: translateX(3px); opacity: 0.7; }
+    91%            { transform: translateX(0); opacity: 0; }
+}
+
+.err-divider {
+    width: 60px;
+    height: 2px;
+    background: var(--color-accent, #f6a821);
+    margin: 1.5rem auto;
+    position: relative;
+    opacity: 0.7;
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        height: 2px;
+        width: 6px;
+        background: var(--color-accent, #f6a821);
+    }
+
+    &::before { left: -12px; }
+    &::after  { right: -12px; }
+}
+
+.err-title {
+    font-size: 16px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--color-muted, #949ba2);
+    font-weight: 400;
+    margin: 0 0 1.25rem;
+}
+
+.err-message {
+    color: var(--color-text-light, #aaa);
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0 0 2rem;
+}
+
+.err-exception {
+    background: rgba(0,0,0,0.2);
+    border-left: 3px solid var(--color-danger, #db524b);
+    border-radius: 0 4px 4px 0;
+    padding: 10px 14px;
+    font-family: monospace;
+    font-size: 14px;
+    color: var(--color-danger, #db524b);
+    text-align: left;
+    margin-bottom: 2rem;
+    word-break: break-all;
+}
+
+.err-pong-toggle {
+    margin-top: 1.5rem;
+
+    button {
+        background: none;
+        border: none;
+        color: var(--color-muted, #949ba2);
+        font-size: 12px;
+        letter-spacing: 0.1em;
+        cursor: pointer;
+        padding: 0;
+        opacity: 0.5;
+        transition: opacity 0.2s;
+
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+.err-pong-wrapper {
+    margin-top: 1.5rem;
+    display: none;
+
+    &.is-open {
+        display: block;
+    }
+}
+
+#pong-canvas {
+    display: block;
+    margin: 0 auto;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 4px;
+    cursor: none;
+}
+
+.err-pong-hint {
+    font-size: 11px;
+    color: var(--color-muted, #949ba2);
+    opacity: 0.4;
+    margin-top: 8px;
+    letter-spacing: 0.05em;
+}

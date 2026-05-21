@@ -8,6 +8,7 @@
 @use 'partials/leadership';
 @use 'partials/auth';
 @use 'partials/org-chart';
+@use 'partials/errors';
 
 .diagonal-pattern {
     background-image: repeating-linear-gradient(
