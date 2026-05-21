@@ -283,8 +283,44 @@ document.addEventListener('DOMContentLoaded', function () {
             var ll = gb.leg === 0;
 
             if (gb.dead) {
-                ctx.fillStyle = 'rgba(220,70,50,0.85)';
-                f(x, y, DW, DH);
+                ctx.save();
+                ctx.translate(x + DW / 2, GY);
+                ctx.rotate(Math.PI / 2);
+                var lx = -DW / 2;
+                var ly = -DH;
+
+                ctx.fillStyle = hair;
+                ctx.fillRect(lx + 1,  ly + 0,  18, 5);
+                ctx.fillRect(lx + 0,  ly + 3,  5,  9);
+                ctx.fillRect(lx + 15, ly + 3,  5,  9);
+
+                ctx.fillStyle = skin;
+                ctx.fillRect(lx + 4,  ly + 4,  12, 10);
+
+                ctx.fillStyle = eyeC;
+                ctx.fillRect(lx + 11, ly + 6,  2, 2);
+                ctx.fillRect(lx + 13, ly + 8,  2, 2);
+                ctx.fillRect(lx + 15, ly + 10, 2, 2);
+                ctx.fillRect(lx + 15, ly + 6,  2, 2);
+                ctx.fillRect(lx + 11, ly + 10, 2, 2);
+
+                ctx.fillStyle = shirt;
+                ctx.fillRect(lx + 4,  ly + 14, 12, 14);
+                ctx.fillStyle = vest;
+                ctx.fillRect(lx + 5,  ly + 14, 10, 14);
+
+                ctx.fillStyle = eyeC;
+                ctx.fillRect(lx + 3,  ly + 27, 14, 2);
+
+                ctx.fillStyle = pants;
+                ctx.fillRect(lx + 3,  ly + 29, 6,  11);
+                ctx.fillRect(lx + 11, ly + 29, 6,  11);
+
+                ctx.fillStyle = boot;
+                ctx.fillRect(lx + 2,  ly + 40, 7,  6);
+                ctx.fillRect(lx + 10, ly + 40, 7,  6);
+
+                ctx.restore();
                 return;
             }
 
@@ -532,18 +568,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
             drawShantyTown();
 
-            ctx.fillStyle = 'rgba(10,28,60,0.92)';
-            f(0, GY + 12, W, H - GY - 12);
-
-            ctx.fillStyle = 'rgba(55,110,185,0.2)';
-            for (var i = 0; i < pebbles.length; i++) {
-                f(pebbles[i].x, GY + 18 + (i % 5) * 5, pebbles[i].size * 5 + 3, 1);
-            }
+            ctx.fillStyle = 'rgba(15,8,3,0.95)';
+            f(0, GY + 12, W, 3);
 
             ctx.fillStyle = 'rgba(68,40,14,0.95)';
             var postGap = 90;
             for (var px = W - (dockX % postGap); px > -postGap; px -= postGap) {
-                f(Math.floor(px) - 4, GY + 10, 9, H - GY - 10);
+                f(Math.floor(px) - 4, GY + 15, 9, 8);
+            }
+
+            ctx.fillStyle = 'rgba(10,28,60,0.92)';
+            f(0, GY + 23, W, H - GY - 23);
+
+            ctx.fillStyle = 'rgba(55,120,210,0.35)';
+            f(0, GY + 23, W, 2);
+
+            ctx.fillStyle = 'rgba(45,30,18,0.72)';
+            for (var px = W - (dockX % postGap); px > -postGap; px -= postGap) {
+                f(Math.floor(px) - 4, GY + 25, 9, H - GY - 25);
+            }
+
+            ctx.fillStyle = 'rgba(55,110,185,0.2)';
+            for (var i = 0; i < pebbles.length; i++) {
+                f(pebbles[i].x, GY + 30 + (i % 4) * 6, pebbles[i].size * 5 + 3, 1);
             }
 
             ctx.fillStyle = 'rgba(122,76,32,0.92)';
