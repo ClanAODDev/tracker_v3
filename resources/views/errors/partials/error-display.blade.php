@@ -19,7 +19,10 @@
 
         <div id="err-pong-wrapper" class="err-pong-wrapper">
             <canvas id="pong-canvas" width="500" height="260"></canvas>
-            <p class="err-pong-hint">space / tap to jump &middot; down to duck</p>
+            <div class="err-pong-footer">
+                <p class="err-pong-hint">space / tap to jump &middot; down to duck</p>
+                <button id="fs-btn" class="err-fs-btn">⛶ fullscreen</button>
+            </div>
         </div>
     </div>
 </div>

@@ -29,6 +29,21 @@ document.addEventListener('DOMContentLoaded', function () {
     var update, draw;
     var onJump, onDuckStart, onDuckEnd;
 
+    var fsBtn = document.getElementById('fs-btn');
+    if (fsBtn) {
+        fsBtn.addEventListener('click', function () {
+            if (!document.fullscreenElement) {
+                wrapper.requestFullscreen().catch(function () {});
+            } else {
+                document.exitFullscreen();
+            }
+        });
+
+        document.addEventListener('fullscreenchange', function () {
+            fsBtn.textContent = document.fullscreenElement ? '⛶ exit' : '⛶ fullscreen';
+        });
+    }
+
     document.addEventListener('keydown', function (e) {
         if (!running) return;
         if (e.code === 'Space' || e.code === 'ArrowUp') {
