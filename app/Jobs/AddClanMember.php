@@ -27,11 +27,13 @@ class AddClanMember implements ShouldQueue
             throw new RuntimeException("Member {$this->member->clan_id} has no division assigned.");
         }
 
-        $procedureService->setDiscordInfo(
-            userId: $this->member->clan_id,
-            discordId: $this->member->discord_id ?? '',
-            discordTag: $this->member->discord ?? '',
-        );
+        if ($this->member->discord_id && $this->member->discord) {
+            $procedureService->setDiscordInfo(
+                userId: $this->member->clan_id,
+                discordId: $this->member->discord_id,
+                discordTag: $this->member->discord,
+            );
+        }
 
         try {
             AODForumService::addForumMember(

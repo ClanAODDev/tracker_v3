@@ -24,6 +24,36 @@ class EditMemberRequest extends EditRecord
         return parent::getSaveFormAction()->hidden();
     }
 
+    private function discordSchema(): array
+    {
+        return [
+            TextInput::make('discord_id')
+                ->label('Discord ID (Snowflake)')
+                ->helperText('Right-click the user in Discord → Copy User ID. Requires Developer Mode enabled.')
+                ->default(function () {
+                    $member = $this->getRecord()->member;
+
+                    return $member->discord_id
+                        ?? $member->user?->discord_id;
+                })
+                ->required(fn () => ! $this->getRecord()->member->discord_id
+                    && ! $this->getRecord()->member->user?->discord_id)
+                ->numeric()
+                ->minLength(17)
+                ->maxLength(19),
+            TextInput::make('discord')
+                ->label('Discord Username')
+                ->helperText('Right-click the user in Discord → Copy Username.')
+                ->default(function () {
+                    $member = $this->getRecord()->member;
+
+                    return $member->discord
+                        ?? $member->user?->discord_username;
+                })
+                ->maxLength(191),
+        ];
+    }
+
     protected function getHeaderActions(): array
     {
         /** @var MemberRequest $record */
@@ -41,19 +71,28 @@ class EditMemberRequest extends EditRecord
                     return ! $onHold && ! $isApproved;
                 })
                 ->requiresConfirmation()
-                ->schema([
-                    TextInput::make('member_name')
-                        ->label('Member Name')
-                        ->helperText('This name will be synced to the forum as AOD_{name}.')
-                        ->required()
-                        ->default(fn () => $this->getRecord()->member->name),
-                ])
+                ->schema(fn () => array_merge(
+                    [
+                        TextInput::make('member_name')
+                            ->label('Member Name')
+                            ->helperText('This name will be synced to the forum as AOD_{name}.')
+                            ->required()
+                            ->default(fn () => $this->getRecord()->member->name),
+                    ],
+                    $this->discordSchema(),
+                ))
                 ->action(function (array $data): void {
                     $rec  = $this->getRecord();
                     $user = auth()->user();
 
-                    if ($rec->member->name !== $data['member_name']) {
-                        $rec->member->update(['name' => $data['member_name']]);
+                    $rec->member->update([
+                        'name'       => $data['member_name'],
+                        'discord_id' => $data['discord_id'] ?: $rec->member->discord_id,
+                        'discord'    => $data['discord'] ?: $rec->member->discord,
+                    ]);
+
+                    if (! $rec->member->division_id) {
+                        $rec->member->update(['division_id' => $rec->division_id]);
                     }
 
                     $rec->division->notify(new NotifyDivisionMemberRequestApproved(
@@ -63,7 +102,7 @@ class EditMemberRequest extends EditRecord
 
                     $rec->approve();
 
-                    AddClanMember::dispatch(member: $rec->member, admin_id: $user->member->clan_id);
+                    AddClanMember::dispatch(member: $rec->member->fresh(), admin_id: $user->member->clan_id);
 
                     $indexUrl = static::getResource()::getUrl('index') . '?filters[status][value]=approved';
                     $this->redirect($indexUrl, navigate: true);
@@ -135,13 +174,22 @@ class EditMemberRequest extends EditRecord
                     return $this->getRecord()->isApproved();
                 })
                 ->requiresConfirmation()
-                ->action(function (): void {
+                ->schema(fn () => $this->discordSchema())
+                ->action(function (array $data): void {
                     $rec  = $this->getRecord();
                     $user = auth()->user();
 
-                    // Just (re)queue the job — no status changes here
+                    $rec->member->update([
+                        'discord_id' => $data['discord_id'] ?: $rec->member->discord_id,
+                        'discord'    => $data['discord'] ?: $rec->member->discord,
+                    ]);
+
+                    if (! $rec->member->division_id) {
+                        $rec->member->update(['division_id' => $rec->division_id]);
+                    }
+
                     AddClanMember::dispatch(
-                        member: $rec->member,
+                        member: $rec->member->fresh(),
                         admin_id: $user->member->clan_id
                     );
 

@@ -81,7 +81,10 @@ class MemberResource extends Resource
                             ->options(DiscordStatus::class)
                             ->default(null),
                         TextInput::make('discord_id')
-                            ->readOnly()
+                            ->helperText('Discord snowflake ID — right-click a user in Discord → Copy User ID (requires Developer Mode).')
+                            ->numeric()
+                            ->minLength(17)
+                            ->maxLength(19)
                             ->default(null),
                     ])->columns(),
 
