@@ -25,6 +25,7 @@ class CreateForumAccount implements ShouldQueue
         private readonly string $email,
         private readonly string $dateOfBirth,
         private readonly string $discordId,
+        private readonly ?string $password = null,
     ) {}
 
     public function handle(): void
