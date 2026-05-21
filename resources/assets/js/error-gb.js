@@ -5,9 +5,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!btn || !wrapper || !canvas) return;
 
-    var started = false;
-    var running = false;
+    var started  = false;
+    var running  = false;
     var raf;
+    var audioCtx = null;
+
+    function squawk() {
+        try {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            var osc  = audioCtx.createOscillator();
+            var gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(380, audioCtx.currentTime + 0.12);
+            gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 0.15);
+        } catch (e) {}
+    }
     var update, draw;
     var onJump, onDuckStart, onDuckEnd;
 
@@ -99,9 +117,11 @@ document.addEventListener('DOMContentLoaded', function () {
         var hiScore   = parseInt(localStorage.getItem('guybrush_hi') || '0', 10);
         var ticks     = 0;
         var over      = false;
-        var obstacles = [];
-        var pebbles   = [];
-        var toSpawn   = 90;
+        var obstacles  = [];
+        var pebbles    = [];
+        var seagulls   = [];
+        var toSpawn    = 90;
+        var gullSpawn  = 220 + Math.floor(Math.random() * 280);
 
         for (var i = 0; i < 30; i++) {
             pebbles.push({ x: Math.random() * W, size: Math.floor(Math.random() * 2) + 1 });
@@ -147,6 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (score > 15 && Math.random() < 0.22) {
                 var flyY = GY - 94 + Math.floor(Math.random() * 63);
                 obstacles.push({ x: W + 10, kind: 'parrot', flyY: flyY });
+                if (Math.random() < 0.45) squawk();
             } else {
                 var r    = Math.random();
                 var kind = r < 0.38 ? 'mug' : r < 0.65 ? 'chest' : r < 0.83 ? 'mugs' : 'bottle';
@@ -211,6 +232,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     over = gb.dead = true;
                     if (score > hiScore) { hiScore = score; localStorage.setItem('guybrush_hi', hiScore); }
                 }
+
+            }
+
+            gullSpawn--;
+            if (gullSpawn <= 0) {
+                seagulls.push({ x: W + 20, y: GY - 90 - Math.floor(Math.random() * 55), wing: 0, wingTick: 0 });
+                gullSpawn = 300 + Math.floor(Math.random() * 350);
+            }
+
+            for (var g = seagulls.length - 1; g >= 0; g--) {
+                seagulls[g].x -= speed * 0.55;
+                seagulls[g].wingTick++;
+                if (seagulls[g].wingTick >= 14) {
+                    seagulls[g].wing     = 1 - seagulls[g].wing;
+                    seagulls[g].wingTick = 0;
+                }
+                if (seagulls[g].x < -30) seagulls.splice(g, 1);
             }
 
             for (var j = 0; j < pebbles.length; j++) {
@@ -503,6 +541,24 @@ document.addEventListener('DOMContentLoaded', function () {
             var plankGap = 22;
             for (var gx = W - (dockX % plankGap); gx > -plankGap; gx -= plankGap) {
                 f(Math.floor(gx), GY, 2, 12);
+            }
+
+            ctx.fillStyle = 'rgba(210,210,205,0.65)';
+            for (var g = 0; g < seagulls.length; g++) {
+                var gx = Math.floor(seagulls[g].x);
+                var gy = seagulls[g].y;
+                var wu = seagulls[g].wing === 0;
+                f(gx + 3, gy + 2, 5, 2);
+                if (wu) {
+                    f(gx,     gy,     4, 2);
+                    f(gx + 7, gy,     4, 2);
+                } else {
+                    f(gx,     gy + 3, 4, 2);
+                    f(gx + 7, gy + 3, 4, 2);
+                }
+                ctx.fillStyle = 'rgba(210,185,90,0.65)';
+                f(gx + 8, gy + 2, 2, 1);
+                ctx.fillStyle = 'rgba(210,210,205,0.65)';
             }
 
             for (var i = 0; i < obstacles.length; i++) drawObstacle(obstacles[i]);
