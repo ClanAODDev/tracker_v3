@@ -24,7 +24,6 @@ class CreateForumAccount implements ShouldQueue
         private readonly string $username,
         private readonly string $email,
         private readonly string $dateOfBirth,
-        private readonly string $password,
         private readonly string $discordId,
     ) {}
 
@@ -35,7 +34,7 @@ class CreateForumAccount implements ShouldQueue
             username: $this->username,
             email: $this->email,
             dateOfBirth: $this->dateOfBirth,
-            password: $this->password,
+            password: $this->user->forum_password,
             discordId: $this->discordId,
             forumGroup: ForumGroup::AWAITING_MODERATION,
         );

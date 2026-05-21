@@ -124,7 +124,6 @@ class DiscordRegistrationRequest extends FormRequest
                 username: $this->validated('username'),
                 email: $user->email,
                 dateOfBirth: $this->validated('date_of_birth'),
-                password: $this->validated('password'),
                 discordId: $user->discord_id,
             );
         }
