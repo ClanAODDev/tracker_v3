@@ -236,6 +236,6 @@ class AODForumService
     {
         $currentMinute = (int) floor(time() / 60) * 60;
 
-        return md5($currentMinute . config('aod.token'));
+        return hash_hmac('sha256', (string) $currentMinute, config('aod.token'));
     }
 }
