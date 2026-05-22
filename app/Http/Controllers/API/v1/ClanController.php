@@ -15,21 +15,13 @@ class ClanController extends ApiController
 {
     public const RFC3339 = 'Y-m-d\\TH:i:sP';
 
-    /**
-     * Deprecated when website migrates to tracker.
-     *
-     * @return JsonResponse
-     */
-    public function discordPopulationCount()
+    public function discordPopulationCount(): JsonResponse
     {
-        $data = AODForumService::request('https://www.clanaod.net/forums/aodinfo.php?type=last_discord_population_json&');
+        $data = AODForumService::request('https://www.clanaod.net/forums/aodinfo.php', ['type' => 'last_discord_population_json']);
 
         return $this->respond(['data' => $data]);
     }
 
-    /**
-     * @return JsonResponse
-     */
     public function streamEvents()
     {
         $client = new Google_Client;
