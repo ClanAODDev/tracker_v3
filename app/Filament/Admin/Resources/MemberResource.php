@@ -82,8 +82,7 @@ class MemberResource extends Resource
                             ->default(null),
                         TextInput::make('discord_id')
                             ->helperText('Discord snowflake ID — right-click a user in Discord → Copy User ID (requires Developer Mode).')
-                            ->numeric()
-                            ->minLength(17)
+                            ->regex('/^\d{17,19}$/')
                             ->maxLength(19)
                             ->default(null),
                     ])->columns(),

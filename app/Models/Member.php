@@ -324,7 +324,7 @@ class Member extends Model
             return false;
         }
 
-        return sprintf('https://discordapp.com/users/%d', $this->discord_id);
+        return sprintf('https://discordapp.com/users/%s', $this->discord_id);
     }
 
     public function getDiscordAvatarUrl(): ?string

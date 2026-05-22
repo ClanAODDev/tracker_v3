@@ -38,8 +38,7 @@ class EditMemberRequest extends EditRecord
                 })
                 ->required(fn () => ! $this->getRecord()->member->discord_id
                     && ! $this->getRecord()->member->user?->discord_id)
-                ->numeric()
-                ->minLength(17)
+                ->regex('/^\d{17,19}$/')
                 ->maxLength(19),
             TextInput::make('discord')
                 ->label('Discord Username')
