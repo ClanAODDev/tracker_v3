@@ -25,7 +25,7 @@ class DiscordMismatchReport extends Page implements HasTable
 
     protected static ?string $slug = 'discord-mismatch-report';
 
-    protected static string $view = 'filament.admin.pages.discord-mismatch-report';
+    protected string $view = 'filament.admin.pages.discord-mismatch-report';
 
     public function table(Table $table): Table
     {
