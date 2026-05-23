@@ -32,10 +32,10 @@ class DiscordMismatchReport extends Page implements HasTable
         return $table
             ->query(
                 Member::query()
-                    ->whereHas('user', fn (Builder $q) => $q->whereNotNull('discord_id'))
-                    ->whereNotNull('discord_id')
-                    ->whereColumn('members.discord_id', '!=', 'users.discord_id')
                     ->join('users', 'users.member_id', '=', 'members.id')
+                    ->whereNotNull('members.discord_id')
+                    ->whereNotNull('users.discord_id')
+                    ->whereColumn('members.discord_id', '!=', 'users.discord_id')
                     ->select('members.*', 'users.discord_id as user_discord_id')
             )
             ->columns([
