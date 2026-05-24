@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\DivisionApplication;
+use App\Models\Member;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -21,24 +22,46 @@ class PurgePendingDiscordRegistrations implements ShouldQueue
     {
         $cutoff = now()->subDays($this->daysOld);
 
-        $applicationIds = DivisionApplication::where('created_at', '<', $cutoff)
+        $staleApplicationIds = DivisionApplication::where('created_at', '<', $cutoff)
             ->pluck('id');
 
         Comment::where('commentable_type', (new DivisionApplication)->getMorphClass())
-            ->whereIn('commentable_id', $applicationIds)
+            ->whereIn('commentable_id', $staleApplicationIds)
             ->delete();
 
-        $applicationCount = $applicationIds->count();
-        DivisionApplication::whereIn('id', $applicationIds)->delete();
+        $applicationCount = $staleApplicationIds->count();
+        DivisionApplication::whereIn('id', $staleApplicationIds)->delete();
 
-        $userCount = User::pendingDiscord()
+        $staleUserCount = User::pendingDiscord()
             ->where('created_at', '<', $cutoff)
             ->delete();
 
+        $recruitedMemberDiscordIds = Member::where('division_id', '!=', 0)
+            ->whereNotNull('discord_id')
+            ->whereHas('memberRequest', fn ($q) => $q->whereNotNull('approved_at'))
+            ->pluck('discord_id');
+
+        $matchedUsers = User::pendingDiscord()
+            ->whereIn('discord_id', $recruitedMemberDiscordIds)
+            ->get();
+
+        $matchedUserIds = $matchedUsers->pluck('id');
+
+        $matchedApplicationIds = DivisionApplication::whereIn('user_id', $matchedUserIds)->pluck('id');
+
+        Comment::where('commentable_type', (new DivisionApplication)->getMorphClass())
+            ->whereIn('commentable_id', $matchedApplicationIds)
+            ->delete();
+
+        DivisionApplication::whereIn('id', $matchedApplicationIds)->delete();
+
+        $matchedUserCount = User::whereIn('id', $matchedUserIds)->delete();
+
         Log::info('Purged old pending Discord registrations', [
-            'users'        => $userCount,
-            'applications' => $applicationCount,
-            'days_old'     => $this->daysOld,
+            'stale_users'        => $staleUserCount,
+            'stale_applications' => $applicationCount,
+            'matched_users'      => $matchedUserCount,
+            'days_old'           => $this->daysOld,
         ]);
     }
 }
