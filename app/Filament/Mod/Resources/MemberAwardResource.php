@@ -64,6 +64,22 @@ class MemberAwardResource extends Resource
         return null;
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+        $user  = auth()->user();
+
+        if ($user->isRole('admin')) {
+            return $query->whereHas('award', fn ($q) => $q->whereNull('division_id'));
+        }
+
+        if ($user->isDivisionLeader()) {
+            return $query->whereHas('member', fn ($q) => $q->where('division_id', $user->member->division_id));
+        }
+
+        return $query;
+    }
+
     public static function canDeleteAny(): bool
     {
         return auth()->user()->isRole(['admin', 'sr_ldr']);
@@ -204,10 +220,6 @@ class MemberAwardResource extends Resource
             ->filters(filters: [
                 Filter::make('needs approval')
                     ->query(fn (Builder $query): Builder => $query->where('approved', false))->default(),
-                Filter::make('clan_wide')
-                    ->label('Clan-Wide Only')
-                    ->query(fn (Builder $query): Builder => $query->whereHas('award', fn ($q) => $q->whereNull('division_id'))),
-                SelectFilter::make('byDivision')->relationship('award.division', 'name')->label('By Division'),
                 SelectFilter::make('award')->relationship('award', 'name'),
             ])
             ->filtersLayout(FiltersLayout::AboveContentCollapsible)
