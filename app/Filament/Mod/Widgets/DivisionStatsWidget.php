@@ -104,13 +104,15 @@ class DivisionStatsWidget extends BaseWidget
 
     protected function getRecruitsTrend(Division $division): array
     {
+        $results = Member::where('division_id', $division->id)
+            ->where('join_date', '>=', now()->subDays(98))
+            ->selectRaw('FLOOR(DATEDIFF(CURDATE(), DATE(join_date)) / 7) as week_ago, COUNT(*) as count')
+            ->groupBy('week_ago')
+            ->pluck('count', 'week_ago');
+
         $data = [];
         for ($i = 13; $i >= 0; $i--) {
-            $start  = now()->subDays(($i + 1) * 7);
-            $end    = now()->subDays($i * 7);
-            $data[] = Member::where('division_id', $division->id)
-                ->whereBetween('join_date', [$start, $end])
-                ->count();
+            $data[] = (int) ($results[$i] ?? 0);
         }
 
         return $data;

@@ -40,12 +40,16 @@ class TransferResource extends Resource
 
         $divisionId = $user->member?->division_id;
 
-        $count = Transfer::pending()
-            ->where(function ($query) use ($divisionId) {
-                $query->where('division_id', $divisionId)
-                    ->orWhereHas('member', fn ($q) => $q->where('division_id', $divisionId));
-            })
-            ->count();
+        $count = cache()->remember(
+            'nav_badge_transfers_' . $user->id,
+            now()->addMinutes(2),
+            fn () => Transfer::pending()
+                ->where(function ($query) use ($divisionId) {
+                    $query->where('division_id', $divisionId)
+                        ->orWhereHas('member', fn ($q) => $q->where('division_id', $divisionId));
+                })
+                ->count()
+        );
 
         return $count > 0 ? (string) $count : null;
     }

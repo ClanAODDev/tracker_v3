@@ -46,12 +46,13 @@ class RankActionResource extends Resource
     {
         $user = auth()->user();
 
-        $pendingCount = static::getModel()::query()
-            ->forUser($user)
-            ->pending()
-            ->count();
+        $count = cache()->remember(
+            'nav_badge_rank_actions_' . $user->id,
+            now()->addMinutes(2),
+            fn () => static::getModel()::query()->forUser($user)->pending()->count()
+        );
 
-        return $pendingCount ? (string) $pendingCount : null;
+        return $count ? (string) $count : null;
     }
 
     public static function form(Schema $schema): Schema

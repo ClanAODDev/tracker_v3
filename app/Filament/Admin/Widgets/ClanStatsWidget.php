@@ -13,9 +13,14 @@ class ClanStatsWidget extends BaseWidget
 {
     protected static ?int $sort = 1;
 
+    private function activeDivisionIds()
+    {
+        return once(fn () => Division::whereHas('members')->pluck('id'));
+    }
+
     protected function getStats(): array
     {
-        $activeDivisionIds = Division::whereHas('members')->pluck('id');
+        $activeDivisionIds = $this->activeDivisionIds();
         $activeDivisions   = $activeDivisionIds->count();
 
         $latestCensuses = Census::select('division_id', DB::raw('MAX(id) as id'))
@@ -65,10 +70,8 @@ class ClanStatsWidget extends BaseWidget
 
     protected function getClanPopulationTrend(): array
     {
-        $activeDivisionIds = Division::whereHas('members')->pluck('id');
-
         return Census::select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(count) as total'))
-            ->whereIn('division_id', $activeDivisionIds)
+            ->whereIn('division_id', $this->activeDivisionIds())
             ->groupBy('date')
             ->orderByDesc('date')
             ->take(14)
@@ -80,10 +83,8 @@ class ClanStatsWidget extends BaseWidget
 
     protected function getClanVoiceTrend(): array
     {
-        $activeDivisionIds = Division::whereHas('members')->pluck('id');
-
         return Census::select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(weekly_voice_count) as total'))
-            ->whereIn('division_id', $activeDivisionIds)
+            ->whereIn('division_id', $this->activeDivisionIds())
             ->groupBy('date')
             ->orderByDesc('date')
             ->take(14)
@@ -95,11 +96,14 @@ class ClanStatsWidget extends BaseWidget
 
     protected function getClanRecruitsTrend(): array
     {
+        $results = Member::where('join_date', '>=', now()->subDays(98))
+            ->selectRaw('FLOOR(DATEDIFF(CURDATE(), DATE(join_date)) / 7) as week_ago, COUNT(*) as count')
+            ->groupBy('week_ago')
+            ->pluck('count', 'week_ago');
+
         $data = [];
         for ($i = 13; $i >= 0; $i--) {
-            $start  = now()->subDays(($i + 1) * 7);
-            $end    = now()->subDays($i * 7);
-            $data[] = Member::whereBetween('join_date', [$start, $end])->count();
+            $data[] = (int) ($results[$i] ?? 0);
         }
 
         return $data;

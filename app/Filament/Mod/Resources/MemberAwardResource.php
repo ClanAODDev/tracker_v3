@@ -46,17 +46,25 @@ class MemberAwardResource extends Resource
         $user = auth()->user();
 
         if ($user->isRole('admin')) {
-            $count = MemberAward::needsApproval()
-                ->whereHas('award', fn ($query) => $query->whereNull('division_id'))
-                ->count();
+            $count = cache()->remember(
+                'nav_badge_member_awards_admin',
+                now()->addMinutes(2),
+                fn () => MemberAward::needsApproval()
+                    ->whereHas('award', fn ($query) => $query->whereNull('division_id'))
+                    ->count()
+            );
 
             return $count > 0 ? (string) $count : null;
         }
 
         if ($user->isDivisionLeader()) {
-            $count = MemberAward::needsApproval()
-                ->whereHas('member', fn ($query) => $query->where('division_id', $user->member->division_id))
-                ->count();
+            $count = cache()->remember(
+                'nav_badge_member_awards_' . $user->id,
+                now()->addMinutes(2),
+                fn () => MemberAward::needsApproval()
+                    ->whereHas('member', fn ($query) => $query->where('division_id', $user->member->division_id))
+                    ->count()
+            );
 
             return $count > 0 ? (string) $count : null;
         }
@@ -242,6 +250,7 @@ class MemberAwardResource extends Resource
                         ->requiresConfirmation()
                         ->modalDescription('This will generate a notification for every award approved.')
                         ->after(function (Collection $records) {
+                            $records->load('member.division', 'award');
                             foreach ($records as $memberAward) {
                                 if ($memberAward->member->division?->settings()->get('chat_alerts.member_awarded')) {
                                     $memberAward->member->division->notify(new NotifyDivisionMemberAwarded(

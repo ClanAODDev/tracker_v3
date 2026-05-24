@@ -37,7 +37,10 @@ class DivisionTagResource extends Resource
 
         return parent::getEloquentQuery()
             ->forDivision($divisionId)
-            ->assignableBy($user);
+            ->assignableBy($user)
+            ->withCount([
+                'members as members_count' => fn ($q) => $q->where('members.division_id', $divisionId),
+            ]);
     }
 
     public static function canAccess(): bool
@@ -90,11 +93,8 @@ class DivisionTagResource extends Resource
                     }),
                 TextColumn::make('members_count')
                     ->label('Members')
-                    ->getStateUsing(function (DivisionTag $record) {
-                        $divisionId = auth()->user()->member?->division_id;
-
-                        return $record->members()->where('members.division_id', $divisionId)->count();
-                    }),
+                    ->numeric()
+                    ->sortable(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

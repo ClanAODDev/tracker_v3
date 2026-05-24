@@ -35,7 +35,11 @@ class TicketResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        $count = Ticket::whereIn('state', ['new', 'assigned'])->count();
+        $count = cache()->remember(
+            'nav_badge_tickets',
+            now()->addMinutes(2),
+            fn () => Ticket::whereIn('state', ['new', 'assigned'])->count()
+        );
 
         return $count > 0 ? (string) $count : null;
     }
