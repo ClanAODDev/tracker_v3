@@ -20,8 +20,4 @@ class HelpController extends Controller
         return view('help.index');
     }
 
-    public function divisionStructures()
-    {
-        return view('help.division-structures');
-    }
 }
