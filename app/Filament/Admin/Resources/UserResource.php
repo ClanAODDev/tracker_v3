@@ -53,6 +53,18 @@ class UserResource extends Resource
                     ->required()
                     ->searchable()
                     ->relationship('member', 'name'),
+                Section::make('Discord')
+                    ->columnSpanFull()
+                    ->columns()
+                    ->schema([
+                        TextInput::make('discord_id')
+                            ->label('Discord ID')
+                            ->helperText('Discord snowflake ID')
+                            ->regex('/^\d{17,19}$/')
+                            ->maxLength(19),
+                        TextInput::make('discord_username')
+                            ->maxLength(191),
+                    ]),
                 Section::make('Settings')
                     ->columnSpanFull()
                     ->columns()

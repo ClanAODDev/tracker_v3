@@ -209,6 +209,11 @@ class DiscordController extends Controller
                     discordId: $user->discord_id,
                     discordTag: $user->discord_username ?? '',
                 );
+
+                $user->member->update([
+                    'discord_id' => $user->discord_id,
+                    'discord'    => $user->discord_username ?? $user->member->discord,
+                ]);
             }
 
             if ($avatarHash !== null) {
@@ -234,9 +239,11 @@ class DiscordController extends Controller
             'discord_username' => $discordUsername,
         ]);
 
-        if ($avatarHash !== null) {
-            $member->update(['discord_avatar' => $avatarHash]);
-        }
+        $member->update([
+            'discord_id'     => $discordId,
+            'discord'        => $discordUsername,
+            'discord_avatar' => $avatarHash,
+        ]);
 
         Auth::login(user: $user, remember: true);
 
