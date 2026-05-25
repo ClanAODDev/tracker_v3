@@ -12,6 +12,7 @@ use App\Models\Member;
 use App\Models\Note;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionPartTimeMemberRemoved;
+use App\Services\AODForumService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -94,6 +95,16 @@ class EditMember extends EditRecord
                 ->hidden(fn (): bool => ! $this->record->division_id)
                 ->action(function (array $data) {
                     $member = $this->record;
+
+                    if (AODForumService::hasForumUsernameConflict($member->clan_id, $member->name)) {
+                        Notification::make()
+                            ->title('Cannot Remove Member')
+                            ->body("The username '{$member->name}' is already in use by a different forum account. Manual intervention required.")
+                            ->danger()
+                            ->send();
+
+                        return;
+                    }
 
                     if (! empty($data['global_tag_id'])) {
                         $member->tags()->syncWithoutDetaching([

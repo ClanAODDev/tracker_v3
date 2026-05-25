@@ -7,6 +7,7 @@ use App\Models\Member;
 use App\Models\Note;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionPartTimeMemberRemoved;
+use App\Services\AODForumService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteMember extends FormRequest
@@ -31,6 +32,21 @@ class DeleteMember extends FormRequest
         return [
             'removal_reason' => 'required',
         ];
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            /** @var Member $member */
+            $member = $this->route('member');
+
+            if (AODForumService::hasForumUsernameConflict($member->clan_id, $member->name)) {
+                $validator->errors()->add(
+                    'removal_reason',
+                    "Cannot remove {$member->name}: the username '{$member->name}' is already in use by a different forum account. Manual intervention required."
+                );
+            }
+        });
     }
 
     /**

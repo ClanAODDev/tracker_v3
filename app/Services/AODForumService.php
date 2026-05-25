@@ -232,6 +232,15 @@ class AODForumService
         return ! empty($results);
     }
 
+    public static function hasForumUsernameConflict(int $clanId, string $name): bool
+    {
+        return DB::connection('aod_forums')
+            ->table('user')
+            ->where('username', $name)
+            ->where('userid', '!=', $clanId)
+            ->exists();
+    }
+
     private static function generateToken(): string
     {
         $currentMinute = (int) floor(time() / 60) * 60;
