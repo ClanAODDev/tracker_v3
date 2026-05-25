@@ -38,26 +38,23 @@ class LeaveResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        static $badge = null;
+        $user = auth()->user();
 
-        if ($badge !== null) {
-            return $badge ?: null;
+        if (! $user?->isDivisionLeader() && ! $user?->isRole('admin')) {
+            return null;
         }
 
-        if (auth()->user()->isRole(['admin', 'sr_ldr'])) {
-            $divisionId = auth()->user()->member->division_id;
+        $divisionId = $user->member?->division_id;
 
-            $count = static::$model::where('approver_id', null)
-                ->whereHas('member', function ($memberQuery) use ($divisionId) {
-                    $memberQuery->where('division_id', $divisionId);
-                })->count();
+        $count = cache()->remember(
+            'nav_badge_leaves_' . $user->id,
+            now()->addMinutes(2),
+            fn () => static::$model::whereNull('approver_id')
+                ->whereHas('member', fn ($q) => $q->where('division_id', $divisionId))
+                ->count()
+        );
 
-            $badge = $count > 0 ? (string) $count : '';
-
-            return $badge ?: null;
-        }
-
-        return null;
+        return $count > 0 ? (string) $count : null;
     }
 
     public static function form(Schema $schema): Schema

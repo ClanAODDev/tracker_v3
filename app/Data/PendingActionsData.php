@@ -141,7 +141,7 @@ readonly class PendingActionsData
             }
         }
 
-        if ($user->isRole(['admin', 'sr_ldr'])) {
+        if ($user->isDivisionLeader() || $user->isRole('admin')) {
             $count = Leave::whereNull('approver_id')
                 ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
                 ->count();
@@ -149,7 +149,7 @@ readonly class PendingActionsData
                 $actions->push(new PendingAction(
                     key: 'pending-leaves',
                     count: $count,
-                    url: route('filament.mod.resources.leaves.index') . '?filters[pending][isActive]=true',
+                    url: route('filament.mod.resources.leaves.index') . '?filters[needs approval][isActive]=true',
                     icon: 'fa-calendar-alt',
                     label: 'LOA',
                 ));
