@@ -234,11 +234,7 @@ class AODForumService
 
     public static function hasForumUsernameConflict(int $clanId, string $name): bool
     {
-        return DB::connection('aod_forums')
-            ->table('user')
-            ->where('username', $name)
-            ->where('userid', '!=', $clanId)
-            ->exists();
+        return (new self())->userExists($name, $clanId);
     }
 
     private static function generateToken(): string
