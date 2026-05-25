@@ -8,7 +8,6 @@ use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\UnrecoverableJobException;
-use Illuminate\Support\Facades\DB;
 
 class RemoveClanMember implements ShouldQueue
 {
@@ -29,13 +28,7 @@ class RemoveClanMember implements ShouldQueue
         $member = Member::withTrashed()->where('clan_id', $this->memberIdBeingRemoved)->first();
 
         if ($member) {
-            $conflict = DB::connection('aod_forums')
-                ->table('user')
-                ->where('username', $member->name)
-                ->where('userid', '!=', $this->memberIdBeingRemoved)
-                ->exists();
-
-            if ($conflict) {
+            if (AODForumService::hasForumUsernameConflict($member->clan_id, $member->name)) {
                 throw new UnrecoverableJobException(
                     "Cannot remove member {$this->memberIdBeingRemoved} ({$member->name}): " .
                     "username '{$member->name}' already exists for a different forum user. Manual intervention required."
