@@ -32,9 +32,9 @@ class EditMemberRequest extends EditRecord
                 ->helperText('Right-click the user in Discord → Copy User ID. Requires Developer Mode enabled.')
                 ->default(function () {
                     $member = $this->getRecord()->member;
+                    $id     = $member->discord_id ?? $member->user?->discord_id;
 
-                    return $member->discord_id
-                        ?? $member->user?->discord_id;
+                    return $id ? (string) $id : null;
                 })
                 ->required(fn () => ! $this->getRecord()->member->discord_id
                     && ! $this->getRecord()->member->user?->discord_id)

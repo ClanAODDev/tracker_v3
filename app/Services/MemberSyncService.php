@@ -13,7 +13,6 @@ use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use Closure;
 use Exception;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class MemberSyncService
 {
@@ -80,8 +79,6 @@ class MemberSyncService
         $syncData = $this->fetchSyncData();
 
         if ($syncData->isEmpty()) {
-            Log::critical('MEMBER SYNC - No data available from forum');
-
             return false;
         }
 
@@ -91,8 +88,6 @@ class MemberSyncService
 
         $this->syncExistingMembers($forumMemberMap);
         $this->addNewMembers($forumMemberMap);
-
-        $this->logStats();
 
         return true;
     }
@@ -115,7 +110,6 @@ class MemberSyncService
             return collect($info->data ?? []);
         } catch (Exception $exception) {
             $this->lastError = $exception->getMessage();
-            Log::critical('MEMBER SYNC - Failed to fetch data: ' . $this->lastError);
 
             return collect();
         }
@@ -165,12 +159,6 @@ class MemberSyncService
                 removalReason: null
             ));
         } catch (Exception $exception) {
-            Log::error('Failed to send removal notification', [
-                'division'     => $member->division->name,
-                'member'       => $member->name,
-                'notification' => NotifyDivisionMemberRemoved::class,
-                'error'        => $exception->getMessage(),
-            ]);
         }
 
         $member->reset();
@@ -202,10 +190,6 @@ class MemberSyncService
         try {
             $newData = $this->transformForumData($forumData);
         } catch (Exception $exception) {
-            Log::error('Sync error during data transformation', [
-                'member_id' => $member->clan_id,
-                'exception' => $exception->getMessage(),
-            ]);
             $this->stats['errors']++;
 
             return;
@@ -333,10 +317,6 @@ class MemberSyncService
     protected function applyUpdates(Member $member, array $updates, array $oldData, array $newData): void
     {
         if (isset($updates['name']) && $user = $member->user) {
-            Log::debug('Username change detected', [
-                'old' => $oldData['name'],
-                'new' => $newData['name'],
-            ]);
             $user->update(['name' => $updates['name']]);
         }
 
@@ -372,23 +352,9 @@ class MemberSyncService
                 ($this->onAdd)($forumMember->username, $forumMember->userid);
             }
 
-            Log::info('Member added', [
-                'name' => $forumMember->username,
-                'id'   => $forumMember->userid,
-            ]);
-
             $this->stats['added']++;
         } catch (Exception $exception) {
-            Log::error('Failed to create member', [
-                'user'      => $forumMember->userid,
-                'exception' => $exception->getMessage(),
-            ]);
             $this->stats['errors']++;
         }
-    }
-
-    protected function logStats(): void
-    {
-        Log::info('Member sync completed', $this->stats);
     }
 }

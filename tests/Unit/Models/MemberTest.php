@@ -256,4 +256,16 @@ class MemberTest extends TestCase
 
         $this->assertFalse($member->getDiscordUrl());
     }
+
+    #[Test]
+    public function discord_id_is_always_returned_as_string_to_prevent_js_precision_loss()
+    {
+        $snowflake = '319196306516213763';
+
+        $member = $this->createMember(['discord_id' => $snowflake]);
+        $member->refresh();
+
+        $this->assertIsString($member->discord_id);
+        $this->assertSame($snowflake, $member->discord_id);
+    }
 }
