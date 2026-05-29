@@ -14,6 +14,10 @@
     "file": "assets/chart-utils-PLXmSdtb.js",
     "name": "chart-utils"
   },
+  "_grog-game-BiOwuHWN.js": {
+    "file": "assets/grog-game-BiOwuHWN.js",
+    "name": "grog-game"
+  },
   "node_modules/html-to-image/es/index.js": {
     "file": "assets/index-BeoRn2gJ.js",
     "name": "index",
@@ -49,10 +53,13 @@
     "isEntry": true
   },
   "resources/assets/js/error-gb.js": {
-    "file": "assets/error-gb-D_6UDjOh.js",
+    "file": "assets/error-gb-BVYJeD2S.js",
     "name": "error-gb",
     "src": "resources/assets/js/error-gb.js",
-    "isEntry": true
+    "isEntry": true,
+    "imports": [
+      "_grog-game-BiOwuHWN.js"
+    ]
   },
   "resources/assets/js/libs-bundle.js": {
     "file": "assets/libs-bundle-CPeYyZgv.js",
@@ -64,10 +71,13 @@
     ]
   },
   "resources/assets/js/main.js": {
-    "file": "assets/main-Cw0B34y_.js",
+    "file": "assets/main-ifOk0Oc_.js",
     "name": "main",
     "src": "resources/assets/js/main.js",
     "isEntry": true,
+    "imports": [
+      "_grog-game-BiOwuHWN.js"
+    ],
     "dynamicImports": [
       "node_modules/html-to-image/es/index.js"
     ]

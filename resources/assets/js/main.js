@@ -1,3 +1,5 @@
+import { launchGrogGame } from './grog-game.js';
+
 var Tracker = Tracker || {};
 
 (function ($) {
@@ -2002,3 +2004,105 @@ function initTracker() {
 }
 
 initTracker();
+
+window.grogRun = function () {
+    if (document.getElementById('grog-run-overlay')) return;
+
+    var overlay = document.createElement('div');
+    overlay.id = 'grog-run-overlay';
+    Object.assign(overlay.style, {
+        position:       'fixed',
+        inset:          '0',
+        background:     'rgba(0,0,0,0.88)',
+        zIndex:         '99999',
+        display:        'flex',
+        flexDirection:  'column',
+        alignItems:     'center',
+        justifyContent: 'center',
+    });
+
+    var canvas = document.createElement('canvas');
+    canvas.width  = 500;
+    canvas.height = 260;
+    canvas.style.cssText = 'display:block;cursor:pointer;';
+
+    var footer = document.createElement('div');
+    Object.assign(footer.style, {
+        display:        'flex',
+        justifyContent: 'space-between',
+        alignItems:     'center',
+        width:          '500px',
+        marginTop:      '8px',
+        fontFamily:     'monospace',
+        fontSize:       '11px',
+        color:          'rgba(255,255,255,0.35)',
+    });
+
+    var hint = document.createElement('span');
+    hint.textContent = 'space / click to jump  ·  down to duck';
+
+    var btnStyle = 'background:none;border:none;color:rgba(255,255,255,0.35);font-family:monospace;font-size:11px;cursor:pointer;padding:0;';
+
+    var fsBtn = document.createElement('button');
+    fsBtn.textContent = '⛶ fullscreen';
+    fsBtn.style.cssText = btnStyle;
+    fsBtn.addEventListener('click', function () {
+        if (!document.fullscreenElement) {
+            overlay.requestFullscreen().catch(function () {});
+        } else {
+            document.exitFullscreen();
+        }
+    });
+    document.addEventListener('fullscreenchange', function () {
+        if (document.fullscreenElement) {
+            fsBtn.textContent = '⛶ exit';
+            var scale = Math.min(screen.width / canvas.width, screen.height / canvas.height);
+            canvas.style.transform = 'scale(' + scale + ')';
+        } else {
+            fsBtn.textContent = '⛶ fullscreen';
+            canvas.style.transform = '';
+        }
+    });
+
+    var closeBtn = document.createElement('button');
+    closeBtn.textContent = '✕ esc to close';
+    closeBtn.style.cssText = btnStyle;
+
+    var btnGroup = document.createElement('div');
+    btnGroup.style.cssText = 'display:flex;gap:12px;';
+    btnGroup.appendChild(fsBtn);
+    btnGroup.appendChild(closeBtn);
+
+    footer.appendChild(hint);
+    footer.appendChild(btnGroup);
+    overlay.appendChild(canvas);
+    overlay.appendChild(footer);
+    document.body.appendChild(overlay);
+
+    var game = launchGrogGame(canvas);
+    game.start();
+
+    function onKeyDown(e) {
+        if (e.code === 'Escape')                          { close(); return; }
+        if (e.code === 'Space' || e.code === 'ArrowUp')  { e.preventDefault(); game.jump(); }
+        if (e.code === 'ArrowDown')                       { e.preventDefault(); game.duckStart(); }
+    }
+
+    function onKeyUp(e) {
+        if (e.code === 'ArrowDown') game.duckEnd();
+    }
+
+    function close() {
+        game.stop();
+        document.removeEventListener('keydown', onKeyDown);
+        document.removeEventListener('keyup', onKeyUp);
+        overlay.remove();
+    }
+
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
+    canvas.addEventListener('click', function () { game.jump(); });
+    canvas.addEventListener('touchstart', function (e) { e.preventDefault(); game.jump(); }, { passive: false });
+    closeBtn.addEventListener('click', close);
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) close(); });
+};

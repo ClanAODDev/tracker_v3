@@ -9,6 +9,7 @@ use App\Models\Transfer;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -37,6 +38,22 @@ class TransferResource extends Resource
                     ->label('Member')
                     ->searchable()
                     ->required(),
+                DateTimePicker::make('created_at')
+                    ->label('Requested At')
+                    ->default(fn () => now())
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        $set('approved_at', $state);
+                    })
+                    ->live()
+                    ->required(),
+                DateTimePicker::make('approved_at')
+                    ->label('Approved At')
+                    ->default(fn () => now())
+                    ->afterStateUpdated(function ($state, callable $set) {
+                        $set('approved_by', $state ? auth()->id() : null);
+                    })
+                    ->live()
+                    ->nullable(),
             ]);
     }
 
@@ -45,15 +62,22 @@ class TransferResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('division.name')
-                    ->numeric()
                     ->sortable(),
                 TextColumn::make('member.name')
-                    ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Transfer Date')
+                    ->label('Requested')
                     ->dateTime()
                     ->sortable(),
+                TextColumn::make('approved_at')
+                    ->label('Approved')
+                    ->dateTime()
+                    ->sortable()
+                    ->placeholder('Pending'),
+                TextColumn::make('approver.name')
+                    ->label('Approved By')
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
