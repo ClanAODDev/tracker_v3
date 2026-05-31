@@ -26,13 +26,13 @@
         left: 0;
         top: 0;
         bottom: 0;
-        width: 68px;
+        width: 48px;
         background-image: repeating-linear-gradient(
             -45deg,
             transparent,
             transparent 5px,
-            rgba(255, 255, 255, 0.03) 5px,
-            rgba(255, 255, 255, 0.03) 10px
+            rgba(0, 0, 0, 0.18) 5px,
+            rgba(0, 0, 0, 0.18) 10px
         );
         pointer-events: none;
 
@@ -43,7 +43,7 @@
 }
 
 .rank-tree-side {
-    width: 68px;
+    width: 48px;
     flex-shrink: 0;
     display: flex;
     align-items: flex-start;
@@ -60,7 +60,7 @@
 .rank-tree-side-label {
     position: absolute;
     left: 0;
-    width: 68px;
+    width: 48px;
     top: 0;
     bottom: 0;
     display: flex;
@@ -134,8 +134,8 @@
         -45deg,
         transparent,
         transparent 5px,
-        rgba(255, 255, 255, 0.045) 5px,
-        rgba(255, 255, 255, 0.045) 10px
+        rgba(0, 0, 0, 0.25) 5px,
+        rgba(0, 0, 0, 0.25) 10px
     );
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
