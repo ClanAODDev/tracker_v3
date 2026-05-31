@@ -68,9 +68,6 @@
                                 'width'  => 50,
                                 'duties' => 'Member who has recently received the Sergeant rank. Acts as a squad leader within their full-time division. Upon reaching Sergeant, members gain access to ClanAOD.net and AOD TeamSpeak moderation tools, and become eligible for the Commanding Officer position.',
                             ],
-                        ];
-
-                        $enlisted = [
                             [
                                 'abbr'   => 'Cpl',
                                 'name'   => 'Corporal',
@@ -85,6 +82,9 @@
                                 'width'  => 63,
                                 'duties' => 'Experienced member. Sergeants within divisions begin training Lance Corporals for the leadership roles they will assume upon promotion to Corporal. LCpls assist squad leaders with tasks as needed and continue helping their recruits settle into the clan.',
                             ],
+                        ];
+
+                        $enlisted = [
                             [
                                 'abbr'   => 'TR',
                                 'name'   => 'Trainer',
