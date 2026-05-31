@@ -91,6 +91,25 @@
     font-weight: 600;
     color: rgba(0, 0, 0, 0.7);
     text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 767px) {
+    .rank-bar {
+        width: 100% !important;
+        height: 48px;
+    }
+
+    .rank-bar-abbr {
+        min-width: auto;
+        font-size: 15px;
+    }
+
+    .rank-bar-name {
+        font-size: 14px;
+    }
 }
 
 .rank-duties-panel {
