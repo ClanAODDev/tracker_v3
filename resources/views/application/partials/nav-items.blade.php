@@ -125,6 +125,14 @@
                 <a href="{{ route('leadership') }}">Leadership Structure</a>
             </li>
 
+            <li class="{{ set_active('clan/ranks') }}">
+                <a href="{{ route('clan.ranks') }}">Ranking Structure</a>
+            </li>
+
+            <li class="{{ set_active('clan/code-of-conduct') }}">
+                <a href="{{ route('clan.code-of-conduct') }}">Code of Conduct</a>
+            </li>
+
             <li class="{{ set_active('clan/outstanding-inactives') }}">
                 <a href="{{ route('reports.outstanding-inactives') }}">Outstanding Inactives</a>
             </li>

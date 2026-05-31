@@ -9,6 +9,7 @@
 @use 'partials/auth';
 @use 'partials/org-chart';
 @use 'partials/errors';
+@use 'partials/clan-info';
 
 .diagonal-pattern {
     background-image: repeating-linear-gradient(
