@@ -1,171 +1,198 @@
-.rank-ladder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding: 20px 0;
+.rank-tree {
+    padding: 8px 0 20px;
 }
 
-.rank-bar-group {
-    width: 100%;
+.rank-tree-item {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-}
+    align-items: stretch;
+    gap: 0;
 
-.rank-tier-divider {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 10px 0;
-
-    &::before,
-    &::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: var(--overlay-light);
-    }
-
-    span {
-        font-size: 10px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1.5px;
-        color: var(--color-muted);
-        white-space: nowrap;
+    &:hover .rank-tree-body {
+        background: color-mix(in srgb, var(--rank-color) 4%, transparent);
+        border-radius: 6px;
     }
 }
 
-.rank-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 18px;
-    height: 44px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: filter 0.15s, transform 0.15s;
+.rank-tree-section {
     position: relative;
-    overflow: hidden;
+
+    > .rank-tree-item:first-of-type {
+        padding-top: 12px;
+    }
 
     &::before {
         content: '';
         position: absolute;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.25);
-        transition: background 0.15s;
-    }
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 68px;
+        background-image: repeating-linear-gradient(
+            -45deg,
+            transparent,
+            transparent 5px,
+            rgba(255, 255, 255, 0.03) 5px,
+            rgba(255, 255, 255, 0.03) 10px
+        );
+        pointer-events: none;
 
-    &:hover {
-        filter: brightness(1.15);
-        transform: scaleX(1.01);
-
-        &::before {
-            background: rgba(0, 0, 0, 0.1);
+        @media (max-width: 600px) {
+            display: none;
         }
     }
-
-    &.rank-bar--active {
-        filter: brightness(1.2);
-        outline: 2px solid rgba(255, 255, 255, 0.4);
-        outline-offset: 1px;
-    }
 }
 
-.rank-bar-abbr {
+.rank-tree-side {
+    width: 68px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    padding-right: 14px;
+    padding-top: 3px;
     position: relative;
-    font-size: 14px;
-    font-weight: 800;
-    color: rgba(0, 0, 0, 0.75);
-    letter-spacing: 0.5px;
-    text-shadow: 0 1px 2px rgba(255, 255, 255, 0.2);
-    min-width: 52px;
-}
 
-.rank-bar-name {
-    position: relative;
-    font-size: 13px;
-    font-weight: 600;
-    color: rgba(0, 0, 0, 0.7);
-    text-align: right;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-@media (max-width: 1210px) {
-    .rank-bar {
-        width: 100% !important;
-        height: 48px;
-    }
-
-    .rank-bar-abbr {
-        min-width: auto;
-        font-size: 15px;
-    }
-
-    .rank-bar-name {
-        font-size: 14px;
+    @media (max-width: 600px) {
+        display: none;
     }
 }
 
-.rank-duties-panel {
-    background: var(--color-bg-panel);
-    border: 1px solid var(--overlay-light);
-    border-radius: 6px;
-    padding: 16px 20px;
-    display: none;
-    margin-top: 4px;
-    width: 100%;
-
-    &.active {
-        display: block;
-        animation: fade-in 0.2s ease-out;
-    }
-
-    .rank-duties-title {
-        font-size: 13px;
-        font-weight: 700;
-        color: var(--color-white);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 8px;
-    }
-
-    p {
-        font-size: 13px;
-        color: var(--color-gray-300);
-        margin: 0;
-        line-height: 1.6;
-    }
-}
-
-.rank-section-header {
+.rank-tree-side-label {
+    position: absolute;
+    left: 0;
+    width: 68px;
+    top: 0;
+    bottom: 0;
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
+    justify-content: center;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: var(--color-muted);
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: 1;
 
-    h4 {
-        margin: 0;
-        font-size: 14px;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--color-muted);
-    }
-
-    &::after {
-        content: '';
-        flex: 1;
-        height: 1px;
-        background: var(--overlay-light);
+    @media (max-width: 600px) {
+        display: none;
     }
 }
 
+.rank-tree-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 36px;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.rank-tree-node {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--rank-color);
+    flex-shrink: 0;
+    margin-top: 5px;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.2s ease;
+
+    .rank-tree-item:hover & {
+        transform: scale(1.25);
+    }
+}
+
+.rank-tree-item--enlisted .rank-tree-node {
+    opacity: 0.5;
+}
+
+.rank-tree-track::after {
+    content: '';
+    flex: 1;
+    width: 1px;
+    background: var(--overlay-light);
+    margin: 6px 0 0;
+    min-height: 10px;
+}
+
+.rank-tree-item--last .rank-tree-track::after,
+.rank-tree-section .rank-tree-item:last-child .rank-tree-track::after {
+    display: none;
+}
+
+.rank-tree-divider {
+    position: relative;
+    height: 48px;
+    margin: 2px 0;
+    border-radius: 4px;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 5px,
+        rgba(255, 255, 255, 0.045) 5px,
+        rgba(255, 255, 255, 0.045) 10px
+    );
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+}
+
+.rank-tree-body {
+    flex: 1;
+    padding: 2px 12px 22px;
+    transition: background 0.15s ease;
+}
+
+.rank-tree-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 5px;
+    flex-wrap: wrap;
+}
+
+.rank-tree-abbr {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    min-width: 50px;
+    flex-shrink: 0;
+    color: var(--rank-color);
+}
+
+.rank-tree-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-gray-300);
+}
+
+.rank-tree-tag {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--color-muted);
+    border: 1px solid var(--overlay-light);
+    border-radius: 3px;
+    padding: 1px 6px;
+}
+
+.rank-tree-duties {
+    font-size: 13px;
+    color: var(--color-gray-500);
+    line-height: 1.65;
+    margin: 0;
+}
+
+.rank-titles-sidebar {
+    position: sticky;
+    top: 75px;
+}
 
 .title-cards {
     display: flex;
