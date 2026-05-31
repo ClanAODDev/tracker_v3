@@ -36,9 +36,9 @@
                     @endphp
 
                     @foreach($sections as $si => $section)
-                        @if($si > 0)
-                            <div class="rank-tree-divider"></div>
-                        @endif
+                        <div class="rank-tree-divider{{ $si === 0 ? ' rank-tree-divider--first' : '' }}">
+                            <span class="rank-tree-divider-label">{{ $section['label'] }}</span>
+                        </div>
 
                         <div class="rank-tree-section">
                             <span class="rank-tree-side-label">{{ $section['label'] }}</span>

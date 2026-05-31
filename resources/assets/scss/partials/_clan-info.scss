@@ -31,8 +31,8 @@
             -45deg,
             transparent,
             transparent 5px,
-            rgba(0, 0, 0, 0.18) 5px,
-            rgba(0, 0, 0, 0.18) 10px
+            rgba(0, 0, 0, 0.09) 5px,
+            rgba(0, 0, 0, 0.09) 10px
         );
         pointer-events: none;
 
@@ -125,6 +125,28 @@
     display: none;
 }
 
+
+.rank-tree-divider-label {
+    display: none;
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: var(--color-muted);
+    opacity: 0.7;
+
+    @media (max-width: 600px) {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding-left: 12px;
+    }
+}
+
+.rank-tree-divider--first {
+    margin-top: 0;
+}
+
 .rank-tree-divider {
     position: relative;
     height: 48px;
@@ -134,8 +156,8 @@
         -45deg,
         transparent,
         transparent 5px,
-        rgba(0, 0, 0, 0.25) 5px,
-        rgba(0, 0, 0, 0.25) 10px
+        rgba(0, 0, 0, 0.125) 5px,
+        rgba(0, 0, 0, 0.125) 10px
     );
     border-top: 1px solid rgba(255, 255, 255, 0.06);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
