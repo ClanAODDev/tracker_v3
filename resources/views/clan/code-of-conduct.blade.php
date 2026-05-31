@@ -18,44 +18,31 @@
                     <p>All members agree to the Code of Conduct upon being accepted into the clan, and are expected to uphold it at all times. Our code ensures that members conduct themselves respectfully and preserve the respected image of the clan.</p>
                 </div>
 
-                <ol class="coc-list">
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>Strive to conduct ourselves in an appropriate manner</span>
-                    </li>
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>Offer help to anyone who seeks it, if it is possible</span>
-                    </li>
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>Project a positive image of yourself and the AOD clan to others</span>
-                    </li>
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>Put the needs of the clan first, above personal goals</span>
-                    </li>
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>Support members of AOD</span>
-                    </li>
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>Attempt to resolve personal differences directly with the concerned individual(s)</span>
-                    </li>
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>Remind other AOD members of expected conduct in a tactful, non-threatening way, and if possible, in private</span>
-                    </li>
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>Promote fellowship within the game community</span>
-                    </li>
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>Do not condemn or humiliate other clan members</span>
-                    </li>
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>Win and lose games honorably — show sportsmanship</span>
-                    </li>
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>Maintain AOD loyalty</span>
-                    </li>
-                    <li class="coc-item animate-fade-in-up animate-stagger">
-                        <span>No comments about politics, religion, skin color, sexual preferences, or sexual conduct. We are here to play games.</span>
-                    </li>
-                </ol>
+                @php
+                    $articles = [
+                        'Strive to conduct ourselves in an appropriate manner',
+                        'Offer help to anyone who seeks it, if it is possible',
+                        'Project a positive image of yourself and the AOD clan to others',
+                        'Put the needs of the clan first, above personal goals',
+                        'Support members of AOD',
+                        'Attempt to resolve personal differences directly with the concerned individual(s)',
+                        'Remind other AOD members of expected conduct in a tactful, non-threatening way, and if possible, in private',
+                        'Promote fellowship within the game community',
+                        'Do not condemn or humiliate other clan members',
+                        'Win and lose games honorably — show sportsmanship',
+                        'Maintain AOD loyalty',
+                        'No comments about politics, religion, skin color, sexual preferences, or sexual conduct. We are here to play games.',
+                    ];
+                @endphp
+
+                <div class="coc-grid">
+                    @foreach($articles as $i => $article)
+                        <div class="coc-card animate-fade-in-up" style="animation-delay: {{ round(($i + 1) * 0.04, 2) }}s;">
+                            <span class="coc-card-number">{{ $i + 1 }}</span>
+                            <p class="coc-card-text">{{ $article }}</p>
+                        </div>
+                    @endforeach
+                </div>
 
                 <div class="coc-commitment">
                     <i class="fa fa-exclamation-circle"></i>

@@ -91,6 +91,53 @@
     position: relative;
 }
 
+.coc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: auto;
+    gap: 10px;
+    margin-bottom: 20px;
+
+    @media (max-width: 767px) {
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+    }
+}
+
+.coc-card {
+    display: flex;
+    align-items: center;
+    min-height: 72px;
+    gap: 16px;
+    padding: 16px 20px;
+    background: var(--color-bg-panel);
+    border: 1px solid var(--overlay-light);
+    border-radius: 8px;
+    transition: background 0.15s, border-color 0.15s;
+
+    &:hover {
+        background: var(--color-bg-hover);
+        border-color: color-mix(in srgb, var(--color-accent) 25%, transparent);
+    }
+}
+
+.coc-card-number {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--color-muted);
+    opacity: 0.4;
+    min-width: 28px;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.coc-card-text {
+    font-size: 13px;
+    color: var(--color-gray-300);
+    line-height: 1.6;
+    margin: 0;
+}
+
 .rank-tree-node {
     width: 13px;
     height: 13px;
@@ -317,52 +364,6 @@
     }
 }
 
-.coc-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    counter-reset: coc-counter;
-}
-
-.coc-item {
-    counter-increment: coc-counter;
-    display: flex;
-    align-items: flex-start;
-    gap: 18px;
-    padding: 16px 20px;
-    border-radius: 6px;
-    border: 1px solid transparent;
-    margin-bottom: 6px;
-    transition: all 0.15s;
-
-    &::before {
-        content: counter(coc-counter);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 30px;
-        height: 30px;
-        min-width: 30px;
-        border-radius: 50%;
-        background: color-mix(in srgb, var(--color-accent) 15%, transparent);
-        color: var(--color-accent);
-        font-size: 13px;
-        font-weight: 700;
-        border: 1px solid color-mix(in srgb, var(--color-accent) 30%, transparent);
-    }
-
-    &:hover {
-        background: var(--color-bg-panel);
-        border-color: var(--overlay-light);
-    }
-
-    span {
-        font-size: 14px;
-        color: var(--color-gray-300);
-        line-height: 1.6;
-        padding-top: 4px;
-    }
-}
 
 .coc-commitment {
     display: flex;
