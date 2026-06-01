@@ -13,6 +13,8 @@
         <div class="row">
             <div class="col-md-9">
 
+                <div class="rank-section-title">Ranking Structure</div>
+
                 @php
                     use App\Enums\Rank;
 
@@ -72,9 +74,7 @@
 
             <div class="col-md-3">
                 <div class="rank-titles-sidebar">
-                    <p class="text-muted" style="font-size:12px;margin-bottom:12px;">
-                        Titles carry authority within a specific division, are separate from rank, and require nomination and approval by clan leadership.
-                    </p>
+                    <div class="rank-section-title">Roles</div>
                     <div class="title-cards">
                         <div class="title-card">
                             <div class="title-card-header">
@@ -102,6 +102,10 @@
                         <i class="fa fa-info-circle"></i>
                         <p>Only Sergeants and above may issue promotions or demotions, and these are given solely for good service to AOD. Promotions to CO or XO positions and all Sergeant-level promotions require approval from clan leadership.</p>
                     </div>
+
+                    <p class="text-muted" style="font-size:12px;margin-bottom:12px;">
+                        Divisional roles carry authority within a specific division, are independent of rank, and require nomination and approval by clan leadership.
+                    </p>
                 </div>
             </div>
         </div>
