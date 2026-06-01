@@ -19,5 +19,4 @@ class HelpController extends Controller
     {
         return view('help.index');
     }
-
 }

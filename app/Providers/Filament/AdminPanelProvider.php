@@ -11,7 +11,6 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\View\PanelsRenderHook;
-use Filament\Widgets;
 use Filament\Widgets\AccountWidget;
 use Flashadvocate\FilamentReactions\FilamentReactionsPlugin;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;

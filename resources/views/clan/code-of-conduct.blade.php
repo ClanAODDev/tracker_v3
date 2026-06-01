@@ -3,6 +3,7 @@
 @section('content')
 
     @component('application.components.view-heading')
+
         @slot('currentPage') Clan Information @endslot
         @slot('icon') <i class="pe page-header-icon pe-7s-shield"></i> @endslot
         @slot('heading') Angels of Death @endslot

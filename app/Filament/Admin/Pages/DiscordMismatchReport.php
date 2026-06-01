@@ -11,7 +11,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Concerns\InteractsWithTable;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 
 class DiscordMismatchReport extends Page implements HasTable
 {
@@ -74,7 +73,7 @@ class DiscordMismatchReport extends Page implements HasTable
                         ->get();
 
                     $procedureService = app(ForumProcedureService::class);
-                    $fixed = 0;
+                    $fixed            = 0;
 
                     foreach ($mismatches as $member) {
                         $member->withoutRelations()->update([

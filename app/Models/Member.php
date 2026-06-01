@@ -55,7 +55,7 @@ class Member extends Model
         'co_at'                     => 'datetime',
         'last_activity_reminder_at' => 'datetime',
 
-        'discord_id'        => 'string',
+        'discord_id' => 'string',
 
         'position'          => Position::class,
         'rank'              => Rank::class,

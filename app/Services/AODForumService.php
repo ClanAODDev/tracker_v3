@@ -234,7 +234,7 @@ class AODForumService
 
     public static function hasForumUsernameConflict(int $clanId, string $name): bool
     {
-        return (new self())->userExists($name, $clanId);
+        return (new self)->userExists($name, $clanId);
     }
 
     private static function generateToken(): string
