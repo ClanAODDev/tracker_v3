@@ -129,7 +129,7 @@ enum Rank: int implements HasColor, HasLabel
 
     public function isOfficer(): bool
     {
-        return $this->value >= self::LANCE_CORPORAL->value;
+        return $this->value >= self::TRAINER->value;
     }
 
     public function isSeniorLeader(): bool
@@ -147,8 +147,9 @@ enum Rank: int implements HasColor, HasLabel
             self::STAFF_SERGEANT   => 'rare',
             self::SERGEANT         => 'uncommon',
             self::CORPORAL,
-            self::LANCE_CORPORAL => 'officer',
-            default              => 'enlisted',
+            self::LANCE_CORPORAL,
+            self::TRAINER => 'officer',
+            default       => 'enlisted',
         };
     }
 
