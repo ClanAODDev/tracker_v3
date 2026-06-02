@@ -103,7 +103,7 @@
                         <p>Only Sergeants and above may issue promotions or demotions, and these are given solely for good service to AOD. Promotions to CO or XO positions and all Sergeant-level promotions require approval from clan leadership.</p>
                     </div>
 
-                    <p class="text-muted" style="font-size:12px;margin-bottom:12px;">
+                    <p class="rank-sidebar-note">
                         Divisional roles carry authority within a specific division, are independent of rank, and require nomination and approval by clan leadership.
                     </p>
                 </div>
