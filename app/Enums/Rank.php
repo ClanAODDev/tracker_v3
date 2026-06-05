@@ -179,7 +179,7 @@ enum Rank: int implements HasColor, HasLabel
             self::TRAINER             => '[Division Optional] A member who has demonstrated individual ability and has been granted preliminary officer roles to begin recruiting. Their primary focus is helping all new members within their division become productive contributors to the clan.',
             self::SPECIALIST          => 'Member with demonstrated skill and game knowledge. A well-tenured member with broad clan experience — the rank most called upon to mentor others within their division.',
             self::PRIVATE_FIRST_CLASS => 'Expected to help fellow clan members and set an example for incoming members. Rank is based on merit and time served. At this stage, a member should know and follow the Code of Conduct and strive to be the best representation of AOD they can be.',
-            self::PRIVATE             => 'Rank based on merit and time in AOD. A Private should post regularly on the forums and consistently demonstrate clan loyalty and honor.',
+            self::PRIVATE             => 'Rank based on merit and time in AOD. A Private should be regularly active on Discord and consistently demonstrate clan loyalty and honor.',
             self::CADET               => 'Active member who has demonstrated loyalty and honor in their first months in the clan.',
             self::RECRUIT             => 'New member of AOD. Should begin learning the Code of Conduct and the clan rank system, and be active in both the division\'s AOD server and on the forums.',
         };
