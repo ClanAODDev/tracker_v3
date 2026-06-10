@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources;
 
 use App\Enums\Rank;
-use App\Filament\Admin\Resources\TicketResource\Pages\CreateTicket;
 use App\Filament\Admin\Resources\TicketResource\Pages\EditTicket;
 use App\Filament\Admin\Resources\TicketResource\Pages\ListTickets;
 use App\Filament\Admin\Resources\TicketResource\RelationManagers\CommentsRelationManager;
@@ -218,9 +217,8 @@ class TicketResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListTickets::route('/'),
-            'create' => CreateTicket::route('/create'),
-            'edit'   => EditTicket::route('/{record}/edit'),
+            'index' => ListTickets::route('/'),
+            'edit'  => EditTicket::route('/{record}/edit'),
         ];
     }
 }
