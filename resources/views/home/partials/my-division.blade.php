@@ -54,6 +54,9 @@
                 <a href="{{ route('division.voice-report', $myDivision) }}" class="action-card-menu-item">
                     <i class="fa fa-headset"></i> Voice
                 </a>
+                <a href="{{ route('division.transfer-report', $myDivision) }}" class="action-card-menu-item">
+                    <i class="fa fa-exchange-alt"></i> Transfers
+                </a>
             </div>
         </div>
         <a href="{{ route('division.inactive-members', $myDivision) }}" class="action-card collapse-at-xl">
@@ -97,6 +100,9 @@
                 </a>
                 <a href="{{ route('division.voice-report', $myDivision) }}" class="action-card-menu-item show-at-lg">
                     <i class="fa fa-headset"></i> Voice
+                </a>
+                <a href="{{ route('division.transfer-report', $myDivision) }}" class="action-card-menu-item show-at-lg">
+                    <i class="fa fa-exchange-alt"></i> Transfers
                 </a>
                 <a href="{{ route('division', $myDivision->slug) }}" class="action-card-menu-item">
                     <i class="fa fa-home"></i> Division Home

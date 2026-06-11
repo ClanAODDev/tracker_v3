@@ -51,6 +51,7 @@ Route::prefix('divisions/{division}')->group(function () {
         Route::get('retention', 'retentionReport')->name('division.retention-report');
         Route::get('census', 'censusReport')->name('division.census');
         Route::get('promotions/{month?}/{year?}', 'promotionsReport')->middleware('auth')->name('division.promotions');
+        Route::get('transfers', 'transferReport')->middleware('auth')->name('division.transfer-report');
     });
 
     Route::prefix('platoons')->group(function () {

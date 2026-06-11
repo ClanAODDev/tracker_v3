@@ -24,6 +24,9 @@
                                 <a class="dropdown-item" href="{{ route('division.voice-report', $division) }}">
                                     <i class="fa fa-headset"></i> Voice
                                 </a>
+                                <a class="dropdown-item" href="{{ route('division.transfer-report', $division) }}">
+                                    <i class="fa fa-exchange-alt"></i> Transfers
+                                </a>
                             </div>
                         </div>
                     </li>

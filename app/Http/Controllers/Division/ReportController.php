@@ -32,21 +32,10 @@ class ReportController extends Controller
      */
     public function retentionReport(Division $division)
     {
-        $defaultStart = now()->subMonthsNoOverflow(6)->startOfMonth();
-        $defaultEnd   = now()->endOfMonth();
-
-        $start = request()->filled('start')
-            ? Carbon::parse(request('start'))->startOfDay()
-            : $defaultStart;
-
-        $end = request()->filled('end')
-            ? Carbon::parse(request('end'))->endOfDay()
-            : $defaultEnd;
-
-        $range = [
-            'start' => request('start') ?? now()->subMonths(6)->startOfMonth()->format('Y-m-d'),
-            'end'   => request('end') ?? now()->endOfMonth()->format('Y-m-d'),
-        ];
+        [$start, $end, $range] = $this->parseDateRange(
+            now()->subMonthsNoOverflow(6)->startOfMonth(),
+            now()->endOfMonth(),
+        );
 
         $activityCounts = Activity::query()
             ->where('name', ActivityType::RECRUITED)
@@ -341,6 +330,100 @@ class ReportController extends Controller
             ->orderByDesc('rank')
             ->orderByDesc('approved_at')
             ->get();
+    }
+
+    public function transferReport(Division $division)
+    {
+        [$start, $end, $range] = $this->parseDateRange();
+
+        $sources = $this->applyDateRange(
+            DB::table('activities as a')
+                ->leftJoin('divisions as d', 'd.id', '=', 'a.division_id')
+                ->join('members as m', 'm.id', '=', 'a.subject_id')
+                ->where('a.subject_type', 'App\\Models\\Member')
+                ->where('a.name', ActivityType::TRANSFERRED->value)
+                ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(a.properties, '$.to_division')) = ?", [$division->name])
+                ->where('m.division_id', $division->id)
+                ->whereNull('m.deleted_at')
+                ->select('a.division_id', 'd.name as division_name', DB::raw('COUNT(*) as count'))
+                ->groupBy('a.division_id', 'd.name')
+                ->orderByDesc('count'),
+            $start,
+            $end,
+        )->get();
+
+        $recruitedCount = $this->applyDateRange(
+            DB::table('activities as a')
+                ->join('members as m', 'm.id', '=', 'a.subject_id')
+                ->where('a.subject_type', 'App\\Models\\Member')
+                ->where('a.name', ActivityType::RECRUITED->value)
+                ->where('a.division_id', $division->id)
+                ->where('m.division_id', $division->id)
+                ->whereNull('m.deleted_at'),
+            $start,
+            $end,
+        )->count();
+
+        $total = $sources->sum('count') + $recruitedCount;
+
+        $sources = $sources->map(fn ($row) => [
+            'name'        => $row->division_name ?? 'Unknown',
+            'count'       => (int) $row->count,
+            'percentage'  => $total > 0 ? round($row->count / $total * 100, 1) : 0,
+            'is_original' => false,
+        ]);
+
+        if ($recruitedCount > 0) {
+            $sources->push([
+                'name'        => 'Started here',
+                'count'       => $recruitedCount,
+                'percentage'  => $total > 0 ? round($recruitedCount / $total * 100, 1) : 0,
+                'is_original' => true,
+            ]);
+        }
+
+        $stats = [
+            'total'   => $total,
+            'sources' => $sources->where('is_original', false)->count(),
+        ];
+
+        return view('division.reports.transfer-report', compact(
+            'division',
+            'sources',
+            'stats',
+            'range',
+        ));
+    }
+
+    private function parseDateRange(?Carbon $defaultStart = null, ?Carbon $defaultEnd = null): array
+    {
+        $start = request()->filled('start')
+            ? Carbon::parse(request('start'))->startOfDay()
+            : $defaultStart;
+
+        $end = request()->filled('end')
+            ? Carbon::parse(request('end'))->endOfDay()
+            : $defaultEnd;
+
+        $range = [
+            'start' => request('start') ?? $defaultStart?->format('Y-m-d') ?? '',
+            'end'   => request('end') ?? $defaultEnd?->format('Y-m-d') ?? '',
+        ];
+
+        return [$start, $end, $range];
+    }
+
+    private function applyDateRange($query, ?Carbon $start, ?Carbon $end)
+    {
+        if ($start) {
+            $query->where('a.created_at', '>=', $start);
+        }
+
+        if ($end) {
+            $query->where('a.created_at', '<=', $end);
+        }
+
+        return $query;
     }
 
     private function resolveMonthWindow($month, $year): array

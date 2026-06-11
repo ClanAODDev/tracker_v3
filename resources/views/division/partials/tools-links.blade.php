@@ -40,6 +40,9 @@
             <a href="{{ route('division.voice-report', $division) }}" class="tool-card-menu-item">
                 <i class="fa fa-headset"></i> Voice
             </a>
+            <a href="{{ route('division.transfer-report', $division) }}" class="tool-card-menu-item">
+                <i class="fa fa-exchange-alt"></i> Transfers
+            </a>
         </div>
     </div>
 
@@ -94,6 +97,9 @@
             </a>
             <a href="{{ route('division.voice-report', $division) }}" class="tool-card-menu-item show-at-lg">
                 <i class="fa fa-headset"></i> Voice
+            </a>
+            <a href="{{ route('division.transfer-report', $division) }}" class="tool-card-menu-item show-at-lg">
+                <i class="fa fa-exchange-alt"></i> Transfers
             </a>
             <a href="{{ route('partTimers', $division) }}" class="tool-card-menu-item">
                 <i class="fa fa-user-tag"></i> Part Timers

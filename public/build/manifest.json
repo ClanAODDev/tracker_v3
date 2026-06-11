@@ -138,6 +138,15 @@
     "src": "resources/assets/js/training.js",
     "isEntry": true
   },
+  "resources/assets/js/transfer-graph.js": {
+    "file": "assets/transfer-graph-CI7xSohs.js",
+    "name": "transfer-graph",
+    "src": "resources/assets/js/transfer-graph.js",
+    "isEntry": true,
+    "imports": [
+      "_chart-utils-PLXmSdtb.js"
+    ]
+  },
   "resources/assets/js/voice.js": {
     "file": "assets/voice-C5eYLdXu.js",
     "name": "voice",

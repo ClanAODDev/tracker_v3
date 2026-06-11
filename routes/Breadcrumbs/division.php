@@ -30,6 +30,7 @@ $reportPages = [
     'retention-report' => 'Retention',
     'voice-report'     => 'Voice',
     'promotions'       => 'Promotions',
+    'transfer-report'  => 'Transfers',
 ];
 
 foreach ($reportPages as $route => $label) {
