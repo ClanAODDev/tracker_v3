@@ -62,7 +62,7 @@ class MemberAwardResource extends Resource
                 'nav_badge_member_awards_' . $user->id,
                 now()->addMinutes(2),
                 fn () => MemberAward::needsApproval()
-                    ->whereHas('member', fn ($query) => $query->where('division_id', $user->member->division_id))
+                    ->whereHas('award', fn ($query) => $query->where('division_id', $user->member->division_id))
                     ->count()
             );
 
@@ -82,7 +82,7 @@ class MemberAwardResource extends Resource
         }
 
         if ($user->isDivisionLeader()) {
-            return $query->whereHas('member', fn ($q) => $q->where('division_id', $user->member->division_id));
+            return $query->whereHas('award', fn ($q) => $q->where('division_id', $user->member->division_id));
         }
 
         return $query;
