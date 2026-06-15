@@ -59,6 +59,7 @@ class DivisionApplicationApiController extends Controller
         return response()->json([
             'application' => [
                 'id'               => $application->id,
+                'discord_id'       => $application->user->discord_id,
                 'discord_username' => $application->user->discord_username,
                 'avatar'           => $application->discordAvatarUrl(),
                 'created_at'       => $application->created_at->toIso8601String(),

@@ -22,9 +22,23 @@
           <div v-else class="header-avatar-placeholder"><i class="fab fa-discord"></i></div>
           <div class="header-main">
             <div class="app-username">{{ store.currentApplication.discord_username }}</div>
-            <div class="app-date">
-              <i class="fa fa-clock-o m-r-xs"></i>
-              {{ store.formatRelativeDate(store.currentApplication.created_at) }}
+            <div class="app-meta">
+              <span class="app-date">
+                <i class="fa fa-clock-o m-r-xs"></i>{{ store.formatRelativeDate(store.currentApplication.created_at) }}
+              </span>
+              <template v-if="store.currentApplication.discord_id">
+                <span class="app-meta-divider">·</span>
+                <a
+                  :href="`https://discord.com/users/${store.currentApplication.discord_id}`"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="discord-profile-link"
+                  title="Open Discord profile"
+                >
+                  <i class="fab fa-discord m-r-xs"></i>Add Friend
+                </a>
+                <span class="app-meta-hint">(open in browser)</span>
+              </template>
             </div>
           </div>
         </div>
@@ -251,9 +265,43 @@ export default {
   margin-bottom: 4px;
 }
 
+.app-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .app-date {
   font-size: 13px;
   color: var(--color-muted);
+}
+
+.app-meta-divider {
+  color: var(--color-muted);
+  font-size: 13px;
+}
+
+.app-meta-hint {
+  font-size: 11px;
+  color: var(--color-muted);
+}
+
+.discord-profile-link {
+  font-size: 12px;
+  color: #5865F2;
+  text-decoration: none;
+  font-weight: 600;
+  background: rgba(88, 101, 242, 0.12);
+  padding: 2px 8px;
+  border-radius: 10px;
+  transition: background 0.15s;
+}
+
+.discord-profile-link:hover {
+  background: rgba(88, 101, 242, 0.25);
+  color: #5865F2;
+  text-decoration: none;
 }
 
 .detail-sections {
