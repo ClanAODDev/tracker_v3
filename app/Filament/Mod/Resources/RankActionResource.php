@@ -219,9 +219,11 @@ class RankActionResource extends Resource
             )
             ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
-                CommentsTableAction::make()->visible(fn (
-                    RankAction $action
-                ) => auth()->user()->canManageRankActionCommentsFor($action)),
+                CommentsTableAction::make()
+                    ->closeModalByClickingAway(false)
+                    ->visible(fn (
+                        RankAction $action
+                    ) => auth()->user()->canManageRankActionCommentsFor($action)),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

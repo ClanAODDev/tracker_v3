@@ -36,7 +36,7 @@ class EditRankAction extends EditRecord
 
     protected function getHeaderActions(): array
     {
-        $commentsAction = [CommentsAction::make()->label('Comments')];
+        $commentsAction = [CommentsAction::make()->label('Comments')->closeModalByClickingAway(false)];
 
         $actions = [
             ActionGroup::make([
