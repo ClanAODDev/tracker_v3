@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'partials/variables' as *;
 @use 'partials/mixins' as *;
 @use 'partials/buttons';
@@ -12350,7 +12351,7 @@ pre.code-toolbar > .toolbar span:focus {
                 justify-content: center;
 
                 &:hover {
-                    background: darken(#d9534f, 10%);
+                    background: color.adjust(#d9534f, $lightness: -10%);
                 }
             }
         }
