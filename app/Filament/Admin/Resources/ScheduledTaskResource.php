@@ -7,11 +7,17 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use OptimatesDE\FilamentScheduleMonitor\FilamentScheduleMonitorPlugin;
 use OptimatesDE\FilamentScheduleMonitor\Resources\MonitoredScheduledTaskResource;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 
 class ScheduledTaskResource extends MonitoredScheduledTaskResource
 {
+    protected static function plugin(): ?FilamentScheduleMonitorPlugin
+    {
+        return null;
+    }
+
     public static function getNavigationGroup(): string|\UnitEnum|null
     {
         return 'Admin';
