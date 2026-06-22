@@ -454,7 +454,8 @@ store.loadWorkers = (ticketTypeId = null) => {
     const params = ticketTypeId ? { ticket_type_id: ticketTypeId } : {};
     return axios.get(`${store.base_url}/api/tickets/workers`, { params })
         .then((response) => {
-            store.workers = response.data.workers || [];
+            const currentUserId = store.getCurrentUserId();
+            store.workers = (response.data.workers || []).filter(w => w.id !== currentUserId);
         })
         .catch(() => {
             store.workers = [];

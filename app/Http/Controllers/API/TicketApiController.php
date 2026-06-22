@@ -176,8 +176,10 @@ class TicketApiController extends Controller
 
         $assignee = User::with('member')->findOrFail($validated['user_id']);
 
-        if (! $assignee->member || $assignee->member->rank->value < Rank::MASTER_SERGEANT->value) {
-            return response()->json(['error' => 'Target must be MSgt or higher'], 422);
+        $minimumRank = $ticket->type?->minimum_rank?->value ?? Rank::MASTER_SERGEANT->value;
+
+        if (! $assignee->member || $assignee->member->rank->value < $minimumRank) {
+            return response()->json(['error' => 'Assignee does not meet the minimum rank for this ticket type'], 422);
         }
 
         $ticket->ownTo($assignee);

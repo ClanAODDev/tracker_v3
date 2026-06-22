@@ -74,6 +74,14 @@
         </div>
         <div class="action-buttons">
           <button
+            v-if="canAssign"
+            class="btn btn-primary btn-sm"
+            :disabled="store.loading.action"
+            @click="assignToMe"
+          >
+            <i class="fa fa-hand-pointer-o m-r-xs"></i> Assign to me
+          </button>
+          <button
             v-if="canReassign"
             class="btn btn-info btn-sm"
             :disabled="store.loading.action"
