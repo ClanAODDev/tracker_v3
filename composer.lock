@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2eb002c20629b898f71e00bd9ead3746",
+    "content-hash": "da8c93dd0a6820bc8e60c7eb3219cf79",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -4947,6 +4947,62 @@
             "time": "2026-06-02T08:18:44+00:00"
         },
         {
+            "name": "lorisleiva/cron-translator",
+            "version": "v0.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/lorisleiva/cron-translator.git",
+                "reference": "99e87184dc4b535c157af888782e84ba1d397b6e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/lorisleiva/cron-translator/zipball/99e87184dc4b535c157af888782e84ba1d397b6e",
+                "reference": "99e87184dc4b535c157af888782e84ba1d397b6e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Lorisleiva\\CronTranslator\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Loris LEIVA",
+                    "email": "loris.leiva@gmail.com",
+                    "homepage": "https://lorisleiva.com"
+                }
+            ],
+            "description": "Makes CRON expressions human-readable",
+            "homepage": "https://github.com/lorisleiva/cron-translator",
+            "keywords": [
+                "cron",
+                "expression",
+                "human"
+            ],
+            "support": {
+                "issues": "https://github.com/lorisleiva/cron-translator/issues",
+                "source": "https://github.com/lorisleiva/cron-translator/tree/v0.5.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/lorisleiva",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-03-27T10:08:36+00:00"
+        },
+        {
             "name": "ml/iri",
             "version": "1.1.4",
             "target-dir": "ML/IRI",
@@ -5868,6 +5924,58 @@
                 }
             ],
             "time": "2025-09-03T16:03:54+00:00"
+        },
+        {
+            "name": "optimates-de/filament-schedule-monitor",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/OptimatesDE/filament-schedule-monitor.git",
+                "reference": "d0b145ba7c2b49bd170ce74a2fe21d4b5a3c755f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/OptimatesDE/filament-schedule-monitor/zipball/d0b145ba7c2b49bd170ce74a2fe21d4b5a3c755f",
+                "reference": "d0b145ba7c2b49bd170ce74a2fe21d4b5a3c755f",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^4.0|^5.0",
+                "php": "^8.3",
+                "spatie/laravel-schedule-monitor": "^3.0|^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "OptimatesDE\\FilamentScheduleMonitor\\FilamentScheduleMonitorServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "OptimatesDE\\FilamentScheduleMonitor\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Optimates GmbH",
+                    "email": "hi@optimates.de",
+                    "homepage": "https://www.optimates.de",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Read-only Filament UI for spatie/laravel-schedule-monitor: scheduled task status, run history and descriptions.",
+            "homepage": "https://www.optimates.de",
+            "support": {
+                "issues": "https://github.com/OptimatesDE/filament-schedule-monitor/issues",
+                "source": "https://github.com/OptimatesDE/filament-schedule-monitor/tree/v1.0.0"
+            },
+            "time": "2026-06-16T10:14:09+00:00"
         },
         {
             "name": "oscarotero/html-parser",
@@ -8258,6 +8366,84 @@
                 }
             ],
             "time": "2026-03-08T13:45:05+00:00"
+        },
+        {
+            "name": "spatie/laravel-schedule-monitor",
+            "version": "4.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/laravel-schedule-monitor.git",
+                "reference": "a4fdaead210bcf0626110c92d0dd739ceec71fe0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/laravel-schedule-monitor/zipball/a4fdaead210bcf0626110c92d0dd739ceec71fe0",
+                "reference": "a4fdaead210bcf0626110c92d0dd739ceec71fe0",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/bus": "^11.0|^12.0|^13.0",
+                "lorisleiva/cron-translator": "^0.3.0|^0.4.0|^0.5",
+                "nesbot/carbon": "^2.63|^3.0",
+                "nunomaduro/termwind": "^2.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.9"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^9.6|^10.0|^11.0",
+                "pestphp/pest": "^2.34|^3.7|^4.4",
+                "pestphp/pest-plugin-laravel": "^2.3|^3.1|^4.1",
+                "spatie/pest-plugin-snapshots": "^1.1|^2.1",
+                "spatie/phpunit-snapshot-assertions": "^4.2|^5.1",
+                "spatie/test-time": "^1.2"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Spatie\\ScheduleMonitor\\ScheduleMonitorServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-ohdear-monitor": "4.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\ScheduleMonitor\\": "src",
+                    "Spatie\\ScheduleMonitor\\Database\\Factories\\": "database/factories"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Freek Van der Herten",
+                    "email": "freek@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Monitor scheduled tasks in a Laravel app",
+            "homepage": "https://github.com/spatie/laravel-schedule-monitor",
+            "keywords": [
+                "laravel-schedule-monitor",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/laravel-schedule-monitor/issues",
+                "source": "https://github.com/spatie/laravel-schedule-monitor/tree/4.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-03-25T00:29:57+00:00"
         },
         {
             "name": "spatie/laravel-validation-rules",
@@ -15610,5 +15796,5 @@
         "ext-gd": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
