@@ -152,7 +152,10 @@ class TicketApiController extends Controller
             ->where('division_id', '!=', 0)
         )
             ->with('member')
-            ->orderBy('name')
+            ->join('members', 'members.id', '=', 'users.member_id')
+            ->orderBy('members.rank')
+            ->orderBy('users.name')
+            ->select('users.*')
             ->get()
             ->map(fn ($u) => [
                 'id'        => $u->id,
