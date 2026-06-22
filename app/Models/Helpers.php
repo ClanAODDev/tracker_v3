@@ -3,6 +3,7 @@
 use App\Models\MemberRequest;
 use App\Settings\UserSettings;
 use Carbon\Carbon;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
 
@@ -465,4 +466,19 @@ function getAnniversaryTrophy(int $years): ?array
         'color' => '#cd7f32',
         'title' => '5+ Years',
     ];
+}
+
+function scheduledTaskEnabled(string $name): bool
+{
+    static $cache = null;
+
+    if ($cache === null) {
+        try {
+            $cache = MonitoredScheduledTask::pluck('is_enabled', 'name')->all();
+        } catch (Throwable) {
+            return true;
+        }
+    }
+
+    return (bool) ($cache[$name] ?? true);
 }
