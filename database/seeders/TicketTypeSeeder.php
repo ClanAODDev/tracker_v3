@@ -33,6 +33,14 @@ class TicketTypeSeeder extends Seeder
             'description'   => 'Change to Teamspeak',
             'display_order' => 100,
         ],
+        [
+            'name'          => 'SGT Training',
+            'slug'          => 'sgt-training',
+            'description'   => 'Request SGT training',
+            'minimum_rank'  => 10,
+            'role_access'   => [3, 4],
+            'display_order' => 100,
+        ],
     ];
 
     /**
