@@ -77,7 +77,12 @@ class DivisionResource extends Resource
                             TextInput::make('abbreviation')
                                 ->helperText('Should match abbreviation used on forums')
                                 ->maxLength(3)
-                                ->required()
+                                ->required(),
+
+                            TextInput::make('dns_subdomain')
+                                ->label('DNS Subdomain')
+                                ->helperText('Subdomain used for the Cloudflare CNAME (e.g. "planetside"). Defaults to slug if empty.')
+                                ->maxLength(100)
                                 ->maxLength(255),
                         ])->columns(3),
 

@@ -4,8 +4,11 @@ namespace App\Filament\Admin\Resources\DivisionResource\Pages;
 
 use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource;
+use App\Jobs\SyncDivisionDns;
 use App\Models\Member;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditDivision extends EditRecord
@@ -15,6 +18,17 @@ class EditDivision extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('sync_dns')
+                ->label('Sync DNS')
+                ->icon('heroicon-o-globe-alt')
+                ->color('gray')
+                ->requiresConfirmation()
+                ->modalHeading('Sync Division DNS')
+                ->modalDescription('This will create missing CNAMEs and remove stale ones from Cloudflare. Protected records will never be deleted.')
+                ->action(function () {
+                    SyncDivisionDns::dispatch();
+                    Notification::make()->title('DNS sync queued')->success()->send();
+                }),
             DeleteAction::make(),
         ];
     }

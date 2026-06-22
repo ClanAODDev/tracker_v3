@@ -59,4 +59,10 @@ return [
         'client_secret' => env('DISCORD_CLIENT_SECRET'),
         'redirect'      => env('DISCORD_REDIRECT_URI'),
     ],
+
+    'cloudflare' => [
+        'api_token'   => env('CLOUDFLARE_API_TOKEN'),
+        'zone_id'     => env('CLOUDFLARE_ZONE_ID'),
+        'zone_domain' => env('CLOUDFLARE_ZONE_DOMAIN', 'clanaod.net'),
+    ],
 ];
