@@ -131,14 +131,23 @@ class TicketApiController extends Controller
         ]);
     }
 
-    public function workers(): JsonResponse
+    public function workers(Request $request): JsonResponse
     {
         if (! TicketType::get()->contains(fn ($type) => $type->userCanWork(auth()->user()))) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
+        $minimumRank = Rank::MASTER_SERGEANT->value;
+
+        if ($request->filled('ticket_type_id')) {
+            $type = TicketType::find($request->integer('ticket_type_id'));
+            if ($type?->minimum_rank) {
+                $minimumRank = $type->minimum_rank->value;
+            }
+        }
+
         $workers = User::whereHas('member', fn ($q) => $q
-            ->where('rank', '>=', Rank::MASTER_SERGEANT->value)
+            ->where('rank', '>=', $minimumRank)
             ->whereNotNull('division_id')
             ->where('division_id', '!=', 0)
         )

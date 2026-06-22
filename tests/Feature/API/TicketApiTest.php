@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\API;
 
+use App\Enums\Rank;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -222,6 +223,71 @@ class TicketApiTest extends TestCase
             ]);
 
         $response->assertForbidden();
+    }
+
+    #[Test]
+    public function workers_requires_authentication()
+    {
+        $this->getJson('/api/tickets/workers')->assertUnauthorized();
+    }
+
+    #[Test]
+    public function workers_returns_403_for_unauthorized_user()
+    {
+        $user = $this->createMemberWithUser();
+
+        $this->actingAs($user)->getJson('/api/tickets/workers')->assertForbidden();
+    }
+
+    #[Test]
+    public function workers_returns_members_meeting_default_minimum_rank()
+    {
+        $admin         = $this->createAdmin();
+        $eligibleUser  = $this->createMemberWithUser(['rank' => Rank::MASTER_SERGEANT]);
+        $ineligibleUser = $this->createMemberWithUser(['rank' => Rank::SERGEANT]);
+
+        $response = $this->actingAs($admin)->getJson('/api/tickets/workers');
+
+        $response->assertOk();
+        $workerIds = collect($response->json('workers'))->pluck('id');
+        $this->assertTrue($workerIds->contains($eligibleUser->id));
+        $this->assertFalse($workerIds->contains($ineligibleUser->id));
+    }
+
+    #[Test]
+    public function workers_filters_by_ticket_type_minimum_rank()
+    {
+        $admin      = $this->createAdmin();
+        $ticketType = TicketType::factory()->requiresMinimumRank(Rank::STAFF_SERGEANT)->create();
+
+        $eligibleUser   = $this->createMemberWithUser(['rank' => Rank::STAFF_SERGEANT]);
+        $ineligibleUser = $this->createMemberWithUser(['rank' => Rank::SERGEANT]);
+
+        $response = $this->actingAs($admin)
+            ->getJson("/api/tickets/workers?ticket_type_id={$ticketType->id}");
+
+        $response->assertOk();
+        $workerIds = collect($response->json('workers'))->pluck('id');
+        $this->assertTrue($workerIds->contains($eligibleUser->id));
+        $this->assertFalse($workerIds->contains($ineligibleUser->id));
+    }
+
+    #[Test]
+    public function workers_falls_back_to_default_rank_when_type_has_no_minimum_rank()
+    {
+        $admin      = $this->createAdmin();
+        $ticketType = TicketType::factory()->create(['minimum_rank' => null]);
+
+        $eligibleUser   = $this->createMemberWithUser(['rank' => Rank::MASTER_SERGEANT]);
+        $ineligibleUser = $this->createMemberWithUser(['rank' => Rank::SERGEANT]);
+
+        $response = $this->actingAs($admin)
+            ->getJson("/api/tickets/workers?ticket_type_id={$ticketType->id}");
+
+        $response->assertOk();
+        $workerIds = collect($response->json('workers'))->pluck('id');
+        $this->assertTrue($workerIds->contains($eligibleUser->id));
+        $this->assertFalse($workerIds->contains($ineligibleUser->id));
     }
 
     #[Test]

@@ -453,9 +453,7 @@ export default {
 
     openReassignModal() {
       this.reassignUserId = '';
-      if (store.workers.length === 0) {
-        store.loadWorkers();
-      }
+      store.loadWorkers(store.currentTicket?.type?.id ?? null);
       window.jQuery('#ticket-reassign-modal').modal('show');
     },
 

@@ -450,8 +450,9 @@ store.rejectTicket = (ticketId, reason) => store.performAction(ticketId, 'reject
 store.reopenTicket = (ticketId) => store.performAction(ticketId, 'reopen', {}, 'Failed to reopen ticket.');
 
 store.workers = [];
-store.loadWorkers = () => {
-    return axios.get(`${store.base_url}/api/tickets/workers`)
+store.loadWorkers = (ticketTypeId = null) => {
+    const params = ticketTypeId ? { ticket_type_id: ticketTypeId } : {};
+    return axios.get(`${store.base_url}/api/tickets/workers`, { params })
         .then((response) => {
             store.workers = response.data.workers || [];
         })
