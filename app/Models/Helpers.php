@@ -1,11 +1,14 @@
 <?php
 
+use App\Jobs\SyncDivisionDns;
 use App\Models\MemberRequest;
+use App\Services\CloudflareDnsService;
 use App\Settings\UserSettings;
 use Carbon\Carbon;
-use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
+use Illuminate\Support\HtmlString;
+use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 
 function bytesToHuman($bytes)
 {
@@ -466,6 +469,36 @@ function getAnniversaryTrophy(int $years): ?array
         'color' => '#cd7f32',
         'title' => '5+ Years',
     ];
+}
+
+function buildDnsPreview(CloudflareDnsService $service): HtmlString
+{
+    try {
+        $expected  = SyncDivisionDns::expectedSubdomains();
+        $existing  = $service->listCnames();
+        $protected = collect(CloudflareDnsService::PROTECTED_SUBDOMAINS);
+
+        $toCreate = $expected->reject(fn ($s) => $existing->has($s))->values();
+        $toDelete = $existing->keys()
+            ->reject(fn ($s) => $expected->contains($s) || $protected->contains($s))
+            ->values();
+
+        if ($toCreate->isEmpty() && $toDelete->isEmpty()) {
+            return new HtmlString('<p>No changes needed — DNS is already in sync.</p>');
+        }
+
+        $lines = [];
+        if ($toCreate->isNotEmpty()) {
+            $lines[] = '<strong>Would create:</strong> ' . $toCreate->join(', ');
+        }
+        if ($toDelete->isNotEmpty()) {
+            $lines[] = '<strong>Would delete:</strong> ' . $toDelete->join(', ');
+        }
+
+        return new HtmlString(implode('<br>', $lines));
+    } catch (Throwable) {
+        return new HtmlString('Unable to fetch current DNS records. Proceed to sync anyway?');
+    }
 }
 
 function scheduledTaskEnabled(string $name): bool

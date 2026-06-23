@@ -4,10 +4,12 @@ namespace App\Filament\Admin\Resources\DivisionResource\Pages;
 
 use App\Filament\Admin\Resources\DivisionResource;
 use App\Jobs\SyncDivisionDns;
+use App\Services\CloudflareDnsService;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
+use Illuminate\Support\HtmlString;
 
 class ListDivisions extends ListRecords
 {
@@ -22,7 +24,7 @@ class ListDivisions extends ListRecords
                 ->color('gray')
                 ->requiresConfirmation()
                 ->modalHeading('Sync Division DNS')
-                ->modalDescription('This will create missing CNAMEs and remove stale ones from Cloudflare. Protected records will never be deleted.')
+                ->modalDescription(fn (CloudflareDnsService $service) => buildDnsPreview($service))
                 ->action(function () {
                     SyncDivisionDns::dispatch();
                     Notification::make()->title('DNS sync queued')->success()->send();

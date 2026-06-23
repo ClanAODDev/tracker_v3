@@ -6,6 +6,7 @@ use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource;
 use App\Jobs\SyncDivisionDns;
 use App\Models\Member;
+use App\Services\CloudflareDnsService;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
@@ -24,7 +25,7 @@ class EditDivision extends EditRecord
                 ->color('gray')
                 ->requiresConfirmation()
                 ->modalHeading('Sync Division DNS')
-                ->modalDescription('This will create missing CNAMEs and remove stale ones from Cloudflare. Protected records will never be deleted.')
+                ->modalDescription(fn (CloudflareDnsService $service) => buildDnsPreview($service))
                 ->action(function () {
                     SyncDivisionDns::dispatch();
                     Notification::make()->title('DNS sync queued')->success()->send();
