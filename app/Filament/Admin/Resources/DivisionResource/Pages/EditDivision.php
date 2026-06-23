@@ -11,6 +11,7 @@ use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Throwable;
 
 class EditDivision extends EditRecord
 {
@@ -26,9 +27,18 @@ class EditDivision extends EditRecord
                 ->requiresConfirmation()
                 ->modalHeading('Sync Division DNS')
                 ->modalDescription(fn (CloudflareDnsService $service) => buildDnsPreview($service))
-                ->action(function () {
-                    SyncDivisionDns::dispatch();
-                    Notification::make()->title('DNS sync queued')->success()->send();
+                ->modalSubmitActionLabel('Sync Now')
+                ->action(function (CloudflareDnsService $service) {
+                    try {
+                        $result = (new SyncDivisionDns)->handle($service);
+                        $body   = collect([
+                            $result['created'] ? 'Created: ' . implode(', ', $result['created']) : null,
+                            $result['deleted'] ? 'Deleted: ' . implode(', ', $result['deleted']) : null,
+                        ])->filter()->join(' · ') ?: 'Already in sync.';
+                        Notification::make()->title('DNS sync complete')->body($body)->success()->send();
+                    } catch (Throwable $e) {
+                        Notification::make()->title('DNS sync failed')->body($e->getMessage())->danger()->send();
+                    }
                 }),
             DeleteAction::make(),
         ];
