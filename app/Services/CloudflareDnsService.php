@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
@@ -27,13 +28,22 @@ class CloudflareDnsService
 
     public function listCnames(): Collection
     {
-        $response = Http::withToken(config('services.cloudflare.api_token'))
-            ->get(self::API_BASE . "/zones/{$this->zoneId}/dns_records", [
-                'type'     => 'CNAME',
-                'per_page' => 100,
-            ]);
+        $records = [];
+        $page    = 1;
 
-        $records = $response->json('result', []);
+        do {
+            $response = $this->http()
+                ->get(self::API_BASE . "/zones/{$this->zoneId}/dns_records", [
+                    'type'     => 'CNAME',
+                    'per_page' => 100,
+                    'page'     => $page,
+                ]);
+
+            $body       = $response->json();
+            $records    = array_merge($records, $body['result'] ?? []);
+            $totalPages = $body['result_info']['total_pages'] ?? 1;
+            $page++;
+        } while ($page <= $totalPages);
 
         return collect($records)
             ->filter(fn ($r) => str_ends_with($r['name'], '.' . $this->zoneDomain))
@@ -42,19 +52,25 @@ class CloudflareDnsService
 
     public function createCname(string $subdomain): void
     {
-        Http::withToken(config('services.cloudflare.api_token'))
-            ->post(self::API_BASE . "/zones/{$this->zoneId}/dns_records", [
-                'type'    => 'CNAME',
-                'name'    => $subdomain . '.' . $this->zoneDomain,
-                'content' => self::CNAME_TARGET,
-                'proxied' => true,
-                'ttl'     => 1,
-            ]);
+        $this->http()->post(self::API_BASE . "/zones/{$this->zoneId}/dns_records", [
+            'type'    => 'CNAME',
+            'name'    => $subdomain . '.' . $this->zoneDomain,
+            'content' => self::CNAME_TARGET,
+            'proxied' => true,
+            'ttl'     => 1,
+        ]);
     }
 
     public function deleteCname(string $recordId): void
     {
-        Http::withToken(config('services.cloudflare.api_token'))
-            ->delete(self::API_BASE . "/zones/{$this->zoneId}/dns_records/{$recordId}");
+        $this->http()->delete(self::API_BASE . "/zones/{$this->zoneId}/dns_records/{$recordId}");
+    }
+
+    private function http(): PendingRequest
+    {
+        return Http::withHeaders([
+            'X-Auth-Email' => config('services.cloudflare.email'),
+            'X-Auth-Key'   => config('services.cloudflare.api_key'),
+        ]);
     }
 }

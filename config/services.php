@@ -61,7 +61,8 @@ return [
     ],
 
     'cloudflare' => [
-        'api_token'   => env('CLOUDFLARE_API_TOKEN'),
+        'api_key'     => env('CLOUDFLARE_API_TOKEN'),
+        'email'       => env('CLOUDFLARE_EMAIL'),
         'zone_id'     => env('CLOUDFLARE_ZONE_ID'),
         'zone_domain' => env('CLOUDFLARE_ZONE_DOMAIN', 'clanaod.net'),
     ],
