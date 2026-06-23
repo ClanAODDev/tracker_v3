@@ -2,17 +2,21 @@
 
 namespace App\Filament\Admin\Resources;
 
-use Filament\Support\Enums\FontFamily;
+use App\Filament\Admin\Resources\ScheduledTaskResource\Pages\ListScheduledTasks;
+use App\Filament\Admin\Resources\ScheduledTaskResource\Pages\ViewScheduledTask;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Database\Eloquent\Model;
-use App\Filament\Admin\Resources\ScheduledTaskResource\Pages\ListScheduledTasks;
-use App\Filament\Admin\Resources\ScheduledTaskResource\Pages\ViewScheduledTask;
+use Illuminate\Support\Str;
+use Lorisleiva\CronTranslator\CronTranslator;
 use OptimatesDE\FilamentScheduleMonitor\FilamentScheduleMonitorPlugin;
 use OptimatesDE\FilamentScheduleMonitor\Resources\MonitoredScheduledTaskResource;
 use OptimatesDE\FilamentScheduleMonitor\Resources\MonitoredScheduledTaskResource\RelationManagers\LogItemsRelationManager;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
+use Throwable;
 
 class ScheduledTaskResource extends MonitoredScheduledTaskResource
 {
@@ -44,8 +48,8 @@ class ScheduledTaskResource extends MonitoredScheduledTaskResource
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('cron_expression')
-                    ->label(static::trans('columns.cron'))
-                    ->fontFamily(FontFamily::Mono)
+                    ->label('Frequency')
+                    ->state(fn (MonitoredScheduledTask $record): string => static::humanFrequency($record->cron_expression))
                     ->badge()
                     ->color('gray'),
                 TextColumn::make('status')
@@ -88,5 +92,59 @@ class ScheduledTaskResource extends MonitoredScheduledTaskResource
             'index' => ListScheduledTasks::route('/'),
             'view'  => ViewScheduledTask::route('/{record}'),
         ];
+    }
+
+    protected static function descriptionFor(string $name): ?string
+    {
+        return static::scheduleDescriptions()[$name] ?? null;
+    }
+
+    protected static function scheduleDescriptions(): array
+    {
+        static $map = null;
+
+        if ($map !== null) {
+            return $map;
+        }
+
+        $map    = [];
+        $events = app(Schedule::class)->events();
+
+        if ($events === []) {
+            try {
+                app(ConsoleKernel::class)->bootstrap();
+                $events = app(Schedule::class)->events();
+            } catch (Throwable) {
+                $events = [];
+            }
+        }
+
+        foreach ($events as $event) {
+            $description = $event->description;
+
+            if (blank($description)) {
+                continue;
+            }
+
+            $name = $event->monitorName
+                ?? (str_contains((string) $event->command, 'artisan')
+                    ? ltrim(Str::after((string) $event->command, 'artisan'), " '\"")
+                    : ($event->getSummaryForDisplay() ?: null));
+
+            if (filled($name)) {
+                $map[rtrim($name, "'\"")] = $description;
+            }
+        }
+
+        return $map;
+    }
+
+    protected static function humanFrequency(string $cron): string
+    {
+        try {
+            return CronTranslator::translate($cron);
+        } catch (Throwable) {
+            return $cron;
+        }
     }
 }
