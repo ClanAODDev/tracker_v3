@@ -12,6 +12,8 @@ class CloudflareDnsService
         'www', 'ps2', 'test', 'tracker', 'tracker-dev', 'vb5', 'nextcloud', 'monitorss',
     ];
 
+    public const DNS_EXCLUDED_SLUGS = ['floater', 'bluntz-reserves'];
+
     private const CNAME_TARGET = 'clanaod.net';
 
     private const API_BASE = 'https://api.cloudflare.com/client/v4';
@@ -37,7 +39,8 @@ class CloudflareDnsService
                     'type'     => 'CNAME',
                     'per_page' => 100,
                     'page'     => $page,
-                ]);
+                ])
+                ->throw();
 
             $body       = $response->json();
             $records    = array_merge($records, $body['result'] ?? []);
@@ -68,9 +71,13 @@ class CloudflareDnsService
 
     private function http(): PendingRequest
     {
-        return Http::withHeaders([
-            'X-Auth-Email' => config('services.cloudflare.email'),
-            'X-Auth-Key'   => config('services.cloudflare.api_key'),
-        ]);
+        $request = Http::withToken(config('services.cloudflare.api_key'));
+
+        $proxy = config('services.cloudflare.proxy');
+        if ($proxy) {
+            $request = $request->withOptions(['proxy' => $proxy]);
+        }
+
+        return $request;
     }
 }

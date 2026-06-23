@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class SyncDivisionDns implements ShouldQueue
 {
@@ -15,11 +16,11 @@ class SyncDivisionDns implements ShouldQueue
 
     public function __construct(public readonly bool $dryRun = false) {}
 
-    public function handle(CloudflareDnsService $service): void
+    public function handle(CloudflareDnsService $service): array
     {
-        $prefix   = $this->dryRun ? '[DRY RUN] ' : '';
-        $expected = static::expectedSubdomains();
-        $existing = $service->listCnames();
+        $prefix    = $this->dryRun ? '[DRY RUN] ' : '';
+        $expected  = static::expectedSubdomains();
+        $existing  = $service->listCnames();
         $protected = collect(CloudflareDnsService::PROTECTED_SUBDOMAINS);
 
         $created = [];
@@ -31,7 +32,6 @@ class SyncDivisionDns implements ShouldQueue
                     $service->createCname($subdomain);
                 }
                 $created[] = $subdomain;
-                Log::info("{$prefix}DNS sync: create CNAME {$subdomain}");
             }
         }
 
@@ -41,17 +41,23 @@ class SyncDivisionDns implements ShouldQueue
                     $service->deleteCname($record['id']);
                 }
                 $deleted[] = $subdomain;
-                Log::info("{$prefix}DNS sync: delete CNAME {$subdomain}");
             }
         }
 
-        Log::info("{$prefix}DNS sync complete", compact('created', 'deleted'));
+        try {
+            Log::info("{$prefix}DNS sync complete", compact('created', 'deleted'));
+        } catch (Throwable) {
+        }
+
+        return compact('created', 'deleted');
     }
 
     public static function expectedSubdomains(): Collection
     {
-        return Division::whereNull('shutdown_at')
+        return Division::where('active', true)
+            ->whereNull('shutdown_at')
             ->whereNull('deleted_at')
+            ->whereNotIn('slug', CloudflareDnsService::DNS_EXCLUDED_SLUGS)
             ->get()
             ->map(fn ($d) => $d->dns_subdomain ?? $d->slug)
             ->filter()

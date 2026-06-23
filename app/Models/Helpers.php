@@ -496,8 +496,8 @@ function buildDnsPreview(CloudflareDnsService $service): HtmlString
         }
 
         return new HtmlString(implode('<br>', $lines));
-    } catch (Throwable) {
-        return new HtmlString('Unable to fetch current DNS records. Proceed to sync anyway?');
+    } catch (Throwable $e) {
+        return new HtmlString('Unable to fetch current DNS records: ' . e($e->getMessage()));
     }
 }
 

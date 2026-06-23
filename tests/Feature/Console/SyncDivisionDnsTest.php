@@ -145,4 +145,48 @@ class SyncDivisionDnsTest extends TestCase
         $this->assertTrue($subdomains->contains('wow'));
         $this->assertFalse($subdomains->contains('retired'));
     }
+
+    #[Test]
+    public function expected_subdomains_excludes_inactive_divisions(): void
+    {
+        $this->createActiveDivision(['name' => 'wow']);
+        $this->createDivision(['name' => 'inactive-game', 'active' => false]);
+
+        $subdomains = SyncDivisionDns::expectedSubdomains();
+
+        $this->assertTrue($subdomains->contains('wow'));
+        $this->assertFalse($subdomains->contains('inactive-game'));
+    }
+
+    #[Test]
+    public function expected_subdomains_excludes_dns_excluded_slugs(): void
+    {
+        $this->createActiveDivision(['name' => 'wow']);
+
+        foreach (CloudflareDnsService::DNS_EXCLUDED_SLUGS as $slug) {
+            $this->createActiveDivision(['name' => $slug]);
+        }
+
+        $subdomains = SyncDivisionDns::expectedSubdomains();
+
+        $this->assertTrue($subdomains->contains('wow'));
+        foreach (CloudflareDnsService::DNS_EXCLUDED_SLUGS as $slug) {
+            $this->assertFalse($subdomains->contains($slug));
+        }
+    }
+
+    #[Test]
+    public function handle_returns_created_and_deleted_arrays(): void
+    {
+        $this->createActiveDivision(['name' => 'new-game']);
+
+        $service = $this->makeService(['stale' => ['id' => 'rec-stale', 'name' => 'stale.clanaod.net']]);
+        $service->shouldReceive('createCname')->once();
+        $service->shouldReceive('deleteCname')->with('rec-stale')->once();
+
+        $result = (new SyncDivisionDns)->handle($service);
+
+        $this->assertSame(['new-game'], $result['created']);
+        $this->assertSame(['stale'], $result['deleted']);
+    }
 }
