@@ -9,9 +9,19 @@ use Illuminate\Support\Facades\Http;
 class CloudflareDnsService
 {
     public const PROTECTED_SUBDOMAINS = [
-        'www', 'ps2', 'test', 'tracker', 'tracker-dev', 'vb5', 'nextcloud', 'monitorss',
+        'www',
+        'ps2',           // legacy planetside reference
+        'test',          // dev-deployment of website
+        'tracker',
+        'tracker-dev',
+        'vb5',           // upgrade forums environment
+        'nextcloud',
+        'monitorss',
     ];
 
+    /**
+     * Domains do not require CNAMEs
+     */
     public const DNS_EXCLUDED_SLUGS = ['floater', 'bluntz-reserves'];
 
     private const CNAME_TARGET = 'clanaod.net';
@@ -24,43 +34,43 @@ class CloudflareDnsService
 
     public function __construct()
     {
-        $this->zoneId     = config('services.cloudflare.zone_id');
+        $this->zoneId = config('services.cloudflare.zone_id');
         $this->zoneDomain = config('services.cloudflare.zone_domain');
     }
 
     public function listCnames(): Collection
     {
         $records = [];
-        $page    = 1;
+        $page = 1;
 
         do {
             $response = $this->http()
                 ->get(self::API_BASE . "/zones/{$this->zoneId}/dns_records", [
-                    'type'     => 'CNAME',
+                    'type' => 'CNAME',
                     'per_page' => 100,
-                    'page'     => $page,
+                    'page' => $page,
                 ])
                 ->throw();
 
-            $body       = $response->json();
-            $records    = array_merge($records, $body['result'] ?? []);
+            $body = $response->json();
+            $records = array_merge($records, $body['result'] ?? []);
             $totalPages = $body['result_info']['total_pages'] ?? 1;
             $page++;
         } while ($page <= $totalPages);
 
         return collect($records)
-            ->filter(fn ($r) => str_ends_with($r['name'], '.' . $this->zoneDomain))
-            ->keyBy(fn ($r) => str_replace('.' . $this->zoneDomain, '', $r['name']));
+            ->filter(fn($r) => str_ends_with($r['name'], '.' . $this->zoneDomain))
+            ->keyBy(fn($r) => str_replace('.' . $this->zoneDomain, '', $r['name']));
     }
 
     public function createCname(string $subdomain): void
     {
         $this->http()->post(self::API_BASE . "/zones/{$this->zoneId}/dns_records", [
-            'type'    => 'CNAME',
-            'name'    => $subdomain . '.' . $this->zoneDomain,
+            'type' => 'CNAME',
+            'name' => $subdomain . '.' . $this->zoneDomain,
             'content' => self::CNAME_TARGET,
             'proxied' => true,
-            'ttl'     => 1,
+            'ttl' => 1,
         ]);
     }
 
@@ -73,6 +83,7 @@ class CloudflareDnsService
     {
         $request = Http::withToken(config('services.cloudflare.api_key'));
 
+        // handle IP-restriction with SOCKS5H proxy for local testing
         $proxy = config('services.cloudflare.proxy');
         if ($proxy) {
             $request = $request->withOptions(['proxy' => $proxy]);
