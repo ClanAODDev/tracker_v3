@@ -15,7 +15,7 @@ class EditLeave extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make()->label('Revoke'),
+            DeleteAction::make()->label('Delete'),
 
             Action::make('approve')
                 ->label('Approve Leave')

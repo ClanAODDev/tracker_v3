@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Policies;
 
-use App\Enums\Position;
 use App\Enums\Rank;
 use App\Enums\Role;
 use App\Models\DivisionTag;

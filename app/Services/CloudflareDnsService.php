@@ -34,43 +34,43 @@ class CloudflareDnsService
 
     public function __construct()
     {
-        $this->zoneId = config('services.cloudflare.zone_id');
+        $this->zoneId     = config('services.cloudflare.zone_id');
         $this->zoneDomain = config('services.cloudflare.zone_domain');
     }
 
     public function listCnames(): Collection
     {
         $records = [];
-        $page = 1;
+        $page    = 1;
 
         do {
             $response = $this->http()
                 ->get(self::API_BASE . "/zones/{$this->zoneId}/dns_records", [
-                    'type' => 'CNAME',
+                    'type'     => 'CNAME',
                     'per_page' => 100,
-                    'page' => $page,
+                    'page'     => $page,
                 ])
                 ->throw();
 
-            $body = $response->json();
-            $records = array_merge($records, $body['result'] ?? []);
+            $body       = $response->json();
+            $records    = array_merge($records, $body['result'] ?? []);
             $totalPages = $body['result_info']['total_pages'] ?? 1;
             $page++;
         } while ($page <= $totalPages);
 
         return collect($records)
-            ->filter(fn($r) => str_ends_with($r['name'], '.' . $this->zoneDomain))
-            ->keyBy(fn($r) => str_replace('.' . $this->zoneDomain, '', $r['name']));
+            ->filter(fn ($r) => str_ends_with($r['name'], '.' . $this->zoneDomain))
+            ->keyBy(fn ($r) => str_replace('.' . $this->zoneDomain, '', $r['name']));
     }
 
     public function createCname(string $subdomain): void
     {
         $this->http()->post(self::API_BASE . "/zones/{$this->zoneId}/dns_records", [
-            'type' => 'CNAME',
-            'name' => $subdomain . '.' . $this->zoneDomain,
+            'type'    => 'CNAME',
+            'name'    => $subdomain . '.' . $this->zoneDomain,
             'content' => self::CNAME_TARGET,
             'proxied' => true,
-            'ttl' => 1,
+            'ttl'     => 1,
         ]);
     }
 

@@ -153,7 +153,7 @@ class LeaveResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('Revoke')->requiresConfirmation(),
+                    DeleteBulkAction::make()->label('Delete')->requiresConfirmation(),
                 ]),
             ]);
     }

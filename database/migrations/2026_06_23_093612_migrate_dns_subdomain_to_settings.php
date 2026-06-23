@@ -14,7 +14,7 @@ return new class extends Migration
             ->whereNotNull('dns_subdomain')
             ->get()
             ->each(function ($division) {
-                $settings = json_decode($division->settings ?? '{}', true) ?? [];
+                $settings                  = json_decode($division->settings ?? '{}', true) ?? [];
                 $settings['dns_subdomain'] = $division->dns_subdomain;
                 DB::table('divisions')->where('id', $division->id)->update([
                     'settings' => json_encode($settings),

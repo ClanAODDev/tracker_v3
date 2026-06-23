@@ -242,8 +242,8 @@ class TicketApiTest extends TestCase
     #[Test]
     public function workers_returns_members_meeting_default_minimum_rank()
     {
-        $admin         = $this->createAdmin();
-        $eligibleUser  = $this->createMemberWithUser(['rank' => Rank::MASTER_SERGEANT]);
+        $admin          = $this->createAdmin();
+        $eligibleUser   = $this->createMemberWithUser(['rank' => Rank::MASTER_SERGEANT]);
         $ineligibleUser = $this->createMemberWithUser(['rank' => Rank::SERGEANT]);
 
         $response = $this->actingAs($admin)->getJson('/api/tickets/workers');

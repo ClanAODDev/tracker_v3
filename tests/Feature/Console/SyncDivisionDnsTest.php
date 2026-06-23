@@ -13,8 +13,8 @@ use Tests\Traits\CreatesDivisions;
 
 class SyncDivisionDnsTest extends TestCase
 {
-    use RefreshDatabase;
     use CreatesDivisions;
+    use RefreshDatabase;
 
     protected bool $seed = false;
 
