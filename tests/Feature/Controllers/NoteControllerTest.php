@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Enums\Position;
+use App\Enums\Rank;
 use App\Enums\Role;
 use App\Models\DivisionTag;
 use App\Models\Note;
@@ -371,6 +372,7 @@ class NoteControllerTest extends TestCase
             'division_id' => $division->id,
             'platoon_id'  => $platoon->id,
             'position'    => Position::PLATOON_LEADER,
+            'rank'        => Rank::SERGEANT,
         ]);
         $member = $this->createMember(['division_id' => $division->id]);
 
@@ -398,6 +400,7 @@ class NoteControllerTest extends TestCase
         $user     = $this->createMemberWithUser([
             'division_id' => $division->id,
             'position'    => Position::MEMBER,
+            'rank'        => Rank::SERGEANT,
         ], [
             'role' => Role::OFFICER,
         ]);

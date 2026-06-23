@@ -40,7 +40,7 @@
                           title="{{ $tag->division?->name }}" data-tag-id="{{ $tag->id }}"
                           data-visibility="{{ $tag->visibility->value }}">
                         {{ $tag->name }}
-                        @if ($tagDivision)
+                        @if ($tagDivision && ($tag->division_id === null || $tag->division_id === auth()->user()->member?->division_id || auth()->user()->isRole('admin')))
                             @can('assign', [App\Models\DivisionTag::class, $member])
                                 <span class="remove-tag"
                                       style="margin-left: 4px; cursor: pointer; opacity: 0;">&times;</span>

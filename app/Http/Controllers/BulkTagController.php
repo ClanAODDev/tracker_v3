@@ -106,14 +106,17 @@ class BulkTagController extends Controller
     {
         $this->authorize('assign', [DivisionTag::class, $member]);
 
+        $user           = auth()->user();
+        $userDivisionId = $user->member?->division_id;
+
+        $tagIdRule = $user->isRole('admin')
+            ? 'exists:division_tags,id'
+            : Rule::exists('division_tags', 'id')->where(
+                fn ($q) => $q->where('division_id', $userDivisionId)->orWhereNull('division_id')
+            );
+
         $validated = $request->validate([
-            'tag_id' => [
-                'required',
-                'integer',
-                Rule::exists('division_tags', 'id')->where(
-                    fn ($q) => $q->where('division_id', $division->id)->orWhereNull('division_id')
-                ),
-            ],
+            'tag_id' => ['required', 'integer', $tagIdRule],
         ]);
 
         $member->tags()->detach($validated['tag_id']);

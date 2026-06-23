@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Rank;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\User;
@@ -62,37 +63,13 @@ class DivisionTagPolicy
 
     public function assign(User $user, ?Member $member = null): bool
     {
-        if (! $user->isRole(['sr_ldr', 'officer']) && ! $user->isPlatoonLeader() && ! $user->isSquadLeader()) {
-            return false;
-        }
-
-        if ($member === null) {
-            return true;
-        }
-
         $userMember = $user->member;
-        if (! $userMember) {
+
+        if (! $userMember || $userMember->rank->value < Rank::SERGEANT->value) {
             return false;
         }
 
-        return $this->memberIsInUserScope($userMember, $member);
-    }
-
-    protected function memberIsInUserScope(Member $userMember, Member $targetMember): bool
-    {
-        $userDivisionId = $userMember->division_id;
-
-        if (! $userDivisionId) {
-            return false;
-        }
-
-        if ($targetMember->division_id === $userDivisionId) {
-            return true;
-        }
-
-        return $targetMember->partTimeDivisions()
-            ->where('division_id', $userDivisionId)
-            ->exists();
+        return true;
     }
 
     public function getAssignableTags(User $user, Member $member): Builder

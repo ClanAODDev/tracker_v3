@@ -66,4 +66,22 @@ class RemoveTagScopingTest extends TestCase
 
         $this->assertFalse($member->fresh()->tags->contains($globalTag));
     }
+
+    #[Test]
+    public function officer_can_remove_own_division_tag_from_member_in_different_division()
+    {
+        $officer       = $this->createOfficer();
+        $officerDiv    = $officer->member->division;
+        $otherDivision = $this->createActiveDivision();
+        $member        = $this->createMember(['division_id' => $otherDivision->id]);
+        $tag           = DivisionTag::factory()->create(['division_id' => $officerDiv->id]);
+        $member->tags()->attach($tag->id);
+
+        $this->actingAs($officer)
+            ->postJson(route('member-tags.remove', [$otherDivision->slug, $member->clan_id]), [
+                'tag_id' => $tag->id,
+            ])->assertOk();
+
+        $this->assertFalse($member->fresh()->tags->contains($tag));
+    }
 }
