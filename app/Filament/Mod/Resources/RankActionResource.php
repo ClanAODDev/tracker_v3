@@ -77,7 +77,7 @@ class RankActionResource extends Resource
                             Placeholder::make('requester_name')
                                 ->label('Recommended By')
                                 ->hiddenOn('create')
-                                ->content(fn ($record) => $record->requester->name),
+                                ->content(fn ($record) => $record->requester?->name),
 
                             Placeholder::make('requester_name')
                                 ->label('Approved By')

@@ -11,6 +11,8 @@ services:
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
         volumes:
             - '.:/var/www/html'
         networks:
