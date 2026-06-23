@@ -59,7 +59,7 @@ class SyncDivisionDns implements ShouldQueue
             ->whereNull('deleted_at')
             ->whereNotIn('slug', CloudflareDnsService::DNS_EXCLUDED_SLUGS)
             ->get()
-            ->map(fn ($d) => $d->dns_subdomain ?? $d->slug)
+            ->map(fn ($d) => $d->settings()->get('dns_subdomain', null) ?? $d->slug)
             ->filter()
             ->unique()
             ->values();

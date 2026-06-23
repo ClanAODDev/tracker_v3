@@ -8,7 +8,6 @@ use App\Filament\Admin\Resources\DivisionResource\Pages\EditDivision;
 use App\Filament\Admin\Resources\DivisionResource\Pages\ListDivisions;
 use App\Models\Division;
 use App\Models\Member;
-use App\Services\CloudflareDnsService;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -82,18 +81,12 @@ class DivisionResource extends Resource
                                 ->maxLength(3)
                                 ->required(),
 
-                            TextInput::make('dns_subdomain')
-                                ->label('DNS Subdomain')
-                                ->helperText('Subdomain used for the Cloudflare CNAME (e.g. "planetside"). Defaults to slug if empty.')
-                                ->maxLength(255)
-                                ->unique(ignoreRecord: true)
-                                ->rules([
-                                    fn () => function (string $attribute, mixed $value, \Closure $fail) {
-                                        if ($value && in_array($value, CloudflareDnsService::PROTECTED_SUBDOMAINS, strict: true)) {
-                                            $fail("'{$value}' is a protected subdomain and cannot be used.");
-                                        }
-                                    },
-                                ]),
+                            TextInput::make('slug')
+                                ->disabled()
+                                ->dehydrated(false)
+                                ->hiddenOn('create')
+                                ->columnStart(2),
+
                         ])->columns(3),
 
                         TextInput::make('description')

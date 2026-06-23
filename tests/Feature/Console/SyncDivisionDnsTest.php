@@ -42,7 +42,8 @@ class SyncDivisionDnsTest extends TestCase
     #[Test]
     public function uses_dns_subdomain_over_slug_when_set(): void
     {
-        $this->createActiveDivision(['name' => 'ps2-tracker', 'dns_subdomain' => 'ps2']);
+        $division = $this->createActiveDivision(['name' => 'ps2-tracker']);
+        $division->update(['settings' => ['dns_subdomain' => 'ps2']]);
 
         $service = $this->makeService();
         $service->shouldReceive('createCname')->with('ps2')->once();
