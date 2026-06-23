@@ -36,7 +36,7 @@ class AwardResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-trophy';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Admin';
+    protected static string|\UnitEnum|null $navigationGroup = 'Awards';
 
     public static function form(Schema $schema): Schema
     {

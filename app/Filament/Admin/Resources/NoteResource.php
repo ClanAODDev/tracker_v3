@@ -23,9 +23,11 @@ class NoteResource extends Resource
 {
     protected static ?string $model = Note::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-document-text';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Divisions';
+
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $navigationParentItem = 'Members';
 

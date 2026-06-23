@@ -27,7 +27,12 @@ class ScheduledTaskResource extends MonitoredScheduledTaskResource
 
     public static function getNavigationGroup(): string|\UnitEnum|null
     {
-        return 'Admin';
+        return 'System';
+    }
+
+    public static function getNavigationSort(): ?int
+    {
+        return 3;
     }
 
     public static function canUpdate(Model $record): bool
@@ -59,8 +64,8 @@ class ScheduledTaskResource extends MonitoredScheduledTaskResource
                     ->formatStateUsing(fn (string $state): string => static::trans("status.{$state}"))
                     ->color(fn (string $state): string => match ($state) {
                         'failed' => 'danger',
-                        'ok' => 'success',
-                        default => 'gray',
+                        'ok'     => 'success',
+                        default  => 'gray',
                     }),
                 TextColumn::make('last_finished_at')
                     ->label(static::trans('columns.last_finished'))

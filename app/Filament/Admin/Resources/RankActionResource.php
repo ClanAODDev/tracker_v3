@@ -22,9 +22,11 @@ class RankActionResource extends Resource
 {
     protected static ?string $model = RankAction::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrow-trending-up';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Members';
+
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $navigationParentItem = 'Divisions';
 

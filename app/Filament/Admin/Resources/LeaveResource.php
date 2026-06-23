@@ -31,7 +31,9 @@ class LeaveResource extends Resource
 
     protected static ?string $label = 'Leave Request';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Divisions';
+
+    protected static ?int $navigationSort = 2;
 
     protected static ?string $pluralLabel = 'Leaves of Absence';
 

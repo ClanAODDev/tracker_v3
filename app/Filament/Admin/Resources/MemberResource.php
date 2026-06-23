@@ -34,7 +34,9 @@ class MemberResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Members';
+
+    protected static ?int $navigationSort = 1;
 
     public static function canCreate(): bool
     {

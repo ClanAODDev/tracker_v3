@@ -20,9 +20,11 @@ class TransferResource extends Resource
 {
     protected static ?string $model = Transfer::class;
 
-    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-arrows-right-left';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Division';
+    protected static string|\UnitEnum|null $navigationGroup = 'Divisions';
+
+    protected static ?int $navigationSort = 4;
 
     public static function form(Schema $schema): Schema
     {
