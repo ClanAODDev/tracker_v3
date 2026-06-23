@@ -7,8 +7,11 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
+use App\Filament\Admin\Resources\ScheduledTaskResource\Pages\ListScheduledTasks;
+use App\Filament\Admin\Resources\ScheduledTaskResource\Pages\ViewScheduledTask;
 use OptimatesDE\FilamentScheduleMonitor\FilamentScheduleMonitorPlugin;
 use OptimatesDE\FilamentScheduleMonitor\Resources\MonitoredScheduledTaskResource;
+use OptimatesDE\FilamentScheduleMonitor\Resources\MonitoredScheduledTaskResource\RelationManagers\LogItemsRelationManager;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 
 class ScheduledTaskResource extends MonitoredScheduledTaskResource
@@ -70,5 +73,20 @@ class ScheduledTaskResource extends MonitoredScheduledTaskResource
             ->emptyStateHeading(static::trans('empty.list_heading'))
             ->emptyStateDescription(static::trans('empty.list_description'))
             ->emptyStateIcon('heroicon-o-clock');
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            LogItemsRelationManager::class,
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListScheduledTasks::route('/'),
+            'view'  => ViewScheduledTask::route('/{record}'),
+        ];
     }
 }
