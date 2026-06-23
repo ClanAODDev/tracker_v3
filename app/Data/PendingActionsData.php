@@ -141,7 +141,7 @@ readonly class PendingActionsData
             }
         }
 
-        if ($user->isDivisionLeader() || $user->isRole('admin')) {
+        if ($user->isDivisionLeader() || $user->isRole(['admin', 'sr_ldr'])) {
             $count = Leave::whereNull('approver_id')
                 ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
                 ->count();
