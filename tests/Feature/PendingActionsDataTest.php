@@ -169,6 +169,53 @@ final class PendingActionsDataTest extends TestCase
     }
 
     #[Test]
+    public function senior_leaders_see_overdue_leaves(): void
+    {
+        $user = $this->createUserWithRole('sr_ldr');
+
+        $this->createExpiredApprovedLeaves($this->division, 2);
+
+        $pendingActions = PendingActionsData::forDivision($this->division, $user);
+
+        $action = $pendingActions->get('overdue-leaves');
+        $this->assertNotNull($action);
+        $this->assertEquals(2, $action->count);
+        $this->assertEquals('danger', $action->style);
+    }
+
+    #[Test]
+    public function senior_leaders_see_expiring_leaves(): void
+    {
+        $user = $this->createUserWithRole('sr_ldr');
+
+        $this->createExpiringApprovedLeaves($this->division, 2);
+
+        $pendingActions = PendingActionsData::forDivision($this->division, $user);
+
+        $action = $pendingActions->get('expiring-leaves');
+        $this->assertNotNull($action);
+        $this->assertEquals(2, $action->count);
+        $this->assertEquals('warning', $action->style);
+    }
+
+    #[Test]
+    public function unapproved_leaves_do_not_appear_in_expiring_or_overdue(): void
+    {
+        $user = $this->createUserWithRole('sr_ldr');
+
+        $member = Member::factory()->create(['division_id' => $this->division->id]);
+        Leave::factory()->expired()->create([
+            'member_id'   => $member->id,
+            'approver_id' => null,
+        ]);
+
+        $pendingActions = PendingActionsData::forDivision($this->division, $user);
+
+        $this->assertNull($pendingActions->get('overdue-leaves'));
+        $this->assertNull($pendingActions->get('expiring-leaves'));
+    }
+
+    #[Test]
     public function senior_leaders_see_voice_issues(): void
     {
         $user = $this->createUserWithRole('sr_ldr');

@@ -1335,6 +1335,24 @@ body.no-animations {
             border-color: rgba(155, 89, 182, 0.5);
         }
     }
+
+    &--danger {
+        background: color-mix(in srgb, var(--color-danger) 12%, transparent);
+        border-color: color-mix(in srgb, var(--color-danger) 30%, transparent);
+
+        i {
+            color: var(--color-danger);
+        }
+
+        .pending-action-count {
+            color: var(--color-danger);
+        }
+
+        &:hover {
+            background: color-mix(in srgb, var(--color-danger) 20%, transparent);
+            border-color: color-mix(in srgb, var(--color-danger) 50%, transparent);
+        }
+    }
 }
 
 .pending-action-count {

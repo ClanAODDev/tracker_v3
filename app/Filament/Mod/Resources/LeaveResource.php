@@ -136,6 +136,16 @@ class LeaveResource extends Resource
             ->filters([
                 Filter::make('needs approval')
                     ->query(fn (Builder $query): Builder => $query->whereNull('approver_id'))->default(),
+                Filter::make('expiring soon')
+                    ->query(fn (Builder $query): Builder => $query
+                        ->whereNotNull('approver_id')
+                        ->whereBetween('end_date', [now()->startOfDay(), now()->addDays(14)->endOfDay()])
+                    ),
+                Filter::make('overdue')
+                    ->query(fn (Builder $query): Builder => $query
+                        ->whereNotNull('approver_id')
+                        ->where('end_date', '<', now()->startOfDay())
+                    ),
             ])
             ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([

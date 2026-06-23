@@ -12,6 +12,7 @@ use App\Models\MemberAward;
 use App\Models\Platoon;
 use App\Models\Ticket;
 use App\Models\Transfer;
+use App\Models\User;
 
 trait CreatesPendingActionItems
 {
@@ -106,6 +107,31 @@ trait CreatesPendingActionItems
         Ticket::factory()->count($count)->create(['state' => 'new']);
     }
 
+    protected function createExpiredApprovedLeaves(Division $division, int $count = 2): void
+    {
+        $members = Member::factory()->count($count)->create(['division_id' => $division->id]);
+
+        foreach ($members as $member) {
+            Leave::factory()->expired()->create([
+                'member_id'   => $member->id,
+                'approver_id' => User::factory(),
+            ]);
+        }
+    }
+
+    protected function createExpiringApprovedLeaves(Division $division, int $count = 2): void
+    {
+        $members = Member::factory()->count($count)->create(['division_id' => $division->id]);
+
+        foreach ($members as $member) {
+            Leave::factory()->create([
+                'member_id'   => $member->id,
+                'approver_id' => User::factory(),
+                'end_date'    => now()->addDays(7),
+            ]);
+        }
+    }
+
     protected function createAllPendingActionItems(Division $division): void
     {
         $this->createInactiveMembers($division);
@@ -113,6 +139,8 @@ trait CreatesPendingActionItems
         $this->createClanAwardRequests();
         $this->createPendingTransfers($division);
         $this->createPendingLeaves($division);
+        $this->createExpiredApprovedLeaves($division);
+        $this->createExpiringApprovedLeaves($division);
         $this->createVoiceIssues($division);
         $this->createUnassignedMembers($division);
         $this->createMembersWithoutSquad($division);

@@ -154,6 +154,36 @@ readonly class PendingActionsData
                     label: 'LOA',
                 ));
             }
+
+            $count = Leave::whereNotNull('approver_id')
+                ->whereBetween('end_date', [now()->startOfDay(), now()->addDays(14)->endOfDay()])
+                ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
+                ->count();
+            if ($count > 0) {
+                $actions->push(new PendingAction(
+                    key: 'expiring-leaves',
+                    count: $count,
+                    url: route('filament.mod.resources.leaves.index') . '?filters[expiring soon][isActive]=true',
+                    icon: 'fa-calendar-check',
+                    label: 'LOA Expiring',
+                    style: 'warning',
+                ));
+            }
+
+            $count = Leave::whereNotNull('approver_id')
+                ->where('end_date', '<', now()->startOfDay())
+                ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
+                ->count();
+            if ($count > 0) {
+                $actions->push(new PendingAction(
+                    key: 'overdue-leaves',
+                    count: $count,
+                    url: route('filament.mod.resources.leaves.index') . '?filters[overdue][isActive]=true',
+                    icon: 'fa-calendar-times',
+                    label: 'LOA Overdue',
+                    style: 'danger',
+                ));
+            }
         }
 
         if ($user->isRole('sr_ldr')) {
