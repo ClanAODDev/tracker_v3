@@ -487,15 +487,21 @@ function buildDnsPreview(CloudflareDnsService $service): HtmlString
             return new HtmlString('<p>No changes needed — DNS is already in sync.</p>');
         }
 
+        $domain = $service->zoneDomain;
+        $fqdn   = fn (string $s) => "{$s}.{$domain}";
+        $list   = fn ($items) => '<ul style="margin:.25rem 0 0 1rem">'
+            . $items->map(fn ($s) => '<li>' . e($fqdn($s)) . '</li>')->join('')
+            . '</ul>';
+
         $lines = [];
         if ($toCreate->isNotEmpty()) {
-            $lines[] = '<strong>Would create:</strong> ' . $toCreate->join(', ');
+            $lines[] = '<strong>Would create:</strong>' . $list($toCreate);
         }
         if ($toDelete->isNotEmpty()) {
-            $lines[] = '<strong>Would delete:</strong> ' . $toDelete->join(', ');
+            $lines[] = '<strong>Would delete:</strong>' . $list($toDelete);
         }
 
-        return new HtmlString(implode('<br>', $lines));
+        return new HtmlString(implode('', $lines));
     } catch (Throwable $e) {
         return new HtmlString('Unable to fetch current DNS records: ' . e($e->getMessage()));
     }

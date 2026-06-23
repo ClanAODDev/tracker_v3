@@ -29,9 +29,11 @@ class ListDivisions extends ListRecords
                 ->action(function (CloudflareDnsService $service) {
                     try {
                         $result = (new SyncDivisionDns)->handle($service);
+                        $domain = $service->zoneDomain;
+                        $fqdn   = fn (array $list) => implode(', ', array_map(fn ($s) => "{$s}.{$domain}", $list));
                         $body   = collect([
-                            $result['created'] ? 'Created: ' . implode(', ', $result['created']) : null,
-                            $result['deleted'] ? 'Deleted: ' . implode(', ', $result['deleted']) : null,
+                            $result['created'] ? 'Created: ' . $fqdn($result['created']) : null,
+                            $result['deleted'] ? 'Deleted: ' . $fqdn($result['deleted']) : null,
                         ])->filter()->join(' · ') ?: 'Already in sync.';
                         Notification::make()->title('DNS sync complete')->body($body)->success()->send();
                     } catch (Throwable $e) {

@@ -20,7 +20,7 @@ class CloudflareDnsService
 
     private string $zoneId;
 
-    private string $zoneDomain;
+    public string $zoneDomain;
 
     public function __construct()
     {
