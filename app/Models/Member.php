@@ -145,6 +145,7 @@ class Member extends Model
         ]);
 
         $this->transfers()->pending()->delete();
+        $this->leave()->delete();
         $this->partTimeDivisions()->detach();
 
         $divisionSpecificTagIds = $this->tags()->whereNotNull('division_tags.division_id')->pluck('division_tags.id');
