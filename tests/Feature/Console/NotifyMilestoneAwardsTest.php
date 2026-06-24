@@ -64,8 +64,9 @@ class NotifyMilestoneAwardsTest extends TestCase
         ]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $member->id,
-            'award_id'  => $award->id,
+            'member_id'    => $member->id,
+            'award_id'     => $award->id,
+            'requester_id' => $member->id,
         ]);
 
         $this->artisan('tracker:notify-milestone-awards')
@@ -158,8 +159,9 @@ class NotifyMilestoneAwardsTest extends TestCase
         ]);
 
         MemberAward::factory()->approved()->create([
-            'member_id' => $memberWithAward->id,
-            'award_id'  => $award->id,
+            'member_id'    => $memberWithAward->id,
+            'award_id'     => $award->id,
+            'requester_id' => $memberWithAward->id,
         ]);
 
         Member::factory()->create([
