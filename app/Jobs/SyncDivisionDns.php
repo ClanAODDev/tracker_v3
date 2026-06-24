@@ -18,6 +18,10 @@ class SyncDivisionDns implements ShouldQueue
 
     public function handle(CloudflareDnsService $service): array
     {
+        if (! $service->isConfigured()) {
+            return ['created' => [], 'deleted' => []];
+        }
+
         $prefix    = $this->dryRun ? '[DRY RUN] ' : '';
         $expected  = static::expectedSubdomains();
         $existing  = $service->listCnames();

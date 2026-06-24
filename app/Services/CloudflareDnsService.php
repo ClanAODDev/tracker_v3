@@ -28,14 +28,19 @@ class CloudflareDnsService
 
     private const API_BASE = 'https://api.cloudflare.com/client/v4';
 
-    private string $zoneId;
+    private ?string $zoneId;
 
-    public string $zoneDomain;
+    public ?string $zoneDomain;
 
     public function __construct()
     {
         $this->zoneId     = config('services.cloudflare.zone_id');
         $this->zoneDomain = config('services.cloudflare.zone_domain');
+    }
+
+    public function isConfigured(): bool
+    {
+        return filled($this->zoneId) && filled($this->zoneDomain);
     }
 
     public function listCnames(): Collection
