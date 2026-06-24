@@ -9,11 +9,11 @@ class MemberAwardCluster
 {
     use GeneratesAwardImages;
 
-    private const COLUMNS = 3;
+    private const COLUMNS = 4;
 
     private const PADDING = 10;
 
-    private const MAX_AWARDS = 6;
+    private const MAX_AWARDS = 12;
 
     public function generateClusterImage(Member $member): string
     {
@@ -32,9 +32,7 @@ class MemberAwardCluster
     {
         return $this->fetchMemberAwardsCollapseTiered($member, ['awards.image'])
             ->pluck('image')
-            ->filter(function ($imagePath) {
-                return file_exists(storage_path('app/public/' . $imagePath));
-            })
+            ->filter()
             ->take(self::MAX_AWARDS)
             ->values()
             ->toArray();
