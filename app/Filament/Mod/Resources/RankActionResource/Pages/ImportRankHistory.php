@@ -16,6 +16,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
@@ -120,11 +121,13 @@ class ImportRankHistory extends CreateRecord
 
                                 if ($matched === null) {
                                     $skipped[] = "\"{$line}\" (unrecognized rank)";
+
                                     continue;
                                 }
 
                                 if (empty($dateInput)) {
                                     $skipped[] = "\"{$line}\" (missing date)";
+
                                     continue;
                                 }
 
@@ -147,7 +150,7 @@ class ImportRankHistory extends CreateRecord
 
                                 Notification::make()
                                     ->title("{$count} {$label} skipped")
-                                    ->body(new \Illuminate\Support\HtmlString($list))
+                                    ->body(new HtmlString($list))
                                     ->warning()
                                     ->persistent()
                                     ->send();
