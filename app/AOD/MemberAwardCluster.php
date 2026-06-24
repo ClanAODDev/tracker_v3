@@ -9,11 +9,11 @@ class MemberAwardCluster
 {
     use GeneratesAwardImages;
 
-    private const COLUMNS = 4;
+    private const COLUMNS = 7;
 
     private const PADDING = 10;
 
-    private const MAX_AWARDS = 12;
+    private const MAX_AWARDS = 14;
 
     public function generateClusterImage(Member $member): string
     {

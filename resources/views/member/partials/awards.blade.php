@@ -71,7 +71,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Cluster Style (up to 12 awards)</label>
+                        <label>Cluster Style (up to 14 awards)</label>
                         <div class="share-preview text-center" style="background: #1a1a2e; padding: 10px; border-radius: 4px; margin-bottom: 8px;">
                             <img src="{{ $clusterImageUrl }}" alt="Awards Cluster" style="max-width: 100%; height: auto;">
                         </div>
