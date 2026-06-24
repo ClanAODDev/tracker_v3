@@ -95,6 +95,7 @@ class ImportRankHistory extends CreateRecord
                             }
 
                             $entries = [];
+                            $skipped = [];
 
                             foreach (preg_split('/\r\n|\r|\n/', trim($content)) as $line) {
                                 $line = trim($line);
@@ -117,7 +118,13 @@ class ImportRankHistory extends CreateRecord
                                     }
                                 }
 
-                                if ($matched === null || empty($dateInput)) {
+                                if ($matched === null) {
+                                    $skipped[] = "\"{$line}\" (unrecognized rank)";
+                                    continue;
+                                }
+
+                                if (empty($dateInput)) {
+                                    $skipped[] = "\"{$line}\" (missing date)";
                                     continue;
                                 }
 
@@ -127,11 +134,24 @@ class ImportRankHistory extends CreateRecord
                                         'date' => Carbon::parse($dateInput)->format('Y-m-d'),
                                     ];
                                 } catch (\Exception) {
-                                    // skip unparseable date
+                                    $skipped[] = "\"{$line}\" (invalid date)";
                                 }
                             }
 
                             $set('entries', $entries);
+
+                            if (! empty($skipped)) {
+                                $count = count($skipped);
+                                $label = Str::plural('row', $count);
+                                $list  = implode('<br>', array_map('e', $skipped));
+
+                                Notification::make()
+                                    ->title("{$count} {$label} skipped")
+                                    ->body(new \Illuminate\Support\HtmlString($list))
+                                    ->warning()
+                                    ->persistent()
+                                    ->send();
+                            }
                         }),
                 ]),
 

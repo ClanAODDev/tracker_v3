@@ -234,7 +234,7 @@ class TicketApiTest extends TestCase
     #[Test]
     public function workers_returns_403_for_unauthorized_user()
     {
-        $user = $this->createMemberWithUser();
+        $user = $this->createMemberWithUser(['rank' => Rank::PRIVATE]);
 
         $this->actingAs($user)->getJson('/api/tickets/workers')->assertForbidden();
     }

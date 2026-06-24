@@ -3,6 +3,7 @@
 namespace Tests\Feature\Filament;
 
 use App\Enums\Rank;
+use App\Enums\Role;
 use App\Filament\Mod\Resources\RankActionResource\Pages\ImportRankHistory;
 use App\Models\RankAction;
 use App\Models\User;
@@ -206,9 +207,9 @@ class ImportRankHistoryTest extends TestCase
     {
         $division = $this->createActiveDivision();
 
-        return $this->createMemberWithUser([
-            'division_id' => $division->id,
-            'rank'        => Rank::MASTER_SERGEANT,
-        ]);
+        return $this->createMemberWithUser(
+            ['division_id' => $division->id, 'rank' => Rank::MASTER_SERGEANT],
+            ['role' => Role::OFFICER],
+        );
     }
 }
