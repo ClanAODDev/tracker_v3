@@ -21,6 +21,7 @@ class SyncDivisionDnsTest extends TestCase
     private function makeService(array $existingCnames = []): CloudflareDnsService
     {
         $service = Mockery::mock(CloudflareDnsService::class);
+        $service->shouldReceive('isConfigured')->andReturn(true);
         $service->shouldReceive('listCnames')->andReturn(collect($existingCnames));
 
         return $service;
