@@ -6,8 +6,11 @@ use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource\Pages\CreateDivision;
 use App\Filament\Admin\Resources\DivisionResource\Pages\EditDivision;
 use App\Filament\Admin\Resources\DivisionResource\Pages\ListDivisions;
+use App\Jobs\SyncDivisionDns;
 use App\Models\Division;
 use App\Models\Member;
+use App\Services\CloudflareDnsService;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -18,6 +21,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Section;
@@ -31,6 +35,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Throwable;
 use ValentinMorice\FilamentJsonColumn\JsonColumn;
 
 class DivisionResource extends Resource
@@ -235,6 +240,32 @@ class DivisionResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function syncDnsAction(): Action
+    {
+        return Action::make('sync_dns')
+            ->label('Sync DNS')
+            ->icon('heroicon-o-globe-alt')
+            ->color('gray')
+            ->requiresConfirmation()
+            ->modalHeading('Sync Division DNS')
+            ->modalDescription(fn (CloudflareDnsService $service) => buildDnsPreview($service))
+            ->modalSubmitActionLabel('Sync Now')
+            ->action(function (CloudflareDnsService $service) {
+                try {
+                    $result = (new SyncDivisionDns)->handle($service);
+                    $domain = $service->zoneDomain;
+                    $fqdn   = fn (array $list) => implode(', ', array_map(fn ($s) => "{$s}.{$domain}", $list));
+                    $body   = collect([
+                        $result['created'] ? 'Created: ' . $fqdn($result['created']) : null,
+                        $result['deleted'] ? 'Deleted: ' . $fqdn($result['deleted']) : null,
+                    ])->filter()->join(' · ') ?: 'Already in sync.';
+                    Notification::make()->title('DNS sync complete')->body($body)->success()->send();
+                } catch (Throwable $e) {
+                    Notification::make()->title('DNS sync failed')->body($e->getMessage())->danger()->send();
+                }
+            });
     }
 
     public static function getRelations(): array

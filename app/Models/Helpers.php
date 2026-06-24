@@ -474,14 +474,9 @@ function getAnniversaryTrophy(int $years): ?array
 function buildDnsPreview(CloudflareDnsService $service): HtmlString
 {
     try {
-        $expected  = SyncDivisionDns::expectedSubdomains();
-        $existing  = $service->listCnames();
-        $protected = collect(CloudflareDnsService::PROTECTED_SUBDOMAINS);
-
-        $toCreate = $expected->reject(fn ($s) => $existing->has($s))->values();
-        $toDelete = $existing->keys()
-            ->reject(fn ($s) => $expected->contains($s) || $protected->contains($s))
-            ->values();
+        $result   = (new SyncDivisionDns(dryRun: true))->handle($service);
+        $toCreate = collect($result['created']);
+        $toDelete = collect($result['deleted']);
 
         if ($toCreate->isEmpty() && $toDelete->isEmpty()) {
             return new HtmlString('<p>No changes needed — DNS is already in sync.</p>');
