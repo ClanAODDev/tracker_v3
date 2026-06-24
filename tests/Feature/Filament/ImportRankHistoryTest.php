@@ -169,22 +169,22 @@ class ImportRankHistoryTest extends TestCase
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         RankAction::create([
-            'member_id'    => $target->id,
-            'requester_id' => $user->member_id,
-            'approver_id'  => $user->member_id,
-            'rank'         => Rank::PRIVATE->value,
-            'approved_at'  => '2020-01-01',
-            'accepted_at'  => '2020-01-01',
+            'member_id'     => $target->id,
+            'requester_id'  => $user->member_id,
+            'approver_id'   => $user->member_id,
+            'rank'          => Rank::PRIVATE->value,
+            'approved_at'   => '2020-01-01',
+            'accepted_at'   => '2020-01-01',
             'justification' => 'Historical entry',
         ]);
 
         RankAction::create([
-            'member_id'    => $target->id,
-            'requester_id' => $user->member_id,
-            'approver_id'  => $user->member_id,
-            'rank'         => Rank::SPECIALIST->value,
-            'approved_at'  => '2021-06-01',
-            'accepted_at'  => '2021-06-01',
+            'member_id'     => $target->id,
+            'requester_id'  => $user->member_id,
+            'approver_id'   => $user->member_id,
+            'rank'          => Rank::SPECIALIST->value,
+            'approved_at'   => '2021-06-01',
+            'accepted_at'   => '2021-06-01',
             'justification' => 'Historical entry',
         ]);
 
