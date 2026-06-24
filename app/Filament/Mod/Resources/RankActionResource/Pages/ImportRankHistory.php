@@ -44,6 +44,24 @@ class ImportRankHistory extends CreateRecord
                     Select::make('member_id')
                         ->label('Member')
                         ->searchable()
+                        ->live()
+                        ->afterStateUpdated(function ($state, callable $set) {
+                            if (! $state) {
+                                return;
+                            }
+
+                            $existing = RankAction::where('member_id', $state)
+                                ->approvedAndAccepted()
+                                ->orderBy('accepted_at')
+                                ->get()
+                                ->map(fn (RankAction $action) => [
+                                    'rank' => (string) $action->rank->value,
+                                    'date' => $action->accepted_at->toDateString(),
+                                ])
+                                ->toArray();
+
+                            $set('entries', $existing);
+                        })
                         ->getSearchResultsUsing(fn (string $search): array => Member::query()
                             ->where('name', 'like', "%{$search}%")
                             ->limit(10)
