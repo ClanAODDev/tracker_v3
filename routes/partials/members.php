@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Rank;
 use App\Http\Controllers\InactiveMemberController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\MemberController;
@@ -42,6 +43,22 @@ Route::prefix('members')->group(function () {
         Route::delete('{noteId}/force', 'forceDelete')->name('forceDeleteNote');
     });
 });
+
+Route::get('rank-history/template.csv', function () {
+    $ranks = collect(Rank::cases())
+        ->filter(fn (Rank $r) => $r->value <= Rank::MASTER_SERGEANT->value)
+        ->sortBy(fn (Rank $r) => $r->value);
+
+    $lines = ['rank,date (YYYY-MM-DD)'];
+    foreach ($ranks as $rank) {
+        $lines[] = $rank->getLabel() . ',';
+    }
+
+    return response(implode("\n", $lines), 200, [
+        'Content-Type'        => 'text/csv',
+        'Content-Disposition' => 'attachment; filename="rank-history-template.csv"',
+    ]);
+})->middleware(['web', 'auth'])->name('rank-history.template');
 
 Route::controller(InactiveMemberController::class)->prefix('inactive-members')->group(function () {
     Route::get('{member}/flag-inactive', 'create')->name('member.flag-inactive');

@@ -5,6 +5,7 @@ namespace App\Filament\Mod\Resources;
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource\Pages\CreateRankAction;
 use App\Filament\Mod\Resources\RankActionResource\Pages\EditRankAction;
+use App\Filament\Mod\Resources\RankActionResource\Pages\ImportRankHistory;
 use App\Filament\Mod\Resources\RankActionResource\Pages\ListRankActions;
 use App\Models\Member;
 use App\Models\RankAction;
@@ -242,9 +243,10 @@ class RankActionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListRankActions::route('/'),
-            'create' => CreateRankAction::route('/create'),
-            'edit'   => EditRankAction::route('/{record}/edit'),
+            'index'          => ListRankActions::route('/'),
+            'create'         => CreateRankAction::route('/create'),
+            'edit'           => EditRankAction::route('/{record}/edit'),
+            'import-history' => ImportRankHistory::route('/import-history'),
         ];
     }
 
