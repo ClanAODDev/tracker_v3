@@ -16,6 +16,7 @@ return [
     'stream_calendar'         => env('STREAM_CALENDAR_ID'),
     'admin-ticketing-channel' => env('ADMIN_TICKETING_CHANNEL', 'aod-admins'),
     'msgt-channel'            => env('MSGT_CHANNEL', 'aod-msgt-up'),
+    'it-team-channel'         => env('IT_TEAM_CHANNEL'),
 
     'rank' => [
         'promotion_acceptance_mins' => 1440,
