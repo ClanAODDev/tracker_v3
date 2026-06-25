@@ -84,7 +84,7 @@ class ImportRankHistory extends CreateRecord
                         ->label('Upload CSV')
                         ->acceptedFileTypes(['text/csv', 'text/plain', 'application/csv', 'application/vnd.ms-excel'])
                         ->live()
-                        ->afterStateUpdated(function ($state, callable $set) {
+                        ->afterStateUpdated(function ($state, callable $set, callable $get) {
                             $file = is_array($state) ? collect($state)->first() : $state;
 
                             if (! $file instanceof TemporaryUploadedFile) {
@@ -96,7 +96,7 @@ class ImportRankHistory extends CreateRecord
                                 return;
                             }
 
-                            $this->applyParsedContent($content, $set);
+                            $this->applyParsedContent($content, $set, $get);
                         }),
 
                     Textarea::make('csv_paste')
@@ -104,12 +104,12 @@ class ImportRankHistory extends CreateRecord
                         ->placeholder("Private,2023-01-15\nCorporal,2023-06-01")
                         ->rows(6)
                         ->live()
-                        ->afterStateUpdated(function ($state, callable $set) {
+                        ->afterStateUpdated(function ($state, callable $set, callable $get) {
                             if (empty(trim((string) $state))) {
                                 return;
                             }
 
-                            $this->applyParsedContent($state, $set);
+                            $this->applyParsedContent($state, $set, $get);
                         }),
                 ]),
 
@@ -141,7 +141,7 @@ class ImportRankHistory extends CreateRecord
         ]);
     }
 
-    private function applyParsedContent(string $content, callable $set): void
+    private function applyParsedContent(string $content, callable $set, callable $get): void
     {
         $entries = [];
         $skipped = [];
@@ -189,7 +189,17 @@ class ImportRankHistory extends CreateRecord
             }
         }
 
-        $set('entries', $entries);
+        $existing = collect($get('entries') ?? [])
+            ->filter(fn ($e) => ! empty($e['rank']) && ! empty($e['date']))
+            ->values()
+            ->toArray();
+
+        $merged = collect(array_merge($existing, $entries))
+            ->sortBy('date')
+            ->values()
+            ->toArray();
+
+        $set('entries', $merged);
 
         if (! empty($skipped)) {
             $count = count($skipped);
