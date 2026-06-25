@@ -12,6 +12,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Schemas\Components\Section;
@@ -77,10 +78,10 @@ class ImportRankHistory extends CreateRecord
 
             Section::make('CSV Import')
                 ->columnSpanFull()
-                ->description('Upload a CSV with two columns: rank (full name or abbreviation) and date (YYYY-MM-DD). A header row is automatically skipped if the first cell does not match a known rank.')
+                ->description('Two columns per row: rank (full name or abbreviation) and date (YYYY-MM-DD). A header row is automatically skipped if the first cell does not match a known rank.')
                 ->schema([
                     FileUpload::make('csv_file')
-                        ->label('CSV File')
+                        ->label('Upload CSV')
                         ->acceptedFileTypes(['text/csv', 'text/plain', 'application/csv', 'application/vnd.ms-excel'])
                         ->live()
                         ->afterStateUpdated(function ($state, callable $set) {
@@ -95,66 +96,20 @@ class ImportRankHistory extends CreateRecord
                                 return;
                             }
 
-                            $entries = [];
-                            $skipped = [];
+                            $this->applyParsedContent($content, $set);
+                        }),
 
-                            foreach (preg_split('/\r\n|\r|\n/', trim($content)) as $line) {
-                                $line = trim($line);
-                                if (empty($line)) {
-                                    continue;
-                                }
-
-                                $parts     = str_getcsv($line);
-                                $rankInput = trim($parts[0] ?? '');
-                                $dateInput = trim($parts[1] ?? '');
-
-                                $matched = null;
-                                foreach (Rank::cases() as $case) {
-                                    if (
-                                        strcasecmp($case->getLabel(), $rankInput) === 0 ||
-                                        strcasecmp($case->getAbbreviation(), $rankInput) === 0
-                                    ) {
-                                        $matched = $case;
-                                        break;
-                                    }
-                                }
-
-                                if ($matched === null) {
-                                    $skipped[] = "\"{$line}\" (unrecognized rank)";
-
-                                    continue;
-                                }
-
-                                if (empty($dateInput)) {
-                                    $skipped[] = "\"{$line}\" (missing date)";
-
-                                    continue;
-                                }
-
-                                try {
-                                    $entries[] = [
-                                        'rank' => (string) $matched->value,
-                                        'date' => Carbon::parse($dateInput)->format('Y-m-d'),
-                                    ];
-                                } catch (\Exception) {
-                                    $skipped[] = "\"{$line}\" (invalid date)";
-                                }
+                    Textarea::make('csv_paste')
+                        ->label('Paste CSV')
+                        ->placeholder("Private,2023-01-15\nCorporal,2023-06-01")
+                        ->rows(6)
+                        ->live()
+                        ->afterStateUpdated(function ($state, callable $set) {
+                            if (empty(trim((string) $state))) {
+                                return;
                             }
 
-                            $set('entries', $entries);
-
-                            if (! empty($skipped)) {
-                                $count = count($skipped);
-                                $label = Str::plural('row', $count);
-                                $list  = implode('<br>', array_map('e', $skipped));
-
-                                Notification::make()
-                                    ->title("{$count} {$label} skipped")
-                                    ->body(new HtmlString($list))
-                                    ->warning()
-                                    ->persistent()
-                                    ->send();
-                            }
+                            $this->applyParsedContent($state, $set);
                         }),
                 ]),
 
@@ -184,6 +139,70 @@ class ImportRankHistory extends CreateRecord
                         ->minItems(1),
                 ]),
         ]);
+    }
+
+    private function applyParsedContent(string $content, callable $set): void
+    {
+        $entries = [];
+        $skipped = [];
+
+        foreach (preg_split('/\r\n|\r|\n/', trim($content)) as $line) {
+            $line = trim($line);
+            if (empty($line)) {
+                continue;
+            }
+
+            $parts     = str_getcsv($line);
+            $rankInput = trim($parts[0] ?? '');
+            $dateInput = trim($parts[1] ?? '');
+
+            $matched = null;
+            foreach (Rank::cases() as $case) {
+                if (
+                    strcasecmp($case->getLabel(), $rankInput) === 0 ||
+                    strcasecmp($case->getAbbreviation(), $rankInput) === 0
+                ) {
+                    $matched = $case;
+                    break;
+                }
+            }
+
+            if ($matched === null) {
+                $skipped[] = "\"{$line}\" (unrecognized rank)";
+
+                continue;
+            }
+
+            if (empty($dateInput)) {
+                $skipped[] = "\"{$line}\" (missing date)";
+
+                continue;
+            }
+
+            try {
+                $entries[] = [
+                    'rank' => (string) $matched->value,
+                    'date' => Carbon::parse($dateInput)->format('Y-m-d'),
+                ];
+            } catch (\Exception) {
+                $skipped[] = "\"{$line}\" (invalid date)";
+            }
+        }
+
+        $set('entries', $entries);
+
+        if (! empty($skipped)) {
+            $count = count($skipped);
+            $label = Str::plural('row', $count);
+            $list  = implode('<br>', array_map('e', $skipped));
+
+            Notification::make()
+                ->title("{$count} {$label} skipped")
+                ->body(new HtmlString($list))
+                ->warning()
+                ->persistent()
+                ->send();
+        }
     }
 
     public function create(bool $another = false): void
