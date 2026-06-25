@@ -205,6 +205,35 @@ class ImportRankHistoryTest extends TestCase
     }
 
     #[Test]
+    public function import_skips_entries_that_collide_on_date(): void
+    {
+        $user   = $this->createMasterSergeant();
+        $target = $this->createMember(['division_id' => $user->member->division_id]);
+
+        RankAction::create([
+            'member_id'     => $target->id,
+            'requester_id'  => $user->member_id,
+            'approver_id'   => $user->member_id,
+            'rank'          => Rank::PRIVATE->value,
+            'approved_at'   => '2020-03-01',
+            'accepted_at'   => '2020-03-01',
+            'justification' => 'Historical entry',
+        ]);
+
+        $this->actingAs($user);
+
+        Livewire::test(ImportRankHistory::class)
+            ->set('data.member_id', $target->id)
+            ->set('data.entries', [
+                ['rank' => (string) Rank::PRIVATE->value, 'date' => '2020-03-01'],
+                ['rank' => (string) Rank::SPECIALIST->value, 'date' => '2020-09-01'],
+            ])
+            ->call('create');
+
+        $this->assertDatabaseCount('rank_actions', 2);
+    }
+
+    #[Test]
     public function csv_paste_merges_with_existing_entries_sorted_by_date(): void
     {
         $user   = $this->createMasterSergeant();

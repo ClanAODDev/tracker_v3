@@ -230,6 +230,14 @@ class ImportRankHistory extends CreateRecord
             $date = Carbon::parse($entry['date']);
             $rank = Rank::from((int) $entry['rank']);
 
+            $exists = RankAction::where('member_id', $member->id)
+                ->whereDate('accepted_at', $date->toDateString())
+                ->exists();
+
+            if ($exists) {
+                continue;
+            }
+
             RankAction::withoutTimestamps(function () use ($member, $user, $rank, $date) {
                 RankAction::create([
                     'member_id'     => $member->id,
