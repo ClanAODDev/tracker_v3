@@ -101,12 +101,8 @@ class Division extends Model
             ['old-string' => 'platoon leader', 'new-string' => 'platoon leader'],
         ],
 
-    /**
-     * Only used when defined
-     *
-     * dns_subdomain         -- defaults to slug, but used if defined (for exceptions)
-     * application_required  -- used for
-     */
+        'always_visible_in_discord' => false,
+        'meta_description'          => '',
     ];
 
     protected $casts = [
