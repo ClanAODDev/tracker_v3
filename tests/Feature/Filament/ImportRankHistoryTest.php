@@ -85,6 +85,7 @@ class ImportRankHistoryTest extends TestCase
         $action = RankAction::first();
         $this->assertEquals('2021-06-15', $action->approved_at->toDateString());
         $this->assertEquals('2021-06-15', $action->accepted_at->toDateString());
+        $this->assertEquals('2021-06-15', $action->created_at->toDateString());
     }
 
     #[Test]

@@ -230,16 +230,20 @@ class ImportRankHistory extends CreateRecord
             $date = Carbon::parse($entry['date']);
             $rank = Rank::from((int) $entry['rank']);
 
-            RankAction::create([
-                'member_id'     => $member->id,
-                'requester_id'  => $user->member_id,
-                'approver_id'   => $user->member_id,
-                'rank'          => $rank->value,
-                'justification' => 'Historical entry',
-                'approved_at'   => $date,
-                'accepted_at'   => $date,
-                'awarded_at'    => $rank->isOfficer() ? $date : null,
-            ]);
+            RankAction::withoutTimestamps(function () use ($member, $user, $rank, $date) {
+                RankAction::create([
+                    'member_id'     => $member->id,
+                    'requester_id'  => $user->member_id,
+                    'approver_id'   => $user->member_id,
+                    'rank'          => $rank->value,
+                    'justification' => 'Historical entry',
+                    'approved_at'   => $date,
+                    'accepted_at'   => $date,
+                    'awarded_at'    => $rank->isOfficer() ? $date : null,
+                    'created_at'    => $date,
+                    'updated_at'    => $date,
+                ]);
+            });
 
             $count++;
         }
