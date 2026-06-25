@@ -30,12 +30,12 @@ class NotifyAdminDNSChange extends Notification implements ShouldQueue
 
         if ($this->created) {
             $fqdns   = implode(', ', array_map(fn ($s) => "`{$s}.{$this->domain}`", $this->created));
-            $lines[] = ":white_check_mark: **Created:** {$fqdns}";
+            $lines[] = "**Created:** {$fqdns}";
         }
 
         if ($this->deleted) {
             $fqdns   = implode(', ', array_map(fn ($s) => "`{$s}.{$this->domain}`", $this->deleted));
-            $lines[] = ":wastebasket: **Deleted:** {$fqdns}";
+            $lines[] = "**Deleted:** {$fqdns}";
         }
 
         return (new BotChannelMessage($notifiable))
