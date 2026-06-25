@@ -3,11 +3,13 @@
 namespace App\Jobs;
 
 use App\Models\Division;
+use App\Notifications\Channel\NotifyAdminDNSChange;
 use App\Services\CloudflareDnsService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Throwable;
 
 class SyncDivisionDns implements ShouldQueue
@@ -51,6 +53,11 @@ class SyncDivisionDns implements ShouldQueue
         try {
             Log::info("{$prefix}DNS sync complete", compact('created', 'deleted'));
         } catch (Throwable) {
+        }
+
+        if (! $this->dryRun && ($created || $deleted)) {
+            Notification::route('it_team', config('aod.it-team-channel'))
+                ->notify(new NotifyAdminDNSChange($created, $deleted, $service->zoneDomain));
         }
 
         return compact('created', 'deleted');

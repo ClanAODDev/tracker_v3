@@ -3,9 +3,11 @@
 namespace Tests\Feature\Console;
 
 use App\Jobs\SyncDivisionDns;
+use App\Notifications\Channel\NotifyAdminDNSChange;
 use App\Services\CloudflareDnsService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -20,7 +22,8 @@ class SyncDivisionDnsTest extends TestCase
 
     private function makeService(array $existingCnames = []): CloudflareDnsService
     {
-        $service = Mockery::mock(CloudflareDnsService::class);
+        $service             = Mockery::mock(CloudflareDnsService::class);
+        $service->zoneDomain = 'clanaod.net';
         $service->shouldReceive('isConfigured')->andReturn(true);
         $service->shouldReceive('listCnames')->andReturn(collect($existingCnames));
 
@@ -190,5 +193,35 @@ class SyncDivisionDnsTest extends TestCase
 
         $this->assertSame(['new-game'], $result['created']);
         $this->assertSame(['stale'], $result['deleted']);
+    }
+
+    #[Test]
+    public function notifies_it_team_when_changes_occur(): void
+    {
+        Notification::fake();
+
+        $this->createActiveDivision(['name' => 'new-game']);
+
+        $service = $this->makeService(['stale' => ['id' => 'rec-stale', 'name' => 'stale.clanaod.net']]);
+        $service->shouldReceive('createCname')->once();
+        $service->shouldReceive('deleteCname')->with('rec-stale')->once();
+
+        (new SyncDivisionDns)->handle($service);
+
+        Notification::assertSentOnDemand(NotifyAdminDNSChange::class);
+    }
+
+    #[Test]
+    public function does_not_notify_when_no_changes_occur(): void
+    {
+        Notification::fake();
+
+        $this->createActiveDivision(['name' => 'wow']);
+
+        $service = $this->makeService(['wow' => ['id' => 'rec-1', 'name' => 'wow.clanaod.net']]);
+
+        (new SyncDivisionDns)->handle($service);
+
+        Notification::assertNothingSent();
     }
 }

@@ -33,10 +33,11 @@ class BotChannelMessage
      * Target resolved on the notifiable
      */
     private array $allowableTargets = [
-        'officers',     // division-specific
-        'members',      // division-specific
-        'help',         // #admin
-        'admin',        // #aod-msgt-up
+        'officers',  // division-specific
+        'members',   // division-specific
+        'help',      // #admin
+        'admin',     // #aod-msgt-up
+        'it_team',   // #it-team
     ];
 
     public function __construct(private $notifiable) {}
