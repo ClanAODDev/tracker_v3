@@ -203,6 +203,47 @@ class ImportRankHistoryTest extends TestCase
         $this->assertEquals('2021-06-01', $entries[1]['date']);
     }
 
+    #[Test]
+    public function csv_paste_merges_with_existing_entries_sorted_by_date(): void
+    {
+        $user   = $this->createMasterSergeant();
+        $target = $this->createMember(['division_id' => $user->member->division_id]);
+
+        $this->actingAs($user);
+
+        $component = Livewire::test(ImportRankHistory::class)
+            ->set('data.member_id', $target->id)
+            ->set('data.entries', [
+                ['rank' => (string) Rank::PRIVATE->value, 'date' => '2020-01-01'],
+                ['rank' => (string) Rank::CORPORAL->value, 'date' => '2022-06-01'],
+            ])
+            ->set('data.csv_paste', "Specialist,2021-03-15");
+
+        $entries = $component->get('data.entries');
+
+        $this->assertCount(3, $entries);
+        $this->assertEquals('2020-01-01', $entries[0]['date']);
+        $this->assertEquals('2021-03-15', $entries[1]['date']);
+        $this->assertEquals('2022-06-01', $entries[2]['date']);
+    }
+
+    #[Test]
+    public function csv_paste_into_empty_entries_populates_sorted_by_date(): void
+    {
+        $user = $this->createMasterSergeant();
+
+        $this->actingAs($user);
+
+        $component = Livewire::test(ImportRankHistory::class)
+            ->set('data.csv_paste', "Corporal,2021-06-01\nPrivate,2020-01-01");
+
+        $entries = $component->get('data.entries');
+
+        $this->assertCount(2, $entries);
+        $this->assertEquals('2020-01-01', $entries[0]['date']);
+        $this->assertEquals('2021-06-01', $entries[1]['date']);
+    }
+
     protected function createMasterSergeant(): User
     {
         $division = $this->createActiveDivision();
