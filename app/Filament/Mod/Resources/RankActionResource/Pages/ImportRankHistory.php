@@ -129,7 +129,6 @@ class ImportRankHistory extends CreateRecord
                                 )
                                 ->required(),
                             DatePicker::make('date')
-                                ->native(false)
                                 ->required(),
                         ])
                         ->columns(2)
@@ -224,6 +223,10 @@ class ImportRankHistory extends CreateRecord
         $count   = 0;
 
         foreach ($entries as $entry) {
+            if (empty($entry['date']) || empty($entry['rank'])) {
+                continue;
+            }
+
             $date = Carbon::parse($entry['date']);
             $rank = Rank::from((int) $entry['rank']);
 
