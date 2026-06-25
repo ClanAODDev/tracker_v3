@@ -61,14 +61,19 @@ class Division extends Model
             ['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning'],
         ],
 
+        /**
+         * Greatest rank allowing automatic rank action approval
+         */
         'max_platoon_leader_rank' => Rank::PRIVATE_FIRST_CLASS,
 
         'chat_alerts' => [
             'division_edited'    => false,
+            'member_applied'     => false,
             'member_approved'    => false,
             'member_awarded'     => false,
             'member_created'     => false,
             'member_denied'      => false,
+            'member_promoted'    => false,
             'member_removed'     => false,
             'member_transferred' => false,
             'pt_member_removed'  => false,
@@ -95,6 +100,13 @@ class Division extends Model
             ['old-string' => 'squad leader', 'new-string' => 'squad leader'],
             ['old-string' => 'platoon leader', 'new-string' => 'platoon leader'],
         ],
+
+    /**
+     * Only used when defined
+     *
+     * dns_subdomain         -- defaults to slug, but used if defined (for exceptions)
+     * application_required  -- used for
+     */
     ];
 
     protected $casts = [
