@@ -10,7 +10,6 @@ use App\Models\Leave;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Transfer;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -385,9 +384,9 @@ class MemberTest extends TestCase
             'rank'        => Rank::STAFF_SERGEANT,
         ]);
 
-        $eligible          = $this->createMember(['platoon_id' => $platoon->id, 'rank' => Rank::RECRUIT]);
-        $rankTooHigh       = $this->createMember(['platoon_id' => $platoon->id, 'rank' => Rank::CORPORAL]);
-        $differentPlatoon  = $this->createMember(['platoon_id' => $this->createPlatoon($division)->id, 'rank' => Rank::RECRUIT]);
+        $eligible         = $this->createMember(['platoon_id' => $platoon->id, 'rank' => Rank::RECRUIT]);
+        $rankTooHigh      = $this->createMember(['platoon_id' => $platoon->id, 'rank' => Rank::CORPORAL]);
+        $differentPlatoon = $this->createMember(['platoon_id' => $this->createPlatoon($division)->id, 'rank' => Rank::RECRUIT]);
 
         $results = Member::eligibleForRankAction($user)->get();
 

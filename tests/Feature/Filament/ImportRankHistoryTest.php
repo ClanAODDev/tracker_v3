@@ -247,7 +247,7 @@ class ImportRankHistoryTest extends TestCase
                 ['rank' => (string) Rank::PRIVATE->value, 'date' => '2020-01-01'],
                 ['rank' => (string) Rank::CORPORAL->value, 'date' => '2022-06-01'],
             ])
-            ->set('data.csv_paste', "Specialist,2021-03-15");
+            ->set('data.csv_paste', 'Specialist,2021-03-15');
 
         $entries = $component->get('data.entries');
 
