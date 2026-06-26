@@ -2,10 +2,15 @@
 
 namespace Tests\Unit\Models;
 
+use App\Enums\DiscordStatus;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Models\DivisionTag;
+use App\Models\Leave;
 use App\Models\Member;
+use App\Models\MemberRequest;
+use App\Models\Transfer;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -250,11 +255,11 @@ class MemberTest extends TestCase
     }
 
     #[Test]
-    public function get_discord_url_returns_false_when_no_discord_id()
+    public function get_discord_url_returns_null_when_no_discord_id()
     {
         $member = $this->createMember(['discord_id' => null]);
 
-        $this->assertFalse($member->getDiscordUrl());
+        $this->assertNull($member->getDiscordUrl());
     }
 
     #[Test]
@@ -267,5 +272,328 @@ class MemberTest extends TestCase
 
         $this->assertIsString($member->discord_id);
         $this->assertSame($snowflake, $member->discord_id);
+    }
+
+    #[Test]
+    public function get_discord_avatar_url_returns_null_when_no_discord_id()
+    {
+        $member = $this->createMember(['discord_id' => null]);
+
+        $this->assertNull($member->getDiscordAvatarUrl());
+    }
+
+    #[Test]
+    public function get_discord_avatar_url_returns_cdn_url_with_avatar_hash()
+    {
+        $member = $this->createMember([
+            'discord_id'     => '123456789',
+            'discord_avatar' => 'abc123hash',
+        ]);
+
+        $this->assertEquals(
+            'https://cdn.discordapp.com/avatars/123456789/abc123hash.png?size=64',
+            $member->getDiscordAvatarUrl()
+        );
+    }
+
+    #[Test]
+    public function get_discord_avatar_url_uses_modular_default_when_no_avatar_hash()
+    {
+        $discordId = '319196306516213763';
+        $member    = $this->createMember([
+            'discord_id'     => $discordId,
+            'discord_avatar' => null,
+        ]);
+
+        $expected = sprintf(
+            'https://cdn.discordapp.com/embed/avatars/%d.png',
+            abs((int) $discordId >> 22) % 6
+        );
+
+        $this->assertEquals($expected, $member->getDiscordAvatarUrl());
+    }
+
+    #[Test]
+    public function scope_misconfigured_discord_returns_members_with_invalid_statuses()
+    {
+        $neverConnected  = $this->createMember(['last_voice_status' => DiscordStatus::NEVER_CONNECTED]);
+        $neverConfigured = $this->createMember(['last_voice_status' => DiscordStatus::NEVER_CONFIGURED]);
+        $disconnected    = $this->createMember(['last_voice_status' => DiscordStatus::DISCONNECTED]);
+        $connected       = $this->createMember(['last_voice_status' => DiscordStatus::CONNECTED]);
+
+        $results = Member::misconfiguredDiscord()->get();
+
+        $this->assertTrue($results->contains($neverConnected));
+        $this->assertTrue($results->contains($neverConfigured));
+        $this->assertTrue($results->contains($disconnected));
+        $this->assertFalse($results->contains($connected));
+    }
+
+    #[Test]
+    public function eligible_for_rank_action_member_is_scoped_to_own_squad_and_rank_limit()
+    {
+        $squad = $this->createSquad($this->createPlatoon($this->createActiveDivision()));
+
+        $user = $this->createMemberWithUser([
+            'squad_id' => $squad->id,
+            'position' => Position::MEMBER,
+            'rank'     => Rank::SERGEANT,
+        ]);
+
+        $eligible       = $this->createMember(['squad_id' => $squad->id, 'rank' => Rank::RECRUIT]);
+        $rankTooHigh    = $this->createMember(['squad_id' => $squad->id, 'rank' => Rank::SPECIALIST]);
+        $differentSquad = $this->createMember(['squad_id' => $this->createSquad()->id, 'rank' => Rank::RECRUIT]);
+
+        $results = Member::eligibleForRankAction($user)->get();
+
+        $this->assertTrue($results->contains($eligible));
+        $this->assertFalse($results->contains($rankTooHigh));
+        $this->assertFalse($results->contains($differentSquad));
+        $this->assertFalse($results->contains($user->member));
+    }
+
+    #[Test]
+    public function eligible_for_rank_action_squad_leader_is_scoped_to_own_squad()
+    {
+        $squad = $this->createSquad($this->createPlatoon($this->createActiveDivision()));
+
+        $user = $this->createMemberWithUser([
+            'squad_id' => $squad->id,
+            'position' => Position::SQUAD_LEADER,
+            'rank'     => Rank::SERGEANT,
+        ]);
+
+        $eligible       = $this->createMember(['squad_id' => $squad->id, 'rank' => Rank::RECRUIT]);
+        $differentSquad = $this->createMember(['squad_id' => $this->createSquad()->id, 'rank' => Rank::RECRUIT]);
+
+        $results = Member::eligibleForRankAction($user)->get();
+
+        $this->assertTrue($results->contains($eligible));
+        $this->assertFalse($results->contains($differentSquad));
+    }
+
+    #[Test]
+    public function eligible_for_rank_action_platoon_leader_is_scoped_to_own_platoon_and_rank_limit()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+
+        $user = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'platoon_id'  => $platoon->id,
+            'position'    => Position::PLATOON_LEADER,
+            'rank'        => Rank::STAFF_SERGEANT,
+        ]);
+
+        $eligible          = $this->createMember(['platoon_id' => $platoon->id, 'rank' => Rank::RECRUIT]);
+        $rankTooHigh       = $this->createMember(['platoon_id' => $platoon->id, 'rank' => Rank::CORPORAL]);
+        $differentPlatoon  = $this->createMember(['platoon_id' => $this->createPlatoon($division)->id, 'rank' => Rank::RECRUIT]);
+
+        $results = Member::eligibleForRankAction($user)->get();
+
+        $this->assertTrue($results->contains($eligible));
+        $this->assertFalse($results->contains($rankTooHigh));
+        $this->assertFalse($results->contains($differentPlatoon));
+    }
+
+    #[Test]
+    public function eligible_for_rank_action_division_leader_is_scoped_to_own_division_and_rank_limit()
+    {
+        $division      = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+
+        $user = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'rank'        => Rank::MASTER_SERGEANT,
+        ]);
+
+        $eligible          = $this->createMember(['division_id' => $division->id, 'rank' => Rank::RECRUIT]);
+        $rankTooHigh       = $this->createMember(['division_id' => $division->id, 'rank' => Rank::STAFF_SERGEANT]);
+        $differentDivision = $this->createMember(['division_id' => $otherDivision->id, 'rank' => Rank::RECRUIT]);
+
+        $results = Member::eligibleForRankAction($user)->get();
+
+        $this->assertTrue($results->contains($eligible));
+        $this->assertFalse($results->contains($rankTooHigh));
+        $this->assertFalse($results->contains($differentDivision));
+    }
+
+    #[Test]
+    public function eligible_for_rank_action_admin_sees_all_members_with_a_division()
+    {
+        $user = $this->createAdmin();
+
+        $withDivision    = $this->createMember(['division_id' => $this->createActiveDivision()->id, 'rank' => Rank::RECRUIT]);
+        $withoutDivision = $this->createMember(['division_id' => 0, 'rank' => Rank::RECRUIT]);
+
+        $results = Member::eligibleForRankAction($user)->get();
+
+        $this->assertTrue($results->contains($withDivision));
+        $this->assertFalse($results->contains($withoutDivision));
+    }
+
+    #[Test]
+    public function eligible_for_rank_action_search_filters_by_name()
+    {
+        $user = $this->createAdmin();
+
+        $target = $this->createMember(['name' => 'uniqueUsername', 'division_id' => $this->createActiveDivision()->id, 'rank' => Rank::RECRUIT]);
+        $other  = $this->createMember(['name' => 'someoneElse', 'division_id' => $this->createActiveDivision()->id, 'rank' => Rank::RECRUIT]);
+
+        $results = Member::eligibleForRankAction($user, 'uniqueUser')->get();
+
+        $this->assertTrue($results->contains($target));
+        $this->assertFalse($results->contains($other));
+    }
+
+    #[Test]
+    public function reset_clears_pending_transfers()
+    {
+        $member   = $this->createMember();
+        $division = $this->createActiveDivision();
+
+        $pending  = Transfer::factory()->pending()->create(['member_id' => $member->id, 'division_id' => $division->id]);
+        $approved = Transfer::factory()->approved()->create(['member_id' => $member->id, 'division_id' => $division->id]);
+
+        $member->reset();
+
+        $this->assertDatabaseMissing('transfers', ['id' => $pending->id]);
+        $this->assertDatabaseHas('transfers', ['id' => $approved->id]);
+    }
+
+    #[Test]
+    public function reset_deletes_active_leave()
+    {
+        $member = $this->createMember();
+        $leave  = Leave::factory()->create(['member_id' => $member->id]);
+
+        $member->reset();
+
+        $this->assertDatabaseMissing('leaves', ['id' => $leave->id]);
+    }
+
+    #[Test]
+    public function deleting_member_removes_pending_transfers()
+    {
+        $member   = $this->createMember();
+        $division = $this->createActiveDivision();
+
+        $pending  = Transfer::factory()->pending()->create(['member_id' => $member->id, 'division_id' => $division->id]);
+        $approved = Transfer::factory()->approved()->create(['member_id' => $member->id, 'division_id' => $division->id]);
+
+        $member->delete();
+
+        $this->assertDatabaseMissing('transfers', ['id' => $pending->id]);
+        $this->assertDatabaseHas('transfers', ['id' => $approved->id]);
+    }
+
+    #[Test]
+    public function expired_leave_returns_leave_with_past_end_date()
+    {
+        $member  = $this->createMember();
+        $expired = Leave::factory()->expired()->create(['member_id' => $member->id]);
+
+        $this->assertTrue($member->expiredLeave()->exists());
+        $this->assertEquals($expired->id, $member->expiredLeave()->first()->id);
+    }
+
+    #[Test]
+    public function active_leave_returns_leave_with_future_end_date()
+    {
+        $member = $this->createMember();
+        Leave::factory()->create(['member_id' => $member->id]);
+
+        $this->assertTrue($member->activeLeave()->exists());
+    }
+
+    #[Test]
+    public function recruiter_relationship_resolves_via_clan_id()
+    {
+        $recruiter = $this->createMember();
+        $recruit   = $this->createMember(['recruiter_id' => $recruiter->clan_id]);
+
+        $this->assertEquals($recruiter->id, $recruit->recruiter->id);
+    }
+
+    #[Test]
+    public function recruits_returns_members_recruited_by_this_member()
+    {
+        $recruiter = $this->createMember();
+        $recruit   = $this->createMember(['recruiter_id' => $recruiter->clan_id]);
+        $other     = $this->createMember();
+
+        $recruits = $recruiter->recruits;
+
+        $this->assertTrue($recruits->contains($recruit));
+        $this->assertFalse($recruits->contains($other));
+    }
+
+    #[Test]
+    public function aod_profile_link_builds_url_from_clan_id()
+    {
+        $member = $this->createMember(['clan_id' => 12345]);
+
+        $this->assertEquals(
+            'http://www.clanaod.net/forums/member.php?u=12345',
+            $member->AODProfileLink
+        );
+    }
+
+    #[Test]
+    public function voice_invalid_returns_true_when_no_voice_activity()
+    {
+        $member = $this->createMember(['last_voice_activity' => null]);
+
+        $this->assertTrue($member->voice_invalid);
+    }
+
+    #[Test]
+    public function voice_invalid_returns_false_when_voice_activity_exists()
+    {
+        $member = $this->createMember(['last_voice_activity' => now()]);
+
+        $this->assertFalse($member->voice_invalid);
+    }
+
+    #[Test]
+    public function last_promoted_returns_formatted_date()
+    {
+        $member = $this->createMember(['last_promoted_at' => '2024-06-15 00:00:00']);
+
+        $this->assertEquals('2024-06-15', $member->last_promoted);
+    }
+
+    #[Test]
+    public function last_promoted_returns_never_when_not_set()
+    {
+        $member = $this->createMember(['last_promoted_at' => null]);
+
+        $this->assertEquals('Never', $member->last_promoted);
+    }
+
+    #[Test]
+    public function is_pending_returns_true_when_pending_member_request_exists()
+    {
+        $member = $this->createMember();
+        MemberRequest::factory()->create(['member_id' => $member->id]);
+
+        $this->assertTrue($member->is_pending);
+    }
+
+    #[Test]
+    public function is_pending_returns_false_when_no_pending_request()
+    {
+        $member = $this->createMember();
+
+        $this->assertFalse($member->is_pending);
+    }
+
+    #[Test]
+    public function voice_status_formats_enum_value_as_title_case()
+    {
+        $member = $this->createMember(['last_voice_status' => DiscordStatus::NEVER_CONNECTED]);
+
+        $this->assertEquals('Never Connected', (string) $member->voice_status);
     }
 }

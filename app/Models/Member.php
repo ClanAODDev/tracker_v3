@@ -11,10 +11,7 @@ use App\Presenters\MemberPresenter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
@@ -90,8 +87,7 @@ class Member extends Model
 
     public function activityReminders()
     {
-        return $this->hasMany(ActivityReminder::class, 'member_id')
-            ->orderBy('created_at', 'desc');
+        return $this->hasMany(ActivityReminder::class, 'member_id')->latest();
     }
 
     public function latestActivityReminder()
@@ -102,37 +98,24 @@ class Member extends Model
 
     public function transfers()
     {
-        return $this->hasMany(Transfer::class, 'member_id')
-            ->orderBy('created_at', 'desc');
+        return $this->hasMany(Transfer::class, 'member_id')->latest();
     }
 
     public function rankActions()
     {
-        return $this->hasMany(RankAction::class, 'member_id')
-            ->orderBy('created_at', 'desc');
+        return $this->hasMany(RankAction::class, 'member_id')->latest();
     }
 
     public function notes()
     {
-        return $this->hasMany(Note::class, 'member_id')->orderBy('created_at', 'desc');
+        return $this->hasMany(Note::class, 'member_id')->latest();
     }
 
-    /**
-     * Enforce a singleton relationship for squad leaders.
-     *
-     * Prevents members from being a squad leader of more than one squad
-     *
-     * @return HasOne
-     */
     public function squadLeaderOf()
     {
         return $this->hasOne(Squad::class, 'leader_id');
     }
 
-    /**
-     * Resets member's positions and division assignments
-     * including part-time divisions.
-     */
     public function reset()
     {
         $this->update([
@@ -170,41 +153,26 @@ class Member extends Model
             });
     }
 
-    /**
-     * @return BelongsToMany
-     */
     public function partTimeDivisions()
     {
         return $this->belongsToMany(Division::class, 'division_parttimer')->withTimestamps();
     }
 
-    /**
-     * relationship - member belongs to a platoon.
-     */
     public function platoon()
     {
         return $this->belongsTo(Platoon::class);
     }
 
-    /**
-     * relationship - member belongs to a squad.
-     */
     public function squad()
     {
         return $this->belongsTo(Squad::class);
     }
 
-    /**
-     * relationship - member has many divisions.
-     */
     public function division()
     {
         return $this->belongsTo(Division::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function recruiter()
     {
         return $this->belongsTo(self::class, 'recruiter_id', 'clan_id');
@@ -220,36 +188,24 @@ class Member extends Model
         return $this->belongsTo(self::class, 'last_trained_by', 'clan_id');
     }
 
-    /**
-     * @return HasOne
-     */
     public function leave()
     {
         return $this->hasOne(Leave::class, 'member_id');
     }
 
-    /**
-     * @return mixed
-     */
     public function expiredLeave()
     {
-        return $this->hasOne(Leave::class)->where('end_date', '<', today());
+        return $this->hasOne(Leave::class, 'member_id')->where('end_date', '<', today());
     }
 
-    /**
-     * @return HasOne
-     */
     public function memberRequest()
     {
         return $this->hasOne(MemberRequest::class, 'member_id');
     }
 
-    /**
-     * @return mixed
-     */
     public function activeLeave()
     {
-        return $this->hasOne(Leave::class)->where('end_date', '>', today());
+        return $this->hasOne(Leave::class, 'member_id')->where('end_date', '>', today());
     }
 
     public function memberHandles()
@@ -257,15 +213,6 @@ class Member extends Model
         return $this->hasMany(MemberHandle::class);
     }
 
-    /**
-     * -------------------------------------
-     * Policy object refers to these methods
-     * -------------------------------------.
-     */
-
-    /**
-     * @return BelongsToMany
-     */
     public function handles()
     {
         return $this->belongsToMany(Handle::class)->withPivot('value');
@@ -278,38 +225,22 @@ class Member extends Model
             ->withTimestamps();
     }
 
-    /**
-     * @return bool
-     */
-    public function isSquadLeader(Squad $squad)
+    public function isSquadLeader(Squad $squad): bool
     {
         return $this->clan_id === $squad->leader_id;
     }
 
-    /**
-     * @return bool
-     */
-    public function isPlatoonLeader(Platoon $platoon)
+    public function isPlatoonLeader(Platoon $platoon): bool
     {
         return $this->clan_id === $platoon->leader_id;
     }
 
-    /**
-     * Check to see if the member is a division leader
-     * and also assigned to the given division.
-     *
-     * @return bool
-     */
-    public function isDivisionLeader(Division $division)
+    public function isDivisionLeader(Division $division): bool
     {
-        if ($this->division->id === $division->id && in_array($this->position, [
+        return $this->division->id === $division->id && in_array($this->position, [
             Position::EXECUTIVE_OFFICER,
             Position::COMMANDING_OFFICER,
-        ], true)) {
-            return true;
-        }
-
-        return false;
+        ], true);
     }
 
     public function scopeMisconfiguredDiscord($query)
@@ -321,10 +252,10 @@ class Member extends Model
         ]);
     }
 
-    public function getDiscordUrl()
+    public function getDiscordUrl(): ?string
     {
         if (! $this->discord_id) {
-            return false;
+            return null;
         }
 
         return sprintf('https://discordapp.com/users/%s', $this->discord_id);
@@ -361,9 +292,6 @@ class Member extends Model
         return [$this->clan_id, $this->rank->getAbbreviation() . '-' . $this->name];
     }
 
-    /**
-     * @return HasMany
-     */
     public function memberRequests()
     {
         return $this->hasMany(MemberRequest::class, 'requester_id');
@@ -414,11 +342,7 @@ class Member extends Model
 
         return $query
             ->where('id', '<>', $currentMember->id)
-            ->when($user->isMember(), fn (Builder $query) => $query
-                ->where('squad_id', $currentMember->squad_id)
-                ->where('rank', '<', $roleLimits['squadLeader'])
-            )
-            ->when($user->isSquadLeader(), fn (Builder $query) => $query
+            ->when($user->isMember() || $user->isSquadLeader(), fn (Builder $query) => $query
                 ->where('squad_id', $currentMember->squad_id)
                 ->where('rank', '<', $roleLimits['squadLeader'])
             )
