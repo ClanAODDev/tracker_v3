@@ -106,23 +106,6 @@ class SyncDivisionDnsTest extends TestCase
     }
 
     #[Test]
-    public function dry_run_logs_with_prefix(): void
-    {
-        Log::spy();
-
-        $this->createActiveDivision(['name' => 'wow']);
-
-        $service = $this->makeService();
-        $service->shouldReceive('createCname')->never();
-
-        (new SyncDivisionDns(dryRun: true))->handle($service);
-
-        Log::shouldHaveReceived('info')
-            ->with(Mockery::pattern('/^\[DRY RUN\]/'), Mockery::any())
-            ->atLeast()->once();
-    }
-
-    #[Test]
     public function logs_summary_on_completion(): void
     {
         Log::spy();

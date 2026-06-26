@@ -24,7 +24,6 @@ class SyncDivisionDns implements ShouldQueue
             return ['created' => [], 'deleted' => []];
         }
 
-        $prefix    = $this->dryRun ? '[DRY RUN] ' : '';
         $expected  = static::expectedSubdomains();
         $existing  = $service->listCnames();
         $protected = collect(CloudflareDnsService::PROTECTED_SUBDOMAINS);
@@ -50,12 +49,12 @@ class SyncDivisionDns implements ShouldQueue
             }
         }
 
-        try {
-            Log::info("{$prefix}DNS sync complete", compact('created', 'deleted'));
-        } catch (Throwable) {
-        }
-
         if (! $this->dryRun && ($created || $deleted)) {
+            try {
+                Log::info('DNS sync complete', compact('created', 'deleted'));
+            } catch (Throwable) {
+            }
+
             Notification::route('it_team', config('aod.it-team-channel'))
                 ->notify(new NotifyAdminDNSChange($created, $deleted, $service->zoneDomain));
         }
