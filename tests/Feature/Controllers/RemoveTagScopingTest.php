@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\Rank;
 use App\Models\DivisionTag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -16,9 +17,9 @@ class RemoveTagScopingTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function officer_cannot_remove_tag_belonging_to_another_division()
+    public function officer_below_sgt_cannot_remove_tag_belonging_to_another_division()
     {
-        $officer       = $this->createOfficer();
+        $officer       = $this->createOfficer(memberAttributes: ['rank' => Rank::CORPORAL]);
         $division      = $officer->member->division;
         $member        = $this->createMember(['division_id' => $division->id]);
         $otherDivision = $this->createActiveDivision();
@@ -68,16 +69,16 @@ class RemoveTagScopingTest extends TestCase
     }
 
     #[Test]
-    public function officer_can_remove_own_division_tag_from_member_in_different_division()
+    public function sgt_can_remove_tag_from_member_in_different_division()
     {
-        $officer       = $this->createOfficer();
-        $officerDiv    = $officer->member->division;
+        $sgt           = $this->createOfficer();
+        $sgtDiv        = $sgt->member->division;
         $otherDivision = $this->createActiveDivision();
         $member        = $this->createMember(['division_id' => $otherDivision->id]);
-        $tag           = DivisionTag::factory()->create(['division_id' => $officerDiv->id]);
+        $tag           = DivisionTag::factory()->create(['division_id' => $sgtDiv->id]);
         $member->tags()->attach($tag->id);
 
-        $this->actingAs($officer)
+        $this->actingAs($sgt)
             ->postJson(route('member-tags.remove', [$otherDivision->slug, $member->clan_id]), [
                 'tag_id' => $tag->id,
             ])->assertOk();

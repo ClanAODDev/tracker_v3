@@ -65,28 +65,50 @@ class DivisionTagPolicy
     {
         $userMember = $user->member;
 
-        if (! $userMember || $userMember->rank->value < Rank::SERGEANT->value) {
+        if (! $userMember) {
             return false;
         }
 
-        return true;
+        $isSgt     = $userMember->rank->value >= Rank::SERGEANT->value;
+        $isMsgt    = $userMember->rank->value >= Rank::MASTER_SERGEANT->value;
+        $isOfficer = $user->isRole('officer');
+
+        if (! $isOfficer && ! $isSgt) {
+            return false;
+        }
+
+        if ($member === null) {
+            return true;
+        }
+
+        if (! $member->division_id) {
+            return $isMsgt;
+        }
+
+        if ($isSgt) {
+            return true;
+        }
+
+        return $userMember->division_id === $member->division_id;
     }
 
     public function getAssignableTags(User $user, Member $member): Builder
     {
         if ($user->isRole('admin')) {
-            return DivisionTag::query()
-                ->visibleTo($user)
-                ->orderBy('name');
+            return DivisionTag::query()->visibleTo($user)->orderBy('name');
         }
 
-        $userDivisionId = $user->member?->division_id;
+        $userMember     = $user->member;
+        $userDivisionId = $userMember?->division_id;
 
         if (! $userDivisionId) {
             return DivisionTag::query()->whereRaw('1 = 0');
         }
 
-        return DivisionTag::forDivision($userDivisionId)
-            ->visibleTo($user);
+        if ($userMember->rank->value >= Rank::SERGEANT->value) {
+            return DivisionTag::query()->visibleTo($user)->orderBy('name');
+        }
+
+        return DivisionTag::forDivision($userDivisionId)->visibleTo($user);
     }
 }

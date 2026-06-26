@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Rank;
 use App\Enums\TagVisibility;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -116,6 +117,12 @@ class DivisionTag extends Model
                 TagVisibility::PUBLIC,
                 TagVisibility::OFFICERS,
             ]);
+        }
+
+        $userMember = $user->member;
+
+        if ($userMember && $userMember->rank->value >= Rank::SERGEANT->value) {
+            return $query->where('visibility', TagVisibility::PUBLIC);
         }
 
         return $query->whereRaw('1 = 0');

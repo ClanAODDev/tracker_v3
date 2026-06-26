@@ -429,7 +429,7 @@ class NoteControllerTest extends TestCase
     }
 
     #[Test]
-    public function cannot_assign_tag_from_different_division()
+    public function sgt_can_assign_tag_from_any_division_when_creating_note()
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
@@ -438,21 +438,14 @@ class NoteControllerTest extends TestCase
         $otherDivision = $this->createActiveDivision();
         $tag           = DivisionTag::factory()->create(['division_id' => $otherDivision->id]);
 
-        $response = $this->actingAs($srLdr)
+        $this->actingAs($srLdr)
             ->post(route('storeNote', $member->clan_id), [
-                'body'   => 'Test note with wrong division tag',
+                'body'   => 'Note with cross-division tag',
                 'type'   => 'misc',
                 'tag_id' => $tag->id,
-            ]);
+            ])->assertRedirect();
 
-        $response->assertRedirect();
-
-        $this->assertDatabaseHas('notes', [
-            'member_id' => $member->id,
-            'body'      => 'Test note with wrong division tag',
-        ]);
-
-        $this->assertDatabaseMissing('member_tag', [
+        $this->assertDatabaseHas('member_tag', [
             'member_id'       => $member->id,
             'division_tag_id' => $tag->id,
         ]);

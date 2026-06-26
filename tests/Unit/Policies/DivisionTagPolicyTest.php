@@ -156,24 +156,57 @@ class DivisionTagPolicyTest extends TestCase
     }
 
     #[Test]
-    public function sergeant_can_assign_tags()
+    public function officer_can_assign_tags_to_own_division_member()
+    {
+        $officer = $this->createOfficer();
+        $member  = $this->createMember(['division_id' => $officer->member->division_id]);
+
+        $this->assertTrue($this->policy->assign($officer, $member));
+    }
+
+    #[Test]
+    public function officer_cannot_assign_tags_to_member_in_different_division()
+    {
+        $officer       = $this->createOfficer(memberAttributes: ['rank' => Rank::CORPORAL]);
+        $otherDivision = $this->createActiveDivision();
+        $member        = $this->createMember(['division_id' => $otherDivision->id]);
+
+        $this->assertFalse($this->policy->assign($officer, $member));
+    }
+
+    #[Test]
+    public function sergeant_can_assign_tags_to_member_in_any_division()
+    {
+        $division      = $this->createActiveDivision();
+        $user          = $this->createMemberWithUser(['division_id' => $division->id, 'rank' => Rank::SERGEANT]);
+        $otherDivision = $this->createActiveDivision();
+        $member        = $this->createMember(['division_id' => $otherDivision->id]);
+
+        $this->assertTrue($this->policy->assign($user, $member));
+    }
+
+    #[Test]
+    public function sergeant_cannot_assign_tags_to_ex_aod_member()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id, 'rank' => Rank::SERGEANT]);
+        $member   = $this->createMember(['division_id' => 0]);
 
-        $this->assertTrue($this->policy->assign($user, null));
+        $this->assertFalse($this->policy->assign($user, $member));
     }
 
     #[Test]
-    public function officer_can_assign_tags()
+    public function master_sergeant_can_assign_tags_to_ex_aod_member()
     {
-        $officer = $this->createOfficer();
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id, 'rank' => Rank::MASTER_SERGEANT]);
+        $member   = $this->createMember(['division_id' => 0]);
 
-        $this->assertTrue($this->policy->assign($officer, null));
+        $this->assertTrue($this->policy->assign($user, $member));
     }
 
     #[Test]
-    public function rank_below_sergeant_cannot_assign_tags()
+    public function rank_below_sergeant_without_officer_role_cannot_assign_tags()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id, 'rank' => Rank::CORPORAL]);
@@ -182,16 +215,7 @@ class DivisionTagPolicyTest extends TestCase
     }
 
     #[Test]
-    public function can_assign_to_member_in_same_division()
-    {
-        $srLdr  = $this->createSeniorLeader();
-        $member = $this->createMember(['division_id' => $srLdr->member->division_id]);
-
-        $this->assertTrue($this->policy->assign($srLdr, $member));
-    }
-
-    #[Test]
-    public function can_assign_to_member_in_different_division()
+    public function senior_leader_can_assign_to_member_in_any_division()
     {
         $srLdr         = $this->createSeniorLeader();
         $otherDivision = $this->createActiveDivision();

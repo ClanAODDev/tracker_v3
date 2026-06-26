@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Rank;
 use App\Enums\TagVisibility;
 use App\Models\Division;
 use App\Models\DivisionTag;
@@ -107,9 +108,11 @@ class BulkTagController extends Controller
         $this->authorize('assign', [DivisionTag::class, $member]);
 
         $user           = auth()->user();
-        $userDivisionId = $user->member?->division_id;
+        $userMember     = $user->member;
+        $userDivisionId = $userMember?->division_id;
+        $isSgt          = $userMember && $userMember->rank->value >= Rank::SERGEANT->value;
 
-        $tagIdRule = $user->isRole('admin')
+        $tagIdRule = $user->isRole('admin') || $isSgt
             ? 'exists:division_tags,id'
             : Rule::exists('division_tags', 'id')->where(
                 fn ($q) => $q->where('division_id', $userDivisionId)->orWhereNull('division_id')
@@ -179,11 +182,15 @@ class BulkTagController extends Controller
             ->get();
 
         $user           = auth()->user();
-        $userDivisionId = $user->member?->division_id;
+        $userMember     = $user->member;
+        $userDivisionId = $userMember?->division_id;
+        $isSgt          = $userMember && $userMember->rank->value >= Rank::SERGEANT->value;
 
-        $tags = $user->isRole('admin')
-            ? DivisionTag::forDivision($division->id)->assignableBy($user)->get()
-            : DivisionTag::forDivision($userDivisionId)->assignableBy($user)->get();
+        $tags = match (true) {
+            $user->isRole('admin') => DivisionTag::forDivision($division->id)->assignableBy($user)->get(),
+            $isSgt                 => DivisionTag::assignableBy($user)->get(),
+            default                => DivisionTag::forDivision($userDivisionId)->assignableBy($user)->get(),
+        };
 
         return view('division.bulk-tags', compact('division', 'members', 'tags'));
     }
