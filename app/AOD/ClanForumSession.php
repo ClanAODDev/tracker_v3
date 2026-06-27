@@ -94,7 +94,10 @@ class ClanForumSession
     {
         $username = $this->normalizeUsername($sessionData->username);
 
-        if ($existingUser = User::whereName($username)->first()) {
+        $existingUser = User::where('member_id', $member->id)->first()
+            ?? User::whereName($username)->first();
+
+        if ($existingUser) {
             return $existingUser;
         }
 
