@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Member;
 use App\Services\AODForumService;
+use App\Services\ForumProcedureService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\UnrecoverableJobException;
@@ -21,7 +22,7 @@ class RemoveClanMember implements ShouldQueue
         private readonly int $impersonatingMemberId,
     ) {}
 
-    public function handle(): void
+    public function handle(ForumProcedureService $forum): void
     {
         $member = Member::withTrashed()->where('clan_id', $this->memberIdBeingRemoved)->first();
 
@@ -34,11 +35,16 @@ class RemoveClanMember implements ShouldQueue
             }
         }
 
-        $context = $member
-            ? ['name' => $member->name, 'groups' => $member->groups ?? []]
-            : ['name' => 'unknown', 'groups' => []];
+        $forumUser = $forum->getUser($this->memberIdBeingRemoved);
 
-        Log::info('Removing forum member', array_merge(['clan_id' => $this->memberIdBeingRemoved], $context));
+        $context = [
+            'clan_id'         => $this->memberIdBeingRemoved,
+            'name'            => $member?->name ?? 'unknown',
+            'usergroupid'     => $forumUser?->usergroupid ?? null,
+            'membergroupids'  => $forumUser?->membergroupids ?? null,
+        ];
+
+        Log::info('Removing forum member', $context);
 
         try {
             AODForumService::removeForumMember(
@@ -46,9 +52,8 @@ class RemoveClanMember implements ShouldQueue
                 impersonatingMemberId: $this->impersonatingMemberId,
             );
         } catch (RuntimeException $e) {
-            $groupList = implode(', ', $context['groups']);
             throw new RuntimeException(
-                "{$e->getMessage()} | name: {$context['name']}, groups: [{$groupList}]",
+                "{$e->getMessage()} | name: {$context['name']}, usergroupid: {$context['usergroupid']}, membergroupids: {$context['membergroupids']}",
                 previous: $e
             );
         }
