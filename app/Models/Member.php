@@ -294,6 +294,11 @@ class Member extends Model
         return $this->hasMany(MemberRequest::class, 'requester_id');
     }
 
+    public static function isValidForumName(string $name): bool
+    {
+        return ! preg_match('/[<>&"\']/u', $name);
+    }
+
     public function botResponse(): array
     {
         $division = ($this->division)

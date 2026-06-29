@@ -57,6 +57,14 @@ class RecruitingController extends Controller
             return $this->recruitPendingDiscordUser($request, $division, $recruiter);
         }
 
+        $request->validate([
+            'forum_name' => [
+                'required',
+                fn ($attr, $value, $fail) => Member::isValidForumName($value)
+                    ?: $fail('Forum name cannot contain HTML special characters (< > & " \').'),
+            ],
+        ]);
+
         $member = $this->recruitmentService->createMember(
             (int) $request->member_id,
             $request->forum_name,

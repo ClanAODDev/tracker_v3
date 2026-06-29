@@ -3,6 +3,7 @@
 namespace Tests\Unit\Jobs;
 
 use App\Jobs\RemoveClanMember;
+use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use PHPUnit\Framework\Attributes\Test;
@@ -16,6 +17,14 @@ class RemoveClanMemberTest extends TestCase
     {
         parent::setUp();
         config(['aod.token' => 'test-token']);
+    }
+
+    private function makeForumService(): ForumProcedureService
+    {
+        $service = $this->createMock(ForumProcedureService::class);
+        $service->method('getUser')->willReturn(null);
+
+        return $service;
     }
 
     #[Test]
@@ -37,7 +46,7 @@ class RemoveClanMemberTest extends TestCase
         $impersonatingMemberId = 67890;
 
         $job = new RemoveClanMember($memberIdBeingRemoved, $impersonatingMemberId);
-        $job->handle();
+        $job->handle($this->makeForumService());
 
         Http::assertSent(function ($request) use ($memberIdBeingRemoved, $impersonatingMemberId) {
             $url = $request->url();
@@ -58,6 +67,6 @@ class RemoveClanMemberTest extends TestCase
         $job = new RemoveClanMember(12345, 67890);
 
         $this->expectException(\RuntimeException::class);
-        $job->handle();
+        $job->handle($this->makeForumService());
     }
 }

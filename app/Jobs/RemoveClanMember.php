@@ -38,11 +38,17 @@ class RemoveClanMember implements ShouldQueue
         $forumUser = $forum->getUser($this->memberIdBeingRemoved);
 
         $context = [
-            'clan_id'         => $this->memberIdBeingRemoved,
-            'name'            => $member?->name ?? 'unknown',
-            'usergroupid'     => $forumUser?->usergroupid ?? null,
-            'membergroupids'  => $forumUser?->membergroupids ?? null,
+            'clan_id'        => $this->memberIdBeingRemoved,
+            'name'           => $member?->name ?? 'unknown',
+            'usergroupid'    => $forumUser?->usergroupid ?? null,
+            'membergroupids' => $forumUser?->membergroupids ?? null,
         ];
+
+        if ($member && ! Member::isValidForumName($member->name)) {
+            throw new UnrecoverableJobException(
+                "Cannot remove member {$this->memberIdBeingRemoved} ({$member->name}): username contains HTML-unsafe characters stored as entities on the forum (e.g. &lt;), causing the forum API to reject the removal. Manual intervention required."
+            );
+        }
 
         Log::info('Removing forum member', $context);
 

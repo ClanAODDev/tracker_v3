@@ -248,6 +248,9 @@
                 <span class="help-block text-danger" v-else-if="store.member.forum_name && store.validation.forumName.rejectedPrefix === 'rank'">
                   Name cannot begin with a rank abbreviation
                 </span>
+                <span class="help-block text-danger" v-else-if="store.member.forum_name && store.validation.forumName.invalidChars">
+                  Name cannot contain special characters (&lt; &gt; &amp; &quot; &apos;)
+                </span>
                 <span class="help-block text-danger" v-else-if="store.member.forum_name && !store.validation.forumName.available && !store.validation.loading">
                   This name is already taken
                 </span>

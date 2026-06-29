@@ -301,6 +301,11 @@ store.validateForumName = (name, memberId) => {
         return;
     }
 
+    if (/[<>&"']/.test(name)) {
+        store.validation.forumName = { valid: false, available: false, invalidChars: true };
+        return;
+    }
+
     store.validation.loading = true;
 
     debounce('forumName', () => {
