@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\Rank;
+use App\Enums\Role;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\User;
@@ -71,7 +72,7 @@ class DivisionTagPolicy
 
         $isSgt     = $userMember->rank->value >= Rank::SERGEANT->value;
         $isMsgt    = $userMember->rank->value >= Rank::MASTER_SERGEANT->value;
-        $isOfficer = $user->isRole('officer');
+        $isOfficer = $user->isRole([Role::OFFICER, Role::SENIOR_LEADER]);
 
         if (! $isOfficer && ! $isSgt) {
             return false;
