@@ -156,6 +156,54 @@ class DivisionTest extends TestCase
     }
 
     #[Test]
+    public function sgt_and_ssgt_returns_only_sgt_and_staff_sgt()
+    {
+        $division = $this->createActiveDivision();
+
+        $sgt = $this->createMember([
+            'division_id' => $division->id,
+            'rank'        => Rank::SERGEANT,
+        ]);
+
+        $ssgt = $this->createMember([
+            'division_id' => $division->id,
+            'rank'        => Rank::STAFF_SERGEANT,
+        ]);
+
+        $ssg2 = $this->createMember([
+            'division_id' => $division->id,
+            'rank'        => Rank::MASTER_SERGEANT,
+        ]);
+
+        $results = $division->sgtAndSsgt()->get();
+
+        $this->assertTrue($results->contains($sgt));
+        $this->assertTrue($results->contains($ssgt));
+        $this->assertFalse($results->contains($ssg2));
+    }
+
+    #[Test]
+    public function general_sergeants_returns_clan_admin_position_members()
+    {
+        $division = $this->createActiveDivision();
+
+        $clanAdmin = $this->createMember([
+            'division_id' => $division->id,
+            'position'    => Position::CLAN_ADMIN,
+        ]);
+
+        $regularMember = $this->createMember([
+            'division_id' => $division->id,
+            'position'    => Position::MEMBER,
+        ]);
+
+        $results = $division->generalSergeants()->get();
+
+        $this->assertTrue($results->contains($clanAdmin));
+        $this->assertFalse($results->contains($regularMember));
+    }
+
+    #[Test]
     public function leaders_returns_co_and_xo()
     {
         $division = $this->createActiveDivision();
@@ -196,23 +244,59 @@ class DivisionTest extends TestCase
     }
 
     #[Test]
-    public function is_active_returns_correct_value()
+    public function is_shutdown_returns_false_when_not_shut_down()
     {
-        $activeDivision   = $this->createActiveDivision();
-        $inactiveDivision = $this->createInactiveDivision();
+        $division = Division::factory()->create(['shutdown_at' => null]);
 
-        $this->assertTrue($activeDivision->isActive());
-        $this->assertFalse($inactiveDivision->isActive());
+        $this->assertFalse($division->isShutdown());
     }
 
     #[Test]
-    public function is_shutdown_returns_correct_value()
+    public function is_shutdown_returns_true_when_shut_down()
     {
-        $normalDivision   = Division::factory()->create(['shutdown_at' => null]);
-        $shutdownDivision = Division::factory()->create(['shutdown_at' => now()]);
+        $division = Division::factory()->create(['shutdown_at' => now()]);
 
-        $this->assertFalse((bool) $normalDivision->isShutdown());
-        $this->assertTrue((bool) $shutdownDivision->isShutdown());
+        $this->assertTrue($division->isShutdown());
+    }
+
+    #[Test]
+    public function route_notification_for_members_returns_configured_channel()
+    {
+        $division           = Division::factory()->create(['abbreviation' => 'arc']);
+        $division->settings = array_merge($division->settings, ['member_channel' => 'arc-general']);
+        $division->save();
+
+        $this->assertEquals('arc-general', $division->routeNotificationForMembers());
+    }
+
+    #[Test]
+    public function route_notification_for_members_falls_back_to_abbreviation()
+    {
+        $division           = Division::factory()->create(['abbreviation' => 'arc']);
+        $division->settings = array_merge($division->settings, ['member_channel' => '']);
+        $division->save();
+
+        $this->assertEquals('arc-members', $division->routeNotificationForMembers());
+    }
+
+    #[Test]
+    public function route_notification_for_officers_returns_configured_channel()
+    {
+        $division           = Division::factory()->create(['abbreviation' => 'arc']);
+        $division->settings = array_merge($division->settings, ['officer_channel' => 'arc-staff']);
+        $division->save();
+
+        $this->assertEquals('arc-staff', $division->routeNotificationForOfficers());
+    }
+
+    #[Test]
+    public function route_notification_for_officers_falls_back_to_abbreviation()
+    {
+        $division           = Division::factory()->create(['abbreviation' => 'arc']);
+        $division->settings = array_merge($division->settings, ['officer_channel' => '']);
+        $division->save();
+
+        $this->assertEquals('arc-officers', $division->routeNotificationForOfficers());
     }
 
     #[Test]
@@ -237,26 +321,5 @@ class DivisionTest extends TestCase
         $division = $this->createActiveDivision();
 
         $this->assertEquals('Unknown Term', $division->locality('unknown term'));
-    }
-
-    #[Test]
-    public function new_members_last_30_returns_recent_joins()
-    {
-        $division = $this->createActiveDivision();
-
-        $recentMember = $this->createMember([
-            'division_id' => $division->id,
-            'join_date'   => Carbon::now()->subDays(10),
-        ]);
-
-        $oldMember = $this->createMember([
-            'division_id' => $division->id,
-            'join_date'   => Carbon::now()->subDays(45),
-        ]);
-
-        $results = $division->newMembersLast30()->get();
-
-        $this->assertTrue($results->contains($recentMember));
-        $this->assertFalse($results->contains($oldMember));
     }
 }

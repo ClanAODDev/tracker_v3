@@ -63,7 +63,7 @@ class ClanForumSessionTest extends TestCase
     public function returns_existing_user_found_by_username(): void
     {
         $member = Member::factory()->create(['clan_id' => 10002]);
-        $user = User::factory()->create([
+        $user   = User::factory()->create([
             'name'      => 'existingname',
             'member_id' => $member->id,
         ]);
@@ -81,7 +81,7 @@ class ClanForumSessionTest extends TestCase
     public function finds_existing_user_by_member_id_when_username_has_changed(): void
     {
         $member = Member::factory()->create(['clan_id' => 10003]);
-        $user = User::factory()->create([
+        $user   = User::factory()->create([
             'name'      => 'oldname',
             'email'     => 'mario@example.com',
             'member_id' => $member->id,
