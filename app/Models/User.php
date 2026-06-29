@@ -164,7 +164,8 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
             return $userRole === $role;
         }
 
-        $slugs = is_array($role) ? $role : [$role];
+        $items = is_array($role) ? $role : [$role];
+        $slugs = array_map(fn ($r) => $r instanceof Role ? $r->slug() : $r, $items);
 
         return in_array($userRole->slug(), $slugs, true);
     }
