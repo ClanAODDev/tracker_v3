@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Census;
 use App\Models\Division;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class DivisionCensus extends BaseCommand
@@ -14,11 +15,6 @@ class DivisionCensus extends BaseCommand
 
     protected $description = 'Collect division census data across all active divisions';
 
-    protected array $stats = [
-        'recorded' => 0,
-        'errors'   => 0,
-    ];
-
     public function handle(): int
     {
         if (! $this->option('force') && $this->censusAlreadyPerformed()) {
@@ -27,7 +23,14 @@ class DivisionCensus extends BaseCommand
             return self::SUCCESS;
         }
 
-        $divisions = Division::active()->get();
+        $weekAgo   = now()->subDays(8)->toDateString();
+        $divisions = Division::active()
+            ->withCount([
+                'members',
+                'members as weekly_active_count' => fn ($q) => $q->where('last_activity', '>=', $weekAgo),
+                'members as weekly_voice_count'  => fn ($q) => $q->where('last_voice_activity', '>=', $weekAgo),
+            ])
+            ->get();
 
         if ($divisions->isEmpty()) {
             $this->info('No active divisions found.');
@@ -37,52 +40,38 @@ class DivisionCensus extends BaseCommand
 
         $this->info("Beginning division census for {$divisions->count()} divisions...");
 
-        foreach ($divisions as $division) {
-            $this->recordEntry($division);
-        }
+        try {
+            $recorded = $this->recordEntries($divisions);
+            $this->info("Census complete. Recorded: {$recorded}");
+            Log::info('Division census completed', ['recorded' => $recorded]);
+        } catch (Exception $exception) {
+            $this->logError('Census failed', $exception);
 
-        $this->logStats();
+            return self::FAILURE;
+        }
 
         return self::SUCCESS;
     }
 
-    protected function recordEntry(Division $division): void
+    protected function recordEntries(Collection $divisions): int
     {
-        try {
-            Census::create([
-                'division_id'         => $division->id,
-                'count'               => $division->members()->count(),
-                'weekly_active_count' => $division->membersActiveSinceDaysAgo(8)->count(),
-                'weekly_voice_count'  => $division->membersActiveOnDiscordSinceDaysAgo(8)->count(),
-            ]);
+        $now  = now();
+        $rows = $divisions->map(fn (Division $division) => [
+            'division_id'         => $division->id,
+            'count'               => $division->members_count,
+            'weekly_active_count' => $division->weekly_active_count,
+            'weekly_voice_count'  => $division->weekly_voice_count,
+            'created_at'          => $now,
+            'updated_at'          => $now,
+        ])->all();
 
-            $this->stats['recorded']++;
+        Census::insert($rows);
 
-            if ($this->getOutput()->isVerbose()) {
-                $this->line("  Recorded: {$division->name}");
-            }
-        } catch (Exception $exception) {
-            $this->stats['errors']++;
-            $this->logError("Failed to record census for {$division->name}", $exception);
-        }
+        return count($rows);
     }
 
     protected function censusAlreadyPerformed(): bool
     {
         return Census::whereDate('created_at', today())->exists();
-    }
-
-    protected function logStats(): void
-    {
-        $message = "Census complete. Recorded: {$this->stats['recorded']}";
-
-        if ($this->stats['errors'] > 0) {
-            $message .= ", Errors: {$this->stats['errors']}";
-            $this->warn($message);
-        } else {
-            $this->info($message);
-        }
-
-        Log::info('Division census completed', $this->stats);
     }
 }

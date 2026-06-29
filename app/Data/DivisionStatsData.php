@@ -18,8 +18,14 @@ readonly class DivisionStatsData
     {
         $activityThresholdDays = $division->settings()->get('inactivity_days') ?? 30;
 
-        $memberCount      = $division->members()->count();
-        $voiceActiveCount = $division->membersActiveOnDiscordSinceDaysAgo($activityThresholdDays)->count();
+        $division->loadCount([
+            'members',
+            'members as voice_active_count'    => fn ($q) => $q->where('last_voice_activity', '>=', now()->subDays($activityThresholdDays)->toDateString()),
+            'members as recruits_last_30_days' => fn ($q) => $q->where('join_date', '>=', now()->subDays(30)->toDateString()),
+        ]);
+
+        $memberCount      = (int) $division->members_count;
+        $voiceActiveCount = (int) $division->voice_active_count;
 
         return new self(
             memberCount: $memberCount,
@@ -27,9 +33,7 @@ readonly class DivisionStatsData
             voiceRate: $memberCount > 0
                 ? (int) round(($voiceActiveCount / $memberCount) * 100)
                 : 0,
-            recruitsLast30Days: $division->members()
-                ->where('join_date', '>=', now()->subDays(30))
-                ->count(),
+            recruitsLast30Days: (int) $division->recruits_last_30_days,
             activityThresholdDays: $activityThresholdDays,
         );
     }
