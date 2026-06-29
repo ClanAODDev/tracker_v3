@@ -4,10 +4,11 @@ namespace App\Jobs;
 
 use App\Models\Member;
 use App\Services\AODForumService;
-use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\UnrecoverableJobException;
+use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class RemoveClanMember implements ShouldQueue
 {
@@ -20,9 +21,6 @@ class RemoveClanMember implements ShouldQueue
         private readonly int $impersonatingMemberId,
     ) {}
 
-    /**
-     * @throws Exception
-     */
     public function handle(): void
     {
         $member = Member::withTrashed()->where('clan_id', $this->memberIdBeingRemoved)->first();
@@ -36,9 +34,23 @@ class RemoveClanMember implements ShouldQueue
             }
         }
 
-        AODForumService::removeForumMember(
-            memberIdBeingRemoved: $this->memberIdBeingRemoved,
-            impersonatingMemberId: $this->impersonatingMemberId,
-        );
+        $context = $member
+            ? ['name' => $member->name, 'groups' => $member->groups ?? []]
+            : ['name' => 'unknown', 'groups' => []];
+
+        Log::info('Removing forum member', array_merge(['clan_id' => $this->memberIdBeingRemoved], $context));
+
+        try {
+            AODForumService::removeForumMember(
+                memberIdBeingRemoved: $this->memberIdBeingRemoved,
+                impersonatingMemberId: $this->impersonatingMemberId,
+            );
+        } catch (RuntimeException $e) {
+            $groupList = implode(', ', $context['groups']);
+            throw new RuntimeException(
+                "{$e->getMessage()} | name: {$context['name']}, groups: [{$groupList}]",
+                previous: $e
+            );
+        }
     }
 }

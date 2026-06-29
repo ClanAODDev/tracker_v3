@@ -78,11 +78,11 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
                         $notifiable->locality('platoon'),
                         $notifiable->locality('squad')
                     ),
-                    'value' => $this->squad ? sprintf(
+                    'value' => sprintf(
                         '%s / %s',
-                        $this->squad->platoon->name,
-                        $this->squad->name
-                    ) : 'Unassigned',
+                        $this->squad?->platoon?->name ?? 'Unassigned',
+                        $this->squad?->name ?? 'Unassigned',
+                    ),
                 ],
                 [
                     'name'  => $handle?->label ?? 'In-Game Handle',
