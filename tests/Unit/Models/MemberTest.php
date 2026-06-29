@@ -595,4 +595,43 @@ class MemberTest extends TestCase
 
         $this->assertEquals('Never Connected', (string) $member->voice_status);
     }
+
+    #[Test]
+    public function get_url_params_returns_clan_id_and_rank_slug()
+    {
+        $member = $this->createMember([
+            'clan_id' => 42,
+            'name'    => 'testuser',
+            'rank'    => Rank::SERGEANT,
+        ]);
+
+        $this->assertEquals([42, 'Sgt-testuser'], $member->getUrlParams());
+    }
+
+    #[Test]
+    public function trainer_relationship_resolves_via_clan_id()
+    {
+        $trainer = $this->createMember();
+        $trainee = $this->createMember(['last_trained_by' => $trainer->clan_id]);
+
+        $this->assertEquals($trainer->id, $trainee->trainer->id);
+    }
+
+    #[Test]
+    public function activity_reminded_by_resolves_to_user()
+    {
+        $officer = $this->createOfficer();
+        $member  = $this->createMember(['activity_reminded_by_id' => $officer->id]);
+
+        $this->assertEquals($officer->id, $member->activityRemindedBy->id);
+    }
+
+    #[Test]
+    public function is_rank_returns_false_when_rank_is_null()
+    {
+        $member       = $this->createMember();
+        $member->rank = null;
+
+        $this->assertFalse($member->isRank(Rank::SERGEANT));
+    }
 }

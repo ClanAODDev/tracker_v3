@@ -174,7 +174,12 @@ class ReportsController extends Controller
     {
         $divisions = Division::active()
             ->orderBy('name')
-            ->withCount('members', 'newMembersLast30', 'newMembersLast60', 'newMembersLast90')
+            ->withCount([
+                'members',
+                'members as new_members_last30_count' => fn ($q) => $q->where('join_date', '>', now()->subDays(30)),
+                'members as new_members_last60_count' => fn ($q) => $q->where('join_date', '>', now()->subDays(60)),
+                'members as new_members_last90_count' => fn ($q) => $q->where('join_date', '>', now()->subDays(90)),
+            ])
             ->get()
             ->each(function ($division) {
                 $pop             = $division->members_count ?: 1;

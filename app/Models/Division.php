@@ -8,22 +8,19 @@ use App\Enums\Position;
 use App\Enums\Rank;
 use App\Presenters\DivisionPresenter;
 use App\Settings\DivisionSettings;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-/**
- * Class Division.
- */
 class Division extends Model
 {
     use HasFactory;
@@ -31,25 +28,15 @@ class Division extends Model
     use RecordsActivity;
     use SoftDeletes;
 
-    /**
-     * Settings to expose to Division API
-     */
     public array $exposedSettings = [
         'always_visible_in_discord',
         'meta_description',
     ];
 
-    /**
-     * Initial division settings to define on creation
-     */
     public array $defaultSettings = [
-
         'officer_channel' => '',
         'member_channel'  => '',
 
-        /**
-         * Recruiting and basic settings
-         */
         'use_welcome_thread'   => false,
         'division_structure'   => '',
         'welcome_area'         => '',
@@ -61,9 +48,6 @@ class Division extends Model
             ['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning'],
         ],
 
-        /**
-         * Greatest rank allowing automatic rank action approval
-         */
         'max_platoon_leader_rank' => Rank::PRIVATE_FIRST_CLASS,
 
         'chat_alerts' => [
@@ -113,16 +97,10 @@ class Division extends Model
         'shutdown_at'  => 'datetime',
     ];
 
-    /**
-     * @var array
-     */
     protected $hidden = ['structure'];
 
     protected $withCount = ['sergeants', 'members'];
 
-    /**
-     * @var array
-     */
     protected $guarded = [];
 
     protected static function booted(): void
@@ -144,32 +122,14 @@ class Division extends Model
         return 'slug';
     }
 
-    public function setAbbreviationAttribute($value): string
+    public function setAbbreviationAttribute($value): void
     {
-        return $this->attributes['abbreviation'] = strtolower($value);
+        $this->attributes['abbreviation'] = strtolower($value);
     }
 
-    /**
-     * relationship - division has many members.
-     */
     public function members(): HasMany
     {
         return $this->hasMany(Member::class);
-    }
-
-    public function newMembersLast30(): HasMany
-    {
-        return $this->hasMany(Member::class)->where('join_date', '>', Carbon::now()->subDays(30));
-    }
-
-    public function newMembersLast60(): HasMany
-    {
-        return $this->hasMany(Member::class)->where('join_date', '>', Carbon::now()->subDays(60));
-    }
-
-    public function newMembersLast90(): HasMany
-    {
-        return $this->hasMany(Member::class)->where('join_date', '>', Carbon::now()->subDays(90));
     }
 
     public function notes(): HasManyThrough
@@ -209,68 +169,44 @@ class Division extends Model
             ?: ($this->abbreviation ? $this->abbreviation . '-officers' : null);
     }
 
-    /**
-     * Division has many platoons.
-     *
-     * @return HasMany
-     */
-    public function platoons()
+    public function platoons(): HasMany
     {
         return $this->hasMany(Platoon::class)->orderBy('order');
     }
 
-    /**
-     * Division has many activity entries.
-     *
-     * @return HasMany
-     */
-    public function activity()
+    public function activity(): HasMany
     {
         return $this->hasMany(Activity::class);
     }
 
-    /**
-     * Enabled division scope.
-     *
-     * @return mixed
-     */
-    public function scopeActive($query)
+    public function scopeActive($query): void
     {
         $query->whereActive(true)->orderBy('name', 'ASC');
     }
 
-    public function scopeWithoutFloaters($query)
+    public function scopeWithoutFloaters($query): void
     {
         $query->whereNotIn('slug', ['floater']);
     }
 
-    public function scopeWithoutBR($query)
+    public function scopeWithoutBR($query): void
     {
         $query->whereNotIn('slug', ['bluntz-reserves']);
     }
 
-    /**
-     * @return mixed
-     */
-    public function scopeShuttingDown($query, bool $includeShutdown = false)
+    public function scopeShuttingDown($query, bool $includeShutdown = false): void
     {
         if (! $includeShutdown) {
             $query->whereNull('shutdown_at');
         }
     }
 
-    /**
-     * @return mixed
-     */
-    public function sergeants()
+    public function sergeants(): HasMany
     {
         return $this->members()->where('rank', '>=', Rank::SERGEANT);
     }
 
-    /**
-     * Count of Sgts and SSGs.
-     */
-    public function sgtAndSsgt()
+    public function sgtAndSsgt(): HasMany
     {
         return $this->members()->whereIn('rank', [
             Rank::SERGEANT,
@@ -278,64 +214,38 @@ class Division extends Model
         ]);
     }
 
-    /**
-     * @return mixed
-     */
-    public function membersActiveSinceDaysAgo($days)
+    public function membersActiveSinceDaysAgo(int $days): HasMany
     {
-        $date = Carbon::now()->subDays($days)->format('Y-m-d');
-
-        return $this->members()->where('last_activity', '>=', $date);
+        return $this->members()->where('last_activity', '>=', now()->subDays($days)->toDateString());
     }
 
-    /**
-     * @return $this
-     */
-    public function membersActiveOnDiscordSinceDaysAgo($days)
+    public function membersActiveOnDiscordSinceDaysAgo(int $days): HasMany
     {
-        $date = Carbon::now()->subDays($days)->format('Y-m-d');
-
-        return $this->members()->where('last_voice_activity', '>=', $date);
+        return $this->members()->where('last_voice_activity', '>=', now()->subDays($days)->toDateString());
     }
 
-    /**
-     * Includes general sgt (4) and admin (7).
-     *
-     * @return mixed
-     */
-    public function generalSergeants()
+    public function generalSergeants(): HasMany
     {
         return $this->members()->whereIn('position', [
             Position::CLAN_ADMIN,
         ]);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function handle()
+    public function handle(): BelongsTo
     {
         return $this->belongsTo(Handle::class);
     }
 
-    /**
-     * Gets unassigned members of a division (no platoon assignment)
-     * NOTE: Only members (position 1).
-     */
-    public function unassigned()
+    public function unassigned(): HasMany
     {
         return $this->members()
             ->where('platoon_id', 0)
-            ->whereIn('position', [Position::MEMBER])->orderBy(
-                'rank',
-                'asc'
-            )->orderBy('name', 'asc');
+            ->whereIn('position', [Position::MEMBER])
+            ->orderBy('rank', 'asc')
+            ->orderBy('name', 'asc');
     }
 
-    /**
-     * @return string
-     */
-    public function locality($string)
+    public function locality(string $string): string
     {
         $locality = collect($this->settings()->locality);
         if (! $locality->count()) {
@@ -357,10 +267,7 @@ class Division extends Model
         return ucwords($results['new-string']);
     }
 
-    /**
-     * @return DivisionSettings
-     */
-    public function settings()
+    public function settings(): DivisionSettings
     {
         $this->fireCustomModelEvent('settingsRead', true);
 
@@ -369,12 +276,7 @@ class Division extends Model
         return new DivisionSettings($mergedSettings, $this);
     }
 
-    /**
-     * Gets CO and XOs of a division.
-     *
-     * @return mixed
-     */
-    public function leaders()
+    public function leaders(): HasMany
     {
         return $this->members()->orderBy('position', 'desc')
             ->whereIn('position', [
@@ -383,10 +285,7 @@ class Division extends Model
             ]);
     }
 
-    /**
-     * Gets part time members of a division.
-     */
-    public function partTimeMembers()
+    public function partTimeMembers(): BelongsToMany
     {
         return $this->belongsToMany(
             Member::class,
@@ -394,26 +293,18 @@ class Division extends Model
         )->orderByDesc('rank')->orderBy('name')->withTimestamps();
     }
 
-    /**
-     * @return mixed
-     */
-    public function isActive()
+    public function isShutdown(): bool
     {
-        return $this->active;
+        return (bool) $this->shutdown_at;
     }
 
-    public function getLogoPath()
+    public function getLogoPath(): string
     {
         if ($this->logo && Storage::disk('public')->exists($this->logo)) {
             return asset(Storage::url($this->logo));
         }
 
         return getThemedLogoPath();
-    }
-
-    public function isShutdown()
-    {
-        return $this->shutdown_at;
     }
 
     public function transfers(): HasMany
@@ -447,20 +338,8 @@ class Division extends Model
         return $this->hasManyThrough(MemberAward::class, Award::class, 'division_id', 'award_id');
     }
 
-    /**
-     * @return HasMany
-     */
-    public function memberRequests()
+    public function memberRequests(): HasMany
     {
         return $this->hasMany(MemberRequest::class);
-    }
-
-    private static function setMissingSettings(self $division): void
-    {
-        if ($diff = array_diff(array_keys($division->defaultSettings), array_keys($division->settings))) {
-            foreach ($diff as $key) {
-                $division->settings()->set($key, $division->defaultSettings[$key]);
-            }
-        }
     }
 }

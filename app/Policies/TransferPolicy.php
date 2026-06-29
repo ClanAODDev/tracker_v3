@@ -16,7 +16,7 @@ class TransferPolicy
 
     public function create(User $user): bool
     {
-        return $user->division->isActive();
+        return $user->division->active;
     }
 
     public function approve(User $user, Transfer $transfer): bool

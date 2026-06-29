@@ -324,6 +324,29 @@ class DivisionReportControllerTest extends TestCase
         $this->assertEquals(2, $disconnectedCount);
     }
 
+    #[Test]
+    public function turnover_report_shows_correct_member_counts_per_period(): void
+    {
+        $admin    = $this->createAdmin();
+        $division = $this->createActiveDivision();
+
+        $this->createMember(['division_id' => $division->id, 'join_date' => now()->subDays(10)]);
+        $this->createMember(['division_id' => $division->id, 'join_date' => now()->subDays(10)]);
+        $this->createMember(['division_id' => $division->id, 'join_date' => now()->subDays(45)]);
+        $this->createMember(['division_id' => $division->id, 'join_date' => now()->subDays(75)]);
+
+        $response = $this->actingAs($admin)->get(route('reports.division-turnover'));
+
+        $response->assertOk();
+        $response->assertViewHas('divisions', function ($divisions) use ($division) {
+            $row = $divisions->firstWhere('id', $division->id);
+
+            return $row->new_members_last30_count === 2
+                && $row->new_members_last60_count === 3
+                && $row->new_members_last90_count === 4;
+        });
+    }
+
     private function createRecruitActivities(Division $division, User $officer, int $count, $date = null): void
     {
         $date = $date ?? now();

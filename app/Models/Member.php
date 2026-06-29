@@ -11,15 +11,13 @@ use App\Presenters\MemberPresenter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-/**
- * Class Member.
- *
- * @method static whereName($name)
- */
 class Member extends Model
 {
     use HasCustomAttributes;
@@ -35,7 +33,7 @@ class Member extends Model
         });
     }
 
-    public function routeNotificationForBot()
+    public function routeNotificationForBot(): ?string
     {
         return $this->discord;
     }
@@ -63,7 +61,7 @@ class Member extends Model
 
     protected $guarded = [];
 
-    public function awards()
+    public function awards(): HasMany
     {
         return $this->hasMany(MemberAward::class, 'member_id')
             ->with(['award' => fn ($q) => $q->withCount('recipients')])
@@ -75,48 +73,47 @@ class Member extends Model
         return new MemberPresenter($this);
     }
 
-    public function user()
+    public function user(): HasOne
     {
         return $this->hasOne(User::class);
     }
 
-    public function activityRemindedBy()
+    public function activityRemindedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'activity_reminded_by_id');
     }
 
-    public function activityReminders()
+    public function activityReminders(): HasMany
     {
         return $this->hasMany(ActivityReminder::class, 'member_id')->latest();
     }
 
-    public function latestActivityReminder()
+    public function latestActivityReminder(): HasOne
     {
-        return $this->hasOne(ActivityReminder::class, 'member_id')
-            ->latestOfMany();
+        return $this->hasOne(ActivityReminder::class, 'member_id')->latestOfMany();
     }
 
-    public function transfers()
+    public function transfers(): HasMany
     {
         return $this->hasMany(Transfer::class, 'member_id')->latest();
     }
 
-    public function rankActions()
+    public function rankActions(): HasMany
     {
         return $this->hasMany(RankAction::class, 'member_id')->latest();
     }
 
-    public function notes()
+    public function notes(): HasMany
     {
         return $this->hasMany(Note::class, 'member_id')->latest();
     }
 
-    public function squadLeaderOf()
+    public function squadLeaderOf(): HasOne
     {
         return $this->hasOne(Squad::class, 'leader_id');
     }
 
-    public function reset()
+    public function reset(): void
     {
         $this->update([
             'division_id'            => 0,
@@ -135,85 +132,85 @@ class Member extends Model
         $this->tags()->detach($divisionSpecificTagIds);
     }
 
-    public function scopeUnassignedSquadLeaders($query)
+    public function scopeUnassignedSquadLeaders(Builder $query): void
     {
-        return $query
+        $query
             ->where('position', Position::SQUAD_LEADER)
             ->whereNotIn('clan_id', function ($q) {
                 $q->select('leader_id')->from('squads')->whereNotNull('leader_id');
             });
     }
 
-    public function scopeUnassignedPlatoonLeaders($query)
+    public function scopeUnassignedPlatoonLeaders(Builder $query): void
     {
-        return $query
+        $query
             ->where('position', Position::PLATOON_LEADER)
             ->whereNotIn('clan_id', function ($q) {
                 $q->select('leader_id')->from('platoons')->whereNotNull('leader_id');
             });
     }
 
-    public function partTimeDivisions()
+    public function partTimeDivisions(): BelongsToMany
     {
         return $this->belongsToMany(Division::class, 'division_parttimer')->withTimestamps();
     }
 
-    public function platoon()
+    public function platoon(): BelongsTo
     {
         return $this->belongsTo(Platoon::class);
     }
 
-    public function squad()
+    public function squad(): BelongsTo
     {
         return $this->belongsTo(Squad::class);
     }
 
-    public function division()
+    public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
     }
 
-    public function recruiter()
+    public function recruiter(): BelongsTo
     {
         return $this->belongsTo(self::class, 'recruiter_id', 'clan_id');
     }
 
-    public function recruits()
+    public function recruits(): HasMany
     {
         return $this->hasMany(self::class, 'recruiter_id', 'clan_id');
     }
 
-    public function trainer()
+    public function trainer(): BelongsTo
     {
         return $this->belongsTo(self::class, 'last_trained_by', 'clan_id');
     }
 
-    public function leave()
+    public function leave(): HasOne
     {
         return $this->hasOne(Leave::class, 'member_id');
     }
 
-    public function expiredLeave()
+    public function expiredLeave(): HasOne
     {
         return $this->hasOne(Leave::class, 'member_id')->where('end_date', '<', today());
     }
 
-    public function memberRequest()
+    public function memberRequest(): HasOne
     {
         return $this->hasOne(MemberRequest::class, 'member_id');
     }
 
-    public function activeLeave()
+    public function activeLeave(): HasOne
     {
         return $this->hasOne(Leave::class, 'member_id')->where('end_date', '>', today());
     }
 
-    public function memberHandles()
+    public function memberHandles(): HasMany
     {
         return $this->hasMany(MemberHandle::class);
     }
 
-    public function handles()
+    public function handles(): BelongsToMany
     {
         return $this->belongsToMany(Handle::class)->withPivot('value');
     }
@@ -243,7 +240,7 @@ class Member extends Model
         ], true);
     }
 
-    public function scopeMisconfiguredDiscord($query)
+    public function scopeMisconfiguredDiscord(Builder $query): void
     {
         $query->whereIn('last_voice_status', [
             DiscordStatus::NEVER_CONNECTED,
@@ -287,19 +284,16 @@ class Member extends Model
         return $this->rank === $rank;
     }
 
-    public function getUrlParams()
+    public function getUrlParams(): array
     {
         return [$this->clan_id, $this->rank->getAbbreviation() . '-' . $this->name];
     }
 
-    public function memberRequests()
+    public function memberRequests(): HasMany
     {
         return $this->hasMany(MemberRequest::class, 'requester_id');
     }
 
-    /**
-     * Formats member data for a Discord command response.
-     */
     public function botResponse(): array
     {
         $division = ($this->division)
