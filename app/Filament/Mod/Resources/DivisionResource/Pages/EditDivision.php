@@ -86,7 +86,7 @@ class EditDivision extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
-        $protectedSettings = ['officer_channel', 'member_channel'];
+        $protectedSettings = ['officer_channel', 'member_channel', 'dns_subdomain'];
 
         if (isset($data['settings'])) {
             $existingSettings = $record->getRawOriginal('settings');
