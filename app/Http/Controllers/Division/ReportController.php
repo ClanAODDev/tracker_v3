@@ -6,31 +6,25 @@ use App\Enums\ActivityType;
 use App\Http\Controllers\Controller;
 use App\Models\Activity;
 use App\Models\Division;
+use App\Models\Member;
 use App\Models\RankAction;
 use App\Models\User;
 use App\Repositories\DivisionRepository;
 use App\Repositories\MemberRepository;
-use DB;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Throwable;
 
 #[Middleware('auth')]
 class ReportController extends Controller
 {
-    public function __construct(DivisionRepository $division)
-    {
-        $this->division = $division;
-    }
+    public function __construct(private DivisionRepository $division) {}
 
-    /**
-     * @return Factory|View
-     */
-    public function retentionReport(Division $division)
+    public function retentionReport(Division $division): View
     {
         [$start, $end, $range] = $this->parseDateRange(
             now()->subMonthsNoOverflow(6)->startOfMonth(),
@@ -138,7 +132,7 @@ class ReportController extends Controller
         ));
     }
 
-    public function voiceReport(Division $division)
+    public function voiceReport(Division $division): View
     {
         $discordIssues = $division->members()
             ->misconfiguredDiscord()
@@ -164,10 +158,7 @@ class ReportController extends Controller
         ));
     }
 
-    /**
-     * @return Factory|View
-     */
-    public function censusReport(Division $division)
+    public function censusReport(Division $division): View
     {
         $censuses = $division->census
             ->sortByDesc('created_at')
@@ -237,9 +228,9 @@ class ReportController extends Controller
         Request $request,
         MemberRepository $repository,
         Division $division,
-        $month = null,
-        $year = null
-    ) {
+        ?int $month = null,
+        ?int $year = null
+    ): View {
         if ($period = $request->query('period')) {
             [$year, $month] = explode('-', $period);
             $year           = (int) $year;
@@ -290,7 +281,7 @@ class ReportController extends Controller
         ]);
     }
 
-    private function promotionPeriodsFromActions($division)
+    private function promotionPeriodsFromActions(Division $division)
     {
         $base = RankAction::query()
             ->whereNotNull('approved_at')
@@ -305,20 +296,15 @@ class ReportController extends Controller
             ->sortByDesc(fn ($r) => sprintf('%04d-%02d', $r['y'], $r['m']))
             ->values();
 
-        return $rows->map(function ($r) {
-            $y = is_array($r) ? $r['y'] : (int) $r->y;
-            $m = is_array($r) ? $r['m'] : (int) $r->m;
-
-            return [
-                'year'  => $y,
-                'month' => $m,
-                'label' => \Carbon::createFromDate($y, $m, 1)->format('F Y'),
-                'key'   => sprintf('%04d-%02d', $y, $m),
-            ];
-        })->values();
+        return $rows->map(fn ($r) => [
+            'year'  => $r['y'],
+            'month' => $r['m'],
+            'label' => Carbon::createFromDate($r['y'], $r['m'], 1)->format('F Y'),
+            'key'   => sprintf('%04d-%02d', $r['y'], $r['m']),
+        ])->values();
     }
 
-    private function getDivisionPromotions($division, $month, $year): Collection
+    private function getDivisionPromotions(Division $division, ?int $month, ?int $year): Collection
     {
         [$start, $end] = $this->resolveMonthWindow($month, $year);
 
@@ -332,7 +318,7 @@ class ReportController extends Controller
             ->get();
     }
 
-    public function transferReport(Division $division)
+    public function transferReport(Division $division): View
     {
         [$start, $end, $range] = $this->parseDateRange();
 
@@ -340,7 +326,7 @@ class ReportController extends Controller
             DB::table('activities as a')
                 ->leftJoin('divisions as d', 'd.id', '=', 'a.division_id')
                 ->join('members as m', 'm.id', '=', 'a.subject_id')
-                ->where('a.subject_type', 'App\\Models\\Member')
+                ->where('a.subject_type', Member::class)
                 ->where('a.name', ActivityType::TRANSFERRED->value)
                 ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(a.properties, '$.to_division')) = ?", [$division->name])
                 ->where('m.division_id', $division->id)
@@ -355,7 +341,7 @@ class ReportController extends Controller
         $recruitedCount = $this->applyDateRange(
             DB::table('activities as a')
                 ->join('members as m', 'm.id', '=', 'a.subject_id')
-                ->where('a.subject_type', 'App\\Models\\Member')
+                ->where('a.subject_type', Member::class)
                 ->where('a.name', ActivityType::RECRUITED->value)
                 ->where('a.division_id', $division->id)
                 ->where('m.division_id', $division->id)
@@ -426,11 +412,11 @@ class ReportController extends Controller
         return $query;
     }
 
-    private function resolveMonthWindow($month, $year): array
+    private function resolveMonthWindow(?int $month, ?int $year): array
     {
         if ($month && $year) {
             try {
-                $start = \ctype_digit((string) $month)
+                $start = ctype_digit((string) $month)
                     ? Carbon::createFromDate((int) $year, (int) $month, 1)->startOfMonth()
                     : Carbon::parse("first day of {$month} {$year}")->startOfDay()->startOfMonth();
             } catch (Throwable $e) {
