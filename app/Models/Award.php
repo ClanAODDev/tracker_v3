@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -21,46 +23,44 @@ class Award extends Model
         'repeatable'    => 'boolean',
     ];
 
-    protected static function boot()
+    protected static function booted(): void
     {
-        parent::boot();
-
         static::deleting(function (self $award) {
-            $award->recipients->each->delete();
+            $award->recipients()->delete();
         });
     }
 
-    public function recipients()
+    public function recipients(): HasMany
     {
-        return $this->hasMany(MemberAward::class, 'award_id', 'id')
-            ->where('approved', '=', true)
+        return $this->hasMany(MemberAward::class, 'award_id')
+            ->where('approved', true)
             ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
             ->with('member');
     }
 
-    public function unapprovedRecipients()
+    public function unapprovedRecipients(): HasMany
     {
-        return $this->hasMany(MemberAward::class, 'award_id', 'id')
-            ->where('approved', '=', false)
+        return $this->hasMany(MemberAward::class, 'award_id')
+            ->where('approved', false)
             ->with('member');
     }
 
-    public function scopeActive($query)
+    public function scopeActive($query): void
     {
-        return $query->where('active', true);
+        $query->where('active', true);
     }
 
-    public function division()
+    public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class)->select('id', 'name', 'slug', 'active', 'logo');
     }
 
-    public function prerequisite()
+    public function prerequisite(): BelongsTo
     {
         return $this->belongsTo(Award::class, 'prerequisite_award_id');
     }
 
-    public function dependents()
+    public function dependents(): HasMany
     {
         return $this->hasMany(Award::class, 'prerequisite_award_id');
     }

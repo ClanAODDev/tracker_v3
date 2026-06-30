@@ -4,13 +4,12 @@ namespace App\Models;
 
 use App\Enums\ActivityType;
 use App\Enums\Position;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Kirschbaum\Commentions\Contracts\Commentable;
 use Kirschbaum\Commentions\HasComments;
-
-use function now;
 
 class Transfer extends Model implements Commentable
 {
@@ -19,18 +18,12 @@ class Transfer extends Model implements Commentable
 
     public $guarded = [];
 
-    /**
-     * @return BelongsTo
-     */
-    public function member()
+    public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function division()
+    public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
     }
@@ -40,14 +33,14 @@ class Transfer extends Model implements Commentable
         return $this->belongsTo(User::class, 'approved_by');
     }
 
+    public function scopePending(Builder $query): void
+    {
+        $query->whereNull('approved_at');
+    }
+
     public function canApprove(): bool
     {
         return auth()->user()->can('approve', $this);
-    }
-
-    public function scopePending($query)
-    {
-        return $query->whereNull('approved_at');
     }
 
     public function approve(): void
@@ -71,7 +64,7 @@ class Transfer extends Model implements Commentable
         $this->removeLeaderIfNeeded($this->member->position, $this->member->platoon, Position::PLATOON_LEADER);
     }
 
-    protected function removeLeaderIfNeeded($position, $unit, $leaderPosition): void
+    protected function removeLeaderIfNeeded(Position $position, $unit, Position $leaderPosition): void
     {
         if ($position->value === $leaderPosition->value && $unit && $unit->leader_id === $this->member->clan_id) {
             $unit->update(['leader_id' => 0]);

@@ -5,11 +5,12 @@ namespace App\Models;
 use App\Activities\RecordsActivity;
 use App\Enums\ActivityType;
 use App\Enums\Position;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 class Platoon extends Model
@@ -38,53 +39,34 @@ class Platoon extends Model
         static::deleted(fn (Platoon $platoon) => $platoon->recordActivity(ActivityType::DELETED_PLATOON));
     }
 
-    /**
-     * relationship - platoon belongs to a division.
-     */
-    public function division()
+    public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
     }
 
-    /**
-     * relationship - platoon has many squads.
-     */
-    public function squads()
+    public function squads(): HasMany
     {
         return $this->hasMany(Squad::class);
     }
 
-    /**
-     * Leader of a platoon.
-     *
-     * @return BelongsTo
-     */
-    public function leader()
+    public function leader(): BelongsTo
     {
         return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
     }
 
-    /**
-     * Only return members who are squad members.
-     *
-     * @return Collection
-     */
-    public function unassigned()
-    {
-        return $this->members()
-            ->whereSquadId(0)
-            ->whereNotIn('position', [Position::PLATOON_LEADER]);
-    }
-
-    /**
-     * relationship - platoon has many members.
-     */
-    public function members()
+    public function members(): HasMany
     {
         return $this->hasMany(Member::class);
     }
 
-    public function getLogoPath()
+    public function unassigned(): Builder
+    {
+        return $this->members()
+            ->where('squad_id', 0)
+            ->whereNotIn('position', [Position::PLATOON_LEADER]);
+    }
+
+    public function getLogoPath(): string
     {
         if ($this->logo) {
             if (str_starts_with($this->logo, 'http')) {
