@@ -22,7 +22,7 @@ class ClanController extends ApiController
         return $this->respond(['data' => $data]);
     }
 
-    public function streamEvents()
+    public function streamEvents(): JsonResponse
     {
         $client = new Google_Client;
         $client->setApplicationName('AOD Stream Calendar');
@@ -34,7 +34,6 @@ class ClanController extends ApiController
         ]);
         $events = [];
         while (true) {
-            /** @var Google_Service_Calendar_Event $event */
             foreach ($eventStream->getItems() as $event) {
                 if ($event->summary || $event->description) {
                     $start    = Carbon::parse($event->start->dateTime ?? $event->start->date);
@@ -48,8 +47,7 @@ class ClanController extends ApiController
             }
             $pageToken = $eventStream->getNextPageToken();
             if ($pageToken) {
-                $optParams = ['pageToken' => $pageToken];
-                $events    = $service->events->listEvents('primary', $optParams);
+                $eventStream = $service->events->listEvents(config('aod.stream_calendar'), ['pageToken' => $pageToken]);
             } else {
                 break;
             }
