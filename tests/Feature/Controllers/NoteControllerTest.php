@@ -474,4 +474,69 @@ class NoteControllerTest extends TestCase
             'division_tag_id' => $globalTag->id,
         ]);
     }
+
+    #[Test]
+    public function edit_returns_view_for_authorized_user()
+    {
+        $srLdr    = $this->createSeniorLeader();
+        $division = $srLdr->member->division;
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $note = Note::factory()->create(['member_id' => $member->id, 'author_id' => $srLdr->id]);
+
+        $this->actingAs($srLdr)
+            ->get(route('editNote', [$member->clan_id, $note->id]))
+            ->assertOk()
+            ->assertViewIs('member.edit-note');
+    }
+
+    #[Test]
+    public function edit_aborts_404_when_member_has_no_division()
+    {
+        $srLdr  = $this->createSeniorLeader();
+        $member = $this->createMember(['division_id' => 0]);
+
+        $note = Note::factory()->create(['member_id' => $member->id, 'author_id' => $srLdr->id]);
+
+        $this->actingAs($srLdr)
+            ->get(route('editNote', [$member->clan_id, $note->id]))
+            ->assertNotFound();
+    }
+
+    #[Test]
+    public function update_saves_note_changes()
+    {
+        $srLdr    = $this->createSeniorLeader();
+        $division = $srLdr->member->division;
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $note = Note::factory()->create(['member_id' => $member->id, 'author_id' => $srLdr->id]);
+
+        $this->actingAs($srLdr)
+            ->patch(route('updateNote', [$member->clan_id, $note->id]), [
+                'body' => 'Updated note body',
+                'type' => 'positive',
+            ])
+            ->assertRedirect(route('member', $member->getUrlParams()));
+
+        $this->assertDatabaseHas('notes', [
+            'id'   => $note->id,
+            'body' => 'Updated note body',
+            'type' => 'positive',
+        ]);
+    }
+
+    #[Test]
+    public function update_requires_body()
+    {
+        $srLdr    = $this->createSeniorLeader();
+        $division = $srLdr->member->division;
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $note = Note::factory()->create(['member_id' => $member->id, 'author_id' => $srLdr->id]);
+
+        $this->actingAs($srLdr)
+            ->patch(route('updateNote', [$member->clan_id, $note->id]), ['body' => ''])
+            ->assertSessionHasErrors('body');
+    }
 }
