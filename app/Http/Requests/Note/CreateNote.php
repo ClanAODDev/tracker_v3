@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Note;
 
 use App\Models\DivisionTag;
 use App\Models\Note;
@@ -9,12 +9,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class CreateNote extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'body'            => 'required',
@@ -23,7 +23,7 @@ class CreateNote extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'body.required'           => 'You must provide content for your note',
@@ -31,7 +31,7 @@ class CreateNote extends FormRequest
         ];
     }
 
-    public function persist()
+    public function persist(): void
     {
         $member = $this->route('member');
         $user   = auth()->user();
@@ -46,8 +46,7 @@ class CreateNote extends FormRequest
             $tag    = $policy->getAssignableTags($user, $member)->find($this->input('tag_id'));
 
             if ($tag) {
-                $assignerId = $user->member?->id;
-                $member->tags()->syncWithoutDetaching([$tag->id => ['assigned_by' => $assignerId]]);
+                $member->tags()->syncWithoutDetaching([$tag->id => ['assigned_by' => $user->member?->id]]);
             }
         }
     }

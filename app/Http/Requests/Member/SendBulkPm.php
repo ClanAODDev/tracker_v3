@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Member;
 
 use App\Models\Member;
 use Illuminate\Foundation\Http\FormRequest;
@@ -8,7 +8,7 @@ use Spatie\ValidationRules\Rules\Delimited;
 
 class SendBulkPm extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return $this->user()->can('recruit', Member::class);
     }

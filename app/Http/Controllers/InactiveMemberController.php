@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ActivityType;
-use App\Http\Requests\DeleteMember;
+use App\Http\Requests\Member\DeleteMember;
 use App\Models\Activity;
 use App\Models\Division;
 use App\Models\Member;

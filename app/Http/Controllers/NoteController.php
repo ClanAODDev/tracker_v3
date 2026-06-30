@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateNote;
+use App\Http\Requests\Note\CreateNote;
 use App\Models\Leave;
 use App\Models\Member;
 use App\Models\Note;

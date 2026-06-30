@@ -7,7 +7,7 @@ use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\MemberTransferController;
 use App\Http\Controllers\TrainingController;
-use App\Http\Requests\SyncDiscordAvatar;
+use App\Http\Requests\Member\SyncDiscordAvatar;
 use App\Models\Division;
 use App\Models\Feedback;
 use Illuminate\Http\Request;

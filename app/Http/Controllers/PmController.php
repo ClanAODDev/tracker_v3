@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SendBulkPm;
+use App\Http\Requests\Member\SendBulkPm;
 use App\Models\Member;
 
 class PmController extends Controller

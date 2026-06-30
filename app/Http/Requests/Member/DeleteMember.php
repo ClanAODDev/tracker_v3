@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Member;
 
 use App\Jobs\RemoveClanMember;
 use App\Models\Member;
@@ -12,22 +12,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class DeleteMember extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return $this->user()->can('separate', [$this->route('member')]);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
             'removal_reason' => 'required',
@@ -56,10 +46,7 @@ class DeleteMember extends FormRequest
         });
     }
 
-    /**
-     * Persist the form.
-     */
-    public function persist()
+    public function persist(): void
     {
         /** @var Member $member */
         $member = $this->route('member');
@@ -80,7 +67,7 @@ class DeleteMember extends FormRequest
         $member->reset();
     }
 
-    private function createRemovalNote($member)
+    private function createRemovalNote(Member $member): void
     {
         Note::create([
             'type'      => 'misc',
@@ -90,12 +77,10 @@ class DeleteMember extends FormRequest
         ]);
     }
 
-    private function notifyPartTimeDivisions(Member $member)
+    private function notifyPartTimeDivisions(Member $member): void
     {
-        $divisions = $member->partTimeDivisions()->active()->get();
-
-        foreach ($divisions as $division) {
-            $division->notify(new NotifyDivisionPartTimeMemberRemoved($member, $this->removal_reason));
-        }
+        $member->partTimeDivisions()->active()->each(
+            fn ($division) => $division->notify(new NotifyDivisionPartTimeMemberRemoved($member, $this->removal_reason))
+        );
     }
 }
