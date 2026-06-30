@@ -6,7 +6,6 @@ use App\Services\AODForumService;
 use Carbon\Carbon;
 use Google_Client;
 use Google_Service_Calendar;
-use Google_Service_Calendar_Event;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 
