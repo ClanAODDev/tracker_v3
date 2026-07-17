@@ -13,7 +13,7 @@ readonly class DivisionShowData
         public CensusChartData $chartData,
         public Collection $platoons,
         public Collection $divisionLeaders,
-        public Collection $generalSergeants,
+
         public Collection $divisionAnniversaries,
         public ?object $previousCensus,
         public PendingActionsData $pendingActions,
@@ -29,7 +29,7 @@ readonly class DivisionShowData
             'chartData'               => $this->chartData->toArray(),
             'platoons'                => $this->platoons,
             'divisionLeaders'         => $this->divisionLeaders,
-            'generalSergeants'        => $this->generalSergeants,
+
             'divisionAnniversaries'   => $this->divisionAnniversaries,
             'previousCensus'          => $this->previousCensus,
             'pendingActions'          => $this->pendingActions,

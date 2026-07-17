@@ -3,9 +3,11 @@
 namespace App\Data;
 
 use App\Models\Division;
+use App\Models\Member;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 readonly class DivisionLeaderboardData
@@ -51,10 +53,12 @@ readonly class DivisionLeaderboardData
                 }])
                 ->get();
 
+            $recruitTrends = self::getMonthlyRecruitTrends($divisions->pluck('id'));
+
             return [
                 'voiceLeaders'   => self::calculateVoiceLeaders($divisions),
                 'growthLeaders'  => self::calculateGrowthLeaders($divisions),
-                'recruitLeaders' => self::calculateRecruitLeaders($divisions),
+                'recruitLeaders' => self::calculateRecruitLeaders($divisions, $recruitTrends),
             ];
         });
     }
@@ -132,10 +136,13 @@ readonly class DivisionLeaderboardData
             ->values();
     }
 
-    private static function calculateRecruitLeaders(Collection $divisions): Collection
+    private static function calculateRecruitLeaders(Collection $divisions, Collection $recruitTrends): Collection
     {
         return $divisions
-            ->map(function (Division $division) {
+            ->map(function (Division $division) use ($recruitTrends) {
+                $trend    = $recruitTrends->get($division->id, []);
+                $previous = count($trend) >= 2 ? $trend[count($trend) - 2] : 0;
+
                 return [
                     'id'        => $division->id,
                     'name'      => $division->name,
@@ -143,10 +150,36 @@ readonly class DivisionLeaderboardData
                     'logo'      => self::getDivisionLogo($division),
                     'value'     => $division->recruits_count,
                     'formatted' => $division->recruits_count,
+                    'trend'     => $trend,
+                    'trending'  => $division->recruits_count >= $previous ? 'up' : 'down',
                 ];
             })
             ->sortByDesc('value')
             ->values();
+    }
+
+    private static function getMonthlyRecruitTrends(Collection $divisionIds): Collection
+    {
+        $months = 6;
+
+        return Member::query()
+            ->whereIn('division_id', $divisionIds)
+            ->where('join_date', '>=', now()->subMonths($months)->startOfMonth())
+            ->select('division_id', DB::raw("DATE_FORMAT(join_date, '%Y-%m') as month"), DB::raw('COUNT(*) as total'))
+            ->groupBy('division_id', 'month')
+            ->orderBy('month')
+            ->get()
+            ->groupBy('division_id')
+            ->map(function ($rows) use ($months) {
+                $lookup = $rows->pluck('total', 'month');
+                $trend  = [];
+                for ($i = $months - 1; $i >= 0; $i--) {
+                    $key     = now()->subMonths($i)->format('Y-m');
+                    $trend[] = (int) ($lookup[$key] ?? 0);
+                }
+
+                return $trend;
+            });
     }
 
     private static function getDivisionLogo(Division $division): ?string

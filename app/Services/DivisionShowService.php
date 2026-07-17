@@ -28,7 +28,7 @@ class DivisionShowService
             chartData: CensusChartData::fromDivision($division),
             platoons: $this->getPlatoons($division, $stats->activityThresholdDays),
             divisionLeaders: $division->leaders()->get(),
-            generalSergeants: $division->generalSergeants()->get(),
+
             divisionAnniversaries: $this->divisionRepository->getDivisionAnniversaries($division),
             previousCensus: $this->divisionRepository->censusCounts($division)->first(),
             pendingActions: PendingActionsData::forDivision($division, auth()->user()),

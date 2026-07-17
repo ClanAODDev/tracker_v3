@@ -3,8 +3,7 @@
 namespace Tests\Unit\Services;
 
 use App\Data\DivisionShowData;
-use App\Enums\Position;
-use App\Enums\Rank;
+
 use App\Models\Census;
 use App\Services\DivisionShowService;
 use Carbon\Carbon;
@@ -163,22 +162,6 @@ class DivisionShowServiceTest extends TestCase
         $this->assertCount(2, $result->divisionLeaders);
     }
 
-    #[Test]
-    public function get_show_data_includes_general_sergeants()
-    {
-        $division  = $this->createActiveDivision();
-        $clanAdmin = $this->createMember([
-            'division_id' => $division->id,
-            'rank'        => Rank::SERGEANT,
-            'position'    => Position::CLAN_ADMIN,
-        ]);
-        $user = $this->createMemberWithUser(['division_id' => $division->id]);
-        $this->actingAs($user);
-
-        $result = $this->service->getShowData($division);
-
-        $this->assertCount(1, $result->generalSergeants);
-    }
 
     #[Test]
     public function get_show_data_includes_pending_actions()

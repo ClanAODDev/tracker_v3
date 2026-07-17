@@ -31,6 +31,9 @@
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
+                        @if(count($division['trend']) > 1)
+                            <x-sparkline :data="$division['trend']" :trend="$division['trending']" />
+                        @endif
                         <span class="leaderboard-value">{{ $division['formatted'] }}</span>
                     </a>
                 @endforeach
@@ -88,6 +91,9 @@
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
+                        @if(count($division['trend']) > 1)
+                            <x-sparkline :data="$division['trend']" :trend="$division['trending']" />
+                        @endif
                         <span class="leaderboard-value">{{ $division['formatted'] }}</span>
                     </a>
                 @endforeach

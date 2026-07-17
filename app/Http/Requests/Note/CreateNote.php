@@ -6,6 +6,7 @@ use App\Models\DivisionTag;
 use App\Models\Note;
 use App\Policies\DivisionTagPolicy;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateNote extends FormRequest
 {
@@ -18,6 +19,7 @@ class CreateNote extends FormRequest
     {
         return [
             'body'            => 'required',
+            'type'            => ['required', Rule::in(array_keys(Note::allNoteTypes()))],
             'forum_thread_id' => 'nullable|numeric',
             'tag_id'          => 'nullable|integer|exists:division_tags,id',
         ];

@@ -1221,6 +1221,24 @@ body.no-animations {
     font-size: 12px;
 }
 
+.division-card-stats {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.division-card-stat {
+    color: var(--color-muted);
+    font-size: 11px;
+    white-space: nowrap;
+
+    i {
+        margin-right: 3px;
+        font-size: 10px;
+    }
+}
+
 .pending-actions {
     display: flex;
     flex-wrap: wrap;
@@ -2153,6 +2171,10 @@ body.no-animations {
 
     .divisions-grid {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    .division-card-stats {
+        display: none;
     }
 
     .notice {

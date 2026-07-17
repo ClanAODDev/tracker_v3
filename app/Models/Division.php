@@ -224,12 +224,6 @@ class Division extends Model
         return $this->members()->where('last_voice_activity', '>=', now()->subDays($days)->toDateString());
     }
 
-    public function generalSergeants(): HasMany
-    {
-        return $this->members()->whereIn('position', [
-            Position::CLAN_ADMIN,
-        ]);
-    }
 
     public function handle(): BelongsTo
     {
