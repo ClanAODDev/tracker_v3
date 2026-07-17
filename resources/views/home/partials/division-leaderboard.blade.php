@@ -29,6 +29,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
+                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)
@@ -45,6 +46,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
+                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)
@@ -61,6 +63,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
+                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)
@@ -89,6 +92,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
+                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)
@@ -112,6 +116,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
+                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)
@@ -135,6 +140,7 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
+                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
                         <span class="leaderboard-name">{{ $division['name'] }}</span>
                         @if(count($division['trend']) > 1)

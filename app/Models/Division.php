@@ -152,6 +152,11 @@ class Division extends Model
         return $this->hasOne(Census::class)->latestOfMany();
     }
 
+    public function leaderboardSnapshots(): HasMany
+    {
+        return $this->hasMany(LeaderboardSnapshot::class);
+    }
+
     public function squads(): HasManyThrough
     {
         return $this->hasManyThrough(Squad::class, Platoon::class);
