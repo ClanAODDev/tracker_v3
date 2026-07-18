@@ -78,8 +78,8 @@
                     <i class="fa fa-user-plus text-success"></i>
                 </div>
                 <div class="stat-content">
-                    <span class="stat-value">{{ $stats->recruitsLast30Days }}</span>
-                    <span class="stat-label">Recruits <small class="text-muted">(30 days)</small></span>
+                    <span class="stat-value">{{ $stats->recruitsThisMonth }}</span>
+                    <span class="stat-label">Recruits <small class="text-muted">(this month)</small></span>
                 </div>
             </div>
         </div>

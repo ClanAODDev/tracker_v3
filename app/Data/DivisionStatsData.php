@@ -10,7 +10,7 @@ readonly class DivisionStatsData
         public int $memberCount,
         public int $voiceActiveCount,
         public int $voiceRate,
-        public int $recruitsLast30Days,
+        public int $recruitsThisMonth,
         public int $activityThresholdDays,
     ) {}
 
@@ -21,7 +21,7 @@ readonly class DivisionStatsData
         $division->loadCount([
             'members',
             'members as voice_active_count'    => fn ($q) => $q->where('last_voice_activity', '>=', now()->subDays($activityThresholdDays)->toDateString()),
-            'members as recruits_last_30_days' => fn ($q) => $q->where('join_date', '>=', now()->subDays(30)->toDateString()),
+            'members as recruits_this_month' => fn ($q) => $q->where('join_date', '>=', now()->startOfMonth()->toDateString()),
         ]);
 
         $memberCount      = (int) $division->members_count;
@@ -33,7 +33,7 @@ readonly class DivisionStatsData
             voiceRate: $memberCount > 0
                 ? (int) round(($voiceActiveCount / $memberCount) * 100)
                 : 0,
-            recruitsLast30Days: (int) $division->recruits_last_30_days,
+            recruitsThisMonth: (int) $division->recruits_this_month,
             activityThresholdDays: $activityThresholdDays,
         );
     }
