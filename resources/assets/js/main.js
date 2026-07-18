@@ -294,7 +294,7 @@ var Tracker = Tracker || {};
             if (!$modal.length) return;
 
             let timer = null;
-            const delay = 500;
+            const delay = 300;
 
             const openSearch = () => {
                 $modal.addClass('active');
@@ -558,7 +558,7 @@ var Tracker = Tracker || {};
             const $loader = $('.desktop-search-loader');
             const $clearBtn = $('#searchclear');
             let timer = null;
-            const delay = 1000;
+            const delay = 300;
 
             const triggerSearch = () => {
                 $loader.addClass('active');

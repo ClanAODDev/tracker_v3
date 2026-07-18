@@ -26,8 +26,11 @@ class MemberRepository
     {
         $escaped = $this->escapeLike($query);
 
-        return Member::where('name', 'LIKE', "%{$escaped}%")
-            ->orWhere('discord', 'LIKE', "%{$escaped}%")
+        $byName = Member::where('name', 'LIKE', "%{$escaped}%")
+            ->orWhere('discord', 'LIKE', "%{$escaped}%");
+
+        return Member::withWhereHas('handles', fn ($q) => $q->where('value', 'LIKE', "%{$escaped}%"))
+            ->union($byName)
             ->take($limit)
             ->get()
             ->map(fn ($member) => [
