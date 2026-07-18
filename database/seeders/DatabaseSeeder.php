@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             TicketTypeSeeder::class,
+            ClanSnapshotSeeder::class,
+            LeaderboardSnapshotSeeder::class,
         ]);
     }
 }
