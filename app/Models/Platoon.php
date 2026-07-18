@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Activities\RecordsActivity;
 use App\Enums\ActivityType;
 use App\Enums\Position;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -59,7 +58,7 @@ class Platoon extends Model
         return $this->hasMany(Member::class);
     }
 
-    public function unassigned(): Builder
+    public function unassigned(): HasMany
     {
         return $this->members()
             ->where('squad_id', 0)
