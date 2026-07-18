@@ -1,4 +1,4 @@
-<?php
+const REPROCESS_ICON = 'heroicon-o-arrow-path';const REMOVE_HOLD_ICON = 'heroicon-o-play';const HOLD_ICON = 'heroicon-o-pause-circle';const APPROVE_ICON = 'heroicon-o-check-circle';const MAX_DISCORD_USERNAME_LENGTH = 191;const DEFAULT_ROWS_FOR_TEXTAREA = 5;const MIN_DISCORD_ID_LENGTH = 17;const MAX_DISCORD_ID_LENGTH = 19;<?php
 
 namespace App\Filament\Mod\Resources\MemberRequestResource\Pages;
 
@@ -38,7 +38,7 @@ class EditMemberRequest extends EditRecord
                 })
                 ->required(fn () => ! $this->getRecord()->member->discord_id
                     && ! $this->getRecord()->member->user?->discord_id)
-                ->regex('/^\d{17,19}$/')
+                ->regex('/^\d{self::MIN_DISCORD_ID_LENGTH,self::MAX_DISCORD_ID_LENGTH}$/')
                 ->maxLength(19),
             TextInput::make('discord')
                 ->label('Discord Username')
@@ -49,7 +49,7 @@ class EditMemberRequest extends EditRecord
                     return $member->discord
                         ?? $member->user?->discord_username;
                 })
-                ->maxLength(191),
+                ->maxLength(self::MAX_DISCORD_USERNAME_LENGTH),
         ];
     }
 
@@ -61,11 +61,11 @@ class EditMemberRequest extends EditRecord
         return [
             Action::make('approve')
                 ->label('Approve')
-                ->icon('heroicon-o-check-circle')
+                ->icon('self::APPROVE_ICON')
                 ->visible(function (): bool {
                     $rec        = $this->getRecord();
                     $onHold     = $rec->newQuery()->onHold()->whereKey($rec)->exists();
-                    $isApproved = (bool) ($rec->approved_at && is_null($rec->processed_at));
+                    $isApproved = ($rec->approved_at !== null && $rec->processed_at === null);
 
                     return ! $onHold && ! $isApproved;
                 })
@@ -110,7 +110,7 @@ class EditMemberRequest extends EditRecord
             Action::make('placeOnHold')
                 ->label('Place on Hold')
                 ->color('warning')
-                ->icon('heroicon-o-pause-circle')
+                ->icon('self::HOLD_ICON')
                 ->visible(function (): bool {
                     $rec        = $this->getRecord();
                     $onHold     = $rec->newQuery()->onHold()->whereKey($rec)->exists();
@@ -123,7 +123,7 @@ class EditMemberRequest extends EditRecord
                         ->label('Reason for placing on hold')
                         ->helperText('Division officers will be notified of the hold status.')
                         ->required()
-                        ->rows(5),
+                        ->rows(self::DEFAULT_ROWS_FOR_TEXTAREA),
                 ])
                 ->action(function (array $data): void {
                     $rec  = $this->getRecord();
@@ -143,7 +143,7 @@ class EditMemberRequest extends EditRecord
 
             Action::make('removeHold')
                 ->label('Remove Hold')
-                ->icon('heroicon-o-play')
+                ->icon('self::REMOVE_HOLD_ICON')
                 ->visible(function (): bool {
                     $rec = $this->getRecord();
 
@@ -167,7 +167,7 @@ class EditMemberRequest extends EditRecord
 
             Action::make('reprocess')
                 ->label('Re-Process')
-                ->icon('heroicon-o-arrow-path')
+                ->icon('self::REPROCESS_ICON')
                 ->color('info')
                 ->visible(function (): bool {
                     return $this->getRecord()->isApproved();
