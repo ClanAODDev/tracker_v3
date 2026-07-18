@@ -24,7 +24,7 @@ class NoteController extends Controller
 
     public function edit(Member $member, Note $note): View
     {
-        $this->authorize('separate', $member);
+        $this->authorize('edit', $note);
 
         $division = $member->division;
 
@@ -37,7 +37,7 @@ class NoteController extends Controller
 
     public function update(Request $request, Member $member, Note $note): RedirectResponse
     {
-        $this->authorize('separate', $member);
+        $this->authorize('edit', $note);
 
         $request->validate(
             ['body' => 'required', 'forum_thread_id' => 'nullable|numeric'],

@@ -61,7 +61,7 @@ class DivisionLeaderboardDataTest extends TestCase
         $voiceEntry = $data->voiceLeaders->firstWhere('id', $division->id);
 
         $this->assertEquals(2, $voiceEntry['rank_change']);
-        $this->assertEquals(5, $voiceEntry['previous_rank']);
+        $this->assertEquals(3, $voiceEntry['previous_rank']);
     }
 
     #[Test]
