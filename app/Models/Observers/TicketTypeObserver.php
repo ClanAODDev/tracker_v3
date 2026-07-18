@@ -14,6 +14,6 @@ class TicketTypeObserver
 
     public function deleting(TicketType $ticketType)
     {
-        $ticketType->ticket()->delete();
+        $ticketType->tickets()->delete();
     }
 }

@@ -8,17 +8,20 @@ use App\Exceptions\FactoryMissingException;
 use App\Models\Division;
 use App\Models\Member;
 use App\Repositories\ClanRepository;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 #[Middleware('auth')]
 class ReportsController extends Controller
 {
     public function __construct(private ClanRepository $clan) {}
 
-    public function clanCensusReport(Request $request)
+    public function clanCensusReport(Request $request): View
     {
         $defaultStart = now()->subWeeks(52)->format('Y-m-d');
         $defaultEnd   = now()->format('Y-m-d');
@@ -59,7 +62,7 @@ class ReportsController extends Controller
             ->orderBy('name')
             ->withoutFloaters()
             ->with(['census' => fn ($q) => $q->whereBetween(
-                \DB::raw('DATE(created_at)'),
+                DB::raw('DATE(created_at)'),
                 [$start, $end]
             )->orderBy('created_at')])
             ->get()
@@ -101,7 +104,7 @@ class ReportsController extends Controller
         ));
     }
 
-    public function outstandingMembersReport()
+    public function outstandingMembersReport(): View
     {
         $clanMax     = config('aod.maximum_days_inactive');
         $clanMaxDate = now()->subDays($clanMax)->format('Y-m-d');
@@ -139,10 +142,7 @@ class ReportsController extends Controller
         return view('reports.outstanding-members', compact('divisions', 'totals', 'clanMax'));
     }
 
-    /**
-     * Users with empty discord tag.
-     */
-    public function usersWithoutDiscordReport()
+    public function usersWithoutDiscordReport(): JsonResponse
     {
         $divisions = Division::active()->with('members')->get();
         $data      = [];
@@ -152,10 +152,10 @@ class ReportsController extends Controller
             }
         }
 
-        return $data;
+        return response()->json($data);
     }
 
-    public function divisionUsersWithAccess()
+    public function divisionUsersWithAccess(): void
     {
         foreach (Division::active()->get() as $division) {
             echo '---------- ' . $division->name . ' ---------- ' . PHP_EOL;
@@ -170,7 +170,7 @@ class ReportsController extends Controller
         }
     }
 
-    public function divisionTurnoverReport()
+    public function divisionTurnoverReport(): View
     {
         $divisions = Division::active()
             ->orderBy('name')
@@ -203,10 +203,7 @@ class ReportsController extends Controller
         return view('reports.division-turnover', compact('divisions', 'totals'));
     }
 
-    /**
-     * @return Factory|View
-     */
-    public function leadership()
+    public function leadership(): View
     {
         $divisions = Division::active()
             ->withoutFloaters()

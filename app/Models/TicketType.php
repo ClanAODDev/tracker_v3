@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Enums\Rank;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TicketType extends Model
 {
@@ -18,12 +20,12 @@ class TicketType extends Model
         'include_content_in_notification' => 'boolean',
     ];
 
-    public function ticket()
+    public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
     }
 
-    public function auto_assign_to()
+    public function auto_assign_to(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

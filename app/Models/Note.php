@@ -6,6 +6,7 @@ use App\Enums\ActivityType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Note extends Model
@@ -34,7 +35,7 @@ class Note extends Model
         });
     }
 
-    protected static $noteTypes = [
+    protected static array $noteTypes = [
         'misc'     => 'Misc',
         'negative' => 'Negative',
         'positive' => 'Positive',
@@ -47,10 +48,7 @@ class Note extends Model
         'type',
     ];
 
-    /**
-     * @return array
-     */
-    public static function allNoteTypes()
+    public static function allNoteTypes(): array
     {
         if (auth()->user()->isRole(['admin', 'sr_ldr'])) {
             static::$noteTypes['sr_ldr'] = 'Sr Leaders Only';
@@ -59,33 +57,22 @@ class Note extends Model
         return static::$noteTypes;
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function author()
+    public function author(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function member()
+    public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
     }
 
-    public function leave()
+    public function leave(): HasOne
     {
         return $this->hasOne(Leave::class);
     }
 
-    /**
-     * Check to see if note has been changed.
-     *
-     * @return bool
-     */
-    public function changed()
+    public function changed(): bool
     {
         return $this->updated_at !== $this->created_at;
     }

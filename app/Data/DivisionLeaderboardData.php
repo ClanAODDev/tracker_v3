@@ -3,9 +3,12 @@
 namespace App\Data;
 
 use App\Models\Division;
+use App\Models\LeaderboardSnapshot;
+use App\Models\Member;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 readonly class DivisionLeaderboardData
@@ -34,29 +37,75 @@ readonly class DivisionLeaderboardData
         );
     }
 
+    public static function calculate(): array
+    {
+        $divisions = Division::query()
+            ->active()
+            ->withoutFloaters()
+            ->withoutBR()
+            ->whereHas('members')
+            ->withCount('members')
+            ->withCount(['members as recruits_count' => function ($query) {
+                $query->where('join_date', '>=', now()->startOfMonth());
+            }])
+            ->with(['census' => function ($query) {
+                $query->orderBy('created_at', 'desc')->limit(8);
+            }])
+            ->get();
+
+        $recruitTrends = self::getMonthlyRecruitTrends($divisions->pluck('id'));
+
+        return [
+            'voiceLeaders'   => self::calculateVoiceLeaders($divisions),
+            'growthLeaders'  => self::calculateGrowthLeaders($divisions),
+            'recruitLeaders' => self::calculateRecruitLeaders($divisions, $recruitTrends),
+        ];
+    }
+
     private static function getCachedLeaderboards(): array
     {
         return Cache::remember(self::CACHE_KEY, self::CACHE_TTL, function () {
-            $divisions = Division::query()
-                ->active()
-                ->withoutFloaters()
-                ->withoutBR()
-                ->whereHas('members')
-                ->withCount('members')
-                ->withCount(['members as recruits_count' => function ($query) {
-                    $query->where('join_date', '>=', now()->startOfMonth());
-                }])
-                ->with(['census' => function ($query) {
-                    $query->orderBy('created_at', 'desc')->limit(8);
-                }])
-                ->get();
+            $data = self::calculate();
 
-            return [
-                'voiceLeaders'   => self::calculateVoiceLeaders($divisions),
-                'growthLeaders'  => self::calculateGrowthLeaders($divisions),
-                'recruitLeaders' => self::calculateRecruitLeaders($divisions),
-            ];
+            return self::enrichWithMovement($data);
         });
+    }
+
+    private static function enrichWithMovement(array $data): array
+    {
+        $latestDate = LeaderboardSnapshot::orderByDesc('snapshot_date')
+            ->value('snapshot_date');
+
+        if (! $latestDate) {
+            return $data;
+        }
+
+        $snapshots = LeaderboardSnapshot::where('snapshot_date', $latestDate)
+            ->get()
+            ->groupBy('category')
+            ->map(fn ($rows) => $rows->keyBy('division_id'));
+
+        $categoryMap = [
+            'voiceLeaders'   => 'voice',
+            'growthLeaders'  => 'growth',
+            'recruitLeaders' => 'recruits',
+        ];
+
+        foreach ($categoryMap as $key => $category) {
+            $categorySnapshots = $snapshots->get($category, collect());
+
+            $data[$key] = $data[$key]->values()->map(function ($entry, $index) use ($categorySnapshots) {
+                $snapshot    = $categorySnapshots->get($entry['id']);
+                $currentRank = $index + 1;
+
+                $entry['rank_change']   = $snapshot ? $snapshot->rank - $currentRank : 0;
+                $entry['previous_rank'] = $snapshot?->rank;
+
+                return $entry;
+            });
+        }
+
+        return $data;
     }
 
     public static function clearCache(): void
@@ -132,10 +181,13 @@ readonly class DivisionLeaderboardData
             ->values();
     }
 
-    private static function calculateRecruitLeaders(Collection $divisions): Collection
+    private static function calculateRecruitLeaders(Collection $divisions, Collection $recruitTrends): Collection
     {
         return $divisions
-            ->map(function (Division $division) {
+            ->map(function (Division $division) use ($recruitTrends) {
+                $trend    = $recruitTrends->get($division->id, []);
+                $previous = count($trend) >= 2 ? $trend[count($trend) - 2] : 0;
+
                 return [
                     'id'        => $division->id,
                     'name'      => $division->name,
@@ -143,10 +195,36 @@ readonly class DivisionLeaderboardData
                     'logo'      => self::getDivisionLogo($division),
                     'value'     => $division->recruits_count,
                     'formatted' => $division->recruits_count,
+                    'trend'     => $trend,
+                    'trending'  => $division->recruits_count >= $previous ? 'up' : 'down',
                 ];
             })
             ->sortByDesc('value')
             ->values();
+    }
+
+    private static function getMonthlyRecruitTrends(Collection $divisionIds): Collection
+    {
+        $months = 6;
+
+        return Member::query()
+            ->whereIn('division_id', $divisionIds)
+            ->where('join_date', '>=', now()->subMonths($months)->startOfMonth())
+            ->select('division_id', DB::raw("DATE_FORMAT(join_date, '%Y-%m') as month"), DB::raw('COUNT(*) as total'))
+            ->groupBy('division_id', 'month')
+            ->orderBy('month')
+            ->get()
+            ->groupBy('division_id')
+            ->map(function ($rows) use ($months) {
+                $lookup = $rows->pluck('total', 'month');
+                $trend  = [];
+                for ($i = $months - 1; $i >= 0; $i--) {
+                    $key     = now()->subMonths($i)->format('Y-m');
+                    $trend[] = (int) ($lookup[$key] ?? 0);
+                }
+
+                return $trend;
+            });
     }
 
     private static function getDivisionLogo(Division $division): ?string

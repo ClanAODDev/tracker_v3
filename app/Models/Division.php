@@ -152,6 +152,11 @@ class Division extends Model
         return $this->hasOne(Census::class)->latestOfMany();
     }
 
+    public function leaderboardSnapshots(): HasMany
+    {
+        return $this->hasMany(LeaderboardSnapshot::class);
+    }
+
     public function squads(): HasManyThrough
     {
         return $this->hasManyThrough(Squad::class, Platoon::class);
@@ -222,13 +227,6 @@ class Division extends Model
     public function membersActiveOnDiscordSinceDaysAgo(int $days): HasMany
     {
         return $this->members()->where('last_voice_activity', '>=', now()->subDays($days)->toDateString());
-    }
-
-    public function generalSergeants(): HasMany
-    {
-        return $this->members()->whereIn('position', [
-            Position::CLAN_ADMIN,
-        ]);
     }
 
     public function handle(): BelongsTo

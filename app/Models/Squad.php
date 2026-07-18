@@ -8,6 +8,8 @@ use App\Presenters\SquadPresenter;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Squad extends Model
@@ -29,20 +31,17 @@ class Squad extends Model
         static::deleted(fn (Squad $squad) => $squad->recordActivity(ActivityType::DELETED_SQUAD));
     }
 
-    public function present()
+    public function present(): SquadPresenter
     {
         return new SquadPresenter($this);
     }
 
-    /**
-     * relationship - squad belongs to a platoon.
-     */
-    public function platoon()
+    public function platoon(): BelongsTo
     {
         return $this->belongsTo(Platoon::class);
     }
 
-    public function division()
+    public function division(): HasOneThrough
     {
         return $this->hasOneThrough(
             Division::class,
@@ -54,33 +53,22 @@ class Squad extends Model
         );
     }
 
-    /**
-     * relationship - squad has many members.
-     */
-    public function members()
+    public function members(): HasMany
     {
         return $this->hasMany(Member::class)
             ->orderBy('rank', 'desc')
             ->orderBy('name');
     }
 
-    /**
-     * Assign the leader of a squad.
-     *
-     * @return Model
-     */
-    public function assignLeaderTo($member)
-    {
-        return $this->leader()->associate($member);
-    }
-
-    /**
-     * Leader of a squad.
-     *
-     * @return BelongsTo
-     */
-    public function leader()
+    public function leader(): BelongsTo
     {
         return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
+    }
+
+    public function assignLeaderTo(Member $member): self
+    {
+        $this->leader()->associate($member);
+
+        return $this;
     }
 }

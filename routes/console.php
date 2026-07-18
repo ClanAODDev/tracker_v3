@@ -1,7 +1,9 @@
 <?php
 
+use App\Console\Commands\ClanSnapshot;
 use App\Console\Commands\DivisionCensus;
 use App\Console\Commands\FetchApplicationFeeds;
+use App\Console\Commands\LeaderboardSnapshot;
 use App\Console\Commands\MemberSync;
 use App\Console\Commands\NotifyMilestoneAwards;
 use App\Jobs\CleanupUnassignedLeaders;
@@ -22,6 +24,14 @@ Schedule::command(MemberSync::class)->hourly()
 Schedule::command(DivisionCensus::class)->weekly()
     ->description('Record weekly division population snapshot')
     ->when(fn () => scheduledTaskEnabled('tracker:census'));
+
+Schedule::command(ClanSnapshot::class)->weekly()
+    ->description('Capture clan-wide aggregate stats for trend tracking')
+    ->when(fn () => scheduledTaskEnabled('tracker:clan-snapshot'));
+
+Schedule::command(LeaderboardSnapshot::class)->weekly()
+    ->description('Capture division leaderboard rankings for trend tracking')
+    ->when(fn () => scheduledTaskEnabled('tracker:leaderboard-snapshot'));
 
 Schedule::command(NotifyMilestoneAwards::class)->lastDayOfMonth('08:00')
     ->description('Send Discord notifications for milestone award recipients')

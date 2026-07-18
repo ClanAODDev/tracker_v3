@@ -1,29 +1,31 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Note;
 
 use App\Models\DivisionTag;
 use App\Models\Note;
 use App\Policies\DivisionTagPolicy;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class CreateNote extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'body'            => 'required',
+            'type'            => ['required', Rule::in(array_keys(Note::allNoteTypes()))],
             'forum_thread_id' => 'nullable|numeric',
             'tag_id'          => 'nullable|integer|exists:division_tags,id',
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'body.required'           => 'You must provide content for your note',
@@ -31,7 +33,7 @@ class CreateNote extends FormRequest
         ];
     }
 
-    public function persist()
+    public function persist(): void
     {
         $member = $this->route('member');
         $user   = auth()->user();
@@ -46,8 +48,7 @@ class CreateNote extends FormRequest
             $tag    = $policy->getAssignableTags($user, $member)->find($this->input('tag_id'));
 
             if ($tag) {
-                $assignerId = $user->member?->id;
-                $member->tags()->syncWithoutDetaching([$tag->id => ['assigned_by' => $assignerId]]);
+                $member->tags()->syncWithoutDetaching([$tag->id => ['assigned_by' => $user->member?->id]]);
             }
         }
     }

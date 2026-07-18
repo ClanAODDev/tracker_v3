@@ -13,7 +13,7 @@ readonly class DivisionShowData
         public CensusChartData $chartData,
         public Collection $platoons,
         public Collection $divisionLeaders,
-        public Collection $generalSergeants,
+
         public Collection $divisionAnniversaries,
         public ?object $previousCensus,
         public PendingActionsData $pendingActions,
@@ -24,12 +24,12 @@ readonly class DivisionShowData
     public function toArray(): array
     {
         return [
-            'division'                => $this->division,
-            'stats'                   => $this->stats,
-            'chartData'               => $this->chartData->toArray(),
-            'platoons'                => $this->platoons,
-            'divisionLeaders'         => $this->divisionLeaders,
-            'generalSergeants'        => $this->generalSergeants,
+            'division'        => $this->division,
+            'stats'           => $this->stats,
+            'chartData'       => $this->chartData->toArray(),
+            'platoons'        => $this->platoons,
+            'divisionLeaders' => $this->divisionLeaders,
+
             'divisionAnniversaries'   => $this->divisionAnniversaries,
             'previousCensus'          => $this->previousCensus,
             'pendingActions'          => $this->pendingActions,

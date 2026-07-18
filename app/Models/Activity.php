@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ActivityType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Activity extends Model
@@ -23,20 +24,17 @@ class Activity extends Model
         'division',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return MorphTo
-     */
-    public function subject()
+    public function subject(): MorphTo
     {
         return $this->morphTo();
     }
 
-    public function division()
+    public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
     }

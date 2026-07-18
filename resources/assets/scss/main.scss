@@ -1199,6 +1199,7 @@ body.no-animations {
     flex-direction: column;
     gap: 2px;
     min-width: 0;
+    flex: 1;
 }
 
 .division-card-name {
@@ -1219,6 +1220,25 @@ body.no-animations {
 .division-card-count {
     color: var(--color-muted);
     font-size: 12px;
+}
+
+.division-card-stats {
+    display: flex;
+    gap: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.division-card-stat {
+    color: var(--color-muted);
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0.65;
+
+    i {
+        margin-right: 3px;
+        font-size: 10px;
+    }
 }
 
 .pending-actions {
@@ -1988,8 +2008,15 @@ body.no-animations {
     flex-shrink: 0;
 }
 
-.leaderboard-name {
+.leaderboard-name-group {
     flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+}
+
+.leaderboard-name {
     color: var(--color-white);
     font-size: 14px;
     font-weight: 500;
@@ -2017,6 +2044,24 @@ body.no-animations {
     }
 
     &.leaderboard-value--negative {
+        color: var(--color-danger);
+    }
+}
+
+.leaderboard-movement {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    font-size: 10px;
+    font-weight: 500;
+    flex-shrink: 0;
+    opacity: 0.75;
+
+    &.leaderboard-movement--up {
+        color: var(--color-success);
+    }
+
+    &.leaderboard-movement--down {
         color: var(--color-danger);
     }
 }
@@ -2153,6 +2198,10 @@ body.no-animations {
 
     .divisions-grid {
         grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+
+    .division-card-stats {
+        display: none;
     }
 
     .notice {

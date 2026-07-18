@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ActivityType;
-use App\Http\Requests\CreateLeave;
-use App\Http\Requests\UpdateLeave;
+use App\Http\Requests\Leave\CreateLeave;
+use App\Http\Requests\Leave\UpdateLeave;
 use App\Models\Division;
 use App\Models\Leave;
 use App\Models\Member;

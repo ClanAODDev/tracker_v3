@@ -17,8 +17,8 @@ class TrainingCheckpoint extends Model
         return $this->belongsTo(TrainingSection::class, 'training_section_id');
     }
 
-    public function scopeOrdered($query)
+    public function scopeOrdered($query): void
     {
-        return $query->orderBy('display_order');
+        $query->orderBy('display_order');
     }
 }

@@ -3,16 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
-/**
- * @property string state
- * @property mixed resolved_at
- */
 class Ticket extends Model
 {
     use HasFactory;
@@ -47,39 +45,29 @@ class Ticket extends Model
         });
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function type()
+    public function type(): BelongsTo
     {
         return $this->belongsTo(TicketType::class, 'ticket_type_id');
     }
 
-    public function division()
+    public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function caller()
+    public function caller(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function comments()
-    {
-        return $this->hasMany(TicketComment::class)
-            ->orderBy('created_at', 'DESC');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function owner()
+    public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(TicketComment::class)->orderBy('created_at', 'DESC');
     }
 
     public function routeNotificationForHelp(): string
@@ -87,36 +75,37 @@ class Ticket extends Model
         return $this->type->notification_channel ?? config('aod.admin-ticketing-channel');
     }
 
-    /**
-     * @return mixed
-     */
-    public function scopeNew($query)
+    public function scopeNew(Builder $query): void
     {
-        $query->where('state', 'new')
-            ->whereNotIn('state', ['assigned', 'resolved']);
+        $query->where('state', 'new');
     }
 
-    /**
-     * @return mixed
-     */
-    public function scopeAssigned($query)
+    public function scopeAssigned(Builder $query): void
     {
-        $query->where('state', 'assigned')
-            ->whereNotIn('state', ['new', 'resolved']);
+        $query->where('state', 'assigned');
     }
 
-    public function scopeResolved($query)
+    public function scopeResolved(Builder $query): void
     {
-        $query->where('state', 'resolved')
-            ->whereNotIn('state', ['new', 'assigned']);
+        $query->where('state', 'resolved');
     }
 
-    public function getStateColorAttribute()
+    public function getStateColorAttribute(): string
     {
         return $this->stateColors[$this->state];
     }
 
-    public function ownTo(Authenticatable $user)
+    public function isResolved(): bool
+    {
+        return $this->resolved_at !== null;
+    }
+
+    public function hasExternalMessageId(): bool
+    {
+        return ! empty($this->external_message_id);
+    }
+
+    public function ownTo(Authenticatable $user): void
     {
         $this->owner()->associate($user);
         $this->state = 'assigned';
@@ -129,12 +118,7 @@ class Ticket extends Model
         }
     }
 
-    public function isResolved()
-    {
-        return $this->resolved_at;
-    }
-
-    public function resolve()
+    public function resolve(): void
     {
         $this->state       = 'resolved';
         $this->owner_id    = auth()->id();
@@ -143,7 +127,7 @@ class Ticket extends Model
         $this->say('resolved the ticket');
     }
 
-    public function reopen()
+    public function reopen(): void
     {
         $this->state       = 'assigned';
         $this->resolved_at = null;
@@ -151,7 +135,7 @@ class Ticket extends Model
         $this->say('reopened the ticket');
     }
 
-    public function reject()
+    public function reject(): void
     {
         $this->state       = 'rejected';
         $this->resolved_at = now();
@@ -160,16 +144,11 @@ class Ticket extends Model
         $this->say('rejected the ticket');
     }
 
-    public function say(string $comment)
+    public function say(string $comment): void
     {
         $this->comments()->create([
             'user_id' => auth()->id(),
             'body'    => $comment,
         ]);
-    }
-
-    public function hasExternalMessageId(): bool
-    {
-        return ! empty($this->external_message_id);
     }
 }

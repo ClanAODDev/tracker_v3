@@ -7,21 +7,21 @@ use App\Enums\Position;
 use App\Enums\Rank;
 use App\Enums\Role;
 use App\Settings\UserSettings;
-use Exception;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use InvalidArgumentException;
 use Kirschbaum\Commentions\Contracts\Commenter;
 use Laravel\Sanctum\HasApiTokens;
 
-/**
- * Class User.
- */
 class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 {
     use HasApiTokens;
@@ -36,11 +36,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         'theme'                => 'traditional',
     ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name',
         'email',
@@ -55,20 +50,12 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         'forum_password',
     ];
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password',
         'remember_token',
         'forum_password',
     ];
 
-    /**
-     * @var array
-     */
     protected $casts = [
         'developer'      => 'boolean',
         'settings'       => 'json',
@@ -78,6 +65,13 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         'role'           => Role::class,
     ];
 
+    protected static function booted(): void
+    {
+        static::creating(function (self $user) {
+            $user->settings = $user->defaultSettings;
+        });
+    }
+
     public function getSettingsAttribute($value): array
     {
         $stored = is_string($value) ? json_decode($value, true) : ($value ?? []);
@@ -85,23 +79,39 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return array_merge($this->defaultSettings, $stored);
     }
 
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function (self $user) {
-            $user->settings = $user->defaultSettings;
-        });
-    }
-
-    public function member()
+    public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
     }
 
-    public function divisionApplication()
+    public function divisionApplication(): HasOne
     {
         return $this->hasOne(DivisionApplication::class);
+    }
+
+    public function division(): HasOneThrough
+    {
+        return $this->hasOneThrough(Division::class, Member::class, 'id', 'id', 'member_id', 'division_id');
+    }
+
+    public function activity(): HasMany
+    {
+        return $this->hasMany(Activity::class);
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(Note::class);
+    }
+
+    public function scopeAdmins($query): void
+    {
+        $query->whereRole(Role::ADMIN)->orderBy('name', 'ASC');
+    }
+
+    public function scopePendingDiscord($query): void
+    {
+        $query->whereNotNull('discord_id')->whereNull('member_id');
     }
 
     public function hasMember(): bool
@@ -112,44 +122,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
     public function isPendingRegistration(): bool
     {
         return $this->discord_id !== null && $this->member_id === null;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function scopeAdmins($query)
-    {
-        $query->whereRole(Role::ADMIN)->orderBy('name', 'ASC');
-    }
-
-    public function scopePendingDiscord($query)
-    {
-        return $query->whereNotNull('discord_id')->whereNull('member_id');
-    }
-
-    public function recordActivity(ActivityType $type, $related, array $properties = [])
-    {
-        if (! method_exists($related, 'recordActivity')) {
-            throw new Exception('..');
-        }
-
-        return $related->recordActivity($type, $properties);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function activity()
-    {
-        return $this->hasMany(Activity::class);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function notes()
-    {
-        return $this->hasMany(Note::class);
     }
 
     public function isRole(string|array|Role $role): bool
@@ -216,11 +188,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return $member->position == Position::PLATOON_LEADER;
     }
 
-    public function division()
-    {
-        return $this->hasOneThrough(Division::class, Member::class, 'id', 'id', 'member_id', 'division_id');
-    }
-
     public function isDivisionLeader(): bool
     {
         if (! $member = $this->member) {
@@ -233,14 +200,9 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         ]);
     }
 
-    /**
-     * Checks to see if user is a developer.
-     *
-     * @return bool
-     */
-    public function isDeveloper()
+    public function isDeveloper(): bool
     {
-        return $this->developer;
+        return (bool) $this->developer;
     }
 
     public function assignRole(Role|string|int $role): void
@@ -268,31 +230,17 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         }
     }
 
-    /**
-     * Is member allowed to remove members from AOD.
-     *
-     * @return bool
-     */
-    public function canRemoveUsers()
+    public function canRemoveUsers(): bool
     {
         return $this->member->rank->value >= Rank::SERGEANT->value;
     }
 
-    /**
-     * @return UserSettings
-     */
-    public function settings()
+    public function settings(): UserSettings
     {
         return new UserSettings($this->settings, $this);
     }
 
-    /**
-     * Accessor for name
-     * enforce proper casing.
-     *
-     * @param  mixed  $value
-     */
-    public function getNameAttribute($value)
+    public function getNameAttribute($value): string
     {
         return ucfirst($value);
     }
@@ -327,16 +275,13 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return false;
     }
 
-    private function isWithinPlatoonLimit(Rank $targetRank, $division): bool
+    public function recordActivity(ActivityType $type, mixed $related, array $properties = []): mixed
     {
-        $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
+        if (! method_exists($related, 'recordActivity')) {
+            throw new InvalidArgumentException(get_class($related) . ' does not support activity recording.');
+        }
 
-        return $this->isPlatoonLeader() && $targetRank->value <= $maxPlRank->value;
-    }
-
-    private function isAdminOrDivisionLeader(): bool
-    {
-        return $this->isDivisionLeader() || $this->isRole('admin');
+        return $related->recordActivity($type, $properties);
     }
 
     public static function autoApprovedTimestampForRank(
@@ -373,8 +318,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function canManageTransferCommentsFor(Transfer $transfer): bool
     {
-
-        // Only Division Leaders or Admins can manage comments on transfers
         return $this->isAdminOrDivisionLeader();
     }
 
@@ -393,7 +336,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
             return true;
         }
 
-        // Otherwise, only Division Leaders or Admins can manage comments
         return $this->isAdminOrDivisionLeader();
     }
 
@@ -402,7 +344,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         $userRank = $this->member->rank;
         $newRank  = $action->rank;
 
-        // A user cannot approve/deny a rank action for a rank higher than their own
         if ($newRank->value > $userRank->value) {
             return false;
         }
@@ -417,7 +358,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
             return $userRank->value >= Rank::COMMAND_SERGEANT->value;
         }
 
-        // For ranks below Sergeant, only Division Leaders or Admins can approve/deny
         return $this->isAdminOrDivisionLeader();
     }
 
@@ -448,5 +388,17 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
             'member_id' => $member->id,
             'role'      => Role::MEMBER,
         ]);
+    }
+
+    private function isWithinPlatoonLimit(Rank $targetRank, $division): bool
+    {
+        $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
+
+        return $this->isPlatoonLeader() && $targetRank->value <= $maxPlRank->value;
+    }
+
+    private function isAdminOrDivisionLeader(): bool
+    {
+        return $this->isDivisionLeader() || $this->isRole('admin');
     }
 }

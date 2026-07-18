@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class MemberHandle extends Pivot
@@ -13,12 +14,12 @@ class MemberHandle extends Pivot
 
     protected $table = 'handle_member';
 
-    public function member()
+    public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);
     }
 
-    public function handle()
+    public function handle(): BelongsTo
     {
         return $this->belongsTo(Handle::class);
     }

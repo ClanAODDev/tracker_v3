@@ -23,8 +23,8 @@ class TrainingSection extends Model
         return $this->hasMany(TrainingCheckpoint::class)->orderBy('display_order');
     }
 
-    public function scopeOrdered($query)
+    public function scopeOrdered($query): void
     {
-        return $query->orderBy('display_order');
+        $query->orderBy('display_order');
     }
 }

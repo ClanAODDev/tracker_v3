@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Widgets;
 
 use App\Models\Census;
+use App\Models\ClanSnapshot;
 use App\Models\Division;
 use App\Models\Member;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -13,14 +14,50 @@ class ClanStatsWidget extends BaseWidget
 {
     protected static ?int $sort = 1;
 
-    private function activeDivisionIds()
-    {
-        return once(fn () => Division::whereHas('members')->pluck('id'));
-    }
-
     protected function getStats(): array
     {
-        $activeDivisionIds = $this->activeDivisionIds();
+        $latest = ClanSnapshot::recent()->first();
+
+        if ($latest) {
+            return $this->statsFromSnapshot($latest);
+        }
+
+        return $this->statsFromLiveAggregation();
+    }
+
+    protected function statsFromSnapshot(ClanSnapshot $snapshot): array
+    {
+        $recruitsLastMonth = Member::whereBetween('join_date', [
+            now()->subMonth()->startOfMonth(),
+            now()->subMonth()->endOfMonth(),
+        ])->count();
+
+        $history = ClanSnapshot::recent()->limit(14)->get()->reverse()->values();
+
+        return [
+            Stat::make('Total Clan Members', number_format($snapshot->total_members))
+                ->description("{$snapshot->active_divisions} active divisions")
+                ->descriptionIcon('heroicon-m-building-office-2')
+                ->chart($history->pluck('total_members')->all())
+                ->color('primary'),
+
+            Stat::make('Clan Weekly Voice', number_format($snapshot->weekly_voice_count))
+                ->description("{$snapshot->voice_participation}% voice participation")
+                ->descriptionIcon('heroicon-m-speaker-wave')
+                ->chart($history->pluck('weekly_voice_count')->all())
+                ->color($snapshot->voice_participation >= 30 ? 'success' : ($snapshot->voice_participation >= 15 ? 'warning' : 'danger')),
+
+            Stat::make('Recruits This Month', number_format($snapshot->monthly_recruits))
+                ->description($this->getRecruitTrendDescription($snapshot->monthly_recruits, $recruitsLastMonth))
+                ->descriptionIcon($this->getRecruitTrendIcon($snapshot->monthly_recruits, $recruitsLastMonth))
+                ->chart($history->pluck('monthly_recruits')->all())
+                ->color($this->getRecruitTrendColor($snapshot->monthly_recruits, $recruitsLastMonth)),
+        ];
+    }
+
+    protected function statsFromLiveAggregation(): array
+    {
+        $activeDivisionIds = Division::whereHas('members')->pluck('id');
         $activeDivisions   = $activeDivisionIds->count();
 
         $latestCensuses = Census::select('division_id', DB::raw('MAX(id) as id'))
@@ -43,35 +80,31 @@ class ClanStatsWidget extends BaseWidget
             now()->subMonth()->endOfMonth(),
         ])->count();
 
-        $populationTrend = $this->getClanPopulationTrend();
-        $voiceTrend      = $this->getClanVoiceTrend();
-        $recruitsTrend   = $this->getClanRecruitsTrend();
-
         return [
             Stat::make('Total Clan Members', number_format($totalFromCensus))
                 ->description("{$activeDivisions} active divisions")
                 ->descriptionIcon('heroicon-m-building-office-2')
-                ->chart($populationTrend)
+                ->chart($this->getLivePopulationTrend($activeDivisionIds))
                 ->color('primary'),
 
             Stat::make('Clan Weekly Voice', number_format($totalVoice))
                 ->description("{$voicePercent}% voice participation")
                 ->descriptionIcon('heroicon-m-speaker-wave')
-                ->chart($voiceTrend)
+                ->chart($this->getLiveVoiceTrend($activeDivisionIds))
                 ->color($voicePercent >= 30 ? 'success' : ($voicePercent >= 15 ? 'warning' : 'danger')),
 
             Stat::make('Recruits This Month', number_format($recruitsThisMonth))
                 ->description($this->getRecruitTrendDescription($recruitsThisMonth, $recruitsLastMonth))
                 ->descriptionIcon($this->getRecruitTrendIcon($recruitsThisMonth, $recruitsLastMonth))
-                ->chart($recruitsTrend)
+                ->chart($this->getLiveRecruitsTrend())
                 ->color($this->getRecruitTrendColor($recruitsThisMonth, $recruitsLastMonth)),
         ];
     }
 
-    protected function getClanPopulationTrend(): array
+    protected function getLivePopulationTrend($divisionIds): array
     {
         return Census::select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(count) as total'))
-            ->whereIn('division_id', $this->activeDivisionIds())
+            ->whereIn('division_id', $divisionIds)
             ->groupBy('date')
             ->orderByDesc('date')
             ->take(14)
@@ -81,10 +114,10 @@ class ClanStatsWidget extends BaseWidget
             ->toArray();
     }
 
-    protected function getClanVoiceTrend(): array
+    protected function getLiveVoiceTrend($divisionIds): array
     {
         return Census::select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(weekly_voice_count) as total'))
-            ->whereIn('division_id', $this->activeDivisionIds())
+            ->whereIn('division_id', $divisionIds)
             ->groupBy('date')
             ->orderByDesc('date')
             ->take(14)
@@ -94,7 +127,7 @@ class ClanStatsWidget extends BaseWidget
             ->toArray();
     }
 
-    protected function getClanRecruitsTrend(): array
+    protected function getLiveRecruitsTrend(): array
     {
         $results = Member::where('join_date', '>=', now()->subDays(98))
             ->selectRaw('FLOOR(DATEDIFF(CURDATE(), DATE(join_date)) / 7) as week_ago, COUNT(*) as count')

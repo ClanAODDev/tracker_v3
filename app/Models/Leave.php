@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -11,9 +10,6 @@ class Leave extends Model
 {
     use HasFactory;
 
-    /**
-     * @var array
-     */
     protected $casts = [
         'extended' => 'boolean',
         'end_date' => 'datetime',
@@ -27,62 +23,34 @@ class Leave extends Model
         'other'     => 'Other',
     ];
 
-    /**
-     * @var array
-     */
     protected $guarded = [];
 
-    /**
-     * @return BelongsTo
-     */
-    public function member()
+    public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class, 'member_id');
     }
 
-    public function division()
-    {
-        return $this->hasOneThrough(Member::class, Division::class, 'id', 'id', 'clan_id', 'division_id');
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function note()
+    public function note(): BelongsTo
     {
         return $this->belongsTo(Note::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function requester()
+    public function requester(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
-    public function approver()
+    public function approver(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return bool
-     */
-    public function getExpiredAttribute()
+    public function getExpiredAttribute(): bool
     {
-        return Carbon::today() > $this->end_date->format('Y-m-d');
+        return today() > $this->end_date->format('Y-m-d');
     }
 
-    /**
-     * Returns end date in a short format.
-     *
-     * @return mixed
-     */
-    public function getDateAttribute()
+    public function getDateAttribute(): string
     {
         return $this->end_date->format('Y-m-d');
     }

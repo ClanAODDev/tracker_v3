@@ -183,27 +183,6 @@ class DivisionTest extends TestCase
     }
 
     #[Test]
-    public function general_sergeants_returns_clan_admin_position_members()
-    {
-        $division = $this->createActiveDivision();
-
-        $clanAdmin = $this->createMember([
-            'division_id' => $division->id,
-            'position'    => Position::CLAN_ADMIN,
-        ]);
-
-        $regularMember = $this->createMember([
-            'division_id' => $division->id,
-            'position'    => Position::MEMBER,
-        ]);
-
-        $results = $division->generalSergeants()->get();
-
-        $this->assertTrue($results->contains($clanAdmin));
-        $this->assertFalse($results->contains($regularMember));
-    }
-
-    #[Test]
     public function leaders_returns_co_and_xo()
     {
         $division = $this->createActiveDivision();

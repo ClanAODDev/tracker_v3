@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MemberAward extends Model
 {
@@ -14,19 +15,19 @@ class MemberAward extends Model
 
     protected $guarded = [];
 
-    public function member()
+    public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class, 'member_id');
     }
 
-    public function requester()
+    public function requester(): BelongsTo
     {
         return $this->belongsTo(Member::class);
     }
 
-    public function award()
+    public function award(): BelongsTo
     {
-        return $this->belongsTo(Award::class)->orderBy('display_order');
+        return $this->belongsTo(Award::class);
     }
 
     public function scopeNeedsApproval(Builder $query): void
