@@ -308,22 +308,44 @@ class MemberPolicyTest extends TestCase
     }
 
     #[Test]
-    public function member_cannot_manage_own_handles_via_policy()
+    public function member_can_manage_own_handles_via_policy()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
 
         $this->actingAs($user);
-        $this->assertFalse($this->policy->manageIngameHandles($user, $user->member));
+        $this->assertTrue($this->policy->manageIngameHandles($user, $user->member));
     }
 
     #[Test]
-    public function officer_cannot_manage_handles()
+    public function officer_can_manage_handles_within_own_division()
     {
         $officer = $this->createOfficer();
         $member  = $this->createMember(['division_id' => $officer->member->division_id]);
 
         $this->actingAs($officer);
+        $this->assertTrue($this->policy->manageIngameHandles($officer, $member));
+    }
+
+    #[Test]
+    public function officer_cannot_manage_handles_in_different_division()
+    {
+        $officer       = $this->createOfficer();
+        $otherDivision = $this->createActiveDivision();
+        $member        = $this->createMember(['division_id' => $otherDivision->id]);
+
+        $this->actingAs($officer);
         $this->assertFalse($this->policy->manageIngameHandles($officer, $member));
+    }
+
+    #[Test]
+    public function member_cannot_manage_others_handles()
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($user);
+        $this->assertFalse($this->policy->manageIngameHandles($user, $member));
     }
 }

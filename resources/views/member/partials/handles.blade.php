@@ -5,7 +5,7 @@
             @if($member->id === auth()->user()->member_id)
                 <a class="btn btn-default btn-xs" data-toggle="modal" data-target="#ingame-handles-modal"><i class="fa fa-cog"></i> Manage</a>
             @else
-                <a href="{{ route('filament.mod.resources.members.edit', $member) }}#ingame-handles" class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>
+                <a href="{{ route('filament.mod.resources.members.index', ['tableAction' => 'manageHandles', 'tableActionRecord' => $member->id]) }}" class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>
             @endif
         @endcan
     </h3>

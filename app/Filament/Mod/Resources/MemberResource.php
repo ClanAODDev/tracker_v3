@@ -17,6 +17,7 @@ use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
+use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
@@ -403,6 +404,24 @@ class MemberResource extends Resource
             ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->recordActions([
                 EditAction::make(),
+                Action::make('manageHandles')
+                    ->label('Handles')
+                    ->icon('heroicon-o-identification')
+                    ->visible(fn (Member $record): bool => auth()->user()->can('manageIngameHandles', $record))
+                    ->fillForm(fn (Member $record): array => [
+                        'handleGroups' => IngameHandlesForm::getGroupedHandles($record),
+                    ])
+                    ->form([
+                        IngameHandlesForm::make(),
+                    ])
+                    ->action(function (Member $record, array $data): void {
+                        IngameHandlesForm::saveHandles($record, $data['handleGroups']);
+
+                        Notification::make()
+                            ->title('Handles updated')
+                            ->success()
+                            ->send();
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

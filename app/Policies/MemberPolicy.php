@@ -133,6 +133,10 @@ class MemberPolicy
 
     public function manageIngameHandles(User $user, Member $member): bool
     {
-        return $user->isRole('sr_ldr');
+        if ($member->id === $user->member_id || $user->isRole('sr_ldr')) {
+            return true;
+        }
+
+        return $user->isRole('officer') && $user->member?->division_id === $member->division_id;
     }
 }
