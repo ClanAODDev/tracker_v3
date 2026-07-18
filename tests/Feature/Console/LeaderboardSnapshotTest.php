@@ -7,6 +7,7 @@ use App\Models\Division;
 use App\Models\LeaderboardSnapshot;
 use App\Models\Member;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Collection;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -36,7 +37,7 @@ class LeaderboardSnapshotTest extends TestCase
         $division = $this->seedLeaderboardDivisions(1)->first();
 
         LeaderboardSnapshot::factory()->create([
-            'division_id' => $division->id,
+            'division_id'   => $division->id,
             'snapshot_date' => today()->toDateString(),
         ]);
 
@@ -69,8 +70,8 @@ class LeaderboardSnapshotTest extends TestCase
 
         foreach ($divisions as $index => $division) {
             LeaderboardSnapshot::factory()->voice()->create([
-                'division_id' => $division->id,
-                'rank' => $index + 1,
+                'division_id'   => $division->id,
+                'rank'          => $index + 1,
                 'snapshot_date' => $previousDate,
             ]);
         }
@@ -128,18 +129,18 @@ class LeaderboardSnapshotTest extends TestCase
         $this->assertEquals([1, 2, 3, 4], $voiceRanks);
     }
 
-    private function seedLeaderboardDivisions(int $count): \Illuminate\Support\Collection
+    private function seedLeaderboardDivisions(int $count): Collection
     {
         $divisions = Division::factory()->count($count)->create();
 
         foreach ($divisions as $division) {
             Member::factory()->count(rand(5, 20))->create([
                 'division_id' => $division->id,
-                'join_date' => now()->subDays(rand(1, 60)),
+                'join_date'   => now()->subDays(rand(1, 60)),
             ]);
 
             Census::factory()->count(3)->create([
-                'division_id' => $division->id,
+                'division_id'        => $division->id,
                 'weekly_voice_count' => rand(10, 50),
             ]);
         }

@@ -36,16 +36,16 @@ class ClanSnapshotTest extends TestCase
         Member::factory()->count(20)->create(['division_id' => $divB->id]);
 
         Census::factory()->create([
-            'division_id' => $divA->id,
-            'count' => 10,
+            'division_id'         => $divA->id,
+            'count'               => 10,
             'weekly_active_count' => 8,
-            'weekly_voice_count' => 5,
+            'weekly_voice_count'  => 5,
         ]);
         Census::factory()->create([
-            'division_id' => $divB->id,
-            'count' => 20,
+            'division_id'         => $divB->id,
+            'count'               => 20,
             'weekly_active_count' => 15,
-            'weekly_voice_count' => 10,
+            'weekly_voice_count'  => 10,
         ]);
 
         $this->artisan('tracker:clan-snapshot')->assertSuccessful();
@@ -66,11 +66,11 @@ class ClanSnapshotTest extends TestCase
 
         Member::factory()->count(5)->create([
             'division_id' => $division->id,
-            'join_date' => now()->subDays(5),
+            'join_date'   => now()->subDays(5),
         ]);
         Member::factory()->count(3)->create([
             'division_id' => $division->id,
-            'join_date' => now()->subMonths(2),
+            'join_date'   => now()->subMonths(2),
         ]);
 
         Census::factory()->create(['division_id' => $division->id]);
@@ -124,16 +124,16 @@ class ClanSnapshotTest extends TestCase
         Member::factory()->count(5)->create(['division_id' => $division->id]);
 
         Census::factory()->create([
-            'division_id' => $division->id,
-            'count' => 50,
+            'division_id'        => $division->id,
+            'count'              => 50,
             'weekly_voice_count' => 10,
-            'created_at' => now()->subWeek(),
+            'created_at'         => now()->subWeek(),
         ]);
         Census::factory()->create([
-            'division_id' => $division->id,
-            'count' => 100,
+            'division_id'        => $division->id,
+            'count'              => 100,
             'weekly_voice_count' => 30,
-            'created_at' => now(),
+            'created_at'         => now(),
         ]);
 
         $this->artisan('tracker:clan-snapshot')->assertSuccessful();
@@ -153,7 +153,7 @@ class ClanSnapshotTest extends TestCase
             ]);
 
             Census::factory()->create([
-                'division_id' => $division->id,
+                'division_id'        => $division->id,
                 'weekly_voice_count' => rand(10, 50),
             ]);
         }

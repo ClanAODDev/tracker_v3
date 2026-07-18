@@ -34,7 +34,7 @@ class DivisionLeaderboardDataTest extends TestCase
         $divA = $this->seedDivisionWithCensus(voiceCount: 10, totalCount: 100);
         $divB = $this->seedDivisionWithCensus(voiceCount: 80, totalCount: 100);
 
-        $result = DivisionLeaderboardData::calculate();
+        $result   = DivisionLeaderboardData::calculate();
         $voiceIds = $result['voiceLeaders']->pluck('id')->all();
 
         $this->assertEquals($divB->id, $voiceIds[0]);
@@ -45,19 +45,19 @@ class DivisionLeaderboardDataTest extends TestCase
     public function for_user_enriches_with_movement_data_when_snapshots_exist(): void
     {
         $division = $this->seedDivisionWithCensus();
-        $user = $this->createUserWithMember($division);
+        $user     = $this->createUserWithMember($division);
 
         LeaderboardSnapshot::factory()->voice()->create([
-            'division_id' => $division->id,
-            'rank' => 3,
+            'division_id'   => $division->id,
+            'rank'          => 3,
             'previous_rank' => 5,
-            'rank_change' => 2,
+            'rank_change'   => 2,
             'snapshot_date' => today()->toDateString(),
         ]);
 
         DivisionLeaderboardData::clearCache();
 
-        $data = DivisionLeaderboardData::forUser($user);
+        $data       = DivisionLeaderboardData::forUser($user);
         $voiceEntry = $data->voiceLeaders->firstWhere('id', $division->id);
 
         $this->assertEquals(2, $voiceEntry['rank_change']);
@@ -68,11 +68,11 @@ class DivisionLeaderboardDataTest extends TestCase
     public function for_user_returns_zero_movement_when_no_snapshots(): void
     {
         $division = $this->seedDivisionWithCensus();
-        $user = $this->createUserWithMember($division);
+        $user     = $this->createUserWithMember($division);
 
         DivisionLeaderboardData::clearCache();
 
-        $data = DivisionLeaderboardData::forUser($user);
+        $data       = DivisionLeaderboardData::forUser($user);
         $voiceEntry = $data->voiceLeaders->firstWhere('id', $division->id);
 
         $this->assertArrayNotHasKey('rank_change', $voiceEntry);
@@ -82,7 +82,7 @@ class DivisionLeaderboardDataTest extends TestCase
     public function for_user_sets_user_division_id(): void
     {
         $division = $this->seedDivisionWithCensus();
-        $user = $this->createUserWithMember($division);
+        $user     = $this->createUserWithMember($division);
 
         DivisionLeaderboardData::clearCache();
 
@@ -95,7 +95,7 @@ class DivisionLeaderboardDataTest extends TestCase
     public function clear_cache_invalidates_cached_leaderboard(): void
     {
         $division = $this->seedDivisionWithCensus();
-        $user = $this->createUserWithMember($division);
+        $user     = $this->createUserWithMember($division);
 
         DivisionLeaderboardData::forUser($user);
         DivisionLeaderboardData::clearCache();
@@ -112,14 +112,14 @@ class DivisionLeaderboardDataTest extends TestCase
 
         Member::factory()->count($totalCount)->create([
             'division_id' => $division->id,
-            'join_date' => now()->subDays(rand(1, 60)),
+            'join_date'   => now()->subDays(rand(1, 60)),
         ]);
 
         Census::factory()->create([
-            'division_id' => $division->id,
-            'count' => $totalCount,
+            'division_id'         => $division->id,
+            'count'               => $totalCount,
             'weekly_active_count' => $totalCount,
-            'weekly_voice_count' => $voiceCount,
+            'weekly_voice_count'  => $voiceCount,
         ]);
 
         return $division;

@@ -120,17 +120,17 @@ class LeaderboardTrendDataTest extends TestCase
     public function it_only_includes_snapshots_for_requested_category(): void
     {
         LeaderboardSnapshot::factory()->voice()->create([
-            'division_id' => $this->division->id,
-            'rank' => 1,
+            'division_id'   => $this->division->id,
+            'rank'          => 1,
             'snapshot_date' => '2026-07-01',
         ]);
         LeaderboardSnapshot::factory()->growth()->create([
-            'division_id' => $this->division->id,
-            'rank' => 5,
+            'division_id'   => $this->division->id,
+            'rank'          => 5,
             'snapshot_date' => '2026-07-01',
         ]);
 
-        $voiceTrend = LeaderboardTrendData::forDivision($this->division->id, 'voice');
+        $voiceTrend  = LeaderboardTrendData::forDivision($this->division->id, 'voice');
         $growthTrend = LeaderboardTrendData::forDivision($this->division->id, 'growth');
 
         $this->assertEquals(1, $voiceTrend->bestRank);
@@ -141,8 +141,8 @@ class LeaderboardTrendDataTest extends TestCase
     {
         foreach ($ranks as $i => $rank) {
             LeaderboardSnapshot::factory()->voice()->create([
-                'division_id' => $this->division->id,
-                'rank' => $rank,
+                'division_id'   => $this->division->id,
+                'rank'          => $rank,
                 'snapshot_date' => now()->subWeeks(count($ranks) - $i - 1)->toDateString(),
             ]);
         }

@@ -3,7 +3,9 @@
 namespace Tests\Unit\Models;
 
 use App\Models\ClanSnapshot;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -18,7 +20,7 @@ class ClanSnapshotTest extends TestCase
             'snapshot_date' => '2026-07-10',
         ]);
 
-        $this->assertInstanceOf(\Illuminate\Support\Carbon::class, $snapshot->snapshot_date);
+        $this->assertInstanceOf(Carbon::class, $snapshot->snapshot_date);
         $this->assertEquals('2026-07-10', $snapshot->snapshot_date->toDateString());
     }
 
@@ -41,7 +43,7 @@ class ClanSnapshotTest extends TestCase
     {
         ClanSnapshot::factory()->create(['snapshot_date' => '2026-07-10']);
 
-        $this->expectException(\Illuminate\Database\QueryException::class);
+        $this->expectException(QueryException::class);
 
         ClanSnapshot::factory()->create(['snapshot_date' => '2026-07-10']);
     }

@@ -13,13 +13,13 @@ class LeaderboardSnapshotFactory extends Factory
     public function definition(): array
     {
         return [
-            'division_id' => Division::factory(),
-            'category' => $this->faker->randomElement(['voice', 'growth', 'recruits']),
-            'rank' => $this->faker->numberBetween(1, 20),
-            'value' => $this->faker->randomFloat(2, 0, 100),
+            'division_id'   => Division::factory(),
+            'category'      => $this->faker->randomElement(['voice', 'growth', 'recruits']),
+            'rank'          => $this->faker->numberBetween(1, 20),
+            'value'         => $this->faker->randomFloat(2, 0, 100),
             'previous_rank' => null,
-            'rank_change' => 0,
-            'trend_data' => null,
+            'rank_change'   => 0,
+            'trend_data'    => null,
             'snapshot_date' => now()->toDateString(),
         ];
     }
@@ -48,7 +48,7 @@ class LeaderboardSnapshotFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'previous_rank' => $previousRank,
-            'rank_change' => $previousRank - $attributes['rank'],
+            'rank_change'   => $previousRank - $attributes['rank'],
         ]);
     }
 }

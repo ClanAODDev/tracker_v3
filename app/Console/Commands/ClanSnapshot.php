@@ -48,20 +48,20 @@ class ClanSnapshot extends BaseCommand
 
         $totalMembers = (int) ($aggregates->total_members ?? 0);
         $weeklyActive = (int) ($aggregates->weekly_active ?? 0);
-        $weeklyVoice = (int) ($aggregates->weekly_voice ?? 0);
+        $weeklyVoice  = (int) ($aggregates->weekly_voice ?? 0);
 
-        $monthlyRecruits = Member::where('join_date', '>=', now()->startOfMonth())->count();
+        $monthlyRecruits    = Member::where('join_date', '>=', now()->startOfMonth())->count();
         $voiceParticipation = $totalMembers > 0 ? round(($weeklyVoice / $totalMembers) * 100, 2) : 0;
 
         Snapshot::create([
-            'total_members' => $totalMembers,
-            'active_divisions' => $activeDivisionIds->count(),
+            'total_members'       => $totalMembers,
+            'active_divisions'    => $activeDivisionIds->count(),
             'weekly_active_count' => $weeklyActive,
-            'weekly_voice_count' => $weeklyVoice,
-            'monthly_recruits' => $monthlyRecruits,
+            'weekly_voice_count'  => $weeklyVoice,
+            'monthly_recruits'    => $monthlyRecruits,
             'voice_participation' => $voiceParticipation,
-            'snapshot_date' => $today,
-            'created_at' => now(),
+            'snapshot_date'       => $today,
+            'created_at'          => now(),
         ]);
 
         return $this->succeedWithMessage(

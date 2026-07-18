@@ -5,6 +5,7 @@ namespace Tests\Unit\Models;
 use App\Models\Division;
 use App\Models\LeaderboardSnapshot;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -28,14 +29,14 @@ class LeaderboardSnapshotTest extends TestCase
             'snapshot_date' => '2026-07-10',
         ]);
 
-        $this->assertInstanceOf(\Illuminate\Support\Carbon::class, $snapshot->snapshot_date);
+        $this->assertInstanceOf(Carbon::class, $snapshot->snapshot_date);
         $this->assertEquals('2026-07-10', $snapshot->snapshot_date->toDateString());
     }
 
     #[Test]
     public function it_casts_trend_data_to_array(): void
     {
-        $trend = [10, 20, 30, 40];
+        $trend    = [10, 20, 30, 40];
         $snapshot = LeaderboardSnapshot::factory()->create([
             'trend_data' => $trend,
         ]);

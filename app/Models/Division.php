@@ -229,7 +229,6 @@ class Division extends Model
         return $this->members()->where('last_voice_activity', '>=', now()->subDays($days)->toDateString());
     }
 
-
     public function handle(): BelongsTo
     {
         return $this->belongsTo(Handle::class);

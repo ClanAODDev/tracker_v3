@@ -182,7 +182,6 @@ class DivisionTest extends TestCase
         $this->assertFalse($results->contains($ssg2));
     }
 
-
     #[Test]
     public function leaders_returns_co_and_xo()
     {

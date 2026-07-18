@@ -32,10 +32,10 @@ class LeaderboardSnapshotSeeder extends Seeder
         $weeklyRankings = $this->buildWeeklyRankings($divisions);
 
         $rows = [];
-        $now = now();
+        $now  = now();
 
         foreach ($weeklyRankings as $weekIndex => $weekData) {
-            $date = now()->subWeeks(self::WEEKS - 1 - $weekIndex)->toDateString();
+            $date         = now()->subWeeks(self::WEEKS - 1 - $weekIndex)->toDateString();
             $previousWeek = $weekIndex > 0 ? $weeklyRankings[$weekIndex - 1] : null;
 
             foreach (self::CATEGORIES as $category) {
@@ -46,22 +46,22 @@ class LeaderboardSnapshotSeeder extends Seeder
 
                     if ($previousRank !== false && $previousRank !== null) {
                         $previousRank = (int) $previousRank;
-                        $rankChange = $previousRank - $rank;
+                        $rankChange   = $previousRank - $rank;
                     } else {
                         $previousRank = null;
-                        $rankChange = 0;
+                        $rankChange   = 0;
                     }
 
                     $rows[] = [
-                        'division_id' => $divisionId,
-                        'category' => $category,
-                        'rank' => $rank,
-                        'value' => $this->generateValue($category, $rank, $divisions->count()),
+                        'division_id'   => $divisionId,
+                        'category'      => $category,
+                        'rank'          => $rank,
+                        'value'         => $this->generateValue($category, $rank, $divisions->count()),
                         'previous_rank' => $previousRank,
-                        'rank_change' => $rankChange,
-                        'trend_data' => json_encode($this->generateTrend($category)),
+                        'rank_change'   => $rankChange,
+                        'trend_data'    => json_encode($this->generateTrend($category)),
                         'snapshot_date' => $date,
-                        'created_at' => $now,
+                        'created_at'    => $now,
                     ];
                 }
             }
@@ -74,7 +74,7 @@ class LeaderboardSnapshotSeeder extends Seeder
 
     private function buildWeeklyRankings(Collection $divisions): array
     {
-        $ids = $divisions->pluck('id')->toArray();
+        $ids   = $divisions->pluck('id')->toArray();
         $weeks = [];
 
         $initial = [];
@@ -87,11 +87,11 @@ class LeaderboardSnapshotSeeder extends Seeder
 
         for ($i = 1; $i < self::WEEKS; $i++) {
             $previous = $weeks[$i - 1];
-            $current = [];
+            $current  = [];
 
             foreach (self::CATEGORIES as $category) {
-                $ranked = $previous[$category];
-                $ranked = $this->applyRankShuffling($ranked);
+                $ranked             = $previous[$category];
+                $ranked             = $this->applyRankShuffling($ranked);
                 $current[$category] = $ranked;
             }
 
@@ -122,23 +122,23 @@ class LeaderboardSnapshotSeeder extends Seeder
         $position = 1 - (($rank - 1) / max($total - 1, 1));
 
         return match ($category) {
-            'voice' => round($position * 70 + rand(0, 10), 1),
-            'growth' => round($position * 12 - 2 + (rand(-10, 10) / 10), 1),
+            'voice'    => round($position * 70 + rand(0, 10), 1),
+            'growth'   => round($position * 12 - 2 + (rand(-10, 10) / 10), 1),
             'recruits' => (int) round($position * 25 + rand(0, 5)),
-            default => 0,
+            default    => 0,
         };
     }
 
     private function generateTrend(string $category): array
     {
         $points = 8;
-        $trend = [];
+        $trend  = [];
 
         $base = match ($category) {
-            'voice' => rand(20, 60),
-            'growth' => rand(-3, 10),
+            'voice'    => rand(20, 60),
+            'growth'   => rand(-3, 10),
             'recruits' => rand(2, 20),
-            default => 0,
+            default    => 0,
         };
 
         for ($i = 0; $i < $points; $i++) {

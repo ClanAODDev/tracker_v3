@@ -17,7 +17,7 @@ class LeaderboardSnapshot extends Model
 
     protected $casts = [
         'snapshot_date' => 'date',
-        'trend_data' => 'array',
+        'trend_data'    => 'array',
     ];
 
     public function division(): BelongsTo

@@ -35,8 +35,8 @@ readonly class LeaderboardTrendData
             divisionId: $divisionId,
             category: $category,
             history: $snapshots->map(fn ($s) => [
-                'date' => $s->snapshot_date->toDateString(),
-                'rank' => $s->rank,
+                'date'  => $s->snapshot_date->toDateString(),
+                'rank'  => $s->rank,
                 'value' => (float) $s->value,
             ]),
             bestRank: $ranks->min(),

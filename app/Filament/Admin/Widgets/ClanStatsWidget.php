@@ -58,7 +58,7 @@ class ClanStatsWidget extends BaseWidget
     protected function statsFromLiveAggregation(): array
     {
         $activeDivisionIds = Division::whereHas('members')->pluck('id');
-        $activeDivisions = $activeDivisionIds->count();
+        $activeDivisions   = $activeDivisionIds->count();
 
         $latestCensuses = Census::select('division_id', DB::raw('MAX(id) as id'))
             ->whereIn('division_id', $activeDivisionIds)
@@ -70,7 +70,7 @@ class ClanStatsWidget extends BaseWidget
             ->first();
 
         $totalFromCensus = $clanStats->total_count ?? Member::whereIn('division_id', $activeDivisionIds)->count();
-        $totalVoice = $clanStats->total_voice ?? 0;
+        $totalVoice      = $clanStats->total_voice ?? 0;
 
         $voicePercent = $totalFromCensus > 0 ? round(($totalVoice / $totalFromCensus) * 100) : 0;
 
@@ -148,7 +148,7 @@ class ClanStatsWidget extends BaseWidget
             return $current > 0 ? 'New recruiting activity' : 'No recruiting yet';
         }
 
-        $diff = $current - $previous;
+        $diff    = $current - $previous;
         $percent = round(abs($diff / $previous) * 100);
 
         if ($diff > 0) {

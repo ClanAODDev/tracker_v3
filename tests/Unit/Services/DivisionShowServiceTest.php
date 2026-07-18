@@ -3,7 +3,6 @@
 namespace Tests\Unit\Services;
 
 use App\Data\DivisionShowData;
-
 use App\Models\Census;
 use App\Services\DivisionShowService;
 use Carbon\Carbon;
@@ -161,7 +160,6 @@ class DivisionShowServiceTest extends TestCase
 
         $this->assertCount(2, $result->divisionLeaders);
     }
-
 
     #[Test]
     public function get_show_data_includes_pending_actions()
