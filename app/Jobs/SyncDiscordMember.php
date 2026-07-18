@@ -61,6 +61,10 @@ class SyncDiscordMember implements ShouldQueue
             return;
         }
 
+        if (User::where('member_id', $this->member->id)->exists()) {
+            return;
+        }
+
         User::query()
             ->whereNull('member_id')
             ->where('discord_id', $this->member->discord_id)
