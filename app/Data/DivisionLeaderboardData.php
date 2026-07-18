@@ -94,11 +94,12 @@ readonly class DivisionLeaderboardData
         foreach ($categoryMap as $key => $category) {
             $categorySnapshots = $snapshots->get($category, collect());
 
-            $data[$key] = $data[$key]->map(function ($entry) use ($categorySnapshots) {
-                $snapshot = $categorySnapshots->get($entry['id']);
+            $data[$key] = $data[$key]->values()->map(function ($entry, $index) use ($categorySnapshots) {
+                $snapshot    = $categorySnapshots->get($entry['id']);
+                $currentRank = $index + 1;
 
-                $entry['rank_change']   = $snapshot?->rank_change ?? 0;
-                $entry['previous_rank'] = $snapshot?->previous_rank;
+                $entry['rank_change']   = $snapshot ? $snapshot->rank - $currentRank : 0;
+                $entry['previous_rank'] = $snapshot?->rank;
 
                 return $entry;
             });

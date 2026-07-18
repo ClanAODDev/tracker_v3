@@ -2007,8 +2007,15 @@ body.no-animations {
     flex-shrink: 0;
 }
 
-.leaderboard-name {
+.leaderboard-name-group {
     flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+}
+
+.leaderboard-name {
     color: var(--color-white);
     font-size: 14px;
     font-weight: 500;
@@ -2043,11 +2050,11 @@ body.no-animations {
 .leaderboard-movement {
     display: inline-flex;
     align-items: center;
-    gap: 2px;
-    font-size: 11px;
-    font-weight: 600;
+    gap: 1px;
+    font-size: 10px;
+    font-weight: 500;
     flex-shrink: 0;
-    margin-left: -4px;
+    opacity: 0.75;
 
     &.leaderboard-movement--up {
         color: var(--color-success);
@@ -2055,11 +2062,6 @@ body.no-animations {
 
     &.leaderboard-movement--down {
         color: var(--color-danger);
-    }
-
-    &.leaderboard-movement--unchanged {
-        color: var(--color-muted);
-        opacity: 0.4;
     }
 }
 

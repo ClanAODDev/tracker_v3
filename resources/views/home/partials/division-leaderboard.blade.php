@@ -29,9 +29,11 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
-                        <span class="leaderboard-name">{{ $division['name'] }}</span>
+                        <span class="leaderboard-name-group">
+                            <span class="leaderboard-name">{{ $division['name'] }}</span>
+                            @include('home.partials.leaderboard-movement', ['division' => $division])
+                        </span>
                         @if(count($division['trend']) > 1)
                             <x-sparkline :data="$division['trend']" :trend="$division['trending']" />
                         @endif
@@ -46,9 +48,11 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
-                        <span class="leaderboard-name">{{ $division['name'] }}</span>
+                        <span class="leaderboard-name-group">
+                            <span class="leaderboard-name">{{ $division['name'] }}</span>
+                            @include('home.partials.leaderboard-movement', ['division' => $division])
+                        </span>
                         @if(count($division['trend']) > 1)
                             <x-sparkline :data="$division['trend']" :trend="$division['trending']" />
                         @endif
@@ -63,9 +67,11 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
-                        <span class="leaderboard-name">{{ $division['name'] }}</span>
+                        <span class="leaderboard-name-group">
+                            <span class="leaderboard-name">{{ $division['name'] }}</span>
+                            @include('home.partials.leaderboard-movement', ['division' => $division])
+                        </span>
                         @if(count($division['trend']) > 1)
                             <x-sparkline :data="$division['trend']" :trend="$division['value'] > 0 ? 'up' : ($division['value'] < 0 ? 'down' : 'neutral')" />
                         @endif
@@ -92,9 +98,11 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
-                        <span class="leaderboard-name">{{ $division['name'] }}</span>
+                        <span class="leaderboard-name-group">
+                            <span class="leaderboard-name">{{ $division['name'] }}</span>
+                            @include('home.partials.leaderboard-movement', ['division' => $division])
+                        </span>
                         @if(count($division['trend']) > 1)
                             <x-sparkline :data="$division['trend']" :trend="$division['trending']" />
                         @endif
@@ -116,9 +124,11 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
-                        <span class="leaderboard-name">{{ $division['name'] }}</span>
+                        <span class="leaderboard-name-group">
+                            <span class="leaderboard-name">{{ $division['name'] }}</span>
+                            @include('home.partials.leaderboard-movement', ['division' => $division])
+                        </span>
                         @if(count($division['trend']) > 1)
                             <x-sparkline :data="$division['trend']" :trend="$division['trending']" />
                         @endif
@@ -140,9 +150,11 @@
                     <a href="{{ route('division', $division['slug']) }}"
                        class="leaderboard-item {{ $division['id'] === $leaderboard->userDivisionId ? 'leaderboard-item--highlight' : '' }}">
                         <span class="leaderboard-rank leaderboard-rank--{{ $index + 1 }}">{{ $index + 1 }}</span>
-                        @include('home.partials.leaderboard-movement', ['division' => $division])
                         <img src="{{ $division['logo'] ?? getThemedLogoPath() }}" class="leaderboard-logo" alt="">
-                        <span class="leaderboard-name">{{ $division['name'] }}</span>
+                        <span class="leaderboard-name-group">
+                            <span class="leaderboard-name">{{ $division['name'] }}</span>
+                            @include('home.partials.leaderboard-movement', ['division' => $division])
+                        </span>
                         @if(count($division['trend']) > 1)
                             <x-sparkline :data="$division['trend']" :trend="$division['value'] > 0 ? 'up' : ($division['value'] < 0 ? 'down' : 'neutral')" />
                         @endif
