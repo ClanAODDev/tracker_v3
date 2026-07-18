@@ -23,7 +23,7 @@ class DivisionStatsDataTest extends TestCase
         $this->assertEquals(0, $stats->memberCount);
         $this->assertEquals(0, $stats->voiceActiveCount);
         $this->assertEquals(0, $stats->voiceRate);
-        $this->assertEquals(0, $stats->recruitsLast30Days);
+        $this->assertEquals(0, $stats->recruitsThisMonth);
     }
 
     #[Test]
@@ -84,16 +84,16 @@ class DivisionStatsDataTest extends TestCase
 
         Member::factory()->count(2)->create([
             'division_id' => $division->id,
-            'join_date'   => now()->subDays(15),
+            'join_date'   => now()->startOfMonth()->addDays(1),
         ]);
         Member::factory()->create([
             'division_id' => $division->id,
-            'join_date'   => now()->subDays(45),
+            'join_date'   => now()->subMonths(2),
         ]);
 
         $stats = DivisionStatsData::fromDivision($division);
 
-        $this->assertEquals(2, $stats->recruitsLast30Days);
+        $this->assertEquals(2, $stats->recruitsThisMonth);
     }
 
     #[Test]
