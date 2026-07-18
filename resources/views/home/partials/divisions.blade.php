@@ -1,5 +1,5 @@
 @php
-    $divisionStats = collect();
+    $divisionStats = [];
     foreach ($leaderboard->voiceLeaders as $entry) {
         $divisionStats[$entry['id']]['voice'] = $entry['formatted'];
     }
@@ -19,7 +19,7 @@
             @unless($division->isShutdown())
                 <div class="division-card-stats">
                     @if(isset($stats['voice']))
-                        <span class="division-card-stat" title="Voice active">
+                        <span class="division-card-stat" title="Voice active (7 days)">
                             <i class="fa fa-headset"></i> {{ $stats['voice'] }}
                         </span>
                     @endif
