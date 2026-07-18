@@ -25,7 +25,7 @@
         </div>
 
         <div class="divisions-section animate-fade-in-up" style="animation-delay: 0.4s">
-            <h3 class="division-section-title">All <span class="text-muted">Divisions</span></h3>
+            <h3 class="division-section-title">All <span class="text-muted">Divisions</span> <small class="text-muted" style="font-size: 11px; font-weight: 400; letter-spacing: 0; margin-left: 8px;">weekly voice stats shown</small></h3>
             <hr/>
             @include('home.partials.divisions')
         </div>
