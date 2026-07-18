@@ -56,6 +56,11 @@ class ForumProcedureService
         ]);
     }
 
+    public function clearDiscordInfo(int $userId): ?object
+    {
+        return $this->setDiscordInfo($userId, '', '');
+    }
+
     public function checkUser(string $username, string $password): ?object
     {
         return $this->call(self::CHECK_USER, [
