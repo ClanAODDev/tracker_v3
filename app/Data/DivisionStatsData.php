@@ -20,7 +20,7 @@ readonly class DivisionStatsData
 
         $division->loadCount([
             'members',
-            'members as voice_active_count'    => fn ($q) => $q->where('last_voice_activity', '>=', now()->subDays($activityThresholdDays)->toDateString()),
+            'members as voice_active_count'  => fn ($q) => $q->where('last_voice_activity', '>=', now()->subDays($activityThresholdDays)->toDateString()),
             'members as recruits_this_month' => fn ($q) => $q->where('join_date', '>=', now()->startOfMonth()->toDateString()),
         ]);
 
