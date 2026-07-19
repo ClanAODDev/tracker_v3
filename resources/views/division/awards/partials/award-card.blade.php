@@ -26,7 +26,7 @@
                 @endif
             </div>
             <span class="award-pill pill-{{ $award->rarity }}">
-                {{ $award->recipients_count }} {{ Str::plural('recipient', $award->recipients_count) }}
+                {{ Str::counted('recipient', $award->recipients_count) }}
             </span>
         </div>
     </a>

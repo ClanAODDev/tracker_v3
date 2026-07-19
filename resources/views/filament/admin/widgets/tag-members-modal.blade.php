@@ -6,7 +6,7 @@
         </div>
     @else
         <div class="text-sm text-gray-500 dark:text-gray-400 mb-4">
-            {{ $members->count() }} {{ Str::plural('member', $members->count()) }} with this tag
+            {{ Str::counted('member', $members->count()) }} with this tag
         </div>
         <div class="divide-y divide-gray-200 dark:divide-gray-700 max-h-96 overflow-y-auto">
             @foreach($members as $member)

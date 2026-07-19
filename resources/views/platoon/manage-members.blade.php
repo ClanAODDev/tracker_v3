@@ -36,7 +36,7 @@
                     <div class="unassigned-organizer-header">
                         <span>
                             <i class="fa fa-exclamation-triangle text-warning"></i>
-                            {{ count($platoon->unassigned) }} {{ Str::plural('member', count($platoon->unassigned)) }} not assigned to a {{ $division->locality('squad') }}
+                            {{ Str::counted('member', count($platoon->unassigned)) }} not assigned to a {{ $division->locality('squad') }}
                         </span>
                     </div>
                     <div class="unassigned-organizer-members mod-plt" style="display: block;">

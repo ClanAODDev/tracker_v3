@@ -52,7 +52,7 @@
                                         @if ($rarity['max'] === null)
                                             {{ $rarity['min'] }}+
                                         @elseif ($rarity['min'] === $rarity['max'])
-                                            {{ $rarity['min'] }} {{ Str::plural('recipient', $rarity['min']) }}
+                                            {{ Str::counted('recipient', $rarity['min']) }}
                                         @else
                                             {{ $rarity['min'] }}-{{ $rarity['max'] }}
                                         @endif
