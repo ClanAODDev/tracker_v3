@@ -36,6 +36,7 @@ class RecruitingController extends Controller
     public function index()
     {
         $divisions = Division::active()->where('shutdown_at', null)
+            ->orderBy('name')
             ->withoutFloaters()
             ->withoutBR()
             ->get();

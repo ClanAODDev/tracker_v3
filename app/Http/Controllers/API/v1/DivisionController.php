@@ -32,6 +32,7 @@ class DivisionController extends ApiController
     public function index(): JsonResponse
     {
         $divisions = Division::active()
+            ->orderBy('name')
             ->withoutFloaters()
             ->shuttingDown(
                 request()->has('include-shutdown')

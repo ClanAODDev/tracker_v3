@@ -32,6 +32,8 @@ class DivisionLeaderboardWidget extends BaseWidget
         return $table
             ->query(
                 Division::query()
+                    ->active()
+                    ->whereNull('shutdown_at')
                     ->whereHas('members')
                     ->with('latestCensus')
             )
@@ -93,6 +95,8 @@ class DivisionLeaderboardWidget extends BaseWidget
         return $table
             ->query(
                 Division::query()
+                    ->active()
+                    ->whereNull('shutdown_at')
                     ->whereHas('members')
                     ->withCount(['members as recruits_count' => function (Builder $query) {
                         $query->where('join_date', '>=', now()->subDays(30));

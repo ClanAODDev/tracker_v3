@@ -29,6 +29,21 @@ class DivisionLeaderboardDataTest extends TestCase
     }
 
     #[Test]
+    public function calculate_excludes_divisions_with_shutdown_at_set(): void
+    {
+        $activeDivision = $this->seedDivisionWithCensus();
+        $shuttingDown   = $this->seedDivisionWithCensus();
+        $shuttingDown->update(['shutdown_at' => now()]);
+
+        $result = DivisionLeaderboardData::calculate();
+
+        $this->assertTrue($result['voiceLeaders']->pluck('id')->contains($activeDivision->id));
+        $this->assertFalse($result['voiceLeaders']->pluck('id')->contains($shuttingDown->id));
+        $this->assertFalse($result['growthLeaders']->pluck('id')->contains($shuttingDown->id));
+        $this->assertFalse($result['recruitLeaders']->pluck('id')->contains($shuttingDown->id));
+    }
+
+    #[Test]
     public function calculate_returns_divisions_sorted_by_value_descending(): void
     {
         $divA = $this->seedDivisionWithCensus(voiceCount: 10, totalCount: 100);

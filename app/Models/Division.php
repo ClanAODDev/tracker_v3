@@ -186,7 +186,7 @@ class Division extends Model
 
     public function scopeActive($query): void
     {
-        $query->whereActive(true)->orderBy('name', 'ASC');
+        $query->whereActive(true);
     }
 
     public function scopeWithoutFloaters($query): void
