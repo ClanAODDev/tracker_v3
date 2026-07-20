@@ -41,6 +41,7 @@ readonly class DivisionLeaderboardData
     {
         $divisions = Division::query()
             ->active()
+            ->whereNull('shutdown_at')
             ->withoutFloaters()
             ->withoutBR()
             ->whereHas('members')

@@ -144,7 +144,7 @@ class ReportsController extends Controller
 
     public function usersWithoutDiscordReport(): JsonResponse
     {
-        $divisions = Division::active()->with('members')->get();
+        $divisions = Division::active()->orderBy('name')->with('members')->get();
         $data      = [];
         foreach ($divisions as $division) {
             foreach ($division->members->where('discord', '') as $member) {
@@ -157,7 +157,7 @@ class ReportsController extends Controller
 
     public function divisionUsersWithAccess(): void
     {
-        foreach (Division::active()->get() as $division) {
+        foreach (Division::active()->orderBy('name')->get() as $division) {
             echo '---------- ' . $division->name . ' ---------- ' . PHP_EOL;
             $members = $division->members()->whereHas('user', function ($query) {
                 $query->where('role', '>', 2);
@@ -206,6 +206,7 @@ class ReportsController extends Controller
     public function leadership(): View
     {
         $divisions = Division::active()
+            ->orderBy('name')
             ->withoutFloaters()
             ->with([
                 'sergeants' => function ($query) {

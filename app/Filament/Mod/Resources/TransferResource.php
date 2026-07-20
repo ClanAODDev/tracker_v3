@@ -125,7 +125,7 @@ class TransferResource extends Resource
                 SelectFilter::make('transferring_to')
                     ->label('Xfers To')
                     ->searchable()
-                    ->options(Division::active()->pluck('name', 'id'))
+                    ->options(Division::active()->orderBy('name')->pluck('name', 'id'))
                     ->query(function (Builder $query, array $data): Builder {
                         if (! empty($data['value'])) {
                             return $query->where('division_id', $data['value']);

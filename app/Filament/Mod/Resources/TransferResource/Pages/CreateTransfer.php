@@ -120,6 +120,7 @@ class CreateTransfer extends CreateRecord
                             titleAttribute: 'name',
                             modifyQueryUsing: fn (Builder $query, Get $get) => $query
                                 ->active()
+                                ->orderBy('name')
                                 ->withoutFloaters()
                                 ->where('id', '!=', auth()->user()->member?->division_id)
                                 ->when(
