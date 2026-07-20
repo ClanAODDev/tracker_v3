@@ -5,6 +5,7 @@ namespace Tests\Unit\Models;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Models\Division;
+use App\Models\LeaderboardSnapshot;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -79,6 +80,28 @@ class DivisionTest extends TestCase
         $division->update(['shutdown_at' => now()]);
 
         $this->assertFalse(Cache::has('division_leaderboard'));
+    }
+
+    #[Test]
+    public function deactivating_division_preserves_its_leaderboard_snapshots()
+    {
+        $division = $this->createActiveDivision();
+        LeaderboardSnapshot::factory()->count(3)->create(['division_id' => $division->id]);
+
+        $division->update(['active' => false]);
+
+        $this->assertSame(3, LeaderboardSnapshot::forDivision($division->id)->count());
+    }
+
+    #[Test]
+    public function setting_shutdown_at_preserves_its_leaderboard_snapshots()
+    {
+        $division = $this->createActiveDivision();
+        LeaderboardSnapshot::factory()->count(3)->create(['division_id' => $division->id]);
+
+        $division->update(['shutdown_at' => now()]);
+
+        $this->assertSame(3, LeaderboardSnapshot::forDivision($division->id)->count());
     }
 
     #[Test]

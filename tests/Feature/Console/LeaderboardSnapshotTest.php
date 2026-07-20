@@ -32,6 +32,21 @@ class LeaderboardSnapshotTest extends TestCase
     }
 
     #[Test]
+    public function snapshot_command_excludes_shutting_down_divisions(): void
+    {
+        $divisions = $this->seedLeaderboardDivisions(3);
+        $divisions->first()->update(['shutdown_at' => now()]);
+
+        $this->artisan('tracker:leaderboard-snapshot')->assertSuccessful();
+
+        $this->assertEquals(6, LeaderboardSnapshot::count());
+        $this->assertEquals(
+            0,
+            LeaderboardSnapshot::forDivision($divisions->first()->id)->count()
+        );
+    }
+
+    #[Test]
     public function snapshot_skips_when_already_exists_today(): void
     {
         $division = $this->seedLeaderboardDivisions(1)->first();
