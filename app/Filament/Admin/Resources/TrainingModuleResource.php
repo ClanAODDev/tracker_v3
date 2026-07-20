@@ -11,6 +11,7 @@ use App\Models\TrainingModule;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ReplicateAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -21,6 +22,7 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\TextInputColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class TrainingModuleResource extends Resource
 {
@@ -109,6 +111,40 @@ class TrainingModuleResource extends Resource
             ])
             ->recordActions([
                 EditAction::make(),
+                ReplicateAction::make('clone')
+                    ->label('Clone')
+                    ->icon('heroicon-o-square-2-stack')
+                    ->modalHeading(fn (TrainingModule $record): string => "Clone \"{$record->name}\"")
+                    ->excludeAttributes(['slug', 'sections_count'])
+                    ->schema([
+                        TextInput::make('name')
+                            ->required()
+                            ->maxLength(191),
+                        TextInput::make('slug')
+                            ->required()
+                            ->unique(TrainingModule::class, 'slug')
+                            ->maxLength(50)
+                            ->alphaDash(),
+                    ])
+                    ->mutateRecordDataUsing(function (array $data): array {
+                        $data['name'] = $data['name'] . ' (Copy)';
+                        $data['slug'] = Str::slug($data['name']);
+
+                        return $data;
+                    })
+                    ->after(function (TrainingModule $record, TrainingModule $replica): void {
+                        foreach ($record->sections()->ordered()->with('checkpoints')->get() as $section) {
+                            $newSection = $replica->sections()->create(
+                                $section->only(['title', 'icon', 'content', 'display_order'])
+                            );
+
+                            foreach ($section->checkpoints as $checkpoint) {
+                                $newSection->checkpoints()->create(
+                                    $checkpoint->only(['label', 'description', 'display_order'])
+                                );
+                            }
+                        }
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
