@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Data\DivisionLeaderboardData;
 use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Enums\Rank;
@@ -115,6 +116,12 @@ class Division extends Model
             $division->applicationFields()->createMany(DivisionApplicationField::DEFAULTS);
         });
         static::deleted(fn (Division $division) => $division->recordActivity(ActivityType::DELETED_DIVISION));
+
+        static::updated(function (Division $division) {
+            if ($division->wasChanged(['active', 'shutdown_at'])) {
+                DivisionLeaderboardData::clearCache();
+            }
+        });
     }
 
     public function getRouteKeyName(): string

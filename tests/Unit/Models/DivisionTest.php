@@ -7,6 +7,7 @@ use App\Enums\Rank;
 use App\Models\Division;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -54,6 +55,42 @@ class DivisionTest extends TestCase
 
         $this->assertTrue($results->contains($activeDivision));
         $this->assertFalse($results->contains($inactiveDivision));
+    }
+
+    #[Test]
+    public function updating_active_clears_leaderboard_cache()
+    {
+        $division = $this->createActiveDivision();
+
+        Cache::put('division_leaderboard', ['stale' => true], 3600);
+
+        $division->update(['active' => false]);
+
+        $this->assertFalse(Cache::has('division_leaderboard'));
+    }
+
+    #[Test]
+    public function updating_shutdown_at_clears_leaderboard_cache()
+    {
+        $division = $this->createActiveDivision();
+
+        Cache::put('division_leaderboard', ['stale' => true], 3600);
+
+        $division->update(['shutdown_at' => now()]);
+
+        $this->assertFalse(Cache::has('division_leaderboard'));
+    }
+
+    #[Test]
+    public function updating_unrelated_attribute_does_not_clear_leaderboard_cache()
+    {
+        $division = $this->createActiveDivision();
+
+        Cache::put('division_leaderboard', ['stale' => true], 3600);
+
+        $division->update(['description' => 'Updated description']);
+
+        $this->assertTrue(Cache::has('division_leaderboard'));
     }
 
     #[Test]
