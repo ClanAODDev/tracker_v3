@@ -9,6 +9,7 @@ use App\Enums\Position;
 use App\Enums\Rank;
 use App\Presenters\DivisionPresenter;
 use App\Settings\DivisionSettings;
+use Illuminate\Database\Eloquent\Attributes\RouteKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,6 +23,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+#[RouteKey('slug')]
 class Division extends Model
 {
     use HasFactory;
@@ -122,11 +124,6 @@ class Division extends Model
                 DivisionLeaderboardData::clearCache();
             }
         });
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
     }
 
     public function setAbbreviationAttribute($value): void
