@@ -95,4 +95,23 @@ class ClanForumSessionTest extends TestCase
         $this->assertAuthenticatedAs($user);
         $this->assertDatabaseCount('users', 1);
     }
+
+    #[Test]
+    public function creates_user_with_placeholder_email_when_forum_email_already_taken(): void
+    {
+        $member = Member::factory()->create(['clan_id' => 10004]);
+        User::factory()->create(['email' => 'shared@example.com']);
+
+        $sessionData = $this->fakeSessionData(10004, 'newmember', 'shared@example.com');
+        $this->mockForumServices($sessionData);
+
+        $this->hitLoginWithCookie();
+
+        $this->assertDatabaseHas('users', [
+            'name'      => 'newmember',
+            'email'     => $member->id . '@placeholder.local',
+            'member_id' => $member->id,
+        ]);
+        $this->assertDatabaseCount('users', 2);
+    }
 }

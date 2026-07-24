@@ -340,4 +340,35 @@ class UserTest extends TestCase
 
         $this->assertEquals('existing@example.com', $user->fresh()->email);
     }
+
+    #[Test]
+    public function resolve_unique_email_returns_email_when_available()
+    {
+        $member = Member::factory()->create();
+
+        $email = User::resolveUniqueEmail('available@example.com', $member);
+
+        $this->assertEquals('available@example.com', $email);
+    }
+
+    #[Test]
+    public function resolve_unique_email_returns_placeholder_when_null()
+    {
+        $member = Member::factory()->create();
+
+        $email = User::resolveUniqueEmail(null, $member);
+
+        $this->assertEquals($member->id . '@placeholder.local', $email);
+    }
+
+    #[Test]
+    public function resolve_unique_email_returns_placeholder_when_taken()
+    {
+        User::factory()->create(['email' => 'taken@example.com']);
+        $member = Member::factory()->create();
+
+        $email = User::resolveUniqueEmail('taken@example.com', $member);
+
+        $this->assertEquals($member->id . '@placeholder.local', $email);
+    }
 }
