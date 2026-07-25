@@ -103,7 +103,7 @@ class ClanForumSession
 
         $user            = new User;
         $user->name      = $username;
-        $user->email     = $sessionData->email;
+        $user->email     = User::resolveUniqueEmail($sessionData->email, $member);
         $user->member_id = $member->id;
         $user->save();
 

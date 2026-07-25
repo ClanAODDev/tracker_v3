@@ -373,10 +373,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
             return $user;
         }
 
-        if (! $email || self::where('email', $email)->exists()) {
-            $email = $member->id . '@placeholder.local';
-        }
-
         $name = strtolower($member->name);
         if (self::where('name', $name)->exists()) {
             $name = $name . '_' . $member->clan_id;
@@ -384,10 +380,19 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
         return self::create([
             'name'      => $name,
-            'email'     => $email,
+            'email'     => self::resolveUniqueEmail($email, $member),
             'member_id' => $member->id,
             'role'      => Role::MEMBER,
         ]);
+    }
+
+    public static function resolveUniqueEmail(?string $email, Member $member): string
+    {
+        if (! $email || self::where('email', $email)->exists()) {
+            return $member->id . '@placeholder.local';
+        }
+
+        return $email;
     }
 
     private function isWithinPlatoonLimit(Rank $targetRank, $division): bool
