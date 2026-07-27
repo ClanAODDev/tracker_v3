@@ -4,12 +4,15 @@ namespace Tests\Unit\Requests;
 
 use App\Http\Requests\Auth\DiscordRegistrationRequest;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class DiscordRegistrationRequestTest extends TestCase
 {
+    use RefreshDatabase;
+
     private function validateUsername(string $username): ValidatorContract
     {
         $request = DiscordRegistrationRequest::create('/register', 'POST', [
