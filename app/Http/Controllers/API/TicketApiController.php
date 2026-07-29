@@ -60,6 +60,10 @@ class TicketApiController extends Controller
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
 
+        if (! $ticket->canBeOwned()) {
+            return response()->json(['error' => "Ticket cannot be assigned from its current state ({$ticket->state})"], 422);
+        }
+
         $ticket->ownTo($user);
         $this->silentNotify(fn () => $this->notificationService->notifyTicketAssigned($ticket, assignee: $user, assignedBy: $user));
 
@@ -79,6 +83,10 @@ class TicketApiController extends Controller
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
 
+        if (! $ticket->canBeResolved()) {
+            return response()->json(['error' => "Ticket cannot be resolved from its current state ({$ticket->state})"], 422);
+        }
+
         $ticket->resolve();
         $this->silentNotify(fn () => $this->notificationService->notifyTicketResolved($ticket));
 
@@ -96,6 +104,10 @@ class TicketApiController extends Controller
 
         if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
+        }
+
+        if (! $ticket->canBeRejected()) {
+            return response()->json(['error' => "Ticket cannot be rejected from its current state ({$ticket->state})"], 422);
         }
 
         $validated = $request->validate([
@@ -119,6 +131,10 @@ class TicketApiController extends Controller
 
         if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
+        }
+
+        if (! $ticket->canBeReopened()) {
+            return response()->json(['error' => "Ticket cannot be reopened from its current state ({$ticket->state})"], 422);
         }
 
         $ticket->reopen();
@@ -184,6 +200,10 @@ class TicketApiController extends Controller
 
         if (! $assignee->member || $assignee->member->rank->value < $minimumRank) {
             return response()->json(['error' => 'Assignee does not meet the minimum rank for this ticket type'], 422);
+        }
+
+        if (! $ticket->canBeOwned()) {
+            return response()->json(['error' => "Ticket cannot be reassigned from its current state ({$ticket->state})"], 422);
         }
 
         $ticket->ownTo($assignee);

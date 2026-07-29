@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Models;
 
+use App\Exceptions\InvalidTicketTransitionException;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -193,6 +194,117 @@ class TicketTest extends TestCase
 
         $this->assertEquals('rejected', $ticket->state);
         $this->assertNotNull($ticket->resolved_at);
+    }
+
+    #[Test]
+    public function own_to_throws_when_ticket_is_resolved()
+    {
+        $user       = $this->createMemberWithUser();
+        $ticketType = TicketType::factory()->create();
+
+        $this->actingAs($user);
+
+        $ticket = Ticket::factory()->create([
+            'caller_id'      => $user->id,
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'resolved',
+            'resolved_at'    => now(),
+        ]);
+
+        $this->expectException(InvalidTicketTransitionException::class);
+
+        $ticket->ownTo($user);
+    }
+
+    #[Test]
+    public function resolve_throws_when_ticket_is_rejected()
+    {
+        $user       = $this->createMemberWithUser();
+        $ticketType = TicketType::factory()->create();
+
+        $this->actingAs($user);
+
+        $ticket = Ticket::factory()->create([
+            'caller_id'      => $user->id,
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'rejected',
+            'resolved_at'    => now(),
+        ]);
+
+        $this->expectException(InvalidTicketTransitionException::class);
+
+        $ticket->resolve();
+    }
+
+    #[Test]
+    public function reject_throws_when_ticket_is_resolved()
+    {
+        $user       = $this->createMemberWithUser();
+        $ticketType = TicketType::factory()->create();
+
+        $this->actingAs($user);
+
+        $ticket = Ticket::factory()->create([
+            'caller_id'      => $user->id,
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'resolved',
+            'resolved_at'    => now(),
+        ]);
+
+        $this->expectException(InvalidTicketTransitionException::class);
+
+        $ticket->reject();
+    }
+
+    #[Test]
+    public function reopen_throws_when_ticket_is_already_open()
+    {
+        $user       = $this->createMemberWithUser();
+        $ticketType = TicketType::factory()->create();
+
+        $this->actingAs($user);
+
+        $ticket = Ticket::factory()->create([
+            'caller_id'      => $user->id,
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'assigned',
+            'resolved_at'    => null,
+        ]);
+
+        $this->expectException(InvalidTicketTransitionException::class);
+
+        $ticket->reopen();
+    }
+
+    #[Test]
+    public function state_guard_helpers_reflect_open_and_closed_states()
+    {
+        $user       = $this->createMemberWithUser();
+        $ticketType = TicketType::factory()->create();
+
+        $open = Ticket::factory()->create([
+            'caller_id'      => $user->id,
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'assigned',
+            'resolved_at'    => null,
+        ]);
+
+        $closed = Ticket::factory()->create([
+            'caller_id'      => $user->id,
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'rejected',
+            'resolved_at'    => now(),
+        ]);
+
+        $this->assertTrue($open->canBeOwned());
+        $this->assertTrue($open->canBeResolved());
+        $this->assertTrue($open->canBeRejected());
+        $this->assertFalse($open->canBeReopened());
+
+        $this->assertFalse($closed->canBeOwned());
+        $this->assertFalse($closed->canBeResolved());
+        $this->assertFalse($closed->canBeRejected());
+        $this->assertTrue($closed->canBeReopened());
     }
 
     #[Test]

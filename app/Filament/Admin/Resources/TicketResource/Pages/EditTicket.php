@@ -22,7 +22,7 @@ class EditTicket extends EditRecord
                 ->label('Assign to Me')
                 ->icon('heroicon-o-user')
                 ->color('info')
-                ->visible(fn () => $this->record->owner_id !== auth()->id() && ! $this->record->isResolved())
+                ->visible(fn () => $this->record->owner_id !== auth()->id() && $this->record->canBeOwned())
                 ->action(function () {
                     $this->record->ownTo(auth()->user());
                     $this->record->notify(new TicketReaction('assigned'));
@@ -39,7 +39,7 @@ class EditTicket extends EditRecord
                 ->label('Resolve')
                 ->icon('heroicon-o-check-circle')
                 ->color('success')
-                ->visible(fn () => ! $this->record->isResolved())
+                ->visible(fn () => $this->record->canBeResolved())
                 ->requiresConfirmation()
                 ->modalHeading('Resolve Ticket')
                 ->modalDescription('Are you sure you want to mark this ticket as resolved?')
@@ -60,7 +60,7 @@ class EditTicket extends EditRecord
                 ->label('Reject')
                 ->icon('heroicon-o-x-circle')
                 ->color('danger')
-                ->visible(fn () => ! $this->record->isResolved())
+                ->visible(fn () => $this->record->canBeRejected())
                 ->form([
                     Textarea::make('reason')
                         ->label('Rejection Reason')
@@ -86,7 +86,7 @@ class EditTicket extends EditRecord
                 ->label('Reopen')
                 ->icon('heroicon-o-arrow-path')
                 ->color('warning')
-                ->visible(fn () => $this->record->isResolved())
+                ->visible(fn () => $this->record->canBeReopened())
                 ->requiresConfirmation()
                 ->action(function () {
                     $this->record->reopen();
