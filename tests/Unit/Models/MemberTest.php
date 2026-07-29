@@ -215,6 +215,59 @@ class MemberTest extends TestCase
     }
 
     #[Test]
+    public function is_at_least_returns_correct_value()
+    {
+        $member = $this->createMember(['rank' => Rank::SERGEANT]);
+
+        $this->assertTrue($member->isAtLeast(Rank::SERGEANT));
+        $this->assertTrue($member->isAtLeast(Rank::CORPORAL));
+        $this->assertFalse($member->isAtLeast(Rank::STAFF_SERGEANT));
+    }
+
+    #[Test]
+    public function is_above_returns_correct_value()
+    {
+        $member = $this->createMember(['rank' => Rank::SERGEANT]);
+
+        $this->assertTrue($member->isAbove(Rank::CORPORAL));
+        $this->assertFalse($member->isAbove(Rank::SERGEANT));
+        $this->assertFalse($member->isAbove(Rank::STAFF_SERGEANT));
+    }
+
+    #[Test]
+    public function is_at_most_returns_correct_value()
+    {
+        $member = $this->createMember(['rank' => Rank::SERGEANT]);
+
+        $this->assertTrue($member->isAtMost(Rank::SERGEANT));
+        $this->assertTrue($member->isAtMost(Rank::STAFF_SERGEANT));
+        $this->assertFalse($member->isAtMost(Rank::CORPORAL));
+    }
+
+    #[Test]
+    public function outranks_returns_correct_value()
+    {
+        $senior = $this->createMember(['rank' => Rank::STAFF_SERGEANT]);
+        $junior = $this->createMember(['rank' => Rank::CORPORAL]);
+
+        $this->assertTrue($senior->outranks($junior));
+        $this->assertFalse($junior->outranks($senior));
+        $this->assertFalse($senior->outranks($senior));
+    }
+
+    #[Test]
+    public function rank_threshold_helpers_return_false_when_rank_is_null()
+    {
+        $member       = $this->createMember(['rank' => Rank::SERGEANT]);
+        $member->rank = null;
+
+        $this->assertFalse($member->isAtLeast(Rank::RECRUIT));
+        $this->assertFalse($member->isAbove(Rank::RECRUIT));
+        $this->assertFalse($member->isAtMost(Rank::SERGEANT_MAJOR));
+        $this->assertFalse($member->outranks($this->createMember(['rank' => Rank::RECRUIT])));
+    }
+
+    #[Test]
     public function bot_response_formats_correctly()
     {
         $division = $this->createActiveDivision(['name' => 'Test Division']);

@@ -121,7 +121,7 @@ class DivisionTag extends Model
 
         $userMember = $user->member;
 
-        if ($userMember && $userMember->rank->value >= Rank::SERGEANT->value) {
+        if ($userMember?->isAtLeast(Rank::SERGEANT)) {
             return $query->where('visibility', TagVisibility::PUBLIC);
         }
 

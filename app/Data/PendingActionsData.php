@@ -55,7 +55,7 @@ readonly class PendingActionsData
             }
         }
 
-        if ($user->member && $user->member->rank->value >= Rank::SERGEANT->value) {
+        if ($user->member?->isAtLeast(Rank::SERGEANT)) {
             $query = RankAction::forUser($user)
                 ->pending()
                 ->whereHas('member', fn ($q) => $q->where('division_id', $division->id));

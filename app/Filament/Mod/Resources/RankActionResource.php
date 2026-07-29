@@ -93,7 +93,7 @@ class RankActionResource extends Resource
                         Fieldset::make('Dates')->schema([
                             DateTimePicker::make('awarded_at')
                                 ->visible(fn ($record
-                                ) => $record->rank->value >= Rank::SERGEANT->value && $record->awarded_at)
+                                ) => $record->rank->isAtLeast(Rank::SERGEANT) && $record->awarded_at)
                                 ->label('Awarded At')
                                 ->readOnly(),
                             DateTimePicker::make('approved_at')
@@ -370,7 +370,7 @@ class RankActionResource extends Resource
                     if (
                         ($user->isDivisionLeader() || $user->isRole('admin'))
                         && isset($member)
-                        && $member->rank->value >= Rank::CADET->value
+                        && $member->isAtLeast(Rank::CADET)
                     ) {
                         $options['demotion'] = 'Demotion (choose a new, lower rank)';
                     }
@@ -394,7 +394,7 @@ class RankActionResource extends Resource
                     usort($allRanks, fn (Rank $a, Rank $b) => $a->value <=> $b->value);
 
                     $options = array_reduce(
-                        array_filter($allRanks, fn (Rank $r) => $r->value < $member->rank->value),
+                        array_filter($allRanks, fn (Rank $r) => $r->isBelow($member->rank)),
                         fn ($acc, Rank $option) => $acc + [$option->value => ucwords($option->getLabel())],
                         []
                     );
@@ -417,7 +417,7 @@ class RankActionResource extends Resource
 
                     $options = [];
                     foreach ($allRanks as $rank) {
-                        if ($rank->value > $member->rank->value && $rank->value <= Rank::STAFF_SERGEANT->value) {
+                        if ($rank->isAbove($member->rank) && $rank->isAtMost(Rank::STAFF_SERGEANT)) {
                             $options[$rank->value] = ucwords($rank->getLabel());
                         }
                     }

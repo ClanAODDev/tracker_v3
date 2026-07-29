@@ -127,6 +127,26 @@ enum Rank: int implements HasColor, HasLabel
         return $this->value > $previousRank->value;
     }
 
+    public function isAtLeast(Rank $rank): bool
+    {
+        return $this->value >= $rank->value;
+    }
+
+    public function isAbove(Rank $rank): bool
+    {
+        return $this->value > $rank->value;
+    }
+
+    public function isAtMost(Rank $rank): bool
+    {
+        return $this->value <= $rank->value;
+    }
+
+    public function isBelow(Rank $rank): bool
+    {
+        return $this->value < $rank->value;
+    }
+
     public function isOfficer(): bool
     {
         return $this->value >= self::TRAINER->value;

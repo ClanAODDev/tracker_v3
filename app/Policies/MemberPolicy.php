@@ -2,7 +2,6 @@
 
 namespace App\Policies;
 
-use App\Enums\Rank;
 use App\Enums\Role;
 use App\Models\Division;
 use App\Models\Member;
@@ -102,7 +101,7 @@ class MemberPolicy
             return false;
         }
 
-        return $member->rank->value < $user->member->rank->value;
+        return $user->member->outranks($member);
     }
 
     public function managePartTime(User $user, Member $member): bool
@@ -118,8 +117,7 @@ class MemberPolicy
         }
 
         // can only promote up to one below your rank
-        $rankAllowed = $userPromoting->member->rank->value - 1;
-        if ($rankAllowed < $memberBeingPromoted->rank->value) {
+        if (! $userPromoting->member->outranks($memberBeingPromoted)) {
             return false;
         }
 
