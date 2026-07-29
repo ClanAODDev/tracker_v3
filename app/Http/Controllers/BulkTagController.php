@@ -19,7 +19,7 @@ class BulkTagController extends Controller
         $user   = auth()->user();
         $policy = new DivisionTagPolicy;
 
-        $availableTags = $policy->getAssignableTags($user, $member)
+        $availableTags = $policy->getAssignableTags($user)
             ->get()
             ->map(fn ($tag) => [
                 'id'         => $tag->id,
@@ -47,7 +47,7 @@ class BulkTagController extends Controller
         $user   = auth()->user();
         $policy = new DivisionTagPolicy;
 
-        $tag = $policy->getAssignableTags($user, $member)
+        $tag = $policy->getAssignableTags($user)
             ->find($validated['tag_id']);
 
         if (! $tag) {
@@ -107,19 +107,17 @@ class BulkTagController extends Controller
     {
         $this->authorize('assign', [DivisionTag::class, $member]);
 
-        $user           = auth()->user();
-        $userMember     = $user->member;
-        $userDivisionId = $userMember?->division_id;
-        $isSgt          = $userMember?->isAtLeast(Rank::SERGEANT) ?? false;
-
-        $tagIdRule = $user->isRole('admin') || $isSgt
-            ? 'exists:division_tags,id'
-            : Rule::exists('division_tags', 'id')->where(
-                fn ($q) => $q->where('division_id', $userDivisionId)->orWhereNull('division_id')
-            );
+        $user   = auth()->user();
+        $policy = new DivisionTagPolicy;
 
         $validated = $request->validate([
-            'tag_id' => ['required', 'integer', $tagIdRule],
+            'tag_id' => [
+                'required',
+                'integer',
+                Rule::exists('division_tags', 'id')->where(
+                    fn ($q) => $q->whereIn('id', $policy->getAssignableTags($user)->pluck('id'))
+                ),
+            ],
         ]);
 
         $member->tags()->detach($validated['tag_id']);
@@ -201,7 +199,7 @@ class BulkTagController extends Controller
 
         $members  = collect([$member]);
         $policy   = new DivisionTagPolicy;
-        $tags     = $policy->getAssignableTags(auth()->user(), $member)->get();
+        $tags     = $policy->getAssignableTags(auth()->user())->get();
         $returnTo = url()->previous();
 
         return view('division.bulk-tags', compact('division', 'members', 'tags', 'returnTo'));
@@ -223,19 +221,25 @@ class BulkTagController extends Controller
         $user       = auth()->user();
         $assignerId = $user->member?->id;
 
+        $policy = new DivisionTagPolicy;
+        $tagIds = $policy->getAssignableTags($user)
+            ->whereIn('id', $validated['tags'])
+            ->pluck('id')
+            ->all();
+
         foreach ($members as $member) {
-            if (! $user->can('assign', [DivisionTag::class, $member])) {
+            if (! $user->can('assign', [DivisionTag::class, $member]) || empty($tagIds)) {
                 continue;
             }
 
             if ($validated['action'] === 'assign') {
                 $pivotData = [];
-                foreach ($validated['tags'] as $tagId) {
+                foreach ($tagIds as $tagId) {
                     $pivotData[$tagId] = ['assigned_by' => $assignerId];
                 }
                 $member->tags()->syncWithoutDetaching($pivotData);
             } else {
-                $member->tags()->detach($validated['tags']);
+                $member->tags()->detach($tagIds);
             }
         }
 

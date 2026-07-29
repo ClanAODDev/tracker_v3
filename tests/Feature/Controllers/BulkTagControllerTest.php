@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\Rank;
 use App\Models\DivisionTag;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -59,6 +60,26 @@ class BulkTagControllerTest extends TestCase
         $response->assertOk();
         $this->assertFalse($member1->fresh()->tags->contains($tag));
         $this->assertFalse($member2->fresh()->tags->contains($tag));
+    }
+
+    #[Test]
+    public function bulk_store_does_not_apply_tags_the_user_cannot_assign()
+    {
+        $officer       = $this->createOfficer(memberAttributes: ['rank' => Rank::CORPORAL]);
+        $division      = $officer->member->division;
+        $member        = $this->createMember(['division_id' => $division->id]);
+        $otherDivision = $this->createActiveDivision();
+        $foreignTag    = DivisionTag::factory()->create(['division_id' => $otherDivision->id]);
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('bulk-tags.store', $division->slug), [
+                'member_ids' => [$member->clan_id],
+                'tags'       => [$foreignTag->id],
+                'action'     => 'assign',
+            ]);
+
+        $response->assertOk();
+        $this->assertFalse($member->fresh()->tags->contains($foreignTag));
     }
 
     #[Test]

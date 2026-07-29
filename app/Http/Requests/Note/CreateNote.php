@@ -45,7 +45,7 @@ class CreateNote extends FormRequest
 
         if ($this->filled('tag_id') && $user->can('assign', [DivisionTag::class, $member])) {
             $policy = new DivisionTagPolicy;
-            $tag    = $policy->getAssignableTags($user, $member)->find($this->input('tag_id'));
+            $tag    = $policy->getAssignableTags($user)->find($this->input('tag_id'));
 
             if ($tag) {
                 $member->tags()->syncWithoutDetaching([$tag->id => ['assigned_by' => $user->member?->id]]);
