@@ -2,10 +2,8 @@
 
 namespace App\Services;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request;
-use Psr\Http\Message\ResponseInterface;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 
 class AODBotService
 {
@@ -13,13 +11,10 @@ class AODBotService
 
     private $token;
 
-    private $client;
-
     public function __construct()
     {
         $this->baseUrl = config('aod.bot_api_base_url');
         $this->token   = config('aod.discord_bot_token');
-        $this->client  = new Client;
     }
 
     private function buildHeaders(): array
@@ -30,23 +25,30 @@ class AODBotService
         ];
 
         if (auth()->check()) {
-            array_merge($headers, ['X-Requested-By' => auth()->user()->member->discord_id]);
+            $headers['X-Requested-By'] = auth()->user()->member?->discord_id;
         }
 
         return $headers;
     }
 
-    private function send($url, $method = 'GET', $body = null): ResponseInterface
+    private function send(string $url, string $method = 'GET', ?array $body = null): Response
     {
-        return $this->client->send(new Request($method, $url, $this->buildHeaders(), $body), ['verify' => false]);
+        $request = Http::withHeaders($this->buildHeaders())
+            ->withOptions(['verify' => config('aod.bot_api_verify_tls', false)])
+            ->timeout(10)
+            ->connectTimeout(5)
+            ->retry(2, 200)
+            ->throw();
+
+        return $body !== null
+            ? $request->send($method, $url, ['json' => $body])
+            : $request->send($method, $url);
     }
 
     /**
      * Get AOD forum member info
-     *
-     * @throws GuzzleException
      */
-    public function getForumMember($member_id): ResponseInterface
+    public function getForumMember($member_id): Response
     {
         $url = sprintf('%s/forum_member/%s', $this->baseUrl, $member_id);
 
@@ -55,25 +57,19 @@ class AODBotService
 
     /**
      * Requests an ad-hoc member sync
-     *
-     * @throws GuzzleException
      */
-    public function updateDiscordMember($discord_member_id): ResponseInterface
+    public function updateDiscordMember($discord_member_id): Response
     {
         $url = sprintf('%s/members/%s/update', $this->baseUrl, $discord_member_id);
 
         return $this->send($url);
     }
 
-    /**
-     * @throws GuzzleException
-     */
     public function getMemberAvatar(string|int $discord_id): ?string
     {
         $url      = sprintf('%s/members/%s', $this->baseUrl, $discord_id);
         $response = $this->send($url);
-        $data     = json_decode($response->getBody()->getContents(), associative: true);
 
-        return $data['avatarHash'] ?? null;
+        return $response->json('avatarHash');
     }
 }

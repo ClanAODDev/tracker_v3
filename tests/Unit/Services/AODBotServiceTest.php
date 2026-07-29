@@ -3,13 +3,11 @@
 namespace Tests\Unit\Services;
 
 use App\Services\AODBotService;
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\MockHandler;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 use PHPUnit\Framework\Attributes\Test;
-use Psr\Http\Message\ResponseInterface;
 use Tests\TestCase;
 use Tests\Traits\CreatesMembers;
 
@@ -18,144 +16,119 @@ class AODBotServiceTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    private function createServiceWithMockedClient(array $responses): AODBotService
+    protected function setUp(): void
     {
-        $mock         = new MockHandler($responses);
-        $handlerStack = HandlerStack::create($mock);
-        $client       = new Client(['handler' => $handlerStack]);
-
-        $service = new AODBotService;
-
-        $reflection     = new \ReflectionClass($service);
-        $clientProperty = $reflection->getProperty('client');
-        $clientProperty->setAccessible(true);
-        $clientProperty->setValue($service, $client);
-
-        return $service;
+        parent::setUp();
+        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
+        config(['aod.discord_bot_token' => 'test-token']);
     }
 
     #[Test]
     public function get_forum_member_makes_request_to_correct_url()
     {
-        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
-        config(['aod.discord_bot_token' => 'test-token']);
-
-        $service = $this->createServiceWithMockedClient([
-            new Response(200, [], json_encode(['id' => 12345, 'name' => 'TestUser'])),
+        Http::fake([
+            '*' => Http::response(['id' => 12345, 'name' => 'TestUser'], 200),
         ]);
 
-        $response = $service->getForumMember(12345);
+        $response = (new AODBotService)->getForumMember(12345);
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue($response->successful());
+        Http::assertSent(fn ($request) => $request->url() === 'https://bot.example.com/forum_member/12345');
     }
 
     #[Test]
-    public function get_forum_member_returns_response_interface()
+    public function get_forum_member_returns_response_instance()
     {
-        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
-        config(['aod.discord_bot_token' => 'test-token']);
-
-        $service = $this->createServiceWithMockedClient([
-            new Response(200, [], json_encode(['id' => 12345, 'name' => 'TestUser'])),
+        Http::fake([
+            '*' => Http::response(['id' => 12345, 'name' => 'TestUser'], 200),
         ]);
 
-        $response = $service->getForumMember(12345);
+        $response = (new AODBotService)->getForumMember(12345);
 
-        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertInstanceOf(Response::class, $response);
     }
 
     #[Test]
     public function get_forum_member_response_body_contains_member_data()
     {
-        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
-        config(['aod.discord_bot_token' => 'test-token']);
-
         $expectedData = ['id' => 12345, 'name' => 'TestUser', 'rank' => 'CPL'];
 
-        $service = $this->createServiceWithMockedClient([
-            new Response(200, [], json_encode($expectedData)),
+        Http::fake([
+            '*' => Http::response($expectedData, 200),
         ]);
 
-        $response = $service->getForumMember(12345);
-        $body     = json_decode($response->getBody()->getContents(), true);
+        $response = (new AODBotService)->getForumMember(12345);
 
-        $this->assertEquals($expectedData, $body);
+        $this->assertEquals($expectedData, $response->json());
     }
 
     #[Test]
     public function update_discord_member_makes_request()
     {
-        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
-        config(['aod.discord_bot_token' => 'test-token']);
-
-        $service = $this->createServiceWithMockedClient([
-            new Response(200, [], json_encode(['status' => 'updated'])),
+        Http::fake([
+            '*' => Http::response(['status' => 'updated'], 200),
         ]);
 
-        $response = $service->updateDiscordMember('123456789012345678');
+        $response = (new AODBotService)->updateDiscordMember('123456789012345678');
 
-        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertTrue($response->successful());
+        Http::assertSent(fn ($request) => $request->url() === 'https://bot.example.com/members/123456789012345678/update');
     }
 
     #[Test]
     public function update_discord_member_returns_response_with_status()
     {
-        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
-        config(['aod.discord_bot_token' => 'test-token']);
-
-        $service = $this->createServiceWithMockedClient([
-            new Response(200, [], json_encode(['status' => 'success', 'updated' => true])),
+        Http::fake([
+            '*' => Http::response(['status' => 'success', 'updated' => true], 200),
         ]);
 
-        $response = $service->updateDiscordMember('123456789012345678');
-        $body     = json_decode($response->getBody()->getContents(), true);
+        $response = (new AODBotService)->updateDiscordMember('123456789012345678');
 
-        $this->assertEquals('success', $body['status']);
-        $this->assertTrue($body['updated']);
+        $this->assertEquals('success', $response->json('status'));
+        $this->assertTrue($response->json('updated'));
     }
 
     #[Test]
     public function service_includes_authorization_header()
     {
-        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
-        config(['aod.discord_bot_token' => 'test-bot-token']);
+        Http::fake(['*' => Http::response([], 200)]);
 
-        $requestedHeaders = null;
+        (new AODBotService)->getForumMember(12345);
 
-        $mock = new MockHandler([
-            function ($request) use (&$requestedHeaders) {
-                $requestedHeaders = $request->getHeaders();
+        Http::assertSent(fn ($request) => str_contains($request->header('Authorization')[0] ?? '', 'Bearer'));
+    }
 
-                return new Response(200, [], '{}');
-            },
-        ]);
+    #[Test]
+    public function service_includes_content_type_header()
+    {
+        Http::fake(['*' => Http::response([], 200)]);
 
-        $handlerStack = HandlerStack::create($mock);
-        $client       = new Client(['handler' => $handlerStack]);
+        (new AODBotService)->getForumMember(12345);
 
-        $service        = new AODBotService;
-        $reflection     = new \ReflectionClass($service);
-        $clientProperty = $reflection->getProperty('client');
-        $clientProperty->setAccessible(true);
-        $clientProperty->setValue($service, $client);
+        Http::assertSent(fn ($request) => ($request->header('Content-Type')[0] ?? '') === 'application/json');
+    }
 
-        $service->getForumMember(12345);
+    #[Test]
+    public function service_includes_requested_by_header_for_authenticated_user()
+    {
+        $user = $this->createMemberWithUser(['discord_id' => '999888777']);
+        $this->actingAs($user);
 
-        $this->assertArrayHasKey('Authorization', $requestedHeaders);
-        $this->assertStringContainsString('Bearer', $requestedHeaders['Authorization'][0]);
+        Http::fake(['*' => Http::response([], 200)]);
+
+        (new AODBotService)->getForumMember(12345);
+
+        Http::assertSent(fn ($request) => ($request->header('X-Requested-By')[0] ?? null) === '999888777');
     }
 
     #[Test]
     public function get_member_avatar_returns_avatar_hash()
     {
-        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
-        config(['aod.discord_bot_token' => 'test-token']);
-
-        $service = $this->createServiceWithMockedClient([
-            new Response(200, [], json_encode(['avatarHash' => 'abc123def456'])),
+        Http::fake([
+            '*' => Http::response(['avatarHash' => 'abc123def456'], 200),
         ]);
 
-        $hash = $service->getMemberAvatar('123456789012345678');
+        $hash = (new AODBotService)->getMemberAvatar('123456789012345678');
 
         $this->assertEquals('abc123def456', $hash);
     }
@@ -163,46 +136,36 @@ class AODBotServiceTest extends TestCase
     #[Test]
     public function get_member_avatar_returns_null_when_no_avatar()
     {
-        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
-        config(['aod.discord_bot_token' => 'test-token']);
-
-        $service = $this->createServiceWithMockedClient([
-            new Response(200, [], json_encode(['avatarHash' => null])),
+        Http::fake([
+            '*' => Http::response(['avatarHash' => null], 200),
         ]);
 
-        $hash = $service->getMemberAvatar('123456789012345678');
+        $hash = (new AODBotService)->getMemberAvatar('123456789012345678');
 
         $this->assertNull($hash);
     }
 
     #[Test]
-    public function service_includes_content_type_header()
+    public function send_throws_on_server_error_response()
     {
-        config(['aod.bot_api_base_url' => 'https://bot.example.com']);
-        config(['aod.discord_bot_token' => 'test-bot-token']);
+        Http::fake(['*' => Http::response('Internal Server Error', 500)]);
 
-        $requestedHeaders = null;
+        $this->expectException(RequestException::class);
 
-        $mock = new MockHandler([
-            function ($request) use (&$requestedHeaders) {
-                $requestedHeaders = $request->getHeaders();
+        (new AODBotService)->getForumMember(12345);
+    }
 
-                return new Response(200, [], '{}');
-            },
+    #[Test]
+    public function send_retries_after_a_transient_connection_failure()
+    {
+        Http::fake([
+            '*' => Http::sequence()
+                ->pushFailedConnection()
+                ->push(['id' => 12345], 200),
         ]);
 
-        $handlerStack = HandlerStack::create($mock);
-        $client       = new Client(['handler' => $handlerStack]);
+        $response = (new AODBotService)->getForumMember(12345);
 
-        $service        = new AODBotService;
-        $reflection     = new \ReflectionClass($service);
-        $clientProperty = $reflection->getProperty('client');
-        $clientProperty->setAccessible(true);
-        $clientProperty->setValue($service, $client);
-
-        $service->getForumMember(12345);
-
-        $this->assertArrayHasKey('Content-Type', $requestedHeaders);
-        $this->assertEquals('application/json', $requestedHeaders['Content-Type'][0]);
+        $this->assertTrue($response->successful());
     }
 }
