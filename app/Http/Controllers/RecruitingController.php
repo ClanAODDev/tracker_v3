@@ -18,6 +18,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
 #[Middleware('auth')]
@@ -66,20 +67,32 @@ class RecruitingController extends Controller
             ],
         ]);
 
-        $member = $this->recruitmentService->createMember(
-            (int) $request->member_id,
-            $request->forum_name,
-            $division,
-            (int) $request->rank,
-            (int) $request->platoon,
-            $request->squad ? (int) $request->squad : null,
-            $request->ingame_name,
-            $recruiter
-        );
+        $lock = Cache::lock('recruit:member:' . (int) $request->member_id, 30);
 
-        $this->finalizeRecruitment($member, $division, $recruiter);
+        if (! $lock->get()) {
+            return response()->json([
+                'message' => 'This member is already being recruited. Please wait a moment and try again.',
+            ], 409);
+        }
 
-        $this->showSuccessToast('Your recruitment has successfully been completed!');
+        try {
+            $member = $this->recruitmentService->createMember(
+                (int) $request->member_id,
+                $request->forum_name,
+                $division,
+                (int) $request->rank,
+                (int) $request->platoon,
+                $request->squad ? (int) $request->squad : null,
+                $request->ingame_name,
+                $recruiter
+            );
+
+            $this->finalizeRecruitment($member, $division, $recruiter);
+
+            $this->showSuccessToast('Your recruitment has successfully been completed!');
+        } finally {
+            $lock->release();
+        }
     }
 
     #[Authorize('recruit', Member::class)]
@@ -445,6 +458,23 @@ class RecruitingController extends Controller
             ], 422);
         }
 
+        $lock = Cache::lock('recruit:pending-discord:' . $pendingUser->id, 30);
+
+        if (! $lock->get()) {
+            return response()->json([
+                'message' => 'This user is already being recruited. Please wait a moment and try again.',
+            ], 409);
+        }
+
+        try {
+            return $this->processPendingDiscordRecruitment($request, $division, $recruiter, $pendingUser);
+        } finally {
+            $lock->release();
+        }
+    }
+
+    private function processPendingDiscordRecruitment(Request $request, Division $division, Member $recruiter, User $pendingUser)
+    {
         \Log::channel('recruiting')->info('Discord recruitment started', [
             'pending_user_id'  => $pendingUser->id,
             'discord_id'       => $pendingUser->discord_id,

@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -212,6 +213,31 @@ class RecruitingControllerTest extends TestCase
     }
 
     #[Test]
+    public function submit_recruitment_rejects_concurrent_duplicate_submission()
+    {
+        $officer  = $this->createOfficer();
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+
+        $lock = Cache::lock('recruit:member:66666', 30);
+        $lock->get();
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'   => $division->slug,
+                'member_id'  => 66666,
+                'forum_name' => 'DuplicateTestRecruit',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+            ]);
+
+        $response->assertStatus(409);
+        $this->assertDatabaseMissing('members', ['clan_id' => 66666]);
+
+        $lock->release();
+    }
+
+    #[Test]
     public function get_division_recruit_data_excludes_pending_users_without_dob(): void
     {
         $officer  = $this->createOfficer();
@@ -276,6 +302,33 @@ class RecruitingControllerTest extends TestCase
 
         $pendingUser->refresh();
         $this->assertNotNull($pendingUser->member_id);
+    }
+
+    #[Test]
+    public function submit_discord_recruitment_rejects_concurrent_duplicate_submission(): void
+    {
+        $officer     = $this->createOfficer();
+        $division    = $this->createActiveDivision();
+        $platoon     = $this->createPlatoon($division);
+        $pendingUser = User::factory()->pending()->create();
+
+        $lock = Cache::lock('recruit:pending-discord:' . $pendingUser->id, 30);
+        $lock->get();
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'        => $division->slug,
+                'pending_user_id' => $pendingUser->id,
+                'forum_name'      => 'DiscordRecruit',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
+                'ingame_name'     => 'GameHandle',
+            ]);
+
+        $response->assertStatus(409);
+        $this->assertNull($pendingUser->fresh()->member_id);
+
+        $lock->release();
     }
 
     #[Test]
