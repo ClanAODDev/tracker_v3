@@ -309,4 +309,100 @@ class TicketApiTest extends TestCase
 
         $this->assertNull(Ticket::find($ticketId));
     }
+
+    #[Test]
+    public function own_returns_422_for_resolved_ticket()
+    {
+        $admin      = $this->createAdmin();
+        $ticketType = TicketType::factory()->create();
+
+        $ticket = Ticket::factory()->create([
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'resolved',
+            'resolved_at'    => now(),
+        ]);
+
+        $response = $this->actingAs($admin)
+            ->postJson("/api/tickets/{$ticket->id}/own");
+
+        $response->assertStatus(422);
+        $this->assertEquals('resolved', $ticket->fresh()->state);
+    }
+
+    #[Test]
+    public function resolve_returns_422_for_rejected_ticket()
+    {
+        $admin      = $this->createAdmin();
+        $ticketType = TicketType::factory()->create();
+
+        $ticket = Ticket::factory()->create([
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'rejected',
+            'resolved_at'    => now(),
+        ]);
+
+        $response = $this->actingAs($admin)
+            ->postJson("/api/tickets/{$ticket->id}/resolve");
+
+        $response->assertStatus(422);
+        $this->assertEquals('rejected', $ticket->fresh()->state);
+    }
+
+    #[Test]
+    public function reject_returns_422_for_resolved_ticket()
+    {
+        $admin      = $this->createAdmin();
+        $ticketType = TicketType::factory()->create();
+
+        $ticket = Ticket::factory()->create([
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'resolved',
+            'resolved_at'    => now(),
+        ]);
+
+        $response = $this->actingAs($admin)
+            ->postJson("/api/tickets/{$ticket->id}/reject", ['reason' => 'Not applicable anymore']);
+
+        $response->assertStatus(422);
+        $this->assertEquals('resolved', $ticket->fresh()->state);
+    }
+
+    #[Test]
+    public function reopen_returns_422_for_assigned_ticket()
+    {
+        $admin      = $this->createAdmin();
+        $ticketType = TicketType::factory()->create();
+
+        $ticket = Ticket::factory()->create([
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'assigned',
+            'resolved_at'    => null,
+        ]);
+
+        $response = $this->actingAs($admin)
+            ->postJson("/api/tickets/{$ticket->id}/reopen");
+
+        $response->assertStatus(422);
+        $this->assertEquals('assigned', $ticket->fresh()->state);
+    }
+
+    #[Test]
+    public function reassign_returns_422_for_resolved_ticket()
+    {
+        $admin      = $this->createAdmin();
+        $ticketType = TicketType::factory()->create();
+        $assignee   = $this->createMemberWithUser(['rank' => Rank::MASTER_SERGEANT]);
+
+        $ticket = Ticket::factory()->create([
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'resolved',
+            'resolved_at'    => now(),
+        ]);
+
+        $response = $this->actingAs($admin)
+            ->postJson("/api/tickets/{$ticket->id}/reassign", ['user_id' => $assignee->id]);
+
+        $response->assertStatus(422);
+        $this->assertEquals('resolved', $ticket->fresh()->state);
+    }
 }

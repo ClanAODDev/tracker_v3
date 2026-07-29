@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\InvalidTicketTransitionException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -100,6 +101,31 @@ class Ticket extends Model
         return $this->resolved_at !== null;
     }
 
+    public function isOpen(): bool
+    {
+        return ! $this->isResolved();
+    }
+
+    public function canBeOwned(): bool
+    {
+        return $this->isOpen();
+    }
+
+    public function canBeResolved(): bool
+    {
+        return $this->isOpen();
+    }
+
+    public function canBeRejected(): bool
+    {
+        return $this->isOpen();
+    }
+
+    public function canBeReopened(): bool
+    {
+        return $this->isResolved();
+    }
+
     public function hasExternalMessageId(): bool
     {
         return ! empty($this->external_message_id);
@@ -107,6 +133,10 @@ class Ticket extends Model
 
     public function ownTo(Authenticatable $user): void
     {
+        if (! $this->canBeOwned()) {
+            throw new InvalidTicketTransitionException("Cannot assign a ticket in the '{$this->state}' state.");
+        }
+
         $this->owner()->associate($user);
         $this->state = 'assigned';
         $this->save();
@@ -120,6 +150,10 @@ class Ticket extends Model
 
     public function resolve(): void
     {
+        if (! $this->canBeResolved()) {
+            throw new InvalidTicketTransitionException("Cannot resolve a ticket in the '{$this->state}' state.");
+        }
+
         $this->state       = 'resolved';
         $this->owner_id    = auth()->id();
         $this->resolved_at = now();
@@ -129,6 +163,10 @@ class Ticket extends Model
 
     public function reopen(): void
     {
+        if (! $this->canBeReopened()) {
+            throw new InvalidTicketTransitionException("Cannot reopen a ticket in the '{$this->state}' state.");
+        }
+
         $this->state       = 'assigned';
         $this->resolved_at = null;
         $this->save();
@@ -137,6 +175,10 @@ class Ticket extends Model
 
     public function reject(): void
     {
+        if (! $this->canBeRejected()) {
+            throw new InvalidTicketTransitionException("Cannot reject a ticket in the '{$this->state}' state.");
+        }
+
         $this->state       = 'rejected';
         $this->resolved_at = now();
         $this->owner_id    = auth()->id();
