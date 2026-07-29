@@ -41,6 +41,7 @@ var Tracker = Tracker || {};
             Tracker.InitActivityFeedToggle();
             Tracker.InitPopulationMeter();
             Tracker.InitFeedback();
+            Tracker.InitSessionTimeout();
         },
 
         InitNavToggle() {
@@ -1988,6 +1989,93 @@ var Tracker = Tracker || {};
                     $btn.prop('disabled', false);
                 }
             });
+        },
+
+        InitSessionTimeout() {
+            if (!window.Laravel.sessionExpiresAt) return;
+
+            const $modal     = $('#session-timeout-modal');
+            if (!$modal.length) return;
+
+            const $countdown = $('#session-timeout-countdown');
+            const $warning   = $('#session-timeout-warning');
+            const $expired   = $('#session-timeout-expired');
+            const $stayBtn   = $('#session-timeout-stay');
+            const $loginBtn  = $('#session-timeout-login');
+            const WARNING_WINDOW_MS = 2 * 60 * 1000;
+
+            let expiresAt = window.Laravel.sessionExpiresAt * 1000;
+            let warnTimer = null;
+            let countdownTimer = null;
+
+            const clearTimers = () => {
+                clearTimeout(warnTimer);
+                clearInterval(countdownTimer);
+            };
+
+            const showExpired = () => {
+                clearTimers();
+                $warning.hide();
+                $expired.show();
+                $stayBtn.hide();
+                $loginBtn.show();
+                $modal.modal('show');
+            };
+
+            const tickCountdown = () => {
+                const msLeft = expiresAt - Date.now();
+                if (msLeft <= 0) {
+                    showExpired();
+                    return;
+                }
+                const totalSeconds = Math.ceil(msLeft / 1000);
+                const mins = Math.floor(totalSeconds / 60);
+                const secs = totalSeconds % 60;
+                $countdown.text(`${mins}:${secs.toString().padStart(2, '0')}`);
+            };
+
+            const showWarning = () => {
+                $expired.hide();
+                $warning.show();
+                $stayBtn.show();
+                $loginBtn.hide();
+                $modal.modal('show');
+                tickCountdown();
+                countdownTimer = setInterval(tickCountdown, 1000);
+            };
+
+            const scheduleWarning = () => {
+                clearTimers();
+                const msUntilWarning = expiresAt - Date.now() - WARNING_WINDOW_MS;
+                warnTimer = setTimeout(showWarning, Math.max(msUntilWarning, 0));
+            };
+
+            $stayBtn.on('click', () => {
+                $stayBtn.prop('disabled', true);
+
+                $.get(window.Laravel.sessionKeepAliveUrl)
+                    .done((response) => {
+                        expiresAt = response.expiresAt * 1000;
+                        $modal.modal('hide');
+                        scheduleWarning();
+                    })
+                    .fail(() => {
+                        showExpired();
+                    })
+                    .always(() => {
+                        $stayBtn.prop('disabled', false);
+                    });
+            });
+
+            $(document).ajaxError((event, xhr) => {
+                if (xhr.status === 401 || xhr.status === 419) {
+                    document.dispatchEvent(new Event('session:expired'));
+                }
+            });
+
+            document.addEventListener('session:expired', showExpired);
+
+            scheduleWarning();
         },
 
     };
