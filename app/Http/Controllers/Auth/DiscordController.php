@@ -15,6 +15,7 @@ use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
@@ -209,16 +210,14 @@ class DiscordController extends Controller
                     discordId: $user->discord_id,
                     discordTag: $user->discord_username ?? '',
                 );
-
-                $user->member->update([
-                    'discord_id' => $user->discord_id,
-                    'discord'    => $user->discord_username ?? $user->member->discord,
-                ]);
             }
 
-            if ($avatarHash !== null) {
-                $user->member->update(['discord_avatar' => $avatarHash]);
-            }
+            DB::transaction(fn () => $this->syncMemberDiscordFields(
+                $user->member,
+                $user->discord_id,
+                $user->discord_username,
+                $avatarHash
+            ));
         }
 
         return $user->isPendingRegistration()
@@ -233,17 +232,18 @@ class DiscordController extends Controller
         ?string $email,
         ?string $avatarHash = null
     ): RedirectResponse {
-        $user = User::findOrCreateForMember($member, $email);
-        $user->update([
-            'discord_id'       => $discordId,
-            'discord_username' => $discordUsername,
-        ]);
+        $user = DB::transaction(function () use ($member, $email, $discordId, $discordUsername, $avatarHash) {
+            $user = User::findOrCreateForMember($member, $email);
 
-        $member->update([
-            'discord_id'     => $discordId,
-            'discord'        => $discordUsername,
-            'discord_avatar' => $avatarHash,
-        ]);
+            $user->update([
+                'discord_id'       => $discordId,
+                'discord_username' => $discordUsername,
+            ]);
+
+            $this->syncMemberDiscordFields($member, $discordId, $discordUsername, $avatarHash);
+
+            return $user;
+        });
 
         Auth::login(user: $user, remember: true);
 
@@ -256,6 +256,28 @@ class DiscordController extends Controller
         );
 
         return redirect()->intended('/');
+    }
+
+    protected function syncMemberDiscordFields(
+        Member $member,
+        ?string $discordId,
+        ?string $discordUsername,
+        ?string $avatarHash
+    ): void {
+        $updates = [];
+
+        if ($discordId) {
+            $updates['discord_id'] = $discordId;
+            $updates['discord']    = $discordUsername ?? $member->discord;
+        }
+
+        if ($avatarHash !== null) {
+            $updates['discord_avatar'] = $avatarHash;
+        }
+
+        if ($updates) {
+            $member->update($updates);
+        }
     }
 
     protected function createPendingUser(

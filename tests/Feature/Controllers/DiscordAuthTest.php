@@ -247,6 +247,27 @@ class DiscordAuthTest extends TestCase
     }
 
     #[Test]
+    public function discord_callback_preserves_existing_member_avatar_when_none_provided(): void
+    {
+        $member = Member::factory()->create([
+            'discord_id'     => '222333444',
+            'discord_avatar' => 'existingHash',
+        ]);
+
+        $this->mockDiscordUser([
+            'id'       => '222333444',
+            'nickname' => 'NoAvatarUser',
+            'email'    => 'noavatar2@discord.com',
+            'avatar'   => null,
+        ]);
+
+        $this->get(route('auth.discord.callback'));
+
+        $member->refresh();
+        $this->assertEquals('existingHash', $member->discord_avatar);
+    }
+
+    #[Test]
     public function pending_page_requires_authentication(): void
     {
         $response = $this->get(route('auth.discord.pending'));
