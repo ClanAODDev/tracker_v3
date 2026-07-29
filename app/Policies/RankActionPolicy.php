@@ -34,7 +34,7 @@ class RankActionPolicy
         if (
             $user->isDivisionLeader() &&
             $record->member->division_id == $user->division->id &&
-            $record->rank->value <= Rank::STAFF_SERGEANT->value
+            $record->rank->isAtMost(Rank::STAFF_SERGEANT)
         ) {
             return true;
         }
@@ -43,7 +43,7 @@ class RankActionPolicy
         if (
             $user->isPlatoonLeader() &&
             $record->member->platoon_id == $user->member->platoon_id &&
-            $record->rank->value < $user->member->rank->value
+            $record->rank->isBelow($user->member->rank)
         ) {
             return true;
         }

@@ -70,8 +70,8 @@ class DivisionTagPolicy
             return false;
         }
 
-        $isSgt     = $userMember->rank->value >= Rank::SERGEANT->value;
-        $isMsgt    = $userMember->rank->value >= Rank::MASTER_SERGEANT->value;
+        $isSgt     = $userMember->isAtLeast(Rank::SERGEANT);
+        $isMsgt    = $userMember->isAtLeast(Rank::MASTER_SERGEANT);
         $isOfficer = $user->isRole([Role::OFFICER, Role::SENIOR_LEADER]);
 
         if (! $isOfficer && ! $isSgt) {
@@ -106,7 +106,7 @@ class DivisionTagPolicy
             return DivisionTag::query()->whereRaw('1 = 0');
         }
 
-        if ($userMember->rank->value >= Rank::SERGEANT->value) {
+        if ($userMember->isAtLeast(Rank::SERGEANT)) {
             return DivisionTag::query()->visibleTo($user)->orderBy('name');
         }
 

@@ -284,6 +284,28 @@ class Member extends Model
         return $this->rank === $rank;
     }
 
+    public function isAtLeast(Rank $rank): bool
+    {
+        return $this->rank instanceof Rank && $this->rank->isAtLeast($rank);
+    }
+
+    public function isAbove(Rank $rank): bool
+    {
+        return $this->rank instanceof Rank && $this->rank->isAbove($rank);
+    }
+
+    public function isAtMost(Rank $rank): bool
+    {
+        return $this->rank instanceof Rank && $this->rank->isAtMost($rank);
+    }
+
+    public function outranks(Member $other): bool
+    {
+        return $this->rank instanceof Rank
+            && $other->rank instanceof Rank
+            && $this->rank->isAbove($other->rank);
+    }
+
     public function getUrlParams(): array
     {
         return [$this->clan_id, $this->rank->getAbbreviation() . '-' . $this->name];

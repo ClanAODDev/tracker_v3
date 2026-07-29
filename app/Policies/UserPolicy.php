@@ -96,6 +96,6 @@ class UserPolicy
 
     public function train(User $user)
     {
-        return $user->member->rank->value > Rank::SERGEANT->value && \in_array($user->role, [Role::ADMIN, Role::SENIOR_LEADER], true);
+        return $user->member->isAbove(Rank::SERGEANT) && \in_array($user->role, [Role::ADMIN, Role::SENIOR_LEADER], true);
     }
 }

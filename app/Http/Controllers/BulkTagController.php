@@ -110,7 +110,7 @@ class BulkTagController extends Controller
         $user           = auth()->user();
         $userMember     = $user->member;
         $userDivisionId = $userMember?->division_id;
-        $isSgt          = $userMember && $userMember->rank->value >= Rank::SERGEANT->value;
+        $isSgt          = $userMember?->isAtLeast(Rank::SERGEANT) ?? false;
 
         $tagIdRule = $user->isRole('admin') || $isSgt
             ? 'exists:division_tags,id'
@@ -184,7 +184,7 @@ class BulkTagController extends Controller
         $user           = auth()->user();
         $userMember     = $user->member;
         $userDivisionId = $userMember?->division_id;
-        $isSgt          = $userMember && $userMember->rank->value >= Rank::SERGEANT->value;
+        $isSgt          = $userMember?->isAtLeast(Rank::SERGEANT) ?? false;
 
         $tags = match (true) {
             $user->isRole('admin') => DivisionTag::forDivision($division->id)->assignableBy($user)->get(),
