@@ -16,6 +16,17 @@ if (axios.defaults && axios.defaults.headers && axios.defaults.headers.common) {
     };
 }
 
+axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        const status = error.response ? error.response.status : null;
+        if (status === 401 || status === 419) {
+            document.dispatchEvent(new Event('session:expired'));
+        }
+        return Promise.reject(error);
+    }
+);
+
 if (window.toastr) {
     window.toastr.options = {
         'preventDuplicates': true,

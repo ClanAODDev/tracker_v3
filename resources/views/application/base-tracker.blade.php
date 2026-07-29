@@ -53,6 +53,8 @@
 
         @include('application.partials.feedback-modal')
 
+        @include('application.partials.session-timeout-modal')
+
         <section class="search-results closed text-center"></section>
         <section class="content">
             @include('application.partials.alert')
