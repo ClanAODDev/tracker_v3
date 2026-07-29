@@ -305,6 +305,30 @@ class RecruitingControllerTest extends TestCase
     }
 
     #[Test]
+    public function submit_discord_recruitment_rejects_unsafe_forum_name(): void
+    {
+        $officer     = $this->createOfficer();
+        $division    = $this->createActiveDivision();
+        $platoon     = $this->createPlatoon($division);
+        $pendingUser = User::factory()->pending()->create();
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'        => $division->slug,
+                'pending_user_id' => $pendingUser->id,
+                'forum_name'      => '<script>alert(1)</script>',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
+                'ingame_name'     => 'GameHandle',
+            ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('forum_name');
+        $pendingUser->refresh();
+        $this->assertNull($pendingUser->member_id);
+    }
+
+    #[Test]
     public function submit_discord_recruitment_rejects_concurrent_duplicate_submission(): void
     {
         $officer     = $this->createOfficer();

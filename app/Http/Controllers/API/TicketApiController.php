@@ -4,6 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Enums\Rank;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Ticket\AddTicketCommentRequest;
+use App\Http\Requests\Ticket\ReassignTicketRequest;
+use App\Http\Requests\Ticket\RejectTicketRequest;
+use App\Http\Requests\Ticket\StoreTicketRequest;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use App\Models\User;
@@ -98,7 +102,7 @@ class TicketApiController extends Controller
         ]);
     }
 
-    public function reject(Request $request, Ticket $ticket): JsonResponse
+    public function reject(RejectTicketRequest $request, Ticket $ticket): JsonResponse
     {
         $user = auth()->user();
 
@@ -110,9 +114,7 @@ class TicketApiController extends Controller
             return response()->json(['error' => "Ticket cannot be rejected from its current state ({$ticket->state})"], 422);
         }
 
-        $validated = $request->validate([
-            'reason' => 'required|string|min:5',
-        ]);
+        $validated = $request->validated();
 
         $ticket->reject();
         $this->silentNotify(fn () => $this->notificationService->notifyTicketRejected($ticket, $validated['reason']));
@@ -184,7 +186,7 @@ class TicketApiController extends Controller
         return response()->json(['workers' => $workers]);
     }
 
-    public function reassign(Request $request, Ticket $ticket): JsonResponse
+    public function reassign(ReassignTicketRequest $request, Ticket $ticket): JsonResponse
     {
         $user = auth()->user();
 
@@ -192,7 +194,7 @@ class TicketApiController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $validated = $request->validate(['user_id' => 'required|exists:users,id']);
+        $validated = $request->validated();
 
         $assignee = User::with('member')->findOrFail($validated['user_id']);
 
@@ -260,14 +262,9 @@ class TicketApiController extends Controller
         ]);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreTicketRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'ticket_type_id' => 'required|exists:ticket_types,id',
-            'description'    => 'required|string|min:25',
-            'attachments'    => 'nullable|array|max:5',
-            'attachments.*'  => 'file|image|max:1024',
-        ]);
+        $validated = $request->validated();
 
         $paths = collect($request->file('attachments', []))
             ->map(fn ($file) => $file->store('tickets', 'public'))
@@ -293,7 +290,7 @@ class TicketApiController extends Controller
         ], 201);
     }
 
-    public function addComment(Request $request, Ticket $ticket): JsonResponse
+    public function addComment(AddTicketCommentRequest $request, Ticket $ticket): JsonResponse
     {
         $user = auth()->user();
 
@@ -301,9 +298,7 @@ class TicketApiController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $validated = $request->validate([
-            'body' => 'required|string|min:5',
-        ]);
+        $validated = $request->validated();
 
         $comment = $ticket->comments()->create([
             'body'    => $validated['body'],
