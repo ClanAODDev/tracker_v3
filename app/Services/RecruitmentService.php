@@ -9,6 +9,7 @@ use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\RankAction;
 use App\Models\Transfer;
+use Illuminate\Support\Facades\DB;
 
 class RecruitmentService
 {
@@ -22,40 +23,51 @@ class RecruitmentService
         ?string $ingameName,
         Member $recruiter
     ): Member {
-        $member = Member::firstOrNew(['clan_id' => $clanId]);
+        return DB::transaction(function () use (
+            $clanId,
+            $name,
+            $division,
+            $rankId,
+            $platoonId,
+            $squadId,
+            $ingameName,
+            $recruiter
+        ) {
+            $member = Member::firstOrNew(['clan_id' => $clanId]);
 
-        $member->fill([
-            'name'                   => $name,
-            'join_date'              => now(),
-            'last_activity'          => now(),
-            'recruiter_id'           => $recruiter->clan_id,
-            'rank'                   => $rankId,
-            'position'               => Position::MEMBER,
-            'division_id'            => $division->id,
-            'flagged_for_inactivity' => false,
-            'last_promoted_at'       => now(),
-            'platoon_id'             => $platoonId,
-            'squad_id'               => $squadId ?? 0,
-        ])->save();
+            $member->fill([
+                'name'                   => $name,
+                'join_date'              => now(),
+                'last_activity'          => now(),
+                'recruiter_id'           => $recruiter->clan_id,
+                'rank'                   => $rankId,
+                'position'               => Position::MEMBER,
+                'division_id'            => $division->id,
+                'flagged_for_inactivity' => false,
+                'last_promoted_at'       => now(),
+                'platoon_id'             => $platoonId,
+                'squad_id'               => $squadId ?? 0,
+            ])->save();
 
-        $this->attachIngameHandle($member, $division, $ingameName);
+            $this->attachIngameHandle($member, $division, $ingameName);
 
-        $member->recordActivity(ActivityType::RECRUITED);
+            $member->recordActivity(ActivityType::RECRUITED);
 
-        RankAction::create([
-            'member_id'     => $member->id,
-            'rank'          => $rankId,
-            'justification' => 'New recruit',
-            'requester_id'  => $recruiter->id,
-        ])->approveAndAccept();
+            RankAction::create([
+                'member_id'     => $member->id,
+                'rank'          => $rankId,
+                'justification' => 'New recruit',
+                'requester_id'  => $recruiter->id,
+            ])->approveAndAccept();
 
-        Transfer::create([
-            'member_id'   => $member->id,
-            'division_id' => $division->id,
-            'approved_at' => now(),
-        ]);
+            Transfer::create([
+                'member_id'   => $member->id,
+                'division_id' => $division->id,
+                'approved_at' => now(),
+            ]);
 
-        return $member;
+            return $member;
+        });
     }
 
     private function attachIngameHandle(Member $member, Division $division, ?string $ingameName): void
