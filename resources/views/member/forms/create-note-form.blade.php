@@ -2,7 +2,7 @@
 @php
     $canAssignTags = auth()->user()->can('assign', [\App\Models\DivisionTag::class, $member]);
     $assignableTags = $canAssignTags
-        ? (new \App\Policies\DivisionTagPolicy)->getAssignableTags(auth()->user(), $member)->get()
+        ? (new \App\Policies\DivisionTagPolicy)->getAssignableTags(auth()->user())->get()
         : collect();
 @endphp
 <div class="modal-content">

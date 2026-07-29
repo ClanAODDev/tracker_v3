@@ -93,7 +93,7 @@ class DivisionTagPolicy
         return $userMember->division_id === $member->division_id;
     }
 
-    public function getAssignableTags(User $user, Member $member): Builder
+    public function getAssignableTags(User $user): Builder
     {
         if ($user->isRole('admin')) {
             return DivisionTag::query()->visibleTo($user)->orderBy('name');
