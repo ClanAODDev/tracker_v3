@@ -39,9 +39,9 @@ class AODForumService
 
         try {
             $resp = Http::withUserAgent(self::AGENT)
-                ->timeout(10)
-                ->connectTimeout(5)
-                ->retry(2, 200)
+                ->timeout(config('aod.external_request.timeout'))
+                ->connectTimeout(config('aod.external_request.connect_timeout'))
+                ->retry(config('aod.external_request.retry_times'), config('aod.external_request.retry_delay_ms'))
                 ->get($url, $params);
 
             $clean = strip_tags($resp->body());
@@ -155,9 +155,9 @@ class AODForumService
 
         try {
             $resp = Http::withUserAgent(self::AGENT)
-                ->timeout(10)
-                ->connectTimeout(5)
-                ->retry(2, 200)
+                ->timeout(config('aod.external_request.timeout'))
+                ->connectTimeout(config('aod.external_request.connect_timeout'))
+                ->retry(config('aod.external_request.retry_times'), config('aod.external_request.retry_delay_ms'))
                 ->asForm()
                 ->post($url, $params);
 

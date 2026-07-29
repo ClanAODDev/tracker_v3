@@ -35,9 +35,9 @@ class AODBotService
     {
         $request = Http::withHeaders($this->buildHeaders())
             ->withOptions(['verify' => config('aod.bot_api_verify_tls', false)])
-            ->timeout(10)
-            ->connectTimeout(5)
-            ->retry(2, 200)
+            ->timeout(config('aod.external_request.timeout'))
+            ->connectTimeout(config('aod.external_request.connect_timeout'))
+            ->retry(config('aod.external_request.retry_times'), config('aod.external_request.retry_delay_ms'))
             ->throw();
 
         return $body !== null

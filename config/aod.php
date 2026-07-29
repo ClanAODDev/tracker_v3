@@ -13,6 +13,13 @@ return [
     'bot_cmd_tokens'        => env('BOT_COMMAND_TOKENS'),
     'maximum_days_inactive' => env('MAX_DAYS_INACTIVE', 90),
 
+    'external_request' => [
+        'timeout'         => 10,
+        'connect_timeout' => 5,
+        'retry_times'     => 2,
+        'retry_delay_ms'  => 200,
+    ],
+
     'request_grace_period'    => env('REQUEST_GRACE_PERIOD', 2),
     'stream_calendar'         => env('STREAM_CALENDAR_ID'),
     'admin-ticketing-channel' => env('ADMIN_TICKETING_CHANNEL', 'aod-admins'),
