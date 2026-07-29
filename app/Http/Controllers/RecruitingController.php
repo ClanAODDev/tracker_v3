@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ForumGroup;
+use App\Http\Requests\Recruiting\CheckForumEmailRequest;
+use App\Http\Requests\Recruiting\SubmitRecruitmentRequest;
 use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
 use App\Models\DivisionApplication;
@@ -49,7 +51,7 @@ class RecruitingController extends Controller
      * @throws AuthorizationException
      */
     #[Authorize('recruit', Member::class)]
-    public function submitRecruitment(Request $request)
+    public function submitRecruitment(SubmitRecruitmentRequest $request)
     {
 
         $division  = Division::whereSlug($request->division)->first();
@@ -58,14 +60,6 @@ class RecruitingController extends Controller
         if ($request->pending_user_id) {
             return $this->recruitPendingDiscordUser($request, $division, $recruiter);
         }
-
-        $request->validate([
-            'forum_name' => [
-                'required',
-                fn ($attr, $value, $fail) => Member::isValidForumName($value)
-                    ?: $fail('Forum name cannot contain HTML special characters (< > & " \').'),
-            ],
-        ]);
 
         $lock = Cache::lock('recruit:member:' . (int) $request->member_id, 30);
 
@@ -320,10 +314,8 @@ class RecruitingController extends Controller
     }
 
     #[Authorize('recruit', Member::class)]
-    public function checkForumEmail(Request $request): JsonResponse
+    public function checkForumEmail(CheckForumEmailRequest $request): JsonResponse
     {
-
-        $request->validate(['email' => 'required|email']);
 
         if (app()->environment() === 'local') {
             return response()->json([

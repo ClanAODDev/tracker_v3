@@ -4,12 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Enums\Rank;
 use App\Enums\TagVisibility;
+use App\Http\Requests\DivisionTag\AddTagRequest;
+use App\Http\Requests\DivisionTag\CreateBulkTagPageRequest;
+use App\Http\Requests\DivisionTag\CreateDivisionTagRequest;
+use App\Http\Requests\DivisionTag\RemoveTagRequest;
+use App\Http\Requests\DivisionTag\StoreBulkTagRequest;
 use App\Models\Division;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Policies\DivisionTagPolicy;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class BulkTagController extends Controller
 {
@@ -36,13 +39,9 @@ class BulkTagController extends Controller
         ]);
     }
 
-    public function addTag(Request $request, Division $division, Member $member)
+    public function addTag(AddTagRequest $request, Division $division, Member $member)
     {
-        $this->authorize('assign', [DivisionTag::class, $member]);
-
-        $validated = $request->validate([
-            'tag_id' => 'required|integer|exists:division_tags,id',
-        ]);
+        $validated = $request->validated();
 
         $user   = auth()->user();
         $policy = new DivisionTagPolicy;
@@ -60,9 +59,8 @@ class BulkTagController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function createTag(Request $request, Division $division, Member $member)
+    public function createTag(CreateDivisionTagRequest $request, Division $division, Member $member)
     {
-        $this->authorize('create', DivisionTag::class);
         $user = auth()->user();
 
         $userDivision = $user->isRole('admin') ? $division : $user->member?->division;
@@ -70,15 +68,7 @@ class BulkTagController extends Controller
             return response()->json(['error' => 'No division found'], 403);
         }
 
-        $validVisibilities = [TagVisibility::PUBLIC->value, TagVisibility::OFFICERS->value];
-        if ($user->isRole(['admin', 'sr_ldr'])) {
-            $validVisibilities[] = TagVisibility::SENIOR_LEADERS->value;
-        }
-
-        $validated = $request->validate([
-            'name'       => 'required|string|max:25',
-            'visibility' => 'nullable|string|in:' . implode(',', $validVisibilities),
-        ]);
+        $validated = $request->validated();
 
         $existingTag = $userDivision->tags()->where('name', $validated['name'])->first();
         if ($existingTag) {
@@ -103,31 +93,15 @@ class BulkTagController extends Controller
         ]);
     }
 
-    public function removeTag(Request $request, Division $division, Member $member)
+    public function removeTag(RemoveTagRequest $request, Division $division, Member $member)
     {
-        $this->authorize('assign', [DivisionTag::class, $member]);
-
-        $user   = auth()->user();
-        $policy = new DivisionTagPolicy;
-
-        $validated = $request->validate([
-            'tag_id' => [
-                'required',
-                'integer',
-                Rule::exists('division_tags', 'id')->where(
-                    fn ($q) => $q->whereIn('id', $policy->getAssignableTags($user)->pluck('id'))
-                ),
-            ],
-        ]);
-
-        $member->tags()->detach($validated['tag_id']);
+        $member->tags()->detach($request->validated('tag_id'));
 
         return response()->json(['success' => true]);
     }
 
-    public function createDivisionTag(Request $request, Division $division)
+    public function createDivisionTag(CreateDivisionTagRequest $request, Division $division)
     {
-        $this->authorize('create', DivisionTag::class);
         $user = auth()->user();
 
         $userDivision = $user->isRole('admin') ? $division : $user->member?->division;
@@ -135,15 +109,7 @@ class BulkTagController extends Controller
             return response()->json(['error' => 'No division found'], 403);
         }
 
-        $validVisibilities = [TagVisibility::PUBLIC->value, TagVisibility::OFFICERS->value];
-        if ($user->isRole(['admin', 'sr_ldr'])) {
-            $validVisibilities[] = TagVisibility::SENIOR_LEADERS->value;
-        }
-
-        $validated = $request->validate([
-            'name'       => 'required|string|max:25',
-            'visibility' => 'nullable|string|in:' . implode(',', $validVisibilities),
-        ]);
+        $validated = $request->validated();
 
         $existingTag = $userDivision->tags()->where('name', $validated['name'])->first();
         if ($existingTag) {
@@ -165,15 +131,9 @@ class BulkTagController extends Controller
         ]);
     }
 
-    public function create(Request $request, Division $division)
+    public function create(CreateBulkTagPageRequest $request, Division $division)
     {
-        $this->authorize('assign', DivisionTag::class);
-
-        $validated = $request->validate([
-            'member-data' => 'required|string',
-        ]);
-
-        $memberIds = explode(',', $validated['member-data']);
+        $memberIds = explode(',', $request->validated('member-data'));
 
         $members = Member::whereIn('clan_id', $memberIds)
             ->select('id', 'clan_id', 'name', 'rank')
@@ -205,17 +165,9 @@ class BulkTagController extends Controller
         return view('division.bulk-tags', compact('division', 'members', 'tags', 'returnTo'));
     }
 
-    public function store(Request $request, Division $division)
+    public function store(StoreBulkTagRequest $request, Division $division)
     {
-        $this->authorize('assign', DivisionTag::class);
-
-        $validated = $request->validate([
-            'member_ids'   => 'required|array',
-            'member_ids.*' => 'integer',
-            'tags'         => 'required|array',
-            'tags.*'       => 'integer|exists:division_tags,id',
-            'action'       => 'required|in:assign,remove',
-        ]);
+        $validated = $request->validated();
 
         $members    = Member::whereIn('clan_id', $validated['member_ids'])->get();
         $user       = auth()->user();

@@ -405,4 +405,41 @@ class TicketApiTest extends TestCase
         $response->assertStatus(422);
         $this->assertEquals('resolved', $ticket->fresh()->state);
     }
+
+    #[Test]
+    public function reject_requires_a_reason()
+    {
+        $admin      = $this->createAdmin();
+        $ticketType = TicketType::factory()->create();
+
+        $ticket = Ticket::factory()->create([
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'new',
+        ]);
+
+        $response = $this->actingAs($admin)
+            ->postJson("/api/tickets/{$ticket->id}/reject", []);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('reason');
+        $this->assertEquals('new', $ticket->fresh()->state);
+    }
+
+    #[Test]
+    public function reassign_requires_an_existing_user_id()
+    {
+        $admin      = $this->createAdmin();
+        $ticketType = TicketType::factory()->create();
+
+        $ticket = Ticket::factory()->create([
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'new',
+        ]);
+
+        $response = $this->actingAs($admin)
+            ->postJson("/api/tickets/{$ticket->id}/reassign", ['user_id' => 999999]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('user_id');
+    }
 }
