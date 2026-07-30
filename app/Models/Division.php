@@ -278,6 +278,11 @@ class Division extends Model
         return new DivisionSettings($mergedSettings, $this);
     }
 
+    public function inactivityThresholdDays(int $default = 30): int
+    {
+        return $this->settings()->get('inactivity_days') ?? $default;
+    }
+
     public function leaders(): HasMany
     {
         return $this->members()->orderBy('position', 'desc')

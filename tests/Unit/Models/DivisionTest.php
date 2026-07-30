@@ -39,6 +39,36 @@ class DivisionTest extends TestCase
     }
 
     #[Test]
+    public function inactivity_threshold_days_returns_configured_value()
+    {
+        $division           = Division::factory()->create();
+        $division->settings = array_merge($division->settings, ['inactivity_days' => 45]);
+        $division->save();
+
+        $this->assertEquals(45, $division->inactivityThresholdDays());
+    }
+
+    #[Test]
+    public function inactivity_threshold_days_falls_back_to_given_default_when_unset()
+    {
+        $division           = Division::factory()->create();
+        $division->settings = array_merge($division->settings, ['inactivity_days' => null]);
+        $division->save();
+
+        $this->assertEquals(90, $division->inactivityThresholdDays(90));
+    }
+
+    #[Test]
+    public function inactivity_threshold_days_defaults_to_thirty_when_no_default_given()
+    {
+        $division           = Division::factory()->create();
+        $division->settings = array_merge($division->settings, ['inactivity_days' => null]);
+        $division->save();
+
+        $this->assertEquals(30, $division->inactivityThresholdDays());
+    }
+
+    #[Test]
     public function creating_division_generates_slug_from_name()
     {
         $division = Division::factory()->create(['name' => 'Test Division Name']);

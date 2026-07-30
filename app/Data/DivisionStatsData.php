@@ -16,7 +16,7 @@ readonly class DivisionStatsData
 
     public static function fromDivision(Division $division): self
     {
-        $activityThresholdDays = $division->settings()->get('inactivity_days') ?? 30;
+        $activityThresholdDays = $division->inactivityThresholdDays();
 
         $division->loadCount([
             'members',
