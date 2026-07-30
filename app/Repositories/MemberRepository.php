@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Data\DivisionComparisonData;
 use App\Models\Division;
 use App\Models\Member;
 use Illuminate\Support\Collection;
@@ -101,7 +102,7 @@ class MemberRepository
         ]);
     }
 
-    public function getDivisionComparison(Member $member, Division $division): ?object
+    public function getDivisionComparison(Member $member, Division $division): ?DivisionComparisonData
     {
         $tenureDays     = $member->join_date ? (int) $member->join_date->diffInDays() : 0;
         $daysSinceVoice = $member->last_voice_activity
@@ -132,14 +133,14 @@ class MemberRepository
             ? ($stats->activity_rank / $stats->voice_count) * 100
             : 0;
 
-        return (object) [
-            'avgTenureDays'      => round($avgTenureDays),
-            'avgTenureYears'     => round($avgTenureDays / 365, 1),
-            'avgVoiceDays'       => round($avgVoiceDays),
-            'tenurePercentile'   => round($tenurePercentile),
-            'activityPercentile' => round($activityPercentile),
-            'tenureBetter'       => $tenureDays > $avgTenureDays,
-            'activityBetter'     => $daysSinceVoice !== null && $daysSinceVoice < $avgVoiceDays,
-        ];
+        return new DivisionComparisonData(
+            avgTenureDays: (int) round($avgTenureDays),
+            avgTenureYears: round($avgTenureDays / 365, 1),
+            avgVoiceDays: (int) round($avgVoiceDays),
+            tenurePercentile: (int) round($tenurePercentile),
+            activityPercentile: (int) round($activityPercentile),
+            tenureBetter: $tenureDays > $avgTenureDays,
+            activityBetter: $daysSinceVoice !== null && $daysSinceVoice < $avgVoiceDays,
+        );
     }
 }

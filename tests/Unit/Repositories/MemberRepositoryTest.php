@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Repositories;
 
+use App\Data\DivisionComparisonData;
 use App\Repositories\MemberRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -139,5 +140,55 @@ class MemberRepositoryTest extends TestCase
         $results = $this->repository->searchAutocomplete('TestUser', 3);
 
         $this->assertCount(3, $results);
+    }
+
+    #[Test]
+    public function get_division_comparison_returns_null_when_division_has_no_members_with_join_date()
+    {
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id, 'join_date' => null]);
+
+        $comparison = $this->repository->getDivisionComparison($member, $division);
+
+        $this->assertNull($comparison);
+    }
+
+    #[Test]
+    public function get_division_comparison_returns_typed_data_object()
+    {
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember([
+            'division_id'         => $division->id,
+            'join_date'           => now()->subDays(100),
+            'last_voice_activity' => now()->subDays(2),
+        ]);
+        $this->createMember([
+            'division_id'         => $division->id,
+            'join_date'           => now()->subDays(50),
+            'last_voice_activity' => now()->subDays(10),
+        ]);
+
+        $comparison = $this->repository->getDivisionComparison($member, $division);
+
+        $this->assertInstanceOf(DivisionComparisonData::class, $comparison);
+        $this->assertIsInt($comparison->avgTenureDays);
+        $this->assertIsInt($comparison->avgVoiceDays);
+        $this->assertIsInt($comparison->tenurePercentile);
+        $this->assertIsInt($comparison->activityPercentile);
+    }
+
+    #[Test]
+    public function get_division_comparison_marks_longer_tenured_member_as_better()
+    {
+        $division = $this->createActiveDivision();
+        $veteran  = $this->createMember([
+            'division_id' => $division->id,
+            'join_date'   => now()->subDays(1000),
+        ]);
+        $this->createMember(['division_id' => $division->id, 'join_date' => now()->subDays(10)]);
+
+        $comparison = $this->repository->getDivisionComparison($veteran, $division);
+
+        $this->assertTrue($comparison->tenureBetter);
     }
 }
