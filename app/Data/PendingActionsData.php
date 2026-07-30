@@ -28,31 +28,26 @@ readonly class PendingActionsData
         $maxDays = config('aod.maximum_days_inactive');
 
         if ($user->can('manage', MemberRequest::class)) {
-            $count = $division->memberRequests()->pending()->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'member-requests',
-                    count: $count,
-                    url: route('filament.mod.resources.member-requests.index') . '?filters[status][value]=pending',
-                    icon: 'fa-user-plus',
-                    label: 'Request',
-                    style: 'warning',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                $division->memberRequests()->pending()->count(),
+                key: 'member-requests',
+                url: route('filament.mod.resources.member-requests.index') . '?filters[status][value]=pending',
+                icon: 'fa-user-plus',
+                label: 'Request',
+                style: 'warning',
+            );
         }
 
         if ($user->can('recruit', Member::class) && $division->settings()->get('application_required', false)) {
-            $count = DivisionApplication::where('division_id', $division->id)
-                ->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'pending-applications',
-                    count: $count,
-                    url: route('division', $division->slug) . '?applications=1',
-                    icon: 'fa-clipboard-list',
-                    label: 'Application',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                DivisionApplication::where('division_id', $division->id)->count(),
+                key: 'pending-applications',
+                url: route('division', $division->slug) . '?applications=1',
+                icon: 'fa-clipboard-list',
+                label: 'Application',
+            );
         }
 
         if ($user->member?->isAtLeast(Rank::SERGEANT)) {
@@ -67,185 +62,188 @@ readonly class PendingActionsData
                 $url .= '?tableFilters[sgt_plus][isActive]=true';
             }
 
-            $count = $query->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'pending-rank-actions',
-                    count: $count,
-                    url: $url,
-                    icon: 'fa-arrow-up',
-                    label: 'Rank Action',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                $query->count(),
+                key: 'pending-rank-actions',
+                url: $url,
+                icon: 'fa-arrow-up',
+                label: 'Rank Action',
+            );
         }
 
         if ($user->isRole('sr_ldr')) {
-            $count = $division->members()
-                ->whereDoesntHave('leave')
-                ->where('last_voice_activity', '<', now()->subDays($maxDays)->format('Y-m-d'))
-                ->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'inactive-members',
-                    count: $count,
-                    url: route('division.inactive-members', $division),
-                    icon: 'fa-user-clock',
-                    label: 'Outstanding Inactive',
-                    style: 'warning',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                $division->members()
+                    ->whereDoesntHave('leave')
+                    ->where('last_voice_activity', '<', now()->subDays($maxDays)->format('Y-m-d'))
+                    ->count(),
+                key: 'inactive-members',
+                url: route('division.inactive-members', $division),
+                icon: 'fa-user-clock',
+                label: 'Outstanding Inactive',
+                style: 'warning',
+            );
         }
 
         if ($user->isDivisionLeader()) {
-            $count = MemberAward::needsApproval()
-                ->whereHas('award', fn ($q) => $q->where('division_id', $division->id))
-                ->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'award-requests',
-                    count: $count,
-                    url: route('filament.mod.resources.member-awards.index') . reviewDivisionAwardsQuery($division->id),
-                    icon: 'fa-trophy',
-                    label: 'Award',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                MemberAward::needsApproval()
+                    ->whereHas('award', fn ($q) => $q->where('division_id', $division->id))
+                    ->count(),
+                key: 'award-requests',
+                url: route('filament.mod.resources.member-awards.index') . reviewDivisionAwardsQuery($division->id),
+                icon: 'fa-trophy',
+                label: 'Award',
+            );
         }
 
         if ($user->isRole('admin')) {
-            $count = MemberAward::needsApproval()
-                ->whereHas('award', fn ($q) => $q->whereNull('division_id'))
-                ->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'clan-award-requests',
-                    count: $count,
-                    url: route('filament.mod.resources.member-awards.index') . '?filters[needs approval][isActive]=true&filters[clan_wide][isActive]=true',
-                    icon: 'fa-globe',
-                    label: 'Clan Award',
-                    style: 'accent',
-                    adminOnly: true,
-                ));
-            }
+            self::pushAction(
+                $actions,
+                MemberAward::needsApproval()
+                    ->whereHas('award', fn ($q) => $q->whereNull('division_id'))
+                    ->count(),
+                key: 'clan-award-requests',
+                url: route('filament.mod.resources.member-awards.index') . '?filters[needs approval][isActive]=true&filters[clan_wide][isActive]=true',
+                icon: 'fa-globe',
+                label: 'Clan Award',
+                style: 'accent',
+                adminOnly: true,
+            );
         }
 
         if ($user->isDivisionLeader()) {
-            $count = $division->transfers()->pending()->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'pending-transfers',
-                    count: $count,
-                    url: route('filament.mod.resources.transfers.index') . '?filters[incomplete][isActive]=true&filters[transferring_to][value]=' . $division->id,
-                    icon: 'fa-exchange-alt',
-                    label: 'Transfer',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                $division->transfers()->pending()->count(),
+                key: 'pending-transfers',
+                url: route('filament.mod.resources.transfers.index') . '?filters[incomplete][isActive]=true&filters[transferring_to][value]=' . $division->id,
+                icon: 'fa-exchange-alt',
+                label: 'Transfer',
+            );
         }
 
         if ($user->isDivisionLeader() || $user->isRole(['admin', 'sr_ldr'])) {
-            $count = Leave::whereNull('approver_id')
-                ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
-                ->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'pending-leaves',
-                    count: $count,
-                    url: route('filament.mod.resources.leaves.index') . '?filters[needs approval][isActive]=true',
-                    icon: 'fa-calendar-alt',
-                    label: 'LOA',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                Leave::whereNull('approver_id')
+                    ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
+                    ->count(),
+                key: 'pending-leaves',
+                url: route('filament.mod.resources.leaves.index') . '?filters[needs approval][isActive]=true',
+                icon: 'fa-calendar-alt',
+                label: 'LOA',
+            );
 
-            $count = Leave::whereNotNull('approver_id')
-                ->whereBetween('end_date', [now()->startOfDay(), now()->addDays(14)->endOfDay()])
-                ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
-                ->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'expiring-leaves',
-                    count: $count,
-                    url: route('filament.mod.resources.leaves.index') . '?filters[expiring soon][isActive]=true',
-                    icon: 'fa-calendar-check',
-                    label: 'LOA Expiring',
-                    style: 'warning',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                Leave::whereNotNull('approver_id')
+                    ->whereBetween('end_date', [now()->startOfDay(), now()->addDays(14)->endOfDay()])
+                    ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
+                    ->count(),
+                key: 'expiring-leaves',
+                url: route('filament.mod.resources.leaves.index') . '?filters[expiring soon][isActive]=true',
+                icon: 'fa-calendar-check',
+                label: 'LOA Expiring',
+                style: 'warning',
+            );
 
-            $count = Leave::whereNotNull('approver_id')
-                ->where('end_date', '<', now()->startOfDay())
-                ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
-                ->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'overdue-leaves',
-                    count: $count,
-                    url: route('filament.mod.resources.leaves.index') . '?filters[overdue][isActive]=true',
-                    icon: 'fa-calendar-times',
-                    label: 'LOA Overdue',
-                    style: 'danger',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                Leave::whereNotNull('approver_id')
+                    ->where('end_date', '<', now()->startOfDay())
+                    ->whereHas('member', fn ($q) => $q->where('division_id', $division->id))
+                    ->count(),
+                key: 'overdue-leaves',
+                url: route('filament.mod.resources.leaves.index') . '?filters[overdue][isActive]=true',
+                icon: 'fa-calendar-times',
+                label: 'LOA Overdue',
+                style: 'danger',
+            );
         }
 
         if ($user->isRole('sr_ldr')) {
-            $count = $division->members()->misconfiguredDiscord()->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'voice-issues',
-                    count: $count,
-                    url: route('division.voice-report', $division->slug),
-                    icon: 'fa-headset',
-                    label: 'Voice Issue',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                $division->members()->misconfiguredDiscord()->count(),
+                key: 'voice-issues',
+                url: route('division.voice-report', $division->slug),
+                icon: 'fa-headset',
+                label: 'Voice Issue',
+            );
         }
 
         if ($user->can('create', [Platoon::class, $division])) {
-            $count = count($division->unassigned);
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'unassigned-members',
-                    count: $count,
-                    url: route('division', $division->slug) . '#platoons',
-                    icon: 'fa-user-slash',
-                    label: 'No Platoon',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                count($division->unassigned),
+                key: 'unassigned-members',
+                url: route('division', $division->slug) . '#platoons',
+                icon: 'fa-user-slash',
+                label: 'No Platoon',
+            );
         }
 
         if ($user->isRole('sr_ldr')) {
-            $count = $division->members()
-                ->where('platoon_id', '>', 0)
-                ->where('squad_id', 0)
-                ->where('position', Position::MEMBER)
-                ->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'unassigned-to-squad',
-                    count: $count,
-                    url: '#',
-                    icon: 'fa-users-slash',
-                    label: 'No Squad',
-                    modalTarget: 'no-squad-modal',
-                ));
-            }
+            self::pushAction(
+                $actions,
+                $division->members()
+                    ->where('platoon_id', '>', 0)
+                    ->where('squad_id', 0)
+                    ->where('position', Position::MEMBER)
+                    ->count(),
+                key: 'unassigned-to-squad',
+                url: '#',
+                icon: 'fa-users-slash',
+                label: 'No Squad',
+                modalTarget: 'no-squad-modal',
+            );
         }
 
         if ($user->isRole('admin')) {
-            $count = Ticket::whereIn('state', ['new', 'assigned'])->count();
-            if ($count > 0) {
-                $actions->push(new PendingAction(
-                    key: 'open-tickets',
-                    count: $count,
-                    url: route('help.tickets.widget') . '?view=all',
-                    icon: 'fa-ticket-alt',
-                    label: 'Open Ticket',
-                    style: 'warning',
-                    adminOnly: true,
-                ));
-            }
+            self::pushAction(
+                $actions,
+                Ticket::whereIn('state', ['new', 'assigned'])->count(),
+                key: 'open-tickets',
+                url: route('help.tickets.widget') . '?view=all',
+                icon: 'fa-ticket-alt',
+                label: 'Open Ticket',
+                style: 'warning',
+                adminOnly: true,
+            );
         }
 
         return new self($actions);
+    }
+
+    private static function pushAction(
+        Collection $actions,
+        int $count,
+        string $key,
+        string $url,
+        string $icon,
+        string $label,
+        string $style = 'default',
+        bool $adminOnly = false,
+        ?string $modalTarget = null,
+    ): void {
+        if ($count <= 0) {
+            return;
+        }
+
+        $actions->push(new PendingAction(
+            key: $key,
+            count: $count,
+            url: $url,
+            icon: $icon,
+            label: $label,
+            style: $style,
+            adminOnly: $adminOnly,
+            modalTarget: $modalTarget,
+        ));
     }
 
     public function hasAnyActions(): bool
