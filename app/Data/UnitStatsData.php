@@ -21,7 +21,7 @@ readonly class UnitStatsData
     public static function fromMembers(Collection $members, ?Division $division, array $voiceActivityGraph): self
     {
         $division          = $division ?? $members->first()?->division;
-        $maxDays           = $division?->settings()->get('inactivity_days') ?? 90;
+        $maxDays           = $division?->inactivityThresholdDays(90) ?? 90;
         $now               = now();
         $inactiveThreshold = $now->copy()->subDays($maxDays);
 

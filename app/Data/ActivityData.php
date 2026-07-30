@@ -28,7 +28,7 @@ readonly class ActivityData
             default                  => 'critical',
         };
 
-        $divisionMax = $division?->settings()->get('inactivity_days') ?? 30;
+        $divisionMax = $division?->inactivityThresholdDays(30) ?? 30;
         $healthPct   = $daysSinceVoice !== null
             ? max(0, min(100, 100 - ($daysSinceVoice / $divisionMax * 100)))
             : 0;
