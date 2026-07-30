@@ -21,21 +21,9 @@ readonly class MemberStatsData
         ?Division $division,
         MemberRepository $memberRepository
     ): self {
-        $divisionComparison = null;
-        if ($division) {
-            $comparison = $memberRepository->getDivisionComparison($member, $division);
-            if ($comparison) {
-                $divisionComparison = new DivisionComparisonData(
-                    avgTenureDays: $comparison->avgTenureDays,
-                    avgTenureYears: $comparison->avgTenureYears,
-                    avgVoiceDays: $comparison->avgVoiceDays,
-                    tenurePercentile: $comparison->tenurePercentile,
-                    activityPercentile: $comparison->activityPercentile,
-                    tenureBetter: $comparison->tenureBetter,
-                    activityBetter: $comparison->activityBetter,
-                );
-            }
-        }
+        $divisionComparison = $division
+            ? $memberRepository->getDivisionComparison($member, $division)
+            : null;
 
         return new self(
             tenure: TenureData::fromMember($member),
