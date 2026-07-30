@@ -118,7 +118,7 @@ readonly class DivisionLeaderboardData
     {
         return $divisions
             ->map(function (Division $division) {
-                $censusRecords = $division->census->sortBy('created_at')->values();
+                $censusRecords = self::sortedCensus($division);
                 $latest        = $censusRecords->last();
                 $previous      = $censusRecords->count() > 1 ? $censusRecords->get($censusRecords->count() - 2) : null;
 
@@ -137,10 +137,7 @@ readonly class DivisionLeaderboardData
                 })->values()->toArray();
 
                 return [
-                    'id'        => $division->id,
-                    'name'      => $division->name,
-                    'slug'      => $division->slug,
-                    'logo'      => self::getDivisionLogo($division),
+                    ...self::baseEntry($division),
                     'value'     => (int) $voiceRate,
                     'formatted' => $voiceRate . '%',
                     'trend'     => $trend,
@@ -155,7 +152,7 @@ readonly class DivisionLeaderboardData
     {
         return $divisions
             ->map(function (Division $division) {
-                $censusRecords = $division->census->sortBy('created_at')->values();
+                $censusRecords = self::sortedCensus($division);
                 $currentCount  = $division->members_count;
                 $previousCount = $censusRecords->last()?->count ?? 0;
 
@@ -169,10 +166,7 @@ readonly class DivisionLeaderboardData
                 $trend[] = $currentCount;
 
                 return [
-                    'id'        => $division->id,
-                    'name'      => $division->name,
-                    'slug'      => $division->slug,
-                    'logo'      => self::getDivisionLogo($division),
+                    ...self::baseEntry($division),
                     'value'     => $growthRate,
                     'formatted' => ($growthRate >= 0 ? '+' : '') . $growthRate . '%',
                     'trend'     => $trend,
@@ -190,10 +184,7 @@ readonly class DivisionLeaderboardData
                 $previous = count($trend) >= 2 ? $trend[count($trend) - 2] : 0;
 
                 return [
-                    'id'        => $division->id,
-                    'name'      => $division->name,
-                    'slug'      => $division->slug,
-                    'logo'      => self::getDivisionLogo($division),
+                    ...self::baseEntry($division),
                     'value'     => $division->recruits_count,
                     'formatted' => $division->recruits_count,
                     'trend'     => $trend,
@@ -202,6 +193,21 @@ readonly class DivisionLeaderboardData
             })
             ->sortByDesc('value')
             ->values();
+    }
+
+    private static function sortedCensus(Division $division): Collection
+    {
+        return $division->census->sortBy('created_at')->values();
+    }
+
+    private static function baseEntry(Division $division): array
+    {
+        return [
+            'id'   => $division->id,
+            'name' => $division->name,
+            'slug' => $division->slug,
+            'logo' => self::getDivisionLogo($division),
+        ];
     }
 
     private static function getMonthlyRecruitTrends(Collection $divisionIds): Collection
