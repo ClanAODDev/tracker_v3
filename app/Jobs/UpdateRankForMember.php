@@ -36,8 +36,7 @@ class UpdateRankForMember implements ShouldQueue
             ));
         }
 
-        if ($this->action->rank->isPromotion($this->action->member->rank)) {
-            // notifying of promotion
+        if ($this->action->rank->isPromotion($this->action->member->rank) && $this->action->member->division) {
             $this->action->member->division->notify(new NotifyDivisionMemberPromotion(
                 $this->action->member->name,
                 $this->action->rank->getLabel()

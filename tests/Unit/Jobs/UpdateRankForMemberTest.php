@@ -142,6 +142,27 @@ class UpdateRankForMemberTest extends TestCase
     }
 
     #[Test]
+    public function job_does_not_crash_on_promotion_when_member_has_no_division()
+    {
+        $member = $this->createMember([
+            'division_id' => 0,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
+        ]);
+
+        $action = RankAction::factory()->approved()->create([
+            'member_id' => $member->id,
+            'rank'      => Rank::CORPORAL,
+        ]);
+
+        $job = new UpdateRankForMember($action);
+        $job->handle($this->procedureService);
+
+        $member->refresh();
+        $this->assertEquals(Rank::CORPORAL, $member->rank);
+        Notification::assertNothingSent();
+    }
+
+    #[Test]
     public function job_does_not_send_promotion_notification_on_demotion()
     {
         $division = $this->createActiveDivision();
