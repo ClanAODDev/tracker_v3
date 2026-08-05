@@ -66,7 +66,7 @@ class ClanSnapshotTest extends TestCase
 
         Member::factory()->count(5)->create([
             'division_id' => $division->id,
-            'join_date'   => now()->subDays(5),
+            'join_date'   => now()->startOfMonth()->addDay(),
         ]);
         Member::factory()->count(3)->create([
             'division_id' => $division->id,
