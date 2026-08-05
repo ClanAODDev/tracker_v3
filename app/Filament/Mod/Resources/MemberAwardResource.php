@@ -10,7 +10,7 @@ use App\Filament\Mod\Resources\RankActionResource\RelationManagers\RequesterRela
 use App\Models\Award;
 use App\Models\Division;
 use App\Models\MemberAward;
-use App\Notifications\Channel\NotifyDivisionMemberAwarded;
+use App\Services\AwardNotificationService;
 use Closure;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -248,18 +248,8 @@ class MemberAwardResource extends Resource
                         ->hidden(fn () => ! auth()->user()->isRole(['admin', 'sr_ldr']))
                         ->action(fn (Collection $records) => $records->each->update(['approved' => true]))
                         ->requiresConfirmation()
-                        ->modalDescription('This will generate a notification for every award approved.')
-                        ->after(function (Collection $records) {
-                            $records->load('member.division', 'award');
-                            foreach ($records as $memberAward) {
-                                if ($memberAward->member->division?->settings()->get('chat_alerts.member_awarded')) {
-                                    $memberAward->member->division->notify(new NotifyDivisionMemberAwarded(
-                                        $memberAward->member->name,
-                                        $memberAward->award
-                                    ));
-                                }
-                            }
-                        }),
+                        ->modalDescription('This will generate one consolidated notification per division, grouped by award type.')
+                        ->after(fn (Collection $records) => app(AwardNotificationService::class)->notifyBulkApproval($records)),
 
                 ]),
             ]);
