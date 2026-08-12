@@ -47,7 +47,6 @@ class CreateLeave extends FormRequest
         $leave = Leave::create([
             'reason'   => $this->leave_type,
             'end_date' => Carbon::parse($this->end_date),
-            'extended' => false,
         ]);
 
         $leave->member()->associate($this->member_id);

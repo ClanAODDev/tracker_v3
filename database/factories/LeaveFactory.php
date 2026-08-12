@@ -33,11 +33,6 @@ class LeaveFactory extends Factory
         ]);
     }
 
-    public function extended(): self
-    {
-        return $this;
-    }
-
     public function military(): self
     {
         return $this->state(fn (array $attributes) => [
