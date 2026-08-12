@@ -7,6 +7,7 @@ use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\User;
 use App\Repositories\DivisionRepository;
 use App\Services\DivisionShowService;
 use App\Services\MemberQueryService;
@@ -108,9 +109,7 @@ class DivisionController extends Controller
 
     public function unassignedToSquad(Division $division): JsonResponse
     {
-        if (! auth()->user()->isRole('sr_ldr')) {
-            abort(403);
-        }
+        $this->authorize('manageUnassigned', User::class);
 
         $members = $division->members()
             ->with('platoon:id,name')

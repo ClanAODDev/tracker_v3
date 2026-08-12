@@ -54,24 +54,28 @@
                     </span>
     </td>
     <td class="text-center hidden-xs">{{ $member->last_promoted_at?->format('Y-m-d') ?? 'Never' }}</td>
-    @if(!auth()->user()->isRole('member'))
+    @can('remindActivity', App\Models\Member::class)
         @php
             $remindedToday = $member->last_activity_reminder_at?->isToday();
         @endphp
         <td class="text-center hidden-xs hidden-sm">
-            <button type="button"
-                    class="btn btn-xs activity-reminder-toggle {{ $remindedToday ? 'btn-default' : 'btn-success' }}"
-                    data-member-id="{{ $member->clan_id }}"
-                    data-original-title="{{ $member->last_activity_reminder_at ? 'Reminded ' . $member->last_activity_reminder_at->diffForHumans() : 'Not reminded' }}"
-                    title="{{ $member->last_activity_reminder_at ? 'Reminded ' . $member->last_activity_reminder_at->diffForHumans() : 'Not reminded' }}"
-                    {{ $remindedToday ? 'disabled' : '' }}>
-                <i class="fa fa-bell"></i>
-                @if($member->last_activity_reminder_at)
-                    <span class="reminded-date">{{ $member->last_activity_reminder_at->format('n/j/y') }}</span>
-                @endif
-            </button>
+            @can('remindActivity', $member)
+                <button type="button"
+                        class="btn btn-xs activity-reminder-toggle {{ $remindedToday ? 'btn-default' : 'btn-success' }}"
+                        data-member-id="{{ $member->clan_id }}"
+                        data-original-title="{{ $member->last_activity_reminder_at ? 'Reminded ' . $member->last_activity_reminder_at->diffForHumans() : 'Not reminded' }}"
+                        title="{{ $member->last_activity_reminder_at ? 'Reminded ' . $member->last_activity_reminder_at->diffForHumans() : 'Not reminded' }}"
+                        {{ $remindedToday ? 'disabled' : '' }}>
+                    <i class="fa fa-bell"></i>
+                    @if($member->last_activity_reminder_at)
+                        <span class="reminded-date">{{ $member->last_activity_reminder_at->format('n/j/y') }}</span>
+                    @endif
+                </button>
+            @else
+                <span class="text-muted">—</span>
+            @endcan
         </td>
-    @endif
+    @endcan
     <td class="hidden-xs hidden-sm table-tags-cell">
         @foreach($visibleMemberTags as $tag)
             <span class="badge table-tag tag-visibility-{{ $tag->visibility->value }}"
@@ -99,7 +103,7 @@
     </td>
     <td class="col-hidden">{{ $member->last_voice_activity }}</td>
     <td class="col-hidden">{{ $member->tags->pluck('id')->join(',') }}</td>
-    @if(!auth()->user()->isRole('member'))
+    @can('remindActivity', App\Models\Member::class)
         <td class="col-hidden">{{ $member->last_activity_reminder_at?->format('Y-m-d') ?? '0000-00-00' }}</td>
-    @endif
+    @endcan
 </tr>

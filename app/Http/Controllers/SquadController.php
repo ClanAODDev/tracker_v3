@@ -12,7 +12,6 @@ use App\Repositories\SquadRepository;
 use App\Services\MemberQueryService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 
 #[Middleware('auth')]
@@ -34,19 +33,23 @@ class SquadController extends Controller
         return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'unitStats'));
     }
 
-    #[Authorize('recruit', Member::class)]
     public function assignMember(Request $request): JsonResponse
     {
-
-        $member = Member::find($request->member_id);
+        $member = Member::findOrFail($request->member_id);
 
         if ((int) $request->squad_id === 0) {
+            if ($member->platoon) {
+                $this->authorize('update', $member->platoon);
+            }
+
             $member->platoon()->dissociate();
             $member->squad()->dissociate();
             $member->save();
             $member->recordActivity(ActivityType::UNASSIGNED);
         } else {
-            $squad = Squad::find($request->squad_id);
+            $squad = Squad::findOrFail($request->squad_id);
+            $this->authorize('update', $squad->platoon);
+
             $member->platoon()->associate($squad->platoon);
             $member->squad()->associate($squad);
             $member->save();

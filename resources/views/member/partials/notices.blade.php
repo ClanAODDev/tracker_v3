@@ -4,12 +4,12 @@
     </x-notice>
 @endif
 
-@can ('update', $member->clan_id)
+@can ('update', $member)
     @if (! $member->handles->contains($division->handle) && $division->handle)
         <x-notice
             type="warning"
             icon="fa-gamepad"
-            :cta="route('editMember', $member->clan_id) . '#handles'"
+            :cta="route('filament.mod.resources.members.edit', $member) . '#ingame-handles'"
             ctaLabel="Add Handle"
         >
             The <strong>{{ $division->name }}</strong> division requires a <code>{{ $division->handle->label }}</code> handle, but {{ $member->name }} does not have one.

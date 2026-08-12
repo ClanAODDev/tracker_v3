@@ -7,6 +7,7 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class MemberPolicy
 {
@@ -48,6 +49,18 @@ class MemberPolicy
         return auth()->user()->isRole('sr_ldr');
     }
 
+    /**
+     * Can the user reset the given member's squad/platoon assignments?
+     */
+    public function reset(User $user, Member $member): bool
+    {
+        if ($member->id === auth()->user()->member_id) {
+            return false;
+        }
+
+        return auth()->user()->isRole('sr_ldr');
+    }
+
     public function flagInactive(User $user): bool
     {
         return $user->isRole(['officer', 'sr_ldr']);
@@ -60,6 +73,24 @@ class MemberPolicy
         }
 
         return $user->isRole(['officer', 'sr_ldr']);
+    }
+
+    /**
+     * Can the user clear the given member's activity reminders?
+     *
+     * Deliberately stricter than remindActivity(): clearing reminder
+     * history is restricted to sr_ldr, unlike setting one which any
+     * officer can do.
+     */
+    public function clearActivityReminders(User $user, Member $member): Response
+    {
+        if ($member->id === $user->member_id) {
+            return Response::deny('Cannot clear your own reminders');
+        }
+
+        return $user->isRole('sr_ldr')
+            ? Response::allow()
+            : Response::deny();
     }
 
     public function updateLeave(User $user, Member $member)

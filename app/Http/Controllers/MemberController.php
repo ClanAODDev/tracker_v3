@@ -79,8 +79,10 @@ class MemberController extends Controller
     #[Authorize('recruit', Member::class)]
     public function assignPlatoon(Member $member): JsonResponse
     {
+        $platoon = Platoon::where('id', request()->platoon_id)
+            ->where('division_id', $member->division_id)
+            ->firstOrFail();
 
-        $platoon            = Platoon::find(request()->platoon_id);
         $member->platoon_id = $platoon->id;
         $member->save();
         $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
@@ -102,6 +104,8 @@ class MemberController extends Controller
 
     public function unassignMember(Member $member): RedirectResponse
     {
+        $this->authorize('reset', $member);
+
         $member->squad_id   = 0;
         $member->platoon_id = 0;
         $member->save();
@@ -146,19 +150,7 @@ class MemberController extends Controller
 
     public function clearActivityReminders(Member $member): JsonResponse
     {
-        if (! auth()->user()->isRole(['sr_ldr', 'admin'])) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Unauthorized',
-            ], 403);
-        }
-
-        if (auth()->user()->member?->clan_id === $member->clan_id) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Cannot clear your own reminders',
-            ], 403);
-        }
+        $this->authorize('clearActivityReminders', $member);
 
         $count = ActivityReminder::where('member_id', $member->id)->delete();
 
