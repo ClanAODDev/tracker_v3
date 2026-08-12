@@ -78,7 +78,7 @@
         </li>
     @endcan
 
-    @if(Auth::user()->can('manage', \App\Models\MemberRequest::class))
+    @if(auth()->user()->can('manage', \App\Models\MemberRequest::class))
         <li>
             <a href="{{ route('filament.mod.resources.member-requests.index'). '?filters[status][value]=pending'}}">
                 Member Requests
@@ -92,7 +92,7 @@
         </li>
     @endunless
 
-    @if(Auth::user()->isRole(['admin', 'sr_ldr', 'officer']))
+    @if(auth()->user()->isRole(['admin', 'sr_ldr', 'officer']))
         <li class="{{ set_active('help/tickets*') }}">
             <a href="{{ route('help.tickets.widget') }}">Get Help</a>
         </li>
@@ -140,23 +140,23 @@
     </li>
 
 
-    @if(Auth::user()->isRole(['admin', 'sr_ldr', 'officer']))
+    @if(auth()->user()->isRole(['admin', 'sr_ldr', 'officer']) || auth()->user()->isDeveloper())
         <li class="nav-category">
             Admin
         </li>
-        @if(Auth::user()->isDeveloper())
+        @if(auth()->user()->isDeveloper())
             <li>
                 <a href="{{ url('/log-viewer') }}">Log Viewer</a>
             </li>
 
         @endif
-        @if(Auth::user()->isRole(('admin')))
+        @if(auth()->user()->isRole('admin') || auth()->user()->isDeveloper())
             <li>
                 <a href="/admin">Admin</a>
             </li>
         @endif
 
-        @if(Auth::user()->isRole(['sr_ldr', 'admin', 'officer']))
+        @if(auth()->user()->isRole(['sr_ldr', 'admin', 'officer']) || auth()->user()->isDeveloper())
             <li>
                 <a href="/operations">Operations</a>
             </li>
@@ -192,7 +192,7 @@
                 </a>
             </li>
 
-            @if(Auth::user()->isRole(['admin', 'sr_ldr', 'officer']))
+            @if(auth()->user()->isRole(['admin', 'sr_ldr', 'officer']))
                 <li class="{{ set_active(['help/docs/recruiting']) }}">
                     <a href="{{ route('help.recruiting') }}">
                         Recruiting
@@ -200,7 +200,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->isRole('admin'))
+            @if(auth()->user()->isRole('admin'))
                 <li class="{{ set_active(['help/docs/admin']) }}">
                     <a href="{{ route('help.admin.home') }}">
                         Contributing
@@ -210,7 +210,7 @@
         </ul>
     </li>
 
-    @can('train', Auth::user())
+    @can('train', auth()->user())
         <li class="{{ set_active(['training', 'training/*']) }}">
             <a href="{{ route('training.index') }}">Training</a>
         </li>

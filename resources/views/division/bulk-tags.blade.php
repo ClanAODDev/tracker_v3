@@ -36,26 +36,28 @@
                             @endforelse
                         </div>
                     </div>
-                    <div class="panel-footer">
-                        <label class="control-label m-b-sm" style="display: block;">Create New Tag</label>
-                        <div class="input-group" style="max-width: 400px;">
-                            <input type="text" id="new-tag-name" class="form-control input-sm" placeholder="Tag name">
-                            <span class="input-group-addon" style="padding: 0; border: none; width: auto;">
-                                <select id="new-tag-visibility" class="form-control input-sm" style="border-radius: 0;">
-                                    <option value="public">Public</option>
-                                    <option value="leadership">Leadership</option>
-                                    @if($isSeniorLeader)
-                                        <option value="senior_leader">Senior Leader</option>
-                                    @endif
-                                </select>
-                            </span>
-                            <span class="input-group-btn">
-                                <button type="button" id="create-tag-btn" class="btn btn-default btn-sm">
-                                    <i class="fa fa-plus"></i> Create
-                                </button>
-                            </span>
+                    @can('create', App\Models\DivisionTag::class)
+                        <div class="panel-footer">
+                            <label class="control-label m-b-sm" style="display: block;">Create New Tag</label>
+                            <div class="input-group" style="max-width: 400px;">
+                                <input type="text" id="new-tag-name" class="form-control input-sm" placeholder="Tag name">
+                                <span class="input-group-addon" style="padding: 0; border: none; width: auto;">
+                                    <select id="new-tag-visibility" class="form-control input-sm" style="border-radius: 0;">
+                                        <option value="public">Public</option>
+                                        <option value="leadership">Leadership</option>
+                                        @if($isSeniorLeader)
+                                            <option value="senior_leader">Senior Leader</option>
+                                        @endif
+                                    </select>
+                                </span>
+                                <span class="input-group-btn">
+                                    <button type="button" id="create-tag-btn" class="btn btn-default btn-sm">
+                                        <i class="fa fa-plus"></i> Create
+                                    </button>
+                                </span>
+                            </div>
                         </div>
-                    </div>
+                    @endcan
                 </div>
 
                 <form action="{{ route('bulk-tags.store', $division) }}" method="POST" id="bulk-tags-form">

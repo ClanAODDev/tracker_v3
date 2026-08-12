@@ -14,6 +14,11 @@ class TransferPolicy
         }
     }
 
+    public function viewAny(User $user): bool
+    {
+        return $user->isRole(['officer', 'sr_ldr']);
+    }
+
     public function create(User $user): bool
     {
         return $user->division->active;

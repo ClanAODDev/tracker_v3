@@ -8,6 +8,11 @@ class LeavePolicy
 {
     use HandlesAuthorization;
 
+    public function viewAny()
+    {
+        return ! auth()->user()->isRole('member');
+    }
+
     public function create()
     {
         return ! auth()->user()->isRole('member');

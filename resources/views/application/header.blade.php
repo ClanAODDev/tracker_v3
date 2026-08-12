@@ -66,7 +66,7 @@
         'csrfToken' => csrf_token(),
         'appPath' => route('index'),
         'canWorkTickets' => auth()->check() && \App\Models\TicketType::get()->contains(fn ($type) => $type->userCanWork(auth()->user())),
-        'canUseBulkMode' => auth()->check() && auth()->user()->isRole(['officer', 'sr_ldr', 'admin']),
+        'canUseBulkMode' => auth()->check() && (auth()->user()->isRole(['officer', 'sr_ldr', 'admin']) || auth()->user()->isDeveloper()),
         'userId' => auth()->id(),
         'sessionExpiresAt' => auth()->check() ? now()->addMinutes(config('session.lifetime'))->timestamp : null,
         'sessionKeepAliveUrl' => auth()->check() ? route('session.keep-alive') : null,

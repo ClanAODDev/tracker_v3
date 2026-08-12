@@ -29,24 +29,26 @@
 @endif
 
 @if ($member->leave)
-    @if ($member->leave->approver)
-        <x-notice
-            type="warning"
-            icon="fa-calendar-alt"
-            :cta="route('filament.mod.resources.leaves.edit', $member->leave->id)"
-            ctaLabel="View Details"
-        >
-            Member has a leave of absence for <strong>{{ $member->leave->reason }}</strong> until <strong>{{ $member->leave->end_date->format('Y-m-d') }}</strong>.
-        </x-notice>
-    @else
-        <x-notice
-            type="warning"
-            icon="fa-calendar-alt"
-            :cta="route('filament.mod.resources.leaves.edit', $member->leave->id)"
-            ctaLabel="View Details"
-        >
-            Member has a leave of absence request that has not yet been approved.
-        </x-notice>
-    @endif
+    @can ('update', $member->leave)
+        @if ($member->leave->approver)
+            <x-notice
+                type="warning"
+                icon="fa-calendar-alt"
+                :cta="route('filament.mod.resources.leaves.edit', $member->leave->id)"
+                ctaLabel="View Details"
+            >
+                Member has a leave of absence for <strong>{{ $member->leave->reason }}</strong> until <strong>{{ $member->leave->end_date->format('Y-m-d') }}</strong>.
+            </x-notice>
+        @else
+            <x-notice
+                type="warning"
+                icon="fa-calendar-alt"
+                :cta="route('filament.mod.resources.leaves.edit', $member->leave->id)"
+                ctaLabel="View Details"
+            >
+                Member has a leave of absence request that has not yet been approved.
+            </x-notice>
+        @endif
+    @endcan
 @endif
 
