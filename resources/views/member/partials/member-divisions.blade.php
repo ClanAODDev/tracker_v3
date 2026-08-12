@@ -48,7 +48,9 @@
 @if($showSection)
     <h3 class="division-section-title m-t-xl">
         Divisions
-        @if(auth()->user()->isRole('sr_ldr'))
+        @if($member->id === auth()->user()->member_id)
+            <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#part-time-divisions-modal"><i class="fa fa-cog"></i> Manage</button>
+        @elseif(auth()->user()->can('update', $member))
             <a href="{{ route('filament.mod.resources.members.edit', $member) }}#part-time-divisions" class="btn btn-default btn-xs"><i class="fa fa-cog"></i> Manage</a>
         @endif
     </h3>
