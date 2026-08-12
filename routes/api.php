@@ -4,12 +4,17 @@ use App\Http\Controllers\API\DivisionApplicationApiController;
 use App\Http\Controllers\API\TicketApiController;
 use App\Http\Controllers\API\v1\ClanController;
 use App\Http\Controllers\API\v1\DivisionController;
+use App\Http\Controllers\API\v1\FallenMemberController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->name('v1.')->group(function () {
     Route::controller(ClanController::class)->middleware('abilities:clan:read')->group(function () {
         Route::get('discord-count', 'discordPopulationCount')->name('discord_population');
         Route::get('stream-events', 'streamEvents')->name('stream_events');
+    });
+
+    Route::controller(FallenMemberController::class)->middleware('abilities:clan:read')->group(function () {
+        Route::get('fallen-members', 'index')->name('fallen_members');
     });
 
     Route::controller(DivisionController::class)->prefix('divisions')->name('divisions.')->group(function () {
