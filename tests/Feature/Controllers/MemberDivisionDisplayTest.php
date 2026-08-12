@@ -113,6 +113,50 @@ class MemberDivisionDisplayTest extends TestCase
     }
 
     #[Test]
+    public function manage_button_opens_settings_modal_when_viewing_own_profile()
+    {
+        $user = $this->createSeniorLeader();
+
+        $editUrl = route('filament.mod.resources.members.edit', $user->member) . '#part-time-divisions';
+
+        $this->actingAs($user)
+            ->get(route('member', $user->member->getUrlParams()))
+            ->assertOk()
+            ->assertSee('class="btn btn-default btn-xs" data-toggle="modal" data-target="#part-time-divisions-modal"', false)
+            ->assertDontSee($editUrl, false);
+    }
+
+    #[Test]
+    public function manage_button_links_to_edit_page_when_authorized_for_another_member()
+    {
+        $seniorLeader = $this->createSeniorLeader();
+        $member       = $this->createMember();
+
+        $editUrl = route('filament.mod.resources.members.edit', $member) . '#part-time-divisions';
+
+        $this->actingAs($seniorLeader)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertSee($editUrl, false)
+            ->assertDontSee('class="btn btn-default btn-xs" data-toggle="modal" data-target="#part-time-divisions-modal"', false);
+    }
+
+    #[Test]
+    public function manage_button_is_absent_when_not_authorized_for_another_member()
+    {
+        $user   = $this->createMemberWithUser();
+        $member = $this->createMember();
+
+        $editUrl = route('filament.mod.resources.members.edit', $member) . '#part-time-divisions';
+
+        $this->actingAs($user)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertDontSee('class="btn btn-default btn-xs" data-toggle="modal" data-target="#part-time-divisions-modal"', false)
+            ->assertDontSee($editUrl, false);
+    }
+
+    #[Test]
     public function current_division_is_excluded_from_past_section()
     {
         $user    = $this->createMemberWithUser();
