@@ -11,7 +11,6 @@ class Leave extends Model
     use HasFactory;
 
     protected $casts = [
-        'extended' => 'boolean',
         'end_date' => 'datetime',
     ];
 
