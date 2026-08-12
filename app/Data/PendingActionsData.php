@@ -187,7 +187,7 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->isRole('sr_ldr')) {
+        if ($user->can('manageUnassigned', User::class)) {
             self::pushAction(
                 $actions,
                 $division->members()

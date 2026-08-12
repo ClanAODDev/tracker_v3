@@ -10,7 +10,7 @@
                             <span class="badge">{{ count($notes) }}</span>
                         @endif
                     </h4>
-                    @if(auth()->user()->isRole(['sr_ldr', 'admin']) && $trashedNotes->count() > 0)
+                    @if($trashedNotes->count() > 0)
                         <button type="button" class="btn btn-xs btn-default pull-right m-t-xs toggle-trashed-notes" data-count="{{ $trashedNotes->count() }}">
                             <i class="fa fa-trash"></i> Deleted ({{ $trashedNotes->count() }})
                         </button>
@@ -31,7 +31,7 @@
                             </div>
                         @endif
                     </div>
-                    @if(auth()->user()->isRole(['sr_ldr', 'admin']) && $trashedNotes->count() > 0)
+                    @if($trashedNotes->count() > 0)
                         <div class="notes-trashed-list" style="display: none;">
                             <div class="alert alert-warning m-b-md">
                                 <i class="fa fa-exclamation-triangle"></i>
