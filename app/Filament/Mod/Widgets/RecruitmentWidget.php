@@ -10,7 +10,6 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 
 class RecruitmentWidget extends BaseWidget
 {
@@ -163,6 +162,6 @@ class RecruitmentWidget extends BaseWidget
 
     protected function getDivision(): ?Division
     {
-        return Auth::user()?->division;
+        return auth()->user()?->division;
     }
 }

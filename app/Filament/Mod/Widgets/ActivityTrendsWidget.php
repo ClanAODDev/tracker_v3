@@ -5,7 +5,6 @@ namespace App\Filament\Mod\Widgets;
 use App\Models\Census;
 use App\Models\Division;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\Auth;
 
 class ActivityTrendsWidget extends ChartWidget
 {
@@ -108,6 +107,6 @@ class ActivityTrendsWidget extends ChartWidget
 
     protected function getDivision(): ?Division
     {
-        return Auth::user()?->division;
+        return auth()->user()?->division;
     }
 }

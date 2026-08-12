@@ -7,7 +7,6 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use Illuminate\Support\Facades\Auth;
 
 class ImpersonationController extends Controller
 {
@@ -22,7 +21,7 @@ class ImpersonationController extends Controller
 
         $this->showSuccessToast('You are now impersonating ' . $user->name);
 
-        Auth::login($user);
+        auth()->login($user);
 
         return redirect('/');
     }
@@ -31,7 +30,7 @@ class ImpersonationController extends Controller
     {
         if (session('impersonating') && session('impersonatingUser')) {
             $user = User::find(session('impersonatingUser'));
-            Auth::login($user);
+            auth()->login($user);
             session()->forget(['impersonating', 'impersonatingUser']);
             $this->showSuccessToast('Impersonation ended');
         }

@@ -13,7 +13,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
@@ -133,7 +132,7 @@ class LoginController extends Controller
      */
     protected function guard()
     {
-        return Auth::guard();
+        return auth()->guard();
     }
 
     protected function redirectPath()
@@ -163,7 +162,7 @@ class LoginController extends Controller
 
             $user = User::findOrCreateForMember($member, $this->email);
 
-            Auth::login($user);
+            auth()->login($user);
 
             app(ClanForumPermissions::class)->handleAccountRoles(
                 $user->member->clan_id,

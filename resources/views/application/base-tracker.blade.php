@@ -13,9 +13,9 @@
     @include('application.partials.console')
 </head>
 
-@if (Auth::check() && Auth::user()->member && Auth::user()->member->division)
+@if (auth()->check() && auth()->user()->member && auth()->user()->member->division)
     @php
-        $userSettings = Auth::user()->settings;
+        $userSettings = auth()->user()->settings;
         $bodyClasses = collect([
             session('primary_nav_collapsed') === true ? 'nav-toggle' : null,
             ($userSettings['disable_animations'] ?? false) ? 'no-animations' : null,

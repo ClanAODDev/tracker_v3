@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Data\DivisionLeaderboardData;
 use App\Data\PendingActionsData;
 use App\Models\Division;
-use Auth;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\View\View;
@@ -20,7 +19,7 @@ class AppController extends Controller
 
     public function index(): Factory|View
     {
-        $user       = Auth::user();
+        $user       = auth()->user();
         $myDivision = $user->member->division;
 
         $pendingActions = PendingActionsData::forDivision($myDivision, $user);
