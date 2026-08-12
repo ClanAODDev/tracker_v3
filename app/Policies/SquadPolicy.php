@@ -25,6 +25,11 @@ class SquadPolicy
         }
     }
 
+    public static function viewAny(User $user): bool
+    {
+        return $user->isRole(['officer', 'sr_ldr']);
+    }
+
     public static function deleteAny(User $user): bool
     {
         return $user->isRole(['admin', 'sr_ldr']) || $user->isDivisionLeader();

@@ -95,4 +95,36 @@ class BulkTagControllerTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    #[Test]
+    public function create_new_tag_control_is_hidden_for_officer()
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $response = $this->actingAs($officer)
+            ->post(route('bulk-tags.create', $division->slug), [
+                'member-data' => (string) $member->clan_id,
+            ]);
+
+        $response->assertOk();
+        $response->assertDontSee('Create New Tag');
+    }
+
+    #[Test]
+    public function create_new_tag_control_is_visible_for_sr_ldr()
+    {
+        $srLdr    = $this->createSeniorLeader();
+        $division = $srLdr->member->division;
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $response = $this->actingAs($srLdr)
+            ->post(route('bulk-tags.create', $division->slug), [
+                'member-data' => (string) $member->clan_id,
+            ]);
+
+        $response->assertOk();
+        $response->assertSee('Create New Tag');
+    }
 }

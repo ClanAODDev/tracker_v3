@@ -25,6 +25,11 @@ class PlatoonPolicy
         }
     }
 
+    public function viewAny(User $user): bool
+    {
+        return $user->isRole(['officer', 'sr_ldr']);
+    }
+
     public function update(User $user, Platoon $platoon): bool
     {
         $member = $user->member;

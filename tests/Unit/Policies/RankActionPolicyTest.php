@@ -20,6 +20,23 @@ class RankActionPolicyTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
+    public function officer_can_view_any_rank_action_list()
+    {
+        $officer = $this->createOfficer();
+
+        $this->assertTrue(RankActionPolicy::viewAny($officer));
+    }
+
+    #[Test]
+    public function member_cannot_view_any_rank_action_list()
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+
+        $this->assertFalse(RankActionPolicy::viewAny($user));
+    }
+
+    #[Test]
     public function admin_can_view_any_rank_action()
     {
         $admin    = $this->createAdmin();

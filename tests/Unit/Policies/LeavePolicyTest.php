@@ -66,6 +66,29 @@ class LeavePolicyTest extends TestCase
     }
 
     #[Test]
+    public function officer_can_view_any_leave()
+    {
+        $officer = $this->createOfficer();
+        $this->actingAs($officer);
+
+        $this->assertTrue($this->policy->viewAny());
+    }
+
+    #[Test]
+    public function member_cannot_view_any_leave()
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser([
+            'division_id' => $division->id,
+        ]);
+        $user->role = Role::MEMBER;
+        $user->save();
+        $this->actingAs($user);
+
+        $this->assertFalse($this->policy->viewAny());
+    }
+
+    #[Test]
     public function admin_can_update_leave()
     {
         $admin = $this->createAdmin();

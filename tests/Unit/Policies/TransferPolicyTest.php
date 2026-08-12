@@ -57,6 +57,31 @@ class TransferPolicyTest extends TestCase
     }
 
     #[Test]
+    public function officer_can_view_any_transfer()
+    {
+        $officer = $this->createOfficer();
+
+        $this->assertTrue($this->policy->viewAny($officer));
+    }
+
+    #[Test]
+    public function sr_ldr_can_view_any_transfer()
+    {
+        $srLdr = $this->createSeniorLeader();
+
+        $this->assertTrue($this->policy->viewAny($srLdr));
+    }
+
+    #[Test]
+    public function regular_member_cannot_view_any_transfer()
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+
+        $this->assertFalse($this->policy->viewAny($user));
+    }
+
+    #[Test]
     public function user_can_create_transfer_in_active_division()
     {
         $division = $this->createActiveDivision();

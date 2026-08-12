@@ -11,6 +11,11 @@ class RankActionPolicy
 {
     use HandlesAuthorization;
 
+    public static function viewAny(User $user): bool
+    {
+        return $user->isRole(['officer', 'sr_ldr', 'admin']);
+    }
+
     public static function update(User $user, RankAction $record): bool
     {
         $authedMemberId = $user->member_id;
