@@ -14,7 +14,6 @@ use App\Services\ForumProcedureService;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Laravel\Socialite\Facades\Socialite;
@@ -199,7 +198,7 @@ class DiscordController extends Controller
 
     protected function loginExistingUser(User $user, ?string $avatarHash): RedirectResponse
     {
-        Auth::login(user: $user, remember: true);
+        auth()->login(user: $user, remember: true);
 
         if ($user->member) {
             $this->forumPermissions->handleAccountRoles($user->member->clan_id);
@@ -245,7 +244,7 @@ class DiscordController extends Controller
             return $user;
         });
 
-        Auth::login(user: $user, remember: true);
+        auth()->login(user: $user, remember: true);
 
         $this->forumPermissions->handleAccountRoles($member->clan_id);
 
@@ -310,7 +309,7 @@ class DiscordController extends Controller
             'discord_avatar'   => $avatarHash,
         ]);
 
-        Auth::login(user: $user, remember: true);
+        auth()->login(user: $user, remember: true);
 
         if ($avatarHash !== null) {
             session(['discord_avatar_hash' => $avatarHash]);

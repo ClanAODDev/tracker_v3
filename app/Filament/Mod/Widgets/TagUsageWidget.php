@@ -10,7 +10,6 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
 
 class TagUsageWidget extends BaseWidget
 {
@@ -95,6 +94,6 @@ class TagUsageWidget extends BaseWidget
 
     protected function getDivision(): ?Division
     {
-        return Auth::user()?->division;
+        return auth()->user()?->division;
     }
 }

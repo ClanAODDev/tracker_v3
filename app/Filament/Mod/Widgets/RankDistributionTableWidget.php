@@ -8,7 +8,6 @@ use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class RankDistributionTableWidget extends BaseWidget
@@ -72,6 +71,6 @@ class RankDistributionTableWidget extends BaseWidget
 
     protected function getDivision(): ?Division
     {
-        return Auth::user()?->division;
+        return auth()->user()?->division;
     }
 }

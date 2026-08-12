@@ -6,7 +6,6 @@ use App\Models\Member;
 use App\Models\User;
 use App\Services\ForumProcedureService;
 use Exception;
-use Illuminate\Support\Facades\Auth;
 
 class ClanForumSession
 {
@@ -26,7 +25,7 @@ class ClanForumSession
             return $this->handleLocalEnvironment();
         }
 
-        if (Auth::check()) {
+        if (auth()->check()) {
             return true;
         }
 
@@ -53,7 +52,7 @@ class ClanForumSession
     {
         $userId = config('dev_default_user') ?? 1;
         $user   = config('dev_default_user') ? User::find($userId) : User::first();
-        Auth::login($user);
+        auth()->login($user);
     }
 
     protected function authenticateFromForumSession(): bool
@@ -74,7 +73,7 @@ class ClanForumSession
         }
 
         $user = $this->findOrCreateUser($sessionData, $member);
-        Auth::login($user);
+        auth()->login($user);
 
         $this->syncForumPermissions($member->clan_id, $sessionData);
 

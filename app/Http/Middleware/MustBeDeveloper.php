@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use Auth;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -16,7 +15,7 @@ class MustBeDeveloper
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && $request->user()->developer) {
+        if (auth()->check() && $request->user()->developer) {
             return $next($request);
         }
 

@@ -6,7 +6,6 @@ use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\Member;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\Auth;
 
 class RankDistributionWidget extends ChartWidget
 {
@@ -101,6 +100,6 @@ class RankDistributionWidget extends ChartWidget
 
     protected function getDivision(): ?Division
     {
-        return Auth::user()?->division;
+        return auth()->user()?->division;
     }
 }

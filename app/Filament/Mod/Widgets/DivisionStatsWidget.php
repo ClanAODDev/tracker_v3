@@ -8,7 +8,6 @@ use App\Models\DivisionTag;
 use App\Models\Member;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Facades\Auth;
 
 class DivisionStatsWidget extends BaseWidget
 {
@@ -77,7 +76,7 @@ class DivisionStatsWidget extends BaseWidget
 
     protected function getDivision(): ?Division
     {
-        return Auth::user()?->division;
+        return auth()->user()?->division;
     }
 
     protected function getPopulationTrend(Division $division): array

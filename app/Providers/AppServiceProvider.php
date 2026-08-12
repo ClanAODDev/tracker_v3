@@ -14,7 +14,6 @@ use App\Models\User;
 use App\Settings\UserSettings;
 use Filament\Actions\Action;
 use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
@@ -60,7 +59,7 @@ class AppServiceProvider extends ServiceProvider
             class_alias(Action::class, \Filament\Tables\Actions\Action::class);
         }
 
-        $this->app->singleton(UserSettings::class, fn () => Auth::user()->settings());
+        $this->app->singleton(UserSettings::class, fn () => auth()->user()->settings());
 
         $this->app->bind(\Filament\Auth\Http\Responses\Contracts\LogoutResponse::class, LogoutResponse::class);
 

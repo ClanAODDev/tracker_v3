@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use Auth;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -16,7 +15,7 @@ class DivisionMustBeActive
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && $request->division->active && $request->division) {
+        if (auth()->check() && $request->division->active && $request->division) {
             return $next($request);
         }
 
