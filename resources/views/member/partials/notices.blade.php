@@ -5,7 +5,7 @@
 @endif
 
 @can ('update', $member)
-    @if (! $member->handles->contains($division->handle) && $division->handle)
+    @if ($division && $division->handle && ! $member->handles->contains($division->handle))
         <x-notice
             type="warning"
             icon="fa-gamepad"
