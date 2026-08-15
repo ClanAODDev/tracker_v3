@@ -9,6 +9,12 @@
                 <a href="{{ route('filament.mod.resources.members.edit', $member) }}">Edit Member</a>
             </li>
 
+            @can('train', auth()->user())
+                <li>
+                    <a href="{{ route('training.sgt', ['clan_id' => $member->clan_id]) }}">SGT Training</a>
+                </li>
+            @endcan
+
 @if ($member->user)
                 @can('impersonate', $member->user)
                     <li>
