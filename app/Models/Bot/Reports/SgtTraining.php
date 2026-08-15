@@ -26,7 +26,7 @@ class SgtTraining implements Report
             return 'No SSgts found.';
         }
 
-        return $this->buildTable($results);
+        return "Number of SGT trainings per SSgt\n\n" . $this->buildTable($results);
     }
 
     private function buildTable(array $rows): string
