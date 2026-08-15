@@ -41,8 +41,8 @@ class BotChannel
             'Authorization' => sprintf('Bearer %s', config('aod.discord_bot_token')),
         ];
 
-        if (auth()->check()) {
-            array_merge($headers, ['X-Requested-By' => auth()->user()->member->discord_id]);
+        if (auth()->check() && auth()->user()->member?->discord_id) {
+            $headers = array_merge($headers, ['X-Requested-By' => auth()->user()->member->discord_id]);
         }
 
         $request = new Request('POST', $url, $headers, json_encode($message['body']));

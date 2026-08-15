@@ -7,16 +7,22 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Log\Logger;
 use Illuminate\Notifications\Notification;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
+use Tests\Traits\CreatesMembers;
 
 class BotChannelTest extends TestCase
 {
+    use CreatesMembers;
+    use RefreshDatabase;
+
     private function channelWithResponse(ClientException $exception, Logger $logger): BotChannel
     {
         $mock   = new MockHandler([$exception]);
@@ -106,5 +112,40 @@ class BotChannelTest extends TestCase
         $this->expectException(ClientException::class);
 
         $channel->send(null, $this->memberNotification());
+    }
+
+    #[Test]
+    public function x_requested_by_header_is_set_for_authenticated_user_with_discord_id()
+    {
+        $user = $this->createMemberWithUser();
+        $user->member->update(['discord_id' => '999888777']);
+
+        $this->actingAs($user);
+
+        $history      = [];
+        $mock         = new MockHandler([new Response(200, [], json_encode(['id' => 1]))]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push(Middleware::history($history));
+        $client = new Client(['handler' => $handlerStack]);
+
+        $channel = new BotChannel($client, Mockery::mock(Logger::class)->shouldIgnoreMissing());
+        $channel->send(null, $this->memberNotification());
+
+        $this->assertSame('999888777', $history[0]['request']->getHeaderLine('X-Requested-By'));
+    }
+
+    #[Test]
+    public function x_requested_by_header_is_omitted_when_unauthenticated()
+    {
+        $history      = [];
+        $mock         = new MockHandler([new Response(200, [], json_encode(['id' => 1]))]);
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push(Middleware::history($history));
+        $client = new Client(['handler' => $handlerStack]);
+
+        $channel = new BotChannel($client, Mockery::mock(Logger::class)->shouldIgnoreMissing());
+        $channel->send(null, $this->memberNotification());
+
+        $this->assertFalse($history[0]['request']->hasHeader('X-Requested-By'));
     }
 }
