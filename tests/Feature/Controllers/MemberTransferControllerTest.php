@@ -172,7 +172,7 @@ class MemberTransferControllerTest extends TestCase
             ->assertStatus(400);
 
         $this->assertStringContainsString(
-            'Transfer requests can only be made once per week',
+            'Transfer requests can only be made once every',
             $response->json('error')
         );
     }

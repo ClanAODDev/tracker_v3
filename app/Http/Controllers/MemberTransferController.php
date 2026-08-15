@@ -8,6 +8,7 @@ use App\Models\Transfer;
 use App\Notifications\Channel\NotifyDivisionMemberTransferRequested;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class MemberTransferController extends Controller
 {
@@ -50,16 +51,10 @@ class MemberTransferController extends Controller
             return response()->json(['error' => 'You already have a pending transfer request'], 400);
         }
 
-        $recentTransfer = Transfer::where('member_id', $member->id)
-            ->where('created_at', '>=', now()->subWeek())
-            ->first();
+        $authResponse = Gate::inspect('create', Transfer::class);
 
-        if ($recentTransfer) {
-            $nextAllowed = $recentTransfer->created_at->addWeek()->format('M j, Y');
-
-            return response()->json([
-                'error' => "Transfer requests can only be made once per week. You can request again after {$nextAllowed}.",
-            ], 400);
+        if ($authResponse->denied()) {
+            return response()->json(['error' => $authResponse->message()], 400);
         }
 
         $isOfficer   = $member->rank->isOfficer();

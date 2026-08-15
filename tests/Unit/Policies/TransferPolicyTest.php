@@ -87,7 +87,7 @@ class TransferPolicyTest extends TestCase
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
 
-        $this->assertTrue($this->policy->create($user));
+        $this->assertTrue($this->policy->create($user)->allowed());
     }
 
     #[Test]
@@ -100,7 +100,54 @@ class TransferPolicyTest extends TestCase
         $user = $this->createMemberWithUser(['division_id' => $division->id]);
         $user->refresh();
 
-        $this->assertFalse($this->policy->create($user));
+        $this->assertTrue($this->policy->create($user)->denied());
+    }
+
+    #[Test]
+    public function user_cannot_create_transfer_within_cooldown_period()
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+
+        Transfer::factory()->approved()->create([
+            'member_id'  => $user->member->id,
+            'created_at' => now()->subDays(3),
+        ]);
+
+        $response = $this->policy->create($user);
+
+        $this->assertTrue($response->denied());
+        $this->assertStringContainsString('Transfer requests can only be made once every', $response->message());
+    }
+
+    #[Test]
+    public function user_can_create_transfer_after_cooldown_period()
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+
+        Transfer::factory()->approved()->create([
+            'member_id'  => $user->member->id,
+            'created_at' => now()->subDays(config('aod.transfer.cooldown_days') + 1),
+        ]);
+
+        $this->assertTrue($this->policy->create($user)->allowed());
+    }
+
+    #[Test]
+    public function cooldown_period_respects_config_value()
+    {
+        config(['aod.transfer.cooldown_days' => 14]);
+
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+
+        Transfer::factory()->approved()->create([
+            'member_id'  => $user->member->id,
+            'created_at' => now()->subDays(10),
+        ]);
+
+        $this->assertTrue($this->policy->create($user)->denied());
     }
 
     public static function approveProvider(): array

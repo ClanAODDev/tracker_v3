@@ -35,6 +35,10 @@ return [
         'max_division_leader'       => Rank::STAFF_SERGEANT,
     ],
 
+    'transfer' => [
+        'cooldown_days' => env('TRANSFER_COOLDOWN_DAYS', 7),
+    ],
+
     'awards' => [
         'cache_minutes' => env('AWARDS_CACHE_MINUTES', 60),
         'rarity'        => [

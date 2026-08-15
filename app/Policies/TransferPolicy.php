@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Transfer;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
 class TransferPolicy
 {
@@ -19,9 +20,24 @@ class TransferPolicy
         return $user->isRole(['officer', 'sr_ldr']);
     }
 
-    public function create(User $user): bool
+    public function create(User $user): Response
     {
-        return $user->division->active;
+        if (! $user->division->active) {
+            return Response::deny('Your division is not active.');
+        }
+
+        $cooldownDays   = config('aod.transfer.cooldown_days');
+        $recentTransfer = Transfer::where('member_id', $user->member_id)
+            ->where('created_at', '>=', now()->subDays($cooldownDays))
+            ->first();
+
+        if ($recentTransfer) {
+            $nextAllowed = $recentTransfer->created_at->addDays($cooldownDays)->format('M j, Y');
+
+            return Response::deny("Transfer requests can only be made once every {$cooldownDays} days. You can request again after {$nextAllowed}.");
+        }
+
+        return Response::allow();
     }
 
     public function approve(User $user, Transfer $transfer): bool
