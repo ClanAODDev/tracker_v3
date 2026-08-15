@@ -26,7 +26,7 @@ class TransferPolicy
             return Response::deny('Your division is not active.');
         }
 
-        $cooldownDays   = config('aod.transfer.cooldown_days');
+        $cooldownDays   = (int) config('aod.transfer.cooldown_days');
         $recentTransfer = Transfer::where('member_id', $user->member_id)
             ->where('created_at', '>=', now()->subDays($cooldownDays))
             ->first();
