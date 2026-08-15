@@ -102,9 +102,10 @@ class MemberResource extends Resource
                         DateTimePicker::make('join_date'),
                         DateTimePicker::make('last_promoted_at'),
                         DateTimePicker::make('last_trained_at'),
-                        TextInput::make('last_trained_by')
-                            ->numeric()
-                            ->default(null),
+                        Select::make('last_trained_by')
+                            ->label('Last Trained By')
+                            ->searchable()
+                            ->relationship('trainer', 'name'),
                         DateTimePicker::make('xo_at'),
                         DateTimePicker::make('co_at'),
                     ])->columns(3),
