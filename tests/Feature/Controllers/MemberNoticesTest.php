@@ -44,4 +44,15 @@ class MemberNoticesTest extends TestCase
             ->assertOk()
             ->assertSee('leave of absence');
     }
+
+    #[Test]
+    public function handle_notice_does_not_crash_for_divisionless_member()
+    {
+        $member = $this->createMember(['division_id' => 0]);
+        $srLdr  = $this->createSeniorLeader();
+
+        $this->actingAs($srLdr)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk();
+    }
 }
