@@ -61,6 +61,12 @@ class BotChannel
                 $context['response_body']   = (string) $e->getResponse()->getBody();
             }
 
+            if ($this->isUnknownMember($message['api_uri'], $context['response_status'] ?? null)) {
+                $this->logger->warning('BotChannel: member not found on Discord, skipping', $context);
+
+                return;
+            }
+
             $this->logger->error('BotChannel request failed', $context);
 
             throw $e;
@@ -70,5 +76,16 @@ class BotChannel
             $response = json_decode($response->getBody());
             $notifiable->update(['external_message_id' => $response->id]);
         }
+    }
+
+    /**
+     * A 404 on a members/{id} DM means Discord doesn't recognize that
+     * member (they've left the guild, or their discord_id is stale) —
+     * expected and not worth retrying, unlike a 404 on any other
+     * endpoint, which likely signals a real configuration problem.
+     */
+    private function isUnknownMember(string $apiUri, ?int $responseStatus): bool
+    {
+        return $responseStatus === 404 && str_starts_with($apiUri, 'members/');
     }
 }
