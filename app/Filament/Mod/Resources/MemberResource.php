@@ -17,6 +17,7 @@ use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
+use App\Services\ForumProcedureService;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -419,6 +420,39 @@ class MemberResource extends Resource
 
                         Notification::make()
                             ->title('Handles updated')
+                            ->success()
+                            ->send();
+                    }),
+                Action::make('setDiscordInfo')
+                    ->label('Discord Info')
+                    ->icon('heroicon-o-chat-bubble-left-right')
+                    ->visible(fn (Member $record): bool => auth()->user()->can('update', $record))
+                    ->fillForm(fn (Member $record): array => [
+                        'discord_id'  => $record->discord_id,
+                        'discord_tag' => $record->discord,
+                    ])
+                    ->form([
+                        TextInput::make('discord_id')
+                            ->label('Discord User ID')
+                            ->rule('regex:/^\d+$/')
+                            ->nullable(),
+                        TextInput::make('discord_tag')
+                            ->label('Discord Username/Tag')
+                            ->nullable(),
+                    ])
+                    ->action(function (Member $record, array $data, ForumProcedureService $forumProcedureService): void {
+                        $discordId  = (string) ($data['discord_id'] ?? '');
+                        $discordTag = (string) ($data['discord_tag'] ?? '');
+
+                        $forumProcedureService->setDiscordInfo($record->clan_id, $discordId, $discordTag);
+
+                        $record->update([
+                            'discord_id' => $discordId !== '' ? $discordId : null,
+                            'discord'    => $discordTag !== '' ? $discordTag : null,
+                        ]);
+
+                        Notification::make()
+                            ->title('Discord info updated')
                             ->success()
                             ->send();
                     }),
