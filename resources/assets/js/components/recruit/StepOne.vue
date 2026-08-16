@@ -145,23 +145,24 @@
             <div v-else>
               <div class="recruit-pending-selected">
                 <div class="recruit-pending-selected-header">
-                  <i class="fab fa-discord" style="color: #5865F2;"></i>
-                  <strong>{{ store.selectedPendingUser.discord_username }}</strong>
-                  <a href="#" @click.prevent="clearPendingUser" class="text-muted" style="margin-left: auto; font-size: 12px;"><i class="fa fa-times"></i> Change</a>
-                </div>
-
-                <div class="recruit-email-check-status recruit-email-check-warning">
-                  <i class="fa fa-exclamation-triangle"></i>
-                  <div><strong>{{ store.selectedPendingUser.discord_username }}</strong> is the account the recruit applied with. Confirm this is the account they are currently using. If this doesn't match, have them log in with the account they originally applied with before proceeding with the recruitment.</div>
+                  <div class="recruit-pending-selected-row">
+                    <i class="fab fa-discord" style="color: #5865F2;"></i>
+                    <strong>{{ store.selectedPendingUser.discord_username }}</strong>
+                    <a href="#" @click.prevent="clearPendingUser" class="text-muted" style="margin-left: auto; font-size: 12px;"><i class="fa fa-times"></i> Change</a>
+                  </div>
+                  <div class="recruit-pending-selected-notice">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <span>This is the account the recruit applied with — confirm it's the one they're currently using. If it doesn't match, have them log in with the account they originally applied with before proceeding with the recruitment.</span>
+                  </div>
                 </div>
 
                 <!-- Loading email check -->
-                <div v-if="store.forumEmailCheck.loading" class="recruit-email-check-status">
+                <div v-if="store.forumEmailCheck.loading" class="recruit-status-line">
                   <span class="themed-spinner spinner-sm"></span> Checking for existing forum account...
                 </div>
 
                 <!-- Email check: found + eligible -->
-                <div v-else-if="store.forumEmailCheck.checked && store.forumEmailCheck.found && store.forumEmailCheck.eligible" class="recruit-email-check-status recruit-email-check-success">
+                <div v-else-if="store.forumEmailCheck.checked && store.forumEmailCheck.found && store.forumEmailCheck.eligible" class="recruit-status-line recruit-status-line-success">
                   <i class="fa fa-check-circle"></i>
                   <div>
                     <div>Existing forum account found: <strong>{{ store.forumEmailCheck.username }}</strong> (ID: {{ store.forumEmailCheck.userId }})</div>
@@ -186,7 +187,7 @@
                 </div>
 
                 <!-- Email check: not found -->
-                <div v-else-if="store.forumEmailCheck.checked && !store.forumEmailCheck.found" class="recruit-email-check-status recruit-email-check-info">
+                <div v-else-if="store.forumEmailCheck.checked && !store.forumEmailCheck.found" class="recruit-status-line recruit-status-line-info">
                   <i class="fa fa-info-circle"></i>
                   <div>No existing forum account found. One will be created during recruitment.</div>
                 </div>
