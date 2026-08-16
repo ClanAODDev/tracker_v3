@@ -19,13 +19,25 @@ class MemberActionsButtonTest extends TestCase
     public function sgt_training_link_is_visible_for_qualifying_sr_ldr()
     {
         $srLdr  = $this->createSeniorLeader(memberAttributes: ['rank' => Rank::STAFF_SERGEANT]);
-        $member = $this->createMember();
+        $member = $this->createMember(['rank' => Rank::SERGEANT]);
 
         $this->actingAs($srLdr)
             ->get(route('member', $member->getUrlParams()))
             ->assertOk()
             ->assertSee(route('training.sgt', ['clan_id' => $member->clan_id]), false)
             ->assertSee('SGT Training');
+    }
+
+    #[Test]
+    public function sgt_training_link_is_hidden_for_member_below_sergeant()
+    {
+        $srLdr  = $this->createSeniorLeader(memberAttributes: ['rank' => Rank::STAFF_SERGEANT]);
+        $member = $this->createMember(['rank' => Rank::CORPORAL]);
+
+        $this->actingAs($srLdr)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertDontSee('SGT Training');
     }
 
     #[Test]
