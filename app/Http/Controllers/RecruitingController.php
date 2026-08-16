@@ -102,24 +102,35 @@ class RecruitingController extends Controller
     }
 
     #[Authorize('recruit', Member::class)]
-    public function discordConfirm(Division $division, string $discordId)
+    public function discordConfirm(string $discordId)
     {
-        if ($division->isShutdown()) {
-            $this->showErrorToast('This division has been shutdown and cannot receive new members');
-
-            return redirect()->back();
-        }
-
         $pendingUser = User::pendingDiscord()
             ->whereNotNull('date_of_birth')
             ->where('discord_id', $discordId)
             ->with('divisionApplication.division')
             ->first();
 
+        // The applicant's own division application, if any, is the only
+        // reliable source for where they should be recruited to — the
+        // caller constructing this link has no way of knowing that.
+        $targetDivision = $pendingUser?->divisionApplication?->division;
+
+        if ($targetDivision?->isShutdown()) {
+            $this->showErrorToast('This division has been shutdown and cannot receive new members');
+
+            return redirect()->route('recruiting.initial');
+        }
+
         return view('recruit.discord-confirm', [
-            'division'    => $division,
-            'discordId'   => $discordId,
-            'pendingUser' => $pendingUser ? $this->mapPendingDiscordUser($pendingUser) : null,
+            'targetDivision' => $targetDivision,
+            'discordId'      => $discordId,
+            'forumAccount'   => $pendingUser ? $this->checkForumAccountForEmail($pendingUser->email) : null,
+            'pendingUser'    => $pendingUser ? $this->mapPendingDiscordUser($pendingUser) : null,
+            'divisions'      => $targetDivision ? null : Division::active()->where('shutdown_at', null)
+                ->orderBy('name')
+                ->withoutFloaters()
+                ->withoutBR()
+                ->get(),
         ]);
     }
 
@@ -338,43 +349,40 @@ class RecruitingController extends Controller
     #[Authorize('recruit', Member::class)]
     public function checkForumEmail(CheckForumEmailRequest $request): JsonResponse
     {
+        return response()->json($this->checkForumAccountForEmail($request->email));
+    }
 
+    private function checkForumAccountForEmail(string $email): array
+    {
         if (app()->environment() === 'local') {
-            return response()->json([
-                'found' => false,
-            ]);
+            return ['found' => false];
         }
 
-        $forumService = app(AODForumService::class);
-        $forumUser    = $forumService->getUserByEmail($request->email);
+        $forumUser = $this->forumService->getUserByEmail($email);
 
         if (! $forumUser) {
-            return response()->json([
-                'found' => false,
-            ]);
+            return ['found' => false];
         }
 
         $userId       = (int) $forumUser->userid;
         $forumProfile = $this->procedureService->getUser($userId);
 
         if (! $forumProfile || ! property_exists($forumProfile, 'usergroupid')) {
-            return response()->json([
-                'found' => false,
-            ]);
+            return ['found' => false];
         }
 
         $groupId  = (int) $forumProfile->usergroupid;
         $group    = ForumGroup::tryFrom($groupId);
         $eligible = $group?->isEligibleForRecruitment() ?? false;
 
-        return response()->json([
+        return [
             'found'            => true,
             'user_id'          => $userId,
             'username'         => $forumProfile->username ?? $forumUser->username,
             'group_id'         => $groupId,
             'eligible'         => $eligible,
             'rejection_reason' => $eligible ? null : $group?->recruitmentRejectionReason(),
-        ]);
+        ];
     }
 
     #[Authorize('recruit', Member::class)]
@@ -423,10 +431,23 @@ class RecruitingController extends Controller
             'forum_name'           => $u->name,
             'discord_id'           => $u->discord_id,
             'email'                => $u->email,
+            'obfuscated_email'     => $this->obfuscateEmail($u->email),
+            'avatar_url'           => $u->getDiscordAvatarUrl(),
             'created_at'           => $u->created_at->diffForHumans(),
             'application'          => $application,
             'application_division' => $u->divisionApplication?->division?->name,
         ];
+    }
+
+    private function obfuscateEmail(?string $email): ?string
+    {
+        if (! $email || ! str_contains($email, '@')) {
+            return null;
+        }
+
+        [$local, $domain] = explode('@', $email, 2);
+
+        return '***' . mb_substr($local, -2) . '@' . $domain;
     }
 
     private function createForumAccountForPendingUser(

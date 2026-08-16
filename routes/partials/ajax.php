@@ -18,6 +18,7 @@ Route::controller(RecruitingController::class)->group(function () {
     Route::post('platoon-squads', 'searchPlatoonForSquads')->name('getPlatoonSquads');
     Route::post('search-division-threads', 'doThreadCheck')->name('divisionThreadCheck');
     Route::get('recruit', 'index')->name('recruiting.initial');
+    Route::get('recruit/discord/{discordId}', 'discordConfirm')->name('recruiting.discordConfirm');
     Route::post('add-member', 'submitRecruitment')->name('recruiting.addMember');
     Route::get('divisions/{division}/recruit/data', 'getDivisionRecruitData')->name('recruiting.divisionData');
     Route::get('divisions/{division}/recruit/pending-discord', 'pendingDiscord')->name('recruiting.pendingDiscord');

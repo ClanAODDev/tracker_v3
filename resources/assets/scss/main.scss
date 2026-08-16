@@ -11941,13 +11941,16 @@ pre.code-toolbar > .toolbar span:focus {
 
 .recruit-pending-selected {
     margin-top: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .recruit-pending-selected-header {
-    padding: 8px 12px;
+    padding: 10px 12px;
     background: rgba(88, 101, 242, 0.1);
-    border: 1px solid rgba(88, 101, 242, 0.2);
-    border-radius: 6px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     font-size: 14px;
 }
 
@@ -11957,19 +11960,20 @@ pre.code-toolbar > .toolbar span:focus {
     gap: 8px;
 }
 
-.recruit-pending-selected-notice {
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    font-size: 12px;
-    color: #f39c12;
+.recruit-pending-selected-avatar {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
 
-    > i {
-        margin-top: 1px;
-        flex-shrink: 0;
+.recruit-pending-selected-section {
+    padding: 10px 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+    &:first-child {
+        border-top: none;
     }
 }
 
@@ -11977,8 +11981,7 @@ pre.code-toolbar > .toolbar span:focus {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    padding: 10px 12px;
-    margin-top: 10px;
+    padding: 8px 10px;
     border-radius: 6px;
     font-size: 13px;
 
@@ -11998,7 +12001,6 @@ pre.code-toolbar > .toolbar span:focus {
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    margin-top: 8px;
     font-size: 13px;
     color: var(--color-muted);
 
@@ -12017,10 +12019,7 @@ pre.code-toolbar > .toolbar span:focus {
 }
 
 .application-responses {
-    margin-top: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 6px;
-    overflow: hidden;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .application-responses-header {
@@ -12065,6 +12064,127 @@ pre.code-toolbar > .toolbar span:focus {
 .application-field-value {
     font-size: 13px;
     color: var(--color-white);
+}
+
+.discord-confirm-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 15px;
+}
+
+.discord-confirm-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: rgba(88, 101, 242, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.discord-confirm-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(88, 101, 242, 0.4);
+    flex-shrink: 0;
+}
+
+.discord-confirm-identity {
+    min-width: 0;
+    flex: 1;
+
+    h3 {
+        margin: 0 0 4px;
+        font-size: 20px;
+    }
+}
+
+.discord-confirm-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+    font-size: 13px;
+    color: var(--color-muted);
+
+    > span {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    i {
+        margin-right: 4px;
+    }
+}
+
+.discord-confirm-division-badge {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: auto;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--color-muted);
+}
+
+.discord-confirm-division-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    object-fit: cover;
+    margin-right: 6px;
+}
+
+.discord-confirm-section {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.discord-confirm-responses {
+    padding: 20px;
+}
+
+.discord-confirm-responses-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--color-muted);
+    margin: 0 0 12px;
+}
+
+.discord-confirm-footer {
+    padding: 16px 20px;
+    background: rgba(0, 0, 0, 0.1);
+    text-align: right;
+}
+
+.discord-confirm-empty {
+    text-align: center;
+    padding: 60px 20px;
+    margin-top: 15px;
+}
+
+.discord-confirm-empty-icon {
+    font-size: 48px;
+    color: rgba(88, 101, 242, 0.4);
+    margin-bottom: 16px;
+    display: block;
+}
+
+.discord-confirm-empty h4 {
+    margin-bottom: 8px;
+}
+
+.discord-confirm-empty p {
+    max-width: 420px;
+    margin: 0 auto 20px;
 }
 
 .member-tags-display {

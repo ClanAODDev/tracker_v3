@@ -268,6 +268,44 @@ class DiscordAuthTest extends TestCase
     }
 
     #[Test]
+    public function discord_callback_stores_avatar_for_new_pending_user(): void
+    {
+        $this->mockDiscordUser([
+            'id'       => '333444555',
+            'nickname' => 'AvatarUser',
+            'email'    => 'avatar@discord.com',
+            'avatar'   => 'freshHash123',
+        ]);
+
+        $this->get(route('auth.discord.callback'));
+
+        $this->assertDatabaseHas('users', [
+            'discord_id'     => '333444555',
+            'discord_avatar' => 'freshHash123',
+        ]);
+    }
+
+    #[Test]
+    public function discord_callback_refreshes_avatar_for_pending_user_on_relogin(): void
+    {
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '444555666',
+            'discord_avatar' => 'oldHash',
+        ]);
+
+        $this->mockDiscordUser([
+            'id'       => '444555666',
+            'nickname' => $user->discord_username,
+            'email'    => $user->email,
+            'avatar'   => 'newHash',
+        ]);
+
+        $this->get(route('auth.discord.callback'));
+
+        $this->assertEquals('newHash', $user->fresh()->discord_avatar);
+    }
+
+    #[Test]
     public function pending_page_requires_authentication(): void
     {
         $response = $this->get(route('auth.discord.pending'));

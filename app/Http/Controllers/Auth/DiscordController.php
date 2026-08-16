@@ -200,6 +200,10 @@ class DiscordController extends Controller
     {
         auth()->login(user: $user, remember: true);
 
+        if ($avatarHash !== null && $avatarHash !== $user->discord_avatar) {
+            $user->update(['discord_avatar' => $avatarHash]);
+        }
+
         if ($user->member) {
             $this->forumPermissions->handleAccountRoles($user->member->clan_id);
 

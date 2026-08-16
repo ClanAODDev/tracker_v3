@@ -150,67 +150,66 @@
               <div class="recruit-pending-selected">
                 <div class="recruit-pending-selected-header">
                   <div class="recruit-pending-selected-row">
-                    <i class="fab fa-discord" style="color: #5865F2;"></i>
+                    <img v-if="store.selectedPendingUser.avatar_url" :src="store.selectedPendingUser.avatar_url" class="recruit-pending-selected-avatar" alt="">
+                    <i v-else class="fab fa-discord" style="color: #5865F2;"></i>
                     <strong>{{ store.selectedPendingUser.discord_username }}</strong>
                     <a href="#" @click.prevent="clearPendingUser" class="text-muted" style="margin-left: auto; font-size: 12px;"><i class="fa fa-times"></i> Change</a>
                   </div>
-                  <div class="recruit-pending-selected-notice">
-                    <i class="fa fa-exclamation-triangle"></i>
-                    <span>This is the account the recruit applied with — confirm it's the one they're currently using. If it doesn't match, have them log in with the account they originally applied with before proceeding with the recruitment.</span>
+                </div>
+
+                <div class="recruit-pending-selected-section">
+                  <!-- Loading email check -->
+                  <div v-if="store.forumEmailCheck.loading" class="recruit-status-line">
+                    <span class="themed-spinner spinner-sm"></span> Checking for existing forum account...
                   </div>
-                </div>
 
-                <!-- Loading email check -->
-                <div v-if="store.forumEmailCheck.loading" class="recruit-status-line">
-                  <span class="themed-spinner spinner-sm"></span> Checking for existing forum account...
-                </div>
-
-                <!-- Email check: found + eligible -->
-                <div v-else-if="store.forumEmailCheck.checked && store.forumEmailCheck.found && store.forumEmailCheck.eligible" class="recruit-status-line recruit-status-line-success">
-                  <i class="fa fa-check-circle"></i>
-                  <div>
-                    <div>Existing forum account found: <strong>{{ store.forumEmailCheck.username }}</strong> (ID: {{ store.forumEmailCheck.userId }})</div>
-                    <div class="text-muted" style="font-size: 12px; margin-top: 2px;">This account will be used for recruitment. The name can be changed below if desired.</div>
-                  </div>
-                </div>
-
-                <!-- Email check: found + ineligible -->
-                <div v-else-if="store.forumEmailCheck.checked && store.forumEmailCheck.found && !store.forumEmailCheck.eligible" class="recruit-email-check-status recruit-email-check-blocked">
-                  <i class="fa fa-exclamation-triangle"></i>
-                  <div>
-                    <div>A forum account was found for this email: <strong>{{ store.forumEmailCheck.username }}</strong></div>
-                    <div class="text-muted" style="font-size: 12px; margin-top: 2px;">
-                      <template v-if="store.forumEmailCheck.groupId === 3">
-                        This account is pending email verification. The recruit needs to complete the email verification process on the forums before they can be recruited.
-                      </template>
-                      <template v-else>
-                        {{ store.forumEmailCheck.rejectionReason }}
-                      </template>
+                  <!-- Email check: found + eligible -->
+                  <div v-else-if="store.forumEmailCheck.checked && store.forumEmailCheck.found && store.forumEmailCheck.eligible" class="recruit-status-line recruit-status-line-success">
+                    <i class="fa fa-check-circle"></i>
+                    <div>
+                      <div>Existing forum account found: <strong>{{ store.forumEmailCheck.username }}</strong> (ID: {{ store.forumEmailCheck.userId }})</div>
+                      <div class="text-muted" style="font-size: 12px; margin-top: 2px;">This account will be used for recruitment. The name can be changed below if desired.</div>
                     </div>
                   </div>
+
+                  <!-- Email check: found + ineligible -->
+                  <div v-else-if="store.forumEmailCheck.checked && store.forumEmailCheck.found && !store.forumEmailCheck.eligible" class="recruit-email-check-status recruit-email-check-blocked">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <div>
+                      <div>A forum account was found for this email: <strong>{{ store.forumEmailCheck.username }}</strong></div>
+                      <div class="text-muted" style="font-size: 12px; margin-top: 2px;">
+                        <template v-if="store.forumEmailCheck.groupId === 3">
+                          This account is pending email verification. The recruit needs to complete the email verification process on the forums before they can be recruited.
+                        </template>
+                        <template v-else>
+                          {{ store.forumEmailCheck.rejectionReason }}
+                        </template>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Email check: not found -->
+                  <div v-else-if="store.forumEmailCheck.checked && !store.forumEmailCheck.found" class="recruit-status-line recruit-status-line-info">
+                    <i class="fa fa-info-circle"></i>
+                    <div>No existing forum account found. One will be created during recruitment.</div>
+                  </div>
                 </div>
 
-                <!-- Email check: not found -->
-                <div v-else-if="store.forumEmailCheck.checked && !store.forumEmailCheck.found" class="recruit-status-line recruit-status-line-info">
-                  <i class="fa fa-info-circle"></i>
-                  <div>No existing forum account found. One will be created during recruitment.</div>
-                </div>
-              </div>
-
-              <!-- Application responses -->
-              <div v-if="store.selectedPendingUser.application" class="application-responses" style="margin-top: 8px;">
-                <div class="application-responses-header" @click="sections.application = !sections.application">
-                  <i class="fa fa-file-alt"></i> Application Submitted
-                  <span v-if="store.selectedPendingUser.application_division" class="text-muted" style="font-size: 12px; font-weight: normal; margin-left: 6px;">
-                    ({{ store.selectedPendingUser.application_division }})
-                  </span>
-                  <i class="fa" :class="sections.application ? 'fa-chevron-up' : 'fa-chevron-down'" style="margin-left: auto;"></i>
-                </div>
-                <div v-show="sections.application" class="application-responses-body">
-                  <div class="row">
-                    <div v-for="(item, index) in store.selectedPendingUser.application" :key="index" class="col-md-4 application-field">
-                      <div class="application-field-label">{{ item.label }}</div>
-                      <div class="application-field-value">{{ item.value || '—' }}</div>
+                <!-- Application responses -->
+                <div v-if="store.selectedPendingUser.application" class="application-responses">
+                  <div class="application-responses-header" @click="sections.application = !sections.application">
+                    <i class="fa fa-file-alt"></i> Application Submitted
+                    <span v-if="store.selectedPendingUser.application_division" class="text-muted" style="font-size: 12px; font-weight: normal; margin-left: 6px;">
+                      ({{ store.selectedPendingUser.application_division }})
+                    </span>
+                    <i class="fa" :class="sections.application ? 'fa-chevron-up' : 'fa-chevron-down'" style="margin-left: auto;"></i>
+                  </div>
+                  <div v-show="sections.application" class="application-responses-body">
+                    <div class="row">
+                      <div v-for="(item, index) in store.selectedPendingUser.application" :key="index" class="col-md-4 application-field">
+                        <div class="application-field-label">{{ item.label }}</div>
+                        <div class="application-field-value">{{ item.value || '—' }}</div>
+                      </div>
                     </div>
                   </div>
                 </div>

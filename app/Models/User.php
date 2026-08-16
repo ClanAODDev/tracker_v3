@@ -46,6 +46,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         'member_id',
         'discord_id',
         'discord_username',
+        'discord_avatar',
         'date_of_birth',
         'forum_password',
     ];
@@ -253,6 +254,23 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
     public function getFilamentAvatarUrl(): ?string
     {
         return $this->member?->getDiscordAvatarUrl();
+    }
+
+    public function getDiscordAvatarUrl(): ?string
+    {
+        if (! $this->discord_id) {
+            return null;
+        }
+
+        if ($this->discord_avatar) {
+            return sprintf('https://cdn.discordapp.com/avatars/%s/%s.png?size=64', $this->discord_id, $this->discord_avatar);
+        }
+
+        if ($url = $this->divisionApplication?->discordAvatarUrl()) {
+            return $url;
+        }
+
+        return sprintf('https://cdn.discordapp.com/embed/avatars/%d.png', abs((int) $this->discord_id >> 22) % 6);
     }
 
     public function canAccessPanel(Panel $panel): bool
