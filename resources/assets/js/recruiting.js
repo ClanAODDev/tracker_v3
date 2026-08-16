@@ -10,6 +10,7 @@ if (container) {
         ranks: JSON.parse(container.getAttribute('data-ranks') || '{}'),
         rankLabels: JSON.parse(container.getAttribute('data-rank-labels') || '{}'),
         pendingUserId: container.getAttribute('data-pending-user-id'),
+        memberId: container.getAttribute('data-member-id'),
     });
     app.mount('#recruiting-container');
 }

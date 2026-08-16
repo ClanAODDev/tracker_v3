@@ -20,6 +20,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 
@@ -126,12 +127,27 @@ class RecruitingController extends Controller
             'discordId'      => $discordId,
             'forumAccount'   => $pendingUser ? $this->checkForumAccountForEmail($pendingUser->email) : null,
             'pendingUser'    => $pendingUser ? $this->mapPendingDiscordUser($pendingUser) : null,
+            'memberMatches'  => $pendingUser ? null : $this->findMembersByDiscordId($discordId),
             'divisions'      => $targetDivision ? null : Division::active()->where('shutdown_at', null)
                 ->orderBy('name')
                 ->withoutFloaters()
                 ->withoutBR()
                 ->get(),
         ]);
+    }
+
+    private function findMembersByDiscordId(string $discordId): Collection
+    {
+        return Member::where('discord_id', $discordId)
+            ->with('division')
+            ->get()
+            ->map(fn ($m) => [
+                'name'       => $m->name,
+                'clan_id'    => $m->clan_id,
+                'division'   => $m->division_id ? $m->division?->name : null,
+                'url'        => route('member', $m->getUrlParams()),
+                'isExMember' => $m->division_id === 0,
+            ]);
     }
 
     #[Authorize('recruit', Member::class)]

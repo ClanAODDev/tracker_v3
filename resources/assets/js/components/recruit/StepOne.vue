@@ -401,7 +401,7 @@ import StepIndicator from './StepIndicator.vue';
 
 export default {
   components: { StepIndicator },
-  props: ['ranks', 'rankLabels', 'recruiterId', 'divisionSlug', 'cancelUrl', 'pendingUserId'],
+  props: ['ranks', 'rankLabels', 'recruiterId', 'divisionSlug', 'cancelUrl', 'pendingUserId', 'memberId'],
 
   data() {
     return {
@@ -617,6 +617,12 @@ export default {
     store.loadDivisionData(this.divisionSlug).then(() => {
       if (this.pendingUserId) this.resolvePendingUserId();
     });
+
+    if (this.memberId) {
+      store.recruitPath = 'forum';
+      store.member.id = this.memberId;
+      store.validateMemberId(this.memberId);
+    }
   },
 };
 </script>

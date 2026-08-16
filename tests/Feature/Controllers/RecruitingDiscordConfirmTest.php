@@ -250,4 +250,79 @@ class RecruitingDiscordConfirmTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    #[Test]
+    public function calls_out_ex_member_match_with_recruit_options(): void
+    {
+        $officer  = $this->createOfficer();
+        $division = $this->createActiveDivision();
+
+        $exMember = $this->createMember([
+            'discord_id'  => '123456789012345678',
+            'division_id' => 0,
+            'name'        => 'FormerMember',
+        ]);
+
+        $response = $this->actingAs($officer)
+            ->get(route('recruiting.discordConfirm', '123456789012345678'));
+
+        $response->assertOk();
+        $response->assertSee('FormerMember');
+        $response->assertSee('Ex-AOD');
+        $response->assertSee(route('recruiting.form', $division) . '?member_id=' . $exMember->clan_id, false);
+    }
+
+    #[Test]
+    public function calls_out_active_member_match_without_recruit_options(): void
+    {
+        $officer  = $this->createOfficer();
+        $division = $this->createActiveDivision(['name' => 'Active Division']);
+
+        $this->createMember([
+            'discord_id'  => '123456789012345678',
+            'division_id' => $division->id,
+            'name'        => 'CurrentMember',
+        ]);
+
+        $response = $this->actingAs($officer)
+            ->get(route('recruiting.discordConfirm', '123456789012345678'));
+
+        $response->assertOk();
+        $response->assertSee('CurrentMember');
+        $response->assertSee('Active Division');
+        $response->assertDontSee('Recruit them back in');
+    }
+
+    #[Test]
+    public function does_not_show_member_match_section_when_none_found(): void
+    {
+        $officer = $this->createOfficer();
+
+        $response = $this->actingAs($officer)
+            ->get(route('recruiting.discordConfirm', '123456789012345678'));
+
+        $response->assertOk();
+        $response->assertDontSee('matches existing member record');
+    }
+
+    #[Test]
+    public function does_not_check_members_table_when_pending_registration_found(): void
+    {
+        $officer = $this->createOfficer();
+
+        $pendingUser = User::factory()->pending()->create([
+            'discord_id' => '123456789012345678',
+        ]);
+
+        $this->createMember([
+            'discord_id'  => '123456789012345678',
+            'division_id' => 0,
+        ]);
+
+        $response = $this->actingAs($officer)
+            ->get(route('recruiting.discordConfirm', $pendingUser->discord_id));
+
+        $response->assertOk();
+        $response->assertViewHas('memberMatches', null);
+    }
 }

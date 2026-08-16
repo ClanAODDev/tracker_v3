@@ -112,6 +112,39 @@
                     <i class="fa fa-arrow-left"></i> Back to Recruitment
                 </a>
             </div>
+
+            @if ($memberMatches->isNotEmpty())
+                <div class="discord-confirm-card" style="margin-top: 15px;">
+                    <div class="discord-confirm-section" style="border-bottom: none;">
+                        <p class="text-muted" style="margin-bottom: 10px;">This Discord account matches existing member record(s):</p>
+                        @foreach ($memberMatches as $match)
+                            <div class="recruit-status-line {{ $match['isExMember'] ? 'recruit-status-line-info' : '' }}" style="margin-top: 12px;">
+                                <i class="fa {{ $match['isExMember'] ? 'fa-history' : 'fa-user' }}"></i>
+                                <div>
+                                    <div>
+                                        <a href="{{ $match['url'] }}" target="_blank"><strong>{{ $match['name'] }}</strong></a>
+                                        — {{ $match['division'] ?? 'Ex-AOD' }}
+                                    </div>
+                                    @if ($match['isExMember'])
+                                        <div style="margin-top: 8px;">
+                                            <span class="text-muted" style="font-size: 12px;">Recruit them back in — select a division:</span>
+                                            <div class="row" style="margin-top: 6px;">
+                                                @foreach ($divisions as $division)
+                                                    <div class="col-sm-4" style="margin-bottom: 8px;">
+                                                        <a href="{{ route('recruiting.form', $division) }}?member_id={{ $match['clan_id'] }}" class="btn btn-default btn-sm btn-block">
+                                                            {{ $division->name }}
+                                                        </a>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
         @endif
     </div>
 @endsection
