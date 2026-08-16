@@ -109,7 +109,8 @@ class RankActionResource extends Resource
                                 return $record->requester_id !== auth()->user()->member_id;
                             })
                             ->columnSpanFull(),
-                        Livewire::make(Reactions::class),
+                        Livewire::make(Reactions::class)
+                            ->visible(fn ($record) => auth()->user()->canManageRankActionCommentsFor($record)),
                     ]),
 
             ]);

@@ -150,6 +150,11 @@
                   <a href="#" @click.prevent="clearPendingUser" class="text-muted" style="margin-left: auto; font-size: 12px;"><i class="fa fa-times"></i> Change</a>
                 </div>
 
+                <div class="recruit-email-check-status recruit-email-check-warning">
+                  <i class="fa fa-exclamation-triangle"></i>
+                  <div>Confirm <strong>{{ store.selectedPendingUser.discord_username }}</strong> is the account the recruit applied with. If this doesn't match their current username, have them log in with the account they originally applied with before proceeding with the recruitment.</div>
+                </div>
+
                 <!-- Loading email check -->
                 <div v-if="store.forumEmailCheck.loading" class="recruit-email-check-status">
                   <span class="themed-spinner spinner-sm"></span> Checking for existing forum account...
