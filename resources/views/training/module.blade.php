@@ -141,36 +141,45 @@
             </div>
         </div>
 
-        @if(request()->has('training') && $module->show_completion_form)
+        @if($trainee && $module->show_completion_form)
             <div class="training-stepper__completion">
                 <div class="panel panel-filled panel-c-success">
                     <div class="panel-heading">
                         <i class="fa fa-check-circle"></i> Complete Training
                     </div>
                     <div class="panel-body">
-                        <p>Once you are finished with the training session, search for the member
-                            you are training and submit.</p>
+                        <p>Mark this training session complete for <strong>{{ $trainee->name }}</strong>?</p>
                         <p class="text-muted m-b-none">This will update the member's last training date and set you as the trainer.</p>
                     </div>
                     <div class="panel-footer">
-                        <form action="{{ route('training.update') }}" method="POST" class="training-stepper__form">
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#complete-training-modal">
+                            <i class="fa fa-check"></i> Mark Training Complete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal fade" id="complete-training-modal" tabindex="-1" role="dialog" aria-labelledby="complete-training-modal-title">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <form action="{{ route('training.update') }}" method="POST">
                             @csrf
                             <input type="hidden" name="module" value="{{ $module->slug }}">
-                            <div class="training-stepper__form-row">
-                                <div class="input-group">
-                                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
-                                    <input type="text"
-                                           class="form-control search-member"
-                                           id="trainee_name"
-                                           name="trainee_name"
-                                           autocomplete="off"
-                                           placeholder="Search for member..."
-                                           value="{{ $trainee?->name }}"
-                                    />
-                                </div>
-                                <input type="hidden" name="clan_id" id="clan_id" value="{{ $trainee?->clan_id }}">
+                            <input type="hidden" name="clan_id" value="{{ $trainee->clan_id }}">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <h4 class="modal-title" id="complete-training-modal-title">Confirm Training Completion</h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Mark <strong>{{ $trainee->name }}</strong> as having completed the {{ $module->name }} training?</p>
+                                <p class="text-muted">This sets their last training date to now and records you as the trainer.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                 <button type="submit" class="btn btn-success">
-                                    <i class="fa fa-check"></i> Complete Training
+                                    <i class="fa fa-check"></i> Confirm
                                 </button>
                             </div>
                         </form>
