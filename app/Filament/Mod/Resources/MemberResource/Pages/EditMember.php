@@ -17,7 +17,6 @@ use App\Services\ForumProcedureService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -76,35 +75,22 @@ class EditMember extends EditRecord
                 ->openUrlInNewTab(),
 
             Action::make('setDiscordInfo')
-                ->label('Discord Info')
-                ->icon('heroicon-o-chat-bubble-left-right')
+                ->label('Clear Discord Info')
+                ->icon('heroicon-o-x-circle')
+                ->color('danger')
                 ->visible(fn (): bool => auth()->user()->can('update', $this->record))
-                ->fillForm(fn (): array => [
-                    'discord_id'  => $this->record->discord_id,
-                    'discord_tag' => $this->record->discord,
-                ])
-                ->schema([
-                    TextInput::make('discord_id')
-                        ->label('Discord User ID')
-                        ->rule('regex:/^\d+$/')
-                        ->nullable(),
-                    TextInput::make('discord_tag')
-                        ->label('Discord Username/Tag')
-                        ->nullable(),
-                ])
-                ->action(function (array $data, ForumProcedureService $forumProcedureService): void {
-                    $discordId  = (string) ($data['discord_id'] ?? '');
-                    $discordTag = (string) ($data['discord_tag'] ?? '');
-
-                    $forumProcedureService->setDiscordInfo($this->record->clan_id, $discordId, $discordTag);
+                ->requiresConfirmation()
+                ->modalDescription('This will remove the Discord account link for this member on both the forum and the tracker.')
+                ->action(function (ForumProcedureService $forumProcedureService): void {
+                    $forumProcedureService->clearDiscordInfo($this->record->clan_id);
 
                     $this->record->update([
-                        'discord_id' => $discordId !== '' ? $discordId : null,
-                        'discord'    => $discordTag !== '' ? $discordTag : null,
+                        'discord_id' => null,
+                        'discord'    => null,
                     ]);
 
                     Notification::make()
-                        ->title('Discord info updated')
+                        ->title('Discord info cleared')
                         ->success()
                         ->send();
                 }),

@@ -18,48 +18,32 @@ class MemberResourceSetDiscordInfoTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function sr_ldr_can_set_discord_info(): void
+    public function sr_ldr_can_clear_discord_info(): void
     {
         $division = $this->createActiveDivision();
         $srLdr    = $this->createSeniorLeader($division);
-        $member   = $this->createMember(['division_id' => $division->id, 'discord_id' => null, 'discord' => null]);
+        $member   = $this->createMember([
+            'division_id' => $division->id,
+            'discord_id'  => '123456789012345678',
+            'discord'     => 'existingusername',
+        ]);
 
         $this->mock(ForumProcedureService::class, function ($mock) use ($member) {
-            $mock->shouldReceive('setDiscordInfo')
+            $mock->shouldReceive('clearDiscordInfo')
                 ->once()
-                ->with($member->clan_id, '123456789012345678', 'newusername')
+                ->with($member->clan_id)
                 ->andReturn(null);
         });
 
         $this->actingAs($srLdr);
 
         Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
-            ->callAction('setDiscordInfo', data: [
-                'discord_id'  => '123456789012345678',
-                'discord_tag' => 'newusername',
-            ])
+            ->callAction('setDiscordInfo')
             ->assertHasNoActionErrors();
 
         $member->refresh();
-        $this->assertSame('123456789012345678', $member->discord_id);
-        $this->assertSame('newusername', $member->discord);
-    }
-
-    #[Test]
-    public function discord_id_must_be_numeric(): void
-    {
-        $division = $this->createActiveDivision();
-        $srLdr    = $this->createSeniorLeader($division);
-        $member   = $this->createMember(['division_id' => $division->id]);
-
-        $this->actingAs($srLdr);
-
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
-            ->callAction('setDiscordInfo', data: [
-                'discord_id'  => 'not-a-snowflake',
-                'discord_tag' => 'someuser',
-            ])
-            ->assertHasActionErrors(['discord_id']);
+        $this->assertNull($member->discord_id);
+        $this->assertNull($member->discord);
     }
 
     #[Test]
