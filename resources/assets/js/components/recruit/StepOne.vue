@@ -152,7 +152,7 @@
 
                 <div class="recruit-email-check-status recruit-email-check-warning">
                   <i class="fa fa-exclamation-triangle"></i>
-                  <div>Confirm <strong>{{ store.selectedPendingUser.discord_username }}</strong> is the account the recruit applied with. If this doesn't match their current username, have them log in with the account they originally applied with before proceeding with the recruitment.</div>
+                  <div><strong>{{ store.selectedPendingUser.discord_username }}</strong> is the account the recruit applied with. Confirm this is the account they are currently using. If this doesn't match, have them log in with the account they originally applied with before proceeding with the recruitment.</div>
                 </div>
 
                 <!-- Loading email check -->
