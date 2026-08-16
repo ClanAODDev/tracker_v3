@@ -477,16 +477,16 @@ export default {
 
   watch: {
     isNewMember(isNew) {
-      if (isNew) {
-        this.sections.agreements = true;
-        this.sections.tasks = true;
-      }
+      if (isNew) this.expandIncompleteSections();
     },
     'store.selectedPendingUser'(user) {
-      if (user) {
-        this.sections.agreements = true;
-        this.sections.tasks = true;
-      }
+      if (user) this.expandIncompleteSections();
+    },
+    isAgreementsComplete(complete) {
+      this.sections.agreements = !complete;
+    },
+    isTasksComplete(complete) {
+      this.sections.tasks = !complete;
     },
   },
 
@@ -508,6 +508,11 @@ export default {
 
     toggleDemoMode() {
       store.toggleDemoMode();
+    },
+
+    expandIncompleteSections() {
+      if (!this.isAgreementsComplete) this.sections.agreements = true;
+      if (!this.isTasksComplete) this.sections.tasks = true;
     },
 
     toggleSection(section) {
