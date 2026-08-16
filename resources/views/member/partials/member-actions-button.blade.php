@@ -10,9 +10,11 @@
             </li>
 
             @can('train', auth()->user())
-                <li>
-                    <a href="{{ route('training.sgt', ['clan_id' => $member->clan_id]) }}">SGT Training</a>
-                </li>
+                @if ($member->rank->isAtLeast(\App\Enums\Rank::SERGEANT))
+                    <li>
+                        <a href="{{ route('training.sgt', ['clan_id' => $member->clan_id]) }}">SGT Training</a>
+                    </li>
+                @endif
             @endcan
 
 @if ($member->user)
