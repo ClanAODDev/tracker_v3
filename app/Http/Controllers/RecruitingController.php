@@ -102,6 +102,28 @@ class RecruitingController extends Controller
     }
 
     #[Authorize('recruit', Member::class)]
+    public function discordConfirm(Division $division, string $discordId)
+    {
+        if ($division->isShutdown()) {
+            $this->showErrorToast('This division has been shutdown and cannot receive new members');
+
+            return redirect()->back();
+        }
+
+        $pendingUser = User::pendingDiscord()
+            ->whereNotNull('date_of_birth')
+            ->where('discord_id', $discordId)
+            ->with('divisionApplication.division')
+            ->first();
+
+        return view('recruit.discord-confirm', [
+            'division'    => $division,
+            'discordId'   => $discordId,
+            'pendingUser' => $pendingUser ? $this->mapPendingDiscordUser($pendingUser) : null,
+        ]);
+    }
+
+    #[Authorize('recruit', Member::class)]
     public function getDivisionRecruitData(Division $division): JsonResponse
     {
 
@@ -380,28 +402,31 @@ class RecruitingController extends Controller
             ->with('divisionApplication.division')
             ->orderBy('created_at', 'desc')
             ->get()
-            ->map(function ($u) {
-                $application = null;
-                if ($u->divisionApplication) {
-                    $application = collect($u->divisionApplication->responses)->map(function ($response) {
-                        return [
-                            'label' => $response['label'] ?? 'Unknown',
-                            'value' => is_array($response['value'] ?? null) ? implode(', ', $response['value']) : ($response['value'] ?? '—'),
-                        ];
-                    })->values();
-                }
+            ->map(fn ($u) => $this->mapPendingDiscordUser($u));
+    }
 
+    private function mapPendingDiscordUser(User $u): array
+    {
+        $application = null;
+        if ($u->divisionApplication) {
+            $application = collect($u->divisionApplication->responses)->map(function ($response) {
                 return [
-                    'id'                   => $u->id,
-                    'discord_username'     => $u->discord_username,
-                    'forum_name'           => $u->name,
-                    'discord_id'           => $u->discord_id,
-                    'email'                => $u->email,
-                    'created_at'           => $u->created_at->diffForHumans(),
-                    'application'          => $application,
-                    'application_division' => $u->divisionApplication?->division?->name,
+                    'label' => $response['label'] ?? 'Unknown',
+                    'value' => is_array($response['value'] ?? null) ? implode(', ', $response['value']) : ($response['value'] ?? '—'),
                 ];
-            });
+            })->values();
+        }
+
+        return [
+            'id'                   => $u->id,
+            'discord_username'     => $u->discord_username,
+            'forum_name'           => $u->name,
+            'discord_id'           => $u->discord_id,
+            'email'                => $u->email,
+            'created_at'           => $u->created_at->diffForHumans(),
+            'application'          => $application,
+            'application_division' => $u->divisionApplication?->division?->name,
+        ];
     }
 
     private function createForumAccountForPendingUser(

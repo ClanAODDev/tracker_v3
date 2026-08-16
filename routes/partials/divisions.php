@@ -45,6 +45,7 @@ Route::prefix('divisions/{division}')->group(function () {
     });
 
     Route::get('recruit/form', [RecruitingController::class, 'form'])->name('recruiting.form');
+    Route::get('recruit/discord/{discordId}', [RecruitingController::class, 'discordConfirm'])->name('recruiting.discordConfirm');
 
     Route::controller(ReportController::class)->group(function () {
         Route::get('voice-report', 'voiceReport')->name('division.voice-report');

@@ -7,6 +7,7 @@
       :recruiter-id="recruiterId"
       :division-slug="division"
       :cancel-url="cancelUrl"
+      :pending-user-id="pendingUserId"
     ></step-one>
 
     <step-confirmation
@@ -27,7 +28,7 @@ export default {
     StepConfirmation,
   },
 
-  props: ['division', 'ranks', 'rankLabels', 'recruiterId'],
+  props: ['division', 'ranks', 'rankLabels', 'recruiterId', 'pendingUserId'],
 
   data() {
     return {

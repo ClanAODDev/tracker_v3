@@ -120,6 +120,10 @@
 
             <!-- Pending user selection -->
             <div v-if="!store.selectedPendingUser" style="margin-top: 10px;">
+              <div v-if="pendingUserIdNotFound" class="recruit-status-line" style="margin-top: 0; margin-bottom: 10px; color: #f39c12;">
+                <i class="fa fa-exclamation-triangle"></i>
+                <div>That pending registration could no longer be found — it may have already been recruited. Select from the list below instead.</div>
+              </div>
               <div class="form-group">
                 <label for="pending_user">
                   <i class="fab fa-discord" style="color: #5865F2;"></i> Pending Discord Registrations
@@ -398,13 +402,14 @@ import StepIndicator from './StepIndicator.vue';
 
 export default {
   components: { StepIndicator },
-  props: ['ranks', 'rankLabels', 'recruiterId', 'divisionSlug', 'cancelUrl'],
+  props: ['ranks', 'rankLabels', 'recruiterId', 'divisionSlug', 'cancelUrl', 'pendingUserId'],
 
   data() {
     return {
       store,
       submitted: false,
       showAllPending: false,
+      pendingUserIdNotFound: false,
       sections: {
         agreements: false,
         tasks: false,
@@ -551,6 +556,26 @@ export default {
       store.reloadPendingDiscord(this.showAllPending);
     },
 
+    resolvePendingUserId() {
+      store.recruitPath = 'discord';
+
+      const match = store.division.pending_discord.find(u => u.id === parseInt(this.pendingUserId));
+      if (match) {
+        store.selectPendingUser(match.id);
+        return;
+      }
+
+      this.showAllPending = true;
+      store.reloadPendingDiscord(true).then(() => {
+        const retryMatch = store.division.pending_discord.find(u => u.id === parseInt(this.pendingUserId));
+        if (retryMatch) {
+          store.selectPendingUser(retryMatch.id);
+        } else {
+          this.pendingUserIdNotFound = true;
+        }
+      });
+    },
+
     retryLoad() {
       store.loadDivisionData(this.divisionSlug);
     },
@@ -590,7 +615,9 @@ export default {
   mounted() {
     store.recruiter_id = this.recruiterId;
     store.rankLabels = this.rankLabels;
-    store.loadDivisionData(this.divisionSlug);
+    store.loadDivisionData(this.divisionSlug).then(() => {
+      if (this.pendingUserId) this.resolvePendingUserId();
+    });
   },
 };
 </script>
