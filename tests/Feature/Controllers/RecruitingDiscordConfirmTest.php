@@ -19,6 +19,15 @@ class RecruitingDiscordConfirmTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->mock(AODForumService::class, function ($mock) {
+            $mock->shouldReceive('getUserByEmail')->andReturn(null);
+        });
+    }
+
     #[Test]
     public function shows_matching_pending_registration(): void
     {
@@ -268,7 +277,7 @@ class RecruitingDiscordConfirmTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('FormerMember');
-        $response->assertSee('Ex-AOD');
+        $response->assertSee('Former member');
         $response->assertSee(route('recruiting.form', $division) . '?member_id=' . $exMember->clan_id, false);
     }
 

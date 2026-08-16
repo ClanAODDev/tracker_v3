@@ -12165,26 +12165,98 @@ pre.code-toolbar > .toolbar span:focus {
     text-align: right;
 }
 
-.discord-confirm-empty {
-    text-align: center;
-    padding: 60px 20px;
-    margin-top: 15px;
+.discord-confirm-footer-split {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    text-align: left;
 }
 
-.discord-confirm-empty-icon {
-    font-size: 48px;
-    color: rgba(88, 101, 242, 0.4);
-    margin-bottom: 16px;
-    display: block;
+.discord-confirm-header-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(88, 101, 242, 0.12);
+    border: 2px solid rgba(88, 101, 242, 0.3);
+    color: #5865F2;
+    font-size: 28px;
+    flex-shrink: 0;
 }
 
-.discord-confirm-empty h4 {
-    margin-bottom: 8px;
+.discord-confirm-not-found {
+    max-width: 640px;
+    margin: 15px auto 0;
 }
 
-.discord-confirm-empty p {
-    max-width: 420px;
-    margin: 0 auto 20px;
+.discord-confirm-match {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.discord-confirm-match-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.discord-confirm-match-avatar-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-muted);
+    font-size: 16px;
+}
+
+.discord-confirm-match-identity {
+    flex: 1;
+    min-width: 0;
+}
+
+.discord-confirm-match-action {
+    flex-shrink: 0;
+    width: 260px;
+}
+
+.discord-confirm-division-picker {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .form-control {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .btn {
+        flex-shrink: 0;
+    }
+}
+
+.discord-confirm-division-picker-sm {
+    .form-control {
+        height: 30px;
+        padding: 5px 10px;
+        font-size: 12px;
+    }
+
+    .btn {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
 }
 
 .member-tags-display {
