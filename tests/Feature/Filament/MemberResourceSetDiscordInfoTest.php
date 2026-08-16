@@ -18,7 +18,7 @@ class MemberResourceSetDiscordInfoTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function sr_ldr_can_clear_discord_info(): void
+    public function sr_ldr_can_clear_forum_discord_info(): void
     {
         $division = $this->createActiveDivision();
         $srLdr    = $this->createSeniorLeader($division);
@@ -42,8 +42,8 @@ class MemberResourceSetDiscordInfoTest extends TestCase
             ->assertHasNoActionErrors();
 
         $member->refresh();
-        $this->assertNull($member->discord_id);
-        $this->assertNull($member->discord);
+        $this->assertSame('123456789012345678', $member->discord_id);
+        $this->assertSame('existingusername', $member->discord);
     }
 
     #[Test]

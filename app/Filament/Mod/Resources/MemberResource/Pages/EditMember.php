@@ -75,22 +75,17 @@ class EditMember extends EditRecord
                 ->openUrlInNewTab(),
 
             Action::make('setDiscordInfo')
-                ->label('Clear Discord Info')
+                ->label('Clear Forum Discord Info')
                 ->icon('heroicon-o-x-circle')
                 ->color('danger')
                 ->visible(fn (): bool => auth()->user()->can('update', $this->record))
                 ->requiresConfirmation()
-                ->modalDescription('This will remove the Discord account link for this member on both the forum and the tracker.')
+                ->modalDescription('This will remove the Discord account link on the forum, allowing the member to link their currently authenticated Discord account.')
                 ->action(function (ForumProcedureService $forumProcedureService): void {
                     $forumProcedureService->clearDiscordInfo($this->record->clan_id);
 
-                    $this->record->update([
-                        'discord_id' => null,
-                        'discord'    => null,
-                    ]);
-
                     Notification::make()
-                        ->title('Discord info cleared')
+                        ->title('Forum Discord info cleared')
                         ->success()
                         ->send();
                 }),
