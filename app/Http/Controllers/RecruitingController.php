@@ -147,6 +147,7 @@ class RecruitingController extends Controller
                 'division'   => $m->division_id ? $m->division?->name : null,
                 'url'        => route('member', $m->getUrlParams()),
                 'isExMember' => $m->division_id === 0,
+                'avatarUrl'  => $m->getDiscordAvatarUrl(),
             ]);
     }
 

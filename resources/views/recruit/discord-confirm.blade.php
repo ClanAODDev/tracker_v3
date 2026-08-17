@@ -86,65 +86,134 @@
                 @else
                     <div class="discord-confirm-section">
                         <p class="text-muted" style="margin-bottom: 10px;">No division application on file — select which division to recruit them into:</p>
-                        <div class="row">
-                            @foreach ($divisions as $division)
-                                <div class="col-sm-4" style="margin-bottom: 10px;">
-                                    <a href="{{ route('recruiting.form', $division) }}?pending_user_id={{ $pendingUser['id'] }}" class="panel panel-filled" style="margin-bottom: 0;">
-                                        <div class="panel-body">
-                                            <h5 class="m-b-none">
-                                                <img src="{{ $division->getLogoPath() }}" class="division-icon-medium">
-                                                {{ $division->name }}
-                                            </h5>
-                                        </div>
-                                    </a>
-                                </div>
-                            @endforeach
+                        <div class="discord-confirm-division-picker">
+                            <select class="form-control division-picker-select">
+                                <option value="">Select division...</option>
+                                @foreach ($divisions as $division)
+                                    <option value="{{ route('recruiting.form', $division) }}?pending_user_id={{ $pendingUser['id'] }}">{{ $division->name }}</option>
+                                @endforeach
+                            </select>
+                            <button type="button" class="btn btn-success division-picker-proceed" disabled>
+                                Proceed <i class="fa fa-arrow-right"></i>
+                            </button>
                         </div>
                     </div>
                 @endif
             </div>
-        @else
-            <div class="discord-confirm-empty">
-                <i class="fab fa-discord discord-confirm-empty-icon"></i>
-                <h4>No Pending Registration Found</h4>
-                <p class="text-muted">There's no pending Discord registration for this account (ID: <code>{{ $discordId }}</code>). Have the recruit apply to AOD via the website — <a href="https://clanaod.net" target="_blank">clanaod.net</a> — and click "Apply".</p>
-                <a href="{{ route('recruiting.initial') }}" class="btn btn-default">
-                    <i class="fa fa-arrow-left"></i> Back to Recruitment
-                </a>
-            </div>
+        @elseif ($memberMatches->isNotEmpty())
+            <div class="discord-confirm-not-found">
+                <div class="discord-confirm-card">
+                    <div class="discord-confirm-header">
+                        <i class="fab fa-discord discord-confirm-header-icon"></i>
+                        <div class="discord-confirm-identity">
+                            <h3>No Pending Discord Application</h3>
+                            <div class="discord-confirm-meta">
+                                <span><i class="fa fa-hashtag"></i> {{ $discordId }}</span>
+                            </div>
+                        </div>
+                    </div>
 
-            @if ($memberMatches->isNotEmpty())
-                <div class="discord-confirm-card" style="margin-top: 15px;">
-                    <div class="discord-confirm-section" style="border-bottom: none;">
-                        <p class="text-muted" style="margin-bottom: 10px;">This Discord account matches existing member record(s):</p>
-                        @foreach ($memberMatches as $match)
-                            <div class="recruit-status-line {{ $match['isExMember'] ? 'recruit-status-line-info' : '' }}" style="margin-top: 12px;">
-                                <i class="fa {{ $match['isExMember'] ? 'fa-history' : 'fa-user' }}"></i>
-                                <div>
-                                    <div>
-                                        <a href="{{ $match['url'] }}" target="_blank"><strong>{{ $match['name'] }}</strong></a>
-                                        — {{ $match['division'] ?? 'Ex-AOD' }}
-                                    </div>
+                    <div class="discord-confirm-section">
+                        <p class="text-muted" style="margin-bottom: 0;">This Discord account isn't tied to a pending registration, but it matches {{ $memberMatches->count() > 1 ? 'these member records' : 'a member record' }} already in the Tracker:</p>
+                    </div>
+
+                    @foreach ($memberMatches as $match)
+                        <div class="discord-confirm-match">
+                            @if ($match['avatarUrl'])
+                                <img src="{{ $match['avatarUrl'] }}" alt="{{ $match['name'] }}" class="discord-confirm-match-avatar">
+                            @else
+                                <div class="discord-confirm-match-avatar discord-confirm-match-avatar-placeholder">
+                                    <i class="fa {{ $match['isExMember'] ? 'fa-history' : 'fa-user' }}"></i>
+                                </div>
+                            @endif
+                            <div class="discord-confirm-match-identity">
+                                <a href="{{ $match['url'] }}" target="_blank"><strong>{{ $match['name'] }}</strong></a>
+                                <div class="text-muted" style="font-size: 12px;">
                                     @if ($match['isExMember'])
-                                        <div style="margin-top: 8px;">
-                                            <span class="text-muted" style="font-size: 12px;">Recruit them back in — select a division:</span>
-                                            <div class="row" style="margin-top: 6px;">
-                                                @foreach ($divisions as $division)
-                                                    <div class="col-sm-4" style="margin-bottom: 8px;">
-                                                        <a href="{{ route('recruiting.form', $division) }}?member_id={{ $match['clan_id'] }}" class="btn btn-default btn-sm btn-block">
-                                                            {{ $division->name }}
-                                                        </a>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-                                        </div>
+                                        <i class="fa fa-history"></i> Former member — no longer in a division
+                                    @else
+                                        <i class="fa fa-user"></i> Active member of {{ $match['division'] }}
                                     @endif
                                 </div>
                             </div>
-                        @endforeach
+                            @if ($match['isExMember'])
+                                <div class="discord-confirm-match-action">
+                                    <div class="discord-confirm-division-picker discord-confirm-division-picker-sm">
+                                        <select class="form-control division-picker-select">
+                                            <option value="">Recruit into...</option>
+                                            @foreach ($divisions as $division)
+                                                <option value="{{ route('recruiting.form', $division) }}?member_id={{ $match['clan_id'] }}">{{ $division->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="button" class="btn btn-success division-picker-proceed" disabled>
+                                            Proceed <i class="fa fa-arrow-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="discord-confirm-match-action text-muted" style="font-size: 12px; text-align: right;">
+                                    Already active — no recruitment needed
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+
+                    <div class="discord-confirm-footer discord-confirm-footer-split">
+                        <a href="{{ route('recruiting.initial') }}" class="btn btn-default btn-sm">
+                            <i class="fa fa-arrow-left"></i> Back to Recruitment
+                        </a>
+                        <span class="text-muted" style="font-size: 12px;">
+                            None of these? Have the recruit apply via <a href="https://clanaod.net" target="_blank">clanaod.net</a>.
+                        </span>
                     </div>
                 </div>
-            @endif
+            </div>
+        @else
+            <div class="discord-confirm-not-found">
+                <div class="discord-confirm-card">
+                    <div class="discord-confirm-header">
+                        <i class="fab fa-discord discord-confirm-header-icon"></i>
+                        <div class="discord-confirm-identity">
+                            <h3>No Pending Registration Found</h3>
+                            <div class="discord-confirm-meta">
+                                <span><i class="fa fa-hashtag"></i> {{ $discordId }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="discord-confirm-section">
+                        <p class="text-muted" style="margin-bottom: 0;">This Discord account isn't tied to a pending registration or an existing member record. Have the recruit apply to AOD via the website — <a href="https://clanaod.net" target="_blank">clanaod.net</a> — and click "Apply".</p>
+                    </div>
+
+                    <div class="discord-confirm-footer">
+                        <a href="{{ route('recruiting.initial') }}" class="btn btn-default btn-sm">
+                            <i class="fa fa-arrow-left"></i> Back to Recruitment
+                        </a>
+                    </div>
+                </div>
+            </div>
         @endif
     </div>
+@endsection
+
+@section('footer_scripts')
+<script>
+    $(function() {
+        $('.discord-confirm-division-picker').each(function() {
+            const $picker = $(this);
+            const $select = $picker.find('.division-picker-select');
+            const $button = $picker.find('.division-picker-proceed');
+
+            $select.on('change', function() {
+                $button.prop('disabled', !$select.val());
+            });
+
+            $button.on('click', function() {
+                if ($select.val()) {
+                    window.location.href = $select.val();
+                }
+            });
+        });
+    });
+</script>
 @endsection
