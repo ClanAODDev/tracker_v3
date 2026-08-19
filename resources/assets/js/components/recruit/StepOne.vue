@@ -98,6 +98,10 @@
                       {{ tag.name }}
                     </span>
                   </div>
+                  <div v-if="store.validation.memberId.discordUsername" class="discord-match-notice">
+                    <i class="fab fa-discord"></i>
+                    Linked Discord account: <strong>{{ store.validation.memberId.discordUsername }}</strong>
+                  </div>
                   <div v-if="store.validation.memberId.discordMatches.length" class="discord-match-notice">
                     <i class="fab fa-discord"></i>
                     Discord ID matches existing member<span v-if="store.validation.memberId.discordMatches.length > 1">s</span>:

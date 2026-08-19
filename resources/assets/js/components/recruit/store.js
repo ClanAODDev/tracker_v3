@@ -190,6 +190,8 @@ store.checkForumEmail = (email) => {
                     tags: [],
                     division: null,
                     discordMatches: [],
+                    discordId: null,
+                    discordUsername: null,
                 };
                 const name = (data.username || '').replace(/^AOD_/i, '').replace(/\b\w/g, c => c.toUpperCase());
                 store.member.forum_name = name;
@@ -225,7 +227,7 @@ store.clearPendingUser = () => {
     store.selectedPendingUser = null;
     store.member.id = '';
     store.member.forum_name = '';
-    store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null, discordMatches: [] };
+    store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null, discordMatches: [], discordId: null, discordUsername: null };
     store.validation.forumName = { valid: false, available: false };
     store.resetForumEmailCheck();
 };
@@ -237,7 +239,7 @@ store.getSquadsForPlatoon = (platoonId) => {
 
 store.validateMemberId = (memberId) => {
     if (!memberId || memberId.length < 1) {
-        store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null, discordMatches: [] };
+        store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null, discordMatches: [], discordId: null, discordUsername: null };
         return;
     }
 
@@ -245,7 +247,7 @@ store.validateMemberId = (memberId) => {
 
     debounce('memberId', () => {
         if (store.inDemoMode) {
-            store.validation.memberId = { valid: true, verifiedEmail: true, groupId: null, currentUsername: 'DemoUser', existsInTracker: false, tags: [], division: null, discordMatches: [] };
+            store.validation.memberId = { valid: true, verifiedEmail: true, groupId: null, currentUsername: 'DemoUser', existsInTracker: false, tags: [], division: null, discordMatches: [], discordId: '123456789012345678', discordUsername: 'demouser' };
             store.member.forum_name = 'DemoUser';
             store.validation.forumName = { valid: true, available: true };
             store.validation.loading = false;
@@ -264,6 +266,8 @@ store.validateMemberId = (memberId) => {
                     tags: data.tags || [],
                     division: data.division || null,
                     discordMatches: data.discord_matches || [],
+                    discordId: data.discord_id || null,
+                    discordUsername: data.discord_username || null,
                 };
 
                 if (data.is_member && data.valid_group && data.username) {
@@ -276,7 +280,7 @@ store.validateMemberId = (memberId) => {
                 store.validation.loading = false;
             })
             .catch(() => {
-                store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null, discordMatches: [] };
+                store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null, discordMatches: [], discordId: null, discordUsername: null };
                 store.validation.loading = false;
             });
     }, 300);
@@ -430,7 +434,7 @@ store.resetForNewRecruit = () => {
     store.member.squad = '';
 
     store.validation.loading = false;
-    store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null, discordMatches: [] };
+    store.validation.memberId = { valid: false, verifiedEmail: false, groupId: null, currentUsername: '', existsInTracker: false, tags: [], division: null, discordMatches: [], discordId: null, discordUsername: null };
     store.validation.forumName = { valid: false, available: false };
     store.resetForumEmailCheck();
 };
