@@ -29,7 +29,7 @@ class PlatoonController extends Controller
         return view('platoon.show', compact('platoon', 'members', 'division', 'unitStats'));
     }
 
-    public function manageSquads($division, $platoon)
+    public function manageSquads(Division $division, Platoon $platoon)
     {
         $platoon->load('squads', 'squads.members', 'squads.leader');
 

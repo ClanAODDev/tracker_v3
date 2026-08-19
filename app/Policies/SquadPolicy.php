@@ -50,7 +50,7 @@ class SquadPolicy
 
     public static function update(User $user, Squad $squad): bool
     {
-        if ($user->isRole('sr_ldr')) {
+        if ($user->isRole('sr_ldr') && $user->member->division_id === $squad->division->id) {
             return true;
         }
 

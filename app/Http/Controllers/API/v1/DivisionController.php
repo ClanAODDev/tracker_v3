@@ -34,7 +34,7 @@ class DivisionController extends ApiController
         $divisions = Division::active()
             ->orderBy('name')
             ->withoutFloaters()
-            ->shuttingDown(
+            ->withoutShutdown(
                 request()->has('include-shutdown')
             )->get();
 

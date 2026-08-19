@@ -60,4 +60,64 @@ class AssignSquadAuthorizationTest extends TestCase
         $this->assertEquals($squad->id, $target->squad_id);
         $this->assertEquals($platoon->id, $target->platoon_id);
     }
+
+    #[Test]
+    public function officer_can_unassign_member_from_squad()
+    {
+        $officer = $this->createOfficer();
+        $platoon = $this->createPlatoon($officer->member->division);
+        $squad   = $this->createSquad($platoon);
+        $target  = $this->createMember([
+            'division_id' => $officer->member->division_id,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => $squad->id,
+        ]);
+
+        $this->actingAs($officer)
+            ->postJson('/members/assign-squad', [
+                'member_id' => $target->id,
+                'squad_id'  => 0,
+            ])->assertOk();
+
+        $target->refresh();
+        $this->assertNotEquals($squad->id, $target->squad_id);
+    }
+
+    #[Test]
+    public function officer_cannot_unassign_member_from_another_divisions_squad()
+    {
+        $division      = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+        $platoon       = $this->createPlatoon($division);
+        $squad         = $this->createSquad($platoon);
+        $target        = $this->createMember([
+            'division_id' => $division->id,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => $squad->id,
+        ]);
+        $officer = $this->createOfficer($otherDivision);
+
+        $this->actingAs($officer)
+            ->postJson('/members/assign-squad', [
+                'member_id' => $target->id,
+                'squad_id'  => 0,
+            ])->assertForbidden();
+
+        $target->refresh();
+        $this->assertEquals($squad->id, $target->squad_id);
+    }
+
+    #[Test]
+    public function unassigning_member_with_no_platoon_is_a_no_op()
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+        $target   = $this->createMember(['division_id' => $division->id, 'platoon_id' => 0, 'squad_id' => 0]);
+
+        $this->actingAs($user)
+            ->postJson('/members/assign-squad', [
+                'member_id' => $target->id,
+                'squad_id'  => 0,
+            ])->assertOk();
+    }
 }
