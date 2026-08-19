@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Data\UnitStatsData;
 use App\Enums\ActivityType;
+use App\Http\Requests\Squad\AssignSquadMemberRequest;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
@@ -11,7 +12,6 @@ use App\Models\Squad;
 use App\Repositories\SquadRepository;
 use App\Services\MemberQueryService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 
 #[Middleware('auth')]
@@ -33,14 +33,16 @@ class SquadController extends Controller
         return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'unitStats'));
     }
 
-    public function assignMember(Request $request): JsonResponse
+    public function assignMember(AssignSquadMemberRequest $request): JsonResponse
     {
         $member = Member::findOrFail($request->member_id);
 
         if ((int) $request->squad_id === 0) {
-            if ($member->platoon) {
-                $this->authorize('update', $member->platoon);
+            if (! $member->platoon) {
+                return response()->json(['success' => true]);
             }
+
+            $this->authorize('update', $member->platoon);
 
             $member->platoon()->dissociate();
             $member->squad()->dissociate();
