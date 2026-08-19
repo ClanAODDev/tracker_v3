@@ -159,24 +159,24 @@ class DivisionTest extends TestCase
     }
 
     #[Test]
-    public function scope_shutting_down_excludes_shutdown_divisions_by_default()
+    public function scope_without_shutdown_excludes_shutdown_divisions_by_default()
     {
         $activeDivision       = Division::factory()->create(['shutdown_at' => null]);
         $shuttingDownDivision = Division::factory()->create(['shutdown_at' => now()]);
 
-        $results = Division::shuttingDown()->get();
+        $results = Division::withoutShutdown()->get();
 
         $this->assertTrue($results->contains($activeDivision));
         $this->assertFalse($results->contains($shuttingDownDivision));
     }
 
     #[Test]
-    public function scope_shutting_down_includes_shutdown_divisions_when_flag_set()
+    public function scope_without_shutdown_includes_shutdown_divisions_when_flag_set()
     {
         $activeDivision       = Division::factory()->create(['shutdown_at' => null]);
         $shuttingDownDivision = Division::factory()->create(['shutdown_at' => now()]);
 
-        $results = Division::shuttingDown(true)->get();
+        $results = Division::withoutShutdown(true)->get();
 
         $this->assertTrue($results->contains($activeDivision));
         $this->assertTrue($results->contains($shuttingDownDivision));

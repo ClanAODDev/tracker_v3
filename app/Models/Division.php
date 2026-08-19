@@ -203,7 +203,7 @@ class Division extends Model
         $query->whereNotIn('slug', ['bluntz-reserves']);
     }
 
-    public function scopeShuttingDown($query, bool $includeShutdown = false): void
+    public function scopeWithoutShutdown($query, bool $includeShutdown = false): void
     {
         if (! $includeShutdown) {
             $query->whereNull('shutdown_at');
@@ -212,7 +212,7 @@ class Division extends Model
 
     public function scopeRecruitable($query): void
     {
-        $query->active()->shuttingDown()->withoutFloaters()->withoutBR()->orderBy('name');
+        $query->active()->withoutShutdown()->withoutFloaters()->withoutBR()->orderBy('name');
     }
 
     public function sergeants(): HasMany
