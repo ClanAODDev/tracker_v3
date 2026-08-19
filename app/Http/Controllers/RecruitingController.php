@@ -38,11 +38,7 @@ class RecruitingController extends Controller
     #[Authorize('recruit', Member::class)]
     public function index()
     {
-        $divisions = Division::active()->where('shutdown_at', null)
-            ->orderBy('name')
-            ->withoutFloaters()
-            ->withoutBR()
-            ->get();
+        $divisions = Division::recruitable()->get();
 
         return view('recruit.index', compact('divisions'));
     }
@@ -127,11 +123,7 @@ class RecruitingController extends Controller
             'forumAccount'   => $pendingUser ? $this->checkForumAccountForEmail($pendingUser->email) : null,
             'pendingUser'    => $pendingUser ? $this->mapPendingDiscordUser($pendingUser) : null,
             'memberMatches'  => $pendingUser ? null : $this->findMembersByDiscordId($discordId),
-            'divisions'      => $targetDivision ? null : Division::active()->where('shutdown_at', null)
-                ->orderBy('name')
-                ->withoutFloaters()
-                ->withoutBR()
-                ->get(),
+            'divisions'      => $targetDivision ? null : Division::recruitable()->get(),
         ]);
     }
 

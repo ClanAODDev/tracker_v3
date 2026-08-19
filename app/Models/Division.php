@@ -210,6 +210,11 @@ class Division extends Model
         }
     }
 
+    public function scopeRecruitable($query): void
+    {
+        $query->active()->shuttingDown()->withoutFloaters()->withoutBR()->orderBy('name');
+    }
+
     public function sergeants(): HasMany
     {
         return $this->members()->where('rank', '>=', Rank::SERGEANT);
