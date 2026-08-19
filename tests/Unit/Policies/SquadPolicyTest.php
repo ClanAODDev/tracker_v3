@@ -39,4 +39,25 @@ class SquadPolicyTest extends TestCase
 
         $this->assertFalse(SquadPolicy::viewAny($user));
     }
+
+    #[Test]
+    public function sr_ldr_can_update_squad_in_own_division()
+    {
+        $division = $this->createActiveDivision();
+        $squad    = $this->createSquad($this->createPlatoon($division));
+        $srLdr    = $this->createSeniorLeader($division);
+
+        $this->assertTrue(SquadPolicy::update($srLdr, $squad));
+    }
+
+    #[Test]
+    public function sr_ldr_cannot_update_squad_in_another_division()
+    {
+        $division      = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+        $squad         = $this->createSquad($this->createPlatoon($division));
+        $srLdr         = $this->createSeniorLeader($otherDivision);
+
+        $this->assertFalse(SquadPolicy::update($srLdr, $squad));
+    }
 }
