@@ -15,6 +15,8 @@ use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use App\Services\RecruitmentService;
+use App\Transformers\MemberDiscordMatchTransformer;
+use App\Transformers\PendingDiscordUserTransformer;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -121,7 +123,7 @@ class RecruitingController extends Controller
             'targetDivision' => $targetDivision,
             'discordId'      => $discordId,
             'forumAccount'   => $pendingUser ? $this->checkForumAccountForEmail($pendingUser->email) : null,
-            'pendingUser'    => $pendingUser ? $this->mapPendingDiscordUser($pendingUser) : null,
+            'pendingUser'    => $pendingUser ? (new PendingDiscordUserTransformer)->transform($pendingUser) : null,
             'memberMatches'  => $pendingUser ? null : $this->findMembersByDiscordId($discordId),
             'divisions'      => $targetDivision ? null : Division::recruitable()->get(),
         ]);
@@ -129,17 +131,11 @@ class RecruitingController extends Controller
 
     private function findMembersByDiscordId(string $discordId): Collection
     {
-        return Member::where('discord_id', $discordId)
+        $matches = Member::where('discord_id', $discordId)
             ->with('division')
-            ->get()
-            ->map(fn ($m) => [
-                'name'       => $m->name,
-                'clan_id'    => $m->clan_id,
-                'division'   => $m->division_id ? $m->division?->name : null,
-                'url'        => route('member', $m->getUrlParams()),
-                'isExMember' => $m->division_id === 0,
-                'avatarUrl'  => $m->getDiscordAvatarUrl(),
-            ]);
+            ->get();
+
+        return collect((new MemberDiscordMatchTransformer)->transformCollection($matches->all()));
     }
 
     #[Authorize('recruit', Member::class)]
@@ -365,48 +361,12 @@ class RecruitingController extends Controller
             });
         }
 
-        return $query
+        $pendingUsers = $query
             ->with('divisionApplication.division')
             ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(fn ($u) => $this->mapPendingDiscordUser($u));
-    }
+            ->get();
 
-    private function mapPendingDiscordUser(User $u): array
-    {
-        $application = null;
-        if ($u->divisionApplication) {
-            $application = collect($u->divisionApplication->responses)->map(function ($response) {
-                return [
-                    'label' => $response['label'] ?? 'Unknown',
-                    'value' => is_array($response['value'] ?? null) ? implode(', ', $response['value']) : ($response['value'] ?? '—'),
-                ];
-            })->values();
-        }
-
-        return [
-            'id'                   => $u->id,
-            'discord_username'     => $u->discord_username,
-            'forum_name'           => $u->name,
-            'discord_id'           => $u->discord_id,
-            'email'                => $u->email,
-            'obfuscated_email'     => $this->obfuscateEmail($u->email),
-            'avatar_url'           => $u->getDiscordAvatarUrl(),
-            'created_at'           => $u->created_at->diffForHumans(),
-            'application'          => $application,
-            'application_division' => $u->divisionApplication?->division?->name,
-        ];
-    }
-
-    private function obfuscateEmail(?string $email): ?string
-    {
-        if (! $email || ! str_contains($email, '@')) {
-            return null;
-        }
-
-        [$local, $domain] = explode('@', $email, 2);
-
-        return '***' . mb_substr($local, -2) . '@' . $domain;
+        return collect((new PendingDiscordUserTransformer)->transformCollection($pendingUsers->all()));
     }
 
     private function createForumAccountForPendingUser(
@@ -622,16 +582,11 @@ class RecruitingController extends Controller
             return [];
         }
 
-        return Member::where('discord_id', $discordId)
+        $matches = Member::where('discord_id', $discordId)
             ->where('clan_id', '!=', $memberId)
             ->with('division:id,name')
-            ->get()
-            ->map(fn ($m) => [
-                'name'     => $m->name,
-                'clan_id'  => $m->clan_id,
-                'division' => $m->division?->name,
-                'url'      => route('member', [$m->clan_id, $m->rank->getAbbreviation() . '-' . $m->name]),
-            ])
-            ->toArray();
+            ->get();
+
+        return (new MemberDiscordMatchTransformer)->transformCollection($matches->all());
     }
 }
