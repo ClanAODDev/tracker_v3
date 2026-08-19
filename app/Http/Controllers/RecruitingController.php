@@ -3,18 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ForumGroup;
+use App\Exceptions\RecruitmentFailedException;
 use App\Http\Requests\Recruiting\CheckForumEmailRequest;
 use App\Http\Requests\Recruiting\SubmitRecruitmentRequest;
+use App\Http\Requests\Recruiting\ValidateMemberNameRequest;
 use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
-use App\Models\DivisionApplication;
 use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
 use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
 use App\Services\AODForumService;
+use App\Services\DiscordRecruitmentService;
 use App\Services\ForumProcedureService;
 use App\Services\RecruitmentService;
+use App\Transformers\MemberDiscordMatchTransformer;
+use App\Transformers\PendingDiscordUserTransformer;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,7 +26,6 @@ use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\View\View;
 
 #[Middleware('auth')]
 class RecruitingController extends Controller
@@ -31,6 +34,7 @@ class RecruitingController extends Controller
         protected ForumProcedureService $procedureService,
         protected RecruitmentService $recruitmentService,
         protected AODForumService $forumService,
+        protected DiscordRecruitmentService $discordRecruitmentService,
     ) {}
 
     /**
@@ -39,11 +43,7 @@ class RecruitingController extends Controller
     #[Authorize('recruit', Member::class)]
     public function index()
     {
-        $divisions = Division::active()->where('shutdown_at', null)
-            ->orderBy('name')
-            ->withoutFloaters()
-            ->withoutBR()
-            ->get();
+        $divisions = Division::recruitable()->get();
 
         return view('recruit.index', compact('divisions'));
     }
@@ -62,29 +62,38 @@ class RecruitingController extends Controller
             return $this->recruitPendingDiscordUser($request, $division, $recruiter);
         }
 
-        $lock = Cache::lock('recruit:member:' . (int) $request->member_id, 30);
+        return $this->withRecruitLock(
+            'recruit:member:' . (int) $request->member_id,
+            'This member is already being recruited. Please wait a moment and try again.',
+            function () use ($request, $division, $recruiter) {
+                $member = $this->recruitmentService->createMember(
+                    (int) $request->member_id,
+                    $request->forum_name,
+                    $division,
+                    (int) $request->rank,
+                    (int) $request->platoon,
+                    $request->squad ? (int) $request->squad : null,
+                    $request->ingame_name,
+                    $recruiter
+                );
+
+                $this->finalizeRecruitment($member, $division, $recruiter);
+
+                $this->showSuccessToast('Your recruitment has successfully been completed!');
+            }
+        );
+    }
+
+    private function withRecruitLock(string $key, string $busyMessage, callable $callback)
+    {
+        $lock = Cache::lock($key, 30);
 
         if (! $lock->get()) {
-            return response()->json([
-                'message' => 'This member is already being recruited. Please wait a moment and try again.',
-            ], 409);
+            return response()->json(['message' => $busyMessage], 409);
         }
 
         try {
-            $member = $this->recruitmentService->createMember(
-                (int) $request->member_id,
-                $request->forum_name,
-                $division,
-                (int) $request->rank,
-                (int) $request->platoon,
-                $request->squad ? (int) $request->squad : null,
-                $request->ingame_name,
-                $recruiter
-            );
-
-            $this->finalizeRecruitment($member, $division, $recruiter);
-
-            $this->showSuccessToast('Your recruitment has successfully been completed!');
+            return $callback();
         } finally {
             $lock->release();
         }
@@ -126,29 +135,19 @@ class RecruitingController extends Controller
             'targetDivision' => $targetDivision,
             'discordId'      => $discordId,
             'forumAccount'   => $pendingUser ? $this->checkForumAccountForEmail($pendingUser->email) : null,
-            'pendingUser'    => $pendingUser ? $this->mapPendingDiscordUser($pendingUser) : null,
+            'pendingUser'    => $pendingUser ? (new PendingDiscordUserTransformer)->transform($pendingUser) : null,
             'memberMatches'  => $pendingUser ? null : $this->findMembersByDiscordId($discordId),
-            'divisions'      => $targetDivision ? null : Division::active()->where('shutdown_at', null)
-                ->orderBy('name')
-                ->withoutFloaters()
-                ->withoutBR()
-                ->get(),
+            'divisions'      => $targetDivision ? null : Division::recruitable()->get(),
         ]);
     }
 
     private function findMembersByDiscordId(string $discordId): Collection
     {
-        return Member::where('discord_id', $discordId)
+        $matches = Member::where('discord_id', $discordId)
             ->with('division')
-            ->get()
-            ->map(fn ($m) => [
-                'name'       => $m->name,
-                'clan_id'    => $m->clan_id,
-                'division'   => $m->division_id ? $m->division?->name : null,
-                'url'        => route('member', $m->getUrlParams()),
-                'isExMember' => $m->division_id === 0,
-                'avatarUrl'  => $m->getDiscordAvatarUrl(),
-            ]);
+            ->get();
+
+        return collect((new MemberDiscordMatchTransformer)->transformCollection($matches->all()));
     }
 
     #[Authorize('recruit', Member::class)]
@@ -202,59 +201,6 @@ class RecruitingController extends Controller
             ],
             'pending_discord' => $pendingDiscord,
         ]);
-    }
-
-    /**
-     * @return array
-     */
-    public function searchPlatoons($slug)
-    {
-        $division = Division::whereSlug($slug)->first();
-
-        return $this->getPlatoons($division);
-    }
-
-    /**
-     * Fetch a division's recruitment tasks.
-     *
-     * @return mixed
-     */
-    public function getTasks(Request $request)
-    {
-
-        $division = Division::whereSlug($request->division)->first();
-
-        $tasks = $division->settings()->get('recruiting_tasks');
-
-        return collect($tasks)->map(fn ($task) => ['complete' => false, 'description' => $task['task_description']]);
-    }
-
-    /**
-     * ajax method.
-     *
-     * @return object
-     */
-    public function searchPlatoonForSquads(Request $request)
-    {
-        return $this->getSquadsFor(Platoon::find($request->platoon));
-    }
-
-    /**
-     * @return object
-     */
-    public function getSquadsFor(Platoon $platoon)
-    {
-        return $platoon->squads->load('leader', 'members');
-    }
-
-    /**
-     * @return Factory|View
-     */
-    public function doThreadCheck(Request $request)
-    {
-        $division = Division::whereSlug($request->division)->first();
-
-        return $division->settings()->get('recruiting_threads');
     }
 
     /**
@@ -334,26 +280,20 @@ class RecruitingController extends Controller
         ];
     }
 
-    /**
-     * @param  string  $name
-     * @param  int  $memberId
-     * @return JsonResponse
-     */
-    public function validateMemberName()
+    public function validateMemberName(ValidateMemberNameRequest $request): JsonResponse
     {
         if (app()->environment() === 'local') {
             return response()->json(['memberExists' => false]);
         }
 
-        $name     = request('name');
-        $memberId = request('member_id', 0);
-        $email    = request('email');
+        $name     = $request->string('name')->toString();
+        $memberId = $request->integer('member_id');
+        $email    = $request->string('email')->toString();
 
-        $forumService = app(AODForumService::class);
-        $nameIsTaken  = $forumService->userExists($name, $memberId);
+        $nameIsTaken = $this->forumService->userExists($name, $memberId);
 
         if ($nameIsTaken && $email) {
-            $existingUser = $forumService->getUserByEmail($email);
+            $existingUser = $this->forumService->getUserByEmail($email);
 
             if ($existingUser && strcasecmp($existingUser->username, $name) === 0) {
                 return response()->json([
@@ -427,84 +367,12 @@ class RecruitingController extends Controller
             });
         }
 
-        return $query
+        $pendingUsers = $query
             ->with('divisionApplication.division')
             ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(fn ($u) => $this->mapPendingDiscordUser($u));
-    }
+            ->get();
 
-    private function mapPendingDiscordUser(User $u): array
-    {
-        $application = null;
-        if ($u->divisionApplication) {
-            $application = collect($u->divisionApplication->responses)->map(function ($response) {
-                return [
-                    'label' => $response['label'] ?? 'Unknown',
-                    'value' => is_array($response['value'] ?? null) ? implode(', ', $response['value']) : ($response['value'] ?? '—'),
-                ];
-            })->values();
-        }
-
-        return [
-            'id'                   => $u->id,
-            'discord_username'     => $u->discord_username,
-            'forum_name'           => $u->name,
-            'discord_id'           => $u->discord_id,
-            'email'                => $u->email,
-            'obfuscated_email'     => $this->obfuscateEmail($u->email),
-            'avatar_url'           => $u->getDiscordAvatarUrl(),
-            'created_at'           => $u->created_at->diffForHumans(),
-            'application'          => $application,
-            'application_division' => $u->divisionApplication?->division?->name,
-        ];
-    }
-
-    private function obfuscateEmail(?string $email): ?string
-    {
-        if (! $email || ! str_contains($email, '@')) {
-            return null;
-        }
-
-        [$local, $domain] = explode('@', $email, 2);
-
-        return '***' . mb_substr($local, -2) . '@' . $domain;
-    }
-
-    private function createForumAccountForPendingUser(
-        User $pendingUser,
-        string $forumName,
-        int $recruiterClanId,
-    ): ?object {
-        $result = AODForumService::createForumAccount(
-            impersonatingMemberId: $recruiterClanId,
-            username: $forumName,
-            email: $pendingUser->email,
-            dateOfBirth: $pendingUser->date_of_birth->format('Y-m-d'),
-            password: $pendingUser->forum_password,
-            discordId: $pendingUser->discord_id,
-            forumGroup: ForumGroup::AWAITING_MODERATION,
-        );
-
-        if (! $result['success']) {
-            \Log::channel('recruiting')->warning('Forum account creation failed', [
-                'error'   => $result['error'] ?? 'Unknown error',
-                'payload' => [
-                    'aod_userid'  => $recruiterClanId,
-                    'username'    => $forumName,
-                    'email'       => $pendingUser->email,
-                    'dob'         => $pendingUser->date_of_birth->format('Y-m-d'),
-                    'discord_id'  => $pendingUser->discord_id,
-                    'usergroupid' => ForumGroup::AWAITING_MODERATION->value,
-                ],
-            ]);
-
-            return null;
-        }
-
-        $pendingUser->update(['forum_password' => null]);
-
-        return $this->forumService->getUserByEmail($pendingUser->email);
+        return collect((new PendingDiscordUserTransformer)->transformCollection($pendingUsers->all()));
     }
 
     private function recruitPendingDiscordUser(Request $request, Division $division, Member $recruiter)
@@ -517,141 +385,21 @@ class RecruitingController extends Controller
             ], 422);
         }
 
-        $lock = Cache::lock('recruit:pending-discord:' . $pendingUser->id, 30);
+        return $this->withRecruitLock(
+            'recruit:pending-discord:' . $pendingUser->id,
+            'This user is already being recruited. Please wait a moment and try again.',
+            function () use ($request, $division, $recruiter, $pendingUser) {
+                try {
+                    $member = $this->discordRecruitmentService->recruit($pendingUser, $request, $division, $recruiter);
+                } catch (RecruitmentFailedException $e) {
+                    return response()->json(['message' => $e->getMessage()], 422);
+                }
 
-        if (! $lock->get()) {
-            return response()->json([
-                'message' => 'This user is already being recruited. Please wait a moment and try again.',
-            ], 409);
-        }
+                $this->finalizeRecruitment($member, $division, $recruiter);
 
-        try {
-            return $this->processPendingDiscordRecruitment($request, $division, $recruiter, $pendingUser);
-        } finally {
-            $lock->release();
-        }
-    }
-
-    private function processPendingDiscordRecruitment(Request $request, Division $division, Member $recruiter, User $pendingUser)
-    {
-        \Log::channel('recruiting')->info('Discord recruitment started', [
-            'pending_user_id'  => $pendingUser->id,
-            'discord_id'       => $pendingUser->discord_id,
-            'discord_username' => $pendingUser->discord_username,
-            'email'            => $pendingUser->email,
-            'has_password'     => ! empty($pendingUser->forum_password),
-            'recruiter_id'     => $recruiter->clan_id,
-        ]);
-
-        $forumUser = $this->forumService->getUserByEmail($pendingUser->email);
-
-        \Log::channel('recruiting')->info('Forum account lookup by email', [
-            'found'   => $forumUser !== null,
-            'user_id' => $forumUser?->userid,
-        ]);
-
-        if (! $forumUser && $pendingUser->forum_password) {
-            \Log::channel('recruiting')->info('No existing forum account — creating new account', [
-                'forum_name' => $request->forum_name,
-            ]);
-
-            $forumUser = $this->createForumAccountForPendingUser($pendingUser, $request->forum_name, $recruiter->clan_id);
-
-            \Log::channel('recruiting')->info('Forum account creation result', [
-                'success' => $forumUser !== null,
-                'user_id' => $forumUser?->userid,
-            ]);
-
-            if (! $forumUser) {
-                return response()->json([
-                    'message' => 'Failed to create forum account. Please try again or contact an administrator.',
-                ], 422);
+                $this->showSuccessToast('Recruitment completed for Discord user.');
             }
-        }
-
-        if (! $forumUser) {
-            \Log::channel('recruiting')->warning('Discord recruitment aborted — no forum account and no password', [
-                'pending_user_id' => $pendingUser->id,
-            ]);
-
-            return response()->json([
-                'message' => 'No forum account found for this user and no password is available to create one. '
-                    . 'The user may need to re-register through Discord.',
-            ], 422);
-        }
-
-        $clanId       = (int) $forumUser->userid;
-        $forumProfile = $this->procedureService->getUser($clanId);
-
-        \Log::channel('recruiting')->info('Forum profile fetched', [
-            'clan_id'        => $clanId,
-            'found'          => $forumProfile !== null,
-            'usergroupid'    => $forumProfile?->usergroupid,
-            'membergroupids' => $forumProfile->membergroupids ?? null,
-        ]);
-
-        if ($forumProfile && property_exists($forumProfile, 'usergroupid')) {
-            $group = ForumGroup::tryFrom((int) $forumProfile->usergroupid);
-
-            if ($group && ! $group->isEligibleForRecruitment()) {
-                \Log::channel('recruiting')->warning('Discord recruitment blocked — ineligible forum group', [
-                    'clan_id' => $clanId,
-                    'group'   => $group->name,
-                ]);
-
-                return response()->json([
-                    'message' => $group->recruitmentRejectionReason(),
-                ], 422);
-            }
-        }
-
-        $discordResult = $this->procedureService->setDiscordInfo(
-            userId: $clanId,
-            discordId: $pendingUser->discord_id,
-            discordTag: $pendingUser->discord_username ?? '',
         );
-
-        \Log::channel('recruiting')->info('Set discord info on forum profile', [
-            'clan_id'          => $clanId,
-            'discord_id'       => $pendingUser->discord_id,
-            'discord_username' => $pendingUser->discord_username,
-            'rows_matched'     => $discordResult?->rows_matched,
-            'rows_affected'    => $discordResult?->rows_affected,
-        ]);
-
-        if (! $discordResult || ! $discordResult->rows_matched) {
-            \Log::channel('recruiting')->error('Discord recruitment aborted — forum account not found', [
-                'clan_id' => $clanId,
-            ]);
-
-            return response()->json([
-                'message' => 'Forum account not found for this user. Please contact an administrator.',
-            ], 422);
-        }
-
-        $member = $this->recruitmentService->createMember(
-            $clanId,
-            $request->forum_name,
-            $division,
-            (int) $request->rank,
-            (int) $request->platoon,
-            $request->squad ? (int) $request->squad : null,
-            $request->ingame_name,
-            $recruiter
-        );
-
-        \Log::channel('recruiting')->info('Member created via Discord recruitment', [
-            'member_id' => $member->id,
-            'clan_id'   => $clanId,
-        ]);
-
-        $pendingUser->update(['member_id' => $member->id]);
-
-        DivisionApplication::where('user_id', $pendingUser->id)->get()->each->delete();
-
-        $this->finalizeRecruitment($member, $division, $recruiter);
-
-        $this->showSuccessToast('Recruitment completed for Discord user.');
     }
 
     private function finalizeRecruitment(Member $member, Division $division, Member $recruiter): void
@@ -684,24 +432,11 @@ class RecruitingController extends Controller
             return [];
         }
 
-        return Member::where('discord_id', $discordId)
+        $matches = Member::where('discord_id', $discordId)
             ->where('clan_id', '!=', $memberId)
             ->with('division:id,name')
-            ->get()
-            ->map(fn ($m) => [
-                'name'     => $m->name,
-                'clan_id'  => $m->clan_id,
-                'division' => $m->division?->name,
-                'url'      => route('member', [$m->clan_id, $m->rank->getAbbreviation() . '-' . $m->name]),
-            ])
-            ->toArray();
-    }
+            ->get();
 
-    /**
-     * @return array
-     */
-    private function getPlatoons($division)
-    {
-        return ['data' => ['platoons' => $division->platoons->pluck('name', 'id'), 'settings' => $division->settings]];
+        return (new MemberDiscordMatchTransformer)->transformCollection($matches->all());
     }
 }
