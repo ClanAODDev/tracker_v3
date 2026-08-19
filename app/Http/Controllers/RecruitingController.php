@@ -22,7 +22,6 @@ use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\View\View;
 
 #[Middleware('auth')]
 class RecruitingController extends Controller
@@ -202,59 +201,6 @@ class RecruitingController extends Controller
             ],
             'pending_discord' => $pendingDiscord,
         ]);
-    }
-
-    /**
-     * @return array
-     */
-    public function searchPlatoons($slug)
-    {
-        $division = Division::whereSlug($slug)->first();
-
-        return $this->getPlatoons($division);
-    }
-
-    /**
-     * Fetch a division's recruitment tasks.
-     *
-     * @return mixed
-     */
-    public function getTasks(Request $request)
-    {
-
-        $division = Division::whereSlug($request->division)->first();
-
-        $tasks = $division->settings()->get('recruiting_tasks');
-
-        return collect($tasks)->map(fn ($task) => ['complete' => false, 'description' => $task['task_description']]);
-    }
-
-    /**
-     * ajax method.
-     *
-     * @return object
-     */
-    public function searchPlatoonForSquads(Request $request)
-    {
-        return $this->getSquadsFor(Platoon::find($request->platoon));
-    }
-
-    /**
-     * @return object
-     */
-    public function getSquadsFor(Platoon $platoon)
-    {
-        return $platoon->squads->load('leader', 'members');
-    }
-
-    /**
-     * @return Factory|View
-     */
-    public function doThreadCheck(Request $request)
-    {
-        $division = Division::whereSlug($request->division)->first();
-
-        return $division->settings()->get('recruiting_threads');
     }
 
     /**
@@ -695,13 +641,5 @@ class RecruitingController extends Controller
                 'url'      => route('member', [$m->clan_id, $m->rank->getAbbreviation() . '-' . $m->name]),
             ])
             ->toArray();
-    }
-
-    /**
-     * @return array
-     */
-    private function getPlatoons($division)
-    {
-        return ['data' => ['platoons' => $division->platoons->pluck('name', 'id'), 'settings' => $division->settings]];
     }
 }
