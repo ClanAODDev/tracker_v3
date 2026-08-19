@@ -6,6 +6,7 @@ use App\Enums\ForumGroup;
 use App\Exceptions\RecruitmentFailedException;
 use App\Http\Requests\Recruiting\CheckForumEmailRequest;
 use App\Http\Requests\Recruiting\SubmitRecruitmentRequest;
+use App\Http\Requests\Recruiting\ValidateMemberNameRequest;
 use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
 use App\Models\Member;
@@ -279,26 +280,20 @@ class RecruitingController extends Controller
         ];
     }
 
-    /**
-     * @param  string  $name
-     * @param  int  $memberId
-     * @return JsonResponse
-     */
-    public function validateMemberName()
+    public function validateMemberName(ValidateMemberNameRequest $request): JsonResponse
     {
         if (app()->environment() === 'local') {
             return response()->json(['memberExists' => false]);
         }
 
-        $name     = request('name');
-        $memberId = request('member_id', 0);
-        $email    = request('email');
+        $name     = $request->string('name')->toString();
+        $memberId = $request->integer('member_id');
+        $email    = $request->string('email')->toString();
 
-        $forumService = app(AODForumService::class);
-        $nameIsTaken  = $forumService->userExists($name, $memberId);
+        $nameIsTaken = $this->forumService->userExists($name, $memberId);
 
         if ($nameIsTaken && $email) {
-            $existingUser = $forumService->getUserByEmail($email);
+            $existingUser = $this->forumService->getUserByEmail($email);
 
             if ($existingUser && strcasecmp($existingUser->username, $name) === 0) {
                 return response()->json([
