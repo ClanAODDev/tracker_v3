@@ -299,6 +299,8 @@ class RecruitingController extends Controller
                 'tags'              => $tags,
                 'division'          => $division,
                 'discord_matches'   => [],
+                'discord_id'        => '123456789012345678',
+                'discord_username'  => 'localtestuser',
             ];
         }
 
@@ -327,6 +329,8 @@ class RecruitingController extends Controller
             'tags'              => $tags,
             'division'          => $division,
             'discord_matches'   => $discordMatches,
+            'discord_id'        => $result->discord_id ?? null,
+            'discord_username'  => $result->discord_tag ?? null,
         ];
     }
 
