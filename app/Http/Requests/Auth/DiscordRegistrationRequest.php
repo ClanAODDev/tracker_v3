@@ -32,14 +32,8 @@ class DiscordRegistrationRequest extends FormRequest
                     }
 
                     $lower = strtolower($value);
-                    foreach (Rank::cases() as $rank) {
-                        // Trainer's "Tr" abbreviation is excluded: it's a common name
-                        // prefix (Travis, Trent, etc.) rather than a recognizable rank.
-                        if ($rank === Rank::TRAINER) {
-                            continue;
-                        }
-
-                        if (str_starts_with($lower, strtolower($rank->getAbbreviation()))) {
+                    foreach (Rank::forbiddenNamePrefixes() as $prefix) {
+                        if (str_starts_with($lower, $prefix)) {
                             $fail('Username cannot begin with a rank abbreviation.');
 
                             return;

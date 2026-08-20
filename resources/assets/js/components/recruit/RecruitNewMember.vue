@@ -29,12 +29,16 @@ export default {
     StepConfirmation,
   },
 
-  props: ['division', 'ranks', 'rankLabels', 'recruiterId', 'pendingUserId', 'memberId'],
+  props: ['division', 'ranks', 'rankLabels', 'recruiterId', 'pendingUserId', 'memberId', 'forbiddenNamePrefixes'],
 
   data() {
     return {
       store,
     };
+  },
+
+  created() {
+    store.forbiddenNamePrefixes = this.forbiddenNamePrefixes || [];
   },
 
   computed: {

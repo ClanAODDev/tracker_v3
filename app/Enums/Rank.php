@@ -122,6 +122,20 @@ enum Rank: int implements HasColor, HasLabel
         return $ranks;
     }
 
+    /**
+     * Rank abbreviations that a username/forum name shouldn't start with, since
+     * that reads as an unearned rank claim. Trainer's "Tr" is excluded: it's a
+     * common name prefix (Travis, Trent, etc.) rather than a recognizable rank.
+     */
+    public static function forbiddenNamePrefixes(): array
+    {
+        return collect(self::cases())
+            ->reject(fn (self $rank) => $rank === self::TRAINER)
+            ->map(fn (self $rank) => strtolower($rank->getAbbreviation()))
+            ->values()
+            ->all();
+    }
+
     public function isPromotion(Rank $previousRank): bool
     {
         return $this->value > $previousRank->value;

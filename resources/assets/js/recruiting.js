@@ -9,6 +9,7 @@ if (container) {
         recruiterId: container.getAttribute('data-recruiter-id'),
         ranks: JSON.parse(container.getAttribute('data-ranks') || '{}'),
         rankLabels: JSON.parse(container.getAttribute('data-rank-labels') || '{}'),
+        forbiddenNamePrefixes: JSON.parse(container.getAttribute('data-forbidden-name-prefixes') || '[]'),
         pendingUserId: container.getAttribute('data-pending-user-id'),
         memberId: container.getAttribute('data-member-id'),
     });

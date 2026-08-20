@@ -39,4 +39,21 @@ class RankTest extends TestCase
         $this->assertFalse(Rank::SERGEANT->isBelow(Rank::SERGEANT));
         $this->assertFalse(Rank::STAFF_SERGEANT->isBelow(Rank::SERGEANT));
     }
+
+    #[Test]
+    public function forbidden_name_prefixes_excludes_trainer()
+    {
+        $this->assertNotContains('tr', Rank::forbiddenNamePrefixes());
+    }
+
+    #[Test]
+    public function forbidden_name_prefixes_includes_other_rank_abbreviations()
+    {
+        $prefixes = Rank::forbiddenNamePrefixes();
+
+        $this->assertContains('rct', $prefixes);
+        $this->assertContains('sgt', $prefixes);
+        $this->assertContains('sgtmaj', $prefixes);
+        $this->assertCount(13, $prefixes);
+    }
 }
