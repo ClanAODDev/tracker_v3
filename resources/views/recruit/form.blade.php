@@ -17,6 +17,7 @@
              data-recruiter-id="{{ auth()->user()->member?->clan_id ?? auth()->user()->id }}"
              data-ranks="{{ json_encode(\App\Enums\Rank::getAllRanks()) }}"
              data-rank-labels="{{ json_encode(\App\Enums\Rank::getAllRanksWithLabels()) }}"
+             data-forbidden-name-prefixes="{{ json_encode(\App\Enums\Rank::forbiddenNamePrefixes()) }}"
              data-pending-user-id="{{ request('pending_user_id') }}"
              data-member-id="{{ request('member_id') }}">
         </div>
