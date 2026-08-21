@@ -14,13 +14,22 @@ return [
     | authentication cookies. Typically, these should include your local
     | and production domains which access your API via a frontend SPA.
     |
+    | This app's own domain is deliberately NOT included by default: no
+    | frontend here consumes /api/v1 over a session cookie, and a
+    | TransientToken (attached to stateful requests) satisfies every
+    | ability check unconditionally, which would silently bypass the
+    | abilities:division:read/division:write gates on those routes for
+    | any logged-in user. Only add this app's own domain here if a
+    | first-party SPA is intentionally built against /api/v1, and pair it
+    | with real per-route authorization that doesn't rely solely on
+    | tokenCan().
+    |
     */
 
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-        '%s%s',
-        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
-        env('APP_URL') ? ',' . parse_url(env('APP_URL'), PHP_URL_HOST) : ''
-    ))),
+    'stateful' => explode(',', env(
+        'SANCTUM_STATEFUL_DOMAINS',
+        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1'
+    )),
 
     /*
     |--------------------------------------------------------------------------
