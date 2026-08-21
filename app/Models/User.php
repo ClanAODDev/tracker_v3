@@ -277,7 +277,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public static function autoApprovedTimestampForRank(
         string $targetRank,
-        $division,
+        Member $member,
         bool $asBoolean = false
     ): bool|null|Carbon {
         $user       = auth()->user();
@@ -294,8 +294,9 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
             return $asBoolean ? true : now();
         }
 
-        // Platoon Leaders may auto-approve if the target rank is within their limit
-        if ($user->isWithinPlatoonLimit($targetRank, $division)) {
+        // Platoon Leaders may auto-approve within their own platoon, if the target rank is within their limit
+        if ($user->member->platoon_id === $member->platoon_id
+            && $user->isWithinPlatoonLimit($targetRank, $user->division)) {
             return $asBoolean ? true : now();
         }
 

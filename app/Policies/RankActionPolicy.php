@@ -70,7 +70,10 @@ class RankActionPolicy
             return false;
         }
 
-        if ($user->isWithinPlatoonLimit($newRank, $user->division)) {
+        if (
+            $user->member->platoon_id === $action->member->platoon_id &&
+            $user->isWithinPlatoonLimit($newRank, $user->division)
+        ) {
             return true;
         }
 
@@ -92,7 +95,10 @@ class RankActionPolicy
             return $userRank->value >= Rank::MASTER_SERGEANT->value;
         }
 
-        if ($user->isWithinPlatoonLimit($newRank, $user->division)) {
+        if (
+            $user->member->platoon_id === $action->member->platoon_id &&
+            $user->isWithinPlatoonLimit($newRank, $user->division)
+        ) {
             return true;
         }
 
