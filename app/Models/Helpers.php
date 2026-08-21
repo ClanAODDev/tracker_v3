@@ -204,52 +204,6 @@ function carbon_date_or_null_if_zero($value)
 }
 
 /**
- * Provides visual feedback for a member's last activity
- * based on division activity threshold.
- *
- * @return string
- */
-function getActivityClass($date, $division)
-{
-    $defaultThresholds = [
-        ['days' => 30, 'class' => 'text-danger'],
-        ['days' => 14, 'class' => 'text-warning'],
-    ];
-
-    $limits = $division->settings()
-        ->get('activity_threshold', $defaultThresholds);
-
-    if (! $date instanceof Carbon) {
-        return 'text-danger';
-    }
-
-    $days = $date->diffInDays();
-
-    foreach ($limits as $limit) {
-        if ($days >= $limit['days']) {
-            return $limit['class'];
-        }
-    }
-
-    return 'text-success';
-}
-
-/**
- * Provides visual feedback for a member's last activity
- * for display on their member profile
- *
- * @return string
- */
-function getMemberProfileActivityClass($date)
-{
-    if (! $date instanceof Carbon) {
-        return 'text-muted';
-    } else {
-        return '';
-    }
-}
-
-/**
  * Helper for assigning leadership of platoons, squads.
  *
  * @param  Eloquent|Model  $model
