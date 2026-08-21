@@ -65,6 +65,12 @@ class TransferPolicy
             || $this->isLosingDivisionLeader($user, $transfer);
     }
 
+    public function manageComments(User $user, Transfer $transfer): bool
+    {
+        return $this->isGainingDivisionLeader($user, $transfer)
+            || $this->isLosingDivisionLeader($user, $transfer);
+    }
+
     private function isGainingDivisionLeader(User $user, Transfer $transfer): bool
     {
         return $user->division->id === $transfer->division_id && $user->isDivisionLeader();

@@ -334,11 +334,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return $asBoolean ? false : null;
     }
 
-    public function canManageTransferCommentsFor(Transfer $transfer): bool
-    {
-        return $this->isAdminOrDivisionLeader();
-    }
-
     public static function findOrCreateForMember(Member $member, ?string $email = null): self
     {
         $user = self::where('member_id', $member->id)->first();
@@ -373,8 +368,10 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return $email;
     }
 
-    private function isAdminOrDivisionLeader(): bool
+    public function isWithinPlatoonLimit(Rank $targetRank, $division): bool
     {
-        return $this->isDivisionLeader() || $this->isRole('admin');
+        $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
+
+        return $this->isPlatoonLeader() && $targetRank->value <= $maxPlRank->value;
     }
 }

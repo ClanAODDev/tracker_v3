@@ -70,7 +70,7 @@ class RankActionPolicy
             return false;
         }
 
-        if (self::isWithinPlatoonLimit($user, $newRank)) {
+        if ($user->isWithinPlatoonLimit($newRank, $user->division)) {
             return true;
         }
 
@@ -92,18 +92,11 @@ class RankActionPolicy
             return $userRank->value >= Rank::MASTER_SERGEANT->value;
         }
 
-        if (self::isWithinPlatoonLimit($user, $newRank)) {
+        if ($user->isWithinPlatoonLimit($newRank, $user->division)) {
             return true;
         }
 
         return self::isAdminOrDivisionLeader($user);
-    }
-
-    private static function isWithinPlatoonLimit(User $user, Rank $targetRank): bool
-    {
-        $maxPlRank = Rank::from($user->division->settings()->get('max_platoon_leader_rank'));
-
-        return $user->isPlatoonLeader() && $targetRank->value <= $maxPlRank->value;
     }
 
     private static function isAdminOrDivisionLeader(User $user): bool

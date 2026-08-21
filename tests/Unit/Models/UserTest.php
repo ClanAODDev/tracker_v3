@@ -371,4 +371,48 @@ class UserTest extends TestCase
 
         $this->assertEquals($member->id . '@placeholder.local', $email);
     }
+
+    #[Test]
+    public function is_within_platoon_limit_true_for_platoon_leader_at_or_below_division_limit()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'platoon_id'  => $platoon->id,
+            'position'    => Position::PLATOON_LEADER,
+        ]);
+
+        // default max_platoon_leader_rank setting is Rank::PRIVATE_FIRST_CLASS
+        $this->assertTrue($leader->isWithinPlatoonLimit(Rank::PRIVATE_FIRST_CLASS, $division));
+    }
+
+    #[Test]
+    public function is_within_platoon_limit_false_above_division_limit()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'platoon_id'  => $platoon->id,
+            'position'    => Position::PLATOON_LEADER,
+        ]);
+
+        $this->assertFalse($leader->isWithinPlatoonLimit(Rank::CORPORAL, $division));
+    }
+
+    #[Test]
+    public function is_within_platoon_limit_false_for_non_platoon_leader()
+    {
+        $division = $this->createActiveDivision();
+
+        $user = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'position'    => Position::MEMBER,
+        ]);
+
+        $this->assertFalse($user->isWithinPlatoonLimit(Rank::PRIVATE_FIRST_CLASS, $division));
+    }
 }
