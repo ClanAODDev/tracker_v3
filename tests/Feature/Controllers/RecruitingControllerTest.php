@@ -238,6 +238,100 @@ class RecruitingControllerTest extends TestCase
     }
 
     #[Test]
+    public function submit_recruitment_rejects_member_already_in_a_division()
+    {
+        $officer  = $this->createOfficer();
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+
+        $existing = $this->createMember(['division_id' => $division->id]);
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'   => $division->slug,
+                'member_id'  => $existing->clan_id,
+                'forum_name' => 'HijackAttempt',
+                'rank'       => Rank::SERGEANT_MAJOR->value,
+                'platoon'    => $platoon->id,
+            ]);
+
+        $response->assertStatus(422);
+        $this->assertDatabaseHas('members', [
+            'id'          => $existing->id,
+            'division_id' => $division->id,
+            'rank'        => $existing->rank->value,
+        ]);
+    }
+
+    #[Test]
+    public function submit_recruitment_allows_member_with_no_active_division()
+    {
+        $officer  = $this->createOfficer();
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+
+        $exMember = $this->createMember(['division_id' => 0]);
+
+        $response = $this->actingAs($officer)
+            ->post(route('recruiting.addMember'), [
+                'division'   => $division->slug,
+                'member_id'  => $exMember->clan_id,
+                'forum_name' => 'ReturningMember',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+            ]);
+
+        $this->assertDatabaseHas('members', [
+            'id'          => $exMember->id,
+            'division_id' => $division->id,
+        ]);
+    }
+
+    #[Test]
+    public function submit_recruitment_rejects_platoon_from_another_division()
+    {
+        $officer       = $this->createOfficer();
+        $division      = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+        $otherPlatoon  = $this->createPlatoon($otherDivision);
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'   => $division->slug,
+                'member_id'  => 55555,
+                'forum_name' => 'CrossDivisionRecruit',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $otherPlatoon->id,
+            ]);
+
+        $response->assertStatus(422);
+        $this->assertDatabaseMissing('members', ['clan_id' => 55555]);
+    }
+
+    #[Test]
+    public function submit_recruitment_rejects_squad_from_another_platoon()
+    {
+        $officer      = $this->createOfficer();
+        $division     = $this->createActiveDivision();
+        $platoon      = $this->createPlatoon($division);
+        $otherPlatoon = $this->createPlatoon($division);
+        $otherSquad   = $this->createSquad($otherPlatoon);
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'   => $division->slug,
+                'member_id'  => 44444,
+                'forum_name' => 'CrossPlatoonRecruit',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+                'squad'      => $otherSquad->id,
+            ]);
+
+        $response->assertStatus(422);
+        $this->assertDatabaseMissing('members', ['clan_id' => 44444]);
+    }
+
+    #[Test]
     public function get_division_recruit_data_excludes_pending_users_without_dob(): void
     {
         $officer  = $this->createOfficer();

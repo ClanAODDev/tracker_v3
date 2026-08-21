@@ -66,16 +66,20 @@ class RecruitingController extends Controller
             'recruit:member:' . (int) $request->member_id,
             'This member is already being recruited. Please wait a moment and try again.',
             function () use ($request, $division, $recruiter) {
-                $member = $this->recruitmentService->createMember(
-                    (int) $request->member_id,
-                    $request->forum_name,
-                    $division,
-                    (int) $request->rank,
-                    (int) $request->platoon,
-                    $request->squad ? (int) $request->squad : null,
-                    $request->ingame_name,
-                    $recruiter
-                );
+                try {
+                    $member = $this->recruitmentService->createMember(
+                        (int) $request->member_id,
+                        $request->forum_name,
+                        $division,
+                        (int) $request->rank,
+                        (int) $request->platoon,
+                        $request->squad ? (int) $request->squad : null,
+                        $request->ingame_name,
+                        $recruiter
+                    );
+                } catch (RecruitmentFailedException $e) {
+                    return response()->json(['message' => $e->getMessage()], 422);
+                }
 
                 $this->finalizeRecruitment($member, $division, $recruiter);
 
