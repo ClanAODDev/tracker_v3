@@ -164,41 +164,25 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function isMember(): bool
     {
-        if (! $member = $this->member) {
-            return false;
-        }
-
-        return $member->position->value == Position::MEMBER->value;
+        return $this->member?->position === Position::MEMBER;
     }
 
     public function isSquadLeader(): bool
     {
-        if (! $member = $this->member) {
-            return false;
-        }
-
-        return $member->position == Position::SQUAD_LEADER;
+        return $this->member?->position === Position::SQUAD_LEADER;
     }
 
     public function isPlatoonLeader(): bool
     {
-        if (! $member = $this->member) {
-            return false;
-        }
-
-        return $member->position == Position::PLATOON_LEADER;
+        return $this->member?->position === Position::PLATOON_LEADER;
     }
 
     public function isDivisionLeader(): bool
     {
-        if (! $member = $this->member) {
-            return false;
-        }
-
-        return in_array($member->position, [
+        return in_array($this->member?->position, [
             Position::COMMANDING_OFFICER,
             Position::EXECUTIVE_OFFICER,
-        ]);
+        ], true);
     }
 
     public function isDeveloper(): bool
