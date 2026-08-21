@@ -3,7 +3,7 @@
        style="padding-left: 30px; margin-bottom: 0;">
         <div class="panel-body">
             <h5 class="m-b-none">
-                {!! $member->present()->rankName !!}
+                {{ $member->present()->rankName }}
             </h5>
             <div><small class="slight">{{ $member->division->name ?? "Ex-AOD" }} [{{ $member->clan_id }}]</small></div>
             @if ($member->discord)

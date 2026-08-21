@@ -11,7 +11,7 @@
                         <img src="{{ $leader->getDiscordAvatarUrl() }}" alt="{{ $leader->name }}" class="leader-avatar leader-avatar-md">
                     @endif
                     <div class="leader-card-text">
-                        <h4 class="m-b-none">{!! $leader->present()->rankName !!}</h4>
+                        <h4 class="m-b-none">{{ $leader->present()->rankName }}</h4>
                         <small>{{ $leader->position->getLabel() }}</small>
                     </div>
                     <span class="leader-card-icon"><i class="pe pe-2x pe-7s-shield text-muted"></i></span>

@@ -4,7 +4,7 @@
 
     @component ('application.components.division-heading', ['division' => $division])
         @slot ('heading')
-            {!! $member->present()->rankName !!}
+            {{ $member->present()->rankName }}
             @include('member.partials.member-actions-button', ['member' => $member])
         @endslot
         @slot ('subheading')

@@ -74,4 +74,13 @@ class MemberPresenterTest extends TestCase
 
         $this->assertSame('text-muted', $member->present()->profileActivityClass());
     }
+
+    #[Test]
+    public function colored_name_escapes_html_in_member_name()
+    {
+        $member = $this->createMember(['name' => '<script>alert(1)</script>']);
+
+        $this->assertStringNotContainsString('<script>', $member->present()->coloredName());
+        $this->assertStringContainsString('&lt;script&gt;', $member->present()->coloredName());
+    }
 }

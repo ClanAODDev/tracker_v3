@@ -43,7 +43,7 @@
                                 <tr>
                                     <td>
                                         <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover">
-                                            {!! $member->present()->rankName !!}
+                                            {{ $member->present()->rankName }}
                                         </a>
                                     </td>
                                     <td class="hidden-xs">{{ $member->last_promoted_at?->format('Y-m-d') ?? '--' }}</td>
@@ -100,7 +100,7 @@
                                     <tr class="{{ $rowClass }}">
                                         <td>
                                             <a href="{{ route('member', $member->getUrlParams()) }}" class="rank-hover">
-                                                {!! $member->present()->rankName !!}
+                                                {{ $member->present()->rankName }}
                                             </a>
                                         </td>
                                         <td class="hidden">{{ $member->position === \App\Enums\Position::CLAN_ADMIN ? 0 : $member->position->value }}</td>

@@ -16,6 +16,19 @@ class MemberDivisionDisplayTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
+    public function member_name_is_escaped_on_show_page()
+    {
+        $user   = $this->createMemberWithUser(['name' => '<script>alert(1)</script>']);
+        $member = $user->member;
+
+        $this->actingAs($user)
+            ->get(route('member', [$member->clan_id, 'x']))
+            ->assertOk()
+            ->assertDontSee('<script>alert(1)</script>', false)
+            ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false);
+    }
+
+    #[Test]
     public function primary_division_card_is_shown()
     {
         $user   = $this->createMemberWithUser();

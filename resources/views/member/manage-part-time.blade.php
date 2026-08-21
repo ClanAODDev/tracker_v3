@@ -3,7 +3,7 @@
 
     @component ('application.components.division-heading', ['division' => $division])
         @slot ('heading')
-            {!! $member->present()->rankName !!}
+            {{ $member->present()->rankName }}
         @endslot
         @slot ('subheading')
             {{ $member->position?->getLabel() ?? "No Position" }}

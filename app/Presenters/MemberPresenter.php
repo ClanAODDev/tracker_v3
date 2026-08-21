@@ -79,8 +79,8 @@ class MemberPresenter extends Presenter
                     '{prefix}' => $prefix
                         ? "<strong>{$prefix}</strong>"
                         : null,
-                    '{title}' => $title,
-                    '{name}'  => $name,
+                    '{title}' => e($title),
+                    '{name}'  => e($name),
                 ]
             );
         }

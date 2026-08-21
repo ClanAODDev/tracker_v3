@@ -32,7 +32,7 @@
                     </div>
                     @if($trainee)
                         <div class="trainee-info">
-                            Trainee: <strong>{!! $trainee->present()->rankName !!}</strong>
+                            Trainee: <strong>{{ $trainee->present()->rankName }}</strong>
                         </div>
                     @endif
                 </div>
