@@ -208,25 +208,14 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function assignRole(Role|string|int $role): void
     {
-        if ($role instanceof Role) {
-            $this->role = $role;
-            $this->save();
+        $roleEnum = match (true) {
+            $role instanceof Role => $role,
+            is_string($role)      => Role::fromSlug($role),
+            is_int($role)         => Role::tryFrom($role),
+        };
 
-            return;
-        }
-
-        if (is_string($role)) {
-            $roleEnum = Role::fromSlug($role);
-            if ($roleEnum) {
-                $this->role = $roleEnum;
-                $this->save();
-
-                return;
-            }
-        }
-
-        if (is_int($role)) {
-            $this->role = $role;
+        if ($roleEnum) {
+            $this->role = $roleEnum;
             $this->save();
         }
     }
