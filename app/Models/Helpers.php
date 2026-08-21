@@ -3,9 +3,7 @@
 use App\Jobs\SyncDivisionDns;
 use App\Models\MemberRequest;
 use App\Services\CloudflareDnsService;
-use App\Settings\UserSettings;
 use Carbon\Carbon;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
 use Illuminate\Support\HtmlString;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
@@ -150,19 +148,6 @@ function doForumFunction(array $ids, $action)
     }
 
     return urldecode($path . http_build_query($params));
-}
-
-/**
- * Get user settings.
- *
- * @param  null  $key
- * @return Application|mixed
- */
-function UserSettings($key = null)
-{
-    $settings = app(UserSettings::class);
-
-    return $key ? $settings->get($key) : $settings;
 }
 
 function hasDivisionIcon($abbreviation)
