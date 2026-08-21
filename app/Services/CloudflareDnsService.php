@@ -2,9 +2,12 @@
 
 namespace App\Services;
 
+use App\Jobs\SyncDivisionDns;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\HtmlString;
+use Throwable;
 
 class CloudflareDnsService
 {
@@ -41,6 +44,36 @@ class CloudflareDnsService
     public function isConfigured(): bool
     {
         return filled($this->zoneId) && filled($this->zoneDomain);
+    }
+
+    public function previewSync(): HtmlString
+    {
+        try {
+            $result   = (new SyncDivisionDns(dryRun: true))->handle($this);
+            $toCreate = collect($result['created']);
+            $toDelete = collect($result['deleted']);
+
+            if ($toCreate->isEmpty() && $toDelete->isEmpty()) {
+                return new HtmlString('<p>No changes needed — DNS is already in sync.</p>');
+            }
+
+            $fqdn = fn (string $s) => "{$s}.{$this->zoneDomain}";
+            $list = fn ($items) => '<ul style="margin:.25rem 0 0 1rem">'
+                . $items->map(fn ($s) => '<li>' . e($fqdn($s)) . '</li>')->join('')
+                . '</ul>';
+
+            $lines = [];
+            if ($toCreate->isNotEmpty()) {
+                $lines[] = '<strong>Would create:</strong>' . $list($toCreate);
+            }
+            if ($toDelete->isNotEmpty()) {
+                $lines[] = '<strong>Would delete:</strong>' . $list($toDelete);
+            }
+
+            return new HtmlString(implode('', $lines));
+        } catch (Throwable $e) {
+            return new HtmlString('Unable to fetch current DNS records: ' . e($e->getMessage()));
+        }
     }
 
     public function listCnames(): Collection
