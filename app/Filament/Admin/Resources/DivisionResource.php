@@ -250,7 +250,7 @@ class DivisionResource extends Resource
             ->color('gray')
             ->requiresConfirmation()
             ->modalHeading('Sync Division DNS')
-            ->modalDescription(fn (CloudflareDnsService $service) => buildDnsPreview($service))
+            ->modalDescription(fn (CloudflareDnsService $service) => $service->previewSync())
             ->modalSubmitActionLabel('Sync Now')
             ->action(function (CloudflareDnsService $service) {
                 try {

@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use App\Enums\Position;
 use App\Enums\Rank;
+use App\Models\Division;
 use App\Models\Member;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
@@ -99,5 +100,43 @@ class MemberPresenter extends Presenter
         }
 
         return $this->member->rank->getAbbreviation() . ' ' . $this->member->name;
+    }
+
+    /**
+     * CSS class reflecting the member's voice activity against the
+     * division's activity thresholds, for use in member listings.
+     */
+    public function activityClass(Division $division): string
+    {
+        $date = $this->member->last_voice_activity;
+
+        if (! $date instanceof Carbon) {
+            return 'text-danger';
+        }
+
+        $defaultThresholds = [
+            ['days' => 30, 'class' => 'text-danger'],
+            ['days' => 14, 'class' => 'text-warning'],
+        ];
+
+        $limits = $division->settings()->get('activity_threshold', $defaultThresholds);
+        $days   = $date->diffInDays();
+
+        foreach ($limits as $limit) {
+            if ($days >= $limit['days']) {
+                return $limit['class'];
+            }
+        }
+
+        return 'text-success';
+    }
+
+    /**
+     * CSS class reflecting the member's voice activity, for display
+     * on their member profile.
+     */
+    public function profileActivityClass(): string
+    {
+        return $this->member->last_voice_activity instanceof Carbon ? '' : 'text-muted';
     }
 }

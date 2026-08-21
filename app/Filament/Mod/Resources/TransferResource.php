@@ -153,7 +153,7 @@ class TransferResource extends Resource
                     ->size('lg')
                     ->visible(fn (
                         Transfer $transfer
-                    ) => auth()->user()->canManageTransferCommentsFor($transfer)),
+                    ) => auth()->user()->can('manageComments', $transfer)),
 
                 ActionGroup::make([
                     Action::make('Hold')

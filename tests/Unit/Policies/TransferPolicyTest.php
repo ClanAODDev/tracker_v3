@@ -353,4 +353,68 @@ class TransferPolicyTest extends TestCase
 
         $this->assertFalse($this->policy->hold($leader, $transfer));
     }
+
+    #[Test]
+    public function gaining_division_leader_can_manage_comments()
+    {
+        $fromDivision = $this->createActiveDivision();
+        $toDivision   = $this->createActiveDivision();
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $toDivision->id,
+            'position'    => Position::COMMANDING_OFFICER,
+        ]);
+
+        $member = $this->createMember(['division_id' => $fromDivision->id]);
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id'   => $member->id,
+            'division_id' => $toDivision->id,
+        ]);
+
+        $this->assertTrue($this->policy->manageComments($leader, $transfer));
+    }
+
+    #[Test]
+    public function losing_division_leader_can_manage_comments()
+    {
+        $fromDivision = $this->createActiveDivision();
+        $toDivision   = $this->createActiveDivision();
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $fromDivision->id,
+            'position'    => Position::COMMANDING_OFFICER,
+        ]);
+
+        $member = $this->createMember(['division_id' => $fromDivision->id]);
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id'   => $member->id,
+            'division_id' => $toDivision->id,
+        ]);
+
+        $this->assertTrue($this->policy->manageComments($leader, $transfer));
+    }
+
+    #[Test]
+    public function unrelated_division_leader_cannot_manage_comments()
+    {
+        $fromDivision  = $this->createActiveDivision();
+        $toDivision    = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $otherDivision->id,
+            'position'    => Position::COMMANDING_OFFICER,
+        ]);
+
+        $member = $this->createMember(['division_id' => $fromDivision->id]);
+
+        $transfer = Transfer::factory()->pending()->create([
+            'member_id'   => $member->id,
+            'division_id' => $toDivision->id,
+        ]);
+
+        $this->assertFalse($this->policy->manageComments($leader, $transfer));
+    }
 }

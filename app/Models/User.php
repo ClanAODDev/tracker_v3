@@ -164,41 +164,25 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function isMember(): bool
     {
-        if (! $member = $this->member) {
-            return false;
-        }
-
-        return $member->position->value == Position::MEMBER->value;
+        return $this->member?->position === Position::MEMBER;
     }
 
     public function isSquadLeader(): bool
     {
-        if (! $member = $this->member) {
-            return false;
-        }
-
-        return $member->position == Position::SQUAD_LEADER;
+        return $this->member?->position === Position::SQUAD_LEADER;
     }
 
     public function isPlatoonLeader(): bool
     {
-        if (! $member = $this->member) {
-            return false;
-        }
-
-        return $member->position == Position::PLATOON_LEADER;
+        return $this->member?->position === Position::PLATOON_LEADER;
     }
 
     public function isDivisionLeader(): bool
     {
-        if (! $member = $this->member) {
-            return false;
-        }
-
-        return in_array($member->position, [
+        return in_array($this->member?->position, [
             Position::COMMANDING_OFFICER,
             Position::EXECUTIVE_OFFICER,
-        ]);
+        ], true);
     }
 
     public function isDeveloper(): bool
@@ -208,25 +192,14 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function assignRole(Role|string|int $role): void
     {
-        if ($role instanceof Role) {
-            $this->role = $role;
-            $this->save();
+        $roleEnum = match (true) {
+            $role instanceof Role => $role,
+            is_string($role)      => Role::fromSlug($role),
+            is_int($role)         => Role::tryFrom($role),
+        };
 
-            return;
-        }
-
-        if (is_string($role)) {
-            $roleEnum = Role::fromSlug($role);
-            if ($roleEnum) {
-                $this->role = $roleEnum;
-                $this->save();
-
-                return;
-            }
-        }
-
-        if (is_int($role)) {
-            $this->role = $role;
+        if ($roleEnum) {
+            $this->role = $roleEnum;
             $this->save();
         }
     }
@@ -334,51 +307,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return $asBoolean ? false : null;
     }
 
-    public function canManageTransferCommentsFor(Transfer $transfer): bool
-    {
-        return $this->isAdminOrDivisionLeader();
-    }
-
-    public function canManageRankActionCommentsFor(RankAction $action): bool
-    {
-        $userRank = $this->member->rank;
-        $newRank  = $action->rank;
-
-        // For Sergeant and above, require that the user is at least Master Sergeant
-        if ($newRank->value >= Rank::SERGEANT->value) {
-            return $userRank->value >= Rank::MASTER_SERGEANT->value;
-        }
-
-        // Platoon leaders can manage comments for actions within their authorized rank range
-        if ($this->isWithinPlatoonLimit($newRank, $this->division)) {
-            return true;
-        }
-
-        return $this->isAdminOrDivisionLeader();
-    }
-
-    public function canApproveOrDeny(RankAction $action): bool
-    {
-        $userRank = $this->member->rank;
-        $newRank  = $action->rank;
-
-        if ($newRank->value > $userRank->value) {
-            return false;
-        }
-
-        // Platoon leaders can approve/deny if within their authorized rank range
-        if ($this->isWithinPlatoonLimit($newRank, $this->division)) {
-            return true;
-        }
-
-        // For Sergeant and above, require that the user is at least Command Sergeant
-        if ($newRank->value >= Rank::SERGEANT->value) {
-            return $userRank->value >= Rank::COMMAND_SERGEANT->value;
-        }
-
-        return $this->isAdminOrDivisionLeader();
-    }
-
     public static function findOrCreateForMember(Member $member, ?string $email = null): self
     {
         $user = self::where('member_id', $member->id)->first();
@@ -413,15 +341,10 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return $email;
     }
 
-    private function isWithinPlatoonLimit(Rank $targetRank, $division): bool
+    public function isWithinPlatoonLimit(Rank $targetRank, $division): bool
     {
         $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
 
         return $this->isPlatoonLeader() && $targetRank->value <= $maxPlRank->value;
-    }
-
-    private function isAdminOrDivisionLeader(): bool
-    {
-        return $this->isDivisionLeader() || $this->isRole('admin');
     }
 }

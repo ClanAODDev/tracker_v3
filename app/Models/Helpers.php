@@ -1,13 +1,8 @@
 <?php
 
-use App\Jobs\SyncDivisionDns;
 use App\Models\MemberRequest;
-use App\Services\CloudflareDnsService;
-use App\Settings\UserSettings;
 use Carbon\Carbon;
-use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
-use Illuminate\Support\HtmlString;
 use Spatie\ScheduleMonitor\Models\MonitoredScheduledTask;
 
 function bytesToHuman($bytes)
@@ -152,19 +147,6 @@ function doForumFunction(array $ids, $action)
     return urldecode($path . http_build_query($params));
 }
 
-/**
- * Get user settings.
- *
- * @param  null  $key
- * @return Application|mixed
- */
-function UserSettings($key = null)
-{
-    $settings = app(UserSettings::class);
-
-    return $key ? $settings->get($key) : $settings;
-}
-
 function hasDivisionIcon($abbreviation)
 {
     $image = public_path() . "/images/game_icons/48x48/{$abbreviation}.png";
@@ -216,52 +198,6 @@ function checked($arg)
 function carbon_date_or_null_if_zero($value)
 {
     return ($value === null || Carbon::parse($value)->timestamp <= 0) ? null : $value;
-}
-
-/**
- * Provides visual feedback for a member's last activity
- * based on division activity threshold.
- *
- * @return string
- */
-function getActivityClass($date, $division)
-{
-    $defaultThresholds = [
-        ['days' => 30, 'class' => 'text-danger'],
-        ['days' => 14, 'class' => 'text-warning'],
-    ];
-
-    $limits = $division->settings()
-        ->get('activity_threshold', $defaultThresholds);
-
-    if (! $date instanceof Carbon) {
-        return 'text-danger';
-    }
-
-    $days = $date->diffInDays();
-
-    foreach ($limits as $limit) {
-        if ($days >= $limit['days']) {
-            return $limit['class'];
-        }
-    }
-
-    return 'text-success';
-}
-
-/**
- * Provides visual feedback for a member's last activity
- * for display on their member profile
- *
- * @return string
- */
-function getMemberProfileActivityClass($date)
-{
-    if (! $date instanceof Carbon) {
-        return 'text-muted';
-    } else {
-        return '';
-    }
 }
 
 /**
@@ -469,37 +405,6 @@ function getAnniversaryTrophy(int $years): ?array
         'color' => '#cd7f32',
         'title' => '5+ Years',
     ];
-}
-
-function buildDnsPreview(CloudflareDnsService $service): HtmlString
-{
-    try {
-        $result   = (new SyncDivisionDns(dryRun: true))->handle($service);
-        $toCreate = collect($result['created']);
-        $toDelete = collect($result['deleted']);
-
-        if ($toCreate->isEmpty() && $toDelete->isEmpty()) {
-            return new HtmlString('<p>No changes needed — DNS is already in sync.</p>');
-        }
-
-        $domain = $service->zoneDomain;
-        $fqdn   = fn (string $s) => "{$s}.{$domain}";
-        $list   = fn ($items) => '<ul style="margin:.25rem 0 0 1rem">'
-            . $items->map(fn ($s) => '<li>' . e($fqdn($s)) . '</li>')->join('')
-            . '</ul>';
-
-        $lines = [];
-        if ($toCreate->isNotEmpty()) {
-            $lines[] = '<strong>Would create:</strong>' . $list($toCreate);
-        }
-        if ($toDelete->isNotEmpty()) {
-            $lines[] = '<strong>Would delete:</strong>' . $list($toDelete);
-        }
-
-        return new HtmlString(implode('', $lines));
-    } catch (Throwable $e) {
-        return new HtmlString('Unable to fetch current DNS records: ' . e($e->getMessage()));
-    }
 }
 
 function scheduledTaskEnabled(string $name): bool

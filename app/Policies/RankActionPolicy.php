@@ -60,4 +60,47 @@ class RankActionPolicy
     {
         return auth()->user()->isRole(['admin']);
     }
+
+    public static function approve(User $user, RankAction $action): bool
+    {
+        $userRank = $user->member->rank;
+        $newRank  = $action->rank;
+
+        if ($newRank->value > $userRank->value) {
+            return false;
+        }
+
+        if ($user->isWithinPlatoonLimit($newRank, $user->division)) {
+            return true;
+        }
+
+        // For Sergeant and above, require that the user is at least Command Sergeant
+        if ($newRank->value >= Rank::SERGEANT->value) {
+            return $userRank->value >= Rank::COMMAND_SERGEANT->value;
+        }
+
+        return self::isAdminOrDivisionLeader($user);
+    }
+
+    public static function manageComments(User $user, RankAction $action): bool
+    {
+        $userRank = $user->member->rank;
+        $newRank  = $action->rank;
+
+        // For Sergeant and above, require that the user is at least Master Sergeant
+        if ($newRank->value >= Rank::SERGEANT->value) {
+            return $userRank->value >= Rank::MASTER_SERGEANT->value;
+        }
+
+        if ($user->isWithinPlatoonLimit($newRank, $user->division)) {
+            return true;
+        }
+
+        return self::isAdminOrDivisionLeader($user);
+    }
+
+    private static function isAdminOrDivisionLeader(User $user): bool
+    {
+        return $user->isDivisionLeader() || $user->isRole('admin');
+    }
 }
