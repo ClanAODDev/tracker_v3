@@ -339,46 +339,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return $this->isAdminOrDivisionLeader();
     }
 
-    public function canManageRankActionCommentsFor(RankAction $action): bool
-    {
-        $userRank = $this->member->rank;
-        $newRank  = $action->rank;
-
-        // For Sergeant and above, require that the user is at least Master Sergeant
-        if ($newRank->value >= Rank::SERGEANT->value) {
-            return $userRank->value >= Rank::MASTER_SERGEANT->value;
-        }
-
-        // Platoon leaders can manage comments for actions within their authorized rank range
-        if ($this->isWithinPlatoonLimit($newRank, $this->division)) {
-            return true;
-        }
-
-        return $this->isAdminOrDivisionLeader();
-    }
-
-    public function canApproveOrDeny(RankAction $action): bool
-    {
-        $userRank = $this->member->rank;
-        $newRank  = $action->rank;
-
-        if ($newRank->value > $userRank->value) {
-            return false;
-        }
-
-        // Platoon leaders can approve/deny if within their authorized rank range
-        if ($this->isWithinPlatoonLimit($newRank, $this->division)) {
-            return true;
-        }
-
-        // For Sergeant and above, require that the user is at least Command Sergeant
-        if ($newRank->value >= Rank::SERGEANT->value) {
-            return $userRank->value >= Rank::COMMAND_SERGEANT->value;
-        }
-
-        return $this->isAdminOrDivisionLeader();
-    }
-
     public static function findOrCreateForMember(Member $member, ?string $email = null): self
     {
         $user = self::where('member_id', $member->id)->first();
@@ -411,13 +371,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         }
 
         return $email;
-    }
-
-    private function isWithinPlatoonLimit(Rank $targetRank, $division): bool
-    {
-        $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
-
-        return $this->isPlatoonLeader() && $targetRank->value <= $maxPlRank->value;
     }
 
     private function isAdminOrDivisionLeader(): bool

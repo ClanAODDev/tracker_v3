@@ -51,7 +51,7 @@ class EditRankAction extends EditRecord
                     ->requiresConfirmation(),
                 Action::make('deny')->label('Deny change')
                     ->color('warning')
-                    ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
+                    ->visible(fn (RankAction $action) => auth()->user()->can('approve', $action))
                     ->hidden(fn ($action) => ! $action->getRecord()->actionable())
                     ->requiresConfirmation()
                     ->modalHeading('Deny Rank Action')
@@ -200,7 +200,7 @@ class EditRankAction extends EditRecord
                             UpdateRankForMember::dispatch($action);
                         }
                     })
-                    ->visible(fn (RankAction $action) => auth()->user()->canApproveOrDeny($action))
+                    ->visible(fn (RankAction $action) => auth()->user()->can('approve', $action))
                     ->hidden(fn ($action) => ! $action->getRecord()->actionable())
                     ->requiresConfirmation()
                     ->modalHeading(fn ($record) => $record->rank->isOfficer()
@@ -218,7 +218,7 @@ class EditRankAction extends EditRecord
                     ->color('warning')
                     ->requiresConfirmation()
                     ->visible(
-                        fn (RankAction $action) => auth()->user()->canApproveOrDeny($action)
+                        fn (RankAction $action) => auth()->user()->can('approve', $action)
                             && $action->rank->value <= Rank::PRIVATE_FIRST_CLASS->value
                     )
                     ->hidden(fn (RankAction $action) => $action->accepted_at && ! $action->actionable())
@@ -236,7 +236,7 @@ class EditRankAction extends EditRecord
         ];
 
         return
-            auth()->user()->canManageRankActionCommentsFor($this->getRecord())
+            auth()->user()->can('manageComments', $this->getRecord())
                 ? array_merge($actions, $commentsAction)
                 : $actions;
     }

@@ -110,7 +110,7 @@ class RankActionResource extends Resource
                             })
                             ->columnSpanFull(),
                         Livewire::make(Reactions::class)
-                            ->visible(fn ($record) => auth()->user()->canManageRankActionCommentsFor($record)),
+                            ->visible(fn ($record) => auth()->user()->can('manageComments', $record)),
                     ]),
 
             ]);
@@ -225,7 +225,7 @@ class RankActionResource extends Resource
                     ->closeModalByClickingAway(false)
                     ->visible(fn (
                         RankAction $action
-                    ) => auth()->user()->canManageRankActionCommentsFor($action)),
+                    ) => auth()->user()->can('manageComments', $action)),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
