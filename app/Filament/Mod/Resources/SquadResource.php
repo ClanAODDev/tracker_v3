@@ -7,6 +7,7 @@ use App\Filament\Mod\Resources\SquadResource\Pages\ListSquads;
 use App\Filament\Mod\Resources\SquadResource\RelationManagers\MembersRelationManager;
 use App\Models\Member;
 use App\Models\Squad;
+use Closure;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Actions\RestoreAction;
@@ -74,6 +75,15 @@ class SquadResource extends Resource
                             ->getOptionLabelUsing(fn ($value) => Member::where('clan_id',
                                 $value)->value('name'))
                             ->helperText('Leave blank if position not yet assigned. Must be from the same division as the squad being assigned.')
+                            ->rule(fn (?Squad $record): Closure => function (string $attribute, $value, Closure $fail) use ($record) {
+                                if (! $value) {
+                                    return;
+                                }
+
+                                if (! Member::where('clan_id', $value)->where('division_id', $record->platoon->division_id)->exists()) {
+                                    $fail('The selected leader must be a member of this division.');
+                                }
+                            })
                             ->nullable(),
 
                         Hidden::make('original_leader_id')
