@@ -2,7 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Position;
 use App\Models\Division;
+use App\Models\Member;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -73,5 +75,43 @@ final class DivisionApiTest extends TestCase
         $response = $this->json('get', route('v1.divisions.index'));
 
         $response->assertDontSee($divisionShuttingDown->name);
+    }
+
+    #[Test]
+    public function division_read_ability_does_not_expose_leadership_discord_ids()
+    {
+        Sanctum::actingAs($this->user, ['division:read']);
+
+        $division = Division::factory()->create();
+
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'discord_id'  => 123456789012345678,
+        ]);
+
+        $response = $this->json('get', route('v1.divisions.show', $division->slug));
+
+        $response->assertOk();
+        $response->assertJsonMissingPath('data.division.leadership.0.discord_id');
+        $response->assertDontSee('123456789012345678');
+    }
+
+    #[Test]
+    public function division_read_advanced_ability_still_exposes_member_discord_ids()
+    {
+        Sanctum::actingAs($this->user, ['division:read', 'division:read-advanced']);
+
+        $division = Division::factory()->create();
+
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'discord_id'  => 123456789012345678,
+        ]);
+
+        $response = $this->json('get', route('v1.divisions.show', $division->slug) . '?include_members=1');
+
+        $response->assertOk();
+        $response->assertSee('123456789012345678');
     }
 }
