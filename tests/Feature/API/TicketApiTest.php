@@ -100,6 +100,26 @@ class TicketApiTest extends TestCase
     }
 
     #[Test]
+    public function store_is_rate_limited()
+    {
+        $officer    = $this->createOfficer();
+        $ticketType = TicketType::factory()->create();
+
+        $payload = [
+            'ticket_type_id' => $ticketType->id,
+            'description'    => 'This is a test ticket with sufficient description length.',
+        ];
+
+        $statuses = [];
+
+        for ($i = 0; $i < 11; $i++) {
+            $statuses[] = $this->actingAs($officer)->postJson('/api/tickets', $payload)->getStatusCode();
+        }
+
+        $this->assertContains(429, $statuses);
+    }
+
+    #[Test]
     public function store_validates_minimum_description_length()
     {
         $officer    = $this->createOfficer();
