@@ -19,10 +19,10 @@ class RemoveClanMemberTest extends TestCase
         config(['aod.token' => 'test-token']);
     }
 
-    private function makeForumService(): ForumProcedureService
+    private function makeForumService(?object $forumUser = null): ForumProcedureService
     {
         $service = $this->createMock(ForumProcedureService::class);
-        $service->method('getUser')->willReturn(null);
+        $service->method('getUser')->willReturn($forumUser);
 
         return $service;
     }
@@ -68,5 +68,36 @@ class RemoveClanMemberTest extends TestCase
 
         $this->expectException(\RuntimeException::class);
         $job->handle($this->makeForumService());
+    }
+
+    #[Test]
+    public function job_completes_without_throwing_when_forum_has_no_profile_for_member()
+    {
+        Http::fake([
+            '*' => Http::response('invalid_user_specified', 200),
+        ]);
+
+        $job = new RemoveClanMember(12345, 67890);
+
+        $job->handle($this->makeForumService(null));
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), 'do=remaod'));
+    }
+
+    #[Test]
+    public function job_completes_without_throwing_when_member_exists_but_is_already_outside_aod_usergroup()
+    {
+        Http::fake([
+            '*' => Http::response('invalid_user_specified', 200),
+        ]);
+
+        $job = new RemoveClanMember(12345, 67890);
+
+        $job->handle($this->makeForumService((object) [
+            'usergroupid'    => '2',
+            'membergroupids' => '',
+        ]));
+
+        Http::assertSent(fn ($request) => str_contains($request->url(), 'do=remaod'));
     }
 }
