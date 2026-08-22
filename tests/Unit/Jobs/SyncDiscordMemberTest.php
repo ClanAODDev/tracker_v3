@@ -3,8 +3,10 @@
 namespace Tests\Unit\Jobs;
 
 use App\Jobs\SyncDiscordMember;
+use App\Models\User;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -100,5 +102,50 @@ class SyncDiscordMemberTest extends TestCase
         $member->refresh();
 
         $this->assertFalse($member->isDirty());
+    }
+
+    #[Test]
+    public function job_links_pending_discord_user_to_member()
+    {
+        config(['aod.bot_api_base_url' => 'https://bot.test']);
+
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id, 'discord_id' => null]);
+
+        $pendingUser = User::factory()->pending()->create(['discord_id' => '123456789012345678']);
+
+        Http::fake([
+            '*' => Http::response([[
+                'discordid'  => '123456789012345678',
+                'discordtag' => 'TestUser',
+            ]]),
+        ]);
+
+        (new SyncDiscordMember($member))->handle();
+
+        $this->assertEquals($member->id, $pendingUser->fresh()->member_id);
+    }
+
+    #[Test]
+    public function job_does_not_overwrite_an_already_linked_member()
+    {
+        config(['aod.bot_api_base_url' => 'https://bot.test']);
+
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id, 'discord_id' => null]);
+
+        User::factory()->create(['member_id' => $member->id, 'discord_id' => null]);
+        $pendingUser = User::factory()->pending()->create(['discord_id' => '123456789012345678']);
+
+        Http::fake([
+            '*' => Http::response([[
+                'discordid'  => '123456789012345678',
+                'discordtag' => 'TestUser',
+            ]]),
+        ]);
+
+        (new SyncDiscordMember($member))->handle();
+
+        $this->assertNull($pendingUser->fresh()->member_id);
     }
 }

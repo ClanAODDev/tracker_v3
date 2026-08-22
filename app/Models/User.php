@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -325,12 +326,16 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
             $name = $name . '_' . $member->clan_id;
         }
 
-        return self::create([
-            'name'      => $name,
-            'email'     => self::resolveUniqueEmail($email, $member),
-            'member_id' => $member->id,
-            'role'      => Role::MEMBER,
-        ]);
+        try {
+            return self::create([
+                'name'      => $name,
+                'email'     => self::resolveUniqueEmail($email, $member),
+                'member_id' => $member->id,
+                'role'      => Role::MEMBER,
+            ]);
+        } catch (UniqueConstraintViolationException) {
+            return self::where('member_id', $member->id)->firstOrFail();
+        }
     }
 
     public static function resolveUniqueEmail(?string $email, Member $member): string

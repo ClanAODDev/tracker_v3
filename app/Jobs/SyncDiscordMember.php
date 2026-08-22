@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\AODBotService;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Foundation\Queue\Queueable;
 use Log;
 
@@ -64,9 +65,16 @@ class SyncDiscordMember implements ShouldQueue
             return;
         }
 
-        User::query()
-            ->whereNull('member_id')
-            ->where('discord_id', $this->member->discord_id)
-            ->update(['member_id' => $this->member->id]);
+        try {
+            User::query()
+                ->whereNull('member_id')
+                ->where('discord_id', $this->member->discord_id)
+                ->update(['member_id' => $this->member->id]);
+        } catch (UniqueConstraintViolationException) {
+            Log::warning('SyncDiscordMember: member_id already claimed by another user, skipping link', [
+                'member_id'  => $this->member->id,
+                'discord_id' => $this->member->discord_id,
+            ]);
+        }
     }
 }
