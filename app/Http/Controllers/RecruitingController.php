@@ -210,6 +210,7 @@ class RecruitingController extends Controller
     /**
      * @return array
      */
+    #[Authorize('recruit', Member::class)]
     public function validateMemberId($member_id)
     {
         if (! is_numeric($member_id) || (int) $member_id < 1) {
@@ -284,6 +285,7 @@ class RecruitingController extends Controller
         ];
     }
 
+    #[Authorize('recruit', Member::class)]
     public function validateMemberName(ValidateMemberNameRequest $request): JsonResponse
     {
         if (app()->environment() === 'local') {

@@ -738,4 +738,36 @@ class RecruitingControllerTest extends TestCase
 
         $response->assertOk()->assertJson(['discord_matches' => []]);
     }
+
+    #[Test]
+    public function plain_member_cannot_validate_member_id(): void
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id], ['role' => Role::MEMBER]);
+
+        $this->actingAs($user)
+            ->post(route('validate-id', 12345))
+            ->assertForbidden();
+    }
+
+    #[Test]
+    public function plain_member_cannot_validate_member_name(): void
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id], ['role' => Role::MEMBER]);
+
+        $this->actingAs($user)
+            ->postJson(route('validate-name'), ['name' => 'SomeForumName'])
+            ->assertForbidden();
+    }
+
+    #[Test]
+    public function officer_can_validate_member_name(): void
+    {
+        $officer = $this->createOfficer();
+
+        $this->actingAs($officer)
+            ->postJson(route('validate-name'), ['name' => 'SomeForumName'])
+            ->assertOk();
+    }
 }
