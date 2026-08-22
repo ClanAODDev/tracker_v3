@@ -12,7 +12,7 @@ class CreateNote extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('create', Note::class) ?? false;
     }
 
     public function rules(): array

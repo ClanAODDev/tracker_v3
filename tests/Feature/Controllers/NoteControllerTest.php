@@ -314,6 +314,38 @@ class NoteControllerTest extends TestCase
     }
 
     #[Test]
+    public function guest_cannot_create_note()
+    {
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $response = $this->post(route('storeNote', $member->clan_id), [
+            'body' => 'Unauthenticated note',
+            'type' => 'misc',
+        ]);
+
+        $response->assertForbidden();
+        $this->assertDatabaseMissing('notes', ['body' => 'Unauthenticated note']);
+    }
+
+    #[Test]
+    public function plain_member_cannot_create_note()
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id], ['role' => Role::MEMBER]);
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $response = $this->actingAs($user)
+            ->post(route('storeNote', $member->clan_id), [
+                'body' => 'Member note',
+                'type' => 'misc',
+            ]);
+
+        $response->assertForbidden();
+        $this->assertDatabaseMissing('notes', ['body' => 'Member note']);
+    }
+
+    #[Test]
     public function can_create_note_with_tag()
     {
         $srLdr    = $this->createSeniorLeader();
@@ -373,6 +405,8 @@ class NoteControllerTest extends TestCase
             'platoon_id'  => $platoon->id,
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::SERGEANT,
+        ], [
+            'role' => Role::OFFICER,
         ]);
         $member = $this->createMember(['division_id' => $division->id]);
 
