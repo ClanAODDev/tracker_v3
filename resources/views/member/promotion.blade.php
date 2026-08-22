@@ -35,7 +35,7 @@
             </div>
 
             <div class="pull-left">
-                <form action="{{ route('promotion.decline', [$member->clan_id, $action]) }}" method="post">
+                <form action="{{ $declineUrl }}" method="post">
                     @csrf
                     <button type="submit" class="btn btn-default"
                             onclick="confirm('By declining this promotion, you agree to remain at your current rank. ' +
@@ -45,7 +45,7 @@
             </div>
 
             <div class="pull-right">
-                <form action="{{ route('promotion.accept', [$member->clan_id, $action]) }}" method="post">
+                <form action="{{ $acceptUrl }}" method="post">
                     @csrf
                     <button type="submit" class="btn btn-success"
                             onclick="confirm('Upon acceptance, your forum rank will be updated automatically. ' +
