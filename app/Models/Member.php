@@ -113,6 +113,11 @@ class Member extends Model
         return $this->hasOne(Squad::class, 'leader_id');
     }
 
+    public function hasNoDivision(): bool
+    {
+        return $this->division_id === null || $this->division_id === 0;
+    }
+
     public function reset(): void
     {
         $this->update([

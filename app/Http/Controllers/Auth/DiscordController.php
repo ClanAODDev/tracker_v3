@@ -199,6 +199,7 @@ class DiscordController extends Controller
     protected function loginExistingUser(User $user, ?string $avatarHash): RedirectResponse
     {
         auth()->login(user: $user, remember: true);
+        request()->session()->regenerate();
 
         if ($avatarHash !== null && $avatarHash !== $user->discord_avatar) {
             $user->update(['discord_avatar' => $avatarHash]);
@@ -249,6 +250,7 @@ class DiscordController extends Controller
         });
 
         auth()->login(user: $user, remember: true);
+        request()->session()->regenerate();
 
         $this->forumPermissions->handleAccountRoles($member->clan_id);
 
@@ -314,6 +316,7 @@ class DiscordController extends Controller
         ]);
 
         auth()->login(user: $user, remember: true);
+        request()->session()->regenerate();
 
         if ($avatarHash !== null) {
             session(['discord_avatar_hash' => $avatarHash]);

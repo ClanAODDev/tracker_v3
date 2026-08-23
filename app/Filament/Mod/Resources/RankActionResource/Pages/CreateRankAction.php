@@ -51,11 +51,9 @@ class CreateRankAction extends CreateRecord
 
         unset($data['action'], $data['demotion_rank'], $data['promotion_rank'], $data['override_existing']);
 
-        $division = auth()->user()->division;
-
         $data['approved_at'] = User::autoApprovedTimestampForRank(
             $data['rank'],
-            $division
+            $member
         );
 
         return $data;

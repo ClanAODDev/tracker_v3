@@ -9,6 +9,7 @@ use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\SquadsRelationMa
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
+use Closure;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
 use Filament\Actions\RestoreAction;
@@ -86,6 +87,15 @@ class PlatoonResource extends Resource
                             ->getOptionLabelUsing(fn ($value) => Member::where('clan_id',
                                 $value)->value('name'))
                             ->helperText('Leave blank if position not yet assigned. Must be from the same division as the platoon being assigned.')
+                            ->rule(fn (?Platoon $record): Closure => function (string $attribute, $value, Closure $fail) use ($record) {
+                                if (! $value) {
+                                    return;
+                                }
+
+                                if (! Member::where('clan_id', $value)->where('division_id', $record->division_id)->exists()) {
+                                    $fail('The selected leader must be a member of this division.');
+                                }
+                            })
                             ->nullable(),
 
                         Hidden::make('original_leader_id')

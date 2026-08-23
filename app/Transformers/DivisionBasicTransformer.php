@@ -2,6 +2,8 @@
 
 namespace App\Transformers;
 
+use Illuminate\Support\Arr;
+
 class DivisionBasicTransformer extends Transformer
 {
     public function __construct(private readonly MemberBasicTransformer $memberTransformer) {}
@@ -18,8 +20,12 @@ class DivisionBasicTransformer extends Transformer
             'show_on_site'    => $item->show_on_site,
             'officer_channel' => $item->settings()->get('officer_channel', null),
             'icon'            => $item->getLogoPath(),
-            'leadership'      => $this->memberTransformer->transformCollection(
-                $item->leaders()->get()->all()
+            // discord_id is intentionally stripped here: leadership is exposed at the
+            // base division:read ability, but Discord IDs are meant to require
+            // division:read-advanced (see the members list in DivisionController::show()).
+            'leadership' => array_map(
+                fn (array $member) => Arr::except($member, ['discord_id']),
+                $this->memberTransformer->transformCollection($item->leaders()->get()->all())
             ),
         ];
 

@@ -40,7 +40,7 @@ Route::prefix('tickets')->middleware(['web', 'auth'])->name('tickets.')->group(f
     Route::get('/types', [TicketApiController::class, 'types'])->name('types');
     Route::get('/workable', [TicketApiController::class, 'workableIndex'])->name('workable');
     Route::get('/workers', [TicketApiController::class, 'workers'])->name('workers');
-    Route::post('/', [TicketApiController::class, 'store'])->name('store');
+    Route::post('/', [TicketApiController::class, 'store'])->middleware('throttle:10,1')->name('store');
     Route::get('/{ticket}', [TicketApiController::class, 'show'])->name('show');
     Route::post('/{ticket}/comments', [TicketApiController::class, 'addComment'])->name('comments.store');
     Route::post('/{ticket}/own', [TicketApiController::class, 'own'])->name('own');

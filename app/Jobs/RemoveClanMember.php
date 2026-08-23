@@ -58,6 +58,23 @@ class RemoveClanMember implements ShouldQueue
                 impersonatingMemberId: $this->impersonatingMemberId,
             );
         } catch (RuntimeException $e) {
+            if (str_contains($e->getMessage(), 'invalid_user_specified')) {
+                // The forum's removeMember() returns this same response for two
+                // different reasons: no forum profile at all, or a profile that
+                // exists but is no longer in the AOD usergroup. Either way there's
+                // nothing left to remove, so this isn't worth retrying.
+                $reason = $context['usergroupid']
+                    ? "exists on the forum but is not in the AOD usergroup (usergroupid: {$context['usergroupid']})"
+                    : 'has no forum profile';
+
+                Log::warning(
+                    "Forum rejected removal of member {$this->memberIdBeingRemoved} as invalid_user_specified — member {$reason}, already effectively removed",
+                    $context
+                );
+
+                return;
+            }
+
             throw new RuntimeException(
                 "{$e->getMessage()} | name: {$context['name']}, usergroupid: {$context['usergroupid']}, membergroupids: {$context['membergroupids']}",
                 previous: $e

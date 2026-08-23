@@ -4,15 +4,21 @@ namespace App\Services;
 
 use App\Enums\ActivityType;
 use App\Enums\Position;
+use App\Exceptions\RecruitmentFailedException;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
+use App\Models\Platoon;
 use App\Models\RankAction;
+use App\Models\Squad;
 use App\Models\Transfer;
 use Illuminate\Support\Facades\DB;
 
 class RecruitmentService
 {
+    /**
+     * @throws RecruitmentFailedException
+     */
     public function createMember(
         int $clanId,
         string $name,
@@ -23,6 +29,22 @@ class RecruitmentService
         ?string $ingameName,
         Member $recruiter
     ): Member {
+        $existing = Member::where('clan_id', $clanId)->first();
+
+        if ($existing && ! $existing->hasNoDivision()) {
+            throw new RecruitmentFailedException(
+                'This member already exists in the Tracker. Use the transfer process to move them between divisions instead.'
+            );
+        }
+
+        if (! Platoon::where('id', $platoonId)->where('division_id', $division->id)->exists()) {
+            throw new RecruitmentFailedException('Selected platoon does not belong to this division.');
+        }
+
+        if ($squadId && ! Squad::where('id', $squadId)->where('platoon_id', $platoonId)->exists()) {
+            throw new RecruitmentFailedException('Selected squad does not belong to the selected platoon.');
+        }
+
         return DB::transaction(function () use (
             $clanId,
             $name,

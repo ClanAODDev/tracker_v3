@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Exceptions\RecruitmentFailedException;
 use App\Models\Handle;
 use App\Models\Member;
 use App\Services\RecruitmentService;
@@ -51,15 +52,45 @@ class RecruitmentServiceTest extends TestCase
     }
 
     #[Test]
-    public function create_member_updates_existing_member(): void
+    public function create_member_rejects_member_already_in_a_division(): void
     {
         $division  = $this->createActiveDivision();
         $platoon   = $this->createPlatoon($division);
         $recruiter = Member::factory()->create(['clan_id' => 99999]);
 
         $existingMember = Member::factory()->create([
-            'clan_id' => 54321,
-            'name'    => 'OldName',
+            'clan_id'     => 54321,
+            'name'        => 'OldName',
+            'division_id' => $division->id,
+        ]);
+
+        $this->expectException(RecruitmentFailedException::class);
+
+        $this->service->createMember(
+            54321,
+            'NewName',
+            $division,
+            1,
+            $platoon->id,
+            null,
+            'GameHandle',
+            $recruiter
+        );
+
+        $this->assertEquals('OldName', $existingMember->fresh()->name);
+    }
+
+    #[Test]
+    public function create_member_reactivates_member_with_no_division(): void
+    {
+        $division  = $this->createActiveDivision();
+        $platoon   = $this->createPlatoon($division);
+        $recruiter = Member::factory()->create(['clan_id' => 99999]);
+
+        $exMember = Member::factory()->create([
+            'clan_id'     => 54321,
+            'name'        => 'OldName',
+            'division_id' => 0,
         ]);
 
         $member = $this->service->createMember(
@@ -73,8 +104,54 @@ class RecruitmentServiceTest extends TestCase
             $recruiter
         );
 
-        $this->assertEquals($existingMember->id, $member->id);
+        $this->assertEquals($exMember->id, $member->id);
         $this->assertEquals('NewName', $member->fresh()->name);
+        $this->assertEquals($division->id, $member->fresh()->division_id);
+    }
+
+    #[Test]
+    public function create_member_rejects_platoon_from_another_division(): void
+    {
+        $division      = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+        $otherPlatoon  = $this->createPlatoon($otherDivision);
+        $recruiter     = Member::factory()->create(['clan_id' => 99999]);
+
+        $this->expectException(RecruitmentFailedException::class);
+
+        $this->service->createMember(
+            54321,
+            'NewName',
+            $division,
+            1,
+            $otherPlatoon->id,
+            null,
+            'GameHandle',
+            $recruiter
+        );
+    }
+
+    #[Test]
+    public function create_member_rejects_squad_from_another_platoon(): void
+    {
+        $division     = $this->createActiveDivision();
+        $platoon      = $this->createPlatoon($division);
+        $otherPlatoon = $this->createPlatoon($division);
+        $otherSquad   = $this->createSquad($otherPlatoon);
+        $recruiter    = Member::factory()->create(['clan_id' => 99999]);
+
+        $this->expectException(RecruitmentFailedException::class);
+
+        $this->service->createMember(
+            54321,
+            'NewName',
+            $division,
+            1,
+            $platoon->id,
+            $otherSquad->id,
+            'GameHandle',
+            $recruiter
+        );
     }
 
     #[Test]

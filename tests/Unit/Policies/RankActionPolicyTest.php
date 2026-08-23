@@ -302,7 +302,10 @@ class RankActionPolicyTest extends TestCase
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::STAFF_SERGEANT,
         ]);
-        $member = $this->createMember(['division_id' => $division->id]);
+        $member = $this->createMember([
+            'division_id' => $division->id,
+            'platoon_id'  => $platoon->id,
+        ]);
 
         // default max_platoon_leader_rank setting is Rank::PRIVATE_FIRST_CLASS
         $action = RankAction::factory()->create([
@@ -311,6 +314,33 @@ class RankActionPolicyTest extends TestCase
         ]);
 
         $this->assertTrue(RankActionPolicy::approve($leader, $action));
+    }
+
+    #[Test]
+    public function platoon_leader_cannot_approve_action_from_other_platoon()
+    {
+        $division = $this->createActiveDivision();
+        $platoon1 = $this->createPlatoon($division);
+        $platoon2 = $this->createPlatoon($division);
+
+        $leader = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'platoon_id'  => $platoon1->id,
+            'position'    => Position::PLATOON_LEADER,
+            'rank'        => Rank::STAFF_SERGEANT,
+        ]);
+        $member = $this->createMember([
+            'division_id' => $division->id,
+            'platoon_id'  => $platoon2->id,
+        ]);
+
+        // default max_platoon_leader_rank setting is Rank::PRIVATE_FIRST_CLASS
+        $action = RankAction::factory()->create([
+            'member_id' => $member->id,
+            'rank'      => Rank::PRIVATE_FIRST_CLASS,
+        ]);
+
+        $this->assertFalse(RankActionPolicy::approve($leader, $action));
     }
 
     #[Test]
