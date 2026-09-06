@@ -5,7 +5,6 @@ namespace Tests\Feature\Controllers;
 use App\Enums\ForumGroup;
 use App\Enums\Position;
 use App\Enums\Role;
-use App\Jobs\CreateForumAccount;
 use App\Models\Division;
 use App\Models\DivisionApplication;
 use App\Models\Member;
@@ -17,7 +16,6 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Notification;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\User as SocialiteUser;
@@ -866,10 +864,8 @@ class DiscordAuthTest extends TestCase
     }
 
     #[Test]
-    public function discord_registration_does_not_dispatch_duplicate_forum_account_job_on_resubmit(): void
+    public function discord_registration_does_not_create_duplicate_forum_account_on_resubmit(): void
     {
-        Bus::fake();
-
         $division = Division::factory()->create(['active' => true]);
         Member::factory()->create([
             'division_id' => $division->id,
@@ -878,6 +874,7 @@ class DiscordAuthTest extends TestCase
 
         $forumServiceMock = Mockery::mock(AODForumService::class);
         $forumServiceMock->shouldReceive('getUserByEmail')->andReturn(null);
+        $forumServiceMock->shouldNotReceive('createForumAccount');
         $this->app->instance(AODForumService::class, $forumServiceMock);
 
         $user = User::factory()->pending()->create([
@@ -894,8 +891,79 @@ class DiscordAuthTest extends TestCase
                 'password_confirmation' => 'password123',
                 'division_id'           => $division->id,
             ]);
+    }
 
-        Bus::assertNotDispatched(CreateForumAccount::class);
+    #[Test]
+    public function discord_registration_rejects_username_when_forum_creation_fails(): void
+    {
+        $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'clan_id'     => 12345,
+        ]);
+
+        $forumServiceMock = Mockery::mock(AODForumService::class);
+        $forumServiceMock->shouldReceive('userExists')->andReturn(false);
+        $forumServiceMock->shouldReceive('getUserByEmail')->andReturn(null);
+        $forumServiceMock->shouldReceive('createForumAccount')->andReturn([
+            'success' => false,
+            'error'   => "Forum rejected the request (invalid_user_specified). The username 'TestRecruit' may already be taken, or the impersonating user (12345) may be invalid.",
+        ]);
+        $this->app->instance(AODForumService::class, $forumServiceMock);
+
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '123456789',
+            'date_of_birth'  => null,
+            'forum_password' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'username'              => 'TestRecruit',
+                'date_of_birth'         => '2000-01-15',
+                'password'              => 'password123',
+                'password_confirmation' => 'password123',
+                'division_id'           => $division->id,
+            ])
+            ->assertSessionHasErrors('username');
+
+        $this->assertNotNull($user->fresh()->forum_password);
+    }
+
+    #[Test]
+    public function discord_registration_clears_forum_password_when_forum_account_created(): void
+    {
+        $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'clan_id'     => 12345,
+        ]);
+
+        $forumServiceMock = Mockery::mock(AODForumService::class);
+        $forumServiceMock->shouldReceive('userExists')->andReturn(false);
+        $forumServiceMock->shouldReceive('getUserByEmail')->andReturn(null);
+        $forumServiceMock->shouldReceive('createForumAccount')->andReturn(['success' => true]);
+        $this->app->instance(AODForumService::class, $forumServiceMock);
+
+        $user = User::factory()->pending()->create([
+            'discord_id'     => '123456789',
+            'date_of_birth'  => null,
+            'forum_password' => null,
+        ]);
+
+        $this->actingAs($user)
+            ->post(route('auth.discord.register'), [
+                'username'              => 'TestRecruit',
+                'date_of_birth'         => '2000-01-15',
+                'password'              => 'password123',
+                'password_confirmation' => 'password123',
+                'division_id'           => $division->id,
+            ])
+            ->assertSessionHasNoErrors();
+
+        $this->assertNull($user->fresh()->forum_password);
     }
 
     #[Test]
