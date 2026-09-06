@@ -4,12 +4,12 @@ namespace App\Http\Requests\Auth;
 
 use App\Enums\Position;
 use App\Enums\Rank;
-use App\Jobs\CreateForumAccount;
 use App\Models\Division;
 use App\Models\Member;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
 use App\Services\AODForumService;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class DiscordRegistrationRequest extends FormRequest
@@ -118,14 +118,28 @@ class DiscordRegistrationRequest extends FormRequest
         }
 
         if ($isFirstSubmission) {
-            CreateForumAccount::dispatch(
-                user: $user,
+            $result = app(AODForumService::class)->createForumAccount(
                 impersonatingMemberId: $co->clan_id,
                 username: $this->validated('username'),
                 email: $user->email,
                 dateOfBirth: $this->validated('date_of_birth'),
+                password: $user->forum_password,
                 discordId: $user->discord_id,
             );
+
+            if (! $result['success']) {
+                Log::error('Forum account creation failed', [
+                    'user_id'  => $user->id,
+                    'username' => $this->validated('username'),
+                    'error'    => $result['error'],
+                ]);
+
+                throw ValidationException::withMessages([
+                    'username' => 'This username could not be registered on the forums. Please choose a different username.',
+                ]);
+            }
+
+            $user->update(['forum_password' => null]);
         }
     }
 }
