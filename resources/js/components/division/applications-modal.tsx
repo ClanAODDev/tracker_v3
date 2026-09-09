@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { getJson, postJson } from '@/lib/api';
-import { linkify, relativeDate } from '@/lib/format';
+import { linkify, linkifyHtml, relativeDate } from '@/lib/format';
 import type { SharedProps } from '@/types';
 
 interface Response {
@@ -353,8 +353,8 @@ function DetailView({
                     {detail.responses.map((r, i) => (
                         <div key={i}>
                             <dt
-                                className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground"
-                                dangerouslySetInnerHTML={{ __html: linkify(r.label) }}
+                                className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground [&_p]:m-0"
+                                dangerouslySetInnerHTML={{ __html: linkifyHtml(r.label) }}
                             />
                             <dd
                                 className="mt-0.5 whitespace-pre-wrap text-sm"
