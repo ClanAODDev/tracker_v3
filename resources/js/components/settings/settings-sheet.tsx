@@ -3,6 +3,7 @@ import { ChevronRight, Gamepad2, Loader2, Plus, Puzzle, RefreshCw, Trash2 } from
 import { useEffect, useState, type ReactNode } from 'react';
 import { toast } from 'sonner';
 
+import { TronSpinner } from '@/components/tron-spinner';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
@@ -222,9 +223,12 @@ function TransferSection({
                     </div>
                 )}
                 {pending ? (
-                    <p className="mt-3 text-xs text-muted-foreground">
-                        Transfer to <span className="text-foreground">{pending.division}</span> pending leadership
-                        approval.
+                    <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
+                        <TronSpinner className="size-3.5 shrink-0" />
+                        <span>
+                            Transfer to <span className="text-foreground">{pending.division}</span> pending leadership
+                            approval.
+                        </span>
                     </p>
                 ) : (
                     <Button variant="outline" size="sm" className="mt-3" onClick={() => setDialogOpen(true)}>
