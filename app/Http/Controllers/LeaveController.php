@@ -10,11 +10,9 @@ use App\Models\Leave;
 use App\Models\Member;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\Redirector;
-use Illuminate\View\View;
 
 /**
  * Class LeaveController.
@@ -22,23 +20,6 @@ use Illuminate\View\View;
 #[Middleware('auth')]
 class LeaveController extends Controller
 {
-    /**
-     * @return Factory|View
-     */
-    public function index(Division $division)
-    {
-        $membersWithLeave = $division->members()->whereHas('leave')
-            ->with('leave')->get();
-
-        $expiredLeave = (bool) \count($membersWithLeave->filter(fn ($member) => $member->leave->expired));
-
-        return view('division.leave', compact(
-            'division',
-            'membersWithLeave',
-            'expiredLeave'
-        ));
-    }
-
     /**
      * @return Redirector|RedirectResponse
      *
@@ -54,7 +35,7 @@ class LeaveController extends Controller
 
         $this->showSuccessToast('Leave successfully deleted!');
 
-        return redirect(route('leave.index', $member->division->slug));
+        return redirect(route('division', $member->division->slug));
     }
 
     /**
@@ -72,20 +53,7 @@ class LeaveController extends Controller
 
         $this->showSuccessToast('Leave of absence updated!');
 
-        return redirect(route('leave.index', [$member->division->slug]));
-    }
-
-    /**
-     * @return Factory|View
-     */
-    public function edit(Member $member, Leave $leave)
-    {
-        $this->authorize('updateLeave', $member);
-
-        $leave->load('note', 'approver', 'requester');
-        $division = $member->division;
-
-        return view('leave.edit', compact('division', 'member', 'leave'));
+        return redirect(route('division', $member->division->slug));
     }
 
     /**
@@ -103,7 +71,7 @@ class LeaveController extends Controller
 
         $this->showSuccessToast('Leave of absence created!');
 
-        return redirect(route('leave.index', $division->slug));
+        return redirect(route('division', $division->slug));
     }
 
     /**

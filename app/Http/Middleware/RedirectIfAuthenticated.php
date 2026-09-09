@@ -2,7 +2,6 @@
 
 namespace App\Http\Middleware;
 
-use App\Providers\RouteServiceProvider;
 use Closure;
 use Facades\App\AOD\ClanForumSession;
 use Illuminate\Http\Request;
@@ -25,7 +24,7 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (auth($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                return redirect('/home');
             }
         }
 

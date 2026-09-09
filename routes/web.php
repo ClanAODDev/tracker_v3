@@ -2,11 +2,17 @@
 
 use App\Http\Controllers\Auth\DiscordController;
 use App\Http\Controllers\Auth\LoginController;
+use Inertia\Inertia;
 
 include_once 'extra/requests.php';
 include_once 'extra/awards.php';
 
-Route::view('unauthorized', 'errors.403')->name('errors.unauthorized');
+Route::get('unauthorized', fn () => Inertia::render('errors/show', ['status' => 403])->toResponse(request())->setStatusCode(403))
+    ->name('errors.unauthorized');
+
+if (app()->environment('local')) {
+    Route::get('_dev/gallery', fn () => Inertia::render('dev/gallery'))->name('dev.gallery');
+}
 Auth::routes(['register' => false]);
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 

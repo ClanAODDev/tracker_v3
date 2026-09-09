@@ -25,7 +25,7 @@ class UserTest extends TestCase
         $user = User::factory()->create();
 
         $this->assertIsArray($user->settings);
-        $this->assertArrayHasKey('snow', $user->settings);
+        $this->assertArrayHasKey('mobile_nav_side', $user->settings);
         $this->assertArrayHasKey('ticket_notifications', $user->settings);
     }
 
@@ -36,7 +36,7 @@ class UserTest extends TestCase
         $user->forceFill(['settings' => ['custom_key' => 'value']])->save();
         $user->refresh();
 
-        $this->assertArrayHasKey('snow', $user->settings);
+        $this->assertArrayHasKey('mobile_nav_side', $user->settings);
         $this->assertArrayHasKey('custom_key', $user->settings);
         $this->assertEquals('value', $user->settings['custom_key']);
     }

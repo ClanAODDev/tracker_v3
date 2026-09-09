@@ -30,11 +30,9 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
     use Notifiable;
 
     public array $defaultSettings = [
-        'snow'                 => 'no_snow',
         'ticket_notifications' => true,
         'disable_animations'   => false,
-        'mobile_nav_side'      => 'right',
-        'theme'                => 'traditional',
+        'mobile_nav_side'      => 'left',
     ];
 
     protected $fillable = [

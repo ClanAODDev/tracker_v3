@@ -171,6 +171,27 @@ class ActivityReminderTest extends TestCase
     }
 
     #[Test]
+    public function bulk_reminder_json_returns_updated_clan_ids()
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+        $member1  = $this->createMember(['division_id' => $division->id]);
+        $member2  = $this->createMember(['division_id' => $division->id]);
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('bulk-reminder.store', $division->slug), [
+                'member_ids' => [$member1->clan_id, $member2->clan_id],
+            ])
+            ->assertOk()
+            ->assertJsonPath('count', 2);
+
+        $this->assertEqualsCanonicalizing(
+            [$member1->clan_id, $member2->clan_id],
+            $response->json('updatedIds'),
+        );
+    }
+
+    #[Test]
     public function bulk_reminder_skips_members_already_reminded_today()
     {
         $officer  = $this->createOfficer();

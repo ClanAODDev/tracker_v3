@@ -11,11 +11,14 @@ use App\Models\User;
 use App\Repositories\DivisionRepository;
 use App\Services\DivisionShowService;
 use App\Services\MemberQueryService;
+use App\Support\MemberCard;
+use App\Support\MemberListProps;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
-use Illuminate\View\View;
+use Inertia\Inertia;
+use Inertia\Response;
 
 #[Middleware('auth')]
 class DivisionController extends Controller
@@ -26,32 +29,49 @@ class DivisionController extends Controller
         private MemberQueryService $memberQuery,
     ) {}
 
-    public function show(Division $division): View
+    public function show(Division $division): Response
     {
-        return view('division.show', $this->divisionShow->getShowData($division)->toArray());
+        return Inertia::render('division/show', $this->divisionShow->getShowData($division)->toArray());
     }
 
-    public function partTime(Division $division)
+    public function partTime(Division $division): Response
     {
         $members = $division->partTimeMembers()
             ->with(['handles', 'division', 'leave'])
-            ->get()
-            ->each(function ($member) use ($division) {
-                $member->handle = $member->handles()
-                    ->wherePivot('primary', true)
-                    ->get()
-                    ->filter(fn ($handle) => $handle->id === $division->handle_id)
-                    ->first();
-            });
+            ->get();
 
-        $stats = [
-            'total'   => $members->count(),
-            'active'  => $members->filter(fn ($m) => $m->division_id > 0 && ! $m->leave)->count(),
-            'onLeave' => $members->filter(fn ($m) => $m->leave)->count(),
-            'removed' => $members->filter(fn ($m) => $m->division_id === 0)->count(),
-        ];
+        $rows = $members->map(function (Member $member) use ($division) {
+            $handle = $member->handles->firstWhere('id', $division->handle_id);
+            $status = $member->division_id === 0 ? 'removed' : ($member->leave ? 'onLeave' : 'active');
 
-        return view('division.part-time', compact('division', 'members', 'stats'));
+            return [
+                ...MemberCard::from($member),
+                'primaryDivision' => $member->division_id > 0 ? $member->division?->name : null,
+                'status'          => $status,
+                'handle'          => $handle ? [
+                    'value' => $handle->pivot->value,
+                    'url'   => $handle->url ? $handle->url . $handle->pivot->value : null,
+                ] : null,
+                'removeUrl' => route('removePartTimer', [$division->slug, $member->clan_id]),
+            ];
+        })->values();
+
+        return Inertia::render('division/part-time', [
+            'division' => [
+                'name'        => $division->name,
+                'slug'        => $division->slug,
+                'handleLabel' => $division->handle?->label,
+            ],
+            'members' => $rows,
+            'stats'   => [
+                'total'   => $members->count(),
+                'active'  => $rows->where('status', 'active')->count(),
+                'onLeave' => $rows->where('status', 'onLeave')->count(),
+                'removed' => $rows->where('status', 'removed')->count(),
+            ],
+            'canManage' => request()->user()->can('recruit', Member::class),
+            'addUrl'    => route('addPartTimer', $division),
+        ]);
     }
 
     /**
@@ -85,7 +105,7 @@ class DivisionController extends Controller
         return redirect()->back();
     }
 
-    public function members(Division $division)
+    public function members(Division $division): Response
     {
         $includeParttimers = request()->boolean('parttimers');
 
@@ -104,7 +124,11 @@ class DivisionController extends Controller
         $voiceActivityGraph = $this->division->getDivisionVoiceActivity($division);
         $unitStats          = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
 
-        return view('division.members', compact('division', 'members', 'unitStats', 'includeParttimers'));
+        return Inertia::render('division/members', [
+            ...MemberListProps::build($division, $members, $unitStats),
+            'scope'             => ['kind' => 'division', 'name' => $division->name],
+            'includeParttimers' => $includeParttimers,
+        ]);
     }
 
     public function unassignedToSquad(Division $division): JsonResponse

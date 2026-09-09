@@ -16,7 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
+use Inertia\Inertia;
+use Inertia\Response;
 use Throwable;
 
 #[Middleware('auth')]
@@ -24,7 +25,7 @@ class ReportController extends Controller
 {
     public function __construct(private DivisionRepository $division) {}
 
-    public function retentionReport(Division $division): View
+    public function retentionReport(Division $division): Response
     {
         [$start, $end, $range] = $this->parseDateRange(
             now()->subMonthsNoOverflow(6)->startOfMonth(),
@@ -120,19 +121,25 @@ class ReportController extends Controller
             'retentionRate' => $retentionRate,
         ];
 
-        return view('division.reports.retention-report', compact(
-            'division',
-            'members',
-            'totalRecruitCount',
-            'population',
-            'range',
-            'recruits',
-            'removals',
-            'stats'
-        ));
+        return Inertia::render('division/reports/retention', [
+            'division'          => ['name' => $division->name, 'slug' => $division->slug],
+            'range'             => $range,
+            'stats'             => $stats,
+            'totalRecruitCount' => $totalRecruitCount,
+            'series'            => $recruits->map(fn ($row, $i) => [
+                'month'    => $row[0],
+                'recruits' => $row[1],
+                'removals' => $removals[$i][1] ?? 0,
+            ])->values(),
+            'topRecruiters' => $members->map(fn ($item) => [
+                'rankName' => $item['member']->present()->rankName,
+                'recruits' => $item['recruits'],
+                'url'      => route('member', $item['member']->getUrlParams()),
+            ])->values(),
+        ]);
     }
 
-    public function voiceReport(Division $division): View
+    public function voiceReport(Division $division): Response
     {
         $discordIssues = $division->members()
             ->misconfiguredDiscord()
@@ -150,37 +157,29 @@ class ReportController extends Controller
             'neverConfigured' => $groupedByStatus->get('never_configured')?->count() ?? 0,
         ];
 
-        return view('division.reports.voice-report', compact(
-            'division',
-            'discordIssues',
-            'groupedByStatus',
-            'stats',
-        ));
+        return Inertia::render('division/reports/voice', [
+            'division' => ['name' => $division->name, 'slug' => $division->slug, 'platoonLabel' => $division->locality('platoon')],
+            'stats'    => $stats,
+            'members'  => $discordIssues->map(fn (Member $member) => [
+                'rankName'    => $member->present()->rankName,
+                'status'      => $member->last_voice_status->value,
+                'statusLabel' => $member->last_voice_status->getLabel(),
+                'platoon'     => $member->platoon?->name,
+                'discord'     => $member->discord,
+                'lastActive'  => $member->present()->lastActive('last_voice_activity'),
+                'url'         => route('member', $member->getUrlParams()),
+                'forumUrl'    => doForumFunction([$member->clan_id], 'forumProfile'),
+            ])->values(),
+        ]);
     }
 
-    public function censusReport(Division $division): View
+    public function censusReport(Division $division): Response
     {
         $censuses = $division->census
             ->sortByDesc('created_at')
             ->unique(fn ($c) => $c->created_at->toDateString())
             ->take(52)
             ->values();
-
-        $populations = $censuses->values()->map(fn ($census, $key) => [
-            $census->javascriptTimestamp, $census->count,
-        ]);
-
-        $weeklyActive = $censuses->values()->map(fn ($census, $key) => [
-            $census->javascriptTimestamp, $census->weekly_active_count,
-        ]);
-
-        $weeklyDiscordActive = $censuses->values()->map(fn ($census, $key) => [
-            $census->javascriptTimestamp, $census->weekly_voice_count,
-        ]);
-
-        $comments = $censuses->values()->filter(fn ($census) => $census->notes)->map(fn ($census, $key) => [
-            'x' => $key, 'y' => $censuses->values()->pluck('count'), 'contents' => $census->notes,
-        ])->values();
 
         $latest   = $censuses->first();
         $previous = $censuses->skip(1)->first();
@@ -213,15 +212,31 @@ class ReportController extends Controller
         $stats['peakCount'] = $peakCensus?->count ?? 0;
         $stats['peakDate']  = $peakCensus?->created_at?->format('M j, Y');
 
-        return view('division.reports.census', compact(
-            'division',
-            'populations',
-            'weeklyActive',
-            'comments',
-            'censuses',
-            'weeklyDiscordActive',
-            'stats',
-        ));
+        $ordered = $censuses->reverse()->values();
+
+        return Inertia::render('division/reports/census', [
+            'division' => ['name' => $division->name, 'slug' => $division->slug],
+            'stats'    => $stats,
+            'series'   => $ordered->map(fn ($census) => [
+                'date'       => $census->created_at->format('M j'),
+                'population' => $census->count,
+                'voice'      => $census->weekly_voice_count,
+            ])->values(),
+            'weeks' => $censuses->map(function ($census, $index) use ($censuses) {
+                $prev         = $censuses->skip($index + 1)->first();
+                $voicePercent = $census->count > 0
+                    ? round($census->weekly_voice_count / $census->count * 100, 1)
+                    : 0;
+
+                return [
+                    'date'         => $census->created_at->format('M j, Y'),
+                    'population'   => $census->count,
+                    'change'       => $prev ? $census->count - $prev->count : 0,
+                    'voicePercent' => $voicePercent,
+                    'voiceCount'   => $census->weekly_voice_count,
+                ];
+            })->values(),
+        ]);
     }
 
     public function promotionsReport(
@@ -230,7 +245,7 @@ class ReportController extends Controller
         Division $division,
         ?int $month = null,
         ?int $year = null
-    ): View {
+    ): Response {
         if ($period = $request->query('period')) {
             [$year, $month] = explode('-', $period);
             $year           = (int) $year;
@@ -269,16 +284,43 @@ class ReportController extends Controller
             ? Carbon::createFromDate((int) $year, (int) $month, 1)->format('F Y')
             : now()->format('F Y');
 
-        return view('division.reports.promotions', [
-            'promotions'       => $promotions,
-            'division'         => $division,
-            'promotionPeriods' => $promotionPeriods,
-            'year'             => $year,
-            'month'            => $month,
-            'ranks'            => $ranks,
-            'counts'           => $counts,
-            'periodLabel'      => $periodLabel,
+        $selectedKey = $year && $month ? sprintf('%04d-%02d', $year, $month) : null;
+
+        $groups = $promotions
+            ->groupBy(fn ($p) => $p->rank?->value ?? 0)
+            ->sortKeysDesc()
+            ->map(fn ($group) => [
+                'rankName' => $group->first()->rank?->getLabel() ?? 'Unknown',
+                'members'  => $group->map(fn ($action) => [
+                    'name' => $action->member?->name ?? 'Unknown',
+                    'url'  => $action->member ? route('member', $action->member->getUrlParams()) : null,
+                    'date' => $action->approved_at?->format('M j, Y'),
+                ])->values(),
+            ])
+            ->values();
+
+        return Inertia::render('division/reports/promotions', [
+            'division'    => ['name' => $division->name, 'slug' => $division->slug],
+            'periods'     => $promotionPeriods,
+            'selectedKey' => $selectedKey,
+            'periodLabel' => $periodLabel,
+            'chart'       => $ranks->map(fn ($rank, $i) => ['rank' => $rank, 'count' => $counts[$i] ?? 0])->values(),
+            'groups'      => $groups,
+            'total'       => $promotions->count(),
+            'bbCode'      => $this->promotionsBbCode($promotions),
         ]);
+    }
+
+    private function promotionsBbCode(Collection $promotions): string
+    {
+        return $promotions
+            ->groupBy(fn ($p) => $p->rank?->name ?? 'Unspecified')
+            ->map(function ($actions, $rank) {
+                $names = $actions->map(fn ($a) => '[*]' . $a->member?->name)->implode("\n");
+
+                return '[b]' . strtoupper($rank) . "[/b]\n[list]\n" . $names . "\n[/list]";
+            })
+            ->implode("\n\n");
     }
 
     private function promotionPeriodsFromActions(Division $division)
@@ -318,7 +360,7 @@ class ReportController extends Controller
             ->get();
     }
 
-    public function transferReport(Division $division): View
+    public function transferReport(Division $division): Response
     {
         [$start, $end, $range] = $this->parseDateRange();
 
@@ -369,16 +411,18 @@ class ReportController extends Controller
         }
 
         $stats = [
-            'total'   => $total,
-            'sources' => $sources->where('is_original', false)->count(),
+            'total'         => $total,
+            'sourceCount'   => $sources->where('is_original', false)->count(),
+            'transferredIn' => $sources->where('is_original', false)->sum('count'),
+            'startedHere'   => $sources->where('is_original', true)->sum('count'),
         ];
 
-        return view('division.reports.transfer-report', compact(
-            'division',
-            'sources',
-            'stats',
-            'range',
-        ));
+        return Inertia::render('division/reports/transfers', [
+            'division' => ['name' => $division->name, 'slug' => $division->slug],
+            'range'    => $range,
+            'stats'    => $stats,
+            'sources'  => $sources->values(),
+        ]);
     }
 
     private function parseDateRange(?Carbon $defaultStart = null, ?Carbon $defaultEnd = null): array

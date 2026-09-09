@@ -6,15 +6,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('changelog', [AppController::class, 'changelog'])->name('changelog');
 
-Route::prefix('help/docs')->group(function () {
-    Route::get('/', [HelpController::class, 'index'])->name('help');
-    Route::view('member-awards', 'help.member-awards')->name('help.member-awards');
-    Route::view('managing-rank', 'help.managing-rank')->name('help.managing-rank');
-    Route::view('recruiting', 'help.recruiting')->name('help.recruiting');
+Route::controller(HelpController::class)->prefix('help/docs')->group(function () {
+    Route::get('/', 'index')->name('help');
+    Route::get('member-awards', 'memberAwards')->name('help.member-awards');
+    Route::get('managing-rank', 'managingRank')->name('help.managing-rank');
+    Route::get('recruiting', 'recruiting')->name('help.recruiting');
 
     Route::middleware('admin')->prefix('admin')->name('help.admin.')->group(function () {
-        Route::view('/', 'help.admin.index')->name('home');
-        Route::view('division-checklist', 'help.admin.division-checklist')->name('division-checklist');
-        Route::view('sink', 'help.admin.sink')->name('sink');
+        Route::get('/', 'adminContributing')->name('home');
+        Route::get('division-checklist', 'adminChecklist')->name('division-checklist');
+        Route::get('sink', 'adminSink')->name('sink');
     });
 });

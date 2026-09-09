@@ -1,0 +1,24 @@
+/* ==========================================================================
+ * app.css — entry point for the Inertia frontend's hand-authored styles.
+ *
+ * Everything not covered here is Tailwind utilities inline in components, or
+ * `cva` variants inside the shadcn primitives under components/ui/.
+ *
+ *   theme.css              — design tokens (:root) + @theme inline utility map
+ *   base.css               — @layer base: reset, body, scrollbars
+ *   utilities.css          — @layer utilities: typography + Tron surface kit
+ *   components/*.css        — one file per bespoke widget (plain CSS + keyframes)
+ * ========================================================================== */
+
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:where([data-theme='tron'], [data-theme='tron'] *));
+
+@import './theme.css';
+@import './base.css';
+@import './utilities.css';
+
+@import './components/rank-timeline.css';
+@import './components/tron-spinner.css';
+@import './components/tron-flourishes.css';

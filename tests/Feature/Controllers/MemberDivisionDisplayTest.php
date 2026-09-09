@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\Transfer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -16,20 +17,7 @@ class MemberDivisionDisplayTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function member_name_is_escaped_on_show_page()
-    {
-        $user   = $this->createMemberWithUser(['name' => '<script>alert(1)</script>']);
-        $member = $user->member;
-
-        $this->actingAs($user)
-            ->get(route('member', [$member->clan_id, 'x']))
-            ->assertOk()
-            ->assertDontSee('<script>alert(1)</script>', false)
-            ->assertSee('&lt;script&gt;alert(1)&lt;/script&gt;', false);
-    }
-
-    #[Test]
-    public function primary_division_card_is_shown()
+    public function primary_division_is_shown()
     {
         $user   = $this->createMemberWithUser();
         $member = $user->member;
@@ -37,9 +25,9 @@ class MemberDivisionDisplayTest extends TestCase
         $this->actingAs($user)
             ->get(route('member', $member->getUrlParams()))
             ->assertOk()
-            ->assertSee($member->division->name)
-            ->assertSee('division-card--primary', false)
-            ->assertSee('Primary');
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('member/show')
+                ->where('divisions.current.name', $member->division->name));
     }
 
     #[Test]
@@ -54,19 +42,19 @@ class MemberDivisionDisplayTest extends TestCase
         $this->actingAs($user)
             ->get(route('member', $member->getUrlParams()))
             ->assertOk()
-            ->assertSee($partTime->name)
-            ->assertSee('Part-Time');
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('divisions.partTime', fn ($partTimeDivs) => collect($partTimeDivs)->contains('name', $partTime->name)));
     }
 
     #[Test]
-    public function part_time_badge_is_absent_when_none_assigned()
+    public function part_time_list_is_empty_when_none_assigned()
     {
         $user = $this->createMemberWithUser();
 
         $this->actingAs($user)
             ->get(route('member', $user->member->getUrlParams()))
             ->assertOk()
-            ->assertDontSee('division-card-badge--secondary', false);
+            ->assertInertia(fn (AssertableInertia $page) => $page->where('divisions.partTime', []));
     }
 
     #[Test]
@@ -90,23 +78,23 @@ class MemberDivisionDisplayTest extends TestCase
         $this->actingAs($user)
             ->get(route('member', $member->getUrlParams()))
             ->assertOk()
-            ->assertSee($pastDiv->name)
-            ->assertSee('division-chip', false);
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('divisions.past', fn ($past) => collect($past)->contains('name', $pastDiv->name)));
     }
 
     #[Test]
-    public function past_section_is_absent_with_no_transfer_history()
+    public function past_section_is_empty_with_no_transfer_history()
     {
         $user = $this->createMemberWithUser();
 
         $this->actingAs($user)
             ->get(route('member', $user->member->getUrlParams()))
             ->assertOk()
-            ->assertDontSee('division-chip', false);
+            ->assertInertia(fn (AssertableInertia $page) => $page->where('divisions.past', []));
     }
 
     #[Test]
-    public function repeated_past_division_visits_are_grouped_with_count_badge()
+    public function repeated_past_division_visits_are_grouped_with_count()
     {
         $user         = $this->createMemberWithUser();
         $member       = $user->member;
@@ -117,56 +105,16 @@ class MemberDivisionDisplayTest extends TestCase
         Transfer::factory()->create(['member_id' => $member->id, 'division_id' => $returningDiv->id, 'created_at' => now()->subYear()]);
         Transfer::factory()->create(['member_id' => $member->id, 'division_id' => $member->division_id, 'created_at' => now()->subMonths(6)]);
 
-        $response = $this->actingAs($user)
-            ->get(route('member', $member->getUrlParams()))
-            ->assertOk();
-
-        $response->assertSee('×2');
-        $response->assertSee($returningDiv->name);
-    }
-
-    #[Test]
-    public function manage_button_opens_settings_modal_when_viewing_own_profile()
-    {
-        $user = $this->createSeniorLeader();
-
-        $editUrl = route('filament.mod.resources.members.edit', $user->member) . '#part-time-divisions';
-
-        $this->actingAs($user)
-            ->get(route('member', $user->member->getUrlParams()))
-            ->assertOk()
-            ->assertSee('class="btn btn-default btn-xs" data-toggle="modal" data-target="#part-time-divisions-modal"', false)
-            ->assertDontSee($editUrl, false);
-    }
-
-    #[Test]
-    public function manage_button_links_to_edit_page_when_authorized_for_another_member()
-    {
-        $seniorLeader = $this->createSeniorLeader();
-        $member       = $this->createMember();
-
-        $editUrl = route('filament.mod.resources.members.edit', $member) . '#part-time-divisions';
-
-        $this->actingAs($seniorLeader)
-            ->get(route('member', $member->getUrlParams()))
-            ->assertOk()
-            ->assertSee($editUrl, false)
-            ->assertDontSee('class="btn btn-default btn-xs" data-toggle="modal" data-target="#part-time-divisions-modal"', false);
-    }
-
-    #[Test]
-    public function manage_button_is_absent_when_not_authorized_for_another_member()
-    {
-        $user   = $this->createMemberWithUser();
-        $member = $this->createMember();
-
-        $editUrl = route('filament.mod.resources.members.edit', $member) . '#part-time-divisions';
-
         $this->actingAs($user)
             ->get(route('member', $member->getUrlParams()))
             ->assertOk()
-            ->assertDontSee('class="btn btn-default btn-xs" data-toggle="modal" data-target="#part-time-divisions-modal"', false)
-            ->assertDontSee($editUrl, false);
+            ->assertInertia(function (AssertableInertia $page) use ($returningDiv) {
+                $entry = collect($page->toArray()['props']['divisions']['past'])
+                    ->firstWhere('name', $returningDiv->name);
+
+                $this->assertNotNull($entry);
+                $this->assertSame(2, $entry['visits']);
+            });
     }
 
     #[Test]
@@ -187,12 +135,10 @@ class MemberDivisionDisplayTest extends TestCase
             'created_at'  => now()->subMonths(3),
         ]);
 
-        $content = $this->actingAs($user)
+        $this->actingAs($user)
             ->get(route('member', $member->getUrlParams()))
             ->assertOk()
-            ->getContent();
-
-        $primaryCardCount = substr_count($content, 'division-card--primary');
-        $this->assertSame(1, $primaryCardCount, 'Current division should appear once in primary card only');
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('divisions.past', fn ($past) => ! collect($past)->contains('name', $member->division->name)));
     }
 }

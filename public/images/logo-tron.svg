@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+  <title>AOD Tracker</title>
+  <g>
+    <rect x="0.35" y="0.35" width="3.3" height="3.3" rx="0.4" fill="#e11d2e"/>
+    <rect x="4.35" y="4.35" width="3.3" height="3.3" rx="0.4" fill="#e11d2e"/>
+    <rect x="8.35" y="8.35" width="3.3" height="3.3" rx="0.4" fill="#e11d2e"/>
+    <rect x="12.35" y="12.35" width="3.3" height="3.3" rx="0.4" fill="#e11d2e"/>
+
+    <rect x="4.35" y="0.35" width="3.3" height="3.3" rx="0.4" fill="#a3182a"/>
+    <rect x="8.35" y="4.35" width="3.3" height="3.3" rx="0.4" fill="#a3182a"/>
+    <rect x="12.35" y="8.35" width="3.3" height="3.3" rx="0.4" fill="#a3182a"/>
+
+    <rect x="8.35" y="0.35" width="3.3" height="3.3" rx="0.4" fill="#5f1420"/>
+    <rect x="12.35" y="4.35" width="3.3" height="3.3" rx="0.4" fill="#5f1420"/>
+
+    <rect x="12.35" y="0.35" width="3.3" height="3.3" rx="0.4" fill="#2c0c12"/>
+
+    <rect x="0.35" y="4.35" width="3.3" height="3.3" rx="0.4" fill="#f04d5f"/>
+    <rect x="4.35" y="8.35" width="3.3" height="3.3" rx="0.4" fill="#f04d5f"/>
+    <rect x="8.35" y="12.35" width="3.3" height="3.3" rx="0.4" fill="#f04d5f"/>
+
+    <rect x="0.35" y="8.35" width="3.3" height="3.3" rx="0.4" fill="#f98c98"/>
+    <rect x="4.35" y="12.35" width="3.3" height="3.3" rx="0.4" fill="#f98c98"/>
+
+    <rect x="0.35" y="12.35" width="3.3" height="3.3" rx="0.4" fill="#ffdfe3"/>
+  </g>
+</svg>

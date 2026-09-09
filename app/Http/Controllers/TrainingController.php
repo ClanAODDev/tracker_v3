@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Member;
 use App\Models\TrainingModule;
+use GrahamCampbell\Markdown\Facades\Markdown;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
+use Inertia\Inertia;
+use Inertia\Response;
 
 #[Middleware('auth')]
 class TrainingController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $this->authorize('train', auth()->user());
 
@@ -19,12 +22,18 @@ class TrainingController extends Controller
 
         $modules = TrainingModule::active()->ordered()->withCount('sections')->get()
             ->filter(fn ($module) => $module->isAccessibleBy($member))
-            ->values();
+            ->values()
+            ->map(fn (TrainingModule $module) => [
+                'slug'          => $module->slug,
+                'name'          => $module->name,
+                'description'   => $module->description,
+                'sectionsCount' => $module->sections_count,
+            ]);
 
-        return view('training.index', compact('modules'));
+        return Inertia::render('training/index', ['modules' => $modules]);
     }
 
-    public function show(string $slug, Request $request)
+    public function show(string $slug, Request $request): Response
     {
         $this->authorize('train', auth()->user());
 
@@ -35,15 +44,36 @@ class TrainingController extends Controller
 
         abort_unless($module->isAccessibleBy(auth()->user()->member), 403);
 
-        $trainee = null;
-        if ($request->has('clan_id')) {
-            $trainee = Member::where('clan_id', $request->clan_id)->first();
-        }
+        $trainee = $request->filled('clan_id')
+            ? Member::where('clan_id', $request->clan_id)->first()
+            : null;
 
-        return view('training.module', compact('module', 'trainee'));
+        return Inertia::render('training/module', [
+            'module' => [
+                'slug'               => $module->slug,
+                'name'               => $module->name,
+                'checkpointLabel'    => $module->checkpoint_label,
+                'showCompletionForm' => (bool) $module->show_completion_form,
+                'sections'           => $module->sections->map(fn ($section) => [
+                    'title'       => $section->title,
+                    'content'     => (string) Markdown::convertToHtml($section->content ?? ''),
+                    'checkpoints' => $section->checkpoints->map(fn ($checkpoint) => [
+                        'label'       => $checkpoint->label,
+                        'description' => $checkpoint->description
+                            ? (string) Markdown::convertToHtml($checkpoint->description)
+                            : null,
+                    ])->values(),
+                ])->values(),
+            ],
+            'trainee' => $trainee ? [
+                'clanId'   => $trainee->clan_id,
+                'name'     => $trainee->name,
+                'rankName' => $trainee->present()->rankName,
+            ] : null,
+        ]);
     }
 
-    public function sgtTraining(Request $request)
+    public function sgtTraining(Request $request): Response
     {
         return $this->show('sgt', $request);
     }

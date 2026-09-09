@@ -5,6 +5,7 @@ namespace Tests\Feature\Controllers;
 use App\Enums\Position;
 use App\Enums\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -34,6 +35,33 @@ class MemberAssignmentAuthorizationTest extends TestCase
 
         $this->actingAs($srLdr)
             ->post(route('member.unassign', $srLdr->member->getUrlParams()))
+            ->assertForbidden();
+    }
+
+    #[Test]
+    public function confirm_reset_renders_the_inertia_page_for_sr_ldr()
+    {
+        $srLdr  = $this->createSeniorLeader();
+        $target = $this->createMember();
+
+        $this->actingAs($srLdr)
+            ->get(route('member.confirm-reset', $target->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('member/confirm-unassign')
+                ->where('member.name', $target->name)
+                ->has('resetUrl')
+                ->has('member.profileUrl'));
+    }
+
+    #[Test]
+    public function confirm_reset_is_forbidden_for_member_role()
+    {
+        $user   = $this->createMemberWithUser();
+        $target = $this->createMember();
+
+        $this->actingAs($user)
+            ->get(route('member.confirm-reset', $target->getUrlParams()))
             ->assertForbidden();
     }
 

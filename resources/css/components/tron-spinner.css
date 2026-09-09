@@ -1,0 +1,21 @@
+/* Tron spinner — a bright segment traces the perimeter of a static square
+   frame (no rotation; the dash offset slides along the path).
+
+   One cycle is three revolutions under a single ease-in-out: the segment
+   accelerates away from the top edge, whips around at speed, then decelerates
+   back to a near-stop at the top before winding up again. -216 = 3 × 72
+   (the 18×18 rect's perimeter), so the loop seam lands back at the top.
+   Used by resources/js/components/tron-spinner.tsx. */
+
+@keyframes tron-spinner-trace {
+    from { stroke-dashoffset: 0; }
+    to   { stroke-dashoffset: -216; }
+}
+
+.tron-spinner-trace {
+    animation: tron-spinner-trace 2.4s cubic-bezier(0.6, 0, 0.35, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tron-spinner-trace { animation: none; }
+}

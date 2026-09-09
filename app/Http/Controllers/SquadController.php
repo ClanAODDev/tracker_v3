@@ -11,8 +11,11 @@ use App\Models\Platoon;
 use App\Models\Squad;
 use App\Repositories\SquadRepository;
 use App\Services\MemberQueryService;
+use App\Support\MemberListProps;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
+use Inertia\Inertia;
+use Inertia\Response;
 
 #[Middleware('auth')]
 class SquadController extends Controller
@@ -22,15 +25,42 @@ class SquadController extends Controller
         private MemberQueryService $memberQuery,
     ) {}
 
-    public function show(Division $division, Platoon $platoon, Squad $squad)
+    public function show(Division $division, Platoon $platoon, Squad $squad): Response
     {
         $platoon->load('squads.leader');
+        $squad->loadMissing('leader');
 
         $members            = $this->memberQuery->loadSortedMembers($squad->members(), $division);
         $voiceActivityGraph = $this->squadRepository->getSquadVoiceActivity($squad);
         $unitStats          = UnitStatsData::fromMembers($members, $division, $voiceActivityGraph);
+        $canManage          = auth()->user()->can('update', $squad);
 
-        return view('squad.show', compact('squad', 'platoon', 'members', 'division', 'unitStats'));
+        return Inertia::render('division/members', [
+            ...MemberListProps::build(
+                $division,
+                $members,
+                $unitStats,
+                assignmentKind: 'squad',
+                directRecruitOfClanId: $squad->leader?->clan_id,
+            ),
+            'scope' => [
+                'kind'        => 'squad',
+                'name'        => $squad->name ?: 'Untitled ' . $division->locality('squad'),
+                'canManage'   => $canManage,
+                'editUrl'     => $canManage ? route('filament.mod.resources.squads.edit', $squad) : null,
+                'breadcrumbs' => [
+                    ['label' => $division->name, 'href' => route('division', $division->slug)],
+                    ['label' => $platoon->name ?: 'Untitled', 'href' => route('platoon', [$division->slug, $platoon->id])],
+                    ['label' => $squad->name ?: 'Untitled'],
+                ],
+            ],
+            'squads' => $platoon->squads->map(fn ($s, $i) => [
+                'name'    => $s->name ?: ordSuffix($i + 1) . ' Squad',
+                'url'     => route('squad.show', [$division->slug, $platoon, $s]),
+                'leader'  => $s->leader?->present()->rankName(),
+                'current' => $s->id === $squad->id,
+            ])->values(),
+        ]);
     }
 
     public function assignMember(AssignSquadMemberRequest $request): JsonResponse

@@ -67,8 +67,7 @@ class RecruitingControllerTest extends TestCase
             ->get(route('recruiting.initial'));
 
         $response->assertOk();
-        $response->assertViewIs('recruit.index');
-        $response->assertViewHas('divisions');
+        $response->assertInertia(fn ($page) => $page->component('recruiting/index')->has('divisions'));
     }
 
     #[Test]
@@ -103,8 +102,11 @@ class RecruitingControllerTest extends TestCase
             ->get(route('recruiting.form', $division->slug));
 
         $response->assertOk();
-        $response->assertViewIs('recruit.form');
-        $response->assertViewHas('division');
+        $response->assertInertia(fn ($page) => $page
+            ->component('recruiting/form')
+            ->where('divisionSlug', $division->slug)
+            ->has('platoons')
+            ->has('ranks'));
     }
 
     #[Test]
