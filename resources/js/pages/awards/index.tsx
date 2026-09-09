@@ -99,7 +99,12 @@ export default function AwardsIndex({
                         <HeroStat icon={Hand} value={totals.requestable} label="Requestable" tone="text-success" />
                     </div>
 
-                    <RarityBar breakdown={rarityBreakdown} rarities={rarities} total={totals.awards} />
+                    <RarityBar
+                        breakdown={rarityBreakdown}
+                        rarities={rarities}
+                        total={totals.awards}
+                        className="tron-hatch rounded-b-md"
+                    />
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4">
@@ -237,10 +242,12 @@ function RarityBar({
     breakdown,
     rarities,
     total,
+    className,
 }: {
     breakdown: Record<string, number>;
     rarities: Rarity[];
     total: number;
+    className?: string;
 }) {
     const segments = rarities
         .filter((r) => r.key !== 'unclaimed' && (breakdown[r.key] ?? 0) > 0)
@@ -249,7 +256,7 @@ function RarityBar({
     if (segments.length === 0 || total === 0) return null;
 
     return (
-        <div className="border-t border-border px-5 py-3">
+        <div className={cn('border-t border-border px-5 py-3', className)}>
             <div className="flex h-1.5 gap-0.5 overflow-hidden rounded-full">
                 {segments.map((s) => (
                     <span
