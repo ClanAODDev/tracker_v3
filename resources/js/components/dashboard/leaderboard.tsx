@@ -80,6 +80,7 @@ function Row({ entry, rank, highlight, signed }: { entry: LeaderEntry; rank: num
 export function Leaderboard({ userDivisionId, recruits, voice, growth }: LeaderboardProps) {
     const data = { recruits, voice, growth };
     const [tab, setTab] = useState<(typeof TABS)[number]['key']>('recruits');
+    const [hovered, setHovered] = useState<string | null>(null);
 
     return (
         <div>
@@ -89,9 +90,16 @@ export function Leaderboard({ userDivisionId, recruits, voice, growth }: Leaderb
             </div>
 
             {/* Desktop: all three */}
-            <div className="hidden gap-4 lg:grid lg:grid-cols-3">
+            <div className="hidden gap-4 lg:grid lg:grid-cols-3" onMouseLeave={() => setHovered(null)}>
                 {TABS.map(({ key, label, period, footer }) => (
-                    <div key={key} className="rounded-md border border-border bg-card">
+                    <div
+                        key={key}
+                        onMouseEnter={() => setHovered(key)}
+                        className={cn(
+                            'rounded-md border border-border bg-card transition-opacity duration-200',
+                            hovered && hovered !== key && 'opacity-40',
+                        )}
+                    >
                         <div className="flex items-center justify-between border-b border-border px-3 py-2">
                             <span className="text-xs font-semibold uppercase tracking-wide">{label}</span>
                             <span className="text-[11px] text-muted-foreground">{period}</span>
