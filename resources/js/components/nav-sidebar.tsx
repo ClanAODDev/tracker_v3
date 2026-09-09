@@ -34,7 +34,12 @@ function LeafLink({ item, currentUrl, nested }: { item: NavItem; currentUrl: str
     }
 
     return (
-        <Link href={item.href ?? '#'} prefetch className={className}>
+        <Link
+            href={item.href ?? '#'}
+            prefetch
+            aria-current={active ? 'page' : undefined}
+            className={className}
+        >
             {content}
         </Link>
     );

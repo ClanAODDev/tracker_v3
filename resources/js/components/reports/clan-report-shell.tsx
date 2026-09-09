@@ -43,6 +43,8 @@ export function ClanReportShell({ title, active, actions, children }: PropsWithC
                         <Link
                             key={report.key}
                             href={report.href}
+                            prefetch
+                            aria-current={report.key === active ? 'page' : undefined}
                             className={cn(
                                 'rounded-md px-3 py-1.5 text-sm transition-colors',
                                 report.key === active

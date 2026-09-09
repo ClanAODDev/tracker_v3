@@ -52,6 +52,8 @@ export function ReportShell({
                             <Link
                                 key={report.key}
                                 href={href}
+                                prefetch
+                                aria-current={isActive ? 'page' : undefined}
                                 className={cn(
                                     'rounded-md px-3 py-1.5 text-sm transition-colors',
                                     isActive
