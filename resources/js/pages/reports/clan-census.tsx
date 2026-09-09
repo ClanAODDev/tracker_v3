@@ -96,7 +96,7 @@ export default function ClanCensus({
 
             <DateRangeFilter start={dateRange.start} end={dateRange.end} baseUrl="/clan/census" />
 
-            <div className="grid gap-6 lg:grid-cols-[1fr_18rem]">
+            <div className="grid gap-6 lg:grid-cols-[1fr_18rem] [&>*]:min-w-0">
                 <div className="space-y-6">
                     {chartData.length > 0 && (
                         <section>

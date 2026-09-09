@@ -108,7 +108,7 @@ export default function OrgChart({ division, tree }: OrgChartProps) {
                         )}
                     </div>
 
-                    <div className="ml-auto flex items-center gap-1">
+                    <div className="ml-auto flex flex-wrap items-center justify-end gap-1">
                         <Button variant="outline" size="icon-sm" onClick={() => chartRef.current?.zoomIn()} title="Zoom in">
                             <Plus />
                         </Button>

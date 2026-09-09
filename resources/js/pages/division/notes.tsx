@@ -153,7 +153,7 @@ export default function DivisionNotes({ division, noteTypes, tags, filters, note
                                 >
                                     <Icon className={cn('mt-0.5 size-4 shrink-0', TYPE_TONE[note.type])} />
                                     <div className="min-w-0 flex-1">
-                                        <p className="whitespace-pre-line text-sm">{note.body}</p>
+                                        <p className="whitespace-pre-line break-words text-sm">{note.body}</p>
                                         <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                                             <span className="font-medium text-foreground">{note.memberName}</span>
                                             <span>by {note.author}</span>
