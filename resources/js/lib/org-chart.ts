@@ -365,8 +365,30 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
     }
 
     function renderNode(ng: any, d: any, colors: any) {
+        const hl = isHighlighted(d.data);
+        ng.classed('highlighted', hl);
+        paintNode(ng, d, colors);
+        if (!hl) return;
+
+        const box = ng.select('rect');
+        if (box.empty()) return;
+        const bx = +box.attr('x');
+        const by = +box.attr('y');
+        ng.append('rect')
+            .attr('x', bx - 3)
+            .attr('y', by - 3)
+            .attr('width', +box.attr('width') + 6)
+            .attr('height', +box.attr('height') + 6)
+            .attr('rx', 8)
+            .attr('fill', 'none')
+            .attr('stroke', colors.accent)
+            .attr('stroke-width', 2.5)
+            .style('pointer-events', 'none')
+            .style('filter', `drop-shadow(0 0 6px ${colors.glow})`);
+    }
+
+    function paintNode(ng: any, d: any, colors: any) {
         const type = d.data.type;
-        ng.classed('highlighted', isHighlighted(d.data));
         const w = nodeWidth();
 
         if (type === 'division') {

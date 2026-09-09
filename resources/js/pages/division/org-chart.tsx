@@ -15,7 +15,9 @@ interface OrgChartProps {
 export default function OrgChart({ division, tree }: OrgChartProps) {
     const svgRef = useRef<SVGSVGElement>(null);
     const chartRef = useRef<OrgChartHandle | null>(null);
-    const [query, setQuery] = useState('');
+    const [query, setQuery] = useState(
+        () => new URLSearchParams(window.location.search).get('q') ?? '',
+    );
     const [matches, setMatches] = useState<SearchMatch[]>([]);
     const [showResults, setShowResults] = useState(false);
     const [handlesOn, setHandlesOn] = useState(false);
@@ -24,6 +26,7 @@ export default function OrgChart({ division, tree }: OrgChartProps) {
         if (!svgRef.current) return;
         const chart = createOrgChart(svgRef.current, tree);
         chartRef.current = chart;
+        if (query.trim()) setMatches(chart.setSearch(query));
         return () => chart.destroy();
     }, [tree]);
 
@@ -32,6 +35,10 @@ export default function OrgChart({ division, tree }: OrgChartProps) {
         const found = chartRef.current?.setSearch(value) ?? [];
         setMatches(found);
         setShowResults(value.trim().length > 0);
+
+        const url = new URL(window.location.href);
+        value.trim() ? url.searchParams.set('q', value.trim()) : url.searchParams.delete('q');
+        window.history.replaceState(null, '', url);
     }
 
     return (
