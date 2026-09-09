@@ -54,11 +54,23 @@ interface PersistedState {
 
 const DEFAULT_HIDDEN: VisibilityState = {
     select: false,
+    leave: false,
     tags: false,
     reminder: false,
     handle: false,
     posts: false,
 };
+
+// LOA members sort to the top by default; a clicked column header still takes
+// over for the session, and the pin is reapplied on the next load.
+function withLeaveFirst(sorting: SortingState): SortingState {
+    const rest = sorting.filter((s) => s.id !== 'leave');
+    return [{ id: 'leave', desc: true }, ...(rest.length ? rest : [{ id: 'name', desc: false }])];
+}
+
+// Columns kept on phones; everything else collapses below the `sm` breakpoint.
+const MOBILE_COLUMNS = new Set(['select', 'name', 'rank']);
+const mobileColumnClass = (id: string) => (MOBILE_COLUMNS.has(id) ? undefined : 'hidden sm:table-cell');
 
 function loadState(key: string): Partial<PersistedState> {
     try {
@@ -78,7 +90,7 @@ export function MemberTable({
 }: Props) {
     const persisted = useMemo(() => loadState(storageKey), [storageKey]);
 
-    const [sorting, setSorting] = useState<SortingState>(persisted.sorting ?? [{ id: 'name', desc: false }]);
+    const [sorting, setSorting] = useState<SortingState>(withLeaveFirst(persisted.sorting ?? []));
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
         ...DEFAULT_HIDDEN,
         ...(persisted.columnVisibility ?? {}),
@@ -313,6 +325,14 @@ export function MemberTable({
                 header: 'Posts',
                 cell: ({ row }) => <span className="numeric text-muted-foreground">{row.original.posts}</span>,
             },
+            {
+                id: 'leave',
+                accessorFn: (m) => (m.leave ? 1 : 0),
+                header: 'LOA',
+                enableGlobalFilter: false,
+                sortDescFirst: true,
+                cell: () => null,
+            },
         ],
         [assignmentLabel, selectedTags, reminded],
     );
@@ -360,7 +380,7 @@ export function MemberTable({
     const dragging = useRef(false);
     const dragValue = useRef(true);
 
-    const hideableColumns = table.getAllColumns().filter((c) => c.getCanHide());
+    const hideableColumns = table.getAllColumns().filter((c) => c.getCanHide() && c.id !== 'leave');
 
     return (
         <div className="space-y-3">
@@ -458,7 +478,7 @@ export function MemberTable({
                                     return (
                                         <TableHead
                                             key={header.id}
-                                            className="text-xs"
+                                            className={cn('text-xs', mobileColumnClass(header.column.id))}
                                             aria-sort={
                                                 !canSort
                                                     ? undefined
@@ -533,7 +553,7 @@ export function MemberTable({
                                     }}
                                 >
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
+                                        <TableCell key={cell.id} className={mobileColumnClass(cell.column.id)}>
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </TableCell>
                                     ))}
