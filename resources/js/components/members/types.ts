@@ -11,7 +11,7 @@ export interface MemberRow {
     profileUrl: string;
     assignment: { label: string; url: string } | null;
     joinDate: string | null;
-    voice: { label: string; tone: string; iso: string | null };
+    voice: { label: string; tone: string; iso: string | null; bucket: number };
     lastPromotedAt: string | null;
     reminder: { date: string | null; remindedToday: boolean; human: string; sortKey: string };
     canRemind: boolean;

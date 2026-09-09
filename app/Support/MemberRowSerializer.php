@@ -26,23 +26,19 @@ class MemberRowSerializer
         $reminder    = $member->last_activity_reminder_at;
 
         return [
-            'id'            => $member->clan_id,
-            'name'          => $member->name,
-            'rankName'      => $member->present()->rankName(),
-            'rankAbbr'      => $member->rank->getAbbreviation(),
-            'rankValue'     => $member->rank->value,
-            'rankColor'     => $member->rank->getColorHex(),
-            'position'      => $member->position?->getLabel(),
-            'positionAbbr'  => $member->position?->getAbbreviation() ?: null,
-            'positionClass' => $member->position?->getClass(),
-            'profileUrl'    => route('member', $member->getUrlParams()),
-            'assignment'    => $this->assignment($member),
-            'joinDate'      => $member->join_date?->format('Y-m-d'),
-            'voice'         => [
-                'label' => $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks', 'months']),
-                'tone'  => $member->present()->activityClass($this->division),
-                'iso'   => $member->last_voice_activity?->toIso8601String(),
-            ],
+            'id'             => $member->clan_id,
+            'name'           => $member->name,
+            'rankName'       => $member->present()->rankName(),
+            'rankAbbr'       => $member->rank->getAbbreviation(),
+            'rankValue'      => $member->rank->value,
+            'rankColor'      => $member->rank->getColorHex(),
+            'position'       => $member->position?->getLabel(),
+            'positionAbbr'   => $member->position?->getAbbreviation() ?: null,
+            'positionClass'  => $member->position?->getClass(),
+            'profileUrl'     => route('member', $member->getUrlParams()),
+            'assignment'     => $this->assignment($member),
+            'joinDate'       => $member->join_date?->format('Y-m-d'),
+            'voice'          => $this->voice($member),
             'lastPromotedAt' => $member->last_promoted_at?->format('Y-m-d'),
             'reminder'       => [
                 'date'          => $reminder?->format('n/j/y'),
@@ -72,6 +68,18 @@ class MemberRowSerializer
             'primaryDivision' => $isParttimer ? ($member->division?->name ?? 'None') : null,
             'directRecruit'   => $this->directRecruitOfClanId !== null
                 && $member->recruiter_id === $this->directRecruitOfClanId,
+        ];
+    }
+
+    private function voice(Member $member): array
+    {
+        $bucket = $member->present()->activityBucket($this->division);
+
+        return [
+            'label'  => $member->present()->lastActive('last_voice_activity', skipUnits: ['weeks', 'months']),
+            'tone'   => ['text-success', 'text-warning', 'text-destructive', 'text-muted-foreground'][$bucket],
+            'bucket' => $bucket,
+            'iso'    => $member->last_voice_activity?->toIso8601String(),
         ];
     }
 

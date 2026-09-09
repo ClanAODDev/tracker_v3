@@ -72,6 +72,9 @@ function withLeaveFirst(sorting: SortingState): SortingState {
 const MOBILE_COLUMNS = new Set(['select', 'name', 'rank']);
 const mobileColumnClass = (id: string) => (MOBILE_COLUMNS.has(id) ? undefined : 'hidden sm:table-cell');
 
+// Row tint per voice-activity bucket — same hues as the Discord activity graph.
+const ROW_TINT = ['bg-success/[0.05]', 'bg-warning/[0.08]', 'bg-destructive/[0.08]', 'bg-muted-foreground/[0.06]'] as const;
+
 function loadState(key: string): Partial<PersistedState> {
     try {
         return JSON.parse(localStorage.getItem(key) ?? '{}');
@@ -532,7 +535,9 @@ export function MemberTable({
                                     key={row.id}
                                     data-state={row.getIsSelected() ? 'selected' : undefined}
                                     className={cn(
-                                        row.original.leave && 'bg-warning/[0.05] text-muted-foreground',
+                                        row.original.leave
+                                            ? 'bg-warning/[0.05] text-muted-foreground'
+                                            : ROW_TINT[row.original.voice.bucket],
                                         bulkMode && 'cursor-pointer select-none',
                                     )}
                                     onMouseDown={(e) => {
