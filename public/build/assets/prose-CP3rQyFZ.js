@@ -1,1 +1,0 @@
-import{n as e,t}from"./jsx-runtime-CsL-H3Ru.js";var n=t();function r({html:t,className:r}){return(0,n.jsx)(`div`,{className:e(`prose-tron`,r),dangerouslySetInnerHTML:{__html:t}})}export{r as t};
