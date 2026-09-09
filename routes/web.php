@@ -13,7 +13,8 @@ Route::get('unauthorized', fn () => Inertia::render('errors/show', ['status' => 
 if (app()->environment('local')) {
     Route::get('_dev/gallery', fn () => Inertia::render('dev/gallery'))->name('dev.gallery');
 }
-Auth::routes(['register' => false]);
+Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('login', [LoginController::class, 'login']);
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('auth/discord', [DiscordController::class, 'redirect'])->name('auth.discord');

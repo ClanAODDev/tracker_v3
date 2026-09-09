@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\AOD\ClanForumPermissions;
+use App\Http\Controllers\Auth\Concerns\ThrottlesLogins;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -60,12 +60,9 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse();
     }
 
-    /**
-     * @return array|Request|string
-     */
-    public function username()
+    public function username(): string
     {
-        return request('username');
+        return 'username';
     }
 
     public function showLoginForm(): InertiaResponse

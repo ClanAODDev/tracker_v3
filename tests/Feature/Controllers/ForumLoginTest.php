@@ -44,6 +44,30 @@ class ForumLoginTest extends TestCase
     }
 
     #[Test]
+    public function repeated_failed_logins_are_locked_out(): void
+    {
+        User::factory()->create();
+
+        $this->mock(AODForumService::class)
+            ->shouldReceive('authenticate')
+            ->andReturn(null);
+
+        for ($i = 0; $i < 5; $i++) {
+            $this->post('/login', ['username' => 'spammer', 'password' => 'wrong']);
+        }
+
+        $this->from('/login')
+            ->post('/login', ['username' => 'spammer', 'password' => 'wrong'])
+            ->assertStatus(302)
+            ->assertSessionHasErrors('username');
+
+        $this->assertStringContainsString(
+            'Too many login attempts',
+            session('errors')->first('username'),
+        );
+    }
+
+    #[Test]
     public function login_uses_clan_id_not_name_to_find_member(): void
     {
         $member1 = Member::factory()->create([
