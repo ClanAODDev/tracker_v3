@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Division;
+use App\Models\Leave;
 use App\Models\Member;
 use Illuminate\Support\Collection;
 
@@ -61,8 +62,12 @@ class MemberRowSerializer
             'handle' => $member->handle
                 ? ['value' => $member->handle->pivot->value, 'url' => $member->handle->url ? $member->handle->full_url : null]
                 : null,
-            'posts'           => $member->posts,
-            'onLeave'         => (bool) $member->leave,
+            'posts' => $member->posts,
+            'leave' => $member->leave ? [
+                'until'   => $member->leave->end_date?->format('M j'),
+                'reason'  => Leave::$reasons[$member->leave->reason] ?? null,
+                'pending' => $member->leave->approver_id === null,
+            ] : null,
             'isParttimer'     => $isParttimer,
             'primaryDivision' => $isParttimer ? ($member->division?->name ?? 'None') : null,
             'directRecruit'   => $this->directRecruitOfClanId !== null

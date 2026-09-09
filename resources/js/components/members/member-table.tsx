@@ -136,9 +136,21 @@ export function MemberTable({
                                     *
                                 </span>
                             )}
-                            {m.onLeave && (
-                                <span title="On Leave" className="text-muted-foreground">
-                                    <Clock className="size-3.5" />
+                            {m.leave && (
+                                <span
+                                    title={
+                                        m.leave.pending
+                                            ? 'Leave of absence — pending approval'
+                                            : `On leave${m.leave.reason ? ` (${m.leave.reason})` : ''}${m.leave.until ? ` · back ${m.leave.until}` : ''}`
+                                    }
+                                    className={cn(
+                                        'shrink-0 rounded-sm border px-1 font-mono text-[9px] font-semibold uppercase leading-[1.4] tracking-wide',
+                                        m.leave.pending
+                                            ? 'border-muted-foreground/30 text-muted-foreground'
+                                            : 'border-warning/40 bg-warning/10 text-warning',
+                                    )}
+                                >
+                                    LOA
                                 </span>
                             )}
                             <span style={{ color: m.rankColor ?? undefined }}>
@@ -481,7 +493,7 @@ export function MemberTable({
                                     key={row.id}
                                     data-state={row.getIsSelected() ? 'selected' : undefined}
                                     className={cn(
-                                        row.original.onLeave && 'text-muted-foreground',
+                                        row.original.leave && 'bg-warning/[0.05] text-muted-foreground',
                                         bulkMode && 'cursor-pointer select-none',
                                     )}
                                     onMouseDown={(e) => {
@@ -513,9 +525,20 @@ export function MemberTable({
                 </Table>
             </div>
 
-            <p className="text-xs text-muted-foreground">
-                <Clock className="mr-1 inline size-3" /> On leave
-            </p>
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                    <span className="rounded-sm border border-warning/40 bg-warning/10 px-1 font-mono text-[9px] font-semibold uppercase leading-[1.4] tracking-wide text-warning">
+                        LOA
+                    </span>
+                    On leave
+                </span>
+                <span className="flex items-center gap-1.5">
+                    <Clock className="size-3 text-info" /> Part-timer
+                </span>
+                <span className="flex items-center gap-1.5">
+                    <span className="font-bold text-[#e05cff]">*</span> Direct recruit
+                </span>
+            </div>
 
             <BulkBar
                 selectedIds={selectedIds}

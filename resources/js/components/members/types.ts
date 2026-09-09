@@ -19,7 +19,7 @@ export interface MemberRow {
     tagIds: number[];
     handle: { value: string; url: string | null } | null;
     posts: number;
-    onLeave: boolean;
+    leave: { until: string | null; reason: string | null; pending: boolean } | null;
     isParttimer: boolean;
     primaryDivision: string | null;
     directRecruit: boolean;
