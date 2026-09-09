@@ -101,6 +101,43 @@
     pointer-events: none;
 }
 
+/* A band of crimson hatch that rides down with the sweep line, briefly
+   energising the surface (and any `.tron-hatch` under it) as the scan passes. */
+.tron-scan-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+        -45deg,
+        color-mix(in srgb, var(--primary) 32%, transparent) 0 1px,
+        transparent 1px 7px
+    );
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 45%, transparent);
+    -webkit-mask-size: 100% 64px;
+    mask-size: 100% 64px;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    animation: tron-scan-reveal 0.85s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+@keyframes tron-scan-reveal {
+    0% {
+        mask-position: 0 -64px;
+        -webkit-mask-position: 0 -64px;
+        opacity: 0;
+    }
+    18%,
+    82% {
+        opacity: 1;
+    }
+    100% {
+        mask-position: 0 100%;
+        -webkit-mask-position: 0 100%;
+        opacity: 0;
+    }
+}
+
 .tron-scan-overlay::after {
     content: '';
     position: absolute;
