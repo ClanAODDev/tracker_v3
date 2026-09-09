@@ -101,7 +101,7 @@ export default function Home({ myDivision, toolbar, pendingActions, leaderboard,
                         )}
                     </div>
 
-                    <div className="mt-5">
+                    <div className="tron-hatch -mx-5 -mb-5 mt-4 rounded-b-md border-t border-border px-5 pt-4 pb-5">
                         <DivisionToolbar tools={toolbar} />
                     </div>
                 </div>
