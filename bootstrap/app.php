@@ -105,7 +105,10 @@ return Application::configure(basePath: dirname(__DIR__))
             }
 
             if (! app()->hasDebugModeEnabled() && in_array($status, [400, 403, 404, 405, 409, 419, 500, 503], true)) {
-                return Inertia::render('errors/show', ['status' => $status])
+                return Inertia::render('errors/show', [
+                    'status' => $status,
+                    'path'   => in_array($status, [404, 405], true) ? $request->method() . ' /' . ltrim($request->path(), '/') : null,
+                ])
                     ->toResponse($request)
                     ->setStatusCode($status);
             }

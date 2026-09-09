@@ -175,6 +175,145 @@
     }
 }
 
+/* --- One-shot signal-glitch ------------------------------------------------
+   RGB-split corruption pass over a large glyph (the error-page status code).
+   The element carries its own text in `data-text`; two coloured copies tear
+   past on mount and on `.tron-glitch-run` being re-applied (hover replay). */
+
+.tron-glitch {
+    position: relative;
+    display: inline-block;
+}
+
+.tron-glitch::before,
+.tron-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.tron-glitch::before {
+    color: var(--info);
+}
+
+.tron-glitch::after {
+    color: color-mix(in srgb, var(--primary) 85%, #fff);
+}
+
+.tron-glitch-run {
+    animation: tron-glitch-flicker 0.6s steps(2, end) both;
+}
+
+.tron-glitch-run::before {
+    animation: tron-glitch-a 0.6s steps(2, end) both;
+}
+
+.tron-glitch-run::after {
+    animation: tron-glitch-b 0.6s steps(2, end) both;
+}
+
+@keyframes tron-glitch-flicker {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+    12% {
+        transform: translate(-2px, 1px);
+    }
+    14% {
+        transform: translate(2px, -1px);
+    }
+    46% {
+        transform: translate(1px, 1px);
+    }
+    48% {
+        transform: translate(0, 0);
+    }
+    70% {
+        opacity: 0.7;
+    }
+    72% {
+        opacity: 1;
+    }
+}
+
+@keyframes tron-glitch-a {
+    0%,
+    100% {
+        opacity: 0;
+        transform: translate(0, 0);
+        clip-path: inset(0 0 0 0);
+    }
+    10% {
+        opacity: 0.85;
+        transform: translate(-4px, 1px);
+        clip-path: inset(15% 0 55% 0);
+    }
+    30% {
+        opacity: 0.85;
+        transform: translate(3px, -2px);
+        clip-path: inset(62% 0 8% 0);
+    }
+    50% {
+        opacity: 0.6;
+        transform: translate(-3px, 0);
+        clip-path: inset(8% 0 72% 0);
+    }
+    62% {
+        opacity: 0;
+    }
+}
+
+@keyframes tron-glitch-b {
+    0%,
+    100% {
+        opacity: 0;
+        transform: translate(0, 0);
+        clip-path: inset(0 0 0 0);
+    }
+    12% {
+        opacity: 0.8;
+        transform: translate(4px, -1px);
+        clip-path: inset(70% 0 12% 0);
+    }
+    34% {
+        opacity: 0.8;
+        transform: translate(-3px, 2px);
+        clip-path: inset(28% 0 40% 0);
+    }
+    54% {
+        opacity: 0.55;
+        transform: translate(2px, 0);
+        clip-path: inset(45% 0 30% 0);
+    }
+    66% {
+        opacity: 0;
+    }
+}
+
+/* Blinking terminal cursor for the HUD readout. */
+.tron-caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 1em;
+    translate: 0 0.12em;
+    background: var(--primary);
+    animation: tron-caret 1.1s steps(1, end) infinite;
+}
+
+@keyframes tron-caret {
+    0%,
+    50% {
+        opacity: 1;
+    }
+    50.01%,
+    100% {
+        opacity: 0;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .tron-trace::after,
     .tron-pip {
@@ -185,5 +324,18 @@
     }
     .tron-flash {
         display: none;
+    }
+    .tron-glitch-run,
+    .tron-glitch-run::before,
+    .tron-glitch-run::after {
+        animation: none;
+    }
+    .tron-glitch::before,
+    .tron-glitch::after {
+        display: none;
+    }
+    .tron-caret {
+        animation: none;
+        opacity: 0.7;
     }
 }
