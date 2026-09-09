@@ -1,6 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
 
 import { ThemedAreaChart } from '@/components/charts';
+import { CountUp } from '@/components/count-up';
 import { ClanReportShell } from '@/components/reports/clan-report-shell';
 import { DateRangeFilter } from '@/components/reports/date-range-filter';
 import { StatTiles } from '@/components/reports/stat-tiles';
@@ -66,20 +67,20 @@ export default function ClanCensus({
             <StatTiles
                 stats={[
                     {
-                        value: stats.memberCount.toLocaleString(),
+                        value: stats.memberCount,
                         label: 'Current members',
                         change: change ? { value: change, suffix: '% from last census' } : null,
                     },
                     stats.firstCensus
                         ? {
-                              value: stats.firstCensus.total.toLocaleString(),
+                              value: stats.firstCensus.total,
                               label: 'First census',
                               note: stats.firstCensus.date,
                           }
                         : { value: '—', label: 'First census' },
                     stats.peakCensus
                         ? {
-                              value: stats.peakCensus.total.toLocaleString(),
+                              value: stats.peakCensus.total,
                               label: 'Peak census',
                               note: stats.peakCensus.date,
                           }
@@ -205,7 +206,7 @@ export default function ClanCensus({
                                     <TableRow className="border-t-2 border-border font-medium">
                                         <TableCell>Total</TableCell>
                                         <TableCell className="numeric text-right">
-                                            {divisionPopulations.totalPopulation.toLocaleString()}
+                                            <CountUp value={divisionPopulations.totalPopulation} />
                                         </TableCell>
                                         <TableCell className="numeric text-right">
                                             {divisionPopulations.totalPercent}%
@@ -236,7 +237,9 @@ export default function ClanCensus({
                         ))}
                         <div className="mt-1 flex items-center justify-between border-t border-border px-2 pb-1 pt-2 font-medium">
                             <span>Total</span>
-                            <span className="numeric">{stats.memberCount.toLocaleString()}</span>
+                            <span className="numeric">
+                                <CountUp value={stats.memberCount} />
+                            </span>
                         </div>
                     </div>
                 </section>
