@@ -338,8 +338,10 @@ class DiscordAuthTest extends TestCase
         $response = $this->actingAs($user)->get(route('auth.discord.pending'));
 
         $response->assertOk();
-        $response->assertSee('PendingUser');
-        $response->assertSee('ClanAOD Registration');
+        $response->assertInertia(fn ($page) => $page
+            ->component('auth/discord-pending')
+            ->where('discordUsername', 'PendingUser')
+            ->has('divisions'));
     }
 
     #[Test]
@@ -975,7 +977,9 @@ class DiscordAuthTest extends TestCase
 
         $this->actingAs($user)
             ->get(route('auth.discord.pending'))
-            ->assertSee('Before we continue');
+            ->assertInertia(fn ($page) => $page
+                ->component('auth/discord-pending')
+                ->where('needsRegistration', true));
     }
 
     #[Test]

@@ -3,7 +3,9 @@
 namespace Tests\Feature\Reports;
 
 use App\Exceptions\FactoryMissingException;
+use App\Models\Census;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -18,9 +20,7 @@ class ReportsControllerTest extends TestCase
     #[Test]
     public function clan_census_report_requires_authentication()
     {
-        $response = $this->get(route('reports.clan-census'));
-
-        $response->assertRedirect('/login');
+        $this->get(route('reports.clan-census'))->assertRedirect('/login');
     }
 
     #[Test]
@@ -36,52 +36,74 @@ class ReportsControllerTest extends TestCase
     }
 
     #[Test]
-    public function outstanding_inactives_report_displays()
+    public function clan_census_report_renders_its_inertia_page()
+    {
+        $officer  = $this->createOfficer();
+        $division = $this->createActiveDivision();
+        Census::factory()->count(3)->create(['division_id' => $division->id]);
+
+        $this->actingAs($officer)
+            ->get(route('reports.clan-census'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('reports/clan-census')
+                ->has('chart')
+                ->has('censusTable')
+                ->has('rankDemographic'));
+    }
+
+    #[Test]
+    public function outstanding_inactives_report_renders_its_inertia_page()
     {
         $officer = $this->createOfficer();
 
-        $response = $this->actingAs($officer)
-            ->get(route('reports.outstanding-inactives'));
-
-        $response->assertOk();
+        $this->actingAs($officer)
+            ->get(route('reports.outstanding-inactives'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('reports/outstanding')
+                ->has('divisions')
+                ->has('totals'));
     }
 
     #[Test]
     public function outstanding_inactives_requires_authentication()
     {
-        $response = $this->get(route('reports.outstanding-inactives'));
-
-        $response->assertRedirect('/login');
+        $this->get(route('reports.outstanding-inactives'))->assertRedirect('/login');
     }
 
     #[Test]
-    public function leadership_report_displays()
+    public function leadership_report_renders_its_inertia_page()
     {
         $officer = $this->createOfficer();
 
-        $response = $this->actingAs($officer)
-            ->get(route('leadership'));
-
-        $response->assertOk();
+        $this->actingAs($officer)
+            ->get(route('leadership'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('reports/leadership')
+                ->has('clanLeadership')
+                ->has('divisions'));
     }
 
     #[Test]
     public function leadership_report_requires_authentication()
     {
-        $response = $this->get(route('leadership'));
-
-        $response->assertRedirect('/login');
+        $this->get(route('leadership'))->assertRedirect('/login');
     }
 
     #[Test]
-    public function division_turnover_report_displays_for_admin()
+    public function division_turnover_report_renders_for_admin()
     {
         $admin = $this->createAdmin();
 
-        $response = $this->actingAs($admin)
-            ->get(route('reports.division-turnover'));
-
-        $response->assertOk();
+        $this->actingAs($admin)
+            ->get(route('reports.division-turnover'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('reports/turnover')
+                ->has('divisions')
+                ->has('totals'));
     }
 
     #[Test]
@@ -89,9 +111,8 @@ class ReportsControllerTest extends TestCase
     {
         $officer = $this->createOfficer();
 
-        $response = $this->actingAs($officer)
-            ->get(route('reports.division-turnover'));
-
-        $response->assertForbidden();
+        $this->actingAs($officer)
+            ->get(route('reports.division-turnover'))
+            ->assertForbidden();
     }
 }

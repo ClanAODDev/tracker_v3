@@ -14,6 +14,7 @@ use App\Models\MemberAward;
 use App\Models\Platoon;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesPendingActionItems;
@@ -359,11 +360,13 @@ final class PendingActionsDataTest extends TestCase
         $this->createClanAwardRequests();
         $this->createOpenTickets();
 
-        $response = $this->actingAs($user)->get(route('home'));
-
-        $response->assertStatus(200);
-        $response->assertSee('Clan Award');
-        $response->assertSee('Open Ticket');
+        $this->actingAs($user)->get(route('home'))
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page) {
+                $labels = collect($page->toArray()['props']['pendingActions'])->pluck('label');
+                $this->assertTrue($labels->contains('Clan Award'));
+                $this->assertTrue($labels->contains('Open Ticket'));
+            });
     }
 
     #[Test]
@@ -374,11 +377,13 @@ final class PendingActionsDataTest extends TestCase
         $this->createDivisionAwardRequests($this->division);
         $this->createVoiceIssues($this->division);
 
-        $response = $this->actingAs($user)->get(route('home'));
-
-        $response->assertStatus(200);
-        $response->assertSee('Award');
-        $response->assertSee('Voice Issue');
+        $this->actingAs($user)->get(route('home'))
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page) {
+                $labels = collect($page->toArray()['props']['pendingActions'])->pluck('label');
+                $this->assertTrue($labels->contains('Award'));
+                $this->assertTrue($labels->contains('Voice Issue'));
+            });
     }
 
     #[Test]
@@ -389,11 +394,13 @@ final class PendingActionsDataTest extends TestCase
         $this->createClanAwardRequests();
         $this->createOpenTickets();
 
-        $response = $this->actingAs($user)->get(route('division', $this->division));
-
-        $response->assertStatus(200);
-        $response->assertDontSee('Clan Award');
-        $response->assertDontSee('Open Ticket');
+        $this->actingAs($user)->get(route('division', $this->division))
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page) {
+                $labels = collect($page->toArray()['props']['pendingActions'])->pluck('label');
+                $this->assertFalse($labels->contains('Clan Award'));
+                $this->assertFalse($labels->contains('Open Ticket'));
+            });
     }
 
     #[Test]
@@ -404,11 +411,13 @@ final class PendingActionsDataTest extends TestCase
         $this->createDivisionAwardRequests($this->division);
         $this->createVoiceIssues($this->division);
 
-        $response = $this->actingAs($user)->get(route('division', $this->division));
-
-        $response->assertStatus(200);
-        $response->assertSee('Award');
-        $response->assertSee('Voice Issue');
+        $this->actingAs($user)->get(route('division', $this->division))
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page) {
+                $labels = collect($page->toArray()['props']['pendingActions'])->pluck('label');
+                $this->assertTrue($labels->contains('Award'));
+                $this->assertTrue($labels->contains('Voice Issue'));
+            });
     }
 
     protected function createUserWithRole(string $roleName, ?Position $position = null): User

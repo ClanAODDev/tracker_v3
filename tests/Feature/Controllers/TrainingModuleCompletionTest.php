@@ -5,6 +5,7 @@ namespace Tests\Feature\Controllers;
 use App\Enums\Rank;
 use App\Models\TrainingModule;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -31,9 +32,11 @@ class TrainingModuleCompletionTest extends TestCase
         $this->actingAs($srLdr)
             ->get(route('training.show', ['slug' => $module->slug, 'clan_id' => $trainee->clan_id]))
             ->assertOk()
-            ->assertSee('Mark Training Complete')
-            ->assertSee($trainee->name)
-            ->assertSee('value="' . $trainee->clan_id . '"', false);
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('training/module')
+                ->where('module.showCompletionForm', true)
+                ->where('trainee.name', $trainee->name)
+                ->where('trainee.clanId', $trainee->clan_id));
     }
 
     #[Test]
@@ -50,7 +53,9 @@ class TrainingModuleCompletionTest extends TestCase
         $this->actingAs($srLdr)
             ->get(route('training.show', ['slug' => $module->slug]))
             ->assertOk()
-            ->assertDontSee('Mark Training Complete');
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('training/module')
+                ->where('trainee', null));
     }
 
     #[Test]
@@ -68,7 +73,9 @@ class TrainingModuleCompletionTest extends TestCase
         $this->actingAs($srLdr)
             ->get(route('training.show', ['slug' => $module->slug, 'clan_id' => $trainee->clan_id]))
             ->assertOk()
-            ->assertDontSee('Mark Training Complete');
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('training/module')
+                ->where('module.showCompletionForm', false));
     }
 
     #[Test]
