@@ -150,6 +150,20 @@
         background-position: center top;
     }
 
+    /* Fine 45° diagonal hatch — a texture for empty states, header strips, and
+       inert surfaces. `--hatch-color` tints it (defaults to the faintest ink). */
+    .tron-hatch {
+        background-image: repeating-linear-gradient(
+            -45deg,
+            var(--hatch-color, color-mix(in srgb, var(--foreground) 4%, transparent)) 0 1px,
+            transparent 1px 7px
+        );
+    }
+
+    .tron-hatch-primary {
+        --hatch-color: color-mix(in srgb, var(--primary) 14%, transparent);
+    }
+
     /* Opt-in L-brackets on the corners of a panel.
        Tint the brackets by setting --corner-color on the element. */
     .tron-corners {

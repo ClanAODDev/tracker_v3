@@ -496,7 +496,10 @@ export function MemberTable({
                     <TableBody>
                         {table.getRowModel().rows.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={columns.length} className="py-8 text-center text-muted-foreground">
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="tron-hatch py-10 text-center text-muted-foreground"
+                                >
                                     No members match your filters.
                                 </TableCell>
                             </TableRow>

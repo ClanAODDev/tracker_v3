@@ -28,8 +28,12 @@ export function PageHeader({ title, eyebrow, breadcrumbs, actions }: PageHeaderP
 
     return (
         <>
-            <div className="tron-hairline bg-card/40">
-                <div className="mx-auto w-full max-w-7xl px-6 py-6">
+            <div className="tron-hairline relative overflow-hidden bg-card/40">
+                <div
+                    aria-hidden
+                    className="tron-hatch pointer-events-none absolute inset-y-0 right-0 w-1/3 [mask-image:linear-gradient(to_left,black,transparent)]"
+                />
+                <div className="relative mx-auto w-full max-w-7xl px-6 py-6">
                     <div className="flex flex-wrap items-end justify-between gap-3">
                         <div>
                             {eyebrow && <p className="tron-eyebrow">{eyebrow}</p>}

@@ -119,6 +119,20 @@ export default function Gallery() {
                                 block.
                             </p>
                         </div>
+                        <div className="tron-hatch rounded-md border border-border bg-card p-5">
+                            <p className="text-sm font-medium">Diagonal hatch</p>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                <code className="font-mono text-xs">.tron-hatch</code> — fine 45° texture for empty
+                                states and inert surfaces; <code className="font-mono text-xs">.tron-hatch-primary</code>{' '}
+                                tints it crimson.
+                            </p>
+                        </div>
+                        <div className="tron-hatch tron-hatch-primary rounded-md border border-primary/30 bg-card p-5">
+                            <p className="text-sm font-medium">Hatch · primary</p>
+                            <p className="mt-1 text-sm text-muted-foreground">
+                                Same texture, crimson tint — for accented empty states or callouts.
+                            </p>
+                        </div>
                     </div>
                     <p className="text-sm text-muted-foreground">
                         The page sits on a faint <code className="font-mono text-xs">.tron-grid</code> and every section
