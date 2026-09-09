@@ -86,7 +86,7 @@ function ToolCard({ tool, onOverride }: { tool: DivisionTool; onOverride?: () =>
                 <DropdownMenuContent align="start">
                     {tool.menu.map((item) => (
                         <DropdownMenuItem key={item.href} asChild>
-                            <Link href={item.href}>{item.label}</Link>
+                            <Link href={item.href} prefetch>{item.label}</Link>
                         </DropdownMenuItem>
                     ))}
                 </DropdownMenuContent>
@@ -108,7 +108,7 @@ function ToolCard({ tool, onOverride }: { tool: DivisionTool; onOverride?: () =>
         );
     }
     return (
-        <Link href={tool.href} className={cardClass(tool.accent)}>
+        <Link href={tool.href} prefetch className={cardClass(tool.accent)}>
             {body}
         </Link>
     );
@@ -133,7 +133,7 @@ function OverflowItem({ tool, onOverride }: { tool: DivisionTool; onOverride?: (
                     {content}
                 </a>
             ) : (
-                <Link href={tool.href}>{content}</Link>
+                <Link href={tool.href} prefetch>{content}</Link>
             )}
         </DropdownMenuItem>
     );
