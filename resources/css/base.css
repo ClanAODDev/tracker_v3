@@ -1,0 +1,51 @@
+/* Base layer — reset defaults, body typography, custom scrollbars. */
+
+@layer base {
+    * {
+        border-color: var(--border);
+    }
+
+    html {
+        color-scheme: dark;
+    }
+
+    body {
+        background-color: var(--background);
+        color: var(--foreground);
+        font-family: var(--font-sans);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+    }
+
+    ::selection {
+        background-color: var(--primary-glow);
+    }
+
+    /* In-app "reduce animations" preference (mirrors prefers-reduced-motion). */
+    :root[data-reduce-motion='true'] *,
+    :root[data-reduce-motion='true'] *::before,
+    :root[data-reduce-motion='true'] *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--border-strong);
+        border-radius: 999px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--muted-foreground);
+    }
+}

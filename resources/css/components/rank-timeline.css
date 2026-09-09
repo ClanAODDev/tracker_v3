@@ -1,0 +1,214 @@
+/* Rank timeline — a horizontal "circuit trace" of a member's rank progression.
+   Angular diamond nodes wired by rank-coloured track segments; the newest
+   rank sits under a pulsing bracket. Markers and connector traces both start
+   at the container's 2.5rem top padding, so the trace lands on marker centre
+   (5.5px = half the 11px diamond) with no per-element offset maths.
+   Used by resources/js/components/member/rank-timeline.tsx. */
+
+@keyframes rank-timeline-node-enter {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rank-timeline-trace-draw {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+@keyframes rank-timeline-pulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: translate(-50%, -50%) rotate(45deg) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) rotate(45deg) scale(1.15);
+    }
+}
+
+.rank-timeline-wrapper {
+    position: relative;
+}
+
+.rank-timeline-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 2.5rem;
+    pointer-events: none;
+    background: linear-gradient(to right, transparent, var(--card));
+}
+
+.rank-timeline {
+    display: flex;
+    align-items: flex-start;
+    position: relative;
+    padding: 2.5rem 0.75rem 0.5rem;
+    overflow-x: auto;
+}
+
+/* Track segment between two nodes — coloured by the rank being promoted into. */
+.rank-timeline .timeline-connector {
+    flex: 1 1 2.5rem;
+    min-width: 2rem;
+    position: relative;
+    align-self: flex-start;
+    padding-top: 1.4rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    color: var(--dim-foreground, var(--muted-foreground));
+    opacity: 0;
+    animation: rank-timeline-node-enter 0.3s ease-out forwards;
+    animation-delay: calc(0.3s + var(--i, 0) * 0.07s);
+}
+
+.rank-timeline .timeline-connector::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    right: -1px;
+    top: 5px;
+    height: 2px;
+    background: color-mix(in srgb, var(--seg-color, var(--primary)) 55%, transparent);
+    transform-origin: left center;
+    transform: scaleX(0);
+    animation: rank-timeline-trace-draw 0.4s ease-out forwards;
+    animation-delay: calc(0.25s + var(--i, 0) * 0.07s);
+}
+
+/* The final segment glows — that's the current rank. */
+.rank-timeline > span.timeline-connector:last-of-type::before {
+    background: var(--seg-color, var(--primary));
+    box-shadow: 0 0 8px -1px var(--seg-color, var(--primary));
+}
+
+.rank-timeline .timeline-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    min-width: 60px;
+    flex-shrink: 0;
+    text-align: center;
+    opacity: 0;
+    animation: rank-timeline-node-enter 0.35s ease-out forwards;
+    animation-delay: calc(0.3s + var(--i, 0) * 0.07s);
+    transition: transform 0.2s ease;
+}
+
+.rank-timeline .timeline-node:hover { transform: translateY(-2px); }
+
+/* Diamond marker, centred on the trace line. */
+.rank-timeline .timeline-marker {
+    position: relative;
+    width: 11px;
+    height: 11px;
+    margin-bottom: 0.6rem;
+    background: var(--card);
+    border: 2px solid var(--primary);
+    transform: rotate(45deg);
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rank-timeline .timeline-node:hover .timeline-marker {
+    transform: rotate(45deg) scale(1.25);
+    box-shadow: 0 0 10px -1px var(--rank-color, var(--primary));
+}
+
+.rank-timeline .timeline-marker.marker-join {
+    border-color: var(--border-strong);
+    background: var(--background);
+}
+
+/* Origin crosshair inside the join diamond. */
+.rank-timeline .timeline-marker.marker-join::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: var(--muted-foreground);
+    opacity: 0.6;
+}
+
+.rank-timeline .timeline-marker.marker-consolidated {
+    border-style: dashed;
+    border-color: var(--border-strong);
+    background: transparent;
+}
+
+.rank-timeline .timeline-marker.marker-promotion {
+    border-color: var(--rank-color, var(--primary));
+    background: color-mix(in srgb, var(--rank-color, var(--primary)) 30%, var(--card));
+}
+
+.rank-timeline .timeline-node:last-child .timeline-marker.marker-promotion {
+    background: var(--rank-color, var(--primary));
+    box-shadow: 0 0 10px -1px var(--rank-color, var(--primary));
+}
+
+/* Pulsing bracket ring around the current rank marker. */
+.rank-timeline .timeline-node:last-child .timeline-marker.marker-promotion::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    border: 1px solid var(--rank-color, var(--primary));
+    transform: translate(-50%, -50%) rotate(45deg);
+    animation: rank-timeline-pulse 2.4s ease-in-out infinite;
+    animation-delay: 0.9s;
+}
+
+.rank-timeline .timeline-rank {
+    display: inline-block;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--foreground);
+    background: color-mix(in srgb, var(--rank-color, var(--primary)) 14%, transparent);
+    border: 1px solid color-mix(in srgb, var(--rank-color, var(--primary)) 34%, transparent);
+    padding: 0.1rem 0.5rem;
+    margin-bottom: 0.25rem;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.rank-timeline .timeline-node:hover .timeline-rank { transform: scale(1.04); }
+
+.rank-timeline .timeline-rank.timeline-rank-consolidated {
+    font-weight: 500;
+    color: var(--muted-foreground);
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
+    border: 1px dashed var(--border-strong);
+}
+
+.rank-timeline .timeline-date {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    color: var(--muted-foreground);
+}
+
+.rank-timeline .timeline-label {
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--dim-foreground, var(--muted-foreground));
+}
+
+@media (max-width: 640px) {
+    .rank-timeline .timeline-connector { flex-basis: 1.5rem; font-size: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rank-timeline .timeline-node,
+    .rank-timeline .timeline-connector,
+    .rank-timeline .timeline-connector::before {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+    .rank-timeline .timeline-connector::before { transform: scaleX(1); }
+    .rank-timeline .timeline-node:last-child .timeline-marker.marker-promotion::before {
+        animation: none;
+    }
+}

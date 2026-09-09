@@ -1,0 +1,148 @@
+/* Tron decorative flourishes — circuit-trace rule, HUD corner ID plate, and a
+   one-shot scanline sweep. Each has a `prefers-reduced-motion` fallback; the
+   in-app "reduce animations" pref also disables them via base.css.
+   Used by resources/js/components/tron/*. */
+
+/* --- Circuit-trace rule ------------------------------------------------------
+   A 1px rule that reads like a PCB trace: a bright lead segment on the left, a
+   node square, then a dim run, with a faint pulse travelling along it. */
+
+.tron-trace {
+    position: relative;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--primary) 60%, transparent) 0,
+        color-mix(in srgb, var(--primary) 60%, transparent) 2.25rem,
+        var(--border) 3rem,
+        var(--border) 100%
+    );
+}
+
+.tron-trace::before {
+    content: '';
+    position: absolute;
+    left: 2rem;
+    top: -1.5px;
+    width: 4px;
+    height: 4px;
+    background: var(--primary);
+    box-shadow: 0 0 6px var(--primary-glow);
+}
+
+.tron-trace::after {
+    content: '';
+    position: absolute;
+    top: -0.5px;
+    left: 0;
+    width: 4rem;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    animation: tron-trace-run 7s linear infinite;
+}
+
+@keyframes tron-trace-run {
+    0% {
+        left: 0;
+        opacity: 0;
+    }
+    8%,
+    92% {
+        opacity: 1;
+    }
+    100% {
+        left: calc(100% - 4rem);
+        opacity: 0;
+    }
+}
+
+/* --- HUD corner ID plate --------------------------------------------------- */
+
+.tron-id-plate {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.1rem 0.4rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    line-height: 1;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--dim-foreground, var(--muted-foreground));
+}
+
+.tron-pip {
+    width: 5px;
+    height: 5px;
+    border-radius: 999px;
+    background: var(--success);
+    animation: tron-pip 2.6s ease-out infinite;
+}
+
+@keyframes tron-pip {
+    0% {
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 55%, transparent);
+    }
+    70%,
+    100% {
+        box-shadow: 0 0 0 6px transparent;
+    }
+}
+
+/* --- One-shot scanline sweep --------------------------------------------- */
+
+.tron-scan-overlay {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.tron-scan-overlay::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: -2px;
+    height: 2px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--primary) 75%, transparent) 50%,
+        transparent
+    );
+    box-shadow: 0 0 14px 1px var(--primary-glow);
+    animation: tron-scan-sweep 0.85s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+@keyframes tron-scan-sweep {
+    0% {
+        top: -2px;
+        opacity: 0;
+    }
+    18% {
+        opacity: 1;
+    }
+    82% {
+        opacity: 1;
+    }
+    100% {
+        top: 100%;
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tron-trace::after,
+    .tron-pip {
+        animation: none;
+    }
+    .tron-trace::after {
+        opacity: 0;
+    }
+    .tron-scan-overlay {
+        display: none;
+    }
+}

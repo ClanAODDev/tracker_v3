@@ -1,0 +1,116 @@
+/* Design tokens ------------------------------------------------------------
+ * Tron theme — the tracker's sole theme. Black / dark-grey surfaces, a single
+ * crimson accent, cyan as the opposing signal colour, sharp 4px geometry,
+ * restrained outer-glow on focus. Tokens live on :root so additional themes
+ * can override them later.
+ *
+ * The @theme inline block below exposes each token as a `bg-*` / `text-*` /
+ * `border-*` / `font-*` utility — add a line there whenever a token needs one. */
+
+:root,
+[data-theme='tron'] {
+    --background: #08090b;
+    --foreground: #e7e9ec;
+
+    --card: #0f1113;
+    --card-foreground: #e7e9ec;
+
+    --popover: #15181b;
+    --popover-foreground: #e7e9ec;
+
+    --primary: #e11d2e;
+    --primary-foreground: #fdeaec;
+    --primary-glow: rgba(225, 29, 46, 0.32);
+
+    --secondary: #15181b;
+    --secondary-foreground: #e7e9ec;
+
+    --muted: #131619;
+    --muted-foreground: #868b94;
+    --dim-foreground: #5b616b;
+
+    --accent: #16191d;
+    --accent-foreground: #f4f5f7;
+
+    --destructive: #ff5c5c;
+    --destructive-foreground: #1a0708;
+
+    --success: #22d3a6;
+    --warning: #f5b544;
+    --info: #3ad0ff;
+
+    --border: rgba(255, 255, 255, 0.09);
+    --border-strong: rgba(255, 255, 255, 0.15);
+    --input: rgba(255, 255, 255, 0.12);
+    --ring: rgba(225, 29, 46, 0.55);
+
+    /* Categorical series — validated as an ordered set for the dark surface
+     * (dataviz skill: lightness band, chroma, CVD + normal-vision separation,
+     * ≥3:1 contrast all pass). Order is the CVD-safety mechanism; do not cycle
+     * past slot 5 — fold extra series into "Other" or facet. */
+    --chart-1: #e66767; /* red    */
+    --chart-2: #3987e5; /* blue   */
+    --chart-3: #c98500; /* yellow */
+    --chart-4: #199e70; /* aqua   */
+    --chart-5: #9085e9; /* violet */
+
+    --rarity-mythic: #ff5d6c;
+    --rarity-legendary: #ffa94d;
+    --rarity-epic: #c084fc;
+    --rarity-rare: #4da8ff;
+    --rarity-common: #8b95a5;
+    --rarity-unclaimed: #3a3f47;
+
+    --radius: 0.25rem;
+
+    --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-dim-foreground: var(--dim-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-success: var(--success);
+    --color-warning: var(--warning);
+    --color-info: var(--info);
+    --color-border: var(--border);
+    --color-border-strong: var(--border-strong);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+
+    --color-rarity-mythic: var(--rarity-mythic);
+    --color-rarity-legendary: var(--rarity-legendary);
+    --color-rarity-epic: var(--rarity-epic);
+    --color-rarity-rare: var(--rarity-rare);
+    --color-rarity-common: var(--rarity-common);
+    --color-rarity-unclaimed: var(--rarity-unclaimed);
+
+    --font-sans: var(--font-sans);
+    --font-mono: var(--font-mono);
+
+    --radius-sm: calc(var(--radius) - 2px);
+    --radius-md: var(--radius);
+    --radius-lg: calc(var(--radius) + 2px);
+    --radius-xl: calc(var(--radius) + 6px);
+}
