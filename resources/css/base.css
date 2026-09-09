@@ -21,7 +21,15 @@
         background-color: var(--primary-glow);
     }
 
-    /* In-app "reduce animations" preference (mirrors prefers-reduced-motion). */
+    /* Keyboard focus ring for anything shadcn/Radix doesn't already style
+       (`focus-visible:outline-none` on those wins over this by source order). */
+    :focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+
+    /* Honour reduced motion — the OS `prefers-reduced-motion` setting or the
+       in-app "reduce animations" preference (`data-reduce-motion` on <html>). */
     :root[data-reduce-motion='true'] *,
     :root[data-reduce-motion='true'] *::before,
     :root[data-reduce-motion='true'] *::after {
@@ -29,6 +37,17 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.01ms !important;
+            scroll-behavior: auto !important;
+        }
     }
 
     ::-webkit-scrollbar {

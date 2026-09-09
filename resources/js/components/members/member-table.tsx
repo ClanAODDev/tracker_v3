@@ -368,6 +368,7 @@ export function MemberTable({
                         value={globalFilter}
                         onChange={(e) => setGlobalFilter(e.target.value)}
                         placeholder="Search players"
+                        aria-label="Search players"
                         className="h-8 w-56 pl-8"
                     />
                 </div>
@@ -452,7 +453,19 @@ export function MemberTable({
                                     const canSort = header.column.getCanSort();
                                     const sorted = header.column.getIsSorted();
                                     return (
-                                        <TableHead key={header.id} className="text-xs">
+                                        <TableHead
+                                            key={header.id}
+                                            className="text-xs"
+                                            aria-sort={
+                                                !canSort
+                                                    ? undefined
+                                                    : sorted === 'asc'
+                                                      ? 'ascending'
+                                                      : sorted === 'desc'
+                                                        ? 'descending'
+                                                        : 'none'
+                                            }
+                                        >
                                             {header.isPlaceholder ? null : canSort ? (
                                                 <button
                                                     type="button"
