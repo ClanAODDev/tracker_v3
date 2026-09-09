@@ -1,44 +1,21 @@
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
-import vue from '@vitejs/plugin-vue';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import path from 'path';
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: [
-                'resources/assets/scss/main.scss',
-                'resources/assets/js/libs-bundle.js',
-                'resources/assets/js/main.js',
-                'resources/assets/js/platoon.js',
-                'resources/assets/js/division.js',
-                'resources/assets/js/recruiting.js',
-                'resources/assets/js/voice.js',
-                'resources/assets/js/census-graph.js',
-                'resources/assets/js/member-tags.js',
-                'resources/assets/js/retention-graph.js',
-                'resources/assets/js/transfer-graph.js',
-                'resources/assets/js/applications.js',
-                'resources/assets/js/tickets.js',
-                'resources/assets/js/training.js',
-                'resources/assets/js/org-chart.js',
-                'resources/assets/js/error-gb.js',
-            ],
+            input: ['resources/js/app.tsx'],
             refresh: true,
         }),
-        vue(),
+        react(),
+        tailwindcss(),
     ],
-    build: {
-        rollupOptions: {
-            output: {
-                globals: {
-                    jquery: 'jQuery'
-                }
-            }
-        }
-    },
     resolve: {
         alias: {
-            jquery: '/resources/assets/js/jquery-global.js'
-        }
-    }
+            '@': path.resolve(__dirname, 'resources/js'),
+        },
+    },
 });

@@ -22,7 +22,6 @@
         "ext-json": "*",
         "laravel/sanctum": "^4.0",
         "spatie/laravel-validation-rules": "^3.0",
-        "diglactic/laravel-breadcrumbs": "^10.0",
         "graham-campbell/markdown": "^16.0",
         "laravel/ui": "^4.0",
         "spatie/laravel-ignition": "^2.0",
@@ -45,7 +44,9 @@
         "socialiteproviders/discord": "^4.2",
         "flashadvocate/filament-reactions": "^0.2",
         "spatie/laravel-schedule-monitor": "^4.3",
-        "optimates-de/filament-schedule-monitor": "^1.0"
+        "optimates-de/filament-schedule-monitor": "^1.0",
+        "inertiajs/inertia-laravel": "^3.3",
+        "tightenco/ziggy": "^2.6"
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
