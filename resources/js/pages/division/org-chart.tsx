@@ -1,6 +1,6 @@
 import { Head } from '@inertiajs/react';
 import { Download, Maximize2, Minimize2, Minus, Plus, Scan, Search, X } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -92,7 +92,9 @@ export default function OrgChart({ division, tree }: OrgChartProps) {
                                             }}
                                             className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-sm hover:bg-accent"
                                         >
-                                            <span style={{ color: m.rankColor }}>{m.rankName}</span>
+                                            <span className="rank-ink" style={{ '--rank-color': m.rankColor } as CSSProperties}>
+                                                {m.rankName}
+                                            </span>
                                             <span className="truncate">{m.name}</span>
                                             {m.handle && (
                                                 <span className="ml-auto truncate text-xs text-muted-foreground">

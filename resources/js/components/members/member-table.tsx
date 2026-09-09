@@ -11,7 +11,7 @@ import {
     useReactTable,
 } from '@tanstack/react-table';
 import { ArrowDown, ArrowUp, Bell, ChevronsUpDown, Clock, Columns3, Search } from 'lucide-react';
-import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 import { BulkBar } from '@/components/members/bulk-bar';
@@ -153,7 +153,10 @@ export function MemberTable({
                                     LOA
                                 </span>
                             )}
-                            <span style={{ color: m.rankColor ?? undefined }}>
+                            <span
+                                className="rank-ink"
+                                style={{ '--rank-color': m.rankColor ?? undefined } as CSSProperties}
+                            >
                                 {m.positionAbbr && <strong className={cn('mr-1', m.positionClass)}>{m.positionAbbr}</strong>}
                                 {m.name}
                             </span>

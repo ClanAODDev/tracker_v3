@@ -238,4 +238,15 @@
         box-shadow: 0 0 8px 0 var(--primary-glow);
         opacity: 0.6;
     }
+
+    /* Rank-tinted text. Set --rank-color to the rank hex; the neon rank palette
+       is tuned for the dark ground, so in the light theme it is mixed toward
+       ink to stay legible on white. */
+    .rank-ink {
+        color: var(--rank-color, currentColor);
+    }
+
+    :root[data-theme='light'] .rank-ink {
+        color: color-mix(in srgb, var(--rank-color, currentColor) 42%, #14161a);
+    }
 }
