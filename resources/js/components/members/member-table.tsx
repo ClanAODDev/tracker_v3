@@ -144,6 +144,13 @@ export function MemberTable({
                 header: 'Member',
                 cell: ({ row }) => {
                     const m = row.original;
+                    const nameInner = (
+                        <>
+                            {m.positionAbbr && <strong className={cn('mr-1', m.positionClass)}>{m.positionAbbr}</strong>}
+                            {m.name}
+                        </>
+                    );
+                    const nameStyle = { '--rank-color': m.rankColor ?? undefined } as CSSProperties;
                     return (
                         <div className="flex items-center gap-2">
                             {m.directRecruit && (
@@ -168,13 +175,20 @@ export function MemberTable({
                                     LOA
                                 </span>
                             )}
-                            <span
-                                className="rank-ink"
-                                style={{ '--rank-color': m.rankColor ?? undefined } as CSSProperties}
-                            >
-                                {m.positionAbbr && <strong className={cn('mr-1', m.positionClass)}>{m.positionAbbr}</strong>}
-                                {m.name}
-                            </span>
+                            {bulkMode ? (
+                                <span className="rank-ink" style={nameStyle}>
+                                    {nameInner}
+                                </span>
+                            ) : (
+                                <Link
+                                    href={m.profileUrl}
+                                    className="rank-ink underline-offset-2 hover:underline"
+                                    style={nameStyle}
+                                    title="View profile"
+                                >
+                                    {nameInner}
+                                </Link>
+                            )}
                             {m.isParttimer && (
                                 <span
                                     className="text-info"
@@ -183,13 +197,6 @@ export function MemberTable({
                                     <Clock className="size-3" />
                                 </span>
                             )}
-                            <Link
-                                href={m.profileUrl}
-                                className="ml-auto text-muted-foreground hover:text-foreground"
-                                title="View profile"
-                            >
-                                <Search className="size-3.5" />
-                            </Link>
                         </div>
                     );
                 },
@@ -337,7 +344,7 @@ export function MemberTable({
                 cell: () => null,
             },
         ],
-        [assignmentLabel, selectedTags, reminded],
+        [assignmentLabel, selectedTags, reminded, bulkMode],
     );
 
     const table = useReactTable({
