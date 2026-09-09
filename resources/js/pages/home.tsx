@@ -5,7 +5,7 @@ import { CountUp } from '@/components/count-up';
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
 import { Leaderboard, type LeaderEntry } from '@/components/dashboard/leaderboard';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
-import { TronIdPlate, TronScanline } from '@/components/tron/flourishes';
+import { TronIdPlate, TronFlash } from '@/components/tron/flourishes';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
@@ -74,7 +74,7 @@ export default function Home({ myDivision, toolbar, pendingActions, leaderboard,
             <div className="space-y-8">
                 {/* My division */}
                 <div className="tron-corners rounded-md border border-border bg-card p-5">
-                    <TronScanline />
+                    <TronFlash />
                     <TronIdPlate
                         label={`DIV · ${d.abbr}`}
                         live

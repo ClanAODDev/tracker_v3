@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import { cn } from '@/lib/utils';
 
 /** A 1px "circuit trace" rule — bright lead + node square + travelling pulse. */
@@ -16,9 +18,25 @@ export function TronIdPlate({ label, live, className }: { label: string; live?: 
 }
 
 /**
- * A one-shot bright line that sweeps down its positioned parent on mount.
- * Drop it as the first child of a `relative` container.
+ * Two crimson gradients that flash along the top and bottom edges of the
+ * positioned parent on mount — and again whenever it is hovered — converging
+ * on the corner brackets. Drop it as the first child of a `relative` container.
  */
-export function TronScanline() {
-    return <span aria-hidden className="tron-scan-overlay" />;
+export function TronFlash() {
+    const ref = useRef<HTMLSpanElement>(null);
+
+    useEffect(() => {
+        const el = ref.current;
+        const parent = el?.parentElement;
+        if (!el || !parent) return;
+        const replay = () => {
+            el.classList.remove('tron-flash-run');
+            void el.offsetWidth;
+            el.classList.add('tron-flash-run');
+        };
+        parent.addEventListener('mouseenter', replay);
+        return () => parent.removeEventListener('mouseenter', replay);
+    }, []);
+
+    return <span ref={ref} aria-hidden className="tron-flash tron-flash-run" />;
 }

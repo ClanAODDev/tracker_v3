@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 
 import { AwardCard, TieredCard, type AwardSummary, type TieredGroupSummary } from '@/components/awards/award-card';
 import { CountUp } from '@/components/count-up';
-import { TronIdPlate, TronScanline } from '@/components/tron/flourishes';
+import { TronIdPlate, TronFlash } from '@/components/tron/flourishes';
 import { SimpleSelect } from '@/components/ui/simple-select';
 import AppLayout from '@/layouts/AppLayout';
 import { cn } from '@/lib/utils';
@@ -90,7 +90,7 @@ export default function AwardsIndex({
 
             <div className="space-y-8">
                 <div className="tron-corners relative rounded-md border border-border bg-card">
-                    <TronScanline />
+                    <TronFlash />
                     <TronIdPlate label="AWARDS" className="absolute -top-2 left-3" />
 
                     <div className="flex flex-col divide-y divide-border sm:flex-row sm:divide-x sm:divide-y-0">

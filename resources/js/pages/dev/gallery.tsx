@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 
 import { CountUp } from '@/components/count-up';
 import { TrackerLogo, TrackerMark } from '@/components/tracker-logo';
-import { TronIdPlate, TronScanline, TronTrace } from '@/components/tron/flourishes';
+import { TronIdPlate, TronFlash, TronTrace } from '@/components/tron/flourishes';
 import { TronSpinner } from '@/components/tron-spinner';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -141,16 +141,16 @@ export default function Gallery() {
 
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="tron-corners relative rounded-md border border-border bg-card p-5">
-                            <TronScanline key={scanKey} />
+                            <TronFlash key={scanKey} />
                             <TronIdPlate label="DIV · BF" live className="absolute -top-2 left-3" />
-                            <p className="text-sm font-medium">Corner ID plate + scanline</p>
+                            <p className="text-sm font-medium">Corner ID plate + edge flash</p>
                             <p className="mt-1 text-sm text-muted-foreground">
                                 <code className="font-mono text-xs">&lt;TronIdPlate&gt;</code> HUD tag with a live pip, and{' '}
-                                <code className="font-mono text-xs">&lt;TronScanline&gt;</code> — a one-shot sweep on
-                                mount.
+                                <code className="font-mono text-xs">&lt;TronFlash&gt;</code> — crimson gradients sweeping the
+                                top and bottom edges in opposite directions on mount.
                             </p>
                             <Button size="xs" variant="outline" className="mt-3" onClick={() => setScanKey((k) => k + 1)}>
-                                Replay sweep
+                                Replay flash
                             </Button>
                         </div>
                         <div className="rounded-md border border-border bg-card p-5">

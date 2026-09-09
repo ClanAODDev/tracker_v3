@@ -91,9 +91,12 @@
     }
 }
 
-/* --- One-shot scanline sweep --------------------------------------------- */
+/* --- One-shot edge flash -----------------------------------------------------
+   Two crimson gradient segments that sweep the top and bottom edges in
+   opposite directions on mount, each converging on a `.tron-corners` bracket
+   (top edge → top-left, bottom edge → bottom-right) and fading out there. */
 
-.tron-scan-overlay {
+.tron-flash {
     position: absolute;
     inset: 0;
     overflow: hidden;
@@ -101,73 +104,74 @@
     pointer-events: none;
 }
 
-/* A band of crimson hatch that rides down with the sweep line, briefly
-   energising the surface (and any `.tron-hatch` under it) as the scan passes. */
-.tron-scan-overlay::before {
+.tron-flash::before,
+.tron-flash::after {
     content: '';
     position: absolute;
-    inset: 0;
-    background-image: repeating-linear-gradient(
-        -45deg,
-        color-mix(in srgb, var(--primary) 32%, transparent) 0 1px,
-        transparent 1px 7px
-    );
-    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 45%, transparent);
-    mask-image: linear-gradient(to bottom, transparent, #000 45%, transparent);
-    -webkit-mask-size: 100% 64px;
-    mask-size: 100% 64px;
-    -webkit-mask-repeat: no-repeat;
-    mask-repeat: no-repeat;
-    animation: tron-scan-reveal 0.85s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
-}
-
-@keyframes tron-scan-reveal {
-    0% {
-        mask-position: 0 -64px;
-        -webkit-mask-position: 0 -64px;
-        opacity: 0;
-    }
-    18%,
-    82% {
-        opacity: 1;
-    }
-    100% {
-        mask-position: 0 100%;
-        -webkit-mask-position: 0 100%;
-        opacity: 0;
-    }
-}
-
-.tron-scan-overlay::after {
-    content: '';
-    position: absolute;
-    inset-inline: 0;
-    top: -2px;
     height: 2px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        color-mix(in srgb, var(--primary) 75%, transparent) 50%,
-        transparent
-    );
-    box-shadow: 0 0 14px 1px var(--primary-glow);
-    animation: tron-scan-sweep 0.85s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+    width: 45%;
+    opacity: 0;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    box-shadow: 0 0 10px 0 var(--primary-glow);
 }
 
-@keyframes tron-scan-sweep {
+.tron-flash-run::before,
+.tron-flash-run::after {
+    animation-duration: 1s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-delay: 0.1s;
+    animation-fill-mode: both;
+}
+
+.tron-flash::before {
+    top: 0;
+    left: 0;
+}
+
+.tron-flash::after {
+    bottom: 0;
+    right: 0;
+}
+
+.tron-flash-run::before {
+    animation-name: tron-flash-top;
+}
+
+.tron-flash-run::after {
+    animation-name: tron-flash-bottom;
+}
+
+@keyframes tron-flash-top {
     0% {
-        top: -2px;
         opacity: 0;
+        transform: translateX(160%);
     }
-    18% {
+    25% {
         opacity: 1;
     }
-    82% {
+    70% {
         opacity: 1;
     }
     100% {
-        top: 100%;
         opacity: 0;
+        transform: translateX(-90%);
+    }
+}
+
+@keyframes tron-flash-bottom {
+    0% {
+        opacity: 0;
+        transform: translateX(-160%);
+    }
+    25% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(90%);
     }
 }
 
@@ -179,7 +183,7 @@
     .tron-trace::after {
         opacity: 0;
     }
-    .tron-scan-overlay {
+    .tron-flash {
         display: none;
     }
 }
