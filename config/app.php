@@ -69,6 +69,21 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Asset URL
+    |--------------------------------------------------------------------------
+    |
+    | Root URL the `asset()` helper and the `@vite` directive prepend to build
+    | asset paths. Behind a proxy that does not forward `X-Forwarded-Host`,
+    | Laravel infers the request root as the internal address (e.g.
+    | `http://localhost`), which breaks the Inertia bundle. Set this to the
+    | public origin to pin it. Leave empty to derive it from the request.
+    |
+    */
+
+    'asset_url' => env('ASSET_URL'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Timezone
     |--------------------------------------------------------------------------
     |
