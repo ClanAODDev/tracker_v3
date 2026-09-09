@@ -1,6 +1,6 @@
 import { Head, router, useForm } from '@inertiajs/react';
 import { Check, RefreshCw, Trophy } from 'lucide-react';
-import { type FormEvent, useState } from 'react';
+import { type CSSProperties, type FormEvent, useState } from 'react';
 
 import { RarityPill } from '@/components/awards/award-card';
 import { StatTiles } from '@/components/reports/stat-tiles';
@@ -150,7 +150,12 @@ export default function AwardShow({ award, stats, userHasAward, currentMember, r
 
                 <div
                     className="tron-corners flex flex-col items-center gap-5 rounded-md border bg-card p-6 text-center sm:flex-row sm:text-left"
-                    style={{ borderColor: `color-mix(in srgb, var(--rarity-${stats.rarity}) 40%, var(--border))` }}
+                    style={
+                        {
+                            borderColor: `color-mix(in srgb, var(--rarity-${stats.rarity}) 40%, var(--border))`,
+                            '--corner-color': `color-mix(in srgb, var(--rarity-${stats.rarity}) 80%, var(--border))`,
+                        } as CSSProperties
+                    }
                 >
                     <div className="flex size-24 shrink-0 items-center justify-center">
                         {award.image ? (
