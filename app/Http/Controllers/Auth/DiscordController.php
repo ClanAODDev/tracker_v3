@@ -15,7 +15,8 @@ use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 
@@ -68,7 +69,7 @@ class DiscordController extends Controller
         );
     }
 
-    public function pending(): RedirectResponse|View
+    public function pending(): RedirectResponse|InertiaResponse
     {
         $user        = auth()->user();
         $previewSlug = request('preview');
@@ -88,10 +89,15 @@ class DiscordController extends Controller
             $division   = $divisionId ? Division::find($divisionId) : null;
         }
 
-        return view('auth.discord-pending', $this->buildPendingViewData($division));
+        $errors        = session('errors');
+        $hasFormErrors = $errors && $errors->getBag('default')
+            ->hasAny(['username', 'date_of_birth', 'password', 'password_confirmation', 'division_id']);
+        $needsRegistration = $user->date_of_birth === null || $hasFormErrors;
+
+        return Inertia::render('auth/discord-pending', $this->buildPendingViewData($user, $division, $needsRegistration));
     }
 
-    private function previewPending(User $user, string $divisionSlug): RedirectResponse|View
+    private function previewPending(User $user, string $divisionSlug): RedirectResponse|InertiaResponse
     {
         if (! $user->isRole(['admin', 'sr_ldr', 'officer'])) {
             return redirect('/');
@@ -99,29 +105,41 @@ class DiscordController extends Controller
 
         $division = Division::where('slug', $divisionSlug)->firstOrFail();
 
-        return view('auth.discord-pending', array_merge(
-            $this->buildPendingViewData($division),
-            ['preview' => true, 'previewDivision' => $division]
+        return Inertia::render('auth/discord-pending', $this->buildPendingViewData(
+            $user,
+            $division,
+            needsRegistration: true,
+            preview: true,
         ));
     }
 
-    private function buildPendingViewData(?Division $division): array
+    private function buildPendingViewData(User $user, ?Division $division, bool $needsRegistration, bool $preview = false): array
     {
-        $divisions = Division::active()
-            ->withoutFloaters()
-            ->withoutBR()
-            ->orderBy('name')
-            ->get(['id', 'name', 'abbreviation']);
-
-        $applicationFields = null;
-        $needsApplication  = false;
+        $applicationFields = collect();
 
         if ($division && $division->settings()->get('application_required', false)) {
-            $applicationFields = $division->applicationFields;
-            $needsApplication  = $applicationFields->isNotEmpty();
+            $applicationFields = $division->applicationFields->map(fn ($field) => [
+                'id'         => $field->id,
+                'label'      => strip_tags($field->label, '<strong><em><u><a>'),
+                'helperText' => $field->helper_text ? strip_tags($field->helper_text, '<strong><em><u><a>') : null,
+                'type'       => $field->type,
+                'required'   => (bool) $field->required,
+                'options'    => collect($field->options ?? [])->pluck('label')->all(),
+            ]);
         }
 
-        return compact('divisions', 'applicationFields', 'needsApplication');
+        return [
+            'discordUsername'   => $user->discord_username ?? $user->name,
+            'email'             => $user->email,
+            'defaultUsername'   => $user->name,
+            'preview'           => $preview,
+            'previewDivisionId' => $preview ? $division?->id : null,
+            'needsRegistration' => $needsRegistration,
+            'divisions'         => Division::active()->withoutFloaters()->withoutBR()->orderBy('name')
+                ->get(['id', 'name'])
+                ->map(fn ($d) => ['id' => $d->id, 'name' => $d->name, 'logo' => $d->getLogoPath()]),
+            'applicationFields' => $applicationFields->values(),
+        ];
     }
 
     public function register(DiscordRegistrationRequest $request): RedirectResponse

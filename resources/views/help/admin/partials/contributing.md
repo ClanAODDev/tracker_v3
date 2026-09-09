@@ -1,52 +1,33 @@
 # Contributing Docs
 
-Documentation is contributed with just a few steps, provided below. Markdown formatting is supported and preferable
-for ease of consumption and maintenance.
+Documentation pages are Markdown files rendered into the Tracker's React shell. Adding or editing one takes a few steps.
 
-### For new pages
-#### View
-Create a view in the `resources/views/help/admin` directory using the `<name.blade.php>` convention. You can copy the
-   index file for convenience, and update the path if you want to write strictly markdown
+### Editing an existing page
 
-Follow the examples in the [kitchen sink](/help/docs/admin/sink) for basic syntax.
+Find its Markdown source under `resources/views/help/` — for example this page lives at
+`resources/views/help/admin/partials/contributing.md`. Edit the Markdown and the change is live on the next request; no build step is required for content.
 
-#### Route
-Add a route to your page in `routes/partials/documentation.php`. Use the existing entries as a guide. 
+Follow the [kitchen sink](/help/docs/admin/sink) for supported syntax.
 
-```javascript
-// in order - the route, the dot-notation path to the view, and a route name (optional)
-Route::view('sink', 'help.admin.sink')->name('help.admin.sink');
-```  
-  
-#### Navigation link
-Next, add an entry in the navigation blade partial at `/resources/views/application/partials/navigation.blade.php`. 
-  Find the section marked as admin documentation. An example is provided below:
+### Adding a new page
 
-```html
-<li class="{{ set_active(['help/docs/admin/sink']) }}">
-    <a href="{{ route('help.admin.sink') }}">Kitchen Sink</a>
-</li>
+**1. Write the content.** Create a Markdown file under `resources/views/help/` (use `md-partials/` for member-facing docs, `admin/partials/` for admin-only docs).
+
+**2. Add a controller method.** In `app/Http/Controllers/HelpController.php`, add a method that renders it:
+
+```php
+public function myNewDoc(): Response
+{
+    return $this->doc('md-partials/my-new-doc.md', 'My New Doc');
+}
 ```
 
-### For existing pages
-If you just want to create a new section for an existing page, consider building a partial so the content can be 
-organized according to topic. As an example, this page is included in the `resources/views/help/admin/index.blade.php` 
-view using the `@include` blade directive. This way, we can write strictly as a `.md` file so IDEs can color-code, format, etc.
+Admin-only pages pass `'Admin documentation'` as the third `doc()` argument for the eyebrow label.
 
-Just include the path to the partial wherever you want the content to be inserted.
+**3. Register the route.** In `routes/partials/documentation.php`, add an entry inside the `HelpController` group (put admin pages inside the `admin` middleware group):
 
-```javascript
-@include('help.admin.partials.contributing')
+```php
+Route::get('my-new-doc', 'myNewDoc')->name('help.my-new-doc');
 ```
 
-Alternatively, you can use the `@markdown` and `@endmarkdown` blade directives to directly add Markdown-formatted
-content to a blade template.
-
-```markdown
-@markdown
-    # My header
-    - some
-    - **basic**
-    - __content__
-@endmarkdown
-```
+**4. Link it.** Add an entry to the `Documentation` section of `app/Support/Navigation.php`, and — for member-facing docs — a card in `resources/js/pages/help/index.tsx`.

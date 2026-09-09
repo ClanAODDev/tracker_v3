@@ -12,11 +12,11 @@ use App\Models\Ticket;
 use App\Models\TicketType;
 use App\Models\User;
 use App\Services\TicketNotificationService;
+use App\Support\TicketSerializer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 #[Middleware('auth')]
 class TicketApiController extends Controller
@@ -155,33 +155,9 @@ class TicketApiController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $minimumRank = Rank::MASTER_SERGEANT->value;
-
-        if ($request->filled('ticket_type_id')) {
-            $type = TicketType::find($request->integer('ticket_type_id'));
-            if ($type?->minimum_rank) {
-                $minimumRank = $type->minimum_rank->value;
-            }
-        }
-
-        $workers = User::whereHas('member', fn ($q) => $q
-            ->where('rank', '>=', $minimumRank)
-            ->whereNotNull('division_id')
-            ->where('division_id', '!=', 0)
-        )
-            ->with('member')
-            ->join('members', 'members.id', '=', 'users.member_id')
-            ->orderBy('members.rank')
-            ->orderBy('users.name')
-            ->select('users.*')
-            ->get()
-            ->map(fn ($u) => [
-                'id'        => $u->id,
-                'name'      => $u->name,
-                'rank_name' => $u->member?->present()->rankName(),
-                'avatar'    => $u->member?->getDiscordAvatarUrl(),
-            ])
-            ->values();
+        $workers = TicketSerializer::workers(
+            $request->filled('ticket_type_id') ? $request->integer('ticket_type_id') : null,
+        );
 
         return response()->json(['workers' => $workers]);
     }
@@ -221,29 +197,7 @@ class TicketApiController extends Controller
 
     public function types(): JsonResponse
     {
-        $user       = auth()->user();
-        $userRoleId = $user->role->value ? (string) $user->role->value : null;
-
-        $types = TicketType::orderBy('display_order')
-            ->get()
-            ->filter(function ($type) use ($userRoleId) {
-                $roleAccess = $type->role_access ?? [];
-                if (empty($roleAccess)) {
-                    return true;
-                }
-
-                return $userRoleId && in_array($userRoleId, $roleAccess);
-            })
-            ->map(fn ($type) => [
-                'id'          => $type->id,
-                'name'        => $type->name,
-                'slug'        => $type->slug,
-                'description' => $type->description,
-                'boilerplate' => $type->boilerplate,
-            ])
-            ->values();
-
-        return response()->json(['types' => $types]);
+        return response()->json(['types' => TicketSerializer::types(auth()->user())]);
     }
 
     public function show(Ticket $ticket): JsonResponse
@@ -339,59 +293,6 @@ class TicketApiController extends Controller
 
     protected function transformTicket(Ticket $ticket, bool $includeComments = false, bool $includeCaller = false): array
     {
-        $type     = $ticket->type;
-        $division = $ticket->division;
-        $owner    = $ticket->owner;
-        $caller   = $ticket->caller;
-
-        $data = [
-            'id'          => $ticket->id,
-            'state'       => $ticket->state,
-            'state_color' => $ticket->stateColors[$ticket->state] ?? 'gray',
-            'description' => $ticket->description,
-            'type'        => $type ? [
-                'id'   => $type->id,
-                'name' => $type->name,
-            ] : null,
-            'division' => $division ? [
-                'id'   => $division->id,
-                'name' => $division->name,
-            ] : null,
-            'owner' => $owner ? [
-                'id'     => $owner->id,
-                'name'   => $owner->name,
-                'avatar' => $owner->member?->getDiscordAvatarUrl(),
-            ] : null,
-            'created_at'  => $ticket->created_at->toIso8601String(),
-            'updated_at'  => $ticket->updated_at->toIso8601String(),
-            'resolved_at' => $ticket->resolved_at?->toIso8601String(),
-            'attachments' => collect($ticket->attachments ?? [])->map(
-                fn ($path) => Storage::disk('public')->url($path)
-            )->all(),
-        ];
-
-        if ($includeCaller) {
-            $data['caller'] = $caller ? [
-                'id'     => $caller->id,
-                'name'   => $caller->name,
-                'avatar' => $caller->member?->getDiscordAvatarUrl(),
-            ] : null;
-        }
-
-        if ($includeComments) {
-            $data['comments'] = $ticket->comments->map(fn ($comment) => [
-                'id'   => $comment->id,
-                'body' => $comment->body,
-                'user' => $comment->user ? [
-                    'id'       => $comment->user->id,
-                    'name'     => $comment->user->name,
-                    'avatar'   => $comment->user->member?->getDiscordAvatarUrl(),
-                    'is_admin' => $comment->user->isRole('admin'),
-                ] : null,
-                'created_at' => $comment->created_at->toIso8601String(),
-            ]);
-        }
-
-        return $data;
+        return TicketSerializer::ticket($ticket, $includeComments, $includeCaller);
     }
 }

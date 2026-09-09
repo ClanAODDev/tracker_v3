@@ -1,14 +1,12 @@
 <?php
 
-use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Http\Controllers\AppController;
 use App\Http\Controllers\Bot\BotCommandController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\MemberTransferController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TrainingController;
-use App\Http\Requests\Member\SyncDiscordAvatar;
-use App\Models\Division;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -47,67 +45,13 @@ Route::middleware('auth')->get('session/keep-alive', function () {
     ]);
 })->name('session.keep-alive');
 
-Route::middleware('auth')->prefix('settings')->name('settings.')->group(function () {
-    Route::post('/', function (Request $request) {
-        $user = auth()->user();
-
-        $settings = [
-            'disable_animations' => filter_var($request->input('disable_animations'), FILTER_VALIDATE_BOOLEAN),
-            'mobile_nav_side'    => $request->input('mobile_nav_side', 'right'),
-            'snow'               => $request->input('snow', 'no_snow'),
-            'snow_ignore_mouse'  => filter_var($request->input('snow_ignore_mouse'), FILTER_VALIDATE_BOOLEAN),
-            'theme'              => $request->input('theme', 'traditional'),
-            'ambient_sound'      => filter_var($request->input('ambient_sound'), FILTER_VALIDATE_BOOLEAN),
-            'ambient_volume'     => (float) $request->input('ambient_volume', 0.3),
-        ];
-
-        if ($request->has('welcomed')) {
-            $settings['welcomed'] = filter_var($request->input('welcomed'), FILTER_VALIDATE_BOOLEAN);
-        }
-
-        $user->settings = array_merge($user->settings, $settings);
-        $user->save();
-
-        return response()->json(['success' => true]);
-    })->name('update');
-
-    Route::post('part-time-divisions', function (Request $request) {
-        $member = auth()->user()->member;
-        if (! $member) {
-            return response()->json(['error' => 'No member record'], 400);
-        }
-
-        $divisionIds = $request->input('divisions', []);
-        $activeIds   = Division::active()->pluck('id')->all();
-        $validIds    = array_values(array_intersect($divisionIds, $activeIds));
-        $member->partTimeDivisions()->sync($validIds);
-
-        return response()->json(['success' => true, 'count' => count($validIds)]);
-    })->name('part-time-divisions');
-
-    Route::post('ingame-handles', function (Request $request) {
-        $member = auth()->user()->member;
-        if (! $member) {
-            return response()->json(['error' => 'No member record'], 400);
-        }
-
-        $handles = $request->input('handles', []);
-        IngameHandlesForm::saveHandles($member, $handles);
-
-        return response()->json(['success' => true, 'count' => $member->memberHandles()->count()]);
-    })->name('ingame-handles');
-
+Route::controller(SettingsController::class)->middleware('auth')->prefix('settings')->name('settings.')->group(function () {
+    Route::get('/', 'data')->name('data');
+    Route::post('/', 'update')->name('update');
+    Route::post('part-time-divisions', 'partTimeDivisions')->name('part-time-divisions');
+    Route::post('ingame-handles', 'ingameHandles')->name('ingame-handles');
     Route::post('transfer-request', [MemberTransferController::class, 'store'])->name('transfer-request');
-
-    Route::post('sync-avatar', function (SyncDiscordAvatar $request) {
-        try {
-            $request->persist();
-        } catch (Throwable) {
-            return response()->json(['message' => 'Failed to reach Discord bot'], 503);
-        }
-
-        return response()->json(['avatarUrl' => $request->user()->member->fresh()->getDiscordAvatarUrl()]);
-    })->name('sync-avatar');
+    Route::post('sync-avatar', 'syncAvatar')->name('sync-avatar');
 });
 
 Route::middleware('auth')->post('feedback', function (Request $request) {

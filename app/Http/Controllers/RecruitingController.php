@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ForumGroup;
+use App\Enums\Rank;
 use App\Exceptions\RecruitmentFailedException;
 use App\Http\Requests\Recruiting\CheckForumEmailRequest;
 use App\Http\Requests\Recruiting\SubmitRecruitmentRequest;
@@ -26,6 +27,7 @@ use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Inertia\Inertia;
 
 #[Middleware('auth')]
 class RecruitingController extends Controller
@@ -43,9 +45,14 @@ class RecruitingController extends Controller
     #[Authorize('recruit', Member::class)]
     public function index()
     {
-        $divisions = Division::recruitable()->get();
+        $divisions = Division::recruitable()->get()->map(fn ($division) => [
+            'name' => $division->name,
+            'slug' => $division->slug,
+            'logo' => $division->getLogoPath(),
+            'url'  => route('recruiting.form', $division->slug),
+        ]);
 
-        return view('recruit.index', compact('divisions'));
+        return Inertia::render('recruiting/index', compact('divisions'));
     }
 
     /**
@@ -112,7 +119,16 @@ class RecruitingController extends Controller
             return redirect()->back();
         }
 
-        return view('recruit.form', compact('division'));
+        return Inertia::render('recruiting/form', [
+            ...$this->recruitData($division, request()->boolean('all_pending')),
+            'divisionSlug'          => $division->slug,
+            'cancelUrl'             => route('division', $division->slug),
+            'recruiterId'           => auth()->user()->member?->clan_id ?? auth()->id(),
+            'ranks'                 => Rank::getAllRanks(),
+            'forbiddenNamePrefixes' => Rank::forbiddenNamePrefixes(),
+            'pendingUserId'         => request('pending_user_id') ? (int) request('pending_user_id') : null,
+            'memberId'              => request('member_id') ? (int) request('member_id') : null,
+        ]);
     }
 
     #[Authorize('recruit', Member::class)]
@@ -135,13 +151,25 @@ class RecruitingController extends Controller
             return redirect()->route('recruiting.initial');
         }
 
-        return view('recruit.discord-confirm', [
-            'targetDivision' => $targetDivision,
+        $needsPicker = $pendingUser ? ! $targetDivision : true;
+
+        return Inertia::render('recruit/discord-confirm', [
             'discordId'      => $discordId,
-            'forumAccount'   => $pendingUser ? $this->checkForumAccountForEmail($pendingUser->email) : null,
+            'backUrl'        => route('recruiting.initial'),
             'pendingUser'    => $pendingUser ? (new PendingDiscordUserTransformer)->transform($pendingUser) : null,
-            'memberMatches'  => $pendingUser ? null : $this->findMembersByDiscordId($discordId),
-            'divisions'      => $targetDivision ? null : Division::recruitable()->get(),
+            'forumAccount'   => $pendingUser ? $this->checkForumAccountForEmail($pendingUser->email) : null,
+            'targetDivision' => $targetDivision ? [
+                'name'           => $targetDivision->name,
+                'logo'           => $targetDivision->getLogoPath(),
+                'recruitFormUrl' => route('recruiting.form', $targetDivision) . '?pending_user_id=' . $pendingUser->id,
+            ] : null,
+            'memberMatches' => $pendingUser ? null : $this->findMembersByDiscordId($discordId)->values(),
+            'divisions'     => $needsPicker
+                ? Division::recruitable()->get(['id', 'name', 'slug'])
+                    ->map(fn ($division) => ['name' => $division->name, 'formPath' => route('recruiting.form', $division)])
+                    ->values()
+                : null,
+            'pendingUserId' => $pendingUser?->id,
         ]);
     }
 
@@ -157,7 +185,11 @@ class RecruitingController extends Controller
     #[Authorize('recruit', Member::class)]
     public function getDivisionRecruitData(Division $division): JsonResponse
     {
+        return response()->json($this->recruitData($division, request()->boolean('all_pending')));
+    }
 
+    private function recruitData(Division $division, bool $allPending): array
+    {
         $settings = $division->settings();
         $threads  = $settings->get('recruiting_threads', []);
         $tasks    = $settings->get('recruiting_tasks', []);
@@ -170,9 +202,9 @@ class RecruitingController extends Controller
             ])
             ->get();
 
-        $pendingDiscord = $this->getPendingDiscordUsers($division, request()->boolean('all_pending'));
+        $pendingDiscord = $this->getPendingDiscordUsers($division, $allPending);
 
-        return response()->json([
+        return [
             'name'     => $division->name,
             'platoons' => $platoons->map(fn ($p) => [
                 'id'            => $p->id,
@@ -204,7 +236,7 @@ class RecruitingController extends Controller
                 'squad'   => $division->locality('squad'),
             ],
             'pending_discord' => $pendingDiscord,
-        ]);
+        ];
     }
 
     /**

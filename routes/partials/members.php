@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\Rank;
+use App\Http\Controllers\ActivityReminderController;
 use App\Http\Controllers\InactiveMemberController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\MemberController;
@@ -20,23 +21,23 @@ Route::prefix('members')->group(function () {
         Route::get('{member}/confirm-reset', 'confirmUnassign')->name('member.confirm-reset');
         Route::post('{member}/unassign', 'unassignMember')->name('member.unassign');
         Route::post('{member}/assign-platoon', 'assignPlatoon')->name('member.assign-platoon');
-        Route::post('{member}/set-activity-reminder', 'setActivityReminder')->name('member.set-activity-reminder');
-        Route::delete('{member}/activity-reminders', 'clearActivityReminders')->name('member.clear-activity-reminders');
-        Route::post('search/{name}', 'search');
         Route::get('{member}-{slug?}', 'show')->name('member');
+    });
+
+    Route::controller(ActivityReminderController::class)->group(function () {
+        Route::post('{member}/set-activity-reminder', 'store')->name('member.set-activity-reminder');
+        Route::delete('{member}/activity-reminders', 'destroy')->name('member.clear-activity-reminders');
     });
 
     Route::post('assign-squad', [SquadController::class, 'assignMember']);
 
     Route::controller(LeaveController::class)->group(function () {
-        Route::get('{member}/leave/{leave}/edit', 'edit')->name('leave.edit');
         Route::match(['put', 'patch'], '{member}/leave', 'update')->name('leave.update');
         Route::delete('{member}/leave/{leave}', 'delete')->name('leave.delete');
     });
 
     Route::controller(NoteController::class)->prefix('{member}/notes')->group(function () {
         Route::post('/', 'store')->name('storeNote');
-        Route::get('{note}/edit', 'edit')->name('editNote');
         Route::match(['post', 'patch'], '{note}', 'update')->name('updateNote');
         Route::delete('{note}', 'delete')->name('deleteNote');
         Route::post('{noteId}/restore', 'restore')->name('restoreNote');
