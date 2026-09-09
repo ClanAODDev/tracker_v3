@@ -82,15 +82,36 @@ function themeColors() {
         text: v('--foreground', '#e7e9ec'),
         textMuted: v('--muted-foreground', '#868b94'),
         accent: v('--primary', '#e11d2e'),
+        glow: v('--primary-glow', 'rgba(225,29,46,0.32)'),
         border: v('--border-strong', 'rgba(255,255,255,0.12)'),
+        light: document.documentElement.dataset.theme === 'light',
     };
 }
 
+function shiftToward(hex: string, target: number, amount: number) {
+    const mix = (c: number) => Math.round(c + (target - c) * amount);
+    const r = mix(parseInt(hex.slice(1, 3), 16));
+    const g = mix(parseInt(hex.slice(3, 5), 16));
+    const b = mix(parseInt(hex.slice(5, 7), 16));
+    return { r, g, b };
+}
+
+/** A rank-tinted fill that stays legible on either theme surface. */
 function rankBg(hex: string, opacity = 0.15) {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
     const b = parseInt(hex.slice(5, 7), 16);
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+}
+
+function rankFill(hex: string, colors: any, opacity = 0.15) {
+    if (!colors.light) return rankBg(hex, opacity);
+    const { r, g, b } = shiftToward(hex, 255, 0.78);
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+function rankInk(hex: string, colors: any) {
+    return colors.light ? colors.text : hex;
 }
 
 function truncate(str: string | null | undefined, len: number) {
@@ -291,7 +312,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
         ng.append('text')
             .attr('y', displayHandle && data.handle ? -8 : 0)
             .attr('text-anchor', 'middle')
-            .attr('fill', data.rankColor)
+            .attr('fill', rankInk(data.rankColor, colors))
             .attr('font-size', fontSize)
             .attr('font-weight', '600')
             .style('pointer-events', 'none')
@@ -389,7 +410,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
                 .attr('width', w)
                 .attr('height', height)
                 .attr('rx', 6)
-                .attr('fill', rankBg(d.data.rankColor, 0.15))
+                .attr('fill', rankFill(d.data.rankColor, colors, 0.15))
                 .attr('stroke', d.data.rankColor)
                 .attr('stroke-width', type === 'co' ? 2 : 1)
                 .attr('stroke-opacity', type === 'co' ? 0.8 : 0.5);
@@ -447,7 +468,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
                 .attr('width', w)
                 .attr('height', height)
                 .attr('rx', 6)
-                .attr('fill', leaderColor ? rankBg(leaderColor, 0.15) : colors.bg)
+                .attr('fill', leaderColor ? rankFill(leaderColor, colors, 0.15) : colors.bg)
                 .attr('stroke', leaderColor || colors.accent)
                 .attr('stroke-width', 1)
                 .attr('stroke-opacity', 0.5)
@@ -490,7 +511,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
                 .attr('width', w)
                 .attr('height', height)
                 .attr('rx', 4)
-                .attr('fill', leaderColor ? rankBg(leaderColor, 0.12) : colors.bgDark)
+                .attr('fill', leaderColor ? rankFill(leaderColor, colors, 0.12) : colors.bgDark)
                 .attr('stroke', leaderColor || colors.border)
                 .attr('stroke-opacity', 0.4)
                 .style('cursor', isCollapsible ? 'pointer' : 'default')
@@ -523,13 +544,13 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
             .attr('width', w)
             .attr('height', height)
             .attr('rx', 4)
-            .attr('fill', rankBg(data.rankColor, 0.25))
+            .attr('fill', rankFill(data.rankColor, colors, 0.25))
             .attr('stroke', data.rankColor)
             .attr('stroke-opacity', 0.4);
         ng.append('text')
             .attr('y', displayHandle && data.handle ? -6 : 4)
             .attr('text-anchor', 'middle')
-            .attr('fill', data.rankColor)
+            .attr('fill', rankInk(data.rankColor, colors))
             .attr('font-size', FONT.MEMBER_NAME)
             .attr('font-weight', '600')
             .style('pointer-events', 'none')
