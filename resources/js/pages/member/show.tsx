@@ -390,35 +390,40 @@ export default function MemberShow(props: MemberShowProps) {
                         unit={stats.activity.daysSinceVoice !== null ? 'd' : undefined}
                         label="Since voice activity"
                         detail={
-                            stats.activity.daysSinceVoice !== null ? (
-                                <>
-                                    <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
-                                        <div
-                                            className={cn(
-                                                'h-full rounded-full',
-                                                stats.activity.health === 'critical'
-                                                    ? 'bg-destructive'
-                                                    : stats.activity.health === 'warning'
-                                                      ? 'bg-warning'
-                                                      : 'bg-success',
-                                            )}
-                                            style={{ width: `${stats.activity.healthPct}%` }}
-                                        />
-                                    </div>
-                                    <span>{stats.activity.divisionMax}d threshold</span>
-                                    {stats.activity.reminders.length > 0 && (
-                                        <button
-                                            type="button"
-                                            onClick={() => setRemindersOpen(true)}
-                                            className="ml-2 inline-flex items-center gap-1 text-primary hover:underline"
-                                        >
-                                            <Bell className="size-3" /> {stats.activity.reminders.length}
-                                        </button>
-                                    )}
-                                </>
-                            ) : (
-                                'Never connected'
-                            )
+                            <>
+                                {stats.activity.daysSinceVoice !== null ? (
+                                    <>
+                                        <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
+                                            <div
+                                                className={cn(
+                                                    'h-full rounded-full',
+                                                    stats.activity.health === 'critical'
+                                                        ? 'bg-destructive'
+                                                        : stats.activity.health === 'warning'
+                                                          ? 'bg-warning'
+                                                          : 'bg-success',
+                                                )}
+                                                style={{ width: `${stats.activity.healthPct}%` }}
+                                            />
+                                        </div>
+                                        <span>{stats.activity.divisionMax}d threshold</span>
+                                    </>
+                                ) : (
+                                    <span>Never connected</span>
+                                )}
+                                {stats.activity.reminders.length > 0 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setRemindersOpen(true)}
+                                        className="ml-2 inline-flex items-center gap-1 text-primary hover:underline"
+                                        title="View inactivity reminder history"
+                                    >
+                                        <Bell className="size-3" />
+                                        {stats.activity.reminders.length} reminder
+                                        {stats.activity.reminders.length === 1 ? '' : 's'}
+                                    </button>
+                                )}
+                            </>
                         }
                     />
 
@@ -729,13 +734,16 @@ export default function MemberShow(props: MemberShowProps) {
                 <DialogContent className="max-w-sm">
                     <DialogHeader>
                         <DialogTitle>Reminder history</DialogTitle>
-                        <DialogDescription className="sr-only">Inactivity reminders sent to this member</DialogDescription>
+                        <DialogDescription>
+                            {stats.activity.reminders.length} inactivity reminder
+                            {stats.activity.reminders.length === 1 ? '' : 's'} sent to this member.
+                        </DialogDescription>
                     </DialogHeader>
-                    <ul className="space-y-1.5">
+                    <ul className="-mx-1 max-h-[55vh] space-y-1.5 overflow-y-auto px-1">
                         {stats.activity.reminders.map((reminder, i) => (
-                            <li key={i} className="flex items-center justify-between text-sm">
-                                <span className="numeric text-xs text-muted-foreground">{reminder.date}</span>
-                                <span>{reminder.by}</span>
+                            <li key={i} className="flex items-center justify-between gap-4 text-sm">
+                                <span className="numeric shrink-0 text-xs text-muted-foreground">{reminder.date}</span>
+                                <span className="truncate">{reminder.by}</span>
                             </li>
                         ))}
                     </ul>
