@@ -67,6 +67,59 @@
     --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
+/* Light theme — white ground, the same crimson accent, darker signal colours
+ * for contrast on white. Only the colour tokens change; geometry/typography
+ * are shared. Chart + rarity palettes re-validated for the light surface. */
+[data-theme='light'] {
+    --background: #f6f6f7;
+    --foreground: #16181c;
+
+    --card: #ffffff;
+    --card-foreground: #16181c;
+
+    --popover: #ffffff;
+    --popover-foreground: #16181c;
+
+    --primary: #e11d2e;
+    --primary-foreground: #ffffff;
+    --primary-glow: rgba(225, 29, 46, 0.18);
+
+    --secondary: #eeeef0;
+    --secondary-foreground: #16181c;
+
+    --muted: #f1f1f3;
+    --muted-foreground: #62666f;
+    --dim-foreground: #9096a0;
+
+    --accent: #f0f0f2;
+    --accent-foreground: #16181c;
+
+    --destructive: #d61f2b;
+    --destructive-foreground: #ffffff;
+
+    --success: #0f9d6b;
+    --warning: #b26a00;
+    --info: #0b7ec2;
+
+    --border: rgba(15, 18, 25, 0.12);
+    --border-strong: rgba(15, 18, 25, 0.22);
+    --input: rgba(15, 18, 25, 0.18);
+    --ring: rgba(225, 29, 46, 0.45);
+
+    --chart-1: #d94f4f;
+    --chart-2: #3379d6;
+    --chart-3: #9c6500;
+    --chart-4: #128560;
+    --chart-5: #7c6fe0;
+
+    --rarity-mythic: #e11d48;
+    --rarity-legendary: #d97706;
+    --rarity-epic: #9333ea;
+    --rarity-rare: #2563eb;
+    --rarity-common: #64748b;
+    --rarity-unclaimed: #cbd5e1;
+}
+
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);

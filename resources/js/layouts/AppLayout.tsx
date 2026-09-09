@@ -24,11 +24,16 @@ export default function AppLayout({ header, fullBleed, children }: PropsWithChil
     const navSide = page.props.auth.user?.settings.mobileNavSide === 'right' ? 'right' : 'left';
     const navLeft = navSide === 'left';
     const reduceAnimations = page.props.auth.user?.settings.reduceAnimations ?? false;
+    const theme = page.props.auth.user?.settings.theme === 'light' ? 'light' : 'tron';
     const [navOpen, setNavOpen] = useState(false);
 
     useEffect(() => {
         document.documentElement.dataset.reduceMotion = reduceAnimations ? 'true' : 'false';
     }, [reduceAnimations]);
+
+    useEffect(() => {
+        document.documentElement.dataset.theme = theme;
+    }, [theme]);
 
     const sidebar = <NavSidebar items={nav ?? []} currentUrl={currentUrl} />;
 

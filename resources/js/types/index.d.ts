@@ -10,6 +10,7 @@ export interface AuthUser {
     settings: {
         reduceAnimations: boolean;
         mobileNavSide: 'left' | 'right';
+        theme: 'light' | 'dark';
     };
 }
 

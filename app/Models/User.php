@@ -33,6 +33,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         'ticket_notifications' => true,
         'disable_animations'   => false,
         'mobile_nav_side'      => 'left',
+        'theme'                => 'dark',
     ];
 
     protected $fillable = [

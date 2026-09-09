@@ -59,6 +59,22 @@ class SettingsControllerTest extends TestCase
     }
 
     #[Test]
+    public function theme_can_be_switched_to_light()
+    {
+        $user = $this->createMemberWithUser();
+
+        $this->actingAs($user)
+            ->postJson(route('settings.update'), ['theme' => 'light'])
+            ->assertOk();
+
+        $this->assertSame('light', $user->fresh()->settings()->get('theme'));
+
+        $this->actingAs($user)
+            ->postJson(route('settings.update'), ['theme' => 'sepia'])
+            ->assertStatus(422);
+    }
+
+    #[Test]
     public function part_time_divisions_sync_to_active_divisions_only()
     {
         $division = $this->createActiveDivision();

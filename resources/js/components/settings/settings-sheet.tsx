@@ -26,7 +26,7 @@ interface DivisionRef {
 }
 
 interface SettingsData {
-    settings: { disable_animations: boolean; mobile_nav_side: 'left' | 'right' };
+    settings: { disable_animations: boolean; mobile_nav_side: 'left' | 'right'; theme: 'light' | 'dark' };
     member: {
         name: string;
         avatarUrl: string | null;
@@ -446,6 +446,7 @@ function HandlesDialog({
 function AppearanceSection({ settings }: { settings: SettingsData['settings'] }) {
     const [reduce, setReduce] = useState(settings.disable_animations);
     const [navSide, setNavSide] = useState<'left' | 'right'>(settings.mobile_nav_side);
+    const [theme, setTheme] = useState<'light' | 'dark'>(settings.theme);
 
     async function persist(patch: Record<string, unknown>) {
         try {
@@ -458,6 +459,27 @@ function AppearanceSection({ settings }: { settings: SettingsData['settings'] })
 
     return (
         <Section title="Appearance">
+            <div className="space-y-1.5 text-sm">
+                <span className="block">Theme</span>
+                <div className="flex gap-1">
+                    {(['dark', 'light'] as const).map((option) => (
+                        <Button
+                            key={option}
+                            size="sm"
+                            variant={theme === option ? 'default' : 'outline'}
+                            className="flex-1 capitalize"
+                            onClick={() => {
+                                setTheme(option);
+                                document.documentElement.dataset.theme = option === 'light' ? 'light' : 'tron';
+                                persist({ theme: option });
+                            }}
+                        >
+                            {option}
+                        </Button>
+                    ))}
+                </div>
+            </div>
+
             <label className="flex items-center justify-between gap-3 text-sm">
                 <span>
                     Reduce animations

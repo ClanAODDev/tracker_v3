@@ -26,6 +26,7 @@ class SettingsController extends Controller
             'settings' => [
                 'disable_animations' => (bool) $settings->get('disable_animations', false),
                 'mobile_nav_side'    => $settings->get('mobile_nav_side', 'left'),
+                'theme'              => $settings->get('theme', 'dark'),
             ],
             'member' => null,
         ];
@@ -81,6 +82,7 @@ class SettingsController extends Controller
         $validated = $request->validate([
             'disable_animations' => ['sometimes', 'boolean'],
             'mobile_nav_side'    => ['sometimes', 'in:left,right'],
+            'theme'              => ['sometimes', 'in:light,dark'],
         ]);
 
         $user           = $request->user();
