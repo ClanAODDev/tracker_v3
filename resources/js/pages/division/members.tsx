@@ -137,6 +137,7 @@ export default function MembersPage({
 
     return (
         <AppLayout
+            width="wide"
             header={{
                 eyebrow:
                     scope.kind === 'division'

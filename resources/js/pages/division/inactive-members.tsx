@@ -100,6 +100,7 @@ export default function InactiveMembers({
 
     return (
         <AppLayout
+            width="wide"
             header={{
                 eyebrow: 'Division',
                 title: `${division.name} — inactive members`,

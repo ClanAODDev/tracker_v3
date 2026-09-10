@@ -30,6 +30,7 @@ export function ClanReportShell({ title, active, actions, children }: PropsWithC
 
     return (
         <AppLayout
+            width="wide"
             header={{
                 eyebrow: 'Clan Reports',
                 title,

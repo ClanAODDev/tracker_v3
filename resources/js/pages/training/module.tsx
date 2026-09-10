@@ -53,7 +53,7 @@ export default function TrainingModulePage({ module, trainee }: TrainingModulePr
 
     return (
         <AppLayout
-            fullBleed
+            width="full"
             header={{
                 eyebrow: 'Leadership Training',
                 title: module.name,

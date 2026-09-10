@@ -43,7 +43,7 @@ export default function OrgChart({ division, tree }: OrgChartProps) {
 
     return (
         <AppLayout
-            fullBleed
+            width="full"
             header={{
                 title: 'Organization chart',
                 eyebrow: `${division.name} Division`,

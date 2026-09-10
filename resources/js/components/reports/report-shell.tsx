@@ -32,6 +32,7 @@ export function ReportShell({
 
     return (
         <AppLayout
+            width="wide"
             header={{
                 eyebrow: `${divisionName} Division`,
                 title,

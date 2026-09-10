@@ -13,12 +13,20 @@ import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import type { SharedProps } from '@/types';
 
+type LayoutWidth = 'default' | 'wide' | 'full';
+
+const WIDTH_CLASS: Record<LayoutWidth, string> = {
+    default: 'mx-auto w-full max-w-[88rem] px-6 py-8',
+    wide: 'mx-auto w-full max-w-[104rem] px-6 py-8',
+    full: '',
+};
+
 interface AppLayoutProps {
     header?: PageHeaderProps;
-    fullBleed?: boolean;
+    width?: LayoutWidth;
 }
 
-export default function AppLayout({ header, fullBleed, children }: PropsWithChildren<AppLayoutProps>) {
+export default function AppLayout({ header, width = 'default', children }: PropsWithChildren<AppLayoutProps>) {
     const page = usePage<SharedProps>();
     const nav = page.props.nav;
     const currentUrl = page.url;
@@ -58,7 +66,7 @@ export default function AppLayout({ header, fullBleed, children }: PropsWithChil
                     <ImpersonationBanner />
                     {header && <PageHeader {...header} />}
                     <div className="tron-grid min-h-[calc(100vh-3.5rem)]">
-                        <main className={fullBleed ? '' : 'mx-auto w-full max-w-7xl px-6 py-8'}>{children}</main>
+                        <main className={WIDTH_CLASS[width]}>{children}</main>
                     </div>
                 </div>
             </div>

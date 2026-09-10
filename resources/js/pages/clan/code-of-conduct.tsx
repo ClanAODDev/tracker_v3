@@ -11,7 +11,7 @@ interface CodeOfConductProps {
 function Content({ rules }: CodeOfConductProps) {
     return (
         <>
-            <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
+            <div className="max-w-prose space-y-4 text-sm leading-relaxed text-muted-foreground">
                 <p>
                     The Angels of Death Code of Conduct is the face of our clan. It is not only a guideline for member
                     conduct — it is a statement about what kind of gamers we are, and who we're looking for. AOD is an
