@@ -139,8 +139,10 @@ export function SettingsSheet({ open, onOpenChange }: { open: boolean; onOpenCha
 function ProfileSection({ member }: { member: NonNullable<SettingsData['member']> }) {
     const [avatarUrl, setAvatarUrl] = useState(member.avatarUrl);
     const [syncing, setSyncing] = useState(false);
+    const [cooldown, setCooldown] = useState(false);
 
     async function sync() {
+        if (syncing || cooldown) return;
         setSyncing(true);
         try {
             const res = await postJson<{ avatarUrl: string }>('/settings/sync-avatar', {});
@@ -151,6 +153,8 @@ function ProfileSection({ member }: { member: NonNullable<SettingsData['member']
             toast.error(e instanceof Error ? e.message : 'Failed to sync avatar');
         } finally {
             setSyncing(false);
+            setCooldown(true);
+            setTimeout(() => setCooldown(false), 15000);
         }
     }
 
@@ -171,7 +175,7 @@ function ProfileSection({ member }: { member: NonNullable<SettingsData['member']
                             variant="link"
                             size="sm"
                             className="h-auto p-0 text-xs"
-                            disabled={syncing}
+                            disabled={syncing || cooldown}
                             onClick={sync}
                         >
                             <RefreshCw className={cn('size-3', syncing && 'animate-spin')} /> Sync avatar from Discord

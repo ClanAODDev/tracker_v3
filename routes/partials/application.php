@@ -51,7 +51,7 @@ Route::controller(SettingsController::class)->middleware('auth')->prefix('settin
     Route::post('part-time-divisions', 'partTimeDivisions')->name('part-time-divisions');
     Route::post('ingame-handles', 'ingameHandles')->name('ingame-handles');
     Route::post('transfer-request', [MemberTransferController::class, 'store'])->name('transfer-request');
-    Route::post('sync-avatar', 'syncAvatar')->name('sync-avatar');
+    Route::post('sync-avatar', 'syncAvatar')->middleware('throttle:3,1')->name('sync-avatar');
 });
 
 Route::middleware('auth')->post('feedback', function (Request $request) {
