@@ -20,9 +20,10 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
-            'auth'  => fn () => $this->authProps($request),
-            'nav'   => fn () => ($user = $request->user()) ? Navigation::for($user) : [],
-            'flash' => fn () => [
+            'auth'            => fn () => $this->authProps($request),
+            'nav'             => fn () => ($user = $request->user()) ? Navigation::for($user) : [],
+            'sessionLifetime' => (int) config('session.lifetime'),
+            'flash'           => fn () => [
                 'toasts' => $request->session()->get('toastr::messages', []),
             ],
         ];

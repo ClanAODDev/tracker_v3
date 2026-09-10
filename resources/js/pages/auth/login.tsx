@@ -1,5 +1,5 @@
 import { Head, useForm } from '@inertiajs/react';
-import { LockKeyhole } from 'lucide-react';
+import { Clock, LockKeyhole } from 'lucide-react';
 import type { FormEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -9,9 +9,10 @@ import BlankLayout from '@/layouts/BlankLayout';
 
 interface LoginProps {
     discordEnabled: boolean;
+    expired?: boolean;
 }
 
-export default function Login({ discordEnabled }: LoginProps) {
+export default function Login({ discordEnabled, expired }: LoginProps) {
     const form = useForm({ username: '', password: '', remember: false });
 
     function submit(event: FormEvent) {
@@ -33,6 +34,13 @@ export default function Login({ discordEnabled }: LoginProps) {
                         <h1 className="text-lg font-semibold tracking-tight">Sign in</h1>
                     </div>
                 </div>
+
+                {expired && (
+                    <div className="mb-4 flex items-center gap-2 rounded-md border border-warning/40 bg-warning/5 px-3 py-2.5 text-sm text-warning">
+                        <Clock className="size-4 shrink-0" />
+                        Your session expired. Please sign in again.
+                    </div>
+                )}
 
                 <form onSubmit={submit} className="tron-corners space-y-4 rounded-md border border-border bg-card p-6">
                     <p className="text-sm text-muted-foreground">

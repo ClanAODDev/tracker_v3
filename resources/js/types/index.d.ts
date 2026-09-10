@@ -57,6 +57,7 @@ export interface SharedProps {
         permissions: AuthPermissions | null;
     };
     nav: NavItem[];
+    sessionLifetime: number;
     flash: {
         toasts: Toast[];
     };

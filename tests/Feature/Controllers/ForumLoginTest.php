@@ -23,7 +23,18 @@ class ForumLoginTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('auth/login')
-                ->has('discordEnabled'));
+                ->has('discordEnabled')
+                ->where('expired', false));
+    }
+
+    #[Test]
+    public function login_form_flags_an_expired_session(): void
+    {
+        $this->get('/login?expired=1')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('auth/login')
+                ->where('expired', true));
     }
 
     #[Test]

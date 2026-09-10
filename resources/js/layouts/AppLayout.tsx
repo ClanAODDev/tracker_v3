@@ -6,6 +6,7 @@ import { FlashToaster } from '@/components/flash-toaster';
 import { ImpersonationBanner } from '@/components/impersonation-banner';
 import { NavSidebar } from '@/components/nav-sidebar';
 import { PageHeader, type PageHeaderProps } from '@/components/page-header';
+import { SessionGuard } from '@/components/session-guard';
 import { TrackerHomeLink } from '@/components/tracker-logo';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
@@ -74,6 +75,7 @@ export default function AppLayout({ header, fullBleed, children }: PropsWithChil
             </Sheet>
 
             <FlashToaster />
+            {page.props.auth.user && <SessionGuard lifetimeMinutes={page.props.sessionLifetime} />}
         </div>
     );
 }

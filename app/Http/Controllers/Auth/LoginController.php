@@ -69,6 +69,7 @@ class LoginController extends Controller
     {
         return Inertia::render('auth/login', [
             'discordEnabled' => (bool) config('services.discord.client_id'),
+            'expired'        => request()->boolean('expired'),
         ]);
     }
 
