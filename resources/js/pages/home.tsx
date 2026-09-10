@@ -71,7 +71,7 @@ export default function Home({ myDivision, toolbar, pendingActions, leaderboard,
         <AppLayout header={{ title: 'AOD Tracker', breadcrumbs: [{ label: 'Dashboard' }] }}>
             <Head title="Dashboard" />
 
-            <div className="space-y-8">
+            <div className="tron-stagger space-y-8">
                 {/* My division */}
                 <div className="tron-corners rounded-md border border-border bg-card p-5">
                     <TronFlash />

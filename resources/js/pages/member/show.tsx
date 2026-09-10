@@ -28,6 +28,7 @@ import {
     type TenureStats,
 } from '@/components/member/profile-dialogs';
 import { MemberTagEditor, type DisplayTag, type TagManagement } from '@/components/member/tag-editor';
+import { FillBar } from '@/components/motion';
 import { SectionTitle as BaseSectionTitle } from '@/components/section';
 import { StatCard } from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
@@ -264,7 +265,7 @@ export default function MemberShow(props: MemberShowProps) {
         >
             <Head title={member.rankName} />
 
-            <div className="space-y-8">
+            <div className="tron-stagger space-y-8">
                 <div className="flex flex-wrap items-center gap-3">
                     {member.avatarUrl && (
                         <img src={member.avatarUrl} alt="" className="size-12 rounded-full" />
@@ -330,16 +331,16 @@ export default function MemberShow(props: MemberShowProps) {
                                 {stats.activity.daysSinceVoice !== null ? (
                                     <>
                                         <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
-                                            <div
+                                            <FillBar
+                                                pct={stats.activity.healthPct}
                                                 className={cn(
-                                                    'h-full rounded-full',
+                                                    'rounded-full',
                                                     stats.activity.health === 'critical'
                                                         ? 'bg-destructive'
                                                         : stats.activity.health === 'warning'
                                                           ? 'bg-warning'
                                                           : 'bg-success',
                                                 )}
-                                                style={{ width: `${stats.activity.healthPct}%` }}
                                             />
                                         </div>
                                         <span>{stats.activity.divisionMax}d threshold</span>

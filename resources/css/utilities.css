@@ -249,4 +249,59 @@
     :root[data-theme='light'] .rank-ink {
         color: color-mix(in srgb, var(--rank-color, currentColor) 42%, #14161a);
     }
+
+    /* One-shot staggered fade-up for a container's direct children — a page's
+       sections reading in on load. base.css neutralises it under reduced motion. */
+    .tron-stagger > * {
+        animation: tron-reveal 0.32s ease-out both;
+    }
+
+    .tron-stagger > *:nth-child(1) {
+        animation-delay: 0.03s;
+    }
+    .tron-stagger > *:nth-child(2) {
+        animation-delay: 0.07s;
+    }
+    .tron-stagger > *:nth-child(3) {
+        animation-delay: 0.11s;
+    }
+    .tron-stagger > *:nth-child(4) {
+        animation-delay: 0.15s;
+    }
+    .tron-stagger > *:nth-child(5) {
+        animation-delay: 0.19s;
+    }
+    .tron-stagger > *:nth-child(6) {
+        animation-delay: 0.23s;
+    }
+    .tron-stagger > *:nth-child(n + 7) {
+        animation-delay: 0.26s;
+    }
+
+    /* A brief crimson pulse on a value that just changed in place. */
+    .tron-flash-value {
+        animation: tron-flash-value 0.55s ease-out;
+    }
+}
+
+@keyframes tron-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes tron-flash-value {
+    0% {
+        color: var(--primary);
+        text-shadow: 0 0 8px var(--primary-glow);
+    }
+    100% {
+        color: inherit;
+        text-shadow: none;
+    }
 }

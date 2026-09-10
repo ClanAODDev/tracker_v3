@@ -9,6 +9,7 @@ import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from 
 import { RecentActivityModal, type RecentActivityGroup } from '@/components/division/recent-activity-modal';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
+import { FillBar, FlashOnChange } from '@/components/motion';
 import { SectionTitle } from '@/components/section';
 import { StatCard } from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
@@ -225,10 +226,10 @@ function PlatoonCard({
             )}
 
             <div className="relative -mx-4 -mb-4 mt-3 overflow-hidden rounded-b-[5px] border-t border-border bg-black/15 px-4 py-2">
-                <div
-                    aria-hidden="true"
+                <FillBar
+                    pct={platoon.voiceRate}
                     className={cn('absolute inset-y-0 left-0 border-r', voiceFill(platoon.voiceRate))}
-                    style={{ width: `${platoon.voiceRate}%`, borderRightColor: voiceCorner(platoon.voiceRate) }}
+                    style={{ borderRightColor: voiceCorner(platoon.voiceRate) }}
                 />
                 <div className="relative flex items-center font-mono text-[11px] tracking-[0.04em]">
                     <span className="flex items-baseline gap-1.5 pr-3">
@@ -239,7 +240,9 @@ function PlatoonCard({
                     </span>
                     <span className="flex items-baseline gap-1.5 border-l border-border-strong px-3">
                         <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Members</span>
-                        <span className="font-semibold">{platoon.memberCount}</span>
+                        <FlashOnChange value={platoon.memberCount} className="font-semibold">
+                            {platoon.memberCount}
+                        </FlashOnChange>
                     </span>
                     <span className="flex items-baseline gap-1.5 border-l border-border-strong px-3">
                         <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Squads</span>
@@ -367,7 +370,7 @@ export default function DivisionShow({
         >
             <Head title={d.name} />
 
-            <div className="space-y-8">
+            <div className="tron-stagger space-y-8">
                 {d.shutdownAt && (
                     <div className="flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm font-medium text-destructive">
                         <TriangleAlert className="size-4 shrink-0" />

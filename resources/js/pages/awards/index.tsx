@@ -88,7 +88,7 @@ export default function AwardsIndex({
         >
             <Head title="Achievements" />
 
-            <div className="space-y-8">
+            <div className="tron-stagger space-y-8">
                 <div className="tron-corners relative rounded-md border border-border bg-card">
                     <TronFlash />
                     <TronIdPlate label="AWARDS" className="absolute -top-2 left-3" />
