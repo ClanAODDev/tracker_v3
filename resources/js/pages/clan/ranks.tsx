@@ -1,7 +1,9 @@
 import { Head } from '@inertiajs/react';
 import { Info } from 'lucide-react';
+import { Fragment, type CSSProperties } from 'react';
 
 import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
 
 interface RankEntry {
@@ -37,6 +39,8 @@ const ROLES = [
 ];
 
 export default function Ranks({ sections }: RanksProps) {
+    let rowIndex = 0;
+
     return (
         <AppLayout
             header={{
@@ -48,36 +52,52 @@ export default function Ranks({ sections }: RanksProps) {
             <Head title="Ranking Structure" />
 
             <div className="grid gap-8 lg:grid-cols-[1fr_20rem]">
-                <div className="space-y-8">
-                    {sections.map((section) => (
-                        <section key={section.label}>
-                            <h2 className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
-                                {section.label}
-                            </h2>
-                            <div className="space-y-2">
-                                {section.ranks.map((rank) => (
-                                    <div
-                                        key={rank.abbr}
-                                        className="flex gap-4 rounded-md border border-border bg-card p-4"
-                                        style={{ borderLeft: `2px solid ${rank.color}` }}
-                                    >
-                                        <div className="w-14 shrink-0">
-                                            <span
-                                                className="numeric text-sm font-semibold"
-                                                style={{ color: rank.color }}
-                                            >
-                                                {rank.abbr}
-                                            </span>
+                <div className="space-y-4">
+                    <p className="max-w-prose text-sm text-muted-foreground">
+                        Rank in AOD is earned through tenure and service, not handed out for authority. The structure
+                        runs as one continuous line from the enlisted path up through clan administration.
+                    </p>
+
+                    <div className="rank-tree">
+                        {sections.map((section) => (
+                            <Fragment key={section.label}>
+                                <div className="rank-tier-band">
+                                    <span className="rank-tier-band-label">{section.label}</span>
+                                </div>
+                                <div className="rank-tier">
+                                    <span className="rank-tier-side" aria-hidden="true">
+                                        {section.label}
+                                    </span>
+                                    {section.ranks.map((rank) => (
+                                        <div
+                                            key={rank.abbr}
+                                            className={cn(
+                                                'rank-row',
+                                                rank.tier === 'enlisted' && 'rank-row--muted',
+                                            )}
+                                            style={
+                                                {
+                                                    '--rank-color': rank.color,
+                                                    '--i': rowIndex++,
+                                                } as CSSProperties
+                                            }
+                                        >
+                                            <div className="rank-row-track">
+                                                <span className="rank-row-node" />
+                                            </div>
+                                            <div className="rank-row-body">
+                                                <div className="rank-row-head">
+                                                    <span className="rank-row-abbr">{rank.abbr}</span>
+                                                    <span className="rank-row-name">{rank.name}</span>
+                                                </div>
+                                                <p className="rank-row-duties">{rank.duties}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p className="text-sm font-medium">{rank.name}</p>
-                                            <p className="mt-0.5 text-sm text-muted-foreground">{rank.duties}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </section>
-                    ))}
+                                    ))}
+                                </div>
+                            </Fragment>
+                        ))}
+                    </div>
                 </div>
 
                 <aside className="space-y-4">

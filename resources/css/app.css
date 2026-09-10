@@ -20,5 +20,6 @@
 @import './utilities.css';
 
 @import './components/rank-timeline.css';
+@import './components/rank-tree.css';
 @import './components/tron-spinner.css';
 @import './components/tron-flourishes.css';
