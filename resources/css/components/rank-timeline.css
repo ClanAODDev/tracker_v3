@@ -43,8 +43,9 @@
     display: flex;
     align-items: flex-start;
     position: relative;
-    padding: 2.5rem 0.75rem 0.5rem;
+    padding: 2.5rem 0.75rem 1rem;
     overflow-x: auto;
+    overflow-y: hidden;
 }
 
 /* Track segment between two nodes — coloured by the rank being promoted into. */
