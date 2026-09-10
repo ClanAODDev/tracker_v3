@@ -28,6 +28,7 @@ import {
     type TenureStats,
 } from '@/components/member/profile-dialogs';
 import { MemberTagEditor, type DisplayTag, type TagManagement } from '@/components/member/tag-editor';
+import { SectionTitle as BaseSectionTitle } from '@/components/section';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -130,10 +131,9 @@ function rarityColor(rarity: string) {
 
 function SectionTitle({ children, action }: { children: ReactNode; action?: ReactNode }) {
     return (
-        <div className="mb-3 flex items-center justify-between border-b border-border pb-2">
-            <h2 className="text-sm font-semibold">{children}</h2>
-            {action}
-        </div>
+        <BaseSectionTitle action={action} divider>
+            {children}
+        </BaseSectionTitle>
     );
 }
 

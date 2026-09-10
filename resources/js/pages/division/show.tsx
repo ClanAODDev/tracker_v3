@@ -8,7 +8,9 @@ import { ApplicationsModal } from '@/components/division/applications-modal';
 import { RecentActivityModal, type RecentActivityGroup } from '@/components/division/recent-activity-modal';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
+import { SectionTitle } from '@/components/section';
 import { Button } from '@/components/ui/button';
+import { toneSurface } from '@/lib/tone';
 import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
 import type { MemberCard } from '@/types';
@@ -83,13 +85,6 @@ interface DivisionShowProps {
     pendingApplicationCount: number;
 }
 
-const STYLE_CLASS: Record<string, string> = {
-    default: 'border-border',
-    warning: 'border-warning/40 bg-warning/5',
-    danger: 'border-destructive/40 bg-destructive/5',
-    accent: 'border-primary/40 bg-primary/5',
-};
-
 function voiceTone(rate: number) {
     return rate >= 30 ? 'text-success' : rate >= 15 ? 'text-warning' : 'text-destructive';
 }
@@ -132,6 +127,31 @@ function StatCard({
             </div>
             {trend && trend.length > 1 && <Sparkline data={trend} tone="auto" width={56} height={24} />}
         </Tag>
+    );
+}
+
+function TileLink({
+    href,
+    tint,
+    hover = true,
+    children,
+}: {
+    href: string;
+    tint?: string;
+    hover?: boolean;
+    children: React.ReactNode;
+}) {
+    return (
+        <a
+            href={href}
+            className={cn(
+                'flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors',
+                hover && 'hover:border-primary/40',
+                tint,
+            )}
+        >
+            {children}
+        </a>
     );
 }
 
@@ -229,21 +249,14 @@ export default function DivisionShow({
                 {pendingActions.length > 0 && (
                     <div className="flex flex-wrap gap-2">
                         {pendingActions.map((action) => (
-                            <a
-                                key={action.key}
-                                href={action.url}
-                                className={cn(
-                                    'flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors hover:border-primary/40',
-                                    STYLE_CLASS[action.style] ?? STYLE_CLASS.default,
-                                )}
-                            >
+                            <TileLink key={action.key} href={action.url} tint={toneSurface(action.style)}>
                                 <PendingActionIcon icon={action.icon} className="size-4 text-muted-foreground" />
                                 <span className="numeric font-semibold">{action.count}</span>
                                 <span className="text-muted-foreground">
                                     {action.label}
                                     {action.count === 1 ? '' : 's'}
                                 </span>
-                            </a>
+                            </TileLink>
                         ))}
                     </div>
                 )}
@@ -313,7 +326,7 @@ export default function DivisionShow({
 
                 {/* Leadership */}
                 <section>
-                    <h2 className="mb-3 text-sm font-semibold">Leadership</h2>
+                    <SectionTitle>Leadership</SectionTitle>
                     {leaders.length === 0 ? (
                         <div className="rounded-md border border-primary/30 bg-primary/5 p-4 text-sm">
                             <p className="font-medium">No leadership assigned</p>
@@ -342,14 +355,14 @@ export default function DivisionShow({
                 {/* Milestones */}
                 {anniversaries.length > 0 && (
                     <section>
-                        <h2 className="mb-3 text-sm font-semibold">Milestones</h2>
+                        <SectionTitle>Milestones</SectionTitle>
                         <div className="flex flex-wrap gap-2">
                             {anniversaries.map((a) => (
-                                <a
+                                <TileLink
                                     key={a.clanId}
                                     href={`/members/${a.clanId}-${encodeURIComponent(a.name)}`}
-                                    className={cn(
-                                        'flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors',
+                                    hover={false}
+                                    tint={cn(
                                         a.trophy ? 'border-primary/30 bg-primary/5' : 'border-border',
                                         !a.hasTenureAward && 'border-warning/40',
                                     )}
@@ -365,7 +378,7 @@ export default function DivisionShow({
                                     {!a.hasTenureAward && (
                                         <TriangleAlert className="size-3 text-warning" aria-label="Tenure award not granted" />
                                     )}
-                                </a>
+                                </TileLink>
                             ))}
                         </div>
                     </section>
@@ -373,14 +386,17 @@ export default function DivisionShow({
 
                 {/* Platoons */}
                 <section>
-                    <div className="mb-3 flex items-center justify-between">
-                        <h2 className="text-sm font-semibold">{d.platoonLabel}s</h2>
-                        {d.canCreatePlatoon && (
-                            <Button variant="ghost" size="sm" asChild>
-                                <a href={d.editUrl}>Create {d.platoonLabel}</a>
-                            </Button>
-                        )}
-                    </div>
+                    <SectionTitle
+                        action={
+                            d.canCreatePlatoon ? (
+                                <Button variant="ghost" size="sm" asChild>
+                                    <a href={d.editUrl}>Create {d.platoonLabel}</a>
+                                </Button>
+                            ) : undefined
+                        }
+                    >
+                        {d.platoonLabel}s
+                    </SectionTitle>
                     {platoons.length === 0 ? (
                         <p className="rounded-md border border-destructive/30 bg-card p-4 text-sm text-muted-foreground">
                             No {d.platoonLabel.toLowerCase()}s found

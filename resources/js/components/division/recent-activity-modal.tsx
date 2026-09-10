@@ -20,6 +20,7 @@ import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { toneBorder, toneFill, toneText } from '@/lib/tone';
 import { cn } from '@/lib/utils';
 
 interface ActivityTarget {
@@ -58,15 +59,6 @@ const ICONS: Record<string, LucideIcon> = {
     circle: Circle,
 };
 
-const TONES: Record<string, { text: string; bg: string; ring: string }> = {
-    success: { text: 'text-success', bg: 'bg-success/10', ring: 'border-success/30' },
-    danger: { text: 'text-destructive', bg: 'bg-destructive/10', ring: 'border-destructive/30' },
-    warning: { text: 'text-warning', bg: 'bg-warning/10', ring: 'border-warning/30' },
-    info: { text: 'text-info', bg: 'bg-info/10', ring: 'border-info/30' },
-    accent: { text: 'text-primary', bg: 'bg-primary/10', ring: 'border-primary/30' },
-    muted: { text: 'text-muted-foreground', bg: 'bg-muted', ring: 'border-border' },
-};
-
 function TargetName({ target }: { target: ActivityTarget }) {
     if (!target.url) {
         return <span className="text-muted-foreground">{target.name}</span>;
@@ -81,7 +73,6 @@ function TargetName({ target }: { target: ActivityTarget }) {
 function ActivityRow({ group, index }: { group: RecentActivityGroup; index: number }) {
     const [expanded, setExpanded] = useState(false);
     const Icon = ICONS[group.icon] ?? Circle;
-    const tone = TONES[group.tone] ?? TONES.muted;
     const grouped = group.count > 1;
 
     return (
@@ -89,11 +80,11 @@ function ActivityRow({ group, index }: { group: RecentActivityGroup; index: numb
             <span
                 className={cn(
                     'mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full border',
-                    tone.bg,
-                    tone.ring,
+                    toneFill(group.tone),
+                    toneBorder(group.tone),
                 )}
             >
-                <Icon className={cn('size-3.5', tone.text)} />
+                <Icon className={cn('size-3.5', toneText(group.tone))} />
             </span>
 
             <div className="min-w-0 flex-1">
