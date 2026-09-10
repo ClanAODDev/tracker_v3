@@ -2,13 +2,14 @@ import { Head, Link } from '@inertiajs/react';
 import { Headset, History, Settings, Shield, Star, TriangleAlert, UserPlus, Users } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-import { Sparkline, ThemedLineChart } from '@/components/charts';
+import { ThemedLineChart } from '@/components/charts';
 import { CountUp } from '@/components/count-up';
 import { ApplicationsModal } from '@/components/division/applications-modal';
 import { RecentActivityModal, type RecentActivityGroup } from '@/components/division/recent-activity-modal';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
 import { SectionTitle } from '@/components/section';
+import { StatCard } from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
 import { toneSurface } from '@/lib/tone';
 import { cn } from '@/lib/utils';
@@ -87,47 +88,6 @@ interface DivisionShowProps {
 
 function voiceTone(rate: number) {
     return rate >= 30 ? 'text-success' : rate >= 15 ? 'text-warning' : 'text-destructive';
-}
-
-function StatCard({
-    icon,
-    value,
-    label,
-    sub,
-    trend,
-    delta,
-    onClick,
-}: {
-    icon: React.ReactNode;
-    value: React.ReactNode;
-    label: string;
-    sub?: React.ReactNode;
-    trend?: number[];
-    delta?: React.ReactNode;
-    onClick?: () => void;
-}) {
-    const Tag = onClick ? 'button' : 'div';
-    return (
-        <Tag
-            {...(onClick ? { type: 'button' as const, onClick } : {})}
-            className={cn(
-                'flex items-center gap-3 rounded-md border border-border bg-card p-4 text-left',
-                onClick && 'transition-colors hover:border-primary/40 hover:bg-primary/5',
-            )}
-        >
-            <div className="text-muted-foreground">{icon}</div>
-            <div className="min-w-0 flex-1">
-                <div className="flex items-baseline gap-1.5">
-                    <span className="numeric text-2xl font-semibold">{value}</span>
-                    {delta}
-                </div>
-                <p className="text-xs text-muted-foreground">
-                    {label} {sub}
-                </p>
-            </div>
-            {trend && trend.length > 1 && <Sparkline data={trend} tone="auto" width={56} height={24} />}
-        </Tag>
-    );
 }
 
 function TileLink({
@@ -264,6 +224,7 @@ export default function DivisionShow({
                 {/* Quick stats */}
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                     <StatCard
+                        align="center"
                         icon={<Users className="size-5" />}
                         value={<CountUp value={stats.memberCount} />}
                         label="Total members"
@@ -278,6 +239,7 @@ export default function DivisionShow({
                         }
                     />
                     <StatCard
+                        align="center"
                         icon={<Headset className={cn('size-5', voiceTone(stats.voiceRate))} />}
                         value={<CountUp value={stats.voiceActiveCount} />}
                         label="Voice active"
@@ -286,6 +248,7 @@ export default function DivisionShow({
                         delta={<span className={cn('text-xs', voiceTone(stats.voiceRate))}>{stats.voiceRate}%</span>}
                     />
                     <StatCard
+                        align="center"
                         icon={<UserPlus className="size-5 text-success" />}
                         value={<CountUp value={stats.recruitsThisMonth} />}
                         label="Recruits"
@@ -293,6 +256,7 @@ export default function DivisionShow({
                     />
                     {recentActivityCount > 0 && (
                         <StatCard
+                            align="center"
                             icon={<History className="size-5 text-primary" />}
                             value={<CountUp value={recentActivityCount} />}
                             label="Recent actions"

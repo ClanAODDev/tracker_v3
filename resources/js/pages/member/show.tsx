@@ -29,6 +29,7 @@ import {
 } from '@/components/member/profile-dialogs';
 import { MemberTagEditor, type DisplayTag, type TagManagement } from '@/components/member/tag-editor';
 import { SectionTitle as BaseSectionTitle } from '@/components/section';
+import { StatCard } from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -134,45 +135,6 @@ function SectionTitle({ children, action }: { children: ReactNode; action?: Reac
         <BaseSectionTitle action={action} divider>
             {children}
         </BaseSectionTitle>
-    );
-}
-
-function StatTile({
-    icon,
-    value,
-    unit,
-    label,
-    detail,
-    onClick,
-    tone,
-}: {
-    icon: ReactNode;
-    value: ReactNode;
-    unit?: string;
-    label: string;
-    detail?: ReactNode;
-    onClick?: () => void;
-    tone?: string;
-}) {
-    const Comp = onClick ? 'button' : 'div';
-    return (
-        <Comp
-            onClick={onClick}
-            className={cn(
-                'flex w-full items-start gap-3 rounded-md border border-border bg-card p-4 text-left',
-                onClick && 'transition-colors hover:border-primary/40',
-            )}
-        >
-            <div className={cn('mt-0.5 text-muted-foreground', tone)}>{icon}</div>
-            <div className="min-w-0 flex-1">
-                <div className="numeric text-2xl font-semibold">
-                    {value}
-                    {unit && <span className="ml-0.5 text-sm text-muted-foreground">{unit}</span>}
-                </div>
-                <p className="text-xs text-muted-foreground">{label}</p>
-                {detail && <div className="mt-1 text-xs text-muted-foreground">{detail}</div>}
-            </div>
-        </Comp>
     );
 }
 
@@ -331,7 +293,7 @@ export default function MemberShow(props: MemberShowProps) {
 
                 {/* Stat tiles */}
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                    <StatTile
+                    <StatCard
                         icon={<Sparkles className="size-5" />}
                         value={
                             <>
@@ -351,7 +313,7 @@ export default function MemberShow(props: MemberShowProps) {
                         onClick={() => setTenureOpen(true)}
                     />
 
-                    <StatTile
+                    <StatCard
                         icon={<Mic className="size-5" />}
                         tone={
                             stats.activity.health === 'critical'
@@ -401,7 +363,7 @@ export default function MemberShow(props: MemberShowProps) {
                         }
                     />
 
-                    <StatTile
+                    <StatCard
                         icon={<UserPlus className="size-5" />}
                         value={stats.recruiting.total}
                         label="Recruits"
@@ -421,7 +383,7 @@ export default function MemberShow(props: MemberShowProps) {
                     />
 
                     {canCreateNote && (
-                        <StatTile
+                        <StatCard
                             icon={<MessageSquareText className="size-5" />}
                             value={stats.notes.total}
                             label="Notes"
