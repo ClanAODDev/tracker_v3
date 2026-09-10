@@ -30,6 +30,8 @@ class ForumLoginTest extends TestCase
     #[Test]
     public function login_form_flags_an_expired_session(): void
     {
+        User::factory()->create();
+
         $this->get('/login?expired=1')
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
