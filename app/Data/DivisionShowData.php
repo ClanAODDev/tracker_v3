@@ -124,7 +124,7 @@ readonly class DivisionShowData
                 'members'     => $user->can('manageUnassigned', User::class)
                     ? $division->unassigned()->get()
                         ->map(fn (Member $member) => [
-                            'id'   => $member->id,
+                            'id'   => $member->clan_id,
                             'name' => $member->present()->rankName(),
                         ])->values()
                     : [],

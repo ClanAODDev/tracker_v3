@@ -95,24 +95,31 @@ function voiceTone(rate: number) {
 
 function TileLink({
     href,
+    onClick,
     tint,
     hover = true,
     children,
 }: {
-    href: string;
+    href?: string;
+    onClick?: () => void;
     tint?: string;
     hover?: boolean;
     children: React.ReactNode;
 }) {
+    const className = cn(
+        'flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors',
+        hover && 'hover:border-primary/40',
+        tint,
+    );
+    if (onClick) {
+        return (
+            <button type="button" onClick={onClick} className={className}>
+                {children}
+            </button>
+        );
+    }
     return (
-        <a
-            href={href}
-            className={cn(
-                'flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors',
-                hover && 'hover:border-primary/40',
-                tint,
-            )}
-        >
+        <a href={href} className={className}>
             {children}
         </a>
     );
@@ -330,16 +337,40 @@ export default function DivisionShow({
                 {/* Pending actions */}
                 {pendingActions.length > 0 && (
                     <div className="flex flex-wrap gap-2">
-                        {pendingActions.map((action) => (
-                            <TileLink key={action.key} href={action.url} tint={toneSurface(action.style)}>
-                                <PendingActionIcon icon={action.icon} className="size-4 text-muted-foreground" />
-                                <span className="numeric font-semibold">{action.count}</span>
-                                <span className="text-muted-foreground">
-                                    {action.label}
-                                    {action.count === 1 ? '' : 's'}
-                                </span>
-                            </TileLink>
-                        ))}
+                        {pendingActions.map((action) => {
+                            const inner = (
+                                <>
+                                    <PendingActionIcon icon={action.icon} className="size-4 text-muted-foreground" />
+                                    <span className="numeric font-semibold">{action.count}</span>
+                                    <span className="text-muted-foreground">
+                                        {action.label}
+                                        {action.count === 1 ? '' : 's'}
+                                    </span>
+                                </>
+                            );
+                            const opensOrganize =
+                                action.key === 'unassigned-members' && organizeProps.canOrganize;
+                            return (
+                                <TileLink
+                                    key={action.key}
+                                    href={opensOrganize ? undefined : action.url}
+                                    onClick={
+                                        opensOrganize
+                                            ? () => {
+                                                  organize.setOrganizing(true);
+                                                  platoonsRef.current?.scrollIntoView({
+                                                      behavior: 'smooth',
+                                                      block: 'start',
+                                                  });
+                                              }
+                                            : undefined
+                                    }
+                                    tint={toneSurface(action.style)}
+                                >
+                                    {inner}
+                                </TileLink>
+                            );
+                        })}
                     </div>
                 )}
 
