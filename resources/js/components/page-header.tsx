@@ -8,6 +8,8 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { LAYOUT_MAX_WIDTH, type LayoutWidth } from '@/lib/layout';
+import { cn } from '@/lib/utils';
 
 export interface Crumb {
     label: string;
@@ -20,9 +22,10 @@ export interface PageHeaderProps {
     eyebrow?: string;
     breadcrumbs?: Crumb[];
     actions?: ReactNode;
+    width?: LayoutWidth;
 }
 
-export function PageHeader({ title, eyebrow, breadcrumbs, actions }: PageHeaderProps) {
+export function PageHeader({ title, eyebrow, breadcrumbs, actions, width = 'default' }: PageHeaderProps) {
     const crumbs = (breadcrumbs ?? []).filter((c) => c.label.toLowerCase() !== title.toLowerCase());
     const showCrumbs = crumbs.length >= 2 || crumbs.some((c) => c.href);
 
@@ -33,7 +36,7 @@ export function PageHeader({ title, eyebrow, breadcrumbs, actions }: PageHeaderP
                     aria-hidden
                     className="tron-hatch pointer-events-none absolute inset-y-0 right-0 w-1/3 [mask-image:linear-gradient(to_left,black,transparent)]"
                 />
-                <div className="relative mx-auto w-full max-w-7xl px-6 py-6">
+                <div className={cn('relative mx-auto w-full px-6 py-6', LAYOUT_MAX_WIDTH[width])}>
                     <div className="flex flex-wrap items-end justify-between gap-3">
                         <div>
                             {eyebrow && <p className="tron-eyebrow">{eyebrow}</p>}
@@ -46,7 +49,7 @@ export function PageHeader({ title, eyebrow, breadcrumbs, actions }: PageHeaderP
 
             {showCrumbs && (
                 <div className="border-b border-border bg-card/20">
-                    <div className="mx-auto w-full max-w-7xl px-6 py-2">
+                    <div className={cn('mx-auto w-full px-6 py-2', LAYOUT_MAX_WIDTH[width])}>
                         <Breadcrumb>
                             <BreadcrumbList>
                                 {crumbs.map((crumb, index) => {

@@ -10,14 +10,13 @@ import { SessionGuard } from '@/components/session-guard';
 import { TrackerHomeLink } from '@/components/tracker-logo';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
+import { LAYOUT_MAX_WIDTH, type LayoutWidth } from '@/lib/layout';
 import { cn } from '@/lib/utils';
 import type { SharedProps } from '@/types';
 
-type LayoutWidth = 'default' | 'wide' | 'full';
-
 const WIDTH_CLASS: Record<LayoutWidth, string> = {
-    default: 'mx-auto w-full max-w-[88rem] px-6 py-8',
-    wide: 'mx-auto w-full max-w-[104rem] px-6 py-8',
+    default: cn('mx-auto w-full px-6 py-8', LAYOUT_MAX_WIDTH.default),
+    wide: cn('mx-auto w-full px-6 py-8', LAYOUT_MAX_WIDTH.wide),
     full: '',
 };
 
@@ -64,7 +63,7 @@ export default function AppLayout({ header, width = 'default', children }: Props
                 <div className={navLeft ? 'lg:col-start-2' : 'lg:col-start-1 lg:row-start-1'}>
                     <AppTopbar onOpenNav={() => setNavOpen(true)} navSide={navSide} />
                     <ImpersonationBanner />
-                    {header && <PageHeader {...header} />}
+                    {header && <PageHeader {...header} width={width} />}
                     <div className="tron-grid min-h-[calc(100vh-3.5rem)]">
                         <main className={WIDTH_CLASS[width]}>{children}</main>
                     </div>

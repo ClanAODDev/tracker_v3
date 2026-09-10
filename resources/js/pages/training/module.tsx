@@ -53,7 +53,6 @@ export default function TrainingModulePage({ module, trainee }: TrainingModulePr
 
     return (
         <AppLayout
-            width="full"
             header={{
                 eyebrow: 'Leadership Training',
                 title: module.name,
@@ -62,7 +61,7 @@ export default function TrainingModulePage({ module, trainee }: TrainingModulePr
         >
             <Head title={module.name} />
 
-            <div className="mx-auto flex w-full max-w-7xl gap-6 px-6 py-8">
+            <div className="flex gap-6">
                 <aside className="hidden w-64 shrink-0 lg:block">
                     <ol className="space-y-1">
                         {module.sections.map((s, index) => {
