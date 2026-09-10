@@ -94,6 +94,14 @@ function voiceTone(rate: number) {
     return rate >= 30 ? 'text-success' : rate >= 15 ? 'text-warning' : 'text-destructive';
 }
 
+function voiceSpine(rate: number) {
+    return rate >= 30 ? 'border-l-success' : rate >= 15 ? 'border-l-warning' : 'border-l-destructive';
+}
+
+function voiceFill(rate: number) {
+    return rate >= 30 ? 'bg-success/15' : rate >= 15 ? 'bg-warning/15' : 'bg-destructive/15';
+}
+
 function TileLink({
     href,
     onClick,
@@ -178,7 +186,10 @@ function PlatoonCard({
                     {platoon.squads.map((squad) => (
                         <div
                             key={squad.id}
-                            className="rounded border border-border/60 p-2 text-xs"
+                            className={cn(
+                                'rounded border p-2 text-xs',
+                                squad.leader ? 'border-border/60' : 'border-dashed border-border/60 opacity-60',
+                            )}
                             style={
                                 squad.leader
                                     ? { borderLeftColor: squad.leader.rankColor, borderLeftWidth: 2 }
@@ -197,12 +208,19 @@ function PlatoonCard({
                 </div>
             )}
 
-            <div className="mt-3 flex gap-4 border-t border-border pt-3 text-xs">
-                <span className={cn('flex items-center gap-1', voiceTone(platoon.voiceRate))}>
-                    <span className="size-1.5 rounded-full" style={{ background: 'currentColor' }} />
-                    {platoon.voiceRate}% voice
-                </span>
-                <span className="text-muted-foreground">{platoon.memberCount} members</span>
+            <div className="relative -mx-4 -mb-4 mt-3 overflow-hidden border-t border-border bg-black/15 px-4 py-2.5 text-xs">
+                <div
+                    aria-hidden="true"
+                    className={cn('absolute inset-y-0 left-0', voiceFill(platoon.voiceRate))}
+                    style={{ width: `${platoon.voiceRate}%` }}
+                />
+                <div className="relative flex gap-4">
+                    <span className={cn('flex items-center gap-1', voiceTone(platoon.voiceRate))}>
+                        <span className="size-1.5 rounded-full" style={{ background: 'currentColor' }} />
+                        {platoon.voiceRate}% voice
+                    </span>
+                    <span className="text-muted-foreground">{platoon.memberCount} members</span>
+                </div>
             </div>
         </>
     );
@@ -214,7 +232,7 @@ function PlatoonCard({
                 onDragLeave={onDragLeave}
                 onDrop={onDrop}
                 className={cn(
-                    'rounded-md border border-dashed p-4 transition-colors',
+                    'overflow-hidden rounded-md border border-dashed p-4 transition-colors',
                     isHover ? 'border-primary bg-primary/10' : 'border-primary/40',
                 )}
             >
@@ -226,7 +244,10 @@ function PlatoonCard({
     return (
         <Link
             href={platoon.url}
-            className="rounded-md border border-border bg-card p-4 transition-colors hover:border-primary/30"
+            className={cn(
+                'overflow-hidden rounded-md border border-l-[3px] border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-primary/30',
+                voiceSpine(platoon.voiceRate),
+            )}
         >
             {body}
         </Link>
