@@ -24,7 +24,7 @@ class MemberFactory extends Factory
     {
         return [
             'name'                => $this->faker->userName,
-            'clan_id'             => $this->faker->numberBetween(1000, 999999),
+            'clan_id'             => $this->faker->unique()->numberBetween(1000, 8388607),
             'rank'                => Rank::from(rand(1, 10)),
             'position'            => Position::MEMBER,
             'division_id'         => Division::factory(),
