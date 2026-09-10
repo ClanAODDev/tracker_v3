@@ -35,6 +35,71 @@ const UNASSIGNED = 'unassigned';
 const REMOVE = 'remove';
 type Bucket = number | typeof UNASSIGNED | typeof REMOVE;
 
+function DropList({
+    bucket,
+    members,
+    empty,
+    scroll,
+    hover,
+    draggingId,
+    onDragOver,
+    onDragLeave,
+    onDrop,
+    onDragStart,
+    onDragEnd,
+}: {
+    bucket: Bucket;
+    members: MemberCard[];
+    empty?: string;
+    scroll?: boolean;
+    hover: boolean;
+    draggingId: number | null;
+    onDragOver: () => void;
+    onDragLeave: () => void;
+    onDrop: () => void;
+    onDragStart: (e: DragEvent, id: number, from: Bucket) => void;
+    onDragEnd: () => void;
+}) {
+    return (
+        <ul
+            onDragOver={(e) => {
+                e.preventDefault();
+                onDragOver();
+            }}
+            onDragLeave={onDragLeave}
+            onDrop={onDrop}
+            className={cn(
+                'min-h-16 space-y-1 rounded-md border border-dashed border-border p-2 transition-colors',
+                scroll && 'max-h-96 overflow-y-auto',
+                hover && 'border-primary/60 bg-primary/5',
+            )}
+        >
+            {members.length === 0 && (
+                <li className="px-1 py-2 text-center text-xs text-muted-foreground">{empty ?? 'Empty'}</li>
+            )}
+            {members.map((member) => (
+                <li
+                    key={member.id}
+                    draggable
+                    onDragStart={(e) => onDragStart(e, member.id, bucket)}
+                    onDragEnd={onDragEnd}
+                    className={cn(
+                        'flex cursor-grab items-center gap-2 rounded border border-border bg-card px-2.5 py-1.5 text-sm active:cursor-grabbing',
+                        draggingId === member.id && 'opacity-40',
+                    )}
+                >
+                    <span className="flex-1">{member.name}</span>
+                    {member.isDirectRecruit && (
+                        <span title="Direct recruit" className="font-bold text-[#e05cff]">
+                            *
+                        </span>
+                    )}
+                </li>
+            ))}
+        </ul>
+    );
+}
+
 export default function ManageMembers({
     division,
     platoon,
@@ -119,58 +184,9 @@ export default function ManageMembers({
         e.dataTransfer.setData('text/plain', String(id));
     }
 
-    function List({
-        bucket,
-        members,
-        empty,
-        scroll,
-    }: {
-        bucket: Bucket;
-        members: MemberCard[];
-        empty?: string;
-        scroll?: boolean;
-    }) {
-        return (
-            <ul
-                onDragOver={(e) => {
-                    e.preventDefault();
-                    setHover(bucket);
-                }}
-                onDragLeave={() => setHover((h) => (h === bucket ? null : h))}
-                onDrop={() => drop(bucket)}
-                className={cn(
-                    'min-h-16 space-y-1 rounded-md border border-dashed border-border p-2 transition-colors',
-                    scroll && 'max-h-96 overflow-y-auto',
-                    hover === bucket && 'border-primary/60 bg-primary/5',
-                )}
-            >
-                {members.length === 0 && (
-                    <li className="px-1 py-2 text-center text-xs text-muted-foreground">{empty ?? 'Empty'}</li>
-                )}
-                {members.map((member) => (
-                    <li
-                        key={member.id}
-                        draggable
-                        onDragStart={(e) => onDragStart(e, member.id, bucket)}
-                        onDragEnd={() => {
-                            setDragging(null);
-                            setHover(null);
-                        }}
-                        className={cn(
-                            'flex cursor-grab items-center gap-2 rounded border border-border bg-card px-2.5 py-1.5 text-sm active:cursor-grabbing',
-                            dragging?.id === member.id && 'opacity-40',
-                        )}
-                    >
-                        <span className="flex-1">{member.name}</span>
-                        {member.isDirectRecruit && (
-                            <span title="Direct recruit" className="font-bold text-[#e05cff]">
-                                *
-                            </span>
-                        )}
-                    </li>
-                ))}
-            </ul>
-        );
+    function onDragEnd() {
+        setDragging(null);
+        setHover(null);
     }
 
     return (
@@ -213,7 +229,18 @@ export default function ManageMembers({
                             <TriangleAlert className="size-4 text-warning" />
                             {unassigned.length} not assigned to a {division.squadLabel}
                         </h2>
-                        <List bucket={UNASSIGNED} members={unassigned} empty="All assigned" />
+                        <DropList
+                            bucket={UNASSIGNED}
+                            members={unassigned}
+                            empty="All assigned"
+                            hover={hover === UNASSIGNED}
+                            draggingId={dragging?.id ?? null}
+                            onDragOver={() => setHover(UNASSIGNED)}
+                            onDragLeave={() => setHover((h) => (h === UNASSIGNED ? null : h))}
+                            onDrop={() => drop(UNASSIGNED)}
+                            onDragStart={onDragStart}
+                            onDragEnd={onDragEnd}
+                        />
                     </section>
                 )}
 
@@ -231,7 +258,19 @@ export default function ManageMembers({
                                 <span className="text-xs text-muted-foreground">{squad.leader ?? 'TBA'}</span>
                             </div>
                             <div className="p-2">
-                                <List bucket={squad.id} members={squad.members} empty="Drop members here" scroll />
+                                <DropList
+                                    bucket={squad.id}
+                                    members={squad.members}
+                                    empty="Drop members here"
+                                    scroll
+                                    hover={hover === squad.id}
+                                    draggingId={dragging?.id ?? null}
+                                    onDragOver={() => setHover(squad.id)}
+                                    onDragLeave={() => setHover((h) => (h === squad.id ? null : h))}
+                                    onDrop={() => drop(squad.id)}
+                                    onDragStart={onDragStart}
+                                    onDragEnd={onDragEnd}
+                                />
                             </div>
                         </section>
                     ))}
@@ -242,10 +281,17 @@ export default function ManageMembers({
                         <TriangleAlert className="size-4" />
                         Unassign from {division.platoonLabel}
                     </h2>
-                    <List
+                    <DropList
                         bucket={REMOVE}
                         members={[]}
                         empty={`Drag members here to remove them from this ${division.platoonLabel}`}
+                        hover={hover === REMOVE}
+                        draggingId={dragging?.id ?? null}
+                        onDragOver={() => setHover(REMOVE)}
+                        onDragLeave={() => setHover((h) => (h === REMOVE ? null : h))}
+                        onDrop={() => drop(REMOVE)}
+                        onDragStart={onDragStart}
+                        onDragEnd={onDragEnd}
                     />
                 </section>
             </div>
