@@ -95,4 +95,20 @@ class TrainingModuleCompletionTest extends TestCase
         $this->assertNotNull($trainee->last_trained_at);
         $this->assertSame($srLdr->member->clan_id, $trainee->last_trained_by);
     }
+
+    #[Test]
+    public function members_without_training_authority_cannot_submit_completion(): void
+    {
+        $user    = $this->createMemberWithUser(['rank' => Rank::CORPORAL]);
+        $trainee = $this->createMember(['last_trained_at' => null]);
+
+        $this->actingAs($user)
+            ->post(route('training.update'), [
+                'module'  => 'general',
+                'clan_id' => $trainee->clan_id,
+            ])
+            ->assertForbidden();
+
+        $this->assertNull($trainee->fresh()->last_trained_at);
+    }
 }

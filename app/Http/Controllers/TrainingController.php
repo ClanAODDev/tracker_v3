@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Training\CompleteTrainingRequest;
 use App\Models\Member;
 use App\Models\TrainingModule;
 use GrahamCampbell\Markdown\Facades\Markdown;
@@ -78,13 +79,8 @@ class TrainingController extends Controller
         return $this->show('sgt', $request);
     }
 
-    public function update(Request $request): RedirectResponse
+    public function update(CompleteTrainingRequest $request): RedirectResponse
     {
-        $request->validate(['clan_id' => 'required|exists:members,clan_id'], [
-            'clan_id.required' => 'Please select a member',
-            'clan_id.exists'   => 'That member appears to be invalid',
-        ]);
-
         Member::whereClanId($request->clan_id)->update([
             'last_trained_at' => now(),
             'last_trained_by' => auth()->user()->member->clan_id,
