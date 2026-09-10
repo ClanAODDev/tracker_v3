@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Sparkline, ThemedLineChart } from '@/components/charts';
 import { CountUp } from '@/components/count-up';
 import { ApplicationsModal } from '@/components/division/applications-modal';
+import { RecentActivityModal, type RecentActivityGroup } from '@/components/division/recent-activity-modal';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
 import { Button } from '@/components/ui/button';
@@ -76,6 +77,9 @@ interface DivisionShowProps {
     toolbar: DivisionTool[];
     pendingActions: Array<{ key: string; count: number; url: string; icon: string; label: string; style: string }>;
     recentActivityCount: number;
+    recentActivity: RecentActivityGroup[];
+    canViewAllActivity: boolean;
+    allActivityUrl: string;
     pendingApplicationCount: number;
 }
 
@@ -97,6 +101,7 @@ function StatCard({
     sub,
     trend,
     delta,
+    onClick,
 }: {
     icon: React.ReactNode;
     value: React.ReactNode;
@@ -104,9 +109,17 @@ function StatCard({
     sub?: React.ReactNode;
     trend?: number[];
     delta?: React.ReactNode;
+    onClick?: () => void;
 }) {
+    const Tag = onClick ? 'button' : 'div';
     return (
-        <div className="flex items-center gap-3 rounded-md border border-border bg-card p-4">
+        <Tag
+            {...(onClick ? { type: 'button' as const, onClick } : {})}
+            className={cn(
+                'flex items-center gap-3 rounded-md border border-border bg-card p-4 text-left',
+                onClick && 'transition-colors hover:border-primary/40 hover:bg-primary/5',
+            )}
+        >
             <div className="text-muted-foreground">{icon}</div>
             <div className="min-w-0 flex-1">
                 <div className="flex items-baseline gap-1.5">
@@ -118,7 +131,7 @@ function StatCard({
                 </p>
             </div>
             {trend && trend.length > 1 && <Sparkline data={trend} tone="auto" width={56} height={24} />}
-        </div>
+        </Tag>
     );
 }
 
@@ -145,6 +158,9 @@ export default function DivisionShow({
     toolbar,
     pendingActions,
     recentActivityCount,
+    recentActivity,
+    canViewAllActivity,
+    allActivityUrl,
 }: DivisionShowProps) {
     const populationTrend = census.population.slice(-8);
     const voiceRateTrend = census.voiceActive
@@ -167,6 +183,7 @@ export default function DivisionShow({
 
     const [applicationsOpen, setApplicationsOpen] = useState(false);
     const [initialAppId, setInitialAppId] = useState<number | null>(null);
+    const [activityOpen, setActivityOpen] = useState(false);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -266,6 +283,7 @@ export default function DivisionShow({
                             icon={<History className="size-5 text-primary" />}
                             value={<CountUp value={recentActivityCount} />}
                             label="Recent actions"
+                            onClick={recentActivity.length > 0 ? () => setActivityOpen(true) : undefined}
                         />
                     )}
                 </div>
@@ -446,6 +464,14 @@ export default function DivisionShow({
                     initialApplicationId={initialAppId}
                 />
             )}
+
+            <RecentActivityModal
+                open={activityOpen}
+                onOpenChange={setActivityOpen}
+                groups={recentActivity}
+                canViewAll={canViewAllActivity}
+                allActivityUrl={allActivityUrl}
+            />
         </AppLayout>
     );
 }

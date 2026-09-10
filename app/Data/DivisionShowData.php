@@ -100,6 +100,25 @@ readonly class DivisionShowData
             'recentActivityCount' => $user->isRole('member')
                 ? 0
                 : $this->recentActivity->sum(fn ($group) => $group['events']->count()),
+            'recentActivity' => $user->isRole('member')
+                ? []
+                : $this->recentActivity->map(function (array $group) {
+                    $type  = $group['type'];
+                    $count = $group['events']->count();
+
+                    return [
+                        'icon'        => $type->feedIconName(),
+                        'tone'        => $type->feedTone(),
+                        'description' => $type->feedDescription($count),
+                        'count'       => $count,
+                        'timeAgo'     => $group['created_at']->diffForHumans(short: true),
+                        'targets'     => $group['events']->map(fn ($event) => $event->subject
+                            ? ['name' => $event->subject->name, 'url' => route('member', $event->subject->getUrlParams())]
+                            : ['name' => 'Unknown', 'url' => null])->values(),
+                    ];
+                })->values(),
+            'canViewAllActivity'      => $user->isRole(['sr_ldr', 'admin']),
+            'allActivityUrl'          => route('filament.mod.resources.activities.index'),
             'pendingApplicationCount' => $this->pendingApplicationCount,
         ];
     }
