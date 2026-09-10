@@ -67,6 +67,7 @@ export default function TrainingModulePage({ module, trainee }: TrainingModulePr
                         {module.sections.map((s, index) => {
                             const total = s.checkpoints.length;
                             const done = s.checkpoints.filter((_, ci) => checked[`${index}:${ci}`]).length;
+                            const complete = total > 0 && done === total;
                             return (
                                 <li key={s.title}>
                                     <button
@@ -81,16 +82,23 @@ export default function TrainingModulePage({ module, trainee }: TrainingModulePr
                                         <span
                                             className={cn(
                                                 'numeric flex size-6 shrink-0 items-center justify-center rounded border text-xs',
-                                                index === active
-                                                    ? 'border-primary/50 text-primary'
-                                                    : 'border-border',
+                                                complete
+                                                    ? 'border-primary bg-primary/15 font-semibold text-primary'
+                                                    : index === active
+                                                      ? 'border-primary/50 text-primary'
+                                                      : 'border-border',
                                             )}
                                         >
                                             {index + 1}
                                         </span>
                                         <span className="flex-1 truncate">{s.title}</span>
                                         {total > 0 && (
-                                            <span className="numeric text-xs text-muted-foreground">
+                                            <span
+                                                className={cn(
+                                                    'numeric text-xs',
+                                                    complete ? 'text-primary' : 'text-muted-foreground',
+                                                )}
+                                            >
                                                 {done}/{total}
                                             </span>
                                         )}
