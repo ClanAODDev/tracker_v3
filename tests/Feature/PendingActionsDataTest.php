@@ -249,7 +249,7 @@ final class PendingActionsDataTest extends TestCase
 
         $unassignedAction = $pendingActions->get('unassigned-members');
         $this->assertNotNull($unassignedAction);
-        $this->assertStringContainsString('#platoons', $unassignedAction->url);
+        $this->assertStringContainsString('?organize=1', $unassignedAction->url);
     }
 
     #[Test]
