@@ -8,7 +8,7 @@ import {
     getSortedRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { ArrowDown, ArrowUp, ChevronsUpDown, Clock, Columns3, Search } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronsUpDown, CircleDot, Clock, Columns3, Rows3, Search } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { BulkBar } from '@/components/members/bulk-bar';
@@ -43,9 +43,12 @@ interface Props {
     storageKey: string;
 }
 
+type ActivityStyle = 'row' | 'dot';
+
 interface PersistedState {
     sorting: SortingState;
     columnVisibility: VisibilityState;
+    activityStyle: ActivityStyle;
 }
 
 const DEFAULT_HIDDEN: VisibilityState = {
@@ -101,18 +104,26 @@ export function MemberTable({
     const [bulkMode, setBulkMode] = useState(false);
     const [selectedTags, setSelectedTags] = useState<Set<number>>(new Set());
     const [reminded, setReminded] = useState<Record<number, string>>({});
+    const [activityStyle, setActivityStyle] = useState<ActivityStyle>(persisted.activityStyle ?? 'row');
 
     useEffect(() => {
         try {
-            localStorage.setItem(storageKey, JSON.stringify({ sorting, columnVisibility }));
+            localStorage.setItem(storageKey, JSON.stringify({ sorting, columnVisibility, activityStyle }));
         } catch {
             /* private mode */
         }
-    }, [storageKey, sorting, columnVisibility]);
+    }, [storageKey, sorting, columnVisibility, activityStyle]);
 
     const assignmentLabel = assignmentKind === 'squad' ? division.squadLabel : division.platoonLabel;
 
-    const columns = useMemberColumns({ assignmentLabel, bulkMode, selectedTags, reminded, setReminded });
+    const columns = useMemberColumns({
+        assignmentLabel,
+        bulkMode,
+        selectedTags,
+        reminded,
+        setReminded,
+        activityStyle,
+    });
 
     const table = useReactTable({
         data: rows,
@@ -231,6 +242,20 @@ export function MemberTable({
                     </DropdownMenuContent>
                 </DropdownMenu>
 
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setActivityStyle((s) => (s === 'row' ? 'dot' : 'row'))}
+                    title={
+                        activityStyle === 'row'
+                            ? 'Activity shading: whole row'
+                            : 'Activity shading: dot only'
+                    }
+                    aria-label="Toggle activity shading"
+                >
+                    {activityStyle === 'row' ? <Rows3 /> : <CircleDot />}
+                </Button>
+
                 {bulk.enabled && (
                     <Button
                         variant={bulkMode ? 'default' : 'outline'}
@@ -313,7 +338,7 @@ export function MemberTable({
                                     className={cn(
                                         row.original.leave
                                             ? 'bg-warning/[0.05] text-muted-foreground'
-                                            : ROW_TINT[row.original.voice.bucket],
+                                            : activityStyle === 'row' && ROW_TINT[row.original.voice.bucket],
                                         bulkMode && 'cursor-pointer select-none',
                                     )}
                                     onMouseDown={(e) => {

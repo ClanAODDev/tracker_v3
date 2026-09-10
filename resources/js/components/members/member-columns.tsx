@@ -10,12 +10,15 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { postJson } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
+const DOT_TINT = ['bg-success', 'bg-warning', 'bg-destructive', 'bg-muted-foreground'] as const;
+
 interface Options {
     assignmentLabel: string;
     bulkMode: boolean;
     selectedTags: Set<number>;
     reminded: Record<number, string>;
     setReminded: Dispatch<SetStateAction<Record<number, string>>>;
+    activityStyle: 'row' | 'dot';
 }
 
 export function useMemberColumns({
@@ -24,6 +27,7 @@ export function useMemberColumns({
     selectedTags,
     reminded,
     setReminded,
+    activityStyle,
 }: Options): ColumnDef<MemberRow>[] {
     return useMemo<ColumnDef<MemberRow>[]>(
         () => [
@@ -62,6 +66,13 @@ export function useMemberColumns({
                     const nameStyle = { '--rank-color': m.rankColor ?? undefined } as CSSProperties;
                     return (
                         <div className="flex items-center gap-2">
+                            {activityStyle === 'dot' && (
+                                <span
+                                    aria-hidden="true"
+                                    title={`Discord activity: ${m.voice.label}`}
+                                    className={cn('size-1.5 shrink-0 rounded-full', DOT_TINT[m.voice.bucket])}
+                                />
+                            )}
                             {m.directRecruit && (
                                 <span title="Direct recruit" className="font-bold text-[#e05cff]">
                                     *
@@ -253,7 +264,7 @@ export function useMemberColumns({
                 cell: () => null,
             },
         ],
-        [assignmentLabel, selectedTags, reminded, bulkMode],
+        [assignmentLabel, selectedTags, reminded, bulkMode, activityStyle],
     );
 }
 
