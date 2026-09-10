@@ -6,7 +6,7 @@ import { FlashToaster } from '@/components/flash-toaster';
 import { ImpersonationBanner } from '@/components/impersonation-banner';
 import { NavSidebar } from '@/components/nav-sidebar';
 import { PageHeader, type PageHeaderProps } from '@/components/page-header';
-import { TrackerMark } from '@/components/tracker-logo';
+import { TrackerHomeLink } from '@/components/tracker-logo';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
@@ -46,9 +46,8 @@ export default function AppLayout({ header, fullBleed, children }: PropsWithChil
                         navLeft ? 'left-0 border-r border-border' : 'right-0 border-l border-border',
                     )}
                 >
-                    <div className="flex h-14 items-center gap-2.5 border-b border-border px-5">
-                        <TrackerMark className="size-5 drop-shadow-[0_0_6px_var(--primary-glow)]" />
-                        <span className="font-mono text-sm font-semibold tracking-[0.3em]">TRACKER</span>
+                    <div className="flex h-14 items-center border-b border-border px-5">
+                        <TrackerHomeLink markClassName="drop-shadow-[0_0_6px_var(--primary-glow)]" />
                     </div>
                     <ScrollArea className="h-[calc(100vh-3.5rem)]">{sidebar}</ScrollArea>
                 </aside>
@@ -65,9 +64,8 @@ export default function AppLayout({ header, fullBleed, children }: PropsWithChil
 
             <Sheet open={navOpen} onOpenChange={setNavOpen}>
                 <SheetContent side={navSide} className="w-72 p-0">
-                    <SheetTitle className="flex h-14 items-center gap-2.5 border-b border-border px-5 font-mono text-sm font-semibold tracking-[0.3em]">
-                        <TrackerMark className="size-5" />
-                        TRACKER
+                    <SheetTitle className="flex h-14 items-center border-b border-border px-5">
+                        <TrackerHomeLink />
                     </SheetTitle>
                     <ScrollArea className="h-[calc(100vh-3.5rem)]" onClick={() => setNavOpen(false)}>
                         {sidebar}

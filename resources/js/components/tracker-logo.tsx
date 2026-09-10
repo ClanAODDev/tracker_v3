@@ -1,3 +1,5 @@
+import { Link } from '@inertiajs/react';
+
 import { cn } from '@/lib/utils';
 
 const BAND: Record<number, string> = {
@@ -43,5 +45,18 @@ export function TrackerLogo({ className }: { className?: string }) {
             <TrackerMark />
             <span className="font-mono text-sm font-semibold tracking-[0.3em] text-foreground">TRACKER</span>
         </span>
+    );
+}
+
+export function TrackerHomeLink({ className, markClassName }: { className?: string; markClassName?: string }) {
+    return (
+        <Link
+            href="/"
+            aria-label="AOD Tracker home"
+            className={cn('flex items-center gap-2.5 transition-opacity hover:opacity-80', className)}
+        >
+            <TrackerMark className={cn('size-5', markClassName)} />
+            <span className="font-mono text-sm font-semibold tracking-[0.3em] text-foreground">TRACKER</span>
+        </Link>
     );
 }
