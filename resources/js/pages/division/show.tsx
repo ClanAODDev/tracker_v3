@@ -1,16 +1,18 @@
 import { Head, Link } from '@inertiajs/react';
 import { Headset, History, Settings, Shield, Star, TriangleAlert, UserPlus, Users } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { type DragEvent, useEffect, useRef, useState } from 'react';
 
 import { ThemedLineChart } from '@/components/charts';
 import { CountUp } from '@/components/count-up';
 import { ApplicationsModal } from '@/components/division/applications-modal';
+import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from '@/components/division/organize';
 import { RecentActivityModal, type RecentActivityGroup } from '@/components/division/recent-activity-modal';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
 import { SectionTitle } from '@/components/section';
 import { StatCard } from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
+import { postJson } from '@/lib/api';
 import { toneSurface } from '@/lib/tone';
 import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
@@ -83,6 +85,7 @@ interface DivisionShowProps {
     recentActivity: RecentActivityGroup[];
     canViewAllActivity: boolean;
     allActivityUrl: string;
+    organize: { canOrganize: boolean; members: OrganizeMember[] };
     pendingApplicationCount: number;
 }
 
@@ -128,6 +131,100 @@ function LeaderAvatar({ leader, size = 'sm' }: { leader: Leader; size?: 'sm' | '
     );
 }
 
+function PlatoonCard({
+    platoon,
+    organizing,
+    isHover,
+    onDragOver,
+    onDragLeave,
+    onDrop,
+}: {
+    platoon: Platoon;
+    organizing: boolean;
+    isHover: boolean;
+    onDragOver?: (e: DragEvent) => void;
+    onDragLeave?: () => void;
+    onDrop?: (e: DragEvent) => void;
+}) {
+    const body = (
+        <>
+            <div className="flex items-start gap-3">
+                {platoon.logo && <img src={platoon.logo} alt="" className="size-9 shrink-0 rounded" />}
+                <div className="min-w-0 flex-1">
+                    <p className="font-medium">{platoon.name}</p>
+                    <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                        {platoon.leader ? (
+                            <>
+                                <LeaderAvatar leader={platoon.leader} />
+                                {platoon.leader.rankName}
+                            </>
+                        ) : (
+                            'No leader'
+                        )}
+                    </p>
+                </div>
+            </div>
+
+            {platoon.squads.length > 0 && (
+                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    {platoon.squads.map((squad) => (
+                        <div
+                            key={squad.id}
+                            className="rounded border border-border/60 p-2 text-xs"
+                            style={
+                                squad.leader
+                                    ? { borderLeftColor: squad.leader.rankColor, borderLeftWidth: 2 }
+                                    : undefined
+                            }
+                        >
+                            <div className="flex items-center justify-between">
+                                <span className="font-medium">{squad.name}</span>
+                                <span className="numeric text-muted-foreground">{squad.memberCount}</span>
+                            </div>
+                            <span className="text-muted-foreground">
+                                {squad.leader ? squad.leader.rankName : 'TBA'}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            <div className="mt-3 flex gap-4 border-t border-border pt-3 text-xs">
+                <span className={cn('flex items-center gap-1', voiceTone(platoon.voiceRate))}>
+                    <span className="size-1.5 rounded-full" style={{ background: 'currentColor' }} />
+                    {platoon.voiceRate}% voice
+                </span>
+                <span className="text-muted-foreground">{platoon.memberCount} members</span>
+            </div>
+        </>
+    );
+
+    if (organizing) {
+        return (
+            <div
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+                onDrop={onDrop}
+                className={cn(
+                    'rounded-md border border-dashed p-4 transition-colors',
+                    isHover ? 'border-primary bg-primary/10' : 'border-primary/40',
+                )}
+            >
+                {body}
+            </div>
+        );
+    }
+
+    return (
+        <Link
+            href={platoon.url}
+            className="rounded-md border border-border bg-card p-4 transition-colors hover:border-primary/30"
+        >
+            {body}
+        </Link>
+    );
+}
+
 export default function DivisionShow({
     division: d,
     stats,
@@ -141,6 +238,7 @@ export default function DivisionShow({
     recentActivity,
     canViewAllActivity,
     allActivityUrl,
+    organize: organizeProps,
 }: DivisionShowProps) {
     const populationTrend = census.population.slice(-8);
     const voiceRateTrend = census.voiceActive
@@ -164,6 +262,30 @@ export default function DivisionShow({
     const [applicationsOpen, setApplicationsOpen] = useState(false);
     const [initialAppId, setInitialAppId] = useState<number | null>(null);
     const [activityOpen, setActivityOpen] = useState(false);
+
+    const [platoonList, setPlatoonList] = useState(platoons);
+    const [dropHoverId, setDropHoverId] = useState<number | null>(null);
+    const platoonsRef = useRef<HTMLElement>(null);
+
+    useEffect(() => setPlatoonList(platoons), [platoons]);
+
+    const autoOrganize =
+        typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('organize') === '1';
+
+    const organize = useOrganize({
+        members: organizeProps.members,
+        autoOpen: autoOrganize,
+        assign: async (memberId, platoonId) => {
+            await postJson(`/members/${memberId}/assign-platoon`, { platoon_id: platoonId });
+            setPlatoonList((prev) =>
+                prev.map((p) => (p.id === platoonId ? { ...p, memberCount: p.memberCount + 1 } : p)),
+            );
+        },
+    });
+
+    useEffect(() => {
+        if (autoOrganize) platoonsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, [autoOrganize]);
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
@@ -349,7 +471,7 @@ export default function DivisionShow({
                 )}
 
                 {/* Platoons */}
-                <section>
+                <section ref={platoonsRef}>
                     <SectionTitle
                         action={
                             d.canCreatePlatoon ? (
@@ -361,74 +483,38 @@ export default function DivisionShow({
                     >
                         {d.platoonLabel}s
                     </SectionTitle>
-                    {platoons.length === 0 ? (
+
+                    {organizeProps.canOrganize && (
+                        <OrganizeBanner
+                            members={organize.members}
+                            unitLabel={d.platoonLabel}
+                            organizing={organize.organizing}
+                            onToggle={() => organize.setOrganizing((v) => !v)}
+                            onDragStart={organize.onDragStart}
+                            onDragEnd={organize.onDragEnd}
+                            draggingId={organize.draggingId}
+                        />
+                    )}
+
+                    {platoonList.length === 0 ? (
                         <p className="rounded-md border border-destructive/30 bg-card p-4 text-sm text-muted-foreground">
                             No {d.platoonLabel.toLowerCase()}s found
                         </p>
                     ) : (
                         <div className="grid gap-3 lg:grid-cols-2">
-                            {platoons.map((platoon) => (
-                                <Link
+                            {platoonList.map((platoon) => (
+                                <PlatoonCard
                                     key={platoon.id}
-                                    href={platoon.url}
-                                    className="rounded-md border border-border bg-card p-4 transition-colors hover:border-primary/30"
-                                >
-                                    <div className="flex items-start gap-3">
-                                        {platoon.logo && (
-                                            <img src={platoon.logo} alt="" className="size-9 shrink-0 rounded" />
-                                        )}
-                                        <div className="min-w-0 flex-1">
-                                            <p className="font-medium">{platoon.name}</p>
-                                            <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                                                {platoon.leader ? (
-                                                    <>
-                                                        <LeaderAvatar leader={platoon.leader} />
-                                                        {platoon.leader.rankName}
-                                                    </>
-                                                ) : (
-                                                    'No leader'
-                                                )}
-                                            </p>
-                                        </div>
-                                    </div>
-
-                                    {platoon.squads.length > 0 && (
-                                        <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                                            {platoon.squads.map((squad) => (
-                                                <div
-                                                    key={squad.id}
-                                                    className="rounded border border-border/60 p-2 text-xs"
-                                                    style={
-                                                        squad.leader
-                                                            ? { borderLeftColor: squad.leader.rankColor, borderLeftWidth: 2 }
-                                                            : undefined
-                                                    }
-                                                >
-                                                    <div className="flex items-center justify-between">
-                                                        <span className="font-medium">{squad.name}</span>
-                                                        <span className="numeric text-muted-foreground">
-                                                            {squad.memberCount}
-                                                        </span>
-                                                    </div>
-                                                    <span className="text-muted-foreground">
-                                                        {squad.leader ? squad.leader.rankName : 'TBA'}
-                                                    </span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    )}
-
-                                    <div className="mt-3 flex gap-4 border-t border-border pt-3 text-xs">
-                                        <span className={cn('flex items-center gap-1', voiceTone(platoon.voiceRate))}>
-                                            <span
-                                                className="size-1.5 rounded-full"
-                                                style={{ background: 'currentColor' }}
-                                            />
-                                            {platoon.voiceRate}% voice
-                                        </span>
-                                        <span className="text-muted-foreground">{platoon.memberCount} members</span>
-                                    </div>
-                                </Link>
+                                    platoon={platoon}
+                                    organizing={organize.organizing}
+                                    isHover={dropHoverId === platoon.id}
+                                    {...dropZoneProps({
+                                        organizing: organize.organizing,
+                                        targetId: platoon.id,
+                                        setHoverId: setDropHoverId,
+                                        onDrop: organize.drop,
+                                    })}
+                                />
                             ))}
                         </div>
                     )}

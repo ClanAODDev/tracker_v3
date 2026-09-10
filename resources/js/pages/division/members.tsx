@@ -1,10 +1,13 @@
 import { Head, Link, router } from '@inertiajs/react';
 import { Pencil, Settings2, Users } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
+import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from '@/components/division/organize';
 import { MemberTable } from '@/components/members/member-table';
 import type { BulkConfig, MemberListDivision, MemberRow, UnitStats } from '@/components/members/types';
 import { UnitStatsPanel } from '@/components/members/unit-stats-panel';
 import { Button } from '@/components/ui/button';
+import { postJson } from '@/lib/api';
 import AppLayout from '@/layouts/AppLayout';
 import { cn } from '@/lib/utils';
 
@@ -14,6 +17,7 @@ interface Crumb {
 }
 
 interface SquadEntry {
+    id?: number;
     name: string;
     url: string;
     leader: string | null;
@@ -31,6 +35,7 @@ interface Scope {
     manageUrl?: string | null;
     unassignedCount?: number;
     platoonLabel?: string;
+    squadLabel?: string;
 }
 
 interface Props {
@@ -43,6 +48,7 @@ interface Props {
     scope: Scope;
     includeParttimers?: boolean;
     squads?: SquadEntry[];
+    organize?: { canOrganize: boolean; members: OrganizeMember[] };
 }
 
 export default function MembersPage({
@@ -55,9 +61,37 @@ export default function MembersPage({
     scope,
     includeParttimers,
     squads,
+    organize: organizeProps,
 }: Props) {
     const title =
         scope.kind === 'division' ? `${division.name} members` : scope.name;
+
+    const [squadList, setSquadList] = useState<SquadEntry[]>(squads ?? []);
+    const [dropHoverId, setDropHoverId] = useState<number | null>(null);
+    const squadsRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => setSquadList(squads ?? []), [squads]);
+
+    const canOrganize = scope.kind === 'platoon' && (organizeProps?.canOrganize ?? false);
+    const autoOrganize =
+        typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('organize') === '1';
+
+    const organize = useOrganize({
+        members: organizeProps?.members ?? [],
+        autoOpen: canOrganize && autoOrganize,
+        assign: async (memberId, squadId) => {
+            await postJson('/members/assign-squad', { member_id: memberId, squad_id: squadId });
+            setSquadList((prev) =>
+                prev.map((s) => (s.id === squadId ? { ...s, count: (s.count ?? 0) + 1 } : s)),
+            );
+        },
+    });
+
+    useEffect(() => {
+        if (canOrganize && autoOrganize) {
+            squadsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, [canOrganize, autoOrganize]);
 
     const breadcrumbs: Crumb[] =
         scope.breadcrumbs ??
@@ -125,6 +159,18 @@ export default function MembersPage({
                 </div>
             )}
 
+            {canOrganize && (
+                <OrganizeBanner
+                    members={organize.members}
+                    unitLabel={scope.squadLabel ?? 'Squad'}
+                    organizing={organize.organizing}
+                    onToggle={() => organize.setOrganizing((v) => !v)}
+                    onDragStart={organize.onDragStart}
+                    onDragEnd={organize.onDragEnd}
+                    draggingId={organize.draggingId}
+                />
+            )}
+
             <div className="grid gap-6 lg:grid-cols-[1fr_15rem]">
                 <MemberTable
                     rows={members}
@@ -135,7 +181,17 @@ export default function MembersPage({
                     storageKey={`member-table:${scope.kind}:${division.slug}`}
                 />
                 <div className="order-first space-y-6 lg:order-last">
-                    {squads && squads.length > 0 && <SquadsList squads={squads} />}
+                    {squadList.length > 0 && (
+                        <div ref={squadsRef}>
+                            <SquadsList
+                                squads={squadList}
+                                organizing={organize.organizing}
+                                dropHoverId={dropHoverId}
+                                setDropHoverId={setDropHoverId}
+                                onDrop={organize.drop}
+                            />
+                        </div>
+                    )}
                     <UnitStatsPanel stats={unitStats} />
                 </div>
             </div>
@@ -143,43 +199,88 @@ export default function MembersPage({
     );
 }
 
-function SquadsList({ squads }: { squads: SquadEntry[] }) {
+function SquadsList({
+    squads,
+    organizing,
+    dropHoverId,
+    setDropHoverId,
+    onDrop,
+}: {
+    squads: SquadEntry[];
+    organizing: boolean;
+    dropHoverId: number | null;
+    setDropHoverId: (id: number | null) => void;
+    onDrop: (targetId: number) => void;
+}) {
     return (
-        <div className="divide-y divide-border overflow-hidden rounded-md border border-border">
-            {squads.map((squad) => (
-                <Link
-                    key={squad.url}
-                    href={squad.url}
-                    className={cn(
-                        'block px-3 py-2.5 text-sm transition-colors hover:bg-muted/50',
-                        squad.current && 'bg-primary/10',
-                    )}
-                >
-                    <div className="flex items-center justify-between gap-2">
-                        <span className="font-medium">{squad.name}</span>
-                        {squad.count !== undefined && (
-                            <span className="numeric text-xs text-muted-foreground">{squad.count}</span>
+        <div
+            className={cn(
+                'divide-y divide-border overflow-hidden rounded-md border',
+                organizing ? 'border-dashed border-primary/40' : 'border-border',
+            )}
+        >
+            {squads.map((squad) => {
+                const inner = (
+                    <>
+                        <div className="flex items-center justify-between gap-2">
+                            <span className="font-medium">{squad.name}</span>
+                            {squad.count !== undefined && (
+                                <span className="numeric text-xs text-muted-foreground">{squad.count}</span>
+                            )}
+                        </div>
+                        <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                            <span>{squad.leader ?? 'TBA'}</span>
+                            {squad.voiceRate !== undefined && (
+                                <span
+                                    className={cn(
+                                        'numeric',
+                                        squad.voiceRate >= 50
+                                            ? 'text-success'
+                                            : squad.voiceRate >= 25
+                                              ? 'text-warning'
+                                              : 'text-destructive',
+                                    )}
+                                >
+                                    {squad.voiceRate}%
+                                </span>
+                            )}
+                        </div>
+                    </>
+                );
+
+                if (organizing && squad.id !== undefined) {
+                    return (
+                        <div
+                            key={squad.id}
+                            {...dropZoneProps({
+                                organizing,
+                                targetId: squad.id,
+                                setHoverId: setDropHoverId,
+                                onDrop,
+                            })}
+                            className={cn(
+                                'block px-3 py-2.5 text-sm transition-colors',
+                                dropHoverId === squad.id && 'bg-primary/10',
+                            )}
+                        >
+                            {inner}
+                        </div>
+                    );
+                }
+
+                return (
+                    <Link
+                        key={squad.url}
+                        href={squad.url}
+                        className={cn(
+                            'block px-3 py-2.5 text-sm transition-colors hover:bg-muted/50',
+                            squad.current && 'bg-primary/10',
                         )}
-                    </div>
-                    <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
-                        <span>{squad.leader ?? 'TBA'}</span>
-                        {squad.voiceRate !== undefined && (
-                            <span
-                                className={cn(
-                                    'numeric',
-                                    squad.voiceRate >= 50
-                                        ? 'text-success'
-                                        : squad.voiceRate >= 25
-                                          ? 'text-warning'
-                                          : 'text-destructive',
-                                )}
-                            >
-                                {squad.voiceRate}%
-                            </span>
-                        )}
-                    </div>
-                </Link>
-            ))}
+                    >
+                        {inner}
+                    </Link>
+                );
+            })}
         </div>
     );
 }

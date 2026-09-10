@@ -117,8 +117,18 @@ readonly class DivisionShowData
                             : ['name' => 'Unknown', 'url' => null])->values(),
                     ];
                 })->values(),
-            'canViewAllActivity'      => $user->isRole(['sr_ldr', 'admin']),
-            'allActivityUrl'          => route('filament.mod.resources.activities.index'),
+            'canViewAllActivity' => $user->isRole(['sr_ldr', 'admin']),
+            'allActivityUrl'     => route('filament.mod.resources.activities.index'),
+            'organize'           => [
+                'canOrganize' => $user->can('manageUnassigned', User::class),
+                'members'     => $user->can('manageUnassigned', User::class)
+                    ? $division->unassigned()->get()
+                        ->map(fn (Member $member) => [
+                            'id'   => $member->id,
+                            'name' => $member->present()->rankName(),
+                        ])->values()
+                    : [],
+            ],
             'pendingApplicationCount' => $this->pendingApplicationCount,
         ];
     }

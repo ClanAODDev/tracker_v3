@@ -33,17 +33,22 @@ class PlatoonController extends Controller
         $activityThreshold = now()->subDays($division->settings()->get('inactivity_days') ?? 30);
         $canManage         = auth()->user()->can('update', $platoon);
 
+        $unassigned = $platoon->unassigned
+            ->filter(fn ($member) => $member->position === Position::MEMBER)
+            ->values();
+
         return Inertia::render('division/members', [
             ...MemberListProps::build($division, $members, $unitStats, assignmentKind: 'squad'),
             'scope' => [
                 'kind'            => 'platoon',
                 'name'            => $platoon->name ?: 'Untitled ' . $division->locality('platoon'),
                 'platoonLabel'    => $division->locality('platoon'),
+                'squadLabel'      => $division->locality('squad'),
                 'logo'            => $platoon->getLogoPath(),
                 'canManage'       => $canManage,
                 'editUrl'         => $canManage ? route('filament.mod.resources.platoons.edit', $platoon) : null,
                 'manageUrl'       => $canManage ? route('platoon.manage-squads', [$division->slug, $platoon]) : null,
-                'unassignedCount' => $canManage ? 0 : $platoon->unassigned->count(),
+                'unassignedCount' => $unassigned->count(),
                 'breadcrumbs'     => [
                     ['label' => $division->name, 'href' => route('division', $division->slug)],
                     ['label' => $platoon->name ?: 'Untitled'],
@@ -54,6 +59,7 @@ class PlatoonController extends Controller
                 $active = $squad->members->filter(fn ($m) => $m->last_voice_activity >= $activityThreshold)->count();
 
                 return [
+                    'id'        => $squad->id,
                     'name'      => $squad->name ?: ordSuffix($i + 1) . ' Squad',
                     'url'       => route('squad.show', [$division->slug, $platoon, $squad]),
                     'leader'    => $squad->leader?->present()->rankName(),
@@ -61,6 +67,15 @@ class PlatoonController extends Controller
                     'voiceRate' => $count > 0 ? round(($active / $count) * 100) : 0,
                 ];
             })->values(),
+            'organize' => [
+                'canOrganize' => $canManage,
+                'members'     => $canManage
+                    ? $unassigned->map(fn ($member) => [
+                        'id'   => $member->id,
+                        'name' => $member->present()->rankName(),
+                    ])->values()
+                    : [],
+            ],
         ]);
     }
 
