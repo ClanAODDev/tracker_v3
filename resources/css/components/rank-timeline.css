@@ -71,7 +71,7 @@
     right: -1px;
     top: 5px;
     height: 2px;
-    background: color-mix(in srgb, var(--seg-color, var(--primary)) 55%, transparent);
+    background: color-mix(in srgb, var(--seg-color, var(--primary)) 28%, transparent);
     transform-origin: left center;
     transform: scaleX(0);
     animation: rank-timeline-trace-draw 0.4s ease-out forwards;
@@ -80,8 +80,8 @@
 
 /* The final segment glows — that's the current rank. */
 .rank-timeline > span.timeline-connector:last-of-type::before {
-    background: var(--seg-color, var(--primary));
-    box-shadow: 0 0 8px -1px var(--seg-color, var(--primary));
+    background: color-mix(in srgb, var(--seg-color, var(--primary)) 60%, transparent);
+    box-shadow: 0 0 6px -2px var(--seg-color, var(--primary));
 }
 
 .rank-timeline .timeline-node {
