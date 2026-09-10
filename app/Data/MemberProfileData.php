@@ -39,7 +39,7 @@ class MemberProfileData
 
     private NoteStatsData $noteStats;
 
-    private array $rankTimeline;
+    private object $rankTimeline;
 
     private bool $canFullHistory;
 
