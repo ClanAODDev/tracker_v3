@@ -386,6 +386,8 @@ export function MemberTable({
     const selectedIds = selectedRows.map((r) => r.id);
     const parttimersSelected = selectedRows.some((r) => r.isParttimer);
 
+    const hasDirectRecruits = useMemo(() => rows.some((r) => r.directRecruit), [rows]);
+
     // drag-to-select
     const dragging = useRef(false);
     const dragValue = useRef(true);
@@ -586,9 +588,11 @@ export function MemberTable({
                 <span className="flex items-center gap-1.5">
                     <Clock className="size-3 text-info" /> Part-timer
                 </span>
-                <span className="flex items-center gap-1.5">
-                    <span className="font-bold text-[#e05cff]">*</span> Direct recruit
-                </span>
+                {hasDirectRecruits && (
+                    <span className="flex items-center gap-1.5">
+                        <span className="font-bold text-[#e05cff]">*</span> Direct recruit
+                    </span>
+                )}
             </div>
 
             <BulkBar
