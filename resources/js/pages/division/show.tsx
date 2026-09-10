@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
 import { Headset, History, Settings, Shield, Star, TriangleAlert, UserPlus, Users } from 'lucide-react';
-import { type DragEvent, useEffect, useRef, useState } from 'react';
+import { type CSSProperties, type DragEvent, useEffect, useRef, useState } from 'react';
 
 import { ThemedLineChart } from '@/components/charts';
 import { CountUp } from '@/components/count-up';
@@ -94,10 +94,6 @@ function voiceTone(rate: number) {
     return rate >= 30 ? 'text-success' : rate >= 15 ? 'text-warning' : 'text-destructive';
 }
 
-function voiceSpine(rate: number) {
-    return rate >= 30 ? 'border-l-success' : rate >= 15 ? 'border-l-warning' : 'border-l-destructive';
-}
-
 function voiceFill(rate: number) {
     return rate >= 30 ? 'bg-success/15' : rate >= 15 ? 'bg-warning/15' : 'bg-destructive/15';
 }
@@ -147,8 +143,15 @@ function LeaderAvatar({ leader, size = 'sm' }: { leader: Leader; size?: 'sm' | '
     );
 }
 
+const VOICE_CORNER = ['var(--destructive)', 'var(--warning)', 'var(--success)'] as const;
+
+function voiceCorner(rate: number) {
+    return rate >= 30 ? VOICE_CORNER[2] : rate >= 15 ? VOICE_CORNER[1] : VOICE_CORNER[0];
+}
+
 function PlatoonCard({
     platoon,
+    index,
     organizing,
     isHover,
     onDragOver,
@@ -156,26 +159,33 @@ function PlatoonCard({
     onDrop,
 }: {
     platoon: Platoon;
+    index: number;
     organizing: boolean;
     isHover: boolean;
     onDragOver?: (e: DragEvent) => void;
     onDragLeave?: () => void;
     onDrop?: (e: DragEvent) => void;
 }) {
+    const ledSquads = platoon.squads.filter((s) => s.leader).length;
     const body = (
         <>
             <div className="flex items-start gap-3">
                 {platoon.logo && <img src={platoon.logo} alt="" className="size-9 shrink-0 rounded" />}
                 <div className="min-w-0 flex-1">
-                    <p className="font-medium">{platoon.name}</p>
-                    <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <p className="font-mono text-[13px] font-semibold uppercase leading-tight tracking-[0.08em]">
+                        <span className="text-dim-foreground">P{index + 1}</span>
+                        <span className="mx-1.5 text-border-strong">·</span>
+                        {platoon.name}
+                    </p>
+                    <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                        <span className="font-semibold text-primary">»</span>
                         {platoon.leader ? (
                             <>
                                 <LeaderAvatar leader={platoon.leader} />
                                 {platoon.leader.rankName}
                             </>
                         ) : (
-                            'No leader'
+                            'No leader assigned'
                         )}
                     </p>
                 </div>
@@ -188,7 +198,9 @@ function PlatoonCard({
                             key={squad.id}
                             className={cn(
                                 'rounded border p-2 text-xs',
-                                squad.leader ? 'border-border/60' : 'border-dashed border-border/60 opacity-60',
+                                squad.leader
+                                    ? 'border-border/60'
+                                    : 'tron-hatch border-dashed border-border/60 opacity-75',
                             )}
                             style={
                                 squad.leader
@@ -200,26 +212,41 @@ function PlatoonCard({
                                 <span className="font-medium">{squad.name}</span>
                                 <span className="numeric text-muted-foreground">{squad.memberCount}</span>
                             </div>
-                            <span className="text-muted-foreground">
-                                {squad.leader ? squad.leader.rankName : 'TBA'}
-                            </span>
+                            {squad.leader ? (
+                                <span className="text-muted-foreground">{squad.leader.rankName}</span>
+                            ) : (
+                                <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-dim-foreground">
+                                    TBA
+                                </span>
+                            )}
                         </div>
                     ))}
                 </div>
             )}
 
-            <div className="relative -mx-4 -mb-4 mt-3 overflow-hidden border-t border-border bg-black/15 px-4 py-2.5 text-xs">
+            <div className="relative -mx-4 -mb-4 mt-3 overflow-hidden rounded-b-[5px] border-t border-border bg-black/15 px-4 py-2">
                 <div
                     aria-hidden="true"
-                    className={cn('absolute inset-y-0 left-0', voiceFill(platoon.voiceRate))}
-                    style={{ width: `${platoon.voiceRate}%` }}
+                    className={cn('absolute inset-y-0 left-0 border-r', voiceFill(platoon.voiceRate))}
+                    style={{ width: `${platoon.voiceRate}%`, borderRightColor: voiceCorner(platoon.voiceRate) }}
                 />
-                <div className="relative flex gap-4">
-                    <span className={cn('flex items-center gap-1', voiceTone(platoon.voiceRate))}>
-                        <span className="size-1.5 rounded-full" style={{ background: 'currentColor' }} />
-                        {platoon.voiceRate}% voice
+                <div className="relative flex items-center font-mono text-[11px] tracking-[0.04em]">
+                    <span className="flex items-baseline gap-1.5 pr-3">
+                        <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Voice</span>
+                        <span className={cn('font-semibold', voiceTone(platoon.voiceRate))}>
+                            {platoon.voiceRate}%
+                        </span>
                     </span>
-                    <span className="text-muted-foreground">{platoon.memberCount} members</span>
+                    <span className="flex items-baseline gap-1.5 border-l border-border-strong px-3">
+                        <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Members</span>
+                        <span className="font-semibold">{platoon.memberCount}</span>
+                    </span>
+                    <span className="flex items-baseline gap-1.5 border-l border-border-strong px-3">
+                        <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Squads</span>
+                        <span className="font-semibold">
+                            {ledSquads}/{platoon.squads.length}
+                        </span>
+                    </span>
                 </div>
             </div>
         </>
@@ -244,10 +271,8 @@ function PlatoonCard({
     return (
         <Link
             href={platoon.url}
-            className={cn(
-                'overflow-hidden rounded-md border border-l-[3px] border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-primary/30',
-                voiceSpine(platoon.voiceRate),
-            )}
+            className="tron-corners rounded-md border border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-primary/30"
+            style={{ '--corner-color': voiceCorner(platoon.voiceRate) } as CSSProperties}
         >
             {body}
         </Link>
@@ -562,9 +587,10 @@ export default function DivisionShow({
                         </p>
                     ) : (
                         <div className="grid gap-3 lg:grid-cols-2">
-                            {platoonList.map((platoon) => (
+                            {platoonList.map((platoon, i) => (
                                 <PlatoonCard
                                     key={platoon.id}
+                                    index={i}
                                     platoon={platoon}
                                     organizing={organize.organizing}
                                     isHover={dropHoverId === platoon.id}
