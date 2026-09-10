@@ -43,10 +43,11 @@ interface DivisionShowProps {
     division: {
         name: string;
         slug: string;
-        description: string | null;
         logo: string | null;
         platoonLabel: string;
         isShutdown: boolean;
+        shutdownAt: string | null;
+        shutdownPending: boolean;
         applicationRequired: boolean;
         applicationsUrl: string;
         canDeleteApplications: boolean;
@@ -321,7 +322,14 @@ export default function DivisionShow({
             <Head title={d.name} />
 
             <div className="space-y-8">
-                {d.description && <p className="text-sm text-muted-foreground">{d.description}</p>}
+                {d.shutdownAt && (
+                    <div className="flex items-center gap-2 rounded-md border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm font-medium text-destructive">
+                        <TriangleAlert className="size-4 shrink-0" />
+                        {d.shutdownPending
+                            ? `This division is scheduled to shut down on ${d.shutdownAt}.`
+                            : `This division was shut down on ${d.shutdownAt}.`}
+                    </div>
+                )}
 
                 {/* Tools */}
                 <DivisionToolbar
