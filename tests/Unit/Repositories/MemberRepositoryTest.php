@@ -3,6 +3,7 @@
 namespace Tests\Unit\Repositories;
 
 use App\Data\DivisionComparisonData;
+use App\Models\Handle;
 use App\Repositories\MemberRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -91,6 +92,36 @@ class MemberRepositoryTest extends TestCase
         $results = $this->repository->search('Test_Member');
 
         $this->assertCount(1, $results);
+    }
+
+    #[Test]
+    public function search_loads_division_and_all_handles_for_a_member_matched_by_name()
+    {
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['name' => 'NameMatch', 'division_id' => $division->id]);
+        $member->handles()->attach($division->handle_id, ['value' => 'unrelated-handle', 'primary' => true]);
+
+        $results = $this->repository->search('NameMatch');
+        $result  = $results->first();
+
+        $this->assertTrue($result->relationLoaded('division'));
+        $this->assertTrue($result->relationLoaded('handles'));
+        $this->assertCount(1, $result->handles);
+    }
+
+    #[Test]
+    public function search_loads_a_handle_matched_members_other_handles_too()
+    {
+        $division  = $this->createActiveDivision();
+        $otherType = Handle::factory()->create();
+        $member    = $this->createMember(['division_id' => $division->id]);
+        $member->handles()->attach($division->handle_id, ['value' => 'matching-handle', 'primary' => true]);
+        $member->handles()->attach($otherType->id, ['value' => 'other-handle', 'primary' => false]);
+
+        $results = $this->repository->search('matching-handle');
+        $result  = $results->first();
+
+        $this->assertCount(2, $result->handles);
     }
 
     #[Test]
