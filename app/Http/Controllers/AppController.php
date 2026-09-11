@@ -55,7 +55,7 @@ class AppController extends Controller
                 'slug'                => $myDivision->slug,
                 'abbr'                => $myDivision->abbreviation,
                 'logo'                => $myDivision->getLogoPath(),
-                'memberCount'         => $myDivision->members->count(),
+                'memberCount'         => $myDivision->members()->count(),
                 'isShutdown'          => $myDivision->isShutdown(),
                 'canManage'           => $user->can('update', $myDivision),
                 'manageUrl'           => route('filament.mod.resources.divisions.edit', $myDivision),
