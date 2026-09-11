@@ -228,7 +228,11 @@ function PlatoonCard({
             <div className="relative -mx-4 -mb-4 mt-3 overflow-hidden rounded-b-[5px] border-t border-border bg-black/15 px-4 py-2">
                 <FillBar
                     pct={platoon.voiceRate}
-                    className={cn('absolute inset-y-0 left-0 border-r', voiceFill(platoon.voiceRate))}
+                    className={cn(
+                        'absolute inset-y-0 left-0',
+                        platoon.voiceRate < 100 && 'border-r',
+                        voiceFill(platoon.voiceRate),
+                    )}
                     style={{ borderRightColor: voiceCorner(platoon.voiceRate) }}
                 />
                 <div className="relative flex items-center font-mono text-[11px] tracking-[0.04em]">
