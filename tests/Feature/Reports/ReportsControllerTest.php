@@ -94,10 +94,24 @@ class ReportsControllerTest extends TestCase
         ]));
         $this->createMember(['division_id' => $customDivision->id, 'last_voice_activity' => now()->subDays(10)]);
 
+        // `Leave::factory()` unconditionally creates its own throwaway member (and
+        // division) inside its definition, so other active divisions can appear
+        // in the report alongside these two — look the two up by name rather than
+        // assuming they're the only rows or land at fixed indexes.
         $response  = $this->actingAs($officer)->get(route('reports.outstanding-inactives'))->assertOk();
-        $divisions = $response->inertiaProps()['divisions'];
+        $divisions = collect($response->inertiaProps()['divisions']);
 
-        $this->fail(json_encode($divisions, JSON_PRETTY_PRINT));
+        $aaa = $divisions->firstWhere('name', 'AAA Division');
+        $this->assertSame(4, $aaa['population']);
+        $this->assertSame(1, $aaa['outstanding']);
+        $this->assertSame(1, $aaa['inactive']);
+        $this->assertSame(3, $aaa['active']);
+
+        $zzz = $divisions->firstWhere('name', 'ZZZ Division');
+        $this->assertSame(5, $zzz['divisionMax']);
+        $this->assertSame(1, $zzz['population']);
+        $this->assertSame(0, $zzz['outstanding']);
+        $this->assertSame(1, $zzz['inactive']);
     }
 
     #[Test]
