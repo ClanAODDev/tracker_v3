@@ -42,4 +42,22 @@ class InactiveMembersPageTest extends TestCase
                 ->has('platoons')
                 ->has('bulk.flag'));
     }
+
+    #[Test]
+    public function activity_log_shows_who_flagged_a_member()
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+        $target   = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($officer)->get(route('member.flag-inactive', $target->clan_id));
+
+        $this->actingAs($officer)
+            ->get(route('division.inactive-members', $division->slug))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('activityLog', fn ($rows) => collect($rows)->contains(
+                    fn ($row) => $row['verb'] === 'flagged' && $row['user'] === $officer->name && $row['subject'] === $target->name,
+                )));
+    }
 }

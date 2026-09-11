@@ -173,7 +173,7 @@ class InactiveMemberController extends Controller
         return Activity::where('division_id', $division->id)
             ->whereIn('name', [ActivityType::FLAGGED, ActivityType::UNFLAGGED, ActivityType::REMOVED])
             ->orderByDesc('created_at')
-            ->with(['subject'])
+            ->with(['subject', 'user'])
             ->take(20)
             ->get();
     }
