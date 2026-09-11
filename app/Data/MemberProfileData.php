@@ -4,6 +4,7 @@ namespace App\Data;
 
 use App\Enums\Rank;
 use App\Enums\TagVisibility;
+use App\Models\Award;
 use App\Models\Division;
 use App\Models\DivisionTag;
 use App\Models\Member;
@@ -343,6 +344,11 @@ class MemberProfileData
         $member         = $this->member;
         $memberAwardIds = $member->awards->pluck('award_id')->unique();
 
+        // Awards are a small reference table; loading them all up front lets the
+        // prerequisite chain below be walked in memory instead of lazy-loading
+        // `->prerequisite` one query at a time (unbounded by chain depth).
+        $awardsById = Award::select('id', 'name', 'prerequisite_award_id', 'image')->get()->keyBy('id');
+
         $grouped = $member->awards->groupBy('award_id')->map(fn ($records) => [
             'award'  => $records->first()->award,
             'count'  => $records->count(),
@@ -354,7 +360,7 @@ class MemberProfileData
 
         foreach ($grouped as $awardId => $group) {
             $award = $group['award'];
-            $chain = $award->getPrerequisiteChain();
+            $chain = $this->prerequisiteChain($award, $awardsById);
 
             if (count($chain) === 0) {
                 continue;
@@ -362,7 +368,7 @@ class MemberProfileData
 
             $earnedInChain = collect([$award])->merge($chain)
                 ->filter(fn ($a) => $memberAwardIds->contains($a->id))
-                ->sortByDesc(fn ($a) => count($a->getPrerequisiteChain()));
+                ->sortByDesc(fn ($a) => count($this->prerequisiteChain($a, $awardsById)));
 
             if ($earnedInChain->first()?->id === $award->id) {
                 $tieredGroups[$awardId] = $earnedInChain->values();
@@ -396,6 +402,23 @@ class MemberProfileData
                 ];
             })
             ->values();
+    }
+
+    /**
+     * @param  Collection<int, Award>  $awardsById
+     * @return array<int, Award>
+     */
+    private function prerequisiteChain(Award $award, Collection $awardsById): array
+    {
+        $chain   = [];
+        $current = $awardsById->get($award->prerequisite_award_id);
+
+        while ($current) {
+            $chain[] = $current;
+            $current = $awardsById->get($current->prerequisite_award_id);
+        }
+
+        return $chain;
     }
 
     private function pastDivisions(bool $divisionless): Collection

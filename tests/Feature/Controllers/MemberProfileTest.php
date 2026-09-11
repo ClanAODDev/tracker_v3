@@ -3,6 +3,8 @@
 namespace Tests\Feature\Controllers;
 
 use App\Enums\Rank;
+use App\Models\Award;
+use App\Models\MemberAward;
 use App\Models\Note;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
@@ -87,5 +89,37 @@ class MemberProfileTest extends TestCase
             ->get(route('member', $member->getUrlParams()))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page->where('tagManagement', null));
+    }
+
+    #[Test]
+    public function tiered_awards_are_grouped_with_all_earned_tiers()
+    {
+        $viewer   = $this->createSeniorLeader();
+        $member   = $this->createMember(['division_id' => $viewer->member->division_id]);
+        $division = $this->createActiveDivision();
+
+        $tier1 = Award::factory()->create(['division_id' => $division->id, 'name' => 'Tier 1']);
+        $tier2 = Award::factory()->create([
+            'division_id'           => $division->id,
+            'name'                  => 'Tier 2',
+            'prerequisite_award_id' => $tier1->id,
+        ]);
+        $tier3 = Award::factory()->create([
+            'division_id'           => $division->id,
+            'name'                  => 'Tier 3',
+            'prerequisite_award_id' => $tier2->id,
+        ]);
+
+        foreach ([$tier1, $tier2, $tier3] as $tier) {
+            MemberAward::factory()->approved()->create(['member_id' => $member->id, 'award_id' => $tier->id]);
+        }
+
+        $this->actingAs($viewer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('awards.list', 1)
+                ->where('awards.list.0.name', 'Tier 3')
+                ->has('awards.list.0.tiers', 3));
     }
 }
