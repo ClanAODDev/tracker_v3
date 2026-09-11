@@ -4,6 +4,7 @@ namespace Tests\Feature\Reports;
 
 use App\Exceptions\FactoryMissingException;
 use App\Models\Census;
+use App\Models\Division;
 use App\Models\Leave;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
@@ -85,10 +86,12 @@ class ReportsControllerTest extends TestCase
         $onLeave     = $this->createMember(['division_id' => $division->id, 'last_voice_activity' => now()->subDays($clanMax + 5)]);
         Leave::factory()->create(['member_id' => $onLeave->id, 'end_date' => now()->addWeek()]);
 
-        // Division::creating() seeds `settings` from defaults, so the override
-        // has to be applied after creation.
-        $customDivision = $this->createActiveDivision(['name' => 'ZZZ Division']);
-        $customDivision->settings()->set('inactivity_days', 5);
+        // Division::creating() unconditionally seeds `settings` from defaults,
+        // clobbering anything passed to the factory — suppress it for this one.
+        $customDivision = Division::withoutEvents(fn () => $this->createActiveDivision([
+            'name'     => 'ZZZ Division',
+            'settings' => ['inactivity_days' => 5],
+        ]));
         $this->createMember(['division_id' => $customDivision->id, 'last_voice_activity' => now()->subDays(10)]);
 
         $this->actingAs($officer)
