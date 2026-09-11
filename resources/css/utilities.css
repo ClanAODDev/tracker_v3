@@ -187,15 +187,24 @@
         left: -1px;
         border-top-width: 1px;
         border-left-width: 1px;
-        border-top-left-radius: var(--radius);
     }
 
     .tron-corners::after {
         right: -1px;
         bottom: -1px;
-        border-bottom-right-radius: var(--radius);
         border-right-width: 1px;
         border-bottom-width: 1px;
+    }
+
+    /* Rounds a .tron-corners bracket's own inner corner to match its panel's
+       radius, so it hugs the curve instead of cutting across it. Opt-in per
+       panel — most .tron-corners usages want the sharp bracket as-is. */
+    .tron-corners-round::before {
+        border-top-left-radius: var(--radius);
+    }
+
+    .tron-corners-round::after {
+        border-bottom-right-radius: var(--radius);
     }
 
     /* Red eyebrow label with a leading tick. */

@@ -274,7 +274,7 @@ function PlatoonCard({
     return (
         <Link
             href={platoon.url}
-            className="tron-corners rounded-md border border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-primary/30"
+            className="tron-corners tron-corners-round rounded-md border border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-primary/30"
             style={{ '--corner-color': voiceCorner(platoon.voiceRate) } as CSSProperties}
         >
             {body}
