@@ -56,7 +56,7 @@ export default function PromotionsReport({
                     No promotions were recorded for {periodLabel}.
                 </p>
             ) : (
-                <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
+                <div className="grid gap-6 xl:grid-cols-[1fr_20rem]">
                     <div className="space-y-6">
                         <section>
                             <h2 className="mb-3 text-sm font-semibold">By rank</h2>

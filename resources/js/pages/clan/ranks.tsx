@@ -51,7 +51,7 @@ export default function Ranks({ sections }: RanksProps) {
         >
             <Head title="Ranking Structure" />
 
-            <div className="grid gap-8 lg:grid-cols-[1fr_20rem]">
+            <div className="grid gap-8 xl:grid-cols-[1fr_20rem]">
                 <div className="space-y-4">
                     <p className="max-w-prose text-sm text-muted-foreground">
                         Rank in AOD is earned through tenure and service, not handed out for authority. The structure

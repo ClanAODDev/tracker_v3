@@ -136,7 +136,7 @@ export default function Leadership({ clanLeadership, divisions }: Props) {
         <ClanReportShell title="Leadership Structure" active="leadership">
             <Head title="Leadership Structure" />
 
-            <div className="grid gap-6 lg:grid-cols-[1fr_16rem]">
+            <div className="grid gap-6 xl:grid-cols-[1fr_16rem]">
                 <div className="space-y-6">
                     <section id="clan-leadership" className="scroll-mt-24 rounded-md border border-border bg-card">
                         <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -228,7 +228,7 @@ export default function Leadership({ clanLeadership, divisions }: Props) {
                     ))}
                 </div>
 
-                <nav className="hidden lg:block">
+                <nav className="hidden xl:block">
                     <JumpNav items={jumpItems} />
                 </nav>
             </div>

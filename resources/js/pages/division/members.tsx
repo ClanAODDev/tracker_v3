@@ -172,7 +172,7 @@ export default function MembersPage({
                 />
             )}
 
-            <div className="grid gap-6 lg:grid-cols-[1fr_15rem]">
+            <div className="grid gap-6 xl:grid-cols-[1fr_15rem]">
                 <MemberTable
                     rows={members}
                     division={division}
@@ -181,7 +181,7 @@ export default function MembersPage({
                     tagFilter={tagFilter}
                     storageKey={`member-table:${scope.kind}:${division.slug}`}
                 />
-                <div className="order-first space-y-6 lg:order-last">
+                <div className="order-first space-y-6 xl:order-last">
                     {squadList.length > 0 && (
                         <div ref={squadsRef}>
                             <SquadsList
