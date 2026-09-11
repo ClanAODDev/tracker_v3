@@ -85,7 +85,10 @@ class ReportsControllerTest extends TestCase
         $onLeave     = $this->createMember(['division_id' => $division->id, 'last_voice_activity' => now()->subDays($clanMax + 5)]);
         Leave::factory()->create(['member_id' => $onLeave->id, 'end_date' => now()->addWeek()]);
 
-        $customDivision = $this->createActiveDivision(['name' => 'ZZZ Division', 'settings' => ['inactivity_days' => 5]]);
+        // Division::creating() seeds `settings` from defaults, so the override
+        // has to be applied after creation.
+        $customDivision = $this->createActiveDivision(['name' => 'ZZZ Division']);
+        $customDivision->settings()->set('inactivity_days', 5);
         $this->createMember(['division_id' => $customDivision->id, 'last_voice_activity' => now()->subDays(10)]);
 
         $this->actingAs($officer)
