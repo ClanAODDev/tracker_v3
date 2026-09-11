@@ -4,6 +4,7 @@ namespace Tests\Feature\Reports;
 
 use App\Exceptions\FactoryMissingException;
 use App\Models\Census;
+use App\Models\Leave;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
@@ -70,6 +71,34 @@ class ReportsControllerTest extends TestCase
     public function outstanding_inactives_requires_authentication()
     {
         $this->get(route('reports.outstanding-inactives'))->assertRedirect('/login');
+    }
+
+    #[Test]
+    public function outstanding_inactives_report_applies_each_divisions_own_threshold()
+    {
+        $clanMax = config('aod.maximum_days_inactive');
+
+        $division    = $this->createActiveDivision(['name' => 'AAA Division']);
+        $officer     = $this->createOfficer($division);
+        $outstanding = $this->createMember(['division_id' => $division->id, 'last_voice_activity' => now()->subDays($clanMax + 5)]);
+        $active      = $this->createMember(['division_id' => $division->id, 'last_voice_activity' => now()->subDays(10)]);
+        $onLeave     = $this->createMember(['division_id' => $division->id, 'last_voice_activity' => now()->subDays($clanMax + 5)]);
+        Leave::factory()->create(['member_id' => $onLeave->id, 'end_date' => now()->addWeek()]);
+
+        $customDivision = $this->createActiveDivision(['name' => 'ZZZ Division', 'settings' => ['inactivity_days' => 5]]);
+        $this->createMember(['division_id' => $customDivision->id, 'last_voice_activity' => now()->subDays(10)]);
+
+        $this->actingAs($officer)
+            ->get(route('reports.outstanding-inactives'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('divisions.0.population', 4)
+                ->where('divisions.0.outstanding', 1)
+                ->where('divisions.0.inactive', 1)
+                ->where('divisions.0.active', 3)
+                ->where('divisions.1.population', 1)
+                ->where('divisions.1.outstanding', 0)
+                ->where('divisions.1.inactive', 1));
     }
 
     #[Test]

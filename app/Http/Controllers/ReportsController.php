@@ -124,21 +124,28 @@ class ReportsController extends Controller
 
     public function outstandingMembersReport(): Response
     {
-        $clanMax     = config('aod.maximum_days_inactive');
-        $clanMaxDate = now()->subDays($clanMax)->format('Y-m-d');
+        $clanMax          = config('aod.maximum_days_inactive');
+        $clanMaxThreshold = now()->subDays($clanMax)->startOfDay();
 
-        $divisions = Division::active()
-            ->orderBy('name')
-            ->withCount('members')
-            ->get()
-            ->map(function ($division) use ($clanMax, $clanMaxDate) {
-                $divisionMax     = $division->settings()->get('inactivity_days') ?? $clanMax;
-                $divisionMaxDate = now()->subDays($divisionMax)->format('Y-m-d');
+        $divisions = Division::active()->orderBy('name')->withCount('members')->get();
 
-                $baseQuery = $division->members()->whereDoesntHave('leave', fn ($q) => $q->whereDate('end_date', '>', today()));
+        // One query for every division's eligible members instead of two `count()`
+        // queries per division — the per-division inactivity threshold is then
+        // applied in memory below.
+        $eligibleMembers = Member::query()
+            ->whereIn('division_id', $divisions->pluck('id'))
+            ->whereDoesntHave('leave', fn ($q) => $q->whereDate('end_date', '>', today()))
+            ->get(['division_id', 'last_voice_activity'])
+            ->groupBy('division_id');
 
-                $outstanding = (clone $baseQuery)->where('last_voice_activity', '<', $clanMaxDate)->count();
-                $inactive    = (clone $baseQuery)->where('last_voice_activity', '<', $divisionMaxDate)->count();
+        $divisions = $divisions
+            ->map(function ($division) use ($clanMax, $clanMaxThreshold, $eligibleMembers) {
+                $divisionMax       = $division->settings()->get('inactivity_days') ?? $clanMax;
+                $divisionThreshold = now()->subDays($divisionMax)->startOfDay();
+                $members           = $eligibleMembers->get($division->id, collect());
+
+                $outstanding = $members->filter(fn ($m) => $m->last_voice_activity?->lt($clanMaxThreshold))->count();
+                $inactive    = $members->filter(fn ($m) => $m->last_voice_activity?->lt($divisionThreshold))->count();
                 $population  = $division->members_count;
 
                 return [
@@ -193,7 +200,7 @@ class ReportsController extends Controller
             echo '---------- ' . $division->name . ' ---------- ' . PHP_EOL;
             $members = $division->members()->whereHas('user', function ($query) {
                 $query->where('role', '>', 2);
-            })->get();
+            })->with('user')->get();
             $sortedMembers = collect(Arr::sort($members, fn ($member) => $member->rank_id));
             $sortedMembers->each(function ($member) {
                 echo $member->present()->rankName() . ", {$member->user->role->value}" . PHP_EOL;
