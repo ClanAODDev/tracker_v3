@@ -184,6 +184,15 @@ class AwardController extends Controller
             ->filter(fn ($a) => $a->prerequisite_award_id !== null)
             ->keyBy('prerequisite_award_id');
 
+        // One query for every tiered award's recipients instead of one `count()`
+        // query per chain below — grouped by award so each chain's distinct
+        // member count can still be computed in memory.
+        $recipientsByAward = MemberAward::whereIn('award_id', $awardsWithChains->pluck('id'))
+            ->where('approved', true)
+            ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
+            ->get(['award_id', 'member_id'])
+            ->groupBy('award_id');
+
         $processed = [];
         $groups    = [];
 
@@ -211,11 +220,10 @@ class AwardController extends Controller
             $processed = array_merge($processed, $chainIds);
 
             $topTier        = $chain->last();
-            $recipientCount = MemberAward::whereIn('award_id', $chainIds)
-                ->where('approved', true)
-                ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
-                ->distinct('member_id')
-                ->count('member_id');
+            $recipientCount = collect($chainIds)
+                ->flatMap(fn ($id) => $recipientsByAward->get($id, collect())->pluck('member_id'))
+                ->unique()
+                ->count();
 
             $baseTier  = $chain->first();
             $groupName = $baseTier->tiered_group_name ?? $this->getTieredGroupName($chain);

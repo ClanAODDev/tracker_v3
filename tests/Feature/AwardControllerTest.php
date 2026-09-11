@@ -52,4 +52,38 @@ class AwardControllerTest extends TestCase
                 ->where('stats.total', 1)
                 ->has('recipients.data', 1));
     }
+
+    #[Test]
+    public function tiered_recipient_count_counts_each_member_once_across_all_tiers(): void
+    {
+        $user = User::factory()->create();
+
+        $tier1 = Award::factory()->global()->create([
+            'name'              => 'Test Tenure I',
+            'tiered_group_name' => 'Test Tenure',
+            'display_order'     => 1,
+        ]);
+        $tier2 = Award::factory()->global()->create([
+            'name'                  => 'Test Tenure II',
+            'display_order'         => 2,
+            'prerequisite_award_id' => $tier1->id,
+        ]);
+
+        $division        = Division::factory()->create();
+        $memberBothTiers = Member::factory()->create(['division_id' => $division->id]);
+        $memberOneTier   = Member::factory()->create(['division_id' => $division->id]);
+        $exAodMember     = Member::factory()->create(['division_id' => 0]);
+
+        MemberAward::factory()->create(['award_id' => $tier1->id, 'member_id' => $memberBothTiers->id, 'approved' => true]);
+        MemberAward::factory()->create(['award_id' => $tier2->id, 'member_id' => $memberBothTiers->id, 'approved' => true]);
+        MemberAward::factory()->create(['award_id' => $tier1->id, 'member_id' => $memberOneTier->id, 'approved' => true]);
+        MemberAward::factory()->create(['award_id' => $tier1->id, 'member_id' => $exAodMember->id, 'approved' => true]);
+
+        $this->actingAs($user)
+            ->get(route('awards.tiered', 'test-tenure'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('awards/tiered')
+                ->where('stats.totalRecipients', 2));
+    }
 }
