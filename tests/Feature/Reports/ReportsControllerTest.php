@@ -94,17 +94,10 @@ class ReportsControllerTest extends TestCase
         ]));
         $this->createMember(['division_id' => $customDivision->id, 'last_voice_activity' => now()->subDays(10)]);
 
-        $this->actingAs($officer)
-            ->get(route('reports.outstanding-inactives'))
-            ->assertOk()
-            ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('divisions.0.population', 4)
-                ->where('divisions.0.outstanding', 1)
-                ->where('divisions.0.inactive', 1)
-                ->where('divisions.0.active', 3)
-                ->where('divisions.1.population', 1)
-                ->where('divisions.1.outstanding', 0)
-                ->where('divisions.1.inactive', 1));
+        $response  = $this->actingAs($officer)->get(route('reports.outstanding-inactives'))->assertOk();
+        $divisions = $response->inertiaProps()['divisions'];
+
+        $this->fail(json_encode($divisions, JSON_PRETTY_PRINT));
     }
 
     #[Test]
