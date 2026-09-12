@@ -275,6 +275,7 @@ function ApplicationForm({ fields, disabled }: { fields: ApplicationField[]; dis
                                                             : cur.filter((v) => v !== opt),
                                                     );
                                                 }}
+                                                className="accent-primary"
                                             />
                                             {opt}
                                         </label>

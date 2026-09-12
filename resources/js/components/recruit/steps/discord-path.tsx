@@ -49,6 +49,7 @@ export function DiscordPath({ form }: { form: RecruitForm }) {
                                 form.clearPending();
                                 form.reloadPending(e.target.checked);
                             }}
+                            className="accent-primary"
                         />
                         Show all pending registrations
                     </label>

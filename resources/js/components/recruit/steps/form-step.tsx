@@ -193,6 +193,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                                         prev.map((t, idx) => (idx === i ? { ...t, read: e.target.checked } : t)),
                                     )
                                 }
+                                className="accent-primary"
                             />
                             <div className="flex-1">
                                 <a href={thread.url} target="_blank" rel="noreferrer" className="text-primary hover:underline">
@@ -243,6 +244,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                                         prev.map((t, idx) => (idx === i ? { ...t, complete: e.target.checked } : t)),
                                     )
                                 }
+                                className="mt-0.5 accent-primary"
                             />
                             <span
                                 className="[&_a]:text-primary [&_a]:underline-offset-2 hover:[&_a]:underline"
