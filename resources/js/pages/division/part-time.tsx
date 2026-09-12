@@ -95,7 +95,7 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
             <Head title={`Part-timers · ${division.name}`} />
 
             <div className="space-y-6">
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                     <StatTile value={stats.total} label="Total" />
                     <StatTile value={stats.active} label="Active" className="border-success/30" />
                     <StatTile value={stats.onLeave} label="On leave" className="border-chart-2/30" />

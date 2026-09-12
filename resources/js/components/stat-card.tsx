@@ -55,7 +55,11 @@ export function StatCard({
                 </p>
                 {detail && <div className="mt-1 text-xs text-muted-foreground">{detail}</div>}
             </div>
-            {trend && trend.length > 1 && <Sparkline data={trend} tone="auto" width={56} height={24} />}
+            {trend && trend.length > 1 && (
+                <div className="hidden sm:block">
+                    <Sparkline data={trend} tone="auto" width={56} height={24} />
+                </div>
+            )}
         </Comp>
     );
 }
