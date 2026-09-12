@@ -36,6 +36,18 @@ class AwardControllerTest extends TestCase
     }
 
     #[Test]
+    public function index_redirects_when_division_filter_has_no_awards(): void
+    {
+        $user     = User::factory()->create();
+        $division = Division::factory()->create();
+        Award::factory()->global()->create(['name' => 'Bug Hunter']);
+
+        $this->actingAs($user)
+            ->get(route('awards.index', ['division' => $division->slug]))
+            ->assertRedirect(route('awards.index'));
+    }
+
+    #[Test]
     public function show_renders_an_award_with_its_recipients(): void
     {
         $user   = User::factory()->create();
