@@ -98,6 +98,20 @@ class FetchApplicationFeedsTest extends TestCase
     }
 
     #[Test]
+    public function command_skips_shutdown_divisions(): void
+    {
+        $division = Division::factory()->create(['shutdown_at' => now()]);
+        $division->settings()->set('recruitment_rss_feed', 'https://example.com/rss.xml');
+
+        Http::fake();
+
+        $this->artisan('tracker:fetch-applications')
+            ->assertSuccessful();
+
+        Http::assertNothingSent();
+    }
+
+    #[Test]
     public function command_ignores_invalid_rss_feeds(): void
     {
         Http::fake([

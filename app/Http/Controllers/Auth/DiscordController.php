@@ -135,7 +135,7 @@ class DiscordController extends Controller
             'preview'           => $preview,
             'previewDivisionId' => $preview ? $division?->id : null,
             'needsRegistration' => $needsRegistration,
-            'divisions'         => Division::active()->withoutFloaters()->withoutBR()->orderBy('name')
+            'divisions'         => Division::recruitable()
                 ->get(['id', 'name'])
                 ->map(fn ($d) => ['id' => $d->id, 'name' => $d->name, 'logo' => $d->getLogoPath()]),
             'applicationFields' => $applicationFields->values(),

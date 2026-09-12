@@ -343,6 +343,26 @@ class DiscordAuthTest extends TestCase
     }
 
     #[Test]
+    public function pending_page_hides_shutdown_divisions(): void
+    {
+        $active   = Division::factory()->create(['name' => 'Active Division']);
+        $shutdown = Division::factory()->create(['name' => 'Shutdown Division', 'shutdown_at' => now()]);
+
+        $user = User::factory()->pending()->create([
+            'discord_id'       => '123456789',
+            'discord_username' => 'PendingUser',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('auth.discord.pending'));
+
+        $response->assertOk();
+        $names = collect($response->inertiaProps()['divisions'])->pluck('name');
+
+        $this->assertContains($active->name, $names);
+        $this->assertNotContains($shutdown->name, $names);
+    }
+
+    #[Test]
     public function user_is_pending_registration_returns_true_for_discord_only(): void
     {
         $user = User::factory()->pending()->create([
