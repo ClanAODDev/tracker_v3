@@ -74,7 +74,12 @@ export default function AppLayout({ header, width = 'default', children }: Props
                             <span className="sr-only">Close</span>
                         </SheetClose>
                     </SheetTitle>
-                    <ScrollArea className="h-[calc(100vh-3.5rem)]" onClick={() => setNavOpen(false)}>
+                    <ScrollArea
+                        className="h-[calc(100vh-3.5rem)]"
+                        onClick={(e) => {
+                            if ((e.target as HTMLElement).closest('a')) setNavOpen(false);
+                        }}
+                    >
                         {sidebar}
                     </ScrollArea>
                 </SheetContent>
