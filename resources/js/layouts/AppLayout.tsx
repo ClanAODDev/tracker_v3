@@ -31,7 +31,6 @@ export default function AppLayout({ header, width = 'default', children }: Props
     const nav = page.props.nav;
     const currentUrl = page.url;
     const navSide = page.props.auth.user?.settings.mobileNavSide === 'right' ? 'right' : 'left';
-    const navLeft = navSide === 'left';
     const reduceAnimations = page.props.auth.user?.settings.reduceAnimations ?? false;
     const theme = page.props.auth.user?.settings.theme === 'light' ? 'light' : 'tron';
     const [navOpen, setNavOpen] = useState(false);
@@ -48,20 +47,15 @@ export default function AppLayout({ header, width = 'default', children }: Props
 
     return (
         <div className="min-h-screen bg-background text-foreground">
-            <div className={cn('lg:grid', navLeft ? 'lg:grid-cols-[15rem_1fr]' : 'lg:grid-cols-[1fr_15rem]')}>
-                <aside
-                    className={cn(
-                        'fixed inset-y-0 z-40 hidden w-60 bg-card/30 lg:block',
-                        navLeft ? 'left-0 border-r border-border' : 'right-0 border-l border-border',
-                    )}
-                >
+            <div className="lg:grid lg:grid-cols-[15rem_1fr]">
+                <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 border-r border-border bg-card/30 lg:block">
                     <div className="flex h-14 items-center border-b border-border px-5">
                         <TrackerHomeLink markClassName="drop-shadow-[0_0_6px_var(--primary-glow)]" />
                     </div>
                     <ScrollArea className="h-[calc(100vh-3.5rem)]">{sidebar}</ScrollArea>
                 </aside>
 
-                <div className={navLeft ? 'lg:col-start-2' : 'lg:col-start-1 lg:row-start-1'}>
+                <div className="lg:col-start-2">
                     <AppTopbar onOpenNav={() => setNavOpen(true)} navSide={navSide} />
                     <ImpersonationBanner />
                     {header && <PageHeader {...header} width={width} />}

@@ -506,7 +506,12 @@ function AppearanceSection({ settings }: { settings: SettingsData['settings'] })
             </label>
 
             <div className="space-y-1.5 text-sm">
-                <span className="block">Navigation side</span>
+                <span className="block">
+                    Mobile navigation side
+                    <span className="mt-0.5 block text-xs text-muted-foreground">
+                        Which side the menu opens from on phones — pick the side easiest to reach one-handed
+                    </span>
+                </span>
                 <div className="flex gap-1">
                     {(['left', 'right'] as const).map((side) => (
                         <Button
