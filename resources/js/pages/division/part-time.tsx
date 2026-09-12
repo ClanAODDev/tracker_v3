@@ -3,6 +3,7 @@ import { ExternalLink, Plus, Search, Trash2, Users } from 'lucide-react';
 import { useMemo, useState } from 'react';
 
 import { MemberCombobox, type MemberResult } from '@/components/member-combobox';
+import { StatTiles } from '@/components/reports/stat-tiles';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -38,15 +39,6 @@ const STATUS_BADGE: Record<Row['status'], { label: string; className: string }> 
     onLeave: { label: 'On leave', className: 'border-chart-2/40 text-chart-2' },
     removed: { label: 'Removed', className: 'border-destructive/40 text-destructive' },
 };
-
-function StatTile({ value, label, className }: { value: number; label: string; className?: string }) {
-    return (
-        <div className={cn('rounded-md border border-border bg-card p-4', className)}>
-            <div className="numeric text-2xl font-semibold">{value}</div>
-            <p className="mt-0.5 text-xs text-muted-foreground">{label}</p>
-        </div>
-    );
-}
 
 export default function PartTime({ division, members, stats, canManage, addUrl }: Props) {
     const [search, setSearch] = useState('');
@@ -95,12 +87,14 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
             <Head title={`Part-timers · ${division.name}`} />
 
             <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-                    <StatTile value={stats.total} label="Total" />
-                    <StatTile value={stats.active} label="Active" className="border-success/30" />
-                    <StatTile value={stats.onLeave} label="On leave" className="border-chart-2/30" />
-                    <StatTile value={stats.removed} label="Removed" className="border-destructive/30" />
-                </div>
+                <StatTiles
+                    stats={[
+                        { value: stats.total, label: 'Total' },
+                        { value: stats.active, label: 'Active', tone: 'success' },
+                        { value: stats.onLeave, label: 'On leave', tone: 'info' },
+                        { value: stats.removed, label: 'Removed', tone: 'danger' },
+                    ]}
+                />
 
                 {members.length === 0 ? (
                     <div className="rounded-md border border-border bg-card p-10 text-center">

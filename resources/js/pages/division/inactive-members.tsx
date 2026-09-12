@@ -3,6 +3,7 @@ import { Bell, Flag, History, Mail, Search, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
+import { StatTiles } from '@/components/reports/stat-tiles';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -10,7 +11,6 @@ import { SimpleSelect } from '@/components/ui/simple-select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { postJson } from '@/lib/api';
-import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
 
 interface InactiveRow {
@@ -114,12 +114,14 @@ export default function InactiveMembers({
             <Head title={`${division.name} inactive members`} />
 
             <div className="space-y-6">
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    <StatTile label="Inactive" value={stats.total} />
-                    <StatTile label="Flagged" value={stats.flagged} tone="text-warning" />
-                    <StatTile label="Severe (2× threshold)" value={stats.severe} tone="text-destructive" />
-                    <StatTile label="Threshold" value={`${division.inactivityDays}d`} tone="text-info" />
-                </div>
+                <StatTiles
+                    stats={[
+                        { value: stats.total, label: 'Inactive' },
+                        { value: stats.flagged, label: 'Flagged', tone: 'warning' },
+                        { value: stats.severe, label: 'Severe (2× threshold)', tone: 'danger' },
+                        { value: `${division.inactivityDays}d`, label: 'Threshold', tone: 'info' },
+                    ]}
+                />
 
                 <div className="flex flex-wrap items-center gap-2">
                     <SimpleSelect
@@ -356,15 +358,6 @@ export default function InactiveMembers({
                 </div>
             )}
         </AppLayout>
-    );
-}
-
-function StatTile({ label, value, tone }: { label: string; value: number | string; tone?: string }) {
-    return (
-        <div className="rounded-md border border-border bg-card p-4">
-            <p className={cn('numeric text-2xl font-semibold', tone)}>{value}</p>
-            <p className="text-xs text-muted-foreground">{label}</p>
-        </div>
     );
 }
 
