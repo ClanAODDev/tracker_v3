@@ -141,13 +141,23 @@
 
     /* --- Tron surface treatments --------------------------------------- */
 
-    /* Faint perspective grid — sits behind page content, barely there. */
+    /* Faint perspective grid — sits behind page content, barely there.
+       Drifts upward one tile per cycle; `prefers-reduced-motion` handling
+       in base.css freezes the animation for anyone who needs that. */
     .tron-grid {
         background-image:
             linear-gradient(to right, color-mix(in srgb, var(--foreground) 3%, transparent) 1px, transparent 1px),
             linear-gradient(to bottom, color-mix(in srgb, var(--foreground) 3%, transparent) 1px, transparent 1px);
         background-size: 44px 44px;
-        background-position: center top;
+        background-position-x: center;
+        background-position-y: 0;
+        animation: tron-grid-drift 7s linear infinite;
+    }
+
+    @keyframes tron-grid-drift {
+        to {
+            background-position-y: -88px;
+        }
     }
 
     /* Fine 45° diagonal hatch — a texture for empty states, header strips, and
