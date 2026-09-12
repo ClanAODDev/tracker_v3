@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Exceptions\RecruitmentFailedException;
+use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
@@ -12,6 +13,8 @@ use App\Models\Platoon;
 use App\Models\RankAction;
 use App\Models\Squad;
 use App\Models\Transfer;
+use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
+use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
 use Illuminate\Support\Facades\DB;
 
 class RecruitmentService
@@ -114,5 +117,30 @@ class RecruitmentService
             'member_id'    => $member->id,
             'division_id'  => $division->id,
         ]);
+    }
+
+    /**
+     * Shared post-creation housekeeping for a freshly recruited member,
+     * regardless of whether they came through the plain or Discord flow:
+     * open the member request, notify the division, and queue a Discord sync.
+     */
+    public function finalizeRecruitment(Member $member, Division $division, Member $recruiter): void
+    {
+        $this->createMemberRequest($member, $division, $recruiter);
+
+        $this->notifyDivisionOfRecruit($member, $division);
+
+        SyncDiscordMember::dispatch($member);
+    }
+
+    private function notifyDivisionOfRecruit(Member $member, Division $division): void
+    {
+        if ($division->id !== auth()->user()->member->division_id) {
+            $division->notify(new NotifyDivisionNewExternalRecruit($member, auth()->user()));
+
+            return;
+        }
+
+        $division->notify(new NotifyDivisionNewMemberRecruited($member, auth()->user()));
     }
 }
