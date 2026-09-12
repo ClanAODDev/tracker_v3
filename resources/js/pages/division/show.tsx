@@ -1,44 +1,26 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { Headset, History, Settings, Shield, Star, TriangleAlert, UserPlus, Users } from 'lucide-react';
-import { type CSSProperties, type DragEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { ThemedLineChart } from '@/components/charts';
 import { CountUp } from '@/components/count-up';
 import { ApplicationsModal } from '@/components/division/applications-modal';
+import { LeaderAvatar } from '@/components/division/leader-avatar';
 import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from '@/components/division/organize';
+import { PlatoonCard, type Platoon } from '@/components/division/platoon-card';
 import { RecentActivityModal, type RecentActivityGroup } from '@/components/division/recent-activity-modal';
+import { TileLink } from '@/components/division/tile-link';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
-import { FillBar, FlashOnChange } from '@/components/motion';
 import { SectionTitle } from '@/components/section';
 import { StatCard } from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
 import { postJson } from '@/lib/api';
 import { toneSurface } from '@/lib/tone';
+import { voiceTone } from '@/lib/voice-tone';
 import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
 import type { MemberCard } from '@/types';
-
-type Leader = Partial<MemberCard>;
-
-interface Squad {
-    id: number;
-    name: string;
-    memberCount: number;
-    leader: Leader | null;
-}
-
-interface Platoon {
-    id: number;
-    name: string;
-    description: string | null;
-    logo: string | null;
-    url: string;
-    memberCount: number;
-    voiceRate: number;
-    leader: Leader | null;
-    squads: Squad[];
-}
 
 interface DivisionShowProps {
     division: {
@@ -89,201 +71,6 @@ interface DivisionShowProps {
     allActivityUrl: string;
     organize: { canOrganize: boolean; members: OrganizeMember[] };
     pendingApplicationCount: number;
-}
-
-function voiceTone(rate: number) {
-    return rate >= 30 ? 'text-success' : rate >= 15 ? 'text-warning' : 'text-destructive';
-}
-
-function voiceFill(rate: number) {
-    return rate >= 30 ? 'bg-success/15' : rate >= 15 ? 'bg-warning/15' : 'bg-destructive/15';
-}
-
-function TileLink({
-    href,
-    onClick,
-    tint,
-    hover = true,
-    children,
-}: {
-    href?: string;
-    onClick?: () => void;
-    tint?: string;
-    hover?: boolean;
-    children: React.ReactNode;
-}) {
-    const className = cn(
-        'flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors',
-        hover && 'hover:border-primary/40',
-        tint,
-    );
-    if (onClick) {
-        return (
-            <button type="button" onClick={onClick} className={className}>
-                {children}
-            </button>
-        );
-    }
-    return (
-        <a href={href} className={className}>
-            {children}
-        </a>
-    );
-}
-
-function LeaderAvatar({ leader, size = 'sm' }: { leader: Leader; size?: 'sm' | 'md' }) {
-    const dim = size === 'md' ? 'size-9' : 'size-5';
-    if (leader.avatarUrl) {
-        return <img src={leader.avatarUrl} alt="" className={cn(dim, 'shrink-0 rounded-full')} />;
-    }
-    return (
-        <span
-            className={cn(dim === 'size-9' ? 'size-2.5' : 'size-2', 'shrink-0 rounded-full')}
-            style={{ background: leader.rankColor ?? 'var(--muted-foreground)' }}
-        />
-    );
-}
-
-const VOICE_CORNER = ['var(--destructive)', 'var(--warning)', 'var(--success)'] as const;
-
-function voiceCorner(rate: number) {
-    return rate >= 30 ? VOICE_CORNER[2] : rate >= 15 ? VOICE_CORNER[1] : VOICE_CORNER[0];
-}
-
-function PlatoonCard({
-    platoon,
-    index,
-    organizing,
-    isHover,
-    onDragOver,
-    onDragLeave,
-    onDrop,
-}: {
-    platoon: Platoon;
-    index: number;
-    organizing: boolean;
-    isHover: boolean;
-    onDragOver?: (e: DragEvent) => void;
-    onDragLeave?: () => void;
-    onDrop?: (e: DragEvent) => void;
-}) {
-    const ledSquads = platoon.squads.filter((s) => s.leader).length;
-    const body = (
-        <>
-            <div className="flex items-start gap-3">
-                {platoon.logo && <img src={platoon.logo} alt="" className="size-9 shrink-0 rounded" />}
-                <div className="min-w-0 flex-1">
-                    <p className="font-mono text-[13px] font-semibold uppercase leading-tight tracking-[0.08em]">
-                        <span className="text-dim-foreground">P{index + 1}</span>
-                        <span className="mx-1.5 text-border-strong">·</span>
-                        {platoon.name}
-                    </p>
-                    <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <span className="font-semibold text-primary">»</span>
-                        {platoon.leader ? (
-                            <>
-                                <LeaderAvatar leader={platoon.leader} />
-                                {platoon.leader.rankName}
-                            </>
-                        ) : (
-                            'No leader assigned'
-                        )}
-                    </p>
-                </div>
-            </div>
-
-            {platoon.squads.length > 0 && (
-                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    {platoon.squads.map((squad) => (
-                        <div
-                            key={squad.id}
-                            className={cn(
-                                'rounded border p-2 text-xs',
-                                squad.leader
-                                    ? 'border-border/60'
-                                    : 'tron-hatch border-dashed border-border/60 opacity-75',
-                            )}
-                            style={
-                                squad.leader
-                                    ? { borderLeftColor: squad.leader.rankColor, borderLeftWidth: 2 }
-                                    : undefined
-                            }
-                        >
-                            <div className="flex items-center justify-between">
-                                <span className="font-medium">{squad.name}</span>
-                                <span className="numeric text-muted-foreground">{squad.memberCount}</span>
-                            </div>
-                            {squad.leader ? (
-                                <span className="text-muted-foreground">{squad.leader.rankName}</span>
-                            ) : (
-                                <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-dim-foreground">
-                                    TBA
-                                </span>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            <div className="relative -mx-4 -mb-4 mt-3 overflow-hidden rounded-b-[5px] border-t border-border bg-black/15 px-4 py-2">
-                <FillBar
-                    pct={platoon.voiceRate}
-                    className={cn(
-                        'absolute inset-y-0 left-0',
-                        platoon.voiceRate < 100 && 'border-r',
-                        voiceFill(platoon.voiceRate),
-                    )}
-                    style={{ borderRightColor: voiceCorner(platoon.voiceRate) }}
-                />
-                <div className="relative flex items-center font-mono text-[11px] tracking-[0.04em]">
-                    <span className="flex items-baseline gap-1.5 pr-3">
-                        <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Voice</span>
-                        <span className={cn('font-semibold', voiceTone(platoon.voiceRate))}>
-                            {platoon.voiceRate}%
-                        </span>
-                    </span>
-                    <span className="flex items-baseline gap-1.5 border-l border-border-strong px-3">
-                        <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Members</span>
-                        <FlashOnChange value={platoon.memberCount} className="font-semibold">
-                            {platoon.memberCount}
-                        </FlashOnChange>
-                    </span>
-                    <span className="flex items-baseline gap-1.5 border-l border-border-strong px-3">
-                        <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Squads</span>
-                        <span className="font-semibold">
-                            {ledSquads}/{platoon.squads.length}
-                        </span>
-                    </span>
-                </div>
-            </div>
-        </>
-    );
-
-    if (organizing) {
-        return (
-            <div
-                onDragOver={onDragOver}
-                onDragLeave={onDragLeave}
-                onDrop={onDrop}
-                className={cn(
-                    'overflow-hidden rounded-md border border-dashed p-4 transition-colors',
-                    isHover ? 'border-primary bg-primary/10' : 'border-primary/40',
-                )}
-            >
-                {body}
-            </div>
-        );
-    }
-
-    return (
-        <Link
-            href={platoon.url}
-            className="tron-corners tron-corners-round rounded-md border border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-primary/30"
-            style={{ '--corner-color': voiceCorner(platoon.voiceRate) } as CSSProperties}
-        >
-            {body}
-        </Link>
-    );
 }
 
 export default function DivisionShow({
