@@ -36,7 +36,7 @@ export interface Stat {
 
 export function StatTiles({ stats }: { stats: Stat[] }) {
     return (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {stats.map((stat, i) => (
                 <div key={i} className={cn('rounded-md border bg-card p-4', TONE_CLASS[stat.tone ?? 'default'])}>
                     <div className="flex items-baseline gap-1">
