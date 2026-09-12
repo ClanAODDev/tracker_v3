@@ -10,6 +10,7 @@ use App\Models\DivisionApplication;
 use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
+use App\Services\DiscordRegistrationService;
 use App\Services\ForumProcedureService;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
@@ -25,6 +26,7 @@ class DiscordController extends Controller
     public function __construct(
         protected ClanForumPermissions $forumPermissions,
         protected ForumProcedureService $procedureService,
+        protected DiscordRegistrationService $registration,
     ) {}
 
     public function redirect()
@@ -234,7 +236,7 @@ class DiscordController extends Controller
                 );
             }
 
-            DB::transaction(fn () => $this->syncMemberDiscordFields(
+            DB::transaction(fn () => $this->registration->syncMemberDiscordFields(
                 $user->member,
                 $user->discord_id,
                 $user->discord_username,
@@ -262,7 +264,7 @@ class DiscordController extends Controller
                 'discord_username' => $discordUsername,
             ]);
 
-            $this->syncMemberDiscordFields($member, $discordId, $discordUsername, $avatarHash);
+            $this->registration->syncMemberDiscordFields($member, $discordId, $discordUsername, $avatarHash);
 
             return $user;
         });
@@ -279,28 +281,6 @@ class DiscordController extends Controller
         );
 
         return redirect()->intended('/');
-    }
-
-    protected function syncMemberDiscordFields(
-        Member $member,
-        ?string $discordId,
-        ?string $discordUsername,
-        ?string $avatarHash
-    ): void {
-        $updates = [];
-
-        if ($discordId) {
-            $updates['discord_id'] = $discordId;
-            $updates['discord']    = $discordUsername ?? $member->discord;
-        }
-
-        if ($avatarHash !== null) {
-            $updates['discord_avatar'] = $avatarHash;
-        }
-
-        if ($updates) {
-            $member->update($updates);
-        }
     }
 
     protected function createPendingUser(
@@ -321,17 +301,7 @@ class DiscordController extends Controller
             ]);
         }
 
-        $sanitizedName = $this->sanitizeName($discordUsername);
-        $uniqueName    = $this->makeUniqueName($sanitizedName);
-        $hadCollision  = $uniqueName !== $sanitizedName;
-
-        $user = User::create([
-            'name'             => $uniqueName,
-            'email'            => $email,
-            'discord_id'       => $discordId,
-            'discord_username' => $discordUsername,
-            'discord_avatar'   => $avatarHash,
-        ]);
+        [$user, $hadCollision] = $this->registration->createPendingUser($discordId, $discordUsername, $email, $avatarHash);
 
         auth()->login(user: $user, remember: true);
         request()->session()->regenerate();
@@ -349,25 +319,5 @@ class DiscordController extends Controller
         }
 
         return $redirect;
-    }
-
-    protected function sanitizeName(string $name): string
-    {
-        $name = preg_replace(pattern: '/[^a-zA-Z0-9_]/', replacement: '', subject: $name);
-
-        return substr($name, offset: 0, length: 50) ?: 'discord_user';
-    }
-
-    protected function makeUniqueName(string $base): string
-    {
-        $name = $base;
-        $i    = 1;
-
-        while (User::where('name', $name)->exists()) {
-            $suffix = '_' . $i++;
-            $name   = substr($base, 0, 50 - strlen($suffix)) . $suffix;
-        }
-
-        return $name;
     }
 }
