@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\ClanCensusReportData;
 use App\Enums\Position;
 use App\Enums\Rank;
-use App\Exceptions\FactoryMissingException;
 use App\Models\Division;
 use App\Models\Member;
 use App\Repositories\ClanRepository;
@@ -12,8 +12,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -24,102 +22,7 @@ class ReportsController extends Controller
 
     public function clanCensusReport(Request $request): Response
     {
-        $defaultStart = now()->subWeeks(52)->format('Y-m-d');
-        $defaultEnd   = now()->format('Y-m-d');
-
-        $start = $request->filled('start') ? $request->input('start') : $defaultStart;
-        $end   = $request->filled('end') ? $request->input('end') : $defaultEnd;
-
-        $hasDateFilter = $request->filled('start') || $request->filled('end');
-
-        $defaultCensus = $this->clan->censusCounts(52);
-
-        if ($defaultCensus->isEmpty()) {
-            throw new FactoryMissingException('You might need to run the `census` factory');
-        }
-
-        $censusCounts   = $hasDateFilter ? $this->clan->censusCountsBetween($start, $end) : $defaultCensus;
-        $memberCount    = $this->clan->totalActiveMembers();
-        $previousCensus = $defaultCensus->first();
-        $milestones     = $this->clan->censusMilestones();
-
-        $rows = $censusCounts->reverse()->values();
-
-        $chart = $rows->map(fn ($row) => [
-            'date'       => Carbon::parse($row->date)->format('M j, y'),
-            'population' => (int) $row->count,
-            'voice'      => (int) $row->weekly_voice_active,
-        ]);
-
-        $table       = $rows->reverse()->values();
-        $censusTable = $table->map(function ($row, $index) use ($table) {
-            $prev  = $table->get($index + 1);
-            $count = (int) $row->count;
-            $voice = (int) $row->weekly_voice_active;
-
-            return [
-                'date'         => Carbon::parse($row->date)->format('M j, Y'),
-                'population'   => $count,
-                'change'       => $prev ? $count - (int) $prev->count : 0,
-                'voiceActive'  => $voice,
-                'voicePercent' => $count > 0 ? round($voice / $count * 100, 1) : 0,
-            ];
-        });
-
-        $divisions = Division::active()
-            ->orderBy('name')
-            ->withoutFloaters()
-            ->with(['census' => fn ($q) => $q->whereBetween(DB::raw('DATE(created_at)'), [$start, $end])->orderBy('created_at')])
-            ->get()
-            ->filter(fn ($division) => $division->census->isNotEmpty())
-            ->map(function ($division) {
-                $latest  = $division->census->last();
-                $percent = $latest->count > 0 ? round($latest->weekly_voice_count / $latest->count * 100, 1) : 0;
-
-                return [
-                    'name'         => $division->name,
-                    'slug'         => $division->slug,
-                    'population'   => $latest->count,
-                    'voiceActive'  => $latest->weekly_voice_count,
-                    'voicePercent' => $percent,
-                ];
-            })
-            ->values();
-
-        $totalPopulation  = $divisions->sum('population');
-        $totalVoiceActive = $divisions->sum('voiceActive');
-
-        $rankDemographic = $this->clan->allRankDemographic()->map(fn ($rank) => [
-            'abbreviation' => $rank->abbreviation,
-            'count'        => (int) $rank->count,
-            'percent'      => $memberCount > 0 ? round($rank->count / $memberCount * 100, 1) : 0,
-        ])->values();
-
-        return Inertia::render('reports/clan-census', [
-            'stats' => [
-                'memberCount'   => $memberCount,
-                'previousCount' => $previousCensus?->count ? (int) $previousCensus->count : null,
-                'firstCensus'   => $milestones->first ? [
-                    'total' => (int) $milestones->first->total,
-                    'date'  => Carbon::parse($milestones->first->date)->format('M j, Y'),
-                ] : null,
-                'peakCensus' => $milestones->peak ? [
-                    'total' => (int) $milestones->peak->total,
-                    'date'  => Carbon::parse($milestones->peak->date)->format('M j, Y'),
-                ] : null,
-            ],
-            'chart'               => $chart,
-            'censusTable'         => $censusTable,
-            'divisionPopulations' => [
-                'rows'             => $divisions,
-                'totalPopulation'  => $totalPopulation,
-                'totalVoiceActive' => $totalVoiceActive,
-                'totalPercent'     => $totalPopulation > 0 ? round($totalVoiceActive / $totalPopulation * 100, 1) : 0,
-            ],
-            'rankDemographic' => $rankDemographic,
-            'dateRange'       => ['start' => $start, 'end' => $end],
-            'hasDateFilter'   => $hasDateFilter,
-        ]);
+        return Inertia::render('reports/clan-census', ClanCensusReportData::for($request, $this->clan)->toArray());
     }
 
     public function outstandingMembersReport(): Response
