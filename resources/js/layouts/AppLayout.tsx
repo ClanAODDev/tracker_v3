@@ -1,4 +1,5 @@
 import { usePage } from '@inertiajs/react';
+import { XIcon } from 'lucide-react';
 import { type PropsWithChildren, type ReactNode, useEffect, useState } from 'react';
 
 import { AppTopbar } from '@/components/app-topbar';
@@ -9,7 +10,7 @@ import { PageHeader, type PageHeaderProps } from '@/components/page-header';
 import { SessionGuard } from '@/components/session-guard';
 import { TrackerHomeLink } from '@/components/tracker-logo';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Sheet, SheetContent, SheetTitle } from '@/components/ui/sheet';
+import { Sheet, SheetClose, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { LAYOUT_MAX_WIDTH, type LayoutWidth } from '@/lib/layout';
 import { cn } from '@/lib/utils';
 import type { SharedProps } from '@/types';
@@ -71,9 +72,13 @@ export default function AppLayout({ header, width = 'default', children }: Props
             </div>
 
             <Sheet open={navOpen} onOpenChange={setNavOpen}>
-                <SheetContent side={navSide} className="w-72 p-0">
-                    <SheetTitle className="flex h-14 items-center border-b border-border px-5">
+                <SheetContent side={navSide} showCloseButton={false} className="w-72 p-0">
+                    <SheetTitle className="flex h-14 items-center justify-between border-b border-border px-5">
                         <TrackerHomeLink />
+                        <SheetClose className="rounded-xs text-muted-foreground opacity-70 transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring">
+                            <XIcon className="size-4" />
+                            <span className="sr-only">Close</span>
+                        </SheetClose>
                     </SheetTitle>
                     <ScrollArea className="h-[calc(100vh-3.5rem)]" onClick={() => setNavOpen(false)}>
                         {sidebar}
