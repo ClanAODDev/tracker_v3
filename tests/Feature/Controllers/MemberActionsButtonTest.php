@@ -63,4 +63,41 @@ class MemberActionsButtonTest extends TestCase
 
         $this->assertHasSgtTraining($officer, $member, false);
     }
+
+    #[Test]
+    public function flag_action_offers_flag_for_a_member_not_yet_flagged()
+    {
+        $officer = $this->createOfficer();
+        $member  = $this->createMember(['flagged_for_inactivity' => false]);
+
+        $this->actingAs($officer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page) use ($member) {
+                $page->component('member/show');
+                $action = collect($page->toArray()['props']['actions'])->firstWhere('label', 'Flag for inactivity');
+                $this->assertNotNull($action);
+                $this->assertSame(route('member.flag-inactive', $member->clan_id), $action['url']);
+            });
+    }
+
+    #[Test]
+    public function flag_action_offers_unflag_for_an_already_flagged_member()
+    {
+        $officer = $this->createOfficer();
+        $member  = $this->createMember(['flagged_for_inactivity' => true]);
+
+        $this->actingAs($officer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page) use ($member) {
+                $page->component('member/show');
+                $labels = collect($page->toArray()['props']['actions'])->pluck('label');
+                $this->assertFalse($labels->contains('Flag for inactivity'));
+
+                $action = collect($page->toArray()['props']['actions'])->firstWhere('label', 'Unflag for inactivity');
+                $this->assertNotNull($action);
+                $this->assertSame(route('member.unflag-inactive', $member->clan_id), $action['url']);
+            });
+    }
 }

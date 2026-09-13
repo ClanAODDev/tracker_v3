@@ -99,7 +99,9 @@ class MemberProfileData
                     ? ['label' => 'Impersonate user', 'url' => route('impersonate', $member->user)]
                     : null,
                 $user->can('flagInactive', Member::class)
-                    ? ['label' => 'Flag for inactivity', 'url' => route('member.flag-inactive', $member->clan_id)]
+                    ? ($member->flagged_for_inactivity
+                        ? ['label' => 'Unflag for inactivity', 'url' => route('member.unflag-inactive', $member->clan_id)]
+                        : ['label' => 'Flag for inactivity', 'url' => route('member.flag-inactive', $member->clan_id)])
                     : null,
             ])),
             'tags' => $member->tags
