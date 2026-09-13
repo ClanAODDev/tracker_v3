@@ -9,6 +9,7 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\User;
 use App\Repositories\DivisionRepository;
+use App\Rules\HandleFormat;
 use App\Services\DivisionShowService;
 use App\Services\MemberQueryService;
 use App\Support\MemberCard;
@@ -61,6 +62,7 @@ class DivisionController extends Controller
                 'name'        => $division->name,
                 'slug'        => $division->slug,
                 'handleLabel' => $division->handle?->label,
+                'handleHint'  => $division->handle?->regex_hint,
             ],
             'members' => $rows,
             'stats'   => [
@@ -156,7 +158,7 @@ class DivisionController extends Controller
     {
         $validated = request()->validate([
             'member_id'    => 'required|exists:members,clan_id',
-            'handle_value' => 'nullable|string|max:255',
+            'handle_value' => ['nullable', 'string', 'max:255', new HandleFormat($division->handle)],
         ]);
 
         $member = Member::where('clan_id', $validated['member_id'])->firstOrFail();

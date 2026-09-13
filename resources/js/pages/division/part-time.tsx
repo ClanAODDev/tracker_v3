@@ -27,7 +27,7 @@ interface Row extends MemberCard {
 }
 
 interface Props {
-    division: { name: string; slug: string; handleLabel: string | null };
+    division: { name: string; slug: string; handleLabel: string | null; handleHint: string | null };
     members: Row[];
     stats: { total: number; active: number; onLeave: number; removed: number };
     canManage: boolean;
@@ -233,8 +233,11 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                                     placeholder={`Their ${division.handleLabel.toLowerCase()} name…`}
                                 />
                                 <p className="text-xs text-muted-foreground">
-                                    Sets their in-game handle for {division.name}.
+                                    {division.handleHint ?? `Sets their in-game handle for ${division.name}.`}
                                 </p>
+                                {form.errors.handle_value && (
+                                    <p className="text-xs text-destructive">{form.errors.handle_value}</p>
+                                )}
                             </div>
                         )}
                         <DialogFooter>
