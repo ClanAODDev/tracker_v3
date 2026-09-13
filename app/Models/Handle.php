@@ -28,4 +28,18 @@ class Handle extends Model
     {
         return $this->belongsTo(Member::class);
     }
+
+    /**
+     * Whether a handle value satisfies this type's format, if one is set.
+     * A blank value or a type without a regex is always considered valid —
+     * required-ness is a separate concern handled by the caller's rules.
+     */
+    public function matches(?string $value): bool
+    {
+        if (! $this->regex || $value === null || $value === '') {
+            return true;
+        }
+
+        return @preg_match($this->regex, $value) === 1;
+    }
 }

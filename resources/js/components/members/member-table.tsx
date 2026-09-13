@@ -1,0 +1,402 @@
+import {
+    type ColumnFiltersState,
+    type SortingState,
+    type VisibilityState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { ArrowDown, ArrowUp, ChevronsUpDown, CircleDot, Clock, Columns3, Rows3, Search } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import { BulkBar } from '@/components/members/bulk-bar';
+import { columnLabel, useMemberColumns } from '@/components/members/member-columns';
+import type { BulkConfig, MemberListDivision, MemberRow } from '@/components/members/types';
+import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import { cn } from '@/lib/utils';
+
+interface Props {
+    rows: MemberRow[];
+    division: MemberListDivision;
+    assignmentKind: 'platoon' | 'squad';
+    bulk: BulkConfig;
+    tagFilter: Array<{ id: number; name: string; count: number }>;
+    storageKey: string;
+}
+
+type ActivityStyle = 'row' | 'dot';
+
+interface PersistedState {
+    sorting: SortingState;
+    columnVisibility: VisibilityState;
+    activityStyle: ActivityStyle;
+}
+
+const DEFAULT_HIDDEN: VisibilityState = {
+    select: false,
+    leave: false,
+    tags: false,
+    reminder: false,
+    handle: false,
+    posts: false,
+};
+
+// LOA members sort to the top by default; a clicked column header still takes
+// over for the session, and the pin is reapplied on the next load.
+function withLeaveFirst(sorting: SortingState): SortingState {
+    const rest = sorting.filter((s) => s.id !== 'leave');
+    return [{ id: 'leave', desc: true }, ...(rest.length ? rest : [{ id: 'name', desc: false }])];
+}
+
+// Columns kept on phones; everything else collapses below the `sm` breakpoint.
+const MOBILE_COLUMNS = new Set(['select', 'name', 'rank']);
+const mobileColumnClass = (id: string) => (MOBILE_COLUMNS.has(id) ? undefined : 'hidden sm:table-cell');
+
+// Row tint per voice-activity bucket — same hues as the Discord activity graph.
+const ROW_TINT = ['bg-success/[0.05]', 'bg-warning/[0.08]', 'bg-destructive/[0.08]', 'bg-muted-foreground/[0.06]'] as const;
+
+function loadState(key: string): Partial<PersistedState> {
+    try {
+        return JSON.parse(localStorage.getItem(key) ?? '{}');
+    } catch {
+        return {};
+    }
+}
+
+export function MemberTable({
+    rows,
+    division,
+    assignmentKind,
+    bulk,
+    tagFilter,
+    storageKey,
+}: Props) {
+    const persisted = useMemo(() => loadState(storageKey), [storageKey]);
+
+    const [sorting, setSorting] = useState<SortingState>(withLeaveFirst(persisted.sorting ?? []));
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+        ...DEFAULT_HIDDEN,
+        ...(persisted.columnVisibility ?? {}),
+        select: false,
+    });
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [globalFilter, setGlobalFilter] = useState('');
+    const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+    const [bulkMode, setBulkMode] = useState(false);
+    const [selectedTags, setSelectedTags] = useState<Set<number>>(new Set());
+    const [reminded, setReminded] = useState<Record<number, string>>({});
+    const [activityStyle, setActivityStyle] = useState<ActivityStyle>(persisted.activityStyle ?? 'row');
+
+    useEffect(() => {
+        try {
+            localStorage.setItem(storageKey, JSON.stringify({ sorting, columnVisibility, activityStyle }));
+        } catch {
+            /* private mode */
+        }
+    }, [storageKey, sorting, columnVisibility, activityStyle]);
+
+    const assignmentLabel = assignmentKind === 'squad' ? division.squadLabel : division.platoonLabel;
+
+    const columns = useMemberColumns({
+        assignmentLabel,
+        bulkMode,
+        selectedTags,
+        reminded,
+        setReminded,
+        activityStyle,
+    });
+
+    const table = useReactTable({
+        data: rows,
+        columns,
+        state: { sorting, columnVisibility, columnFilters, globalFilter, rowSelection },
+        getRowId: (row) => String(row.id),
+        enableRowSelection: bulkMode,
+        onSortingChange: setSorting,
+        onColumnVisibilityChange: setColumnVisibility,
+        onColumnFiltersChange: setColumnFilters,
+        onGlobalFilterChange: setGlobalFilter,
+        onRowSelectionChange: setRowSelection,
+        globalFilterFn: (row, _columnId, value) => {
+            const q = String(value).toLowerCase();
+            const m = row.original as MemberRow;
+            return (
+                m.name.toLowerCase().includes(q) ||
+                (m.rankAbbr ?? '').toLowerCase().includes(q) ||
+                (m.handle?.value ?? '').toLowerCase().includes(q) ||
+                (m.assignment?.label ?? '').toLowerCase().includes(q)
+            );
+        },
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+    });
+
+    useEffect(() => {
+        table.getColumn('select')?.toggleVisibility(bulkMode);
+        if (!bulkMode) setRowSelection({});
+    }, [bulkMode, table]);
+
+    useEffect(() => {
+        table.getColumn('tags')?.setFilterValue(selectedTags.size > 0 ? [...selectedTags] : undefined);
+    }, [selectedTags, table]);
+
+    const selectedRows = table.getFilteredSelectedRowModel().rows.map((r) => r.original);
+    const selectedIds = selectedRows.map((r) => r.id);
+    const parttimersSelected = selectedRows.some((r) => r.isParttimer);
+
+    const hasDirectRecruits = useMemo(() => rows.some((r) => r.directRecruit), [rows]);
+
+    // drag-to-select
+    const dragging = useRef(false);
+    const dragValue = useRef(true);
+
+    const hideableColumns = table.getAllColumns().filter((c) => c.getCanHide() && c.id !== 'leave');
+
+    return (
+        <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+                <div className="relative">
+                    <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                        value={globalFilter}
+                        onChange={(e) => setGlobalFilter(e.target.value)}
+                        placeholder="Search players"
+                        aria-label="Search players"
+                        className="h-8 w-56 pl-8"
+                    />
+                </div>
+
+                {tagFilter.length > 0 && (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="sm">
+                                Tags
+                                {selectedTags.size > 0 && (
+                                    <span className="numeric rounded bg-primary/15 px-1 text-primary">
+                                        {selectedTags.size}
+                                    </span>
+                                )}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" className="max-h-72 overflow-y-auto">
+                            <DropdownMenuLabel>Filter by tag</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {tagFilter.map((tag) => (
+                                <DropdownMenuCheckboxItem
+                                    key={tag.id}
+                                    checked={selectedTags.has(tag.id)}
+                                    onCheckedChange={() =>
+                                        setSelectedTags((prev) => {
+                                            const next = new Set(prev);
+                                            next.has(tag.id) ? next.delete(tag.id) : next.add(tag.id);
+                                            return next;
+                                        })
+                                    }
+                                    onSelect={(e) => e.preventDefault()}
+                                >
+                                    {tag.name} <span className="ml-1 text-muted-foreground">({tag.count})</span>
+                                </DropdownMenuCheckboxItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
+
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm">
+                            <Columns3 /> Columns
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                        {hideableColumns.map((column) => (
+                            <DropdownMenuCheckboxItem
+                                key={column.id}
+                                checked={column.getIsVisible()}
+                                onCheckedChange={(v) => column.toggleVisibility(!!v)}
+                                onSelect={(e) => e.preventDefault()}
+                                className="capitalize"
+                            >
+                                {columnLabel(column.id, assignmentLabel)}
+                            </DropdownMenuCheckboxItem>
+                        ))}
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setActivityStyle((s) => (s === 'row' ? 'dot' : 'row'))}
+                    title={
+                        activityStyle === 'row'
+                            ? 'Activity shading: whole row'
+                            : 'Activity shading: dot only'
+                    }
+                    aria-label="Toggle activity shading"
+                >
+                    {activityStyle === 'row' ? <Rows3 /> : <CircleDot />}
+                </Button>
+
+                {bulk.enabled && (
+                    <Button
+                        variant={bulkMode ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setBulkMode((v) => !v)}
+                    >
+                        {bulkMode ? 'Exit bulk mode' : 'Bulk mode'}
+                    </Button>
+                )}
+
+                <span className="ml-auto text-xs text-muted-foreground">
+                    {table.getFilteredRowModel().rows.length} of {rows.length}
+                </span>
+            </div>
+
+            <div className="overflow-x-auto rounded-md border border-border">
+                <Table>
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id} className="bg-card/40">
+                                {headerGroup.headers.map((header) => {
+                                    const canSort = header.column.getCanSort();
+                                    const sorted = header.column.getIsSorted();
+                                    return (
+                                        <TableHead
+                                            key={header.id}
+                                            className={cn('text-xs', mobileColumnClass(header.column.id))}
+                                            aria-sort={
+                                                !canSort
+                                                    ? undefined
+                                                    : sorted === 'asc'
+                                                      ? 'ascending'
+                                                      : sorted === 'desc'
+                                                        ? 'descending'
+                                                        : 'none'
+                                            }
+                                        >
+                                            {header.isPlaceholder ? null : canSort ? (
+                                                <button
+                                                    type="button"
+                                                    className="flex items-center gap-1 hover:text-foreground"
+                                                    onClick={header.column.getToggleSortingHandler()}
+                                                >
+                                                    {flexRender(
+                                                        header.column.columnDef.header,
+                                                        header.getContext(),
+                                                    )}
+                                                    {sorted === 'asc' ? (
+                                                        <ArrowUp className="size-3" />
+                                                    ) : sorted === 'desc' ? (
+                                                        <ArrowDown className="size-3" />
+                                                    ) : (
+                                                        <ChevronsUpDown className="size-3 opacity-40" />
+                                                    )}
+                                                </button>
+                                            ) : (
+                                                flexRender(header.column.columnDef.header, header.getContext())
+                                            )}
+                                        </TableHead>
+                                    );
+                                })}
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows.length === 0 ? (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="tron-hatch py-10 text-center text-muted-foreground"
+                                >
+                                    No members match your filters.
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() ? 'selected' : undefined}
+                                    className={cn(
+                                        row.original.leave
+                                            ? 'bg-warning/[0.05] text-muted-foreground'
+                                            : activityStyle === 'row' && ROW_TINT[row.original.voice.bucket],
+                                        bulkMode && 'cursor-pointer select-none',
+                                    )}
+                                    onMouseDown={(e) => {
+                                        if (!bulkMode) return;
+                                        if ((e.target as HTMLElement).closest('a, button, input, [role=checkbox]'))
+                                            return;
+                                        if (e.button !== 0) return;
+                                        dragging.current = true;
+                                        dragValue.current = !row.getIsSelected();
+                                        row.toggleSelected(dragValue.current);
+                                        e.preventDefault();
+                                    }}
+                                    onMouseEnter={() => {
+                                        if (dragging.current) row.toggleSelected(dragValue.current);
+                                    }}
+                                    onMouseUp={() => {
+                                        dragging.current = false;
+                                    }}
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id} className={mobileColumnClass(cell.column.id)}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                    <span className="rounded-sm border border-warning/40 bg-warning/10 px-1 font-mono text-[9px] font-semibold uppercase leading-[1.4] tracking-wide text-warning">
+                        LOA
+                    </span>
+                    On leave
+                </span>
+                <span className="flex items-center gap-1.5">
+                    <Clock className="size-3 text-info" /> Part-timer
+                </span>
+                {hasDirectRecruits && (
+                    <span className="flex items-center gap-1.5">
+                        <span className="font-bold text-[#e05cff]">*</span> Direct recruit
+                    </span>
+                )}
+            </div>
+
+            <BulkBar
+                selectedIds={selectedIds}
+                parttimersSelected={parttimersSelected}
+                bulk={bulk}
+                division={division}
+                onClear={() => setRowSelection({})}
+                onReminded={(ids, date) => {
+                    setReminded((prev) => ({ ...prev, ...Object.fromEntries(ids.map((id) => [id, date])) }));
+                }}
+            />
+        </div>
+    );
+}

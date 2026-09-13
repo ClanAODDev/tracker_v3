@@ -27,7 +27,7 @@ class DivisionShowService
             stats: $stats,
             chartData: CensusChartData::fromDivision($division),
             platoons: $this->getPlatoons($division, $stats->activityThresholdDays),
-            divisionLeaders: $division->leaders()->get(),
+            divisionLeaders: $division->leaders()->with('division')->get(),
 
             divisionAnniversaries: $this->divisionRepository->getDivisionAnniversaries($division),
             previousCensus: $this->divisionRepository->censusCounts($division)->first(),
@@ -43,8 +43,8 @@ class DivisionShowService
     {
         return $division->platoons()
             ->with([
-                'squads' => fn ($q) => $q->withCount('members')->with('leader'),
-                'leader',
+                'squads' => fn ($q) => $q->withCount('members')->with('leader.division'),
+                'leader.division',
             ])
             ->withCount([
                 'members',

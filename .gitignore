@@ -18,6 +18,7 @@ composer.phar
 .DS_Store
 /storage/oauth-private.key
 /storage/oauth-public.key
+/storage/inertia-devtools
 /_ide_helper.php
 /config/mail.mailtrap.php
 *.map

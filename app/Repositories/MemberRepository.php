@@ -13,14 +13,17 @@ class MemberRepository
     {
         $escaped = $this->escapeLike($name);
         $byName  = Member::where('name', 'LIKE', "%{$escaped}%")
-            ->orWhere('discord', 'LIKE', "%{$escaped}%")
-            ->with('division');
+            ->orWhere('discord', 'LIKE', "%{$escaped}%");
 
-        return Member::withWhereHas('handles', fn ($query) => $query->where('value', 'LIKE', "%{$escaped}%"))
-            ->with('division')
+        // Eager loads on either side of a union only apply to rows Eloquent
+        // fetches through that builder directly — `get()` on the outer query
+        // below never applies `$byName`'s loads, so both relations are instead
+        // loaded once, unconstrained, against the combined result.
+        return Member::whereHas('handles', fn ($query) => $query->where('value', 'LIKE', "%{$escaped}%"))
             ->union($byName)
             ->orderBy('name')
-            ->get();
+            ->get()
+            ->load(['division', 'handles']);
     }
 
     public function searchAutocomplete(string $query, int $limit = 5): Collection

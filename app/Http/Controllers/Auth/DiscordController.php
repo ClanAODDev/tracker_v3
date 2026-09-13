@@ -10,12 +10,14 @@ use App\Models\DivisionApplication;
 use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
+use App\Services\DiscordRegistrationService;
 use App\Services\ForumProcedureService;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 
@@ -24,6 +26,7 @@ class DiscordController extends Controller
     public function __construct(
         protected ClanForumPermissions $forumPermissions,
         protected ForumProcedureService $procedureService,
+        protected DiscordRegistrationService $registration,
     ) {}
 
     public function redirect()
@@ -68,7 +71,7 @@ class DiscordController extends Controller
         );
     }
 
-    public function pending(): RedirectResponse|View
+    public function pending(): RedirectResponse|InertiaResponse
     {
         $user        = auth()->user();
         $previewSlug = request('preview');
@@ -88,10 +91,15 @@ class DiscordController extends Controller
             $division   = $divisionId ? Division::find($divisionId) : null;
         }
 
-        return view('auth.discord-pending', $this->buildPendingViewData($division));
+        $errors        = session('errors');
+        $hasFormErrors = $errors && $errors->getBag('default')
+            ->hasAny(['username', 'date_of_birth', 'password', 'password_confirmation', 'division_id']);
+        $needsRegistration = $user->date_of_birth === null || $hasFormErrors;
+
+        return Inertia::render('auth/discord-pending', $this->buildPendingViewData($user, $division, $needsRegistration));
     }
 
-    private function previewPending(User $user, string $divisionSlug): RedirectResponse|View
+    private function previewPending(User $user, string $divisionSlug): RedirectResponse|InertiaResponse
     {
         if (! $user->isRole(['admin', 'sr_ldr', 'officer'])) {
             return redirect('/');
@@ -99,29 +107,41 @@ class DiscordController extends Controller
 
         $division = Division::where('slug', $divisionSlug)->firstOrFail();
 
-        return view('auth.discord-pending', array_merge(
-            $this->buildPendingViewData($division),
-            ['preview' => true, 'previewDivision' => $division]
+        return Inertia::render('auth/discord-pending', $this->buildPendingViewData(
+            $user,
+            $division,
+            needsRegistration: true,
+            preview: true,
         ));
     }
 
-    private function buildPendingViewData(?Division $division): array
+    private function buildPendingViewData(User $user, ?Division $division, bool $needsRegistration, bool $preview = false): array
     {
-        $divisions = Division::active()
-            ->withoutFloaters()
-            ->withoutBR()
-            ->orderBy('name')
-            ->get(['id', 'name', 'abbreviation']);
-
-        $applicationFields = null;
-        $needsApplication  = false;
+        $applicationFields = collect();
 
         if ($division && $division->settings()->get('application_required', false)) {
-            $applicationFields = $division->applicationFields;
-            $needsApplication  = $applicationFields->isNotEmpty();
+            $applicationFields = $division->applicationFields->map(fn ($field) => [
+                'id'         => $field->id,
+                'label'      => strip_tags($field->label, '<strong><em><u><a>'),
+                'helperText' => $field->helper_text ? strip_tags($field->helper_text, '<strong><em><u><a>') : null,
+                'type'       => $field->type,
+                'required'   => (bool) $field->required,
+                'options'    => collect($field->options ?? [])->pluck('label')->all(),
+            ]);
         }
 
-        return compact('divisions', 'applicationFields', 'needsApplication');
+        return [
+            'discordUsername'   => $user->discord_username ?? $user->name,
+            'email'             => $user->email,
+            'defaultUsername'   => $user->name,
+            'preview'           => $preview,
+            'previewDivisionId' => $preview ? $division?->id : null,
+            'needsRegistration' => $needsRegistration,
+            'divisions'         => Division::recruitable()
+                ->get(['id', 'name'])
+                ->map(fn ($d) => ['id' => $d->id, 'name' => $d->name, 'logo' => $d->getLogoPath()]),
+            'applicationFields' => $applicationFields->values(),
+        ];
     }
 
     public function register(DiscordRegistrationRequest $request): RedirectResponse
@@ -216,7 +236,7 @@ class DiscordController extends Controller
                 );
             }
 
-            DB::transaction(fn () => $this->syncMemberDiscordFields(
+            DB::transaction(fn () => $this->registration->syncMemberDiscordFields(
                 $user->member,
                 $user->discord_id,
                 $user->discord_username,
@@ -244,7 +264,7 @@ class DiscordController extends Controller
                 'discord_username' => $discordUsername,
             ]);
 
-            $this->syncMemberDiscordFields($member, $discordId, $discordUsername, $avatarHash);
+            $this->registration->syncMemberDiscordFields($member, $discordId, $discordUsername, $avatarHash);
 
             return $user;
         });
@@ -261,28 +281,6 @@ class DiscordController extends Controller
         );
 
         return redirect()->intended('/');
-    }
-
-    protected function syncMemberDiscordFields(
-        Member $member,
-        ?string $discordId,
-        ?string $discordUsername,
-        ?string $avatarHash
-    ): void {
-        $updates = [];
-
-        if ($discordId) {
-            $updates['discord_id'] = $discordId;
-            $updates['discord']    = $discordUsername ?? $member->discord;
-        }
-
-        if ($avatarHash !== null) {
-            $updates['discord_avatar'] = $avatarHash;
-        }
-
-        if ($updates) {
-            $member->update($updates);
-        }
     }
 
     protected function createPendingUser(
@@ -303,17 +301,7 @@ class DiscordController extends Controller
             ]);
         }
 
-        $sanitizedName = $this->sanitizeName($discordUsername);
-        $uniqueName    = $this->makeUniqueName($sanitizedName);
-        $hadCollision  = $uniqueName !== $sanitizedName;
-
-        $user = User::create([
-            'name'             => $uniqueName,
-            'email'            => $email,
-            'discord_id'       => $discordId,
-            'discord_username' => $discordUsername,
-            'discord_avatar'   => $avatarHash,
-        ]);
+        [$user, $hadCollision] = $this->registration->createPendingUser($discordId, $discordUsername, $email, $avatarHash);
 
         auth()->login(user: $user, remember: true);
         request()->session()->regenerate();
@@ -331,25 +319,5 @@ class DiscordController extends Controller
         }
 
         return $redirect;
-    }
-
-    protected function sanitizeName(string $name): string
-    {
-        $name = preg_replace(pattern: '/[^a-zA-Z0-9_]/', replacement: '', subject: $name);
-
-        return substr($name, offset: 0, length: 50) ?: 'discord_user';
-    }
-
-    protected function makeUniqueName(string $base): string
-    {
-        $name = $base;
-        $i    = 1;
-
-        while (User::where('name', $name)->exists()) {
-            $suffix = '_' . $i++;
-            $name   = substr($base, 0, 50 - strlen($suffix)) . $suffix;
-        }
-
-        return $name;
     }
 }

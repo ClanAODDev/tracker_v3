@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ActivityReminderController;
 use App\Http\Controllers\BulkMoveController;
 use App\Http\Controllers\BulkTagController;
 use App\Http\Controllers\Division\ReportController;
@@ -8,7 +9,6 @@ use App\Http\Controllers\DivisionNoteController;
 use App\Http\Controllers\DivisionOrgChartController;
 use App\Http\Controllers\InactiveMemberController;
 use App\Http\Controllers\LeaveController;
-use App\Http\Controllers\MemberController;
 use App\Http\Controllers\PlatoonController;
 use App\Http\Controllers\PmController;
 use App\Http\Controllers\RecruitingController;
@@ -29,7 +29,6 @@ Route::prefix('divisions/{division}')->group(function () {
     });
 
     Route::controller(LeaveController::class)->prefix('leave')->group(function () {
-        Route::get('/', 'index')->name('leave.index');
         Route::post('/', 'store')->name('leave.store');
     });
 
@@ -63,12 +62,10 @@ Route::prefix('divisions/{division}')->group(function () {
     Route::post('private-message', [PmController::class, 'create'])->name('private-message.create');
 
     Route::controller(BulkTagController::class)->group(function () {
-        Route::post('bulk-tags', 'create')->name('bulk-tags.create');
         Route::post('bulk-tags/store', 'store')->name('bulk-tags.store');
         Route::post('bulk-tags/create-tag', 'createDivisionTag')->name('bulk-tags.create-tag');
 
         Route::prefix('member-tags/{member}')->name('member-tags.')->group(function () {
-            Route::get('/', 'edit')->name('edit');
             Route::get('json', 'getTags')->name('get');
             Route::post('add', 'addTag')->name('add');
             Route::post('remove', 'removeTag')->name('remove');
@@ -81,5 +78,5 @@ Route::prefix('divisions/{division}')->group(function () {
         Route::post('/', 'store')->name('store');
     });
 
-    Route::post('bulk-reminder', [MemberController::class, 'bulkReminder'])->name('bulk-reminder.store');
+    Route::post('bulk-reminder', [ActivityReminderController::class, 'bulkStore'])->name('bulk-reminder.store');
 });

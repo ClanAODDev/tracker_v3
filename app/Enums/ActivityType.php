@@ -114,6 +114,35 @@ enum ActivityType: int
         };
     }
 
+    public function feedIconName(): string
+    {
+        return match ($this) {
+            self::RECRUITED                                                   => 'user-plus',
+            self::REMOVED                                                     => 'user-minus',
+            self::TRANSFERRED                                                 => 'arrow-left-right',
+            self::FLAGGED                                                     => 'flag',
+            self::UNFLAGGED                                                   => 'flag-off',
+            self::REQUESTED_LEAVE, self::APPROVED_LEAVE, self::EXTENDED_LEAVE => 'clock',
+            self::ENDED_LEAVE                                                 => 'circle-check',
+            self::ADD_PART_TIME                                               => 'circle-plus',
+            self::REMOVE_PART_TIME                                            => 'circle-minus',
+            self::ROLE_GRANTED                                                => 'shield',
+            default                                                           => 'circle',
+        };
+    }
+
+    public function feedTone(): string
+    {
+        return match ($this) {
+            self::RECRUITED, self::ENDED_LEAVE                                               => 'success',
+            self::REMOVED                                                                    => 'danger',
+            self::TRANSFERRED, self::ADD_PART_TIME                                           => 'info',
+            self::FLAGGED, self::REQUESTED_LEAVE, self::APPROVED_LEAVE, self::EXTENDED_LEAVE => 'warning',
+            self::ROLE_GRANTED                                                               => 'accent',
+            default                                                                          => 'muted',
+        };
+    }
+
     public function feedDescription(int $count = 1): string
     {
         $wasWere = $count === 1 ? 'was' : 'were';

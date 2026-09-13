@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\Rank;
 use App\Enums\TagVisibility;
 use App\Http\Requests\DivisionTag\AddTagRequest;
-use App\Http\Requests\DivisionTag\CreateBulkTagPageRequest;
 use App\Http\Requests\DivisionTag\CreateDivisionTagRequest;
 use App\Http\Requests\DivisionTag\RemoveTagRequest;
 use App\Http\Requests\DivisionTag\StoreBulkTagRequest;
@@ -129,40 +127,6 @@ class BulkTagController extends Controller
                 'visibility' => $tag->visibility->value,
             ],
         ]);
-    }
-
-    public function create(CreateBulkTagPageRequest $request, Division $division)
-    {
-        $memberIds = explode(',', $request->validated('member-data'));
-
-        $members = Member::whereIn('clan_id', $memberIds)
-            ->select('id', 'clan_id', 'name', 'rank')
-            ->get();
-
-        $user           = auth()->user();
-        $userMember     = $user->member;
-        $userDivisionId = $userMember?->division_id;
-        $isSgt          = $userMember?->isAtLeast(Rank::SERGEANT) ?? false;
-
-        $tags = match (true) {
-            $user->isRole('admin') => DivisionTag::forDivision($division->id)->assignableBy($user)->get(),
-            $isSgt                 => DivisionTag::assignableBy($user)->get(),
-            default                => DivisionTag::forDivision($userDivisionId)->assignableBy($user)->get(),
-        };
-
-        return view('division.bulk-tags', compact('division', 'members', 'tags'));
-    }
-
-    public function edit(Division $division, Member $member)
-    {
-        $this->authorize('assign', [DivisionTag::class, $member]);
-
-        $members  = collect([$member]);
-        $policy   = new DivisionTagPolicy;
-        $tags     = $policy->getAssignableTags(auth()->user())->get();
-        $returnTo = url()->previous();
-
-        return view('division.bulk-tags', compact('division', 'members', 'tags', 'returnTo'));
     }
 
     public function store(StoreBulkTagRequest $request, Division $division)

@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -21,6 +22,21 @@ final class ApiTokenGenerationTest extends TestCase
         auth()->user()->createToken('test');
 
         $this->assertCount(1, auth()->user()->refresh()->tokens);
+    }
+
+    #[Test]
+    public function developer_page_renders_the_inertia_page_with_tokens(): void
+    {
+        $user = User::factory()->create(['developer' => true]);
+        $user->createToken('existing');
+
+        $this->actingAs($user)
+            ->get(route('developer'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('developer/index')
+                ->has('tokens', 1)
+                ->where('tokens.0.name', 'existing'));
     }
 
     #[Test]

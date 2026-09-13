@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\Leave;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -14,6 +15,11 @@ class MemberNoticesTest extends TestCase
     use CreatesDivisions;
     use CreatesMembers;
     use RefreshDatabase;
+
+    private function noticeMessages(AssertableInertia $page): string
+    {
+        return collect($page->toArray()['props']['notices'])->pluck('message')->implode(' ');
+    }
 
     #[Test]
     public function leave_notice_is_hidden_for_regular_member()
@@ -27,7 +33,10 @@ class MemberNoticesTest extends TestCase
         $this->actingAs($viewer)
             ->get(route('member', $member->getUrlParams()))
             ->assertOk()
-            ->assertDontSee('leave of absence');
+            ->assertInertia(fn (AssertableInertia $page) => $this->assertStringNotContainsString(
+                'leave of absence',
+                $this->noticeMessages($page),
+            ));
     }
 
     #[Test]
@@ -42,7 +51,10 @@ class MemberNoticesTest extends TestCase
         $this->actingAs($srLdr)
             ->get(route('member', $member->getUrlParams()))
             ->assertOk()
-            ->assertSee('leave of absence');
+            ->assertInertia(fn (AssertableInertia $page) => $this->assertStringContainsString(
+                'leave of absence',
+                $this->noticeMessages($page),
+            ));
     }
 
     #[Test]

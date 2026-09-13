@@ -12,6 +12,7 @@ use App\Models\RankAction;
 use App\Models\User;
 use App\Repositories\DivisionRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -22,6 +23,30 @@ class DivisionReportControllerTest extends TestCase
     use CreatesDivisions;
     use CreatesMembers;
     use RefreshDatabase;
+
+    #[Test]
+    public function division_reports_render_their_inertia_pages(): void
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+
+        $pages = [
+            'division.census'           => 'division/reports/census',
+            'division.retention-report' => 'division/reports/retention',
+            'division.voice-report'     => 'division/reports/voice',
+            'division.promotions'       => 'division/reports/promotions',
+            'division.transfer-report'  => 'division/reports/transfers',
+        ];
+
+        foreach ($pages as $route => $component) {
+            $this->actingAs($officer)
+                ->get(route($route, $division->slug))
+                ->assertOk()
+                ->assertInertia(fn (AssertableInertia $page) => $page
+                    ->component($component)
+                    ->where('division.slug', $division->slug));
+        }
+    }
 
     #[Test]
     public function census_report_requires_authentication()
@@ -335,16 +360,16 @@ class DivisionReportControllerTest extends TestCase
         $this->createMember(['division_id' => $division->id, 'join_date' => now()->subDays(45)]);
         $this->createMember(['division_id' => $division->id, 'join_date' => now()->subDays(75)]);
 
-        $response = $this->actingAs($admin)->get(route('reports.division-turnover'));
+        $this->actingAs($admin)
+            ->get(route('reports.division-turnover'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('reports/turnover')
+                ->where('divisions', function ($divisions) use ($division) {
+                    $row = collect($divisions)->firstWhere('name', $division->name);
 
-        $response->assertOk();
-        $response->assertViewHas('divisions', function ($divisions) use ($division) {
-            $row = $divisions->firstWhere('id', $division->id);
-
-            return $row->new_members_last30_count === 2
-                && $row->new_members_last60_count === 3
-                && $row->new_members_last90_count === 4;
-        });
+                    return $row['last30'] === 2 && $row['last60'] === 3 && $row['last90'] === 4;
+                }));
     }
 
     private function createRecruitActivities(Division $division, User $officer, int $count, $date = null): void

@@ -3,18 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\AOD\ClanForumPermissions;
+use App\Http\Controllers\Auth\Concerns\ThrottlesLogins;
 use App\Http\Controllers\Controller;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Contracts\View\Factory;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Inertia\Inertia;
+use Inertia\Response as InertiaResponse;
 
 #[Middleware('guest', except: ['logout'])]
 class LoginController extends Controller
@@ -58,20 +60,17 @@ class LoginController extends Controller
         return $this->sendFailedLoginResponse();
     }
 
-    /**
-     * @return array|Request|string
-     */
-    public function username()
+    public function username(): string
     {
-        return request('username');
+        return 'username';
     }
 
-    /**
-     * @return Factory|View
-     */
-    public function showLoginForm()
+    public function showLoginForm(): InertiaResponse
     {
-        return view('auth.login');
+        return Inertia::render('auth/login', [
+            'discordEnabled' => (bool) config('services.discord.client_id'),
+            'expired'        => request()->boolean('expired'),
+        ]);
     }
 
     /**
@@ -141,14 +140,12 @@ class LoginController extends Controller
     }
 
     /**
-     * Get the failed login response instance.
-     *
-     * @return Factory|View
+     * @throws ValidationException
      */
-    protected function sendFailedLoginResponse()
+    protected function sendFailedLoginResponse(): never
     {
-        return view('auth.login')->withErrors([
-            'login' => 'Invalid login credentials',
+        throw ValidationException::withMessages([
+            'username' => 'Invalid login credentials.',
         ]);
     }
 

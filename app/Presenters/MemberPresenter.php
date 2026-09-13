@@ -132,6 +132,29 @@ class MemberPresenter extends Presenter
     }
 
     /**
+     * Voice-activity bucket (0 = active … 3 = long inactive / never), using the
+     * same cutoffs the division's Discord-activity graph does (`inactivity_days` / 3).
+     */
+    public function activityBucket(Division $division): int
+    {
+        $maxDays = (int) ($division->settings()->get('inactivity_days') ?? 90);
+        $date    = $this->member->last_voice_activity;
+
+        if (! $date instanceof Carbon) {
+            return 3;
+        }
+
+        $days = $date->diffInDays();
+
+        return match (true) {
+            $days >= $maxDays                      => 3,
+            $days >= (int) round($maxDays * 2 / 3) => 2,
+            $days >= (int) round($maxDays / 3)     => 1,
+            default                                => 0,
+        };
+    }
+
+    /**
      * CSS class reflecting the member's voice activity, for display
      * on their member profile.
      */

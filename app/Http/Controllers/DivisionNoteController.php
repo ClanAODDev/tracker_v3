@@ -5,19 +5,16 @@ namespace App\Http\Controllers;
 use App\Models\Division;
 use App\Models\DivisionTag;
 use App\Models\Note;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
-use Illuminate\View\View;
+use Inertia\Inertia;
+use Inertia\Response;
 
 #[Middleware('auth')]
 class DivisionNoteController extends Controller
 {
-    /**
-     * @return Factory|View
-     */
     #[Authorize('show', Note::class)]
-    public function index(Division $division)
+    public function index(Division $division): Response
     {
 
         $type   = request('type');
@@ -54,13 +51,32 @@ class DivisionNoteController extends Controller
                 return true;
             });
 
-        $noteTypes = Note::allNoteTypes();
-
         $tags = DivisionTag::forDivision($division->id)
             ->visibleTo()
             ->orderBy('name')
             ->get();
 
-        return view('division.notes', compact('division', 'notes', 'type', 'search', 'noteTypes', 'tags', 'tagId'));
+        return Inertia::render('division/notes', [
+            'division'  => ['name' => $division->name, 'slug' => $division->slug],
+            'noteTypes' => Note::allNoteTypes(),
+            'tags'      => $tags->map(fn ($tag) => [
+                'id'   => $tag->id,
+                'name' => $tag->name . ($tag->isGlobal() ? ' (Clan-wide)' : ''),
+            ])->values(),
+            'filters' => [
+                'type'   => $type,
+                'search' => $search,
+                'tag'    => $tagId ? (int) $tagId : null,
+            ],
+            'notes' => $notes->map(fn (Note $note) => [
+                'id'         => $note->id,
+                'type'       => $note->type,
+                'body'       => $note->body,
+                'memberName' => $note->member->present()->rankName(),
+                'memberUrl'  => route('member', $note->member->getUrlParams()) . '?notes=1',
+                'author'     => $note->author?->name ?? 'Unknown',
+                'date'       => $note->updated_at->format('M j, Y'),
+            ])->values(),
+        ]);
     }
 }

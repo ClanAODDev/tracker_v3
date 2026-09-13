@@ -3,29 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ForumGroup;
+use App\Enums\Rank;
 use App\Exceptions\RecruitmentFailedException;
 use App\Http\Requests\Recruiting\CheckForumEmailRequest;
 use App\Http\Requests\Recruiting\SubmitRecruitmentRequest;
 use App\Http\Requests\Recruiting\ValidateMemberNameRequest;
-use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\User;
-use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
-use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
 use App\Services\AODForumService;
 use App\Services\DiscordRecruitmentService;
 use App\Services\ForumProcedureService;
 use App\Services\RecruitmentService;
-use App\Transformers\MemberDiscordMatchTransformer;
 use App\Transformers\PendingDiscordUserTransformer;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Inertia\Inertia;
 
 #[Middleware('auth')]
 class RecruitingController extends Controller
@@ -43,9 +40,14 @@ class RecruitingController extends Controller
     #[Authorize('recruit', Member::class)]
     public function index()
     {
-        $divisions = Division::recruitable()->get();
+        $divisions = Division::recruitable()->get()->map(fn ($division) => [
+            'name' => $division->name,
+            'slug' => $division->slug,
+            'logo' => $division->getLogoPath(),
+            'url'  => route('recruiting.form', $division->slug),
+        ]);
 
-        return view('recruit.index', compact('divisions'));
+        return Inertia::render('recruiting/index', compact('divisions'));
     }
 
     /**
@@ -81,7 +83,7 @@ class RecruitingController extends Controller
                     return response()->json(['message' => $e->getMessage()], 422);
                 }
 
-                $this->finalizeRecruitment($member, $division, $recruiter);
+                $this->recruitmentService->finalizeRecruitment($member, $division, $recruiter);
 
                 $this->showSuccessToast('Your recruitment has successfully been completed!');
             }
@@ -112,7 +114,16 @@ class RecruitingController extends Controller
             return redirect()->back();
         }
 
-        return view('recruit.form', compact('division'));
+        return Inertia::render('recruiting/form', [
+            ...$this->recruitData($division, request()->boolean('all_pending')),
+            'divisionSlug'          => $division->slug,
+            'cancelUrl'             => route('division', $division->slug),
+            'recruiterId'           => auth()->user()->member?->clan_id ?? auth()->id(),
+            'ranks'                 => Rank::getAllRanks(),
+            'forbiddenNamePrefixes' => Rank::forbiddenNamePrefixes(),
+            'pendingUserId'         => request('pending_user_id') ? (int) request('pending_user_id') : null,
+            'memberId'              => request('member_id') ? (int) request('member_id') : null,
+        ]);
     }
 
     #[Authorize('recruit', Member::class)]
@@ -135,29 +146,36 @@ class RecruitingController extends Controller
             return redirect()->route('recruiting.initial');
         }
 
-        return view('recruit.discord-confirm', [
-            'targetDivision' => $targetDivision,
+        $needsPicker = $pendingUser ? ! $targetDivision : true;
+
+        return Inertia::render('recruit/discord-confirm', [
             'discordId'      => $discordId,
-            'forumAccount'   => $pendingUser ? $this->checkForumAccountForEmail($pendingUser->email) : null,
+            'backUrl'        => route('recruiting.initial'),
             'pendingUser'    => $pendingUser ? (new PendingDiscordUserTransformer)->transform($pendingUser) : null,
-            'memberMatches'  => $pendingUser ? null : $this->findMembersByDiscordId($discordId),
-            'divisions'      => $targetDivision ? null : Division::recruitable()->get(),
+            'forumAccount'   => $pendingUser ? $this->checkForumAccountForEmail($pendingUser->email) : null,
+            'targetDivision' => $targetDivision ? [
+                'name'           => $targetDivision->name,
+                'logo'           => $targetDivision->getLogoPath(),
+                'recruitFormUrl' => route('recruiting.form', $targetDivision) . '?pending_user_id=' . $pendingUser->id,
+            ] : null,
+            'memberMatches' => $pendingUser ? null : $this->discordRecruitmentService->findMembersByDiscordId($discordId)->values(),
+            'divisions'     => $needsPicker
+                ? Division::recruitable()->get(['id', 'name', 'slug'])
+                    ->map(fn ($division) => ['name' => $division->name, 'formPath' => route('recruiting.form', $division)])
+                    ->values()
+                : null,
+            'pendingUserId' => $pendingUser?->id,
         ]);
-    }
-
-    private function findMembersByDiscordId(string $discordId): Collection
-    {
-        $matches = Member::where('discord_id', $discordId)
-            ->with('division')
-            ->get();
-
-        return collect((new MemberDiscordMatchTransformer)->transformCollection($matches->all()));
     }
 
     #[Authorize('recruit', Member::class)]
     public function getDivisionRecruitData(Division $division): JsonResponse
     {
+        return response()->json($this->recruitData($division, request()->boolean('all_pending')));
+    }
 
+    private function recruitData(Division $division, bool $allPending): array
+    {
         $settings = $division->settings();
         $threads  = $settings->get('recruiting_threads', []);
         $tasks    = $settings->get('recruiting_tasks', []);
@@ -170,9 +188,9 @@ class RecruitingController extends Controller
             ])
             ->get();
 
-        $pendingDiscord = $this->getPendingDiscordUsers($division, request()->boolean('all_pending'));
+        $pendingDiscord = $this->discordRecruitmentService->getPendingDiscordUsers($division, $allPending);
 
-        return response()->json([
+        return [
             'name'     => $division->name,
             'platoons' => $platoons->map(fn ($p) => [
                 'id'            => $p->id,
@@ -204,7 +222,7 @@ class RecruitingController extends Controller
                 'squad'   => $division->locality('squad'),
             ],
             'pending_discord' => $pendingDiscord,
-        ]);
+        ];
     }
 
     /**
@@ -269,7 +287,7 @@ class RecruitingController extends Controller
             ];
         }
 
-        $discordMatches = $this->findDiscordMatches($member_id, $result, $member);
+        $discordMatches = $this->discordRecruitmentService->findDiscordMatches($member_id, $result, $member);
 
         return [
             'is_member'         => true,
@@ -357,33 +375,13 @@ class RecruitingController extends Controller
     {
 
         return response()->json([
-            'pending_discord' => $this->getPendingDiscordUsers($division, request()->boolean('all_pending')),
+            'pending_discord' => $this->discordRecruitmentService->getPendingDiscordUsers($division, request()->boolean('all_pending')),
         ]);
-    }
-
-    private function getPendingDiscordUsers(Division $division, bool $allPending = false)
-    {
-        $query = User::pendingDiscord()
-            ->whereNotNull('date_of_birth');
-
-        if (! $allPending) {
-            $query->where(function ($q) use ($division) {
-                $q->whereHas('divisionApplication', fn ($a) => $a->where('division_id', $division->id))
-                    ->orWhereDoesntHave('divisionApplication');
-            });
-        }
-
-        $pendingUsers = $query
-            ->with('divisionApplication.division')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        return collect((new PendingDiscordUserTransformer)->transformCollection($pendingUsers->all()));
     }
 
     private function recruitPendingDiscordUser(Request $request, Division $division, Member $recruiter)
     {
-        $pendingUser = User::pendingDiscord()->find($request->pending_user_id);
+        $pendingUser = $this->discordRecruitmentService->findPendingUser((int) $request->pending_user_id);
 
         if (! $pendingUser) {
             return response()->json([
@@ -401,48 +399,10 @@ class RecruitingController extends Controller
                     return response()->json(['message' => $e->getMessage()], 422);
                 }
 
-                $this->finalizeRecruitment($member, $division, $recruiter);
+                $this->recruitmentService->finalizeRecruitment($member, $division, $recruiter);
 
                 $this->showSuccessToast('Recruitment completed for Discord user.');
             }
         );
-    }
-
-    private function finalizeRecruitment(Member $member, Division $division, Member $recruiter): void
-    {
-        $this->recruitmentService->createMemberRequest($member, $division, $recruiter);
-
-        $this->handleNotification($member, $division);
-
-        SyncDiscordMember::dispatch($member);
-    }
-
-    private function handleNotification($member, $division)
-    {
-        if ($division->id !== auth()->user()->member->division_id) {
-            return $division->notify(new NotifyDivisionNewExternalRecruit($member, auth()->user()));
-        }
-
-        return $division->notify(new NotifyDivisionNewMemberRecruited($member, auth()->user()));
-    }
-
-    private function findDiscordMatches(int $memberId, object $result, ?Member $existingMember): array
-    {
-        $discordId = property_exists($result, 'discord_id') ? $result->discord_id : null;
-
-        if (! $discordId && $existingMember?->discord_id) {
-            $discordId = $existingMember->discord_id;
-        }
-
-        if (! $discordId) {
-            return [];
-        }
-
-        $matches = Member::where('discord_id', $discordId)
-            ->where('clan_id', '!=', $memberId)
-            ->with('division:id,name')
-            ->get();
-
-        return (new MemberDiscordMatchTransformer)->transformCollection($matches->all());
     }
 }

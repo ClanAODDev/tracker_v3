@@ -10,7 +10,6 @@ use App\Models\Leave;
 use App\Models\Member;
 use App\Models\MemberAward;
 use App\Models\MemberRequest;
-use App\Models\Platoon;
 use App\Models\RankAction;
 use App\Models\Ticket;
 use App\Models\User;
@@ -176,12 +175,12 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->can('create', [Platoon::class, $division])) {
+        if ($user->can('manageUnassigned', User::class)) {
             self::pushAction(
                 $actions,
                 count($division->unassigned),
                 key: 'unassigned-members',
-                url: route('division', $division->slug) . '#platoons',
+                url: route('division', $division->slug) . '?organize=1',
                 icon: 'fa-user-slash',
                 label: 'No Platoon',
             );

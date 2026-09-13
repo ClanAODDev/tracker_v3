@@ -17,13 +17,11 @@ class LeaveControllerTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function index_requires_authentication()
+    public function store_requires_authentication()
     {
         $division = $this->createActiveDivision();
 
-        $response = $this->get(route('leave.index', $division->slug));
-
-        $response->assertRedirect('/login');
+        $this->post(route('leave.store', $division->slug))->assertRedirect('/login');
     }
 
     #[Test]

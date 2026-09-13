@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -28,97 +29,81 @@ class RecruitingDiscordConfirmTest extends TestCase
         });
     }
 
+    private function confirm(User $actor, string $discordId)
+    {
+        return $this->actingAs($actor)->get(route('recruiting.discordConfirm', $discordId));
+    }
+
     #[Test]
     public function shows_matching_pending_registration(): void
     {
-        $officer = $this->createOfficer();
-
         $pendingUser = User::factory()->pending()->create([
             'discord_id'       => '123456789012345678',
             'discord_username' => 'ReadyUser',
             'email'            => 'readyuser@example.com',
         ]);
 
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', $pendingUser->discord_id));
-
-        $response->assertOk();
-        $response->assertViewIs('recruit.discord-confirm');
-        $response->assertViewHas('pendingUser', fn ($data) => $data['discord_username'] === 'ReadyUser'
-            && $data['obfuscated_email'] === '***er@example.com');
-        $response->assertSee('ReadyUser');
-        $response->assertSee('***er@example.com');
+        $this->confirm($this->createOfficer(), $pendingUser->discord_id)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('recruit/discord-confirm')
+                ->where('pendingUser.discord_username', 'ReadyUser')
+                ->where('pendingUser.obfuscated_email', '***er@example.com'));
     }
 
     #[Test]
     public function targets_the_division_from_the_pending_application(): void
     {
-        $officer  = $this->createOfficer();
-        $division = $this->createActiveDivision();
-
-        $pendingUser = User::factory()->pending()->create([
-            'discord_id' => '123456789012345678',
-        ]);
+        $division    = $this->createActiveDivision();
+        $pendingUser = User::factory()->pending()->create(['discord_id' => '123456789012345678']);
 
         DivisionApplication::factory()->create([
             'user_id'     => $pendingUser->id,
             'division_id' => $division->id,
         ]);
 
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', $pendingUser->discord_id));
-
-        $response->assertOk();
-        $response->assertSee($division->name . ' Division');
-        $response->assertSee(route('recruiting.form', $division) . '?pending_user_id=' . $pendingUser->id, false);
+        $this->confirm($this->createOfficer(), $pendingUser->discord_id)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('targetDivision.name', $division->name)
+                ->where(
+                    'targetDivision.recruitFormUrl',
+                    route('recruiting.form', $division) . '?pending_user_id=' . $pendingUser->id,
+                ));
     }
 
     #[Test]
     public function shows_division_picker_when_no_application_on_file(): void
     {
-        $officer   = $this->createOfficer();
-        $divisionA = $this->createActiveDivision(['name' => 'Alpha Division']);
-        $divisionB = $this->createActiveDivision(['name' => 'Bravo Division']);
+        $this->createActiveDivision(['name' => 'Alpha Division']);
+        $this->createActiveDivision(['name' => 'Bravo Division']);
+        $pendingUser = User::factory()->pending()->create(['discord_id' => '123456789012345678']);
 
-        $pendingUser = User::factory()->pending()->create([
-            'discord_id' => '123456789012345678',
-        ]);
-
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', $pendingUser->discord_id));
-
-        $response->assertOk();
-        $response->assertSee('No division application on file');
-        $response->assertSee(route('recruiting.form', $divisionA) . '?pending_user_id=' . $pendingUser->id, false);
-        $response->assertSee(route('recruiting.form', $divisionB) . '?pending_user_id=' . $pendingUser->id, false);
+        $this->confirm($this->createOfficer(), $pendingUser->discord_id)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('targetDivision', null)
+                ->where('divisions', fn ($divisions) => collect($divisions)->pluck('name')
+                    ->contains('Alpha Division')));
     }
 
     #[Test]
     public function redirects_when_applied_division_is_shutdown(): void
     {
-        $officer  = $this->createOfficer();
-        $division = $this->createActiveDivision(['shutdown_at' => now()->subDay()]);
-
-        $pendingUser = User::factory()->pending()->create([
-            'discord_id' => '123456789012345678',
-        ]);
+        $division    = $this->createActiveDivision(['shutdown_at' => now()->subDay()]);
+        $pendingUser = User::factory()->pending()->create(['discord_id' => '123456789012345678']);
 
         DivisionApplication::factory()->create([
             'user_id'     => $pendingUser->id,
             'division_id' => $division->id,
         ]);
 
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', $pendingUser->discord_id));
-
-        $response->assertRedirect();
+        $this->confirm($this->createOfficer(), $pendingUser->discord_id)->assertRedirect();
     }
 
     #[Test]
     public function shows_forum_account_when_found_and_eligible(): void
     {
-        $officer = $this->createOfficer();
-
         $pendingUser = User::factory()->pending()->create([
             'discord_id' => '123456789012345678',
             'email'      => 'recruit@example.com',
@@ -133,19 +118,17 @@ class RecruitingDiscordConfirmTest extends TestCase
                 ->andReturn((object) ['usergroupid' => 2, 'username' => 'ForumUser555']);
         });
 
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', $pendingUser->discord_id));
-
-        $response->assertOk();
-        $response->assertSee('Forum account found');
-        $response->assertSee('ForumUser555');
+        $this->confirm($this->createOfficer(), $pendingUser->discord_id)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('forumAccount.found', true)
+                ->where('forumAccount.eligible', true)
+                ->where('forumAccount.username', 'ForumUser555'));
     }
 
     #[Test]
     public function shows_ineligible_reason_when_forum_account_blocked(): void
     {
-        $officer = $this->createOfficer();
-
         $pendingUser = User::factory()->pending()->create([
             'discord_id' => '123456789012345678',
             'email'      => 'recruit@example.com',
@@ -160,44 +143,31 @@ class RecruitingDiscordConfirmTest extends TestCase
                 ->andReturn((object) ['usergroupid' => 49, 'username' => 'BannedUser']);
         });
 
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', $pendingUser->discord_id));
-
-        $response->assertOk();
-        $response->assertSee('BannedUser');
-        $response->assertSee('User forum account is banned');
+        $this->confirm($this->createOfficer(), $pendingUser->discord_id)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('forumAccount.eligible', false)
+                ->where('forumAccount.rejection_reason', 'User forum account is banned'));
     }
 
     #[Test]
     public function shows_no_forum_account_message_when_not_found(): void
     {
-        $officer = $this->createOfficer();
-
         $pendingUser = User::factory()->pending()->create([
             'discord_id' => '123456789012345678',
             'email'      => 'recruit@example.com',
         ]);
 
-        $this->mock(AODForumService::class, function ($mock) {
-            $mock->shouldReceive('getUserByEmail')->andReturn(null);
-        });
-
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', $pendingUser->discord_id));
-
-        $response->assertOk();
-        $response->assertSee('No existing forum account found');
+        $this->confirm($this->createOfficer(), $pendingUser->discord_id)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page->where('forumAccount.found', false));
     }
 
     #[Test]
     public function shows_application_responses_when_present(): void
     {
-        $officer  = $this->createOfficer();
-        $division = $this->createActiveDivision();
-
-        $pendingUser = User::factory()->pending()->create([
-            'discord_id' => '123456789012345678',
-        ]);
+        $division    = $this->createActiveDivision();
+        $pendingUser = User::factory()->pending()->create(['discord_id' => '123456789012345678']);
 
         DivisionApplication::factory()->create([
             'user_id'     => $pendingUser->id,
@@ -207,43 +177,34 @@ class RecruitingDiscordConfirmTest extends TestCase
             ],
         ]);
 
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', $pendingUser->discord_id));
-
-        $response->assertOk();
-        $response->assertSee('Why do you want to join?');
-        $response->assertSee('Because AOD is great');
+        $this->confirm($this->createOfficer(), $pendingUser->discord_id)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('pendingUser.application.0.label', 'Why do you want to join?')
+                ->where('pendingUser.application.0.value', 'Because AOD is great'));
     }
 
     #[Test]
-    public function shows_not_found_message_for_unknown_discord_id(): void
+    public function shows_not_found_state_for_unknown_discord_id(): void
     {
-        $officer = $this->createOfficer();
-
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', '999999999999999999'));
-
-        $response->assertOk();
-        $response->assertViewHas('pendingUser', null);
-        $response->assertSee('No Pending Registration Found');
-        $response->assertSee('clanaod.net');
+        $this->confirm($this->createOfficer(), '999999999999999999')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('pendingUser', null)
+                ->where('memberMatches', []));
     }
 
     #[Test]
     public function excludes_pending_users_without_date_of_birth(): void
     {
-        $officer = $this->createOfficer();
-
         User::factory()->pending()->create([
             'discord_id'    => '123456789012345678',
             'date_of_birth' => null,
         ]);
 
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', '123456789012345678'));
-
-        $response->assertOk();
-        $response->assertViewHas('pendingUser', null);
+        $this->confirm($this->createOfficer(), '123456789012345678')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page->where('pendingUser', null));
     }
 
     #[Test]
@@ -254,37 +215,31 @@ class RecruitingDiscordConfirmTest extends TestCase
         $user->role = Role::MEMBER;
         $user->save();
 
-        $response = $this->actingAs($user)
-            ->get(route('recruiting.discordConfirm', '123456789012345678'));
-
-        $response->assertForbidden();
+        $this->confirm($user, '123456789012345678')->assertForbidden();
     }
 
     #[Test]
     public function calls_out_ex_member_match_with_recruit_options(): void
     {
-        $officer  = $this->createOfficer();
-        $division = $this->createActiveDivision();
-
+        $this->createActiveDivision();
         $exMember = $this->createMember([
             'discord_id'  => '123456789012345678',
             'division_id' => 0,
             'name'        => 'FormerMember',
         ]);
 
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', '123456789012345678'));
-
-        $response->assertOk();
-        $response->assertSee('FormerMember');
-        $response->assertSee('Former member');
-        $response->assertSee(route('recruiting.form', $division) . '?member_id=' . $exMember->clan_id, false);
+        $this->confirm($this->createOfficer(), '123456789012345678')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('memberMatches.0.name', 'FormerMember')
+                ->where('memberMatches.0.isExMember', true)
+                ->where('memberMatches.0.clan_id', $exMember->clan_id)
+                ->has('divisions'));
     }
 
     #[Test]
     public function calls_out_active_member_match_without_recruit_options(): void
     {
-        $officer  = $this->createOfficer();
         $division = $this->createActiveDivision(['name' => 'Active Division']);
 
         $this->createMember([
@@ -293,45 +248,26 @@ class RecruitingDiscordConfirmTest extends TestCase
             'name'        => 'CurrentMember',
         ]);
 
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', '123456789012345678'));
-
-        $response->assertOk();
-        $response->assertSee('CurrentMember');
-        $response->assertSee('Active Division');
-        $response->assertDontSee('Recruit them back in');
-    }
-
-    #[Test]
-    public function does_not_show_member_match_section_when_none_found(): void
-    {
-        $officer = $this->createOfficer();
-
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', '123456789012345678'));
-
-        $response->assertOk();
-        $response->assertDontSee('matches existing member record');
+        $this->confirm($this->createOfficer(), '123456789012345678')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('memberMatches.0.name', 'CurrentMember')
+                ->where('memberMatches.0.isExMember', false)
+                ->where('memberMatches.0.division', 'Active Division'));
     }
 
     #[Test]
     public function does_not_check_members_table_when_pending_registration_found(): void
     {
-        $officer = $this->createOfficer();
-
-        $pendingUser = User::factory()->pending()->create([
-            'discord_id' => '123456789012345678',
-        ]);
+        $pendingUser = User::factory()->pending()->create(['discord_id' => '123456789012345678']);
 
         $this->createMember([
             'discord_id'  => '123456789012345678',
             'division_id' => 0,
         ]);
 
-        $response = $this->actingAs($officer)
-            ->get(route('recruiting.discordConfirm', $pendingUser->discord_id));
-
-        $response->assertOk();
-        $response->assertViewHas('memberMatches', null);
+        $this->confirm($this->createOfficer(), $pendingUser->discord_id)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page->where('memberMatches', null));
     }
 }

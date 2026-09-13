@@ -1,0 +1,328 @@
+/* Utilities — hand-rolled classes that Tailwind can't express concisely.
+ *   · Typography helpers      (.numeric, .prose-tron)
+ *   · Tron surface treatments (.tron-grid, .tron-corners, .tron-eyebrow,
+ *                              .tron-glow, .tron-hairline) */
+
+@layer utilities {
+    /* --- Typography ------------------------------------------------------- */
+
+    /* Tabular monospaced figures for stats, IDs, counts. */
+    .numeric {
+        font-family: var(--font-mono);
+        font-feature-settings: 'tnum' 1;
+        letter-spacing: -0.01em;
+    }
+
+    /* Rendered-markdown container (trusted admin HTML from `Prose`). */
+    .prose-tron {
+        max-width: none;
+        font-size: 0.875rem;
+        line-height: 1.625;
+        color: var(--muted-foreground);
+    }
+
+    .prose-tron p {
+        margin-block: 0.75rem;
+    }
+
+    .prose-tron p:first-child {
+        margin-top: 0;
+    }
+
+    .prose-tron p:last-child {
+        margin-bottom: 0;
+    }
+
+    .prose-tron strong {
+        font-weight: 600;
+        color: var(--foreground);
+    }
+
+    .prose-tron a {
+        color: var(--primary);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+    .prose-tron :is(h1, h2, h3) {
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--foreground);
+    }
+
+    .prose-tron h1 {
+        font-size: 1.125rem;
+    }
+
+    .prose-tron h2 {
+        font-size: 1rem;
+    }
+
+    .prose-tron h3 {
+        font-size: 0.875rem;
+    }
+
+    .prose-tron :is(ul, ol) {
+        margin-block: 0.75rem;
+        padding-left: 1.25rem;
+    }
+
+    .prose-tron ul {
+        list-style: disc;
+    }
+
+    .prose-tron ol {
+        list-style: decimal;
+    }
+
+    .prose-tron li {
+        margin-block: 0.25rem;
+    }
+
+    .prose-tron code {
+        border-radius: 0.25rem;
+        background: var(--muted);
+        padding: 0.125rem 0.375rem;
+        font-family: var(--font-mono);
+        font-size: 0.75rem;
+        color: var(--foreground);
+    }
+
+    .prose-tron pre {
+        margin-block: 0.75rem;
+        overflow-x: auto;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: var(--muted);
+        padding: 0.75rem;
+    }
+
+    .prose-tron pre code {
+        background: transparent;
+        padding: 0;
+    }
+
+    .prose-tron blockquote {
+        border-left: 2px solid color-mix(in srgb, var(--primary) 40%, transparent);
+        padding-left: 1rem;
+        font-style: italic;
+    }
+
+    .prose-tron hr {
+        margin-block: 1.5rem;
+        border-color: var(--border);
+    }
+
+    .prose-tron table {
+        width: 100%;
+        margin-block: 1rem;
+        border-collapse: collapse;
+        font-size: 0.8125rem;
+    }
+
+    .prose-tron :is(th, td) {
+        border: 1px solid var(--border);
+        padding: 0.375rem 0.625rem;
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .prose-tron th {
+        background: color-mix(in srgb, var(--foreground) 4%, transparent);
+        font-weight: 600;
+        color: var(--foreground);
+    }
+
+    /* CommonMark heading-permalink anchors ("¶") — keep them out. */
+    .prose-tron .heading-permalink {
+        display: none;
+    }
+
+    /* --- Tron surface treatments --------------------------------------- */
+
+    /* Faint perspective grid — sits behind page content, barely there.
+       Drifts upward one tile per cycle; `prefers-reduced-motion` handling
+       in base.css freezes the animation for anyone who needs that. */
+    .tron-grid {
+        background-image:
+            linear-gradient(to right, color-mix(in srgb, var(--foreground) 3%, transparent) 1px, transparent 1px),
+            linear-gradient(to bottom, color-mix(in srgb, var(--foreground) 3%, transparent) 1px, transparent 1px);
+        background-size: 44px 44px;
+        background-position-x: center;
+        background-position-y: 0;
+        animation: tron-grid-drift 7s linear infinite;
+    }
+
+    @keyframes tron-grid-drift {
+        to {
+            background-position-y: -88px;
+        }
+    }
+
+    /* Fine 45° diagonal hatch — a texture for empty states, header strips, and
+       inert surfaces. `--hatch-color` tints it (defaults to the faintest ink). */
+    .tron-hatch {
+        background-image: repeating-linear-gradient(
+            -45deg,
+            var(--hatch-color, color-mix(in srgb, var(--foreground) 4%, transparent)) 0 1px,
+            transparent 1px 7px
+        );
+    }
+
+    .tron-hatch-primary {
+        --hatch-color: color-mix(in srgb, var(--primary) 14%, transparent);
+    }
+
+    /* Opt-in L-brackets on the corners of a panel.
+       Tint the brackets by setting --corner-color on the element. */
+    .tron-corners {
+        position: relative;
+    }
+
+    .tron-corners::before,
+    .tron-corners::after {
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        border-color: var(--corner-color, var(--primary));
+        border-style: solid;
+        border-width: 0;
+        opacity: 0.7;
+    }
+
+    .tron-corners::before {
+        top: -1px;
+        left: -1px;
+        border-top-width: 1px;
+        border-left-width: 1px;
+    }
+
+    .tron-corners::after {
+        right: -1px;
+        bottom: -1px;
+        border-right-width: 1px;
+        border-bottom-width: 1px;
+    }
+
+    /* Rounds a .tron-corners bracket's own inner corner to match its panel's
+       radius, so it hugs the curve instead of cutting across it. Opt-in per
+       panel — most .tron-corners usages want the sharp bracket as-is. */
+    .tron-corners-round::before {
+        border-top-left-radius: var(--radius);
+    }
+
+    .tron-corners-round::after {
+        border-bottom-right-radius: var(--radius);
+    }
+
+    /* Red eyebrow label with a leading tick. */
+    .tron-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--primary);
+    }
+
+    .tron-eyebrow::before {
+        content: '';
+        width: 1.25rem;
+        height: 1px;
+        background: var(--primary);
+    }
+
+    /* Thin crimson underglow on focused / active surfaces. */
+    .tron-glow {
+        box-shadow:
+            0 0 0 1px var(--primary),
+            0 0 16px -2px var(--primary-glow);
+    }
+
+    /* Fading accent rule under a block. */
+    .tron-hairline {
+        position: relative;
+    }
+
+    .tron-hairline::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--primary) 45%, var(--primary) 55%, transparent);
+        box-shadow: 0 0 8px 0 var(--primary-glow);
+        opacity: 0.6;
+    }
+
+    /* Rank-tinted text. Set --rank-color to the rank hex; the neon rank palette
+       is tuned for the dark ground, so in the light theme it is mixed toward
+       ink to stay legible on white. */
+    .rank-ink {
+        color: var(--rank-color, currentColor);
+    }
+
+    :root[data-theme='light'] .rank-ink {
+        color: color-mix(in srgb, var(--rank-color, currentColor) 42%, #14161a);
+    }
+
+    /* One-shot staggered fade-up for a container's direct children — a page's
+       sections reading in on load. base.css neutralises it under reduced motion. */
+    .tron-stagger > * {
+        animation: tron-reveal 0.32s ease-out both;
+    }
+
+    .tron-stagger > *:nth-child(1) {
+        animation-delay: 0.03s;
+    }
+    .tron-stagger > *:nth-child(2) {
+        animation-delay: 0.07s;
+    }
+    .tron-stagger > *:nth-child(3) {
+        animation-delay: 0.11s;
+    }
+    .tron-stagger > *:nth-child(4) {
+        animation-delay: 0.15s;
+    }
+    .tron-stagger > *:nth-child(5) {
+        animation-delay: 0.19s;
+    }
+    .tron-stagger > *:nth-child(6) {
+        animation-delay: 0.23s;
+    }
+    .tron-stagger > *:nth-child(n + 7) {
+        animation-delay: 0.26s;
+    }
+
+    /* A brief crimson pulse on a value that just changed in place. */
+    .tron-flash-value {
+        animation: tron-flash-value 0.55s ease-out;
+    }
+}
+
+@keyframes tron-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes tron-flash-value {
+    0% {
+        color: var(--primary);
+        text-shadow: 0 0 8px var(--primary-glow);
+    }
+    100% {
+        color: inherit;
+        text-shadow: none;
+    }
+}

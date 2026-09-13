@@ -159,6 +159,7 @@ class DivisionShowServiceTest extends TestCase
         $result = $this->service->getShowData($division);
 
         $this->assertCount(2, $result->divisionLeaders);
+        $this->assertTrue($result->divisionLeaders->first()->relationLoaded('division'));
     }
 
     #[Test]
@@ -233,5 +234,21 @@ class DivisionShowServiceTest extends TestCase
         $result = $this->service->getShowData($division);
 
         $this->assertTrue($result->platoons->first()->relationLoaded('leader'));
+        $this->assertTrue($result->platoons->first()->leader->relationLoaded('division'));
+    }
+
+    #[Test]
+    public function get_show_data_squad_leaders_load_division()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+        $squad    = $this->createSquad($platoon);
+        $this->createSquadLeader($squad);
+        $user = $this->createMemberWithUser(['division_id' => $division->id]);
+        $this->actingAs($user);
+
+        $result = $this->service->getShowData($division);
+
+        $this->assertTrue($result->platoons->first()->squads->first()->leader->relationLoaded('division'));
     }
 }

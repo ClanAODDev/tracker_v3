@@ -3,6 +3,7 @@
 namespace Tests\Unit\Requests;
 
 use App\Http\Requests\Auth\DiscordRegistrationRequest;
+use App\Models\Division;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
@@ -47,5 +48,35 @@ class DiscordRegistrationRequestTest extends TestCase
 
         $this->assertTrue($validator->errors()->has('username'));
         $this->assertStringContainsString('AOD_', $validator->errors()->first('username'));
+    }
+
+    #[Test]
+    public function shutdown_division_is_rejected()
+    {
+        $division = Division::factory()->create(['shutdown_at' => now()]);
+
+        $request = DiscordRegistrationRequest::create('/register', 'POST', [
+            'username'    => 'ValidName',
+            'division_id' => $division->id,
+        ]);
+
+        $validator = Validator::make($request->all(), $request->rules());
+
+        $this->assertTrue($validator->errors()->has('division_id'));
+    }
+
+    #[Test]
+    public function recruitable_division_is_accepted()
+    {
+        $division = Division::factory()->create();
+
+        $request = DiscordRegistrationRequest::create('/register', 'POST', [
+            'username'    => 'ValidName',
+            'division_id' => $division->id,
+        ]);
+
+        $validator = Validator::make($request->all(), $request->rules());
+
+        $this->assertFalse($validator->errors()->has('division_id'));
     }
 }

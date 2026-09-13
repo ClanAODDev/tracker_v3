@@ -1,0 +1,184 @@
+/* Rank tree — the clan ranking structure drawn as one continuous rail. A
+   rank-coloured node and trace thread the ranks top to bottom; each group
+   boundary is a "station" — a ring on the line under a rule — with the tier
+   name set vertically in the gutter. Rank stands for tenure and contribution,
+   not a chain of command. Each row sets --rank-color and --i (stagger index).
+   Used by resources/js/pages/clan/ranks.tsx. */
+
+@keyframes rank-tree-row-enter {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.rank-tree {
+    position: relative;
+}
+
+/* Tier boundary — a station on the rail: a ring on the line, a label, a rule. */
+.rank-tier-band {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: 2.75rem;
+    padding-left: 1.95rem;
+    border-top: 1px solid var(--border-strong);
+}
+
+.rank-tier + .rank-tier-band {
+    margin-top: 0.5rem;
+}
+
+.rank-tier-band::before {
+    content: '';
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+    border-radius: 9999px;
+    border: 2px solid var(--border-strong);
+    background: var(--background);
+}
+
+.rank-tier-band-label {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--muted-foreground);
+}
+
+.rank-tier {
+    position: relative;
+}
+
+/* Rotated tier label in the gutter, left of the rail. */
+.rank-tier-side {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    font-family: var(--font-mono);
+    font-size: 0.5625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--dim-foreground, var(--muted-foreground));
+    pointer-events: none;
+}
+
+.rank-row {
+    display: flex;
+    padding-left: 1.75rem;
+    opacity: 0;
+    animation: rank-tree-row-enter 0.35s ease-out forwards;
+    animation-delay: calc(var(--i, 0) * 0.05s);
+}
+
+.rank-row-track {
+    position: relative;
+    width: 1.5rem;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 0.9rem;
+}
+
+.rank-row-node {
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 9999px;
+    background: var(--rank-color, var(--primary));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--rank-color, var(--primary)) 14%, transparent);
+    flex-shrink: 0;
+    z-index: 1;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rank-row-track::after {
+    content: '';
+    flex: 1;
+    width: 2px;
+    margin-top: 0.4rem;
+    min-height: 0.75rem;
+    background: color-mix(in srgb, var(--rank-color, var(--primary)) 22%, transparent);
+}
+
+.rank-row:last-child .rank-row-track::after {
+    display: none;
+}
+
+.rank-row--muted .rank-row-node {
+    opacity: 0.55;
+}
+
+.rank-row:hover .rank-row-node {
+    transform: scale(1.2);
+    box-shadow: 0 0 10px -1px var(--rank-color, var(--primary));
+}
+
+.rank-row-body {
+    flex: 1;
+    min-width: 0;
+    padding: 0.6rem 0.75rem 1.25rem;
+    border-radius: 6px;
+    transition: background 0.15s ease;
+}
+
+.rank-row:hover .rank-row-body {
+    background: color-mix(in srgb, var(--rank-color, var(--primary)) 5%, transparent);
+}
+
+.rank-row-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.25rem;
+}
+
+.rank-row-abbr {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    color: var(--rank-color, var(--primary));
+    min-width: 3.25rem;
+}
+
+.rank-row-name {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.rank-row-duties {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+}
+
+@media (max-width: 640px) {
+    .rank-tier-side {
+        display: none;
+    }
+    .rank-tier-band {
+        padding-left: 1.5rem;
+    }
+    .rank-row {
+        padding-left: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rank-row {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+}

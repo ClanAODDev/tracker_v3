@@ -4,48 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Member\SendBulkPm;
 use App\Models\Member;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class PmController extends Controller
 {
-    public function create(SendBulkPm $request)
+    public function create(SendBulkPm $request): Response
     {
-        $validated = $request->validated();
-        $memberIds = explode(',', $validated['pm-member-data']);
+        $memberIds = explode(',', $request->validated()['pm-member-data']);
 
-        $membersSelected = Member::whereIn('clan_id', $memberIds)
+        $selected = Member::whereIn('clan_id', $memberIds)
             ->select('clan_id', 'allow_pm', 'name')
             ->get();
 
-        $availableForPm = $membersSelected->filter(function ($member) {
-            return $member->allow_pm;
-        });
+        $available = $selected->filter->allow_pm;
+        $division  = $request->division;
 
-        $remindedCount = 0;
-        $skippedCount  = 0;
-        if ($request->boolean('set_reminder') && $request->user()->can('remindActivity', Member::class)) {
-            $alreadyRemindedToday = Member::whereIn('clan_id', $memberIds)
-                ->whereDate('last_activity_reminder_at', today())
-                ->count();
+        $groups = $available->pluck('clan_id')
+            ->values()
+            ->chunk(20)
+            ->values()
+            ->map(fn ($chunk, $index) => [
+                'label' => 'Group ' . ($index + 1),
+                'url'   => doForumFunction($chunk->values()->all(), 'pm'),
+            ]);
 
-            $remindedCount = Member::whereIn('clan_id', $memberIds)
-                ->where(function ($query) {
-                    $query->whereNull('last_activity_reminder_at')
-                        ->orWhereDate('last_activity_reminder_at', '<', today());
-                })
-                ->update([
-                    'last_activity_reminder_at' => now(),
-                    'activity_reminded_by_id'   => auth()->id(),
-                ]);
-
-            $skippedCount = $alreadyRemindedToday;
-        }
-
-        return view('division.create-pm')->with([
-            'members'       => $availableForPm,
-            'omitted'       => $membersSelected->diffAssoc($availableForPm),
-            'division'      => $request->division,
-            'remindedCount' => $remindedCount,
-            'skippedCount'  => $skippedCount,
+        return Inertia::render('division/create-pm', [
+            'division'       => ['name' => $division->name, 'slug' => $division->slug],
+            'groups'         => $groups,
+            'recipientCount' => $available->count(),
+            'omitted'        => $selected->diffAssoc($available)->pluck('name')->values(),
+            'canRemind'      => $request->user()->can('remindActivity', Member::class),
+            'reminderUrl'    => route('bulk-reminder.store', $division),
+            'reminderIds'    => $available->pluck('clan_id')->values(),
         ]);
     }
 }

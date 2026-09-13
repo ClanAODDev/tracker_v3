@@ -52,6 +52,7 @@ class FetchApplicationFeeds extends BaseCommand
         $excludedDivisions = config('tracker.excluded_divisions', []);
 
         return Division::active()
+            ->withoutShutdown()
             ->whereNotIn('name', $excludedDivisions)
             ->get()
             ->filter(fn ($d) => $d->settings()->get('recruitment_rss_feed'));

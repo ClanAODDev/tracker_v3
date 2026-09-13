@@ -5,6 +5,7 @@ namespace Tests\Feature\Controllers;
 use App\Enums\ForumGroup;
 use App\Enums\Rank;
 use App\Enums\Role;
+use App\Models\Handle;
 use App\Models\User;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
@@ -67,8 +68,7 @@ class RecruitingControllerTest extends TestCase
             ->get(route('recruiting.initial'));
 
         $response->assertOk();
-        $response->assertViewIs('recruit.index');
-        $response->assertViewHas('divisions');
+        $response->assertInertia(fn ($page) => $page->component('recruiting/index')->has('divisions'));
     }
 
     #[Test]
@@ -103,8 +103,11 @@ class RecruitingControllerTest extends TestCase
             ->get(route('recruiting.form', $division->slug));
 
         $response->assertOk();
-        $response->assertViewIs('recruit.form');
-        $response->assertViewHas('division');
+        $response->assertInertia(fn ($page) => $page
+            ->component('recruiting/form')
+            ->where('divisionSlug', $division->slug)
+            ->has('platoons')
+            ->has('ranks'));
     }
 
     #[Test]
@@ -418,6 +421,36 @@ class RecruitingControllerTest extends TestCase
 
         $response->assertStatus(422);
         $response->assertJsonValidationErrors('forum_name');
+        $pendingUser->refresh();
+        $this->assertNull($pendingUser->member_id);
+    }
+
+    #[Test]
+    public function submit_discord_recruitment_rejects_an_ingame_name_that_fails_the_divisions_handle_format(): void
+    {
+        $handle = Handle::create([
+            'label'      => 'Steam',
+            'regex'      => '/^[0-9]+$/',
+            'regex_hint' => 'Steam ID must be numeric.',
+        ]);
+        $officer     = $this->createOfficer();
+        $division    = $this->createActiveDivision(['handle_id' => $handle->id]);
+        $platoon     = $this->createPlatoon($division);
+        $pendingUser = User::factory()->pending()->create();
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'        => $division->slug,
+                'pending_user_id' => $pendingUser->id,
+                'forum_name'      => 'DiscordRecruit',
+                'rank'            => Rank::RECRUIT->value,
+                'platoon'         => $platoon->id,
+                'ingame_name'     => 'not-numeric',
+            ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('ingame_name');
+        $response->assertJson(['message' => 'Steam ID must be numeric.']);
         $pendingUser->refresh();
         $this->assertNull($pendingUser->member_id);
     }

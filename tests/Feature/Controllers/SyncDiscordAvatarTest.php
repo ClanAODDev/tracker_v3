@@ -65,6 +65,25 @@ class SyncDiscordAvatarTest extends TestCase
     }
 
     #[Test]
+    public function repeated_syncs_are_rate_limited(): void
+    {
+        $user = $this->createMemberWithUser(['discord_id' => '123456789012345678']);
+
+        $this->mock(AODBotService::class)
+            ->shouldReceive('getMemberAvatar')
+            ->andReturn('newhash123');
+
+        $statuses = [];
+        for ($i = 0; $i < 5; $i++) {
+            $statuses[] = $this->actingAs($user)
+                ->postJson(route('settings.sync-avatar'))
+                ->status();
+        }
+
+        $this->assertContains(429, $statuses);
+    }
+
+    #[Test]
     public function bot_api_failure_returns_503(): void
     {
         $user = $this->createMemberWithUser(['discord_id' => '123456789012345678']);

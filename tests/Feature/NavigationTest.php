@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -13,6 +14,26 @@ class NavigationTest extends TestCase
     use CreatesDivisions;
     use CreatesMembers;
     use RefreshDatabase;
+
+    /**
+     * @return list<string>
+     */
+    private function navLabels(AssertableInertia $page): array
+    {
+        $flatten = function (array $items) use (&$flatten): array {
+            $labels = [];
+            foreach ($items as $item) {
+                $labels[] = $item['label'] ?? null;
+                if (! empty($item['children'])) {
+                    $labels = array_merge($labels, $flatten($item['children']));
+                }
+            }
+
+            return array_values(array_filter($labels));
+        };
+
+        return $flatten($page->toArray()['props']['nav'] ?? []);
+    }
 
     #[Test]
     public function developer_with_member_role_sees_admin_nav_links()
@@ -25,9 +46,12 @@ class NavigationTest extends TestCase
         $this->actingAs($developer)
             ->get(route('home'))
             ->assertOk()
-            ->assertSee('/admin', false)
-            ->assertSee('/operations', false)
-            ->assertSee('Log Viewer');
+            ->assertInertia(function (AssertableInertia $page) {
+                $labels = $this->navLabels($page);
+                $this->assertContains('Admin Panel', $labels);
+                $this->assertContains('Operations', $labels);
+                $this->assertContains('Log Viewer', $labels);
+            });
     }
 
     #[Test]
@@ -39,9 +63,12 @@ class NavigationTest extends TestCase
         $this->actingAs($user)
             ->get(route('home'))
             ->assertOk()
-            ->assertDontSee('/admin', false)
-            ->assertDontSee('/operations', false)
-            ->assertDontSee('Log Viewer');
+            ->assertInertia(function (AssertableInertia $page) {
+                $labels = $this->navLabels($page);
+                $this->assertNotContains('Admin Panel', $labels);
+                $this->assertNotContains('Operations', $labels);
+                $this->assertNotContains('Log Viewer', $labels);
+            });
     }
 
     #[Test]
@@ -55,7 +82,7 @@ class NavigationTest extends TestCase
         $this->actingAs($developer)
             ->get(route('home'))
             ->assertOk()
-            ->assertSee('"canUseBulkMode":true', false);
+            ->assertInertia(fn (AssertableInertia $page) => $page->where('auth.permissions.canUseBulkMode', true));
     }
 
     #[Test]
@@ -67,6 +94,6 @@ class NavigationTest extends TestCase
         $this->actingAs($user)
             ->get(route('home'))
             ->assertOk()
-            ->assertSee('"canUseBulkMode":false', false);
+            ->assertInertia(fn (AssertableInertia $page) => $page->where('auth.permissions.canUseBulkMode', false));
     }
 }

@@ -56,7 +56,14 @@ class DiscordRegistrationRequest extends FormRequest
                 'before:' . now()->subYears(13)->format('Y-m-d'),
             ],
             'password'    => ['required', 'string', 'min:8', 'confirmed'],
-            'division_id' => ['required', 'exists:divisions,id'],
+            'division_id' => [
+                'required',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    if (! Division::recruitable()->whereKey($value)->exists()) {
+                        $fail('The selected division is not currently accepting applications.');
+                    }
+                },
+            ],
         ];
     }
 

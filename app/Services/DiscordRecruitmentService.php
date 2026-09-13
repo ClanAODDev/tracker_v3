@@ -8,7 +8,10 @@ use App\Models\Division;
 use App\Models\DivisionApplication;
 use App\Models\Member;
 use App\Models\User;
+use App\Transformers\MemberDiscordMatchTransformer;
+use App\Transformers\PendingDiscordUserTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Log;
 
 class DiscordRecruitmentService
@@ -61,6 +64,60 @@ class DiscordRecruitmentService
         DivisionApplication::where('user_id', $pendingUser->id)->get()->each->delete();
 
         return $member;
+    }
+
+    public function findPendingUser(int $pendingUserId): ?User
+    {
+        return User::pendingDiscord()->find($pendingUserId);
+    }
+
+    public function findMembersByDiscordId(string $discordId): Collection
+    {
+        $matches = Member::where('discord_id', $discordId)
+            ->with('division')
+            ->get();
+
+        return collect((new MemberDiscordMatchTransformer)->transformCollection($matches->all()));
+    }
+
+    public function findDiscordMatches(int $memberId, object $result, ?Member $existingMember): array
+    {
+        $discordId = property_exists($result, 'discord_id') ? $result->discord_id : null;
+
+        if (! $discordId && $existingMember?->discord_id) {
+            $discordId = $existingMember->discord_id;
+        }
+
+        if (! $discordId) {
+            return [];
+        }
+
+        $matches = Member::where('discord_id', $discordId)
+            ->where('clan_id', '!=', $memberId)
+            ->with('division:id,name')
+            ->get();
+
+        return (new MemberDiscordMatchTransformer)->transformCollection($matches->all());
+    }
+
+    public function getPendingDiscordUsers(Division $division, bool $allPending = false): Collection
+    {
+        $query = User::pendingDiscord()
+            ->whereNotNull('date_of_birth');
+
+        if (! $allPending) {
+            $query->where(function ($q) use ($division) {
+                $q->whereHas('divisionApplication', fn ($a) => $a->where('division_id', $division->id))
+                    ->orWhereDoesntHave('divisionApplication');
+            });
+        }
+
+        $pendingUsers = $query
+            ->with('divisionApplication.division')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return collect((new PendingDiscordUserTransformer)->transformCollection($pendingUsers->all()));
     }
 
     private function resolveForumAccount(User $pendingUser, string $forumName, int $recruiterClanId): object

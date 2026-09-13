@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Data\MemberStatsData;
-use App\Data\NoteStatsData;
+use App\Data\MemberProfileData;
 use App\Enums\ActivityType;
-use App\Models\ActivityReminder;
-use App\Models\Division;
 use App\Models\Member;
-use App\Models\Note;
 use App\Models\Platoon;
 use App\Repositories\MemberRepository;
 use App\Services\RankTimelineService;
+use App\Support\MemberCard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
+use Inertia\Inertia;
+use Inertia\Response;
 
 #[Middleware('auth')]
 class MemberController extends Controller
@@ -26,16 +25,30 @@ class MemberController extends Controller
         private RankTimelineService $rankTimelineService,
     ) {}
 
-    public function search(Request $request)
+    public function search(Request $request): Response|JsonResponse
     {
-        $name    = $request->query('q');
-        $members = $name ? $this->memberRepository->search($name) : collect();
+        $query   = $request->query('q');
+        $members = $query ? $this->memberRepository->search($query) : collect();
 
-        if (request()->ajax()) {
-            return view('member.search-ajax', compact('members'));
+        $results = $members->values()->map(fn (Member $member) => [
+            'rankName'   => $member->present()->rankName(),
+            'clanId'     => $member->clan_id,
+            'division'   => $member->division->name ?? 'Ex-AOD',
+            'profileUrl' => route('member', $member->getUrlParams()),
+            'discord'    => $member->discord,
+            'handle'     => $member->handles->first()
+                ? $member->handles->first()->pivot->value . ' [' . $member->handles->first()->label . ']'
+                : null,
+        ]);
+
+        if ($request->wantsJson()) {
+            return response()->json(['results' => $results]);
         }
 
-        return view('member.search', compact('members'));
+        return Inertia::render('member/search', [
+            'query'   => $query,
+            'results' => $results,
+        ]);
     }
 
     public function searchAutoComplete(Request $request)
@@ -43,37 +56,12 @@ class MemberController extends Controller
         return $this->memberRepository->searchAutocomplete($request->input('query'));
     }
 
-    public function show(Member $member)
+    public function show(Member $member): Response
     {
-        $user           = auth()->user();
-        $canViewSrLdr   = $user->isRole(['sr_ldr', 'admin']);
-        $canViewTrashed = $user->can('viewTrashed', Note::class);
-
-        $this->memberRepository->loadProfileRelations($member);
-        $division = $member->division;
-
-        $notes             = $this->memberRepository->getNotesForMember($member, $canViewSrLdr);
-        $trashedNotes      = $canViewTrashed ? $this->memberRepository->getTrashedNotesForMember($member) : collect();
-        $rankHistory       = $this->memberRepository->getRankHistory($member);
-        $transfers         = $this->memberRepository->getTransfers($member);
-        $partTimeDivisions = $member->partTimeDivisions()->whereActive(true)->get();
-
-        $memberStats  = MemberStatsData::fromMember($member, $division, $this->memberRepository);
-        $noteStats    = NoteStatsData::fromNotes($notes);
-        $rankTimeline = $this->rankTimelineService->buildTimeline($member, $rankHistory);
-
-        return view('member.show', [
-            'member'            => $member,
-            'division'          => $division,
-            'notes'             => $notes,
-            'trashedNotes'      => $trashedNotes,
-            'noteStats'         => $noteStats,
-            'partTimeDivisions' => $partTimeDivisions,
-            'rankHistory'       => $rankHistory,
-            'rankTimeline'      => $rankTimeline,
-            'transfers'         => $transfers,
-            'memberStats'       => $memberStats,
-        ]);
+        return Inertia::render(
+            'member/show',
+            MemberProfileData::for($member, $this->memberRepository, $this->rankTimelineService)->toArray(),
+        );
     }
 
     #[Authorize('recruit', Member::class)]
@@ -92,13 +80,13 @@ class MemberController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function confirmUnassign(Member $member)
+    public function confirmUnassign(Member $member): Response
     {
         $this->authorize('reset', $member);
 
-        return view('member.confirm-unassign', [
-            'member'   => $member,
-            'division' => $member->division,
+        return Inertia::render('member/confirm-unassign', [
+            'member'   => MemberCard::from($member),
+            'resetUrl' => route('member.unassign', $member->clan_id),
         ]);
     }
 
@@ -114,136 +102,5 @@ class MemberController extends Controller
         $this->showSuccessToast('Member assignments reset successfully');
 
         return redirect()->route('member', $member->getUrlParams());
-    }
-
-    public function setActivityReminder(Member $member): JsonResponse
-    {
-        $this->authorize('remindActivity', $member);
-
-        $alreadyRemindedToday = ActivityReminder::where('member_id', $member->id)
-            ->whereDate('created_at', today())
-            ->exists();
-
-        if ($alreadyRemindedToday) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Already reminded today',
-            ], 400);
-        }
-
-        $reminder = ActivityReminder::create([
-            'member_id'      => $member->id,
-            'division_id'    => $member->division_id,
-            'reminded_by_id' => auth()->id(),
-        ]);
-
-        $member->last_activity_reminder_at = $reminder->created_at;
-        $member->activity_reminded_by_id   = auth()->id();
-        $member->save();
-
-        return response()->json([
-            'success' => true,
-            'date'    => $reminder->created_at->format('n/j'),
-            'title'   => 'Reminded ' . $reminder->created_at->diffForHumans(),
-        ]);
-    }
-
-    public function clearActivityReminders(Member $member): JsonResponse
-    {
-        $this->authorize('clearActivityReminders', $member);
-
-        $count = ActivityReminder::where('member_id', $member->id)->delete();
-
-        $member->last_activity_reminder_at = null;
-        $member->activity_reminded_by_id   = null;
-        $member->save();
-
-        return response()->json([
-            'success' => true,
-            'count'   => $count,
-        ]);
-    }
-
-    #[Authorize('remindActivity', Member::class)]
-    public function bulkReminder(Division $division, Request $request): JsonResponse|RedirectResponse
-    {
-
-        $memberIds = $request->input('member_ids', []);
-
-        if (is_string($memberIds)) {
-            $memberIds = array_filter(explode(',', $memberIds));
-        }
-
-        if (empty($memberIds)) {
-            if ($request->has('redirect')) {
-                return redirect($request->input('redirect'))->with('error', 'No members selected');
-            }
-
-            return response()->json(['success' => false, 'message' => 'No members selected'], 400);
-        }
-
-        $members    = Member::whereIn('clan_id', $memberIds)->get()->keyBy('id');
-        $trackerIds = $members->keys()->toArray();
-
-        $alreadyRemindedIds = ActivityReminder::whereIn('member_id', $trackerIds)
-            ->whereDate('created_at', today())
-            ->pluck('member_id')
-            ->toArray();
-
-        $toUpdateIds = array_values(array_diff($trackerIds, $alreadyRemindedIds));
-
-        if (empty($toUpdateIds)) {
-            if ($request->has('redirect')) {
-                return redirect($request->input('redirect'))->with('reminder_result', [
-                    'count'   => 0,
-                    'skipped' => count($alreadyRemindedIds),
-                ]);
-            }
-
-            return response()->json([
-                'success' => false,
-                'message' => 'All selected members were already reminded today',
-            ], 400);
-        }
-
-        $now       = now();
-        $userId    = auth()->id();
-        $reminders = [];
-
-        foreach ($toUpdateIds as $id) {
-            $member      = $members->get($id);
-            $reminders[] = [
-                'member_id'      => $member->id,
-                'division_id'    => $member->division_id,
-                'reminded_by_id' => $userId,
-                'created_at'     => $now,
-                'updated_at'     => $now,
-            ];
-        }
-
-        ActivityReminder::insert($reminders);
-
-        $count = Member::whereIn('id', $toUpdateIds)
-            ->update([
-                'last_activity_reminder_at' => $now,
-                'activity_reminded_by_id'   => $userId,
-            ]);
-
-        $skippedCount = count($alreadyRemindedIds);
-
-        if ($request->has('redirect')) {
-            return redirect($request->input('redirect'))->with('reminder_result', [
-                'count'   => $count,
-                'skipped' => $skippedCount,
-            ]);
-        }
-
-        return response()->json([
-            'success'    => true,
-            'count'      => $count,
-            'skipped'    => $skippedCount,
-            'updatedIds' => $toUpdateIds,
-            'date'       => $now->format('n/j'),
-        ]);
     }
 }

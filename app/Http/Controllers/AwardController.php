@@ -2,222 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\AwardIndexData;
+use App\Data\AwardShowData;
 use App\Models\Award;
 use App\Models\Member;
 use App\Models\MemberAward;
 use App\Rules\UniqueAwardForMember;
-use Illuminate\Database\Eloquent\Builder;
+use App\Services\AwardCatalogService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
-use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Inertia\Response;
 
 #[Middleware('auth')]
 class AwardController extends Controller
 {
-    public function index()
+    public function index(AwardCatalogService $catalog): Response|RedirectResponse
     {
         $divisionSlug = request('division');
+        $data         = AwardIndexData::for($divisionSlug, $catalog);
 
-        $query = Award::active()
-            ->orderBy('display_order')
-            ->withCount('recipients')
-            ->with('division');
-
-        if ($divisionSlug) {
-            $query->whereHas('division', fn (Builder $q) => $q->where('slug', $divisionSlug));
-        }
-
-        $allAwards = $query->get();
-
-        $awards = $allAwards->filter(function ($award) {
-            if ($award->division_id === null) {
-                return true;
-            }
-            if ($award->division?->active) {
-                return true;
-            }
-
-            return $award->recipients_count > 0;
-        });
-
-        if ($divisionSlug && $awards->isEmpty()) {
+        if ($divisionSlug && $data->isEmpty()) {
             $this->showErrorToast('Selected division has no awards assigned. Showing all...');
 
             return redirect(route('awards.index'));
         }
 
-        $maxRecipients = $awards->max('recipients_count') ?: 1;
-        $awards->each(function ($award) use ($maxRecipients) {
-            $award->popularityPct = round($award->recipients_count / $maxRecipients * 100);
-            $award->rarity        = $award->getRarity();
-        });
-
-        $clanAwards = $awards->whereNull('division_id')->values();
-
-        $activeAwards = $awards
-            ->whereNotNull('division_id')
-            ->filter(fn ($award) => $award->division?->active || $award->division?->slug === $divisionSlug)
-            ->groupBy('division.name')
-            ->sortKeys();
-
-        $legacyAwards = $awards
-            ->whereNotNull('division_id')
-            ->filter(fn ($award) => ! $award->division?->active && $award->recipients_count > 0 && $award->division?->slug !== $divisionSlug)
-            ->groupBy('division.name')
-            ->sortKeys();
-
-        $activeAndClanAwards = $awards->filter(fn ($a) => $a->division_id === null || $a->division?->active);
-        $totals              = (object) [
-            'awards'      => $awards->count(),
-            'recipients'  => $awards->sum('recipients_count'),
-            'requestable' => $activeAndClanAwards->where('allow_request', true)->count(),
-        ];
-
-        $divisionsWithAwards = Award::active()
-            ->whereNotNull('division_id')
-            ->withCount('recipients')
-            ->with('division:id,name,slug,active')
-            ->get()
-            ->filter(fn ($award) => $award->division?->active || $award->recipients_count > 0)
-            ->pluck('division')
-            ->unique('id')
-            ->sortBy([['active', 'desc'], ['name', 'asc']])
-            ->values();
-
-        $tieredGroups   = $this->buildTieredGroups();
-        $tieredAwardIds = collect($tieredGroups)
-            ->flatMap(fn ($group) => $group['tiers']->pluck('id'))
-            ->toArray();
-
-        $clanAwards = $clanAwards->reject(fn ($a) => in_array($a->id, $tieredAwardIds));
-
-        $activeAwards = $activeAwards->map(
-            fn ($awards) => $awards->reject(fn ($a) => in_array($a->id, $tieredAwardIds))
-        )->filter(fn ($awards) => $awards->isNotEmpty());
-
-        $legacyAwards = $legacyAwards->map(
-            fn ($awards) => $awards->reject(fn ($a) => in_array($a->id, $tieredAwardIds))
-        )->filter(fn ($awards) => $awards->isNotEmpty());
-
-        return view('division.awards.index', compact(
-            'awards',
-            'clanAwards',
-            'activeAwards',
-            'legacyAwards',
-            'totals',
-            'divisionSlug',
-            'divisionsWithAwards',
-            'tieredGroups'
-        ));
+        return Inertia::render('awards/index', $data->toArray());
     }
 
-    private function buildTieredGroups(): array
+    public function tiered(string $slug, AwardCatalogService $catalog): Response
     {
-        $awardsWithChains = Award::active()
-            ->where(function ($q) {
-                $q->whereNotNull('prerequisite_award_id')
-                    ->orWhereHas('dependents');
-            })
-            ->withCount('recipients')
-            ->with('division')
-            ->orderBy('display_order')
-            ->get();
-
-        $awardsById   = $awardsWithChains->keyBy('id');
-        $dependentMap = $awardsWithChains
-            ->filter(fn ($a) => $a->prerequisite_award_id !== null)
-            ->keyBy('prerequisite_award_id');
-
-        $processed = [];
-        $groups    = [];
-
-        foreach ($awardsWithChains as $award) {
-            if (in_array($award->id, $processed)) {
-                continue;
-            }
-
-            $chain   = collect([$award]);
-            $current = $awardsById->get($award->prerequisite_award_id);
-            while ($current) {
-                $chain->push($current);
-                $current = $awardsById->get($current->prerequisite_award_id);
-            }
-
-            $current = $award;
-            while ($next = $dependentMap->get($current->id)) {
-                $chain->push($next);
-                $current = $next;
-            }
-
-            $chain = $chain->unique('id')->sortBy('display_order')->values();
-
-            $chainIds  = $chain->pluck('id')->toArray();
-            $processed = array_merge($processed, $chainIds);
-
-            $topTier        = $chain->last();
-            $recipientCount = MemberAward::whereIn('award_id', $chainIds)
-                ->where('approved', true)
-                ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
-                ->distinct('member_id')
-                ->count('member_id');
-
-            $baseTier  = $chain->first();
-            $groupName = $baseTier->tiered_group_name ?? $this->getTieredGroupName($chain);
-            $division  = $baseTier->division;
-            $groups[]  = [
-                'name'           => $groupName,
-                'slug'           => Str::slug($groupName),
-                'description'    => $baseTier->tiered_group_description ?? $this->getTieredGroupDescription($chain, $groupName),
-                'tiers'          => $chain,
-                'topTier'        => $topTier,
-                'recipientCount' => $recipientCount,
-                'division_id'    => $division?->id,
-                'division'       => $division,
-            ];
-        }
-
-        return $groups;
-    }
-
-    private function getTieredGroupName($chain): string
-    {
-        $names = $chain->pluck('name')->toArray();
-
-        if (collect($names)->contains(fn ($n) => str_contains($n, 'Years of Service'))) {
-            return 'AOD Tenure';
-        }
-
-        $commonWords = [];
-        $firstWords  = explode(' ', $names[0]);
-        foreach ($firstWords as $word) {
-            if (collect($names)->every(fn ($n) => str_contains($n, $word))) {
-                $commonWords[] = $word;
-            }
-        }
-
-        return ! empty($commonWords) ? implode(' ', $commonWords) : $chain->first()->name . ' Series';
-    }
-
-    private function getTieredGroupDescription($chain, string $groupName): string
-    {
-        $tierCount = $chain->count();
-        $topTier   = $chain->last();
-
-        if (str_contains($groupName, 'Tenure')) {
-            return 'Recognition for years of dedicated service to the Angels of Death clan. Each tier represents a milestone in your AOD journey.';
-        }
-
-        return "A {$tierCount}-tier progression culminating in {$topTier->name}. Earn each tier in sequence to complete the set.";
-    }
-
-    public function tiered(string $slug)
-    {
-        $tieredGroups = $this->buildTieredGroups();
+        $tieredGroups = $catalog->buildTieredGroups();
         $group        = collect($tieredGroups)->firstWhere('slug', $slug);
 
-        if (! $group) {
-            abort(404);
-        }
+        abort_unless($group, 404);
 
         $tierIds = $group['tiers']->pluck('id')->toArray();
         $tiers   = Award::whereIn('id', $tierIds)
@@ -239,76 +59,53 @@ class AwardController extends Controller
         $earnedCount  = count($userAwardIds);
         $totalTiers   = $tiers->count();
 
-        $nextTierId = null;
-        foreach ($tiers as $tier) {
-            if (! in_array($tier->id, $userAwardIds)) {
-                $nextTierId = $tier->id;
-                break;
-            }
-        }
+        $nextTierId = $tiers->firstWhere(fn ($tier) => ! in_array($tier->id, $userAwardIds))?->id;
 
-        $stats = (object) [
-            'totalRecipients' => $group['recipientCount'],
-            'firstAwarded'    => MemberAward::whereIn('award_id', $tierIds)
-                ->where('approved', true)
-                ->orderBy('created_at')
-                ->first()?->created_at,
-            'earnedCount' => $earnedCount,
-            'totalTiers'  => $totalTiers,
-            'progressPct' => $totalTiers > 0 ? round(($earnedCount / $totalTiers) * 100) : 0,
-        ];
+        $firstAwarded = MemberAward::whereIn('award_id', $tierIds)
+            ->where('approved', true)
+            ->orderBy('created_at')
+            ->first()?->created_at;
 
-        return view('division.awards.tiered', compact('group', 'tiers', 'userAwards', 'userAwardIds', 'nextTierId', 'stats'));
+        return Inertia::render('awards/tiered', [
+            'group' => [
+                'name'        => $group['name'],
+                'slug'        => $group['slug'],
+                'description' => $group['description'],
+            ],
+            'stats' => [
+                'totalRecipients' => $group['recipientCount'],
+                'firstAwarded'    => $firstAwarded?->format('M Y'),
+                'earnedCount'     => $earnedCount,
+                'totalTiers'      => $totalTiers,
+                'progressPct'     => $totalTiers > 0 ? round(($earnedCount / $totalTiers) * 100) : 0,
+            ],
+            'tiers' => $tiers->map(function ($tier) use ($userAwards, $userAwardIds, $nextTierId, $group) {
+                $earned = in_array($tier->id, $userAwardIds);
+
+                return [
+                    'id'              => $tier->id,
+                    'name'            => $tier->name,
+                    'description'     => $tier->description,
+                    'rarity'          => $tier->getRarity(),
+                    'recipientsCount' => (int) $tier->recipients_count,
+                    'image'           => $tier->image ? $tier->getImagePath() : null,
+                    'earned'          => $earned,
+                    'isNext'          => $tier->id === $nextTierId,
+                    'earnedDate'      => $earned ? $userAwards->get($tier->id)?->created_at?->format('M j, Y') : null,
+                    'pct'             => $group['recipientCount'] > 0
+                        ? round(($tier->recipients_count / $group['recipientCount']) * 100)
+                        : 0,
+                ];
+            }),
+        ]);
     }
 
-    public function show(Award $award)
+    public function show(Award $award): Response
     {
-        $award->load(['division']);
-        $award->loadCount('recipients');
-
-        if ($award->repeatable) {
-            $recipients = MemberAward::where('award_id', $award->id)
-                ->where('approved', true)
-                ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
-                ->selectRaw('member_id, COUNT(*) as times_received, MAX(created_at) as last_awarded_at')
-                ->groupBy('member_id')
-                ->orderByDesc('times_received')
-                ->with(['member:id,clan_id,name,rank,division_id,discord_id,discord_avatar', 'member.division:id,name,slug'])
-                ->paginate(50);
-        } else {
-            $recipients = MemberAward::where('award_id', $award->id)
-                ->where('approved', true)
-                ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
-                ->with(['member:id,clan_id,name,rank,division_id,discord_id,discord_avatar', 'member.division:id,name,slug'])
-                ->orderByDesc('created_at')
-                ->paginate(50);
-        }
-
-        $userMember   = auth()->user()?->member;
-        $userHasAward = $userMember
-            ? MemberAward::where('award_id', $award->id)
-                ->where('member_id', $userMember->id)
-                ->where('approved', true)
-                ->exists()
-            : false;
-
-        $stats = (object) [
-            'total'        => $recipients->total(),
-            'firstAwarded' => MemberAward::where('award_id', $award->id)
-                ->where('approved', true)
-                ->orderBy('created_at')
-                ->first()?->created_at,
-            'lastAwarded' => MemberAward::where('award_id', $award->id)
-                ->where('approved', true)
-                ->orderByDesc('created_at')
-                ->first()?->created_at,
-            'rarity' => $award->getRarity(),
-        ];
-
-        return view('division.awards.show', compact('award', 'recipients', 'stats', 'userHasAward'));
+        return Inertia::render('awards/show', AwardShowData::for($award)->toArray());
     }
 
-    public function storeRecommendation(Request $request, Award $award)
+    public function storeRecommendation(Request $request, Award $award): RedirectResponse
     {
         if (! $award->canBeRequestedBy()) {
             return redirect()->back()->withErrors(['award' => 'You cannot request this award.']);

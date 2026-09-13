@@ -35,10 +35,9 @@ class NoteControllerTest extends TestCase
         $this->assertSoftDeleted($note);
 
         $response = $this->actingAs($srLdr)
-            ->postJson(route('restoreNote', [$member->clan_id, $note->id]));
+            ->post(route('restoreNote', [$member->clan_id, $note->id]));
 
-        $response->assertOk();
-        $response->assertJson(['success' => true]);
+        $response->assertRedirect();
 
         $this->assertDatabaseHas('notes', [
             'id'         => $note->id,
@@ -60,10 +59,9 @@ class NoteControllerTest extends TestCase
         $note->delete();
 
         $response = $this->actingAs($srLdr)
-            ->deleteJson(route('forceDeleteNote', [$member->clan_id, $note->id]));
+            ->delete(route('forceDeleteNote', [$member->clan_id, $note->id]));
 
-        $response->assertOk();
-        $response->assertJson(['success' => true]);
+        $response->assertRedirect();
 
         $this->assertModelMissing($note);
     }
@@ -82,10 +80,10 @@ class NoteControllerTest extends TestCase
         $note->delete();
 
         $response = $this->actingAs($officer)
-            ->postJson(route('restoreNote', [$member->clan_id, $note->id]));
+            ->post(route('restoreNote', [$member->clan_id, $note->id]));
 
-        $response->assertOk();
-        $response->assertJson(['success' => true]);
+        $response->assertRedirect();
+        $this->assertDatabaseHas('notes', ['id' => $note->id, 'deleted_at' => null]);
     }
 
     #[Test]
@@ -102,10 +100,10 @@ class NoteControllerTest extends TestCase
         $note->delete();
 
         $response = $this->actingAs($officer)
-            ->deleteJson(route('forceDeleteNote', [$member->clan_id, $note->id]));
+            ->delete(route('forceDeleteNote', [$member->clan_id, $note->id]));
 
-        $response->assertOk();
-        $response->assertJson(['success' => true]);
+        $response->assertRedirect();
+        $this->assertModelMissing($note);
     }
 
     #[Test]
@@ -206,10 +204,10 @@ class NoteControllerTest extends TestCase
         $note->delete();
 
         $response = $this->actingAs($admin)
-            ->postJson(route('restoreNote', [$member->clan_id, $note->id]));
+            ->post(route('restoreNote', [$member->clan_id, $note->id]));
 
-        $response->assertOk();
-        $response->assertJson(['success' => true]);
+        $response->assertRedirect();
+        $this->assertDatabaseHas('notes', ['id' => $note->id, 'deleted_at' => null]);
     }
 
     #[Test]
@@ -226,10 +224,9 @@ class NoteControllerTest extends TestCase
         $note->delete();
 
         $response = $this->actingAs($admin)
-            ->deleteJson(route('forceDeleteNote', [$member->clan_id, $note->id]));
+            ->delete(route('forceDeleteNote', [$member->clan_id, $note->id]));
 
-        $response->assertOk();
-        $response->assertJson(['success' => true]);
+        $response->assertRedirect();
 
         $this->assertModelMissing($note);
     }
@@ -507,34 +504,6 @@ class NoteControllerTest extends TestCase
             'member_id'       => $member->id,
             'division_tag_id' => $globalTag->id,
         ]);
-    }
-
-    #[Test]
-    public function edit_returns_view_for_authorized_user()
-    {
-        $srLdr    = $this->createSeniorLeader();
-        $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id]);
-
-        $note = Note::factory()->create(['member_id' => $member->id, 'author_id' => $srLdr->id]);
-
-        $this->actingAs($srLdr)
-            ->get(route('editNote', [$member->clan_id, $note->id]))
-            ->assertOk()
-            ->assertViewIs('member.edit-note');
-    }
-
-    #[Test]
-    public function edit_aborts_404_when_member_has_no_division()
-    {
-        $srLdr  = $this->createSeniorLeader();
-        $member = $this->createMember(['division_id' => 0]);
-
-        $note = Note::factory()->create(['member_id' => $member->id, 'author_id' => $srLdr->id]);
-
-        $this->actingAs($srLdr)
-            ->get(route('editNote', [$member->clan_id, $note->id]))
-            ->assertNotFound();
     }
 
     #[Test]

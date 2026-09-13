@@ -8,6 +8,7 @@ use App\Models\RankAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\URL;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
@@ -82,7 +83,11 @@ class PromotionControllerTest extends TestCase
 
         $url = URL::temporarySignedRoute('promotion.accept', now()->addMinutes(10), [$member->clan_id, $action]);
 
-        $this->post($url)->assertOk();
+        $this->post($url)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('member/promotion-confirm')
+                ->where('outcome', 'accepted'));
 
         $this->assertNotNull($action->fresh()->accepted_at);
         Bus::assertDispatched(UpdateRankForMember::class);
@@ -100,7 +105,11 @@ class PromotionControllerTest extends TestCase
 
         $url = URL::temporarySignedRoute('promotion.decline', now()->addMinutes(10), [$member->clan_id, $action]);
 
-        $this->post($url)->assertOk();
+        $this->post($url)
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('member/promotion-confirm')
+                ->where('outcome', 'declined'));
 
         $this->assertNotNull($action->fresh()->declined_at);
     }
@@ -119,10 +128,12 @@ class PromotionControllerTest extends TestCase
 
         $response = $this->get($confirmUrl)->assertOk();
 
-        $response->assertViewHas('acceptUrl');
-        $response->assertViewHas('declineUrl');
+        $response->assertInertia(fn (AssertableInertia $page) => $page
+            ->component('member/promotion')
+            ->has('acceptUrl')
+            ->has('declineUrl'));
 
-        $acceptUrl = $response->viewData('acceptUrl');
+        $acceptUrl = $response->viewData('page')['props']['acceptUrl'];
 
         Bus::fake();
         $this->post($acceptUrl)->assertOk();

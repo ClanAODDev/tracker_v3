@@ -7,19 +7,27 @@ use App\Transformers\OrgChartTransformer;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
-use Illuminate\View\View;
+use Inertia\Inertia;
+use Inertia\Response;
 
 #[Middleware('auth')]
 class DivisionOrgChartController extends Controller
 {
-    public function show(Division $division): View
+    public function show(Division $division): Response
     {
-        return view('division.org-chart', compact('division'));
+        return Inertia::render('division/org-chart', [
+            'division' => ['name' => $division->name, 'slug' => $division->slug],
+            'tree'     => $this->buildTree($division),
+        ]);
     }
 
     public function data(Division $division): JsonResponse
     {
+        return response()->json($this->buildTree($division));
+    }
 
+    private function buildTree(Division $division): array
+    {
         $handleFilter = $this->filterHandlesToPrimaryHandle($division);
 
         $division->load([
@@ -34,14 +42,11 @@ class DivisionOrgChartController extends Controller
             ->orderByDesc('rank')
             ->get();
 
-        $transformer = new OrgChartTransformer;
-
-        return response()->json($transformer->transform($division, $leaders));
+        return (new OrgChartTransformer)->transform($division, $leaders);
     }
 
     private function filterHandlesToPrimaryHandle(Division $division): Closure
     {
-        return fn ($query) => $query
-            ->where('handles.id', $division->handle_id);
+        return fn ($query) => $query->where('handles.id', $division->handle_id);
     }
 }

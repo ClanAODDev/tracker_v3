@@ -5,10 +5,12 @@ namespace App\Filament\Forms\Components;
 use App\Models\Handle;
 use App\Models\Member;
 use App\Models\MemberHandle;
+use App\Rules\HandleFormat;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Database\Eloquent\Model;
 
 class IngameHandlesForm
@@ -35,12 +37,14 @@ class IngameHandlesForm
                     ->placeholder('Select a game or platform...')
                     ->options(Handle::orderBy('label')->pluck('label', 'id'))
                     ->searchable()
+                    ->live()
                     ->required(),
 
                 TextInput::make('value')
                     ->label('Your Handle / Username')
                     ->placeholder('Enter your in-game name...')
-                    ->required(),
+                    ->required()
+                    ->rules(fn (Get $get): array => [new HandleFormat(Handle::find($get('handle_id')))]),
 
                 Checkbox::make('primary')
                     ->label('Primary handle for this game')

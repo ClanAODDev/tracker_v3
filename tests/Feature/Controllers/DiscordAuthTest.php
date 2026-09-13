@@ -336,8 +336,30 @@ class DiscordAuthTest extends TestCase
         $response = $this->actingAs($user)->get(route('auth.discord.pending'));
 
         $response->assertOk();
-        $response->assertSee('PendingUser');
-        $response->assertSee('ClanAOD Registration');
+        $response->assertInertia(fn ($page) => $page
+            ->component('auth/discord-pending')
+            ->where('discordUsername', 'PendingUser')
+            ->has('divisions'));
+    }
+
+    #[Test]
+    public function pending_page_hides_shutdown_divisions(): void
+    {
+        $active   = Division::factory()->create(['name' => 'Active Division']);
+        $shutdown = Division::factory()->create(['name' => 'Shutdown Division', 'shutdown_at' => now()]);
+
+        $user = User::factory()->pending()->create([
+            'discord_id'       => '123456789',
+            'discord_username' => 'PendingUser',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('auth.discord.pending'));
+
+        $response->assertOk();
+        $names = collect($response->inertiaProps()['divisions'])->pluck('name');
+
+        $this->assertContains($active->name, $names);
+        $this->assertNotContains($shutdown->name, $names);
     }
 
     #[Test]
@@ -1043,7 +1065,9 @@ class DiscordAuthTest extends TestCase
 
         $this->actingAs($user)
             ->get(route('auth.discord.pending'))
-            ->assertSee('Before we continue');
+            ->assertInertia(fn ($page) => $page
+                ->component('auth/discord-pending')
+                ->where('needsRegistration', true));
     }
 
     #[Test]

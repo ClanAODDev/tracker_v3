@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Data\ClanCensusReportData;
 use App\Enums\Position;
 use App\Enums\Rank;
-use App\Exceptions\FactoryMissingException;
 use App\Models\Division;
 use App\Models\Member;
 use App\Repositories\ClanRepository;
@@ -12,134 +12,76 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\DB;
-use Illuminate\View\View;
+use Inertia\Inertia;
+use Inertia\Response;
 
 #[Middleware('auth')]
 class ReportsController extends Controller
 {
     public function __construct(private ClanRepository $clan) {}
 
-    public function clanCensusReport(Request $request): View
+    public function clanCensusReport(Request $request): Response
     {
-        $defaultStart = now()->subWeeks(52)->format('Y-m-d');
-        $defaultEnd   = now()->format('Y-m-d');
-
-        $start = $request->filled('start') ? $request->input('start') : $defaultStart;
-        $end   = $request->filled('end') ? $request->input('end') : $defaultEnd;
-
-        $hasDateFilter = $request->filled('start') || $request->filled('end');
-
-        $defaultCensus = $this->clan->censusCounts(52);
-
-        if ($defaultCensus->isEmpty()) {
-            throw new FactoryMissingException('You might need to run the `census` factory');
-        }
-
-        $censusCounts = $hasDateFilter
-            ? $this->clan->censusCountsBetween($start, $end)
-            : $defaultCensus;
-
-        $memberCount    = $this->clan->totalActiveMembers();
-        $previousCensus = $defaultCensus->first();
-
-        $milestones = $this->clan->censusMilestones();
-
-        $filteredCensus = $censusCounts->reverse()->values();
-
-        $populations = $filteredCensus->map(fn ($row) => [
-            Carbon::parse($row->date)->subDay()->valueOf(),
-            (int) $row->count,
-        ]);
-
-        $weeklyVoiceActive = $filteredCensus->map(fn ($row) => [
-            Carbon::parse($row->date)->subDay()->valueOf(),
-            (int) $row->weekly_voice_active,
-        ]);
-
-        $censuses = Division::active()
-            ->orderBy('name')
-            ->withoutFloaters()
-            ->with(['census' => fn ($q) => $q->whereBetween(
-                DB::raw('DATE(created_at)'),
-                [$start, $end]
-            )->orderBy('created_at')])
-            ->get()
-            ->filter(fn ($division) => $division->census->isNotEmpty())
-            ->each(function ($division) {
-                $latest                       = $division->census->last();
-                $division->latestCensus       = $latest;
-                $division->population         = $latest->count;
-                $division->weeklyVoiceActive  = $latest->weekly_voice_count;
-                $division->weeklyVoicePercent = $latest->count > 0
-                    ? round($latest->weekly_voice_count / $latest->count * 100, 1)
-                    : 0;
-            });
-
-        $totalPopulation  = $censuses->sum('population');
-        $totalVoiceActive = $censuses->sum('weeklyVoiceActive');
-
-        $rankDemographic = $this->clan->allRankDemographic()->map(function ($rank) use ($memberCount) {
-            $rank->percent = $memberCount > 0 ? round($rank->count / $memberCount * 100, 1) : 0;
-
-            return $rank;
-        });
-
-        $dateRange = ['start' => $start, 'end' => $end];
-
-        return view('reports.clan-statistics', compact(
-            'memberCount',
-            'previousCensus',
-            'filteredCensus',
-            'censuses',
-            'rankDemographic',
-            'totalPopulation',
-            'totalVoiceActive',
-            'milestones',
-            'populations',
-            'weeklyVoiceActive',
-            'dateRange',
-            'hasDateFilter',
-        ));
+        return Inertia::render('reports/clan-census', ClanCensusReportData::for($request, $this->clan)->toArray());
     }
 
-    public function outstandingMembersReport(): View
+    public function outstandingMembersReport(): Response
     {
-        $clanMax     = config('aod.maximum_days_inactive');
-        $clanMaxDate = now()->subDays($clanMax)->format('Y-m-d');
+        $clanMax          = config('aod.maximum_days_inactive');
+        $clanMaxThreshold = now()->subDays($clanMax)->startOfDay();
 
-        $divisions = Division::active()
-            ->orderBy('name')
-            ->withCount('members')
-            ->get()
-            ->each(function ($division) use ($clanMax, $clanMaxDate) {
-                $divisionMax     = $division->settings()->get('inactivity_days') ?? $clanMax;
-                $divisionMaxDate = now()->subDays($divisionMax)->format('Y-m-d');
+        $divisions = Division::active()->orderBy('name')->withCount('members')->get();
 
-                $baseQuery = $division->members()->whereDoesntHave('leave', fn ($q) => $q->whereDate('end_date', '>', today()));
+        // One query for every division's eligible members instead of two `count()`
+        // queries per division — the per-division inactivity threshold is then
+        // applied in memory below.
+        $eligibleMembers = Member::query()
+            ->whereIn('division_id', $divisions->pluck('id'))
+            ->whereDoesntHave('leave', fn ($q) => $q->whereDate('end_date', '>', today()))
+            ->get(['division_id', 'last_voice_activity'])
+            ->groupBy('division_id');
 
-                $division->divisionMax      = $divisionMax;
-                $division->outstandingCount = (clone $baseQuery)->where('last_voice_activity', '<', $clanMaxDate)->count();
-                $division->inactiveCount    = (clone $baseQuery)->where('last_voice_activity', '<', $divisionMaxDate)->count();
-                $division->activeCount      = $division->members_count - $division->inactiveCount;
-                $division->pctInactive      = $division->members_count > 0
-                    ? round($division->inactiveCount / $division->members_count * 100, 1)
-                    : 0;
-                $division->pctOutstanding = $division->members_count > 0
-                    ? round($division->outstandingCount / $division->members_count * 100, 1)
-                    : 0;
+        $divisions = $divisions
+            ->map(function ($division) use ($clanMax, $clanMaxThreshold, $eligibleMembers) {
+                $divisionMax       = $division->settings()->get('inactivity_days') ?? $clanMax;
+                $divisionThreshold = now()->subDays($divisionMax)->startOfDay();
+                $members           = $eligibleMembers->get($division->id, collect());
+
+                $outstanding = $members->filter(fn ($m) => $m->last_voice_activity?->lt($clanMaxThreshold))->count();
+                $inactive    = $members->filter(fn ($m) => $m->last_voice_activity?->lt($divisionThreshold))->count();
+                $population  = $division->members_count;
+
+                return [
+                    'name'           => $division->name,
+                    'slug'           => $division->slug,
+                    'population'     => $population,
+                    'divisionMax'    => $divisionMax,
+                    'outstanding'    => $outstanding,
+                    'inactive'       => $inactive,
+                    'active'         => $population - $inactive,
+                    'pctOutstanding' => $population > 0 ? round($outstanding / $population * 100, 1) : 0,
+                    'pctInactive'    => $population > 0 ? round($inactive / $population * 100, 1) : 0,
+                    'inactiveUrl'    => route('division.inactive-members', $division),
+                ];
             });
 
-        $totals = (object) [
-            'population'  => $divisions->sum('members_count'),
-            'outstanding' => $divisions->sum('outstandingCount'),
-            'inactive'    => $divisions->sum('inactiveCount'),
-        ];
-        $totals->pctOutstanding = $totals->population > 0 ? round($totals->outstanding / $totals->population * 100, 1) : 0;
-        $totals->pctInactive    = $totals->population > 0 ? round($totals->inactive / $totals->population * 100, 1) : 0;
+        $population  = $divisions->sum('population');
+        $outstanding = $divisions->sum('outstanding');
+        $inactive    = $divisions->sum('inactive');
 
-        return view('reports.outstanding-members', compact('divisions', 'totals', 'clanMax'));
+        return Inertia::render('reports/outstanding', [
+            'clanMax'   => $clanMax,
+            'divisions' => $divisions->values(),
+            'totals'    => [
+                'population'     => $population,
+                'outstanding'    => $outstanding,
+                'inactive'       => $inactive,
+                'active'         => $population - $inactive,
+                'pctOutstanding' => $population > 0 ? round($outstanding / $population * 100, 1) : 0,
+                'pctInactive'    => $population > 0 ? round($inactive / $population * 100, 1) : 0,
+                'pctActive'      => $population > 0 ? round(($population - $inactive) / $population * 100, 1) : 0,
+            ],
+        ]);
     }
 
     public function usersWithoutDiscordReport(): JsonResponse
@@ -161,7 +103,7 @@ class ReportsController extends Controller
             echo '---------- ' . $division->name . ' ---------- ' . PHP_EOL;
             $members = $division->members()->whereHas('user', function ($query) {
                 $query->where('role', '>', 2);
-            })->get();
+            })->with('user')->get();
             $sortedMembers = collect(Arr::sort($members, fn ($member) => $member->rank_id));
             $sortedMembers->each(function ($member) {
                 echo $member->present()->rankName() . ", {$member->user->role->value}" . PHP_EOL;
@@ -170,7 +112,7 @@ class ReportsController extends Controller
         }
     }
 
-    public function divisionTurnoverReport(): View
+    public function divisionTurnoverReport(): Response
     {
         $divisions = Division::active()
             ->orderBy('name')
@@ -181,29 +123,42 @@ class ReportsController extends Controller
                 'members as new_members_last90_count' => fn ($q) => $q->where('join_date', '>', now()->subDays(90)),
             ])
             ->get()
-            ->each(function ($division) {
-                $pop             = $division->members_count ?: 1;
-                $division->pct30 = round($division->new_members_last30_count / $pop * 100, 1);
-                $division->pct60 = round($division->new_members_last60_count / $pop * 100, 1);
-                $division->pct90 = round($division->new_members_last90_count / $pop * 100, 1);
+            ->map(function ($division) {
+                $pop = $division->members_count ?: 1;
+
+                return [
+                    'name'       => $division->name,
+                    'population' => $division->members_count,
+                    'last30'     => $division->new_members_last30_count,
+                    'last60'     => $division->new_members_last60_count,
+                    'last90'     => $division->new_members_last90_count,
+                    'pct30'      => round($division->new_members_last30_count / $pop * 100, 1),
+                    'pct60'      => round($division->new_members_last60_count / $pop * 100, 1),
+                    'pct90'      => round($division->new_members_last90_count / $pop * 100, 1),
+                ];
             });
 
-        $totals = (object) [
-            'population' => $divisions->sum('members_count'),
-            'last30'     => $divisions->sum('new_members_last30_count'),
-            'last60'     => $divisions->sum('new_members_last60_count'),
-            'last90'     => $divisions->sum('new_members_last90_count'),
-        ];
+        $population = $divisions->sum('population');
+        $totalPop   = $population ?: 1;
+        $last30     = $divisions->sum('last30');
+        $last60     = $divisions->sum('last60');
+        $last90     = $divisions->sum('last90');
 
-        $totalPop      = $totals->population ?: 1;
-        $totals->pct30 = round($totals->last30 / $totalPop * 100, 1);
-        $totals->pct60 = round($totals->last60 / $totalPop * 100, 1);
-        $totals->pct90 = round($totals->last90 / $totalPop * 100, 1);
-
-        return view('reports.division-turnover', compact('divisions', 'totals'));
+        return Inertia::render('reports/turnover', [
+            'divisions' => $divisions->values(),
+            'totals'    => [
+                'population' => $population,
+                'last30'     => $last30,
+                'last60'     => $last60,
+                'last90'     => $last90,
+                'pct30'      => round($last30 / $totalPop * 100, 1),
+                'pct60'      => round($last60 / $totalPop * 100, 1),
+                'pct90'      => round($last90 / $totalPop * 100, 1),
+            ],
+        ]);
     }
 
-    public function leadership(): View
+    public function leadership(): Response
     {
         $divisions = Division::active()
             ->orderBy('name')
@@ -211,17 +166,21 @@ class ReportsController extends Controller
             ->with([
                 'sergeants' => function ($query) {
                     $query
-                        ->orderByRaw('
-                    CASE
-                        WHEN position = ? THEN 9999
-                        ELSE -position
-                    END ASC
-                ', [Position::CLAN_ADMIN->value])
+                        ->orderByRaw('CASE WHEN position = ? THEN 9999 ELSE -position END ASC', [Position::CLAN_ADMIN->value])
                         ->orderByDesc('rank');
                 },
             ])
-            ->withCount('sgtAndSsgt')
-            ->get();
+            ->withCount(['sgtAndSsgt', 'members'])
+            ->get()
+            ->map(fn ($division) => [
+                'name'         => $division->name,
+                'abbreviation' => $division->abbreviation,
+                'logo'         => $division->getLogoPath(),
+                'memberCount'  => $division->members_count,
+                'sgtCount'     => $division->sgt_and_ssgt_count,
+                'sgtRatio'     => ratio($division->sgt_and_ssgt_count, $division->members_count),
+                'sergeants'    => $division->sergeants->map(fn (Member $member) => $this->leadershipRow($member))->values(),
+            ]);
 
         $leadership = Member::query()
             ->with('division')
@@ -229,8 +188,27 @@ class ReportsController extends Controller
             ->where('division_id', '!=', 0)
             ->orderByDesc('rank')
             ->orderBy('name')
-            ->get();
+            ->get()
+            ->map(fn (Member $member) => $this->leadershipRow($member));
 
-        return view('reports.leadership', compact('divisions', 'leadership'));
+        return Inertia::render('reports/leadership', [
+            'clanLeadership' => $leadership,
+            'divisions'      => $divisions->values(),
+        ]);
+    }
+
+    private function leadershipRow(Member $member): array
+    {
+        $position = $member->position;
+
+        return [
+            'name'         => $member->present()->rankName(),
+            'profileUrl'   => route('member', $member->getUrlParams()),
+            'position'     => $position?->getAbbreviation() ?: 'SGT',
+            'positionKind' => $position === Position::CLAN_ADMIN ? 'admin' : ($position?->name ? strtolower($position->name) : 'member'),
+            'positionSort' => $position === Position::CLAN_ADMIN ? 0 : ($position?->value ?? 0),
+            'lastPromoted' => $member->last_promoted_at?->format('Y-m-d'),
+            'lastTrained'  => $member->last_trained_at?->format('Y-m-d'),
+        ];
     }
 }

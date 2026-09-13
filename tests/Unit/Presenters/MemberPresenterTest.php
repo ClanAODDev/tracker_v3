@@ -60,6 +60,33 @@ class MemberPresenterTest extends TestCase
     }
 
     #[Test]
+    public function activity_bucket_tracks_the_division_inactivity_window()
+    {
+        $division = $this->createActiveDivision();
+        $division->settings()->set('inactivity_days', 90);
+
+        $cases = [
+            [null, 3],
+            [10, 0],
+            [30, 1],
+            [59, 1],
+            [60, 2],
+            [89, 2],
+            [90, 3],
+            [200, 3],
+        ];
+
+        foreach ($cases as [$days, $expected]) {
+            $member = $this->createMember([
+                'division_id'         => $division->id,
+                'last_voice_activity' => $days === null ? null : now()->subDays($days),
+            ]);
+
+            $this->assertSame($expected, $member->present()->activityBucket($division), "days={$days}");
+        }
+    }
+
+    #[Test]
     public function profile_activity_class_is_empty_when_active()
     {
         $member = $this->createMember(['last_voice_activity' => now()]);

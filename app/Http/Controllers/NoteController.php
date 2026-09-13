@@ -6,10 +6,8 @@ use App\Http\Requests\Note\CreateNote;
 use App\Models\Leave;
 use App\Models\Member;
 use App\Models\Note;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
 
 class NoteController extends Controller
 {
@@ -20,19 +18,6 @@ class NoteController extends Controller
         $this->showSuccessToast('Note saved successfully');
 
         return redirect()->back();
-    }
-
-    public function edit(Member $member, Note $note): View
-    {
-        $this->authorize('edit', $note);
-
-        $division = $member->division;
-
-        if (! $division) {
-            abort(404);
-        }
-
-        return view('member.edit-note', compact('note', 'division', 'member'));
     }
 
     public function update(Request $request, Member $member, Note $note): RedirectResponse
@@ -74,33 +59,27 @@ class NoteController extends Controller
         return redirect()->route('member', $member->getUrlParams());
     }
 
-    public function restore(Member $member, int $noteId): JsonResponse
+    public function restore(Member $member, int $noteId): RedirectResponse
     {
-        $note = Note::onlyTrashed()->where('id', $noteId)->where('member_id', $member->id)->first();
-
-        if (! $note) {
-            return response()->json(['success' => false, 'message' => 'Note not found'], 404);
-        }
+        $note = Note::onlyTrashed()->where('id', $noteId)->where('member_id', $member->id)->firstOrFail();
 
         $this->authorize('restore', $note);
 
         $note->restore();
+        $this->showSuccessToast('Note restored');
 
-        return response()->json(['success' => true]);
+        return redirect()->back();
     }
 
-    public function forceDelete(Member $member, int $noteId): JsonResponse
+    public function forceDelete(Member $member, int $noteId): RedirectResponse
     {
-        $note = Note::onlyTrashed()->where('id', $noteId)->where('member_id', $member->id)->first();
-
-        if (! $note) {
-            return response()->json(['success' => false, 'message' => 'Note not found'], 404);
-        }
+        $note = Note::onlyTrashed()->where('id', $noteId)->where('member_id', $member->id)->firstOrFail();
 
         $this->authorize('forceDelete', $note);
 
         $note->forceDelete();
+        $this->showSuccessToast('Note permanently deleted');
 
-        return response()->json(['success' => true]);
+        return redirect()->back();
     }
 }
