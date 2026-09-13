@@ -52,4 +52,26 @@ class HandleResourceTest extends TestCase
 
         $this->assertDatabaseMissing('handles', ['label' => 'Steam']);
     }
+
+    #[Test]
+    public function selecting_a_quick_pattern_fills_in_the_regex_and_hint(): void
+    {
+        $this->actingAs($this->createAdmin());
+
+        Livewire::test(CreateHandle::class)
+            ->fillForm(['label' => 'Discord', 'type' => 'discord'])
+            ->set('data.regex_preset', 'discord')
+            ->assertSet('data.regex', '/^[a-z0-9_.]{2,32}$/')
+            ->assertSet(
+                'data.regex_hint',
+                'Discord usernames are lowercase letters, numbers, underscores, and periods (2-32 characters).',
+            )
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $this->assertDatabaseHas('handles', [
+            'label' => 'Discord',
+            'regex' => '/^[a-z0-9_.]{2,32}$/',
+        ]);
+    }
 }
