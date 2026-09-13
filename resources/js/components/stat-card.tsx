@@ -1,3 +1,4 @@
+import { ChevronRight } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 import { Sparkline } from '@/components/charts';
@@ -60,6 +61,7 @@ export function StatCard({
                     <Sparkline data={trend} tone="auto" width={56} height={24} />
                 </div>
             )}
+            {onClick && <ChevronRight className="size-4 shrink-0 self-center text-muted-foreground" />}
         </Comp>
     );
 }
