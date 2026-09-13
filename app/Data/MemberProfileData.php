@@ -380,7 +380,7 @@ class MemberProfileData
 
         return $grouped
             ->reject(fn ($group, $id) => $skipIds->contains($id))
-            ->sortBy('award.display_order')
+            ->sortByDesc(fn ($group) => $group['latest']->created_at)
             ->map(function ($group, $awardId) use ($tieredGroups) {
                 $award  = $group['award'];
                 $rarity = $award->getRarity();

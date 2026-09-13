@@ -122,4 +122,33 @@ class MemberProfileTest extends TestCase
                 ->where('awards.list.0.name', 'Tier 3')
                 ->has('awards.list.0.tiers', 3));
     }
+
+    #[Test]
+    public function achievements_are_ordered_most_recently_earned_first()
+    {
+        $viewer = $this->createSeniorLeader();
+        $member = $this->createMember(['division_id' => $viewer->member->division_id]);
+
+        $older = Award::factory()->create(['name' => 'Older Award']);
+        $newer = Award::factory()->create(['name' => 'Newer Award']);
+
+        MemberAward::factory()->approved()->create([
+            'member_id'  => $member->id,
+            'award_id'   => $older->id,
+            'created_at' => now()->subYears(2),
+        ]);
+        MemberAward::factory()->approved()->create([
+            'member_id'  => $member->id,
+            'award_id'   => $newer->id,
+            'created_at' => now()->subDay(),
+        ]);
+
+        $this->actingAs($viewer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('awards.list', 2)
+                ->where('awards.list.0.name', 'Newer Award')
+                ->where('awards.list.1.name', 'Older Award'));
+    }
 }
