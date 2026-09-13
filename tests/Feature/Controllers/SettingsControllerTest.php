@@ -135,7 +135,27 @@ class SettingsControllerTest extends TestCase
             ]);
 
         $response->assertStatus(422);
-        $response->assertJson(['message' => 'Steam ID must be numeric.']);
+        $response->assertJson(['message' => 'Steam ID must be numeric.', 'index' => 0]);
+        $this->assertDatabaseMissing('handle_member', ['member_id' => $user->member->id]);
+    }
+
+    #[Test]
+    public function ingame_handles_error_reports_the_index_of_the_failing_row()
+    {
+        $user    = $this->createMemberWithUser();
+        $steam   = Handle::create(['label' => 'Steam', 'regex' => '/^[0-9]+$/', 'regex_hint' => 'Steam ID must be numeric.']);
+        $discord = Handle::create(['label' => 'Discord']);
+
+        $response = $this->actingAs($user)
+            ->postJson(route('settings.ingame-handles'), [
+                'handles' => [
+                    ['id' => '', 'handle_id' => $discord->id, 'value' => 'ValidName', 'primary' => true],
+                    ['id' => '', 'handle_id' => $steam->id, 'value' => 'not-numeric', 'primary' => false],
+                ],
+            ]);
+
+        $response->assertStatus(422);
+        $response->assertJson(['message' => 'Steam ID must be numeric.', 'index' => 1]);
         $this->assertDatabaseMissing('handle_member', ['member_id' => $user->member->id]);
     }
 }

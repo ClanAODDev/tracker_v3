@@ -128,7 +128,13 @@ class SettingsController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first()], 422);
+            $failedField = array_key_first($validator->errors()->messages());
+            preg_match('/^handles\.(\d+)\.value$/', $failedField, $matches);
+
+            return response()->json([
+                'message' => $validator->errors()->first(),
+                'index'   => isset($matches[1]) ? (int) $matches[1] : null,
+            ], 422);
         }
 
         IngameHandlesForm::saveHandles($member, $handles);

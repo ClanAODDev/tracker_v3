@@ -18,7 +18,7 @@ import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { SimpleSelect } from '@/components/ui/simple-select';
 import { Switch } from '@/components/ui/switch';
-import { getJson, postJson } from '@/lib/api';
+import { ApiError, getJson, postJson } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
 interface DivisionRef {
@@ -351,15 +351,33 @@ function HandlesDialog({
     const [rows, setRows] = useState<HandleRow[]>(current);
     const [count, setCount] = useState(current.length);
     const [saving, setSaving] = useState(false);
+    const [rowErrors, setRowErrors] = useState<Record<number, string>>({});
 
     function update(index: number, patch: Partial<HandleRow>) {
         setRows((prev) => prev.map((row, i) => (i === index ? { ...row, ...patch } : row)));
+        setRowErrors((prev) => {
+            if (!(index in prev)) return prev;
+            const next = { ...prev };
+            delete next[index];
+            return next;
+        });
+    }
+
+    function addRow() {
+        setRows((prev) => [...prev, { id: null, handleId: null, value: '', primary: false }]);
+        setRowErrors({});
+    }
+
+    function removeRow(index: number) {
+        setRows((prev) => prev.filter((_, idx) => idx !== index));
+        setRowErrors({});
     }
 
     async function save() {
         setSaving(true);
+        setRowErrors({});
+        const kept = rows.filter((r) => r.handleId && r.value.trim());
         try {
-            const kept = rows.filter((r) => r.handleId && r.value.trim());
             await postJson('/settings/ingame-handles', {
                 handles: kept.map((r) => ({
                     id: r.id ?? '',
@@ -372,7 +390,12 @@ function HandlesDialog({
             toast.success('In-game handles updated');
             setOpen(false);
         } catch (e) {
-            toast.error(e instanceof Error ? e.message : 'Failed to save');
+            const message = e instanceof Error ? e.message : 'Failed to save';
+            if (e instanceof ApiError && typeof e.data.index === 'number') {
+                const rowIndex = rows.indexOf(kept[e.data.index]);
+                if (rowIndex !== -1) setRowErrors({ [rowIndex]: message });
+            }
+            toast.error(message);
         } finally {
             setSaving(false);
         }
@@ -396,7 +419,7 @@ function HandlesDialog({
                 <div className="max-h-80 space-y-2 overflow-y-auto">
                 {rows.length === 0 && <p className="text-sm text-muted-foreground">No handles added.</p>}
                 {rows.map((row, i) => (
-                    <div key={i} className="flex flex-wrap items-center gap-2">
+                    <div key={i} className="flex flex-wrap items-start gap-2">
                         <SimpleSelect
                             value={row.handleId ? String(row.handleId) : '__none'}
                             onChange={(v) => update(i, { handleId: v === '__none' ? null : Number(v) })}
@@ -406,35 +429,28 @@ function HandlesDialog({
                             ]}
                             className="w-32"
                         />
-                        <Input
-                            value={row.value}
-                            onChange={(e) => update(i, { value: e.target.value })}
-                            placeholder="Username"
-                            className="h-9 flex-1"
-                        />
+                        <div className="min-w-0 flex-1">
+                            <Input
+                                value={row.value}
+                                onChange={(e) => update(i, { value: e.target.value })}
+                                placeholder="Username"
+                                className="h-9"
+                                aria-invalid={!!rowErrors[i]}
+                            />
+                            {rowErrors[i] && <p className="mt-1 text-xs text-destructive">{rowErrors[i]}</p>}
+                        </div>
                         <label className="flex items-center gap-1 text-xs text-muted-foreground">
                             <Checkbox checked={row.primary} onCheckedChange={(v) => update(i, { primary: v === true })} />
                             Primary
                         </label>
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            className="size-8 text-destructive"
-                            onClick={() => setRows((prev) => prev.filter((_, idx) => idx !== i))}
-                        >
+                        <Button size="icon" variant="ghost" className="size-8 text-destructive" onClick={() => removeRow(i)}>
                             <Trash2 className="size-4" />
                         </Button>
                     </div>
                 ))}
             </div>
                 <div className="mt-2">
-                    <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() =>
-                            setRows((prev) => [...prev, { id: null, handleId: null, value: '', primary: false }])
-                        }
-                    >
+                    <Button size="sm" variant="outline" onClick={addRow}>
                         <Plus /> Add handle
                     </Button>
                 </div>
