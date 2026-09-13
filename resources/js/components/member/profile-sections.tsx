@@ -4,7 +4,6 @@ import {
     Copy,
     ExternalLink,
     Gamepad2,
-    Layers,
     MessageSquareText,
     Mic,
     Sparkles,
@@ -312,6 +311,53 @@ export function DivisionComparison({ data }: { data: ComparisonData }) {
 
 const ACHIEVEMENTS_COLLAPSE_THRESHOLD = 6;
 
+function TierStack({ tiers }: { tiers: NonNullable<AwardsData['list'][number]['tiers']> }) {
+    const [hovered, setHovered] = useState(false);
+    // Oldest tier first, so it renders (and z-indexes) beneath the newest.
+    const stack = [...tiers].reverse();
+    const n = stack.length;
+    const spread = hovered ? 16 : 6;
+
+    return (
+        <div
+            className="relative size-16"
+            title={tiers.map((t) => t.name).join(', ')}
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+        >
+            {stack.map((tier, i) => {
+                const pos = i - (n - 1) / 2;
+                const fade = n - 1 - i;
+                const scale = Math.max(0.7, 1 - fade * 0.05);
+                const opacity = Math.max(0.5, 1 - fade * 0.09);
+
+                return (
+                    <div
+                        key={`${tier.name}-${i}`}
+                        className="absolute inset-0 flex items-center justify-center transition-transform duration-200"
+                        style={{
+                            transform: `translate(${pos * spread}px, ${-pos * spread * 0.6}px) scale(${scale})`,
+                            opacity,
+                            zIndex: i + 1,
+                        }}
+                    >
+                        {tier.image ? (
+                            <img
+                                src={tier.image}
+                                alt=""
+                                loading="lazy"
+                                className="max-h-14 max-w-full object-contain drop-shadow"
+                            />
+                        ) : (
+                            <Trophy className="size-7 text-muted-foreground" />
+                        )}
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
 function AwardCard({ award, className }: { award: AwardsData['list'][number]; className?: string }) {
     return (
         <Link
@@ -329,14 +375,11 @@ function AwardCard({ award, className }: { award: AwardsData['list'][number]; cl
                 </span>
             )}
             <span className="mb-2 h-0.5 w-8 rounded-full" style={{ background: rarityColor(award.rarity) }} />
-            <div
-                className="flex size-16 items-center justify-center"
-                title={award.tiers ? award.tiers.map((t) => t.name).join(', ') : undefined}
-            >
-                {award.image ? (
+            <div className="flex size-16 items-center justify-center">
+                {award.tiers ? (
+                    <TierStack tiers={award.tiers} />
+                ) : award.image ? (
                     <img src={award.image} alt="" loading="lazy" className="max-h-16 max-w-full object-contain" />
-                ) : award.tiers ? (
-                    <Layers className="size-7 text-muted-foreground" />
                 ) : (
                     <Trophy className="size-8 text-muted-foreground" />
                 )}

@@ -163,7 +163,8 @@ class HandleResource extends Resource
             ->columns([
                 TextColumn::make('label')
                     ->searchable(),
-                ToggleColumn::make('enabled'),
+                ToggleColumn::make('enabled')
+                    ->sortable(),
                 TextColumn::make('regex')
                     ->label('Validation regex')
                     ->placeholder('None')
