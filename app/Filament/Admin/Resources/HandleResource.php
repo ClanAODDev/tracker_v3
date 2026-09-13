@@ -6,6 +6,7 @@ use App\Filament\Admin\Resources\HandleResource\Pages\CreateHandle;
 use App\Filament\Admin\Resources\HandleResource\Pages\EditHandle;
 use App\Filament\Admin\Resources\HandleResource\Pages\ListHandles;
 use App\Models\Handle;
+use Closure;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -36,6 +37,19 @@ class HandleResource extends Resource
                 TextInput::make('type')
                     ->required()
                     ->maxLength(255),
+                TextInput::make('regex')
+                    ->label('Validation regex')
+                    ->helperText('Optional PCRE pattern a handle value must match, e.g. /^[0-9]+$/ for a numeric-only Steam ID. Leave blank to allow any format.')
+                    ->rule(static fn (): Closure => static function (string $attribute, $value, Closure $fail): void {
+                        if ($value !== null && $value !== '' && @preg_match($value, '') === false) {
+                            $fail('Enter a valid PCRE pattern, e.g. /^[0-9]+$/.');
+                        }
+                    })
+                    ->maxLength(255),
+                TextInput::make('regex_hint')
+                    ->label('Format hint')
+                    ->helperText('Shown to members when their value does not match the pattern above, e.g. "Steam ID must be numeric".')
+                    ->maxLength(255),
                 Textarea::make('comments')
                     ->maxLength(255)
                     ->columnSpanFull()
@@ -51,6 +65,10 @@ class HandleResource extends Resource
             ->columns([
                 TextColumn::make('label')
                     ->searchable(),
+                TextColumn::make('regex')
+                    ->label('Validation regex')
+                    ->placeholder('None')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('comments')
                     ->searchable(),
                 TextColumn::make('created_at')
