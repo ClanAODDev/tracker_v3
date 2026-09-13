@@ -3,6 +3,8 @@
 namespace Tests\Feature\Filament;
 
 use App\Filament\Admin\Resources\HandleResource\Pages\CreateHandle;
+use App\Filament\Admin\Resources\HandleResource\Pages\EditHandle;
+use App\Models\Handle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
@@ -73,5 +75,32 @@ class HandleResourceTest extends TestCase
             'label' => 'Discord',
             'regex' => '/^[a-z0-9_.]{2,32}$/',
         ]);
+    }
+
+    #[Test]
+    public function new_handle_types_default_to_enabled(): void
+    {
+        $this->actingAs($this->createAdmin());
+
+        Livewire::test(CreateHandle::class)
+            ->fillForm(['label' => 'Steam', 'type' => 'steam'])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $this->assertDatabaseHas('handles', ['label' => 'Steam', 'enabled' => true]);
+    }
+
+    #[Test]
+    public function an_admin_can_disable_an_existing_handle_type(): void
+    {
+        $this->actingAs($this->createAdmin());
+        $handle = Handle::factory()->create(['label' => 'Epic Games', 'enabled' => true]);
+
+        Livewire::test(EditHandle::class, ['record' => $handle->getRouteKey()])
+            ->fillForm(['enabled' => false])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertFalse($handle->fresh()->enabled);
     }
 }

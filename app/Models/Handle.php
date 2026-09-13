@@ -15,6 +15,7 @@ class Handle extends Model
 
     protected $casts = [
         'visible' => 'boolean',
+        'enabled' => 'boolean',
     ];
 
     protected $guarded = [];

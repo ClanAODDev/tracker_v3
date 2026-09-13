@@ -13,11 +13,14 @@ use Filament\Actions\EditAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
 
 class HandleResource extends Resource
@@ -44,6 +47,10 @@ class HandleResource extends Resource
                         TextInput::make('type')
                             ->required()
                             ->maxLength(255),
+                        Toggle::make('enabled')
+                            ->default(true)
+                            ->helperText('Disabled types are hidden from the self-service and member-edit handle pickers, but any values already saved against them are unaffected.')
+                            ->columnSpanFull(),
                         TextInput::make('url')
                             ->label('Profile URL prefix')
                             ->url()
@@ -156,6 +163,7 @@ class HandleResource extends Resource
             ->columns([
                 TextColumn::make('label')
                     ->searchable(),
+                ToggleColumn::make('enabled'),
                 TextColumn::make('regex')
                     ->label('Validation regex')
                     ->placeholder('None')
@@ -172,7 +180,7 @@ class HandleResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                TernaryFilter::make('enabled'),
             ])
             ->recordActions([
                 EditAction::make(),
