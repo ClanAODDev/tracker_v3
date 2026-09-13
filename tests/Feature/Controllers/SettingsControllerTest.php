@@ -94,4 +94,48 @@ class SettingsControllerTest extends TestCase
     {
         $this->getJson(route('settings.data'))->assertUnauthorized();
     }
+
+    #[Test]
+    public function ingame_handles_are_saved_when_value_matches_the_handle_format()
+    {
+        $user   = $this->createMemberWithUser();
+        $handle = Handle::create(['label' => 'Steam', 'regex' => '/^[0-9]+$/']);
+
+        $this->actingAs($user)
+            ->postJson(route('settings.ingame-handles'), [
+                'handles' => [
+                    ['id' => '', 'handle_id' => $handle->id, 'value' => '76561198000000000', 'primary' => true],
+                ],
+            ])
+            ->assertOk()
+            ->assertJson(['count' => 1]);
+
+        $this->assertDatabaseHas('handle_member', [
+            'member_id' => $user->member->id,
+            'handle_id' => $handle->id,
+            'value'     => '76561198000000000',
+        ]);
+    }
+
+    #[Test]
+    public function ingame_handles_reject_a_value_that_fails_the_handle_format()
+    {
+        $user   = $this->createMemberWithUser();
+        $handle = Handle::create([
+            'label'      => 'Steam',
+            'regex'      => '/^[0-9]+$/',
+            'regex_hint' => 'Steam ID must be numeric.',
+        ]);
+
+        $response = $this->actingAs($user)
+            ->postJson(route('settings.ingame-handles'), [
+                'handles' => [
+                    ['id' => '', 'handle_id' => $handle->id, 'value' => 'not-numeric', 'primary' => true],
+                ],
+            ]);
+
+        $response->assertStatus(422);
+        $response->assertJson(['message' => 'Steam ID must be numeric.']);
+        $this->assertDatabaseMissing('handle_member', ['member_id' => $user->member->id]);
+    }
 }

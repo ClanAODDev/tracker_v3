@@ -6,9 +6,11 @@ use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Http\Requests\Member\SyncDiscordAvatar;
 use App\Models\Division;
 use App\Models\Handle;
+use App\Rules\HandleFormat;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
+use Illuminate\Support\Facades\Validator;
 use Throwable;
 
 #[Middleware('auth')]
@@ -115,7 +117,21 @@ class SettingsController extends Controller
             return response()->json(['error' => 'No member record'], 400);
         }
 
-        IngameHandlesForm::saveHandles($member, $request->input('handles', []));
+        $handles = $request->input('handles', []);
+
+        $rules = [];
+        foreach ($handles as $i => $row) {
+            $handle                    = ! empty($row['handle_id']) ? Handle::find($row['handle_id']) : null;
+            $rules["handles.$i.value"] = [new HandleFormat($handle)];
+        }
+
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        IngameHandlesForm::saveHandles($member, $handles);
 
         return response()->json(['success' => true, 'count' => $member->memberHandles()->count()]);
     }
