@@ -310,10 +310,67 @@ export function DivisionComparison({ data }: { data: ComparisonData }) {
     );
 }
 
+const ACHIEVEMENTS_COLLAPSE_THRESHOLD = 6;
+
+function AwardCard({ award, className }: { award: AwardsData['list'][number]; className?: string }) {
+    return (
+        <Link
+            href={award.url}
+            title={award.reason ?? undefined}
+            className={cn(
+                'group relative flex flex-col items-center rounded-md border border-border bg-card p-3 text-center transition-colors hover:border-[color:var(--rarity)]',
+                className,
+            )}
+            style={{ '--rarity': rarityColor(award.rarity) } as CSSProperties}
+        >
+            {award.count > 1 && (
+                <span className="absolute right-1.5 top-1.5 rounded-full bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                    ×{award.count}
+                </span>
+            )}
+            <span className="mb-2 h-0.5 w-8 rounded-full" style={{ background: rarityColor(award.rarity) }} />
+            <div className="flex size-16 items-center justify-center">
+                {award.tiers ? (
+                    <span className="flex items-center" title={award.tiers.map((t) => t.name).join(', ')}>
+                        <Layers className="size-7 text-muted-foreground" />
+                    </span>
+                ) : award.image ? (
+                    <img src={award.image} alt="" loading="lazy" className="max-h-16 max-w-full object-contain" />
+                ) : (
+                    <Trophy className="size-8 text-muted-foreground" />
+                )}
+            </div>
+            <p className="mt-2 text-xs font-medium">{award.name}</p>
+            <span
+                className="mt-1.5 rounded-full px-2 py-0.5 text-[11px]"
+                style={{
+                    background: `color-mix(in srgb, ${rarityColor(award.rarity)} 15%, transparent)`,
+                    color: rarityColor(award.rarity),
+                }}
+            >
+                {award.earnedOn}
+            </span>
+        </Link>
+    );
+}
+
 export function Achievements({ awards }: { awards: AwardsData }) {
+    const [expanded, setExpanded] = useState(false);
+    const collapsible = awards.list.length > ACHIEVEMENTS_COLLAPSE_THRESHOLD;
+
     return (
         <section>
-            <SectionTitle>Achievements</SectionTitle>
+            <SectionTitle
+                action={
+                    collapsible ? (
+                        <Button size="xs" variant="ghost" onClick={() => setExpanded((v) => !v)}>
+                            {expanded ? 'Show less' : `Show all ${awards.list.length}`}
+                        </Button>
+                    ) : undefined
+                }
+            >
+                Achievements
+            </SectionTitle>
             <div className="mb-4 flex flex-wrap gap-1.5">
                 {RARITY_ORDER.filter((r) => (awards.byRarity[r] ?? 0) > 0).map((r) => (
                     <span
@@ -328,53 +385,19 @@ export function Achievements({ awards }: { awards: AwardsData }) {
                     </span>
                 ))}
             </div>
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-                {awards.list.map((award) => (
-                    <Link
-                        key={award.id}
-                        href={award.url}
-                        title={award.reason ?? undefined}
-                        className="group relative flex flex-col items-center rounded-md border border-border bg-card p-3 text-center transition-colors hover:border-[color:var(--rarity)]"
-                        style={{ '--rarity': rarityColor(award.rarity) } as CSSProperties}
-                    >
-                        {award.count > 1 && (
-                            <span className="absolute right-1.5 top-1.5 rounded-full bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
-                                ×{award.count}
-                            </span>
-                        )}
-                        <span
-                            className="mb-2 h-0.5 w-8 rounded-full"
-                            style={{ background: rarityColor(award.rarity) }}
-                        />
-                        <div className="flex size-16 items-center justify-center">
-                            {award.tiers ? (
-                                <span className="flex items-center" title={award.tiers.map((t) => t.name).join(', ')}>
-                                    <Layers className="size-7 text-muted-foreground" />
-                                </span>
-                            ) : award.image ? (
-                                <img
-                                    src={award.image}
-                                    alt=""
-                                    loading="lazy"
-                                    className="max-h-16 max-w-full object-contain"
-                                />
-                            ) : (
-                                <Trophy className="size-8 text-muted-foreground" />
-                            )}
-                        </div>
-                        <p className="mt-2 text-xs font-medium">{award.name}</p>
-                        <span
-                            className="mt-1.5 rounded-full px-2 py-0.5 text-[11px]"
-                            style={{
-                                background: `color-mix(in srgb, ${rarityColor(award.rarity)} 15%, transparent)`,
-                                color: rarityColor(award.rarity),
-                            }}
-                        >
-                            {award.earnedOn}
-                        </span>
-                    </Link>
-                ))}
-            </div>
+            {expanded || !collapsible ? (
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                    {awards.list.map((award) => (
+                        <AwardCard key={award.id} award={award} />
+                    ))}
+                </div>
+            ) : (
+                <div className="flex gap-3 overflow-x-auto pb-1">
+                    {awards.list.map((award) => (
+                        <AwardCard key={award.id} award={award} className="w-28 shrink-0 sm:w-32" />
+                    ))}
+                </div>
+            )}
         </section>
     );
 }
