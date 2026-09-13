@@ -21,6 +21,16 @@ function guardAuth(response: Response): void {
     }
 }
 
+export class ApiError extends Error {
+    data: Record<string, unknown>;
+
+    constructor(message: string, data: Record<string, unknown> = {}) {
+        super(message);
+        this.name = 'ApiError';
+        this.data = data;
+    }
+}
+
 export async function postJson<T = unknown>(url: string, body: Record<string, unknown>): Promise<T> {
     const response = await fetch(url, {
         method: 'POST',
@@ -40,7 +50,7 @@ export async function postJson<T = unknown>(url: string, body: Record<string, un
     const data = await response.json().catch(() => ({}));
 
     if (!response.ok) {
-        throw new Error((data as { message?: string }).message ?? 'Request failed');
+        throw new ApiError((data as { message?: string }).message ?? 'Request failed', data as Record<string, unknown>);
     }
 
     return data as T;
