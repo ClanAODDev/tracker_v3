@@ -353,7 +353,7 @@ function DetailView({
                     {detail.responses.map((r, i) => (
                         <div key={i}>
                             <dt
-                                className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground [&_p]:m-0"
+                                className="truncate text-[11px] font-semibold uppercase tracking-wide text-dim-foreground [&_p]:m-0 [&_p]:truncate"
                                 dangerouslySetInnerHTML={{ __html: linkifyHtml(r.label) }}
                             />
                             <dd
