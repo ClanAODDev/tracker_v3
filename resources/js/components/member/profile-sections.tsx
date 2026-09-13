@@ -329,13 +329,14 @@ function AwardCard({ award, className }: { award: AwardsData['list'][number]; cl
                 </span>
             )}
             <span className="mb-2 h-0.5 w-8 rounded-full" style={{ background: rarityColor(award.rarity) }} />
-            <div className="flex size-16 items-center justify-center">
-                {award.tiers ? (
-                    <span className="flex items-center" title={award.tiers.map((t) => t.name).join(', ')}>
-                        <Layers className="size-7 text-muted-foreground" />
-                    </span>
-                ) : award.image ? (
+            <div
+                className="flex size-16 items-center justify-center"
+                title={award.tiers ? award.tiers.map((t) => t.name).join(', ') : undefined}
+            >
+                {award.image ? (
                     <img src={award.image} alt="" loading="lazy" className="max-h-16 max-w-full object-contain" />
+                ) : award.tiers ? (
+                    <Layers className="size-7 text-muted-foreground" />
                 ) : (
                     <Trophy className="size-8 text-muted-foreground" />
                 )}

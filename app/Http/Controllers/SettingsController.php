@@ -65,9 +65,19 @@ class SettingsController extends Controller
                 'selected' => $member->partTimeDivisions()->pluck('divisions.id')->all(),
             ];
 
+            $memberHandles = $member->memberHandles()->with('handle:id,label')->get();
+            $usedHandleIds = $memberHandles->pluck('handle_id');
+
             $payload['handles'] = [
-                'types'   => Handle::orderBy('label')->get(['id', 'label']),
-                'current' => $member->memberHandles()->with('handle:id,label')->get()->map(fn ($mh) => [
+                'types' => Handle::query()
+                    ->where(fn ($q) => $q->where('enabled', true)->orWhereIn('id', $usedHandleIds))
+                    ->orderBy('label')
+                    ->get()
+                    ->map(fn (Handle $h) => [
+                        'id'    => $h->id,
+                        'label' => $h->enabled ? $h->label : "{$h->label} (disabled)",
+                    ]),
+                'current' => $memberHandles->map(fn ($mh) => [
                     'id'       => $mh->id,
                     'handleId' => $mh->handle_id,
                     'value'    => $mh->value,

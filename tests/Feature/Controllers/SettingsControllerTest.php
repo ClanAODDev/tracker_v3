@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Models\Handle;
+use App\Models\MemberHandle;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -32,6 +33,31 @@ class SettingsControllerTest extends TestCase
                 'handles'           => ['types', 'current'],
                 'transferableDivisions',
             ]);
+    }
+
+    #[Test]
+    public function handle_types_list_hides_disabled_types_not_in_use_but_keeps_ones_the_member_already_has()
+    {
+        $user           = $this->createMemberWithUser();
+        $enabled        = Handle::create(['label' => 'Steam', 'enabled' => true]);
+        $disabledUnused = Handle::create(['label' => 'Old Platform', 'enabled' => false]);
+        $disabledInUse  = Handle::create(['label' => 'Legacy Platform', 'enabled' => false]);
+
+        MemberHandle::create([
+            'member_id' => $user->member->id,
+            'handle_id' => $disabledInUse->id,
+            'value'     => 'SomeName',
+            'primary'   => true,
+        ]);
+
+        $response = $this->actingAs($user)->getJson(route('settings.data'))->assertOk();
+
+        $labels = collect($response->json('handles.types'))->pluck('label');
+
+        $this->assertTrue($labels->contains('Steam'));
+        $this->assertTrue($labels->contains('Legacy Platform (disabled)'));
+        $this->assertFalse($labels->contains('Old Platform'));
+        $this->assertFalse($labels->contains('Old Platform (disabled)'));
     }
 
     #[Test]

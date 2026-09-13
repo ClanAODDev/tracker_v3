@@ -4,6 +4,7 @@ namespace Tests\Feature\Filament;
 
 use App\Filament\Mod\Resources\MemberResource\Pages\EditMember;
 use App\Models\Handle;
+use App\Models\MemberHandle;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -74,5 +75,32 @@ class MemberResourceIngameHandlesTest extends TestCase
             ->assertHasFormErrors(['handleGroups.0.value']);
 
         $this->assertDatabaseMissing('handle_member', ['member_id' => $member->id]);
+    }
+
+    #[Test]
+    public function editing_a_member_with_an_existing_disabled_handle_type_still_saves(): void
+    {
+        $division = $this->createActiveDivision();
+        $srLdr    = $this->createSeniorLeader($division);
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $handle   = Handle::create(['label' => 'Old Platform', 'enabled' => false]);
+        MemberHandle::create([
+            'member_id' => $member->id,
+            'handle_id' => $handle->id,
+            'value'     => 'LegacyName',
+            'primary'   => true,
+        ]);
+
+        $this->actingAs($srLdr);
+
+        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertDatabaseHas('handle_member', [
+            'member_id' => $member->id,
+            'handle_id' => $handle->id,
+            'value'     => 'LegacyName',
+        ]);
     }
 }

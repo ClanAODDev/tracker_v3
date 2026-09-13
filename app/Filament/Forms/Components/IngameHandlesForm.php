@@ -35,7 +35,17 @@ class IngameHandlesForm
                 Select::make('handle_id')
                     ->label('Game / Platform')
                     ->placeholder('Select a game or platform...')
-                    ->options(Handle::orderBy('label')->pluck('label', 'id'))
+                    ->options(function (Get $get) {
+                        $current = $get('handle_id');
+
+                        return Handle::query()
+                            ->where(fn ($query) => $query->where('enabled', true)->when($current, fn ($q) => $q->orWhere('id', $current)))
+                            ->orderBy('label')
+                            ->get()
+                            ->mapWithKeys(fn (Handle $handle) => [
+                                $handle->id => $handle->enabled ? $handle->label : "{$handle->label} (disabled)",
+                            ]);
+                    })
                     ->searchable()
                     ->live()
                     ->required(),
