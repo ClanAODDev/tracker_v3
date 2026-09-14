@@ -56,6 +56,29 @@ export async function postJson<T = unknown>(url: string, body: Record<string, un
     return data as T;
 }
 
+export async function deleteJson<T = unknown>(url: string): Promise<T> {
+    const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+            Accept: 'application/json',
+            'X-CSRF-TOKEN': csrfToken(),
+            'X-XSRF-TOKEN': xsrfToken(),
+            'X-Requested-With': 'XMLHttpRequest',
+        },
+        credentials: 'same-origin',
+    });
+
+    guardAuth(response);
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+        throw new ApiError((data as { message?: string }).message ?? 'Request failed', data as Record<string, unknown>);
+    }
+
+    return data as T;
+}
+
 export async function getJson<T = unknown>(url: string): Promise<T> {
     const response = await fetch(url, {
         headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
