@@ -168,7 +168,7 @@ export function ProfileStats({ stats, canCreateNote, onTenure, onRecruits, onRem
                         ) : (
                             <span>Never connected</span>
                         )}
-                        {stats.activity.reminders.length > 0 && (
+                        {(stats.activity.reminders.length > 0 || stats.activity.canRemind) && (
                             <button
                                 type="button"
                                 onClick={onReminders}
@@ -176,8 +176,9 @@ export function ProfileStats({ stats, canCreateNote, onTenure, onRecruits, onRem
                                 title="View inactivity reminder history"
                             >
                                 <Bell className="size-3" />
-                                {stats.activity.reminders.length} reminder
-                                {stats.activity.reminders.length === 1 ? '' : 's'}
+                                {stats.activity.reminders.length > 0
+                                    ? `${stats.activity.reminders.length} reminder${stats.activity.reminders.length === 1 ? '' : 's'}`
+                                    : 'Remind'}
                                 <ChevronRight className="size-3" />
                             </button>
                         )}

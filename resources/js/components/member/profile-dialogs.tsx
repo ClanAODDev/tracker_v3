@@ -1,10 +1,13 @@
-import { Link } from '@inertiajs/react';
-import type { ReactNode } from 'react';
+import { Link, router } from '@inertiajs/react';
+import { Bell } from 'lucide-react';
+import { type ReactNode, useState } from 'react';
+import { toast } from 'sonner';
 
 import { RankHistoryList, type RankTimelineData } from '@/components/member/rank-timeline';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { postJson } from '@/lib/api';
 
 export interface ProfileRef {
     name: string;
@@ -26,6 +29,9 @@ export interface ActivityStats {
     healthPct: number;
     divisionMax: number;
     reminders: Array<{ date: string; by: string }>;
+    remindedToday: boolean;
+    canRemind: boolean;
+    remindUrl: string;
     canClearReminders: boolean;
     clearRemindersUrl: string;
 }
@@ -132,6 +138,21 @@ export function ReminderHistoryDialog({
     activity,
 }: DialogControl & { activity: ActivityStats }) {
     const count = activity.reminders.length;
+    const [reminding, setReminding] = useState(false);
+
+    async function markReminded() {
+        setReminding(true);
+        try {
+            const res = await postJson<{ title: string }>(activity.remindUrl, {});
+            toast.success(res.title);
+            router.reload({ only: ['stats'] });
+        } catch (e) {
+            toast.error(e instanceof Error ? e.message : 'Failed to mark reminded');
+        } finally {
+            setReminding(false);
+        }
+    }
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-sm">
@@ -149,20 +170,27 @@ export function ReminderHistoryDialog({
                         </li>
                     ))}
                 </ul>
-                {activity.canClearReminders && (
-                    <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => {
-                            // eslint-disable-next-line no-alert
-                            if (confirm('Clear all reminders for this member?')) {
-                                window.location.href = activity.clearRemindersUrl;
-                            }
-                        }}
-                    >
-                        Clear reminders
-                    </Button>
-                )}
+                <div className="flex flex-wrap gap-2">
+                    {activity.canRemind && (
+                        <Button size="sm" disabled={reminding || activity.remindedToday} onClick={markReminded}>
+                            <Bell /> {activity.remindedToday ? 'Reminded today' : 'Mark reminded'}
+                        </Button>
+                    )}
+                    {activity.canClearReminders && (
+                        <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => {
+                                // eslint-disable-next-line no-alert
+                                if (confirm('Clear all reminders for this member?')) {
+                                    window.location.href = activity.clearRemindersUrl;
+                                }
+                            }}
+                        >
+                            Clear reminders
+                        </Button>
+                    )}
+                </div>
             </DialogContent>
         </Dialog>
     );
