@@ -1,7 +1,6 @@
 import { Link } from '@inertiajs/react';
 import {
     Bell,
-    ChevronRight,
     Copy,
     ExternalLink,
     Gamepad2,
@@ -169,20 +168,17 @@ export function ProfileStats({ stats, canCreateNote, onTenure, onRecruits, onRem
                             <span>Never connected</span>
                         )}
                         {(stats.activity.reminders.length > 0 || stats.activity.canRemind) && (
-                            <button
-                                type="button"
-                                onClick={onReminders}
-                                className="ml-2 inline-flex items-center gap-1 text-primary hover:underline"
-                                title="View inactivity reminder history"
-                            >
+                            <span className="ml-2 inline-flex items-center gap-1 text-primary">
                                 <Bell className="size-3" />
                                 {stats.activity.reminders.length > 0
                                     ? `${stats.activity.reminders.length} reminder${stats.activity.reminders.length === 1 ? '' : 's'}`
                                     : 'Remind'}
-                                <ChevronRight className="size-3" />
-                            </button>
+                            </span>
                         )}
                     </>
+                }
+                onClick={
+                    stats.activity.reminders.length > 0 || stats.activity.canRemind ? onReminders : undefined
                 }
             />
 

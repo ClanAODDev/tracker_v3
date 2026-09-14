@@ -7,7 +7,7 @@ import { RankHistoryList, type RankTimelineData } from '@/components/member/rank
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { postJson } from '@/lib/api';
+import { deleteJson, postJson } from '@/lib/api';
 
 export interface ProfileRef {
     name: string;
@@ -139,6 +139,7 @@ export function ReminderHistoryDialog({
 }: DialogControl & { activity: ActivityStats }) {
     const count = activity.reminders.length;
     const [reminding, setReminding] = useState(false);
+    const [clearing, setClearing] = useState(false);
 
     async function markReminded() {
         setReminding(true);
@@ -150,6 +151,21 @@ export function ReminderHistoryDialog({
             toast.error(e instanceof Error ? e.message : 'Failed to mark reminded');
         } finally {
             setReminding(false);
+        }
+    }
+
+    async function clearReminders() {
+        // eslint-disable-next-line no-alert
+        if (!confirm('Clear all reminders for this member?')) return;
+        setClearing(true);
+        try {
+            await deleteJson(activity.clearRemindersUrl);
+            toast.success('Reminders cleared');
+            router.reload({ only: ['stats'] });
+        } catch (e) {
+            toast.error(e instanceof Error ? e.message : 'Failed to clear reminders');
+        } finally {
+            setClearing(false);
         }
     }
 
@@ -177,16 +193,7 @@ export function ReminderHistoryDialog({
                         </Button>
                     )}
                     {activity.canClearReminders && (
-                        <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => {
-                                // eslint-disable-next-line no-alert
-                                if (confirm('Clear all reminders for this member?')) {
-                                    window.location.href = activity.clearRemindersUrl;
-                                }
-                            }}
-                        >
+                        <Button variant="destructive" size="sm" disabled={clearing} onClick={clearReminders}>
                             Clear reminders
                         </Button>
                     )}
