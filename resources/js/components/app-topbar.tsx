@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 import { MemberSearch } from '@/components/member-search';
 import { SettingsSheet } from '@/components/settings/settings-sheet';
+import { ToolsMenu } from '@/components/tools/tools-menu';
 import { TrackerHomeLink } from '@/components/tracker-logo';
 import { UserMenu } from '@/components/user-menu';
 import { Button } from '@/components/ui/button';
@@ -57,6 +58,7 @@ export function AppTopbar({ onOpenNav, navSide = 'left' }: { onOpenNav: () => vo
                             <Search className="size-5" />
                         </Button>
                         <MemberSearch className="hidden sm:block" />
+                        <ToolsMenu />
                         <UserMenu onOpenSettings={() => setSettingsOpen(true)} />
                         {navSide === 'right' && hamburger}
                     </div>

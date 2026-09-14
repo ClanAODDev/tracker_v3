@@ -24,6 +24,7 @@ Route::post('auth/discord/register', [DiscordController::class, 'register'])->na
 Route::post('auth/discord/application', [DiscordController::class, 'submitApplication'])->name('auth.discord.application')->middleware('auth');
 
 require 'partials/application.php';
+require 'partials/tools.php';
 require 'partials/tickets.php';
 require 'partials/ajax.php';
 require 'partials/members.php';
