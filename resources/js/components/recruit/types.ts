@@ -38,6 +38,8 @@ export interface PendingDiscordUser {
 
 export interface DivisionRecruitData {
     name: string;
+    handleLabel: string | null;
+    handleHint: string | null;
     platoons: RecruitPlatoon[];
     threads: RecruitThread[];
     tasks: RecruitTask[];

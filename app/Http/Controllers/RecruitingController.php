@@ -191,8 +191,10 @@ class RecruitingController extends Controller
         $pendingDiscord = $this->discordRecruitmentService->getPendingDiscordUsers($division, $allPending);
 
         return [
-            'name'     => $division->name,
-            'platoons' => $platoons->map(fn ($p) => [
+            'name'        => $division->name,
+            'handleLabel' => $division->handle?->label,
+            'handleHint'  => $division->handle?->regex_hint,
+            'platoons'    => $platoons->map(fn ($p) => [
                 'id'            => $p->id,
                 'name'          => $p->name,
                 'members_count' => $p->members_count,
