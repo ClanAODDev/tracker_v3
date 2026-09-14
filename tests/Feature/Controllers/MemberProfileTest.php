@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Enums\Rank;
+use App\Models\ActivityReminder;
 use App\Models\Award;
 use App\Models\MemberAward;
 use App\Models\Note;
@@ -121,6 +122,53 @@ class MemberProfileTest extends TestCase
                 ->has('awards.list', 1)
                 ->where('awards.list.0.name', 'Tier 3')
                 ->has('awards.list.0.tiers', 3));
+    }
+
+    #[Test]
+    public function an_officer_can_remind_a_member_with_no_existing_reminders()
+    {
+        $officer = $this->createOfficer();
+        $member  = $this->createMember(['division_id' => $officer->member->division_id]);
+
+        $this->actingAs($officer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('stats.activity.canRemind', true)
+                ->where('stats.activity.remindedToday', false)
+                ->has('stats.activity.remindUrl'));
+    }
+
+    #[Test]
+    public function reminded_today_is_true_once_a_reminder_was_sent_today()
+    {
+        $officer = $this->createOfficer();
+        $member  = $this->createMember(['division_id' => $officer->member->division_id]);
+
+        ActivityReminder::create([
+            'member_id'      => $member->id,
+            'division_id'    => $member->division_id,
+            'reminded_by_id' => $officer->id,
+        ]);
+
+        $this->actingAs($officer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('stats.activity.remindedToday', true));
+    }
+
+    #[Test]
+    public function a_plain_member_cannot_remind_anyone()
+    {
+        $viewer = $this->createMemberWithUser();
+        $member = $this->createMember();
+
+        $this->actingAs($viewer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('stats.activity.canRemind', false));
     }
 
     #[Test]

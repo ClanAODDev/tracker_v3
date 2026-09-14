@@ -72,7 +72,9 @@ export function FormStep({ form }: { form: RecruitForm }) {
             >
                 <div className="grid gap-4 sm:grid-cols-3">
                     <div className="grid gap-1.5">
-                        <Label htmlFor="forum_name">Forum name *</Label>
+                        <Label htmlFor="forum_name" className="min-h-9 leading-tight">
+                            Forum name *
+                        </Label>
                         <div className="flex gap-1.5">
                             <Input
                                 id="forum_name"
@@ -96,7 +98,9 @@ export function FormStep({ form }: { form: RecruitForm }) {
                         <ForumNameHint form={form} />
                     </div>
                     <div className="grid gap-1.5">
-                        <Label htmlFor="ingame">{props.handleLabel ?? 'In-game handle'} *</Label>
+                        <Label htmlFor="ingame" className="min-h-9 leading-tight">
+                            {props.handleLabel ?? 'In-game handle'} *
+                        </Label>
                         <Input
                             id="ingame"
                             value={form.member.ingame_name}
@@ -106,7 +110,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                         {props.handleHint && <p className="text-xs text-muted-foreground">{props.handleHint}</p>}
                     </div>
                     <div className="grid gap-1.5">
-                        <Label>Rank *</Label>
+                        <Label className="min-h-9 leading-tight">Rank *</Label>
                         <SimpleSelect
                             value={form.member.rank || '__all'}
                             onChange={(v) => form.patchMember({ rank: v === '__all' ? '' : v })}
