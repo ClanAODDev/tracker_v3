@@ -60,6 +60,10 @@ return [
         'redirect'      => env('DISCORD_REDIRECT_URI'),
     ],
 
+    'steam' => [
+        'api_key' => env('STEAM_API_KEY'),
+    ],
+
     'cloudflare' => [
         'api_key'     => env('CLOUDFLARE_API_TOKEN'),
         'zone_id'     => env('CLOUDFLARE_ZONE_ID'),
