@@ -87,7 +87,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                                 type="button"
                                 variant="outline"
                                 size="icon-sm"
-                                title="Copy to in-game handle"
+                                title={`Copy to ${(props.handleLabel ?? 'in-game handle').toLowerCase()}`}
                                 onClick={() => form.patchMember({ ingame_name: form.member.forum_name })}
                             >
                                 <ArrowRight />
@@ -96,13 +96,14 @@ export function FormStep({ form }: { form: RecruitForm }) {
                         <ForumNameHint form={form} />
                     </div>
                     <div className="grid gap-1.5">
-                        <Label htmlFor="ingame">In-game handle *</Label>
+                        <Label htmlFor="ingame">{props.handleLabel ?? 'In-game handle'} *</Label>
                         <Input
                             id="ingame"
                             value={form.member.ingame_name}
                             onChange={(e) => form.patchMember({ ingame_name: e.target.value })}
-                            placeholder="In-game name"
+                            placeholder={props.handleLabel ? `Their ${props.handleLabel.toLowerCase()}` : 'In-game name'}
                         />
+                        {props.handleHint && <p className="text-xs text-muted-foreground">{props.handleHint}</p>}
                     </div>
                     <div className="grid gap-1.5">
                         <Label>Rank *</Label>

@@ -111,6 +111,43 @@ class RecruitingControllerTest extends TestCase
     }
 
     #[Test]
+    public function form_passes_the_divisions_handle_label_and_hint()
+    {
+        $officer = $this->createOfficer();
+        $handle  = Handle::create([
+            'label'      => 'Steam Profile',
+            'regex'      => '/^[0-9]+$/',
+            'regex_hint' => 'Steam ID must be numeric.',
+        ]);
+        $division = $this->createActiveDivision(['handle_id' => $handle->id]);
+
+        $response = $this->actingAs($officer)
+            ->get(route('recruiting.form', $division->slug));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('handleLabel', 'Steam Profile')
+            ->where('handleHint', 'Steam ID must be numeric.'));
+    }
+
+    #[Test]
+    public function form_passes_null_handle_label_when_the_divisions_handle_type_no_longer_exists()
+    {
+        // `divisions.handle_id` has no DB-level foreign key, so a dangling
+        // reference (e.g. its Handle row was deleted) is a real, if rare, state.
+        $officer  = $this->createOfficer();
+        $division = $this->createActiveDivision(['handle_id' => 999999]);
+
+        $response = $this->actingAs($officer)
+            ->get(route('recruiting.form', $division->slug));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->where('handleLabel', null)
+            ->where('handleHint', null));
+    }
+
+    #[Test]
     public function form_redirects_for_shutdown_division()
     {
         $officer               = $this->createOfficer();
