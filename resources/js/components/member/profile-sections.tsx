@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import {
     Bell,
+    ChevronRight,
     Copy,
     ExternalLink,
     Gamepad2,
@@ -177,6 +178,7 @@ export function ProfileStats({ stats, canCreateNote, onTenure, onRecruits, onRem
                                 <Bell className="size-3" />
                                 {stats.activity.reminders.length} reminder
                                 {stats.activity.reminders.length === 1 ? '' : 's'}
+                                <ChevronRight className="size-3" />
                             </button>
                         )}
                     </>
