@@ -16,7 +16,14 @@ class UpdateLeave extends FormRequest
     public function rules(): array
     {
         return [
-            'end_date' => 'date|after:today',
+            'end_date' => ['date', 'after:today', 'before_or_equal:' . now()->addYear()->toDateString()],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'end_date.before_or_equal' => 'End date cannot be more than a year from today',
         ];
     }
 

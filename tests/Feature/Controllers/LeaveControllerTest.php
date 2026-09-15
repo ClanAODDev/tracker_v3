@@ -93,4 +93,48 @@ class LeaveControllerTest extends TestCase
         $response->assertSessionDoesntHaveErrors();
         $this->assertDatabaseHas('leaves', ['member_id' => $member->id, 'reason' => 'other']);
     }
+
+    #[Test]
+    public function store_rejects_an_end_date_more_than_a_year_out()
+    {
+        $division = $this->createActiveDivision();
+        $officer  = $this->createMemberWithUser(
+            ['division_id' => $division->id],
+            ['role' => Role::OFFICER]
+        );
+        $member = $this->createMember(['division_id' => $division->id]);
+
+        $response = $this->actingAs($officer)
+            ->post(route('leave.store', $division->slug), [
+                'member_id'  => $member->id,
+                'end_date'   => now()->addYear()->addDay()->format('Y-m-d'),
+                'leave_type' => 'other',
+                'note_body'  => 'Test reason',
+            ]);
+
+        $response->assertSessionHasErrors('end_date');
+        $this->assertDatabaseMissing('leaves', ['member_id' => $member->id]);
+    }
+
+    #[Test]
+    public function store_allows_an_end_date_exactly_a_year_out()
+    {
+        $division = $this->createActiveDivision();
+        $officer  = $this->createMemberWithUser(
+            ['division_id' => $division->id],
+            ['role' => Role::OFFICER]
+        );
+        $member = $this->createMember(['division_id' => $division->id]);
+
+        $response = $this->actingAs($officer)
+            ->post(route('leave.store', $division->slug), [
+                'member_id'  => $member->id,
+                'end_date'   => now()->addYear()->format('Y-m-d'),
+                'leave_type' => 'other',
+                'note_body'  => 'Test reason',
+            ]);
+
+        $response->assertSessionDoesntHaveErrors();
+        $this->assertDatabaseHas('leaves', ['member_id' => $member->id, 'reason' => 'other']);
+    }
 }

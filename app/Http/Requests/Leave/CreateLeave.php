@@ -19,7 +19,7 @@ class CreateLeave extends FormRequest
     public function rules(): array
     {
         return [
-            'end_date'  => 'date|after:today',
+            'end_date'  => ['date', 'after:today', 'before_or_equal:' . now()->addYear()->toDateString()],
             'member_id' => ['exists:members,id', 'unique:leaves,member_id'],
         ];
     }
@@ -27,8 +27,9 @@ class CreateLeave extends FormRequest
     public function messages(): array
     {
         return [
-            'member_id.exists' => 'Not a valid AOD member',
-            'member_id.unique' => 'Member already has a leave of absence',
+            'member_id.exists'         => 'Not a valid AOD member',
+            'member_id.unique'         => 'Member already has a leave of absence',
+            'end_date.before_or_equal' => 'End date cannot be more than a year from today',
         ];
     }
 
