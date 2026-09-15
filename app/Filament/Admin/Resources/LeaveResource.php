@@ -59,9 +59,11 @@ class LeaveResource extends Resource
 
                 DateTimePicker::make('end_date')
                     ->after(now()->addDays(29))
+                    ->beforeOrEqual(now()->addYear())
                     ->default(now()->addDays(30))
                     ->validationMessages([
-                        'after' => 'Date must be 30 days after today',
+                        'after'           => 'Date must be 30 days after today',
+                        'before_or_equal' => 'Date cannot be more than a year from today',
                     ])
                     ->required(),
 
