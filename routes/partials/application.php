@@ -7,8 +7,6 @@ use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\MemberTransferController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TrainingController;
-use App\Models\Feedback;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [AppController::class, 'index'])->name('index');
@@ -53,24 +51,6 @@ Route::controller(SettingsController::class)->middleware('auth')->prefix('settin
     Route::post('transfer-request', [MemberTransferController::class, 'store'])->name('transfer-request');
     Route::post('sync-avatar', 'syncAvatar')->middleware('throttle:3,1')->name('sync-avatar');
 });
-
-Route::middleware('auth')->post('feedback', function (Request $request) {
-    $request->validate([
-        'body'          => 'required|string|max:2000',
-        'url'           => 'nullable|string|max:2048',
-        'screenshots'   => 'nullable|array|max:3',
-        'screenshots.*' => 'nullable|string',
-    ]);
-
-    Feedback::create([
-        'user_id'     => auth()->id(),
-        'body'        => $request->body,
-        'url'         => $request->url,
-        'screenshots' => $request->screenshots ?: null,
-    ]);
-
-    return response()->json(['success' => true]);
-})->name('feedback.store');
 
 Route::get('bot/commands/{command}', [BotCommandController::class, 'index'])->name('bot.commands')->middleware('bot');
 Route::get('admin/login', fn () => redirect('login'))->name('filament.admin.auth.login');
