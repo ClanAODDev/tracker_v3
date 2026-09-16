@@ -5,13 +5,14 @@ use App\Enums\Rank;
 return [
     'logo' => env('LOGO', 'images/logo_v2.svg'),
 
-    'discord_webhook'       => env('DISCORD_WEBHOOK'),
-    'token'                 => env('AOD_TOKEN'),
-    'discord_bot_token'     => env('AOD_BOT_TOKEN'),
-    'bot_api_base_url'      => env('BOT_API_BASE_URL'),
-    'bot_api_verify_tls'    => env('BOT_API_VERIFY_TLS', false),
-    'bot_cmd_tokens'        => env('BOT_COMMAND_TOKENS'),
-    'maximum_days_inactive' => env('MAX_DAYS_INACTIVE', 90),
+    'discord_webhook'          => env('DISCORD_WEBHOOK'),
+    'exception_alerts_webhook' => env('EXCEPTION_ALERTS_WEBHOOK'),
+    'token'                    => env('AOD_TOKEN'),
+    'discord_bot_token'        => env('AOD_BOT_TOKEN'),
+    'bot_api_base_url'         => env('BOT_API_BASE_URL'),
+    'bot_api_verify_tls'       => env('BOT_API_VERIFY_TLS', false),
+    'bot_cmd_tokens'           => env('BOT_COMMAND_TOKENS'),
+    'maximum_days_inactive'    => env('MAX_DAYS_INACTIVE', 90),
 
     'external_request' => [
         'timeout'         => 10,
