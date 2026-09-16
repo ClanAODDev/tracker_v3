@@ -5,6 +5,7 @@ namespace Tests\Unit\Channels;
 use App\Channels\BotChannel;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -13,6 +14,7 @@ use GuzzleHttp\Psr7\Response;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Log\Logger;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Http;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -23,7 +25,7 @@ class BotChannelTest extends TestCase
     use CreatesMembers;
     use RefreshDatabase;
 
-    private function channelWithResponse(ClientException $exception, Logger $logger): BotChannel
+    private function channelWithResponse(ClientException|ServerException $exception, Logger $logger): BotChannel
     {
         $mock   = new MockHandler([$exception]);
         $client = new Client(['handler' => HandlerStack::create($mock)]);
@@ -112,6 +114,79 @@ class BotChannelTest extends TestCase
         $this->expectException(ClientException::class);
 
         $channel->send(null, $this->memberNotification());
+    }
+
+    #[Test]
+    public function bot_down_response_posts_alert_to_webhook_and_still_throws()
+    {
+        config(['aod.exception_alerts_webhook' => 'https://discord.com/api/webhooks/it-team']);
+        Http::fake();
+
+        $exception = new ServerException(
+            'Service Unavailable',
+            new Request('POST', 'channels/999'),
+            new Response(503, [], json_encode(['error' => 'Discord client not ready']))
+        );
+
+        $channel = $this->channelWithResponse($exception, Mockery::mock(Logger::class)->shouldIgnoreMissing());
+
+        $this->expectException(ServerException::class);
+
+        try {
+            $channel->send(null, $this->channelNotification());
+        } finally {
+            Http::assertSent(fn ($request) => $request->url() === 'https://discord.com/api/webhooks/it-team'
+                && str_contains($request['content'], 'Discord bot is down'));
+        }
+    }
+
+    #[Test]
+    public function bot_down_alert_is_throttled_to_one_per_hour()
+    {
+        config(['aod.exception_alerts_webhook' => 'https://discord.com/api/webhooks/it-team']);
+        Http::fake();
+
+        $makeChannel = fn () => $this->channelWithResponse(
+            new ServerException(
+                'Service Unavailable',
+                new Request('POST', 'channels/999'),
+                new Response(503, [], json_encode(['error' => 'Discord client not ready']))
+            ),
+            Mockery::mock(Logger::class)->shouldIgnoreMissing()
+        );
+
+        foreach (range(1, 2) as $attempt) {
+            try {
+                $makeChannel()->send(null, $this->channelNotification());
+            } catch (ServerException) {
+                // expected on every attempt
+            }
+        }
+
+        Http::assertSentCount(1);
+    }
+
+    #[Test]
+    public function bot_down_alert_is_skipped_when_webhook_not_configured()
+    {
+        config(['aod.exception_alerts_webhook' => null]);
+        Http::fake();
+
+        $exception = new ServerException(
+            'Service Unavailable',
+            new Request('POST', 'channels/999'),
+            new Response(503, [], json_encode(['error' => 'Discord client not ready']))
+        );
+
+        $channel = $this->channelWithResponse($exception, Mockery::mock(Logger::class)->shouldIgnoreMissing());
+
+        try {
+            $channel->send(null, $this->channelNotification());
+        } catch (ServerException) {
+            // expected
+        }
+
+        Http::assertNothingSent();
     }
 
     #[Test]

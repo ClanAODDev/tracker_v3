@@ -9,6 +9,9 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
 use Illuminate\Log\Logger;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Throwable;
 
 class BotChannel
 {
@@ -69,6 +72,10 @@ class BotChannel
 
             $this->logger->error('BotChannel request failed', $context);
 
+            if ($this->isBotDown($context['response_status'] ?? null, $context['response_body'] ?? null)) {
+                $this->alertBotDown($context);
+            }
+
             throw $e;
         }
 
@@ -87,5 +94,41 @@ class BotChannel
     private function isUnknownMember(string $apiUri, ?int $responseStatus): bool
     {
         return $responseStatus === 404 && str_starts_with($apiUri, 'members/');
+    }
+
+    /**
+     * A 503 with this specific body means the bot process is up but its
+     * Discord gateway connection isn't - it needs a restart, not a retry.
+     */
+    private function isBotDown(?int $responseStatus, ?string $responseBody): bool
+    {
+        return $responseStatus === 503 && str_contains((string) $responseBody, 'Discord client not ready');
+    }
+
+    /**
+     * Posts straight to Discord's webhook API, bypassing the bot entirely,
+     * so IT is alerted even while the bot itself can't relay anything.
+     * Throttled since every queued notification will hit this while the
+     * bot is down. Throttled to one per hour.
+     */
+    private function alertBotDown(array $context): void
+    {
+        $webhook = config('aod.exception_alerts_webhook');
+
+        if (! $webhook || ! Cache::add('bot-down-alert-sent', true, now()->addHour())) {
+            return;
+        }
+
+        try {
+            Http::post($webhook, [
+                'content' => sprintf(
+                    ":rotating_light: **Discord bot is down** - the bot process is up but its Discord client isn't ready. It likely needs a restart.\nLast failure: `%s` -> %s",
+                    $context['notification'],
+                    $context['error'],
+                ),
+            ]);
+        } catch (Throwable $alertException) {
+            $this->logger->error('Failed to send bot-down alert webhook', ['error' => $alertException->getMessage()]);
+        }
     }
 }
