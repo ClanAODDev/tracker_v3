@@ -1,10 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
 import { Headset, Settings, UserPlus } from 'lucide-react';
+import { useState } from 'react';
 
 import { CountUp } from '@/components/count-up';
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
 import { Leaderboard, type LeaderEntry } from '@/components/dashboard/leaderboard';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
+import { NoSquadModal } from '@/components/division/no-squad-modal';
 import { TronIdPlate, TronFlash } from '@/components/tron/flourishes';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -33,6 +35,8 @@ interface MyDivision {
     canManageRequests: boolean;
     canRecruit: boolean;
     applicationRequired: boolean;
+    canManageUnassigned: boolean;
+    unassignedToSquadUrl: string;
 }
 
 interface PendingActionItem {
@@ -66,6 +70,7 @@ const STYLE_CLASS: Record<string, string> = {
 
 export default function Home({ myDivision, toolbar, pendingActions, leaderboard, divisions }: HomeProps) {
     const d = myDivision;
+    const [noSquadOpen, setNoSquadOpen] = useState(false);
 
     return (
         <AppLayout header={{ title: 'AOD Tracker', breadcrumbs: [{ label: 'Dashboard' }] }}>
@@ -111,22 +116,43 @@ export default function Home({ myDivision, toolbar, pendingActions, leaderboard,
                     <div>
                         <h2 className="tron-eyebrow mb-3">Action items</h2>
                         <div className="flex flex-wrap gap-2">
-                            {pendingActions.map((action) => (
-                                <a
-                                    key={action.key}
-                                    href={action.url}
-                                    className={cn(
-                                        'flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors hover:border-primary/40',
-                                        STYLE_CLASS[action.style] ?? STYLE_CLASS.default,
-                                    )}
-                                >
-                                    <PendingActionIcon icon={action.icon} className="size-4 text-muted-foreground" />
-                                    <span className="numeric font-semibold">
-                                        <CountUp value={action.count} />
-                                    </span>
-                                    <span className="text-muted-foreground">{action.label}{action.count === 1 ? '' : 's'}</span>
-                                </a>
-                            ))}
+                            {pendingActions.map((action) => {
+                                const className = cn(
+                                    'flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors hover:border-primary/40',
+                                    STYLE_CLASS[action.style] ?? STYLE_CLASS.default,
+                                );
+                                const inner = (
+                                    <>
+                                        <PendingActionIcon icon={action.icon} className="size-4 text-muted-foreground" />
+                                        <span className="numeric font-semibold">
+                                            <CountUp value={action.count} />
+                                        </span>
+                                        <span className="text-muted-foreground">
+                                            {action.label}
+                                            {action.count === 1 ? '' : 's'}
+                                        </span>
+                                    </>
+                                );
+
+                                if (action.key === 'unassigned-to-squad') {
+                                    return (
+                                        <button
+                                            key={action.key}
+                                            type="button"
+                                            onClick={() => setNoSquadOpen(true)}
+                                            className={className}
+                                        >
+                                            {inner}
+                                        </button>
+                                    );
+                                }
+
+                                return (
+                                    <a key={action.key} href={action.url} className={className}>
+                                        {inner}
+                                    </a>
+                                );
+                            })}
                         </div>
                     </div>
                 )}
@@ -179,6 +205,10 @@ export default function Home({ myDivision, toolbar, pendingActions, leaderboard,
                     </div>
                 </div>
             </div>
+
+            {d.canManageUnassigned && (
+                <NoSquadModal url={d.unassignedToSquadUrl} open={noSquadOpen} onOpenChange={setNoSquadOpen} />
+            )}
         </AppLayout>
     );
 }

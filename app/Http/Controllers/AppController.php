@@ -8,6 +8,7 @@ use App\Data\PendingActionsData;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
+use App\Models\User;
 use App\Support\DivisionToolbar;
 use GrahamCampbell\Markdown\Facades\Markdown;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
@@ -51,18 +52,20 @@ class AppController extends Controller
 
         return Inertia::render('home', [
             'myDivision' => [
-                'name'                => $myDivision->name,
-                'slug'                => $myDivision->slug,
-                'abbr'                => $myDivision->abbreviation,
-                'logo'                => $myDivision->getLogoPath(),
-                'memberCount'         => $myDivision->members()->count(),
-                'isShutdown'          => $myDivision->isShutdown(),
-                'canManage'           => $user->can('update', $myDivision),
-                'manageUrl'           => route('filament.mod.resources.divisions.edit', $myDivision),
-                'requestsUrl'         => route('filament.mod.resources.member-requests.index'),
-                'canManageRequests'   => $user->can('manage', MemberRequest::class),
-                'canRecruit'          => $user->can('recruit', Member::class),
-                'applicationRequired' => (bool) $myDivision->settings()->get('application_required', false),
+                'name'                 => $myDivision->name,
+                'slug'                 => $myDivision->slug,
+                'abbr'                 => $myDivision->abbreviation,
+                'logo'                 => $myDivision->getLogoPath(),
+                'memberCount'          => $myDivision->members()->count(),
+                'isShutdown'           => $myDivision->isShutdown(),
+                'canManage'            => $user->can('update', $myDivision),
+                'manageUrl'            => route('filament.mod.resources.divisions.edit', $myDivision),
+                'requestsUrl'          => route('filament.mod.resources.member-requests.index'),
+                'canManageRequests'    => $user->can('manage', MemberRequest::class),
+                'canRecruit'           => $user->can('recruit', Member::class),
+                'applicationRequired'  => (bool) $myDivision->settings()->get('application_required', false),
+                'canManageUnassigned'  => $user->can('manageUnassigned', User::class),
+                'unassignedToSquadUrl' => route('division.unassigned-to-squad', $myDivision),
             ],
             'toolbar'        => DivisionToolbar::for($myDivision, $user, includeHome: true),
             'pendingActions' => $pendingActions->actions->map(fn (PendingAction $action) => [

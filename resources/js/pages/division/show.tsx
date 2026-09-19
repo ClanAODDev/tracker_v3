@@ -8,6 +8,7 @@ import { ApplicationsModal } from '@/components/division/applications-modal';
 import { LeaderAvatar } from '@/components/division/leader-avatar';
 import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from '@/components/division/organize';
 import { PlatoonCard, type Platoon } from '@/components/division/platoon-card';
+import { NoSquadModal } from '@/components/division/no-squad-modal';
 import { RecentActivityModal, type RecentActivityGroup } from '@/components/division/recent-activity-modal';
 import { TileLink } from '@/components/division/tile-link';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
@@ -39,6 +40,7 @@ interface DivisionShowProps {
         canManageUnassigned: boolean;
         editUrl: string;
         recruitUrl: string;
+        unassignedToSquadUrl: string;
     };
     stats: {
         memberCount: number;
@@ -110,6 +112,7 @@ export default function DivisionShow({
     const [applicationsOpen, setApplicationsOpen] = useState(false);
     const [initialAppId, setInitialAppId] = useState<number | null>(null);
     const [activityOpen, setActivityOpen] = useState(false);
+    const [noSquadOpen, setNoSquadOpen] = useState(false);
 
     const [platoonList, setPlatoonList] = useState(platoons);
     const [dropHoverId, setDropHoverId] = useState<number | null>(null);
@@ -198,21 +201,23 @@ export default function DivisionShow({
                             );
                             const opensOrganize =
                                 action.key === 'unassigned-members' && organizeProps.canOrganize;
+                            const opensNoSquadModal = action.key === 'unassigned-to-squad';
+                            const onClick = opensOrganize
+                                ? () => {
+                                      organize.setOrganizing(true);
+                                      platoonsRef.current?.scrollIntoView({
+                                          behavior: 'smooth',
+                                          block: 'start',
+                                      });
+                                  }
+                                : opensNoSquadModal
+                                  ? () => setNoSquadOpen(true)
+                                  : undefined;
                             return (
                                 <TileLink
                                     key={action.key}
-                                    href={opensOrganize ? undefined : action.url}
-                                    onClick={
-                                        opensOrganize
-                                            ? () => {
-                                                  organize.setOrganizing(true);
-                                                  platoonsRef.current?.scrollIntoView({
-                                                      behavior: 'smooth',
-                                                      block: 'start',
-                                                  });
-                                              }
-                                            : undefined
-                                    }
+                                    href={onClick ? undefined : action.url}
+                                    onClick={onClick}
                                     tint={toneSurface(action.style)}
                                 >
                                     {inner}
@@ -418,6 +423,10 @@ export default function DivisionShow({
                 canViewAll={canViewAllActivity}
                 allActivityUrl={allActivityUrl}
             />
+
+            {d.canManageUnassigned && (
+                <NoSquadModal url={d.unassignedToSquadUrl} open={noSquadOpen} onOpenChange={setNoSquadOpen} />
+            )}
         </AppLayout>
     );
 }

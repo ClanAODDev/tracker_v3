@@ -74,7 +74,8 @@ class MemberTransferController extends Controller
             $division->notify(new NotifyDivisionMemberTransferRequested(
                 $member,
                 $targetDivision->name,
-                $type
+                $type,
+                autoApproved: ! $isOfficer,
             ));
         }
 
