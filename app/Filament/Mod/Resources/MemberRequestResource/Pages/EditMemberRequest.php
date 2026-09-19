@@ -15,6 +15,15 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
+/**
+ * approve() and delete() re-check the record's database state immediately before acting,
+ * instead of relying solely on their `visible()` callbacks. Filament already re-evaluates
+ * `visible()` fresh on every request, which rules out the "stale already-open page" scenario
+ * this originally assumed - a client can't invoke an action Filament no longer considers visible
+ * server-side. What `visible()` alone doesn't rule out is two requests landing close enough
+ * together that both read "not yet approved" before either one writes its update; these guards
+ * are the belt-and-suspenders check for that narrower window, not a fix for a reproduced bug.
+ */
 class EditMemberRequest extends EditRecord
 {
     protected static string $resource = MemberRequestResource::class;
@@ -80,6 +89,19 @@ class EditMemberRequest extends EditRecord
                     ],
                     $this->discordSchema(),
                 ))
+                ->before(function (Action $action): void {
+                    $rec = $this->getRecord()->fresh();
+
+                    if ($rec->isApproved() || $rec->isOnHold()) {
+                        Notification::make()
+                            ->danger()
+                            ->title('Cannot approve')
+                            ->body('This request was already approved or placed on hold by someone else. Refresh the page to see its current state.')
+                            ->send();
+
+                        $action->halt();
+                    }
+                })
                 ->action(function (array $data): void {
                     $rec  = $this->getRecord();
                     $user = auth()->user();
@@ -163,7 +185,22 @@ class EditMemberRequest extends EditRecord
                     $this->redirect(static::getResource()::getUrl('index'), navigate: true);
                 }),
 
-            DeleteAction::make()->visible(fn () => ! $record->isApproved()),
+            DeleteAction::make()
+                ->visible(fn () => ! $record->isApproved())
+                ->before(function (Action $action): void {
+                    $rec = $this->getRecord()->fresh();
+
+                    if ($rec->isApproved()) {
+                        Notification::make()
+                            ->danger()
+                            ->title('Cannot delete')
+                            ->body('This request was already approved - the member has already been granted forum access. Deleting this record now would not undo that.')
+                            ->persistent()
+                            ->send();
+
+                        $action->halt();
+                    }
+                }),
 
             Action::make('reprocess')
                 ->label('Re-Process')
