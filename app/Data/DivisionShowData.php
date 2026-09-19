@@ -48,6 +48,7 @@ readonly class DivisionShowData
                 'canManageUnassigned'   => $user->can('manageUnassigned', User::class),
                 'editUrl'               => route('filament.mod.resources.divisions.edit', $division),
                 'recruitUrl'            => route('recruiting.form', $division),
+                'unassignedToSquadUrl'  => route('division.unassigned-to-squad', $division),
             ],
             'toolbar' => DivisionToolbar::for($division, $user),
             'stats'   => [
