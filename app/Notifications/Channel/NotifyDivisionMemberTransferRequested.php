@@ -94,7 +94,7 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
         if ($this->autoApproved) {
             $value = sprintf(
                 ':white_check_mark: %s [%s] has transferred %s %s.',
-                $this->member->name,
+                $this->member->present()->rankName(),
                 $this->member->clan_id,
                 $direction,
                 $this->destinationDivision,
@@ -109,7 +109,7 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
 
             $value = sprintf(
                 ':recycle: A transfer request for %s [%s] to %s has been created. [Manage %s transfer requests](%s)',
-                $this->member->name,
+                $this->member->present()->rankName(),
                 $this->member->clan_id,
                 $this->destinationDivision,
                 $label,
