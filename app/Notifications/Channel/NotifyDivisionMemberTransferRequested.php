@@ -32,10 +32,13 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
 
     private readonly string $type;
 
+    private readonly bool $autoApproved;
+
     public function __construct(
         Member $member,
         string $destinationDivision,
         string $type,
+        bool $autoApproved = false,
     ) {
         $type = strtoupper($type);
 
@@ -51,6 +54,12 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
         $this->member              = $member;
         $this->destinationDivision = $destinationDivision;
         $this->type                = $type;
+        $this->autoApproved        = $autoApproved;
+    }
+
+    public function isAutoApproved(): bool
+    {
+        return $this->autoApproved;
     }
 
     /**
@@ -73,19 +82,40 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
     {
         $divisionId = $notifiable->id;
 
-        $filters = [
-            'filters[incomplete][isActive]' => 'true',
-        ];
+        $direction = ($this->type === 'INCOMING') ? 'to' : 'from';
+        $label     = strtolower($this->type);
 
-        $direction                                            = ($this->type === 'INCOMING') ? 'to' : 'from';
-        $filters["filters[transferring_{$direction}][value]"] = $divisionId;
+        // Non-officer transfers are auto-approved the instant they're submitted (see
+        // MemberTransferController::store()) - there's nothing for leadership to approve or
+        // deny, so this must read as a completed-transfer notice, not an action request. The
+        // previous wording ("has been created... Manage transfer requests") was identical for
+        // both cases and led an officer to believe they could still deny an auto-approved
+        // transfer, which had already gone through.
+        if ($this->autoApproved) {
+            $value = sprintf(
+                ':white_check_mark: %s [%s] has transferred %s %s.',
+                $this->member->name,
+                $this->member->clan_id,
+                $direction,
+                $this->destinationDivision,
+            );
+        } else {
+            $filters = [
+                'filters[incomplete][isActive]'             => 'true',
+                "filters[transferring_{$direction}][value]" => $divisionId,
+            ];
 
-        $label = strtolower($this->type);
+            $manageUrl = route('filament.mod.resources.transfers.index') . '?' . http_build_query($filters);
 
-        $queryString = '?' . http_build_query($filters);
-
-        $baseUrl   = route('filament.mod.resources.transfers.index');
-        $manageUrl = $baseUrl . $queryString;
+            $value = sprintf(
+                ':recycle: A transfer request for %s [%s] to %s has been created. [Manage %s transfer requests](%s)',
+                $this->member->name,
+                $this->member->clan_id,
+                $this->destinationDivision,
+                $label,
+                $manageUrl,
+            );
+        }
 
         return new BotChannelMessage($notifiable)
             ->title("{$notifiable->name} Division")
@@ -93,15 +123,8 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
             ->thumbnail($notifiable->getLogoPath())
             ->fields([
                 [
-                    'name'  => '**MEMBER TRANSFER REQUEST**',
-                    'value' => sprintf(
-                        ':recycle: A transfer request for %s [%s] to %s has been created. [Manage %s transfer requests](%s)',
-                        $this->member->name,
-                        $this->member->clan_id,
-                        $this->destinationDivision,
-                        $label,
-                        $manageUrl,
-                    ),
+                    'name'  => $this->autoApproved ? '**MEMBER TRANSFER**' : '**MEMBER TRANSFER REQUEST**',
+                    'value' => $value,
                 ],
             ])
             ->info()

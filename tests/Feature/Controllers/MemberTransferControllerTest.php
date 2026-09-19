@@ -5,6 +5,7 @@ namespace Tests\Feature\Controllers;
 use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\Transfer;
+use App\Notifications\Channel\NotifyDivisionMemberTransferRequested;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\Test;
@@ -17,6 +18,16 @@ class MemberTransferControllerTest extends TestCase
     use CreatesDivisions;
     use CreatesMembers;
     use RefreshDatabase;
+
+    private function withTransferAlertsEnabled(Division $division): Division
+    {
+        $division->settings = array_merge($division->settings, [
+            'chat_alerts' => array_merge($division->settings['chat_alerts'], ['member_transferred' => 'officers']),
+        ]);
+        $division->save();
+
+        return $division;
+    }
 
     #[Test]
     public function member_can_request_transfer_to_another_division()
@@ -73,6 +84,36 @@ class MemberTransferControllerTest extends TestCase
     }
 
     #[Test]
+    public function non_officer_transfer_notifies_divisions_as_already_transferred()
+    {
+        Notification::fake();
+
+        $sourceDivision = $this->withTransferAlertsEnabled($this->createActiveDivision());
+        $targetDivision = $this->withTransferAlertsEnabled($this->createActiveDivision());
+
+        $user = $this->createMemberWithUser([
+            'division_id' => $sourceDivision->id,
+            'rank'        => Rank::PRIVATE_FIRST_CLASS,
+        ]);
+
+        $this->actingAs($user)
+            ->postJson('/settings/transfer-request', ['division_id' => $targetDivision->id])
+            ->assertOk();
+
+        Notification::assertSentTo(
+            $sourceDivision,
+            NotifyDivisionMemberTransferRequested::class,
+            fn (NotifyDivisionMemberTransferRequested $notification) => $notification->isAutoApproved(),
+        );
+
+        Notification::assertSentTo(
+            $targetDivision,
+            NotifyDivisionMemberTransferRequested::class,
+            fn (NotifyDivisionMemberTransferRequested $notification) => $notification->isAutoApproved(),
+        );
+    }
+
+    #[Test]
     public function officer_transfer_requires_approval()
     {
         Notification::fake();
@@ -98,6 +139,30 @@ class MemberTransferControllerTest extends TestCase
 
         $transfer = Transfer::where('member_id', $user->member->id)->first();
         $this->assertNull($transfer->approved_at);
+    }
+
+    #[Test]
+    public function officer_transfer_notifies_divisions_as_pending_approval()
+    {
+        Notification::fake();
+
+        $sourceDivision = $this->withTransferAlertsEnabled($this->createActiveDivision());
+        $targetDivision = $this->withTransferAlertsEnabled($this->createActiveDivision());
+
+        $user = $this->createMemberWithUser([
+            'division_id' => $sourceDivision->id,
+            'rank'        => Rank::LANCE_CORPORAL,
+        ]);
+
+        $this->actingAs($user)
+            ->postJson('/settings/transfer-request', ['division_id' => $targetDivision->id])
+            ->assertOk();
+
+        Notification::assertSentTo(
+            $sourceDivision,
+            NotifyDivisionMemberTransferRequested::class,
+            fn (NotifyDivisionMemberTransferRequested $notification) => ! $notification->isAutoApproved(),
+        );
     }
 
     #[Test]
