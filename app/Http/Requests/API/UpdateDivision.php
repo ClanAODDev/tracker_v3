@@ -30,8 +30,8 @@ class UpdateDivision extends FormRequest
     public function rules()
     {
         return [
-            'officer_channel'  => 'nullable|alpha_dash',
-            'member_channel'   => 'nullable|alpha_dash',
+            'officer_channel'  => ['nullable', 'alpha_dash'],
+            'member_channel'   => ['nullable', 'alpha_dash'],
             'division_channel' => ['nullable', 'regex:/^\d{17,19}$/'],
         ];
     }
