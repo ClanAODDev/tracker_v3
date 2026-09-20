@@ -37,6 +37,36 @@ class DivisionTest extends TestCase
     }
 
     #[Test]
+    public function creating_division_generates_a_unique_guid()
+    {
+        $division = Division::factory()->create();
+
+        $this->assertNotEmpty($division->guid);
+        $this->assertSame(10, strlen($division->guid));
+    }
+
+    #[Test]
+    public function division_guids_are_unique()
+    {
+        $one = Division::factory()->create();
+        $two = Division::factory()->create();
+
+        $this->assertNotSame($one->guid, $two->guid);
+    }
+
+    #[Test]
+    public function division_guid_cannot_be_changed_after_creation()
+    {
+        $division     = Division::factory()->create();
+        $originalGuid = $division->guid;
+
+        $division->guid = 'changedguid';
+        $division->save();
+
+        $this->assertSame($originalGuid, $division->fresh()->guid);
+    }
+
+    #[Test]
     public function creating_division_sets_default_settings()
     {
         $division = Division::factory()->create(['name' => 'Test Division']);

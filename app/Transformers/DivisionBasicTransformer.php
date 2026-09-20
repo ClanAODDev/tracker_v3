@@ -11,6 +11,7 @@ class DivisionBasicTransformer extends Transformer
     public function transform($item): array
     {
         $data = [
+            'guid'            => $item->guid,
             'name'            => $item->name,
             'slug'            => $item->slug,
             'abbreviation'    => $item->abbreviation,

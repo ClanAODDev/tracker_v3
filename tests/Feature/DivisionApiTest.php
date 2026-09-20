@@ -116,6 +116,91 @@ final class DivisionApiTest extends TestCase
     }
 
     #[Test]
+    public function division_show_includes_its_immutable_guid()
+    {
+        Sanctum::actingAs($this->user, ['division:read']);
+
+        $division = Division::factory()->create();
+
+        $response = $this->json('get', route('v1.divisions.show', $division->slug));
+
+        $response->assertOk();
+        $response->assertJsonPath('data.division.guid', $division->guid);
+    }
+
+    #[Test]
+    public function division_write_ability_can_update_the_division_channel()
+    {
+        Sanctum::actingAs($this->user, ['division:write']);
+
+        $division = Division::factory()->create();
+
+        $this->json('post', route('v1.divisions.update', $division->slug), [
+            'division_channel' => '123456789012345678',
+        ])->assertStatus(202);
+
+        $this->assertSame('123456789012345678', $division->fresh()->division_channel);
+    }
+
+    #[Test]
+    public function division_write_ability_can_update_officer_and_member_channels()
+    {
+        Sanctum::actingAs($this->user, ['division:write']);
+
+        $division = Division::factory()->create();
+
+        $this->json('post', route('v1.divisions.update', $division->slug), [
+            'officer_channel' => '509933611009441803',
+            'member_channel'  => '509933610766434314',
+        ])->assertStatus(202);
+
+        $division->refresh();
+        $this->assertSame('509933611009441803', $division->settings()->get('officer_channel'));
+        $this->assertSame('509933610766434314', $division->settings()->get('member_channel'));
+    }
+
+    #[Test]
+    public function officer_and_member_channels_must_look_like_discord_snowflakes()
+    {
+        Sanctum::actingAs($this->user, ['division:write']);
+
+        $division = Division::factory()->create();
+
+        $this->json('post', route('v1.divisions.update', $division->slug), [
+            'officer_channel' => 'not-a-snowflake',
+            'member_channel'  => 'also-not-one',
+        ])->assertJsonValidationErrors(['officer_channel', 'member_channel']);
+    }
+
+    #[Test]
+    public function division_channel_must_look_like_a_discord_snowflake()
+    {
+        Sanctum::actingAs($this->user, ['division:write']);
+
+        $division = Division::factory()->create();
+
+        $this->json('post', route('v1.divisions.update', $division->slug), [
+            'division_channel' => 'not-a-snowflake',
+        ])->assertJsonValidationErrors('division_channel');
+
+        $this->assertNull($division->fresh()->division_channel);
+    }
+
+    #[Test]
+    public function division_read_ability_cannot_update_the_division_channel()
+    {
+        Sanctum::actingAs($this->user, ['division:read']);
+
+        $division = Division::factory()->create();
+
+        $this->json('post', route('v1.divisions.update', $division->slug), [
+            'division_channel' => '123456789012345678',
+        ])->assertForbidden();
+
+        $this->assertNull($division->fresh()->division_channel);
+    }
+
+    #[Test]
     public function division_read_advanced_ability_exposes_leadership_discord_ids()
     {
         Sanctum::actingAs($this->user, ['division:read', 'division:read-advanced']);
