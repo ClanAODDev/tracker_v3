@@ -45,60 +45,62 @@ export function PlatoonCard({
     const ledSquads = platoon.squads.filter((s) => s.leader).length;
     const body = (
         <>
-            <div className="flex items-start gap-3">
-                {platoon.logo && <img src={platoon.logo} alt="" className="size-9 shrink-0 rounded" />}
-                <div className="min-w-0 flex-1">
-                    <p className="font-mono text-[13px] font-semibold uppercase leading-tight tracking-[0.08em]">
-                        <span className="text-dim-foreground">P{index + 1}</span>
-                        <span className="mx-1.5 text-border-strong">·</span>
-                        {platoon.name}
-                    </p>
-                    <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <span className="font-semibold text-primary">»</span>
-                        {platoon.leader ? (
-                            <>
-                                <LeaderAvatar leader={platoon.leader} />
-                                {platoon.leader.rankName}
-                            </>
-                        ) : (
-                            'No leader assigned'
-                        )}
-                    </p>
-                </div>
-            </div>
-
-            {platoon.squads.length > 0 && (
-                <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
-                    {platoon.squads.map((squad) => (
-                        <div
-                            key={squad.id}
-                            className={cn(
-                                'rounded border p-2 text-xs',
-                                squad.leader
-                                    ? 'border-border/60'
-                                    : 'tron-hatch border-dashed border-border/60 opacity-75',
-                            )}
-                            style={
-                                squad.leader
-                                    ? { borderLeftColor: squad.leader.rankColor, borderLeftWidth: 2 }
-                                    : undefined
-                            }
-                        >
-                            <div className="flex items-center justify-between">
-                                <span className="font-medium">{squad.name}</span>
-                                <span className="numeric text-muted-foreground">{squad.memberCount}</span>
-                            </div>
-                            {squad.leader ? (
-                                <span className="text-muted-foreground">{squad.leader.rankName}</span>
+            <div className="flex-1">
+                <div className="flex items-start gap-3">
+                    {platoon.logo && <img src={platoon.logo} alt="" className="size-9 shrink-0 rounded" />}
+                    <div className="min-w-0 flex-1">
+                        <p className="font-mono text-[13px] font-semibold uppercase leading-tight tracking-[0.08em]">
+                            <span className="text-dim-foreground">P{index + 1}</span>
+                            <span className="mx-1.5 text-border-strong">·</span>
+                            {platoon.name}
+                        </p>
+                        <p className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <span className="font-semibold text-primary">»</span>
+                            {platoon.leader ? (
+                                <>
+                                    <LeaderAvatar leader={platoon.leader} />
+                                    {platoon.leader.rankName}
+                                </>
                             ) : (
-                                <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-dim-foreground">
-                                    TBA
-                                </span>
+                                'No leader assigned'
                             )}
-                        </div>
-                    ))}
+                        </p>
+                    </div>
                 </div>
-            )}
+
+                {platoon.squads.length > 0 && (
+                    <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                        {platoon.squads.map((squad) => (
+                            <div
+                                key={squad.id}
+                                className={cn(
+                                    'rounded border p-2 text-xs',
+                                    squad.leader
+                                        ? 'border-border/60'
+                                        : 'tron-hatch border-dashed border-border/60 opacity-75',
+                                )}
+                                style={
+                                    squad.leader
+                                        ? { borderLeftColor: squad.leader.rankColor, borderLeftWidth: 2 }
+                                        : undefined
+                                }
+                            >
+                                <div className="flex items-center justify-between">
+                                    <span className="font-medium">{squad.name}</span>
+                                    <span className="numeric text-muted-foreground">{squad.memberCount}</span>
+                                </div>
+                                {squad.leader ? (
+                                    <span className="text-muted-foreground">{squad.leader.rankName}</span>
+                                ) : (
+                                    <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-dim-foreground">
+                                        TBA
+                                    </span>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
 
             <div className="relative -mx-4 -mb-4 mt-3 overflow-hidden rounded-b-[5px] border-t border-border bg-black/15 px-4 py-2">
                 <FillBar
@@ -141,7 +143,7 @@ export function PlatoonCard({
                 onDragLeave={onDragLeave}
                 onDrop={onDrop}
                 className={cn(
-                    'overflow-hidden rounded-md border border-dashed p-4 transition-colors',
+                    'flex h-full flex-col overflow-hidden rounded-md border border-dashed p-4 transition-colors',
                     isHover ? 'border-primary bg-primary/10' : 'border-primary/40',
                 )}
             >
@@ -153,7 +155,7 @@ export function PlatoonCard({
     return (
         <Link
             href={platoon.url}
-            className="tron-corners tron-corners-round rounded-md border border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-primary/30"
+            className="tron-corners tron-corners-round flex h-full flex-col rounded-md border border-border bg-card p-4 transition-[border-color,transform] hover:-translate-y-0.5 hover:border-primary/30"
             style={{ '--corner-color': voiceCorner(platoon.voiceRate) } as CSSProperties}
         >
             {body}
