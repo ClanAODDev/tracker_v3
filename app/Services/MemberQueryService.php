@@ -39,7 +39,7 @@ class MemberQueryService
     {
         return $this->extractHandles(
             $this->withStandardRelations($query, $division)
-                ->where('division_id', '>', 0)
+                ->where('division_id', $division->id)
                 ->get()
                 ->sortByDesc(fn ($m) => $m->rank->value)
         );

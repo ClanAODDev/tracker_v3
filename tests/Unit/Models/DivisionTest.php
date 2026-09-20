@@ -29,6 +29,14 @@ class DivisionTest extends TestCase
     }
 
     #[Test]
+    public function it_trims_leading_and_trailing_whitespace_from_name()
+    {
+        $division = Division::factory(['name' => '  Aion 2  '])->make();
+
+        $this->assertSame('Aion 2', $division->name);
+    }
+
+    #[Test]
     public function creating_division_sets_default_settings()
     {
         $division = Division::factory()->create(['name' => 'Test Division']);
