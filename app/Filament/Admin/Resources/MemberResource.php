@@ -233,6 +233,12 @@ class MemberResource extends Resource
             ->filters([
                 SelectFilter::make('division')
                     ->relationship('division', 'name'),
+                SelectFilter::make('platoon')
+                    ->relationship('platoon', 'name')
+                    ->searchable(),
+                SelectFilter::make('squad')
+                    ->relationship('squad', 'name')
+                    ->searchable(),
                 Filter::make('Has Active Division')
                     ->query(function (Builder $query) {
                         $query->whereNotNull('division_id')
