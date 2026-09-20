@@ -202,6 +202,7 @@ export default function DivisionShow({
                             const opensOrganize =
                                 action.key === 'unassigned-members' && organizeProps.canOrganize;
                             const opensNoSquadModal = action.key === 'unassigned-to-squad';
+                            const opensApplicationsModal = action.key === 'pending-applications';
                             const onClick = opensOrganize
                                 ? () => {
                                       organize.setOrganizing(true);
@@ -212,7 +213,12 @@ export default function DivisionShow({
                                   }
                                 : opensNoSquadModal
                                   ? () => setNoSquadOpen(true)
-                                  : undefined;
+                                  : opensApplicationsModal
+                                    ? () => {
+                                          setInitialAppId(null);
+                                          setApplicationsOpen(true);
+                                      }
+                                    : undefined;
                             return (
                                 <TileLink
                                     key={action.key}
