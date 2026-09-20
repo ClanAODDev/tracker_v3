@@ -9,6 +9,7 @@ use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\SquadsRelationMa
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
+use App\Rules\ResolvesToImage;
 use Closure;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
@@ -59,7 +60,8 @@ class PlatoonResource extends Resource
                         TextInput::make('logo')
                             ->placeholder('https://')
                             ->maxLength(255)
-                            ->default(null),
+                            ->default(null)
+                            ->rule(new ResolvesToImage),
                     ])->columns(),
 
                 Section::make('Leadership')

@@ -3,6 +3,7 @@
 namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
 
 use App\Filament\Mod\Resources\SquadResource;
+use App\Rules\ResolvesToImage;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
@@ -26,7 +27,8 @@ class SquadsRelationManager extends RelationManager
             TextInput::make('logo')
                 ->maxLength(191)
                 ->placeholder('https://')
-                ->default(null),
+                ->default(null)
+                ->rule(new ResolvesToImage),
         ]);
     }
 

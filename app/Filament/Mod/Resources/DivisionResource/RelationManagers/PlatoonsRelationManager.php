@@ -4,6 +4,7 @@ namespace App\Filament\Mod\Resources\DivisionResource\RelationManagers;
 
 use App\Filament\Mod\Resources\PlatoonResource;
 use App\Models\Platoon;
+use App\Rules\ResolvesToImage;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
@@ -34,7 +35,8 @@ class PlatoonsRelationManager extends RelationManager
                 TextInput::make('logo')
                     ->placeholder('https://')
                     ->maxLength(255)
-                    ->default(null),
+                    ->default(null)
+                    ->rule(new ResolvesToImage),
             ]);
     }
 
