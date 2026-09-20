@@ -116,6 +116,19 @@ final class DivisionApiTest extends TestCase
     }
 
     #[Test]
+    public function division_show_includes_its_immutable_guid()
+    {
+        Sanctum::actingAs($this->user, ['division:read']);
+
+        $division = Division::factory()->create();
+
+        $response = $this->json('get', route('v1.divisions.show', $division->slug));
+
+        $response->assertOk();
+        $response->assertJsonPath('data.division.guid', $division->guid);
+    }
+
+    #[Test]
     public function division_read_advanced_ability_exposes_leadership_discord_ids()
     {
         Sanctum::actingAs($this->user, ['division:read', 'division:read-advanced']);

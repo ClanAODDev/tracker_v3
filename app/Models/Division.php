@@ -111,6 +111,7 @@ class Division extends Model
         static::creating(function (self $division) {
             $division->settings = $division->defaultSettings;
             $division->slug     = Str::slug($division->name);
+            $division->guid     = self::generateGuid();
         });
 
         static::created(function (Division $division) {
@@ -119,11 +120,26 @@ class Division extends Model
         });
         static::deleted(fn (Division $division) => $division->recordActivity(ActivityType::DELETED_DIVISION));
 
+        static::updating(function (Division $division) {
+            if ($division->isDirty('guid')) {
+                $division->guid = $division->getOriginal('guid');
+            }
+        });
+
         static::updated(function (Division $division) {
             if ($division->wasChanged(['active', 'shutdown_at'])) {
                 DivisionLeaderboardData::clearCache();
             }
         });
+    }
+
+    public static function generateGuid(): string
+    {
+        do {
+            $guid = Str::random(10);
+        } while (self::where('guid', $guid)->exists());
+
+        return $guid;
     }
 
     public function setAbbreviationAttribute($value): void
