@@ -116,6 +116,33 @@ final class DivisionApiTest extends TestCase
     }
 
     #[Test]
+    public function division_show_can_be_looked_up_by_guid()
+    {
+        Sanctum::actingAs($this->user, ['division:read']);
+
+        $division = Division::factory()->create();
+
+        $response = $this->json('get', route('v1.divisions.show', $division->guid));
+
+        $response->assertOk();
+        $response->assertJsonPath('data.division.slug', $division->slug);
+    }
+
+    #[Test]
+    public function division_update_can_be_looked_up_by_guid()
+    {
+        Sanctum::actingAs($this->user, ['division:write']);
+
+        $division = Division::factory()->create();
+
+        $this->json('post', route('v1.divisions.update', $division->guid), [
+            'division_channel' => '123456789012345678',
+        ])->assertStatus(202);
+
+        $this->assertSame('123456789012345678', $division->fresh()->division_channel);
+    }
+
+    #[Test]
     public function division_show_includes_its_immutable_guid()
     {
         Sanctum::actingAs($this->user, ['division:read']);
