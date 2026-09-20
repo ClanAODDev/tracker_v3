@@ -27,7 +27,7 @@ enum ApiScope: string
             self::ClanRead             => 'Discord population counts and stream events.',
             self::DivisionRead         => 'Division listing and detail, including leadership.',
             self::DivisionReadAdvanced => 'Adds member lists and Discord IDs to division detail.',
-            self::DivisionWrite        => 'Update a division\'s officer/member channel settings.',
+            self::DivisionWrite        => 'Update a division\'s officer/member/division channel settings.',
         };
     }
 

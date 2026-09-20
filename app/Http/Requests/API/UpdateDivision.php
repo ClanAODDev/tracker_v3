@@ -14,6 +14,12 @@ class UpdateDivision extends FormRequest
                 'member_channel',
             ])
         );
+
+        if ($this->has('division_channel')) {
+            $division->update([
+                'division_channel' => $this->input('division_channel'),
+            ]);
+        }
     }
 
     /**
@@ -24,8 +30,9 @@ class UpdateDivision extends FormRequest
     public function rules()
     {
         return [
-            'officer_channel' => 'nullable|alpha_dash',
-            'member_channel'  => 'nullable|alpha_dash',
+            'officer_channel'  => 'nullable|alpha_dash',
+            'member_channel'   => 'nullable|alpha_dash',
+            'division_channel' => ['nullable', 'regex:/^\d{17,19}$/'],
         ];
     }
 }

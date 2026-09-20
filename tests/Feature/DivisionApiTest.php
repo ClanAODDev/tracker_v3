@@ -129,6 +129,48 @@ final class DivisionApiTest extends TestCase
     }
 
     #[Test]
+    public function division_write_ability_can_update_the_division_channel()
+    {
+        Sanctum::actingAs($this->user, ['division:write']);
+
+        $division = Division::factory()->create();
+
+        $this->json('post', route('v1.divisions.update', $division->slug), [
+            'division_channel' => '123456789012345678',
+        ])->assertStatus(202);
+
+        $this->assertSame('123456789012345678', $division->fresh()->division_channel);
+    }
+
+    #[Test]
+    public function division_channel_must_look_like_a_discord_snowflake()
+    {
+        Sanctum::actingAs($this->user, ['division:write']);
+
+        $division = Division::factory()->create();
+
+        $this->json('post', route('v1.divisions.update', $division->slug), [
+            'division_channel' => 'not-a-snowflake',
+        ])->assertJsonValidationErrors('division_channel');
+
+        $this->assertNull($division->fresh()->division_channel);
+    }
+
+    #[Test]
+    public function division_read_ability_cannot_update_the_division_channel()
+    {
+        Sanctum::actingAs($this->user, ['division:read']);
+
+        $division = Division::factory()->create();
+
+        $this->json('post', route('v1.divisions.update', $division->slug), [
+            'division_channel' => '123456789012345678',
+        ])->assertForbidden();
+
+        $this->assertNull($division->fresh()->division_channel);
+    }
+
+    #[Test]
     public function division_read_advanced_ability_exposes_leadership_discord_ids()
     {
         Sanctum::actingAs($this->user, ['division:read', 'division:read-advanced']);
