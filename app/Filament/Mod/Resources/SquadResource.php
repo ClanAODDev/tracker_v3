@@ -7,6 +7,7 @@ use App\Filament\Mod\Resources\SquadResource\Pages\ListSquads;
 use App\Filament\Mod\Resources\SquadResource\RelationManagers\MembersRelationManager;
 use App\Models\Member;
 use App\Models\Squad;
+use App\Rules\ResolvesToImage;
 use Closure;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
@@ -46,7 +47,8 @@ class SquadResource extends Resource
                             ->maxLength(255),
                         TextInput::make('logo')
                             ->maxLength(191)
-                            ->default(null),
+                            ->default(null)
+                            ->rule(new ResolvesToImage),
                     ])->columns(),
 
                 Section::make('Leadership')
