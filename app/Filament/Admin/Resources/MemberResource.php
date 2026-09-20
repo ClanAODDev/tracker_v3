@@ -8,7 +8,10 @@ use App\Enums\Rank;
 use App\Filament\Admin\Resources\MemberHasManyAwardsResource\RelationManagers\AwardsRelationManager;
 use App\Filament\Admin\Resources\MemberResource\Pages\EditMember;
 use App\Filament\Admin\Resources\MemberResource\Pages\ListMembers;
+use App\Models\Division;
 use App\Models\Member;
+use App\Services\BulkTransferService;
+use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -17,6 +20,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -27,6 +31,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 class MemberResource extends Resource
 {
@@ -262,6 +267,30 @@ class MemberResource extends Resource
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
+                    BulkAction::make('bulk_transfer')
+                        ->label('Move to Division')
+                        ->icon('heroicon-o-arrow-right-circle')
+                        ->color('primary')
+                        ->deselectRecordsAfterCompletion()
+                        ->form([
+                            Select::make('division_id')
+                                ->label('Target Division')
+                                ->options(fn () => Division::active()->orderBy('name')->pluck('name', 'id'))
+                                ->searchable()
+                                ->required(),
+                        ])
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records, array $data, BulkTransferService $service): void {
+                            $targetDivision = Division::findOrFail($data['division_id']);
+
+                            $moved = $service->transfer($records, $targetDivision);
+
+                            Notification::make()
+                                ->title($moved === 1 ? '1 member moved' : "{$moved} members moved")
+                                ->body("Moved to {$targetDivision->name}.")
+                                ->success()
+                                ->send();
+                        }),
                 ]),
             ]);
     }

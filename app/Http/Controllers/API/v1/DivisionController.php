@@ -6,6 +6,7 @@ use App\Http\Requests\API\UpdateDivision;
 use App\Models\Division;
 use App\Transformers\DivisionBasicTransformer;
 use App\Transformers\MemberBasicTransformer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -18,7 +19,7 @@ class DivisionController extends ApiController
 
     public function update($division, UpdateDivision $request): JsonResponse
     {
-        $division = Division::where('slug', $division)->first();
+        $division = $this->resolveDivision($division)->first();
 
         if (! $division) {
             return $this->setStatusCode(404)->respondWithError('Invalid division provided');
@@ -45,7 +46,7 @@ class DivisionController extends ApiController
 
     public function show($slug): JsonResponse
     {
-        $division = Division::where('slug', strtolower($slug))
+        $division = $this->resolveDivision($slug)
             ->active()
             ->first();
 
@@ -76,5 +77,13 @@ class DivisionController extends ApiController
                 'division' => $this->divisionTransformer->transform($division),
             ],
         ]);
+    }
+
+    private function resolveDivision(string $identifier): Builder
+    {
+        return Division::where(function ($query) use ($identifier) {
+            $query->where('slug', strtolower($identifier))
+                ->orWhere('guid', $identifier);
+        });
     }
 }
