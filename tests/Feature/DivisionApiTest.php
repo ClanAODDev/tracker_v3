@@ -114,4 +114,23 @@ final class DivisionApiTest extends TestCase
         $response->assertOk();
         $response->assertSee('123456789012345678');
     }
+
+    #[Test]
+    public function division_read_advanced_ability_exposes_leadership_discord_ids()
+    {
+        Sanctum::actingAs($this->user, ['division:read', 'division:read-advanced']);
+
+        $division = Division::factory()->create();
+
+        Member::factory()->create([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'discord_id'  => 123456789012345678,
+        ]);
+
+        $response = $this->json('get', route('v1.divisions.show', $division->slug));
+
+        $response->assertOk();
+        $response->assertJsonPath('data.division.leadership.0.discord_id', '123456789012345678');
+    }
 }

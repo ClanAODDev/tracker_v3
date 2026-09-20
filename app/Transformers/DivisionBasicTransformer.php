@@ -20,11 +20,10 @@ class DivisionBasicTransformer extends Transformer
             'show_on_site'    => $item->show_on_site,
             'officer_channel' => $item->settings()->get('officer_channel', null),
             'icon'            => $item->getLogoPath(),
-            // discord_id is intentionally stripped here: leadership is exposed at the
-            // base division:read ability, but Discord IDs are meant to require
-            // division:read-advanced (see the members list in DivisionController::show()).
-            'leadership' => array_map(
-                fn (array $member) => Arr::except($member, ['discord_id']),
+            // leadership is exposed at the base division:read ability, but Discord IDs
+            // are meant to require division:read-advanced, so they're stripped here
+            // unless the current token holds that ability.
+            'leadership' => $this->withLeadershipDiscordIds(
                 $this->memberTransformer->transformCollection($item->leaders()->get()->all())
             ),
         ];
@@ -52,5 +51,17 @@ class DivisionBasicTransformer extends Transformer
         }
 
         return $data;
+    }
+
+    private function withLeadershipDiscordIds(array $leadership): array
+    {
+        if (request()->user()?->tokenCan('division:read-advanced')) {
+            return $leadership;
+        }
+
+        return array_map(
+            fn (array $member) => Arr::except($member, ['discord_id']),
+            $leadership
+        );
     }
 }
