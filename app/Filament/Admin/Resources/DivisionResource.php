@@ -35,6 +35,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Validation\Rules\Unique;
 use Throwable;
 use ValentinMorice\FilamentJsonColumn\JsonColumn;
 
@@ -75,7 +76,11 @@ class DivisionResource extends Resource
                         Fieldset::make()->schema([
                             TextInput::make('name')
                                 ->required()
-                                ->maxLength(255),
+                                ->maxLength(255)
+                                ->unique(
+                                    ignoreRecord: true,
+                                    modifyRuleUsing: fn (Unique $rule) => $rule->whereNull('deleted_at'),
+                                ),
 
                             Select::make('handle_id')
                                 ->label('Game Handle')
