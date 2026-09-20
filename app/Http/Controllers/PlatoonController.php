@@ -24,7 +24,11 @@ class PlatoonController extends Controller
 
     public function show(Division $division, Platoon $platoon): Response
     {
-        $platoon->load('squads.leader', 'squads.members', 'unassigned');
+        $platoon->load([
+            'squads.leader',
+            'squads.members' => fn ($query) => $query->where('division_id', $division->id),
+            'unassigned'     => fn ($query) => $query->where('division_id', $division->id),
+        ]);
 
         $members            = $this->memberQuery->loadSortedMembers($platoon->members(), $division);
         $voiceActivityGraph = $this->platoon->getPlatoonVoiceActivity($platoon);
@@ -83,7 +87,11 @@ class PlatoonController extends Controller
     {
         $this->authorize('update', $platoon);
 
-        $platoon->load('squads.members', 'squads.leader', 'unassigned');
+        $platoon->load([
+            'squads.members' => fn ($query) => $query->where('division_id', $division->id),
+            'squads.leader',
+            'unassigned' => fn ($query) => $query->where('division_id', $division->id),
+        ]);
 
         $squads = $platoon->squads->map(function ($squad) {
             $members = $squad->members

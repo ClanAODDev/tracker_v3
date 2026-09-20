@@ -43,13 +43,14 @@ class DivisionShowService
     {
         return $division->platoons()
             ->with([
-                'squads' => fn ($q) => $q->withCount('members')->with('leader.division'),
+                'squads' => fn ($q) => $q->withCount(['members' => fn ($query) => $query->where('division_id', $division->id)])->with('leader.division'),
                 'leader.division',
             ])
             ->withCount([
-                'members',
-                'members as voice_active_count' => function ($query) use ($activityThresholdDays) {
-                    $query->where('last_voice_activity', '>=', now()->subDays($activityThresholdDays));
+                'members'                       => fn ($query) => $query->where('division_id', $division->id),
+                'members as voice_active_count' => function ($query) use ($activityThresholdDays, $division) {
+                    $query->where('division_id', $division->id)
+                        ->where('last_voice_activity', '>=', now()->subDays($activityThresholdDays));
                 },
             ])
             ->orderBy('order')

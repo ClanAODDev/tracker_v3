@@ -124,6 +124,28 @@ class DivisionShowServiceTest extends TestCase
     }
 
     #[Test]
+    public function get_show_data_platoons_exclude_members_from_other_divisions()
+    {
+        $division      = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+        $platoon       = $this->createPlatoon($division);
+        $this->createMember([
+            'division_id' => $division->id,
+            'platoon_id'  => $platoon->id,
+        ]);
+        $this->createMember([
+            'division_id' => $otherDivision->id,
+            'platoon_id'  => $platoon->id,
+        ]);
+        $user = $this->createMemberWithUser(['division_id' => $division->id]);
+        $this->actingAs($user);
+
+        $result = $this->service->getShowData($division);
+
+        $this->assertEquals(1, $result->platoons->first()->members_count);
+    }
+
+    #[Test]
     public function get_show_data_platoons_include_voice_active_count()
     {
         $division = $this->createActiveDivision();
