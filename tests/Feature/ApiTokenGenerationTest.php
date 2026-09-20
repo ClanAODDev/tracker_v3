@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
@@ -37,6 +38,116 @@ final class ApiTokenGenerationTest extends TestCase
                 ->component('developer/index')
                 ->has('tokens', 1)
                 ->where('tokens.0.name', 'existing'));
+    }
+
+    #[Test]
+    public function a_basic_developer_is_not_offered_advanced_scopes(): void
+    {
+        $user = User::factory()->create(['developer' => true, 'role' => Role::OFFICER]);
+
+        $this->actingAs($user)
+            ->get(route('developer'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('developer/index')
+                ->where('availableScopes', fn ($scopes) => collect($scopes)->pluck('value')->all() === [
+                    'clan:read', 'division:read',
+                ]));
+    }
+
+    #[Test]
+    public function a_senior_leader_developer_is_offered_advanced_scopes(): void
+    {
+        $user = User::factory()->create(['developer' => true, 'role' => Role::SENIOR_LEADER]);
+
+        $this->actingAs($user)
+            ->get(route('developer'))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('developer/index')
+                ->where('availableScopes', fn ($scopes) => collect($scopes)->pluck('value')->all() === [
+                    'clan:read', 'division:read', 'division:read-advanced', 'division:write',
+                ]));
+    }
+
+    #[Test]
+    public function a_developer_cannot_generate_a_token_with_a_scope_outside_their_access(): void
+    {
+        $user = User::factory()->create(['developer' => true, 'role' => Role::OFFICER]);
+
+        $this->actingAs($user)
+            ->post(route('developer.token.store'), [
+                'token_name' => 'test',
+                'scopes'     => ['division:write'],
+            ])
+            ->assertSessionHasErrors('scopes.0');
+
+        $this->assertCount(0, $user->refresh()->tokens);
+    }
+
+    #[Test]
+    public function a_developer_can_generate_a_token_with_an_allowed_scope(): void
+    {
+        $user = User::factory()->create(['developer' => true, 'role' => Role::SENIOR_LEADER]);
+
+        $this->actingAs($user)
+            ->post(route('developer.token.store'), [
+                'token_name' => 'test',
+                'scopes'     => ['division:read', 'division:read-advanced'],
+            ])
+            ->assertRedirect(route('developer'));
+
+        $token = $user->refresh()->tokens->first();
+        $this->assertSame(['division:read', 'division:read-advanced'], $token->abilities);
+    }
+
+    #[Test]
+    public function a_developer_can_update_an_existing_tokens_scopes(): void
+    {
+        $user  = User::factory()->create(['developer' => true, 'role' => Role::SENIOR_LEADER]);
+        $token = $user->createToken('existing', ['division:read']);
+
+        $this->actingAs($user)
+            ->patch(route('developer.token.update'), [
+                'token_id' => $token->accessToken->id,
+                'scopes'   => ['division:read', 'division:write'],
+            ])
+            ->assertRedirect(route('developer'));
+
+        $this->assertSame(['division:read', 'division:write'], $token->accessToken->fresh()->abilities);
+    }
+
+    #[Test]
+    public function a_developer_cannot_update_a_tokens_scopes_beyond_their_own_access(): void
+    {
+        $user  = User::factory()->create(['developer' => true, 'role' => Role::OFFICER]);
+        $token = $user->createToken('existing', ['division:read']);
+
+        $this->actingAs($user)
+            ->patch(route('developer.token.update'), [
+                'token_id' => $token->accessToken->id,
+                'scopes'   => ['division:write'],
+            ])
+            ->assertSessionHasErrors('scopes.0');
+
+        $this->assertSame(['division:read'], $token->accessToken->fresh()->abilities);
+    }
+
+    #[Test]
+    public function a_developer_cannot_update_another_users_token_scopes(): void
+    {
+        $owner = User::factory()->create(['developer' => true, 'role' => Role::SENIOR_LEADER]);
+        $other = User::factory()->create(['developer' => true, 'role' => Role::SENIOR_LEADER]);
+        $token = $owner->createToken('existing', ['division:read']);
+
+        $this->actingAs($other)
+            ->patch(route('developer.token.update'), [
+                'token_id' => $token->accessToken->id,
+                'scopes'   => ['division:write'],
+            ])
+            ->assertNotFound();
+
+        $this->assertSame(['division:read'], $token->accessToken->fresh()->abilities);
     }
 
     #[Test]

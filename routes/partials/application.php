@@ -29,6 +29,7 @@ Route::controller(TrainingController::class)->prefix('training')->name('training
 Route::controller(DeveloperController::class)->prefix('developers')->name('developer')->group(function () {
     Route::get('/', 'index');
     Route::post('tokens', 'generateToken')->name('.token.store');
+    Route::patch('tokens', 'updateTokenScopes')->name('.token.update');
     Route::delete('tokens', 'destroyToken')->name('.token.delete');
 });
 
