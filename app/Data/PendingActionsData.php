@@ -146,7 +146,7 @@ readonly class PendingActionsData
                 key: 'expiring-leaves',
                 url: route('filament.mod.resources.leaves.index') . '?filters[expiring soon][isActive]=true',
                 icon: 'fa-calendar-check',
-                label: 'LOA Expiring',
+                label: 'Expiring LOA',
                 style: 'warning',
             );
 
@@ -159,7 +159,7 @@ readonly class PendingActionsData
                 key: 'overdue-leaves',
                 url: route('filament.mod.resources.leaves.index') . '?filters[overdue][isActive]=true',
                 icon: 'fa-calendar-times',
-                label: 'LOA Overdue',
+                label: 'Overdue LOA',
                 style: 'danger',
             );
         }
