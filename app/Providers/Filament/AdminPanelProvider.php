@@ -30,8 +30,9 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->favicon(asset('images/logo-tron.svg'))
             ->colors([
-                'primary' => '#f6a821',
+                'primary' => '#e11d2e',
             ])
             ->plugin(CommentionsPlugin::make())
             ->plugin(FilamentReactionsPlugin::make())
