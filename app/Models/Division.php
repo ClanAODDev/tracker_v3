@@ -131,6 +131,11 @@ class Division extends Model
         $this->attributes['abbreviation'] = strtolower($value);
     }
 
+    public function setNameAttribute($value): void
+    {
+        $this->attributes['name'] = trim($value);
+    }
+
     public function members(): HasMany
     {
         return $this->hasMany(Member::class);
