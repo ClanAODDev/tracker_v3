@@ -143,6 +143,36 @@ final class DivisionApiTest extends TestCase
     }
 
     #[Test]
+    public function division_write_ability_can_update_officer_and_member_channels()
+    {
+        Sanctum::actingAs($this->user, ['division:write']);
+
+        $division = Division::factory()->create();
+
+        $this->json('post', route('v1.divisions.update', $division->slug), [
+            'officer_channel' => '509933611009441803',
+            'member_channel'  => '509933610766434314',
+        ])->assertStatus(202);
+
+        $division->refresh();
+        $this->assertSame('509933611009441803', $division->settings()->get('officer_channel'));
+        $this->assertSame('509933610766434314', $division->settings()->get('member_channel'));
+    }
+
+    #[Test]
+    public function officer_and_member_channels_must_look_like_discord_snowflakes()
+    {
+        Sanctum::actingAs($this->user, ['division:write']);
+
+        $division = Division::factory()->create();
+
+        $this->json('post', route('v1.divisions.update', $division->slug), [
+            'officer_channel' => 'not-a-snowflake',
+            'member_channel'  => 'also-not-one',
+        ])->assertJsonValidationErrors(['officer_channel', 'member_channel']);
+    }
+
+    #[Test]
     public function division_channel_must_look_like_a_discord_snowflake()
     {
         Sanctum::actingAs($this->user, ['division:write']);
