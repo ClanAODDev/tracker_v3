@@ -57,10 +57,10 @@ export function PageHeader({ title, eyebrow, breadcrumbs, actions, width = 'defa
                                     return (
                                         <span key={`${crumb.label}-${index}`} className="contents">
                                             <BreadcrumbItem>
-                                                {last || !crumb.href ? (
-                                                    <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
-                                                ) : (
+                                                {crumb.href ? (
                                                     <BreadcrumbLink href={crumb.href}>{crumb.label}</BreadcrumbLink>
+                                                ) : (
+                                                    <BreadcrumbPage>{crumb.label}</BreadcrumbPage>
                                                 )}
                                             </BreadcrumbItem>
                                             {!last && <BreadcrumbSeparator />}
