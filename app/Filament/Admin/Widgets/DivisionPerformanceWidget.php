@@ -8,6 +8,7 @@ use App\Models\Member;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 
 class DivisionPerformanceWidget extends BaseWidget
@@ -30,7 +31,6 @@ class DivisionPerformanceWidget extends BaseWidget
                     ->whereHas('members')
                     ->withCount('members')
                     ->with(['latestCensus'])
-                    ->orderByDesc('members_count')
             )
             ->columns([
                 TextColumn::make('name')
@@ -53,6 +53,15 @@ class DivisionPerformanceWidget extends BaseWidget
                 TextColumn::make('voice_rate')
                     ->label('Voice %')
                     ->alignCenter()
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->orderBy(
+                            Census::selectRaw('CASE WHEN count = 0 THEN 0 ELSE weekly_voice_count / count END')
+                                ->whereColumn('division_id', 'divisions.id')
+                                ->latest('created_at')
+                                ->limit(1),
+                            $direction,
+                        );
+                    })
                     ->state(function (Division $record) {
                         $census = $record->latestCensus;
                         if (! $census || $census->count == 0) {
@@ -75,6 +84,11 @@ class DivisionPerformanceWidget extends BaseWidget
                 TextColumn::make('recruits_this_month')
                     ->label('Recruits (30d)')
                     ->alignCenter()
+                    ->sortable(query: function (Builder $query, string $direction): Builder {
+                        return $query->withCount(['members as recruits_this_month_count' => function ($q) {
+                            $q->where('join_date', '>=', now()->subDays(30));
+                        }])->orderBy('recruits_this_month_count', $direction);
+                    })
                     ->state(fn (Division $record) => Member::where('division_id', $record->id)
                         ->where('join_date', '>=', now()->subDays(30))
                         ->count())

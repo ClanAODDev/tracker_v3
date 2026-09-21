@@ -334,7 +334,8 @@ class DivisionResource extends Resource
                                 Section::make('Page Content')
                                     ->schema([
                                         MarkdownEditor::make('site_content')
-                                            ->helperText('Changes will prompt an admin review before being published')
+                                            ->hint(str('[Markdown Guide >](https://www.markdownguide.org/basic-syntax/)')->inlineMarkdown()->toHtmlString())
+                                            ->helperText('Changes will prompt an admin review before being published. Start headings at H2 — the division name is already rendered as H1 — so anchor links generate correctly.')
                                             ->toolbarButtons([
                                                 'blockquote',
                                                 'bold',
