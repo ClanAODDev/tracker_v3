@@ -12,8 +12,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SimpleSelect } from '@/components/ui/simple-select';
+import { Switch } from '@/components/ui/switch';
 import { linkifyHtml } from '@/lib/format';
 import { cn } from '@/lib/utils';
+
+const GUIDED_MODE_KEY = 'recruit-form:guided-mode';
 
 export function FormStep({ form }: { form: RecruitForm }) {
     const { props } = form;
@@ -22,9 +25,22 @@ export function FormStep({ form }: { form: RecruitForm }) {
     const [tasksOpen, setTasksOpen] = useState(true);
     const [welcomeOpen, setWelcomeOpen] = useState(true);
     const [appOpen, setAppOpen] = useState(false);
+    const [guided, setGuided] = useState(() => localStorage.getItem(GUIDED_MODE_KEY) === '1');
     const welcomePm = (props.welcome_pm || '')
         .replace(/\{\{\s*name\s*\}\}/g, form.member.forum_name)
         .replace(/\{\{\s*ingame_name\s*\}\}/g, form.member.ingame_name);
+
+    // revealed[k] gates whether the (k+1)th section may show in guided mode — revealed[0] is
+    // always true (member verification always shows first), each subsequent entry requires
+    // every earlier applicable section to be complete first. Sections the division doesn't use
+    // (no platoons, no threads, etc.) don't block the chain.
+    const revealed = [
+        form.memberVerificationComplete,
+        form.detailsComplete,
+        props.platoons.length === 0 || form.assignmentComplete,
+        form.threads.length === 0 || form.agreementsComplete,
+        form.tasks.length === 0 || form.tasksComplete,
+    ].reduce<boolean[]>((acc, gate) => [...acc, acc[acc.length - 1] && gate], [true]);
 
     return (
         <form
@@ -35,6 +51,22 @@ export function FormStep({ form }: { form: RecruitForm }) {
             }}
             className="space-y-4"
         >
+            <label className="flex items-center justify-between gap-3 rounded-md border border-border px-4 py-2.5 text-sm">
+                <span>
+                    Guided mode
+                    <span className="mt-0.5 block text-xs text-muted-foreground">
+                        Reveal each section only once the one before it is complete
+                    </span>
+                </span>
+                <Switch
+                    checked={guided}
+                    onCheckedChange={(v) => {
+                        setGuided(v);
+                        localStorage.setItem(GUIDED_MODE_KEY, v ? '1' : '0');
+                    }}
+                />
+            </label>
+
             <Section
                 icon={<IdCard className="size-4" />}
                 title="Member verification"
@@ -69,67 +101,71 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 )}
             </Section>
 
-            <Section
-                icon={<IdCard className="size-4" />}
-                title="Recruit details"
-                step={2}
-                complete={form.detailsComplete}
-            >
-                <div className="grid gap-4 sm:grid-cols-3">
-                    <div className="grid gap-1.5">
-                        <Label htmlFor="forum_name" className="min-h-9 leading-tight">
-                            Forum name *
-                        </Label>
-                        <div className="flex gap-1.5">
-                            <Input
-                                id="forum_name"
-                                value={form.member.forum_name}
-                                onChange={(e) => {
-                                    form.patchMember({ forum_name: e.target.value });
-                                    form.validateForumName(e.target.value, form.member.id);
-                                }}
-                                placeholder="Desired forum name"
-                            />
-                            <Button
-                                type="button"
-                                variant="outline"
-                                size="icon-sm"
-                                title={`Copy to ${(props.handleLabel ?? 'in-game handle').toLowerCase()}`}
-                                onClick={() => form.patchMember({ ingame_name: form.member.forum_name })}
-                            >
-                                <ArrowRight />
-                            </Button>
+            {(!guided || revealed[1]) && (
+                <Section
+                    icon={<IdCard className="size-4" />}
+                    title="Recruit details"
+                    step={2}
+                    complete={form.detailsComplete}
+                >
+                    <div className="grid gap-4 sm:grid-cols-3">
+                        <div className="grid gap-1.5">
+                            <Label htmlFor="forum_name" className="min-h-9 leading-tight">
+                                Forum name *
+                            </Label>
+                            <div className="flex gap-1.5">
+                                <Input
+                                    id="forum_name"
+                                    value={form.member.forum_name}
+                                    onChange={(e) => {
+                                        form.patchMember({ forum_name: e.target.value });
+                                        form.validateForumName(e.target.value, form.member.id);
+                                    }}
+                                    placeholder="Desired forum name"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="icon-sm"
+                                    title={`Copy to ${(props.handleLabel ?? 'in-game handle').toLowerCase()}`}
+                                    onClick={() => form.patchMember({ ingame_name: form.member.forum_name })}
+                                >
+                                    <ArrowRight />
+                                </Button>
+                            </div>
+                            <ForumNameHint form={form} />
                         </div>
-                        <ForumNameHint form={form} />
+                        <div className="grid gap-1.5">
+                            <Label htmlFor="ingame" className="min-h-9 leading-tight">
+                                {props.handleLabel ?? 'In-game handle'} *
+                            </Label>
+                            <Input
+                                id="ingame"
+                                value={form.member.ingame_name}
+                                onChange={(e) => form.patchMember({ ingame_name: e.target.value })}
+                                placeholder={
+                                    props.handleLabel ? `Their ${props.handleLabel.toLowerCase()}` : 'In-game name'
+                                }
+                            />
+                            {props.handleHint && <p className="text-xs text-muted-foreground">{props.handleHint}</p>}
+                        </div>
+                        <div className="grid gap-1.5">
+                            <Label className="min-h-9 leading-tight">Rank *</Label>
+                            <SimpleSelect
+                                value={form.member.rank || '__all'}
+                                onChange={(v) => form.patchMember({ rank: v === '__all' ? '' : v })}
+                                placeholder="Select rank…"
+                                options={[
+                                    { value: '__all', label: 'Select rank…' },
+                                    ...Object.entries(props.ranks).map(([id, name]) => ({ value: id, label: name })),
+                                ]}
+                            />
+                        </div>
                     </div>
-                    <div className="grid gap-1.5">
-                        <Label htmlFor="ingame" className="min-h-9 leading-tight">
-                            {props.handleLabel ?? 'In-game handle'} *
-                        </Label>
-                        <Input
-                            id="ingame"
-                            value={form.member.ingame_name}
-                            onChange={(e) => form.patchMember({ ingame_name: e.target.value })}
-                            placeholder={props.handleLabel ? `Their ${props.handleLabel.toLowerCase()}` : 'In-game name'}
-                        />
-                        {props.handleHint && <p className="text-xs text-muted-foreground">{props.handleHint}</p>}
-                    </div>
-                    <div className="grid gap-1.5">
-                        <Label className="min-h-9 leading-tight">Rank *</Label>
-                        <SimpleSelect
-                            value={form.member.rank || '__all'}
-                            onChange={(v) => form.patchMember({ rank: v === '__all' ? '' : v })}
-                            placeholder="Select rank…"
-                            options={[
-                                { value: '__all', label: 'Select rank…' },
-                                ...Object.entries(props.ranks).map(([id, name]) => ({ value: id, label: name })),
-                            ]}
-                        />
-                    </div>
-                </div>
-            </Section>
+                </Section>
+            )}
 
-            {props.platoons.length > 0 && (
+            {props.platoons.length > 0 && (!guided || revealed[2]) && (
                 <Section
                     icon={<Users className="size-4" />}
                     title="Assignment"
@@ -182,7 +218,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 </Section>
             )}
 
-            {form.threads.length > 0 && (
+            {form.threads.length > 0 && (!guided || revealed[3]) && (
                 <Section
                     icon={<Check className="size-4" />}
                     title="Agreements"
@@ -239,7 +275,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 </Section>
             )}
 
-            {form.tasks.length > 0 && (
+            {form.tasks.length > 0 && (!guided || revealed[4]) && (
                 <Section
                     icon={<Check className="size-4" />}
                     title="In-processing tasks"
@@ -277,7 +313,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 </Section>
             )}
 
-            {(props.welcome_area || props.welcome_pm) && (
+            {(props.welcome_area || props.welcome_pm) && (!guided || revealed[5]) && (
                 <Section
                     icon={<Mail className="size-4" />}
                     title="Welcome message"
