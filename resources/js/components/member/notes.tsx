@@ -183,7 +183,7 @@ export function NotesDialog({
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-            <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto">
+            <DialogContent className="max-h-[80vh] sm:max-w-3xl overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         Member notes <span className="numeric text-sm text-muted-foreground">{notes.length}</span>
