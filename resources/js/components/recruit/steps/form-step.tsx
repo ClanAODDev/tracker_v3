@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SimpleSelect } from '@/components/ui/simple-select';
 import { linkifyHtml } from '@/lib/format';
+import { cn } from '@/lib/utils';
 
 export function FormStep({ form }: { form: RecruitForm }) {
     const { props } = form;
@@ -193,7 +194,13 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 >
                     <p className="text-sm text-muted-foreground">Confirm the recruit has read the following:</p>
                     {form.threads.map((thread, i) => (
-                        <div key={i} className="flex items-center gap-2 text-sm">
+                        <div
+                            key={i}
+                            className={cn(
+                                'flex items-center gap-2 text-sm transition-opacity',
+                                thread.read && 'opacity-50 hover:opacity-100',
+                            )}
+                        >
                             <input
                                 type="checkbox"
                                 checked={thread.read}
@@ -244,7 +251,13 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 >
                     <p className="text-sm text-muted-foreground">Checklist for onboarding the new recruit:</p>
                     {form.tasks.map((task, i) => (
-                        <label key={i} className="flex items-start gap-2 text-sm">
+                        <label
+                            key={i}
+                            className={cn(
+                                'flex items-start gap-2 text-sm transition-opacity',
+                                task.complete && 'opacity-50 hover:opacity-100',
+                            )}
+                        >
                             <input
                                 type="checkbox"
                                 checked={task.complete}
