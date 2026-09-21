@@ -183,7 +183,7 @@ export function NotesDialog({
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-            <DialogContent className="max-h-[80vh] max-w-2xl overflow-hidden">
+            <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         Member notes <span className="numeric text-sm text-muted-foreground">{notes.length}</span>
@@ -244,7 +244,7 @@ export function NotesDialog({
                     </form>
                 )}
 
-                <div className="space-y-2 overflow-y-auto">
+                <div className="space-y-2">
                     {(showTrashed ? trashedNotes : notes).length === 0 ? (
                         <p className="py-6 text-center text-sm text-muted-foreground">
                             {showTrashed ? 'No deleted notes.' : 'No notes recorded for this member.'}
