@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { ArrowRight, Check, Copy, IdCard, Loader2, MessageSquare, Users } from 'lucide-react';
+import { ArrowRight, Check, Copy, IdCard, Loader2, Mail, MessageSquare, Users } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -19,7 +19,11 @@ export function FormStep({ form }: { form: RecruitForm }) {
     const [attempted, setAttempted] = useState(false);
     const [agreementsOpen, setAgreementsOpen] = useState(true);
     const [tasksOpen, setTasksOpen] = useState(true);
+    const [welcomeOpen, setWelcomeOpen] = useState(true);
     const [appOpen, setAppOpen] = useState(false);
+    const welcomePm = (props.welcome_pm || '')
+        .replace(/\{\{\s*name\s*\}\}/g, form.member.forum_name)
+        .replace(/\{\{\s*ingame_name\s*\}\}/g, form.member.ingame_name);
 
     return (
         <form
@@ -257,6 +261,71 @@ export function FormStep({ form }: { form: RecruitForm }) {
                             />
                         </label>
                     ))}
+                </Section>
+            )}
+
+            {(props.welcome_area || props.welcome_pm) && (
+                <Section
+                    icon={<Mail className="size-4" />}
+                    title="Welcome message"
+                    step={6}
+                    complete
+                    collapsible
+                    open={welcomeOpen}
+                    onToggle={() => setWelcomeOpen((v) => !v)}
+                >
+                    {props.welcome_area && (
+                        <div>
+                            <p className="text-sm font-medium">Create welcome post</p>
+                            <Button size="sm" variant="outline" className="mt-1.5" asChild>
+                                <a
+                                    href={
+                                        props.use_welcome_thread
+                                            ? `https://www.clanaod.net/forums/newreply.php?do=newreply&t=${props.welcome_area}`
+                                            : `https://www.clanaod.net/forums/newthread.php?do=newthread&f=${props.welcome_area}`
+                                    }
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    {props.use_welcome_thread ? 'Create post' : 'Create thread'}
+                                </a>
+                            </Button>
+                        </div>
+                    )}
+                    {props.welcome_pm && (
+                        <div>
+                            <p className="text-sm font-medium">Send welcome DM</p>
+                            <textarea
+                                readOnly
+                                rows={4}
+                                value={welcomePm}
+                                className="mt-1.5 w-full rounded-md border border-border bg-transparent p-2 text-sm"
+                            />
+                            <div className="mt-1.5 flex gap-2">
+                                <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() =>
+                                        navigator.clipboard.writeText(welcomePm).then(() => toast.success('Copied'))
+                                    }
+                                >
+                                    <Copy /> Copy
+                                </Button>
+                                {form.member.id && (
+                                    <Button size="sm" variant="outline" asChild>
+                                        <a
+                                            href={`https://clanaod.net/forums/private.php?do=newpm&u=${form.member.id}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                        >
+                                            Send forum PM
+                                        </a>
+                                    </Button>
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </Section>
             )}
 
