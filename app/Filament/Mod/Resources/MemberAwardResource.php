@@ -109,12 +109,36 @@ class MemberAwardResource extends Resource
                     ->schema([
                         Select::make('division_filter')
                             ->label('Division')
-                            ->options(
-                                Division::where('active', true)
+                            ->options(function () {
+                                $user = auth()->user();
+
+                                if ($user->isRole('admin')) {
+                                    return ['clan-wide' => 'Clan-Wide'];
+                                }
+
+                                if ($user->isDivisionLeader() && $user->member?->division) {
+                                    return [$user->member->division_id => $user->member->division->name];
+                                }
+
+                                return Division::where('active', true)
                                     ->orderBy('name')
                                     ->pluck('name', 'id')
-                                    ->prepend('Clan-Wide', 'clan-wide')
-                            )
+                                    ->prepend('Clan-Wide', 'clan-wide');
+                            })
+                            ->default(function () {
+                                $user = auth()->user();
+
+                                if ($user->isRole('admin')) {
+                                    return 'clan-wide';
+                                }
+
+                                if ($user->isDivisionLeader()) {
+                                    return $user->member?->division_id;
+                                }
+
+                                return null;
+                            })
+                            ->disabled(fn () => auth()->user()->isRole('admin') || auth()->user()->isDivisionLeader())
                             ->placeholder('All divisions')
                             ->live()
                             ->dehydrated(false),
@@ -132,7 +156,23 @@ class MemberAwardResource extends Resource
                             })
                             ->searchable()
                             ->preload()
-                            ->required(),
+                            ->required()
+                            ->rules([
+                                fn (): Closure => function (string $attribute, $value, Closure $fail) {
+                                    $user  = auth()->user();
+                                    $award = Award::find($value);
+
+                                    if (! $award) {
+                                        return;
+                                    }
+
+                                    if ($user->isRole('admin') && $award->division_id !== null) {
+                                        $fail('Admins can only grant clan-wide awards here.');
+                                    } elseif ($user->isDivisionLeader() && $award->division_id !== $user->member?->division_id) {
+                                        $fail('You can only grant awards for your own division.');
+                                    }
+                                },
+                            ]),
                     ]),
 
                 Section::make('Recipient')
