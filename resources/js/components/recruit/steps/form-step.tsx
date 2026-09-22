@@ -30,10 +30,12 @@ export function FormStep({ form }: { form: RecruitForm }) {
         .replace(/\{\{\s*name\s*\}\}/g, form.member.forum_name)
         .replace(/\{\{\s*ingame_name\s*\}\}/g, form.member.ingame_name);
 
-    // revealed[k] gates whether the (k+1)th section may show in guided mode — revealed[0] is
-    // always true (member verification always shows first), each subsequent entry requires
-    // every earlier applicable section to be complete first. Sections the division doesn't use
-    // (no platoons, no threads, etc.) don't block the chain.
+    /*
+     * revealed[k] gates whether the (k+1)th section may show in guided mode — revealed[0] is
+     * always true (member verification always shows first), each subsequent entry requires
+     * every earlier applicable section to be complete first. Sections the division doesn't use
+     * (no platoons, no threads, etc.) don't block the chain.
+     */
     const revealed = [
         form.memberVerificationComplete,
         form.detailsComplete,

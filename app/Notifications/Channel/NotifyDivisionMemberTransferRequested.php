@@ -82,27 +82,33 @@ class NotifyDivisionMemberTransferRequested extends Notification implements Shou
     {
         $divisionId = $notifiable->id;
 
-        // Filament's filter param names ("transferring_to"/"transferring_from") are relative
-        // to $notifiable's own division: an INCOMING notice means members transferring TO this
-        // division, OUTGOING means transferring FROM it.
+        /*
+         * Filament's filter param names ("transferring_to"/"transferring_from") are relative
+         * to $notifiable's own division: an INCOMING notice means members transferring TO this
+         * division, OUTGOING means transferring FROM it.
+         */
         $filterDirection = ($this->type === 'INCOMING') ? 'to' : 'from';
 
-        // Message wording is relative to $counterpartDivision instead: an OUTGOING notice (sent
-        // to the member's old division) describes where they went ("to"); an INCOMING notice
-        // (sent to their new division) describes where they came from ("from"). Using
-        // $filterDirection here was backward — it made the OLD division's channel read "has
-        // transferred from {new division}", naming the division the member was leaving TO as if
-        // it were where they came FROM.
+        /*
+         * Message wording is relative to $counterpartDivision instead: an OUTGOING notice (sent
+         * to the member's old division) describes where they went ("to"); an INCOMING notice
+         * (sent to their new division) describes where they came from ("from"). Using
+         * $filterDirection here was backward — it made the OLD division's channel read "has
+         * transferred from {new division}", naming the division the member was leaving TO as if
+         * it were where they came FROM.
+         */
         $wordDirection = ($this->type === 'INCOMING') ? 'from' : 'to';
 
         $label = strtolower($this->type);
 
-        // Non-officer transfers are auto-approved the instant they're submitted (see
-        // MemberTransferController::store()) - there's nothing for leadership to approve or
-        // deny, so this must read as a completed-transfer notice, not an action request. The
-        // previous wording ("has been created... Manage transfer requests") was identical for
-        // both cases and led an officer to believe they could still deny an auto-approved
-        // transfer, which had already gone through.
+        /*
+         * Non-officer transfers are auto-approved the instant they're submitted (see
+         * MemberTransferController::store()) - there's nothing for leadership to approve or
+         * deny, so this must read as a completed-transfer notice, not an action request. The
+         * previous wording ("has been created... Manage transfer requests") was identical for
+         * both cases and led an officer to believe they could still deny an auto-approved
+         * transfer, which had already gone through.
+         */
         if ($this->autoApproved) {
             $value = sprintf(
                 ':white_check_mark: %s [%s] has transferred %s %s.',
