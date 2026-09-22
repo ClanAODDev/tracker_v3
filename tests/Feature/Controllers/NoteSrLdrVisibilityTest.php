@@ -130,4 +130,43 @@ class NoteSrLdrVisibilityTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('notes', fn ($notes) => ! collect($notes)->contains('id', $note->id)));
     }
+
+    #[Test]
+    public function non_sr_ldr_division_leader_cannot_delete_an_sr_ldr_note(): void
+    {
+        $srLdr  = $this->createSeniorLeader();
+        $viewer = $this->createOfficer($srLdr->member->division);
+        $member = $this->createMember(['division_id' => $viewer->member->division_id]);
+
+        $note = Note::factory()->create([
+            'member_id' => $member->id,
+            'author_id' => $srLdr->id,
+            'type'      => 'sr_ldr',
+        ]);
+
+        $this->actingAs($viewer)
+            ->delete(route('deleteNote', [$member->clan_id, $note->id]))
+            ->assertForbidden();
+
+        $this->assertDatabaseHas('notes', ['id' => $note->id, 'deleted_at' => null]);
+    }
+
+    #[Test]
+    public function sr_ldr_user_can_delete_an_sr_ldr_note(): void
+    {
+        $srLdr  = $this->createSeniorLeader();
+        $member = $this->createMember(['division_id' => $srLdr->member->division_id]);
+
+        $note = Note::factory()->create([
+            'member_id' => $member->id,
+            'author_id' => $srLdr->id,
+            'type'      => 'sr_ldr',
+        ]);
+
+        $this->actingAs($srLdr)
+            ->delete(route('deleteNote', [$member->clan_id, $note->id]))
+            ->assertRedirect();
+
+        $this->assertSoftDeleted($note);
+    }
 }

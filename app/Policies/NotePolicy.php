@@ -31,7 +31,7 @@ class NotePolicy
 
     public function edit(User $user, Note $note): bool
     {
-        if ($note->type === 'msgt' && ! Note::canManageMsgt($user)) {
+        if ($this->restrictedByType($user, $note)) {
             return false;
         }
 
@@ -49,7 +49,7 @@ class NotePolicy
 
     public function delete(User $user, Note $note): bool
     {
-        if ($note->type === 'msgt' && ! Note::canManageMsgt($user)) {
+        if ($this->restrictedByType($user, $note)) {
             return false;
         }
 
@@ -63,7 +63,7 @@ class NotePolicy
 
     public function restore(User $user, Note $note): bool
     {
-        if ($note->type === 'msgt' && ! Note::canManageMsgt($user)) {
+        if ($this->restrictedByType($user, $note)) {
             return false;
         }
 
@@ -72,10 +72,19 @@ class NotePolicy
 
     public function forceDelete(User $user, Note $note): bool
     {
-        if ($note->type === 'msgt' && ! Note::canManageMsgt($user)) {
+        if ($this->restrictedByType($user, $note)) {
             return false;
         }
 
         return $user->isDivisionLeader();
+    }
+
+    private function restrictedByType(User $user, Note $note): bool
+    {
+        return match ($note->type) {
+            'msgt'   => ! Note::canManageMsgt($user),
+            'sr_ldr' => ! Note::canManageSrLdr($user),
+            default  => false,
+        };
     }
 }
