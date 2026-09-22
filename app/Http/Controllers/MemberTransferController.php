@@ -66,14 +66,14 @@ class MemberTransferController extends Controller
         ]);
 
         $notifications = [
-            [$oldDivision, 'OUTGOING'],
-            [$targetDivision, 'INCOMING'],
+            [$oldDivision, 'OUTGOING', $targetDivision->name],
+            [$targetDivision, 'INCOMING', $oldDivision->name],
         ];
 
-        foreach ($notifications as [$division, $type]) {
+        foreach ($notifications as [$division, $type, $counterpartName]) {
             $division->notify(new NotifyDivisionMemberTransferRequested(
                 $member,
-                $targetDivision->name,
+                $counterpartName,
                 $type,
                 autoApproved: ! $isOfficer,
             ));
