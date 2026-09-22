@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ActivityType;
+use App\Enums\Rank;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -50,11 +51,37 @@ class Note extends Model
 
     public static function allNoteTypes(): array
     {
-        if (auth()->user()->isRole(['admin', 'sr_ldr'])) {
-            static::$noteTypes['sr_ldr'] = 'Sr Leaders Only';
+        $types = static::$noteTypes;
+        $user  = auth()->user();
+
+        if (static::canManageSrLdr($user)) {
+            $types['sr_ldr'] = 'Sr Leaders Only';
         }
 
-        return static::$noteTypes;
+        if (static::canManageMsgt($user)) {
+            $types['msgt'] = 'MSGT+ Only';
+        }
+
+        return $types;
+    }
+
+    public static function canManageSrLdr(?User $user): bool
+    {
+        return $user?->isRole(['admin', 'sr_ldr']) ?? false;
+    }
+
+    public static function canManageMsgt(?User $user): bool
+    {
+        return $user?->isRole('admin') || ($user?->member?->isAtLeast(Rank::MASTER_SERGEANT) ?? false);
+    }
+
+    public static function isTypeVisibleTo(string $type, ?User $user): bool
+    {
+        return match ($type) {
+            'sr_ldr' => static::canManageSrLdr($user),
+            'msgt'   => static::canManageMsgt($user),
+            default  => true,
+        };
     }
 
     public function author(): BelongsTo

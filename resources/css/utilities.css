@@ -174,6 +174,29 @@
         --hatch-color: color-mix(in srgb, var(--primary) 14%, transparent);
     }
 
+    /* Thicker, solid, dark bars spaced well apart — reads as a restricted/heavier
+       surface at a glance without competing with card content. Flat black rather
+       than a theme token, so the bars stay dark (not just faintly tinted) against
+       both the near-black card surface in dark mode and a light card in light mode. */
+    .tron-hatch-bold {
+        background-image: repeating-linear-gradient(
+            -45deg,
+            var(--hatch-color, rgba(0, 0, 0, 0.45)) 0 3px,
+            transparent 3px 14px
+        );
+    }
+
+    /* Tint overrides for .tron-hatch-bold, matching each note tier's own color
+       identity — green for Sr Leader (Role::SENIOR_LEADER's badge color), purple
+       for MSGT+ (Rank::MASTER_SERGEANT's own badge hex, #CC00FF). */
+    .tron-hatch-success {
+        --hatch-color: color-mix(in srgb, var(--success) 4%, transparent);
+    }
+
+    .tron-hatch-msgt {
+        --hatch-color: color-mix(in srgb, #cc00ff 4%, transparent);
+    }
+
     /* Opt-in L-brackets on the corners of a panel.
        Tint the brackets by setting --corner-color on the element. */
     .tron-corners {

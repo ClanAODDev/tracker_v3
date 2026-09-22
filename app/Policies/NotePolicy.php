@@ -31,6 +31,10 @@ class NotePolicy
 
     public function edit(User $user, Note $note): bool
     {
+        if ($this->restrictedByType($user, $note)) {
+            return false;
+        }
+
         return $user->isDivisionLeader() || $user->isRole(Role::SENIOR_LEADER);
     }
 
@@ -45,6 +49,10 @@ class NotePolicy
 
     public function delete(User $user, Note $note): bool
     {
+        if ($this->restrictedByType($user, $note)) {
+            return false;
+        }
+
         return $user->isDivisionLeader();
     }
 
@@ -55,11 +63,28 @@ class NotePolicy
 
     public function restore(User $user, Note $note): bool
     {
+        if ($this->restrictedByType($user, $note)) {
+            return false;
+        }
+
         return $user->isDivisionLeader();
     }
 
     public function forceDelete(User $user, Note $note): bool
     {
+        if ($this->restrictedByType($user, $note)) {
+            return false;
+        }
+
         return $user->isDivisionLeader();
+    }
+
+    private function restrictedByType(User $user, Note $note): bool
+    {
+        return match ($note->type) {
+            'msgt'   => ! Note::canManageMsgt($user),
+            'sr_ldr' => ! Note::canManageSrLdr($user),
+            default  => false,
+        };
     }
 }

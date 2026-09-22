@@ -1,18 +1,11 @@
 import { router, useForm } from '@inertiajs/react';
-import { ExternalLink, MessageSquare, Pencil, Plus, RotateCcw, Shield, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
+import { ExternalLink, MessageSquare, Pencil, Plus, RotateCcw, Shield, Star, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { type FormEvent, type ReactNode, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 export interface MemberNote {
@@ -32,11 +25,12 @@ export interface MemberNote {
     forceDeleteUrl: string | null;
 }
 
-const TYPE_META: Record<string, { icon: typeof ThumbsUp; className: string }> = {
-    positive: { icon: ThumbsUp, className: 'text-success' },
-    negative: { icon: ThumbsDown, className: 'text-destructive' },
-    sr_ldr: { icon: Shield, className: 'text-primary' },
-    general: { icon: MessageSquare, className: 'text-muted-foreground' },
+const TYPE_META: Record<string, { icon: typeof ThumbsUp; className: string; hatch?: string; label: string }> = {
+    positive: { icon: ThumbsUp, className: 'text-success', label: 'Positive' },
+    negative: { icon: ThumbsDown, className: 'text-destructive', label: 'Negative' },
+    sr_ldr: { icon: Shield, className: 'text-success', hatch: 'tron-hatch-success', label: 'Sr Leaders Only' },
+    msgt: { icon: Star, className: 'text-[#CC00FF]', hatch: 'tron-hatch-msgt', label: 'MSGT+ Only' },
+    general: { icon: MessageSquare, className: 'text-muted-foreground', label: 'General' },
 };
 
 function NoteCard({ note, memberClanId, trashed }: { note: MemberNote; memberClanId: number; trashed?: boolean }) {
@@ -54,6 +48,7 @@ function NoteCard({ note, memberClanId, trashed }: { note: MemberNote; memberCla
         <div
             className={cn(
                 'rounded-md border border-border bg-card p-3',
+                meta.hatch && cn('tron-hatch tron-hatch-bold', meta.hatch),
                 trashed && 'border-destructive/30 opacity-80',
             )}
         >
@@ -79,7 +74,12 @@ function NoteCard({ note, memberClanId, trashed }: { note: MemberNote; memberCla
             )}
 
             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                <Icon className={cn('size-3.5', meta.className)} />
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Icon className={cn('size-3.5', meta.className)} />
+                    </TooltipTrigger>
+                    <TooltipContent>{meta.label}</TooltipContent>
+                </Tooltip>
                 {note.authorUrl ? (
                     <a href={note.authorUrl} className="hover:text-foreground">
                         {note.authorName}
@@ -181,81 +181,87 @@ export function NotesDialog({
     }
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
-            {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-            <DialogContent className="max-h-[80vh] sm:max-w-3xl overflow-y-auto">
-                <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
+        <Sheet open={open} onOpenChange={onOpenChange}>
+            {trigger && <SheetTrigger asChild>{trigger}</SheetTrigger>}
+            <SheetContent side="right" className="w-full gap-0 overflow-y-auto sm:max-w-xl">
+                <SheetHeader>
+                    <SheetTitle className="flex items-center gap-2">
                         Member notes <span className="numeric text-sm text-muted-foreground">{notes.length}</span>
-                    </DialogTitle>
-                    <DialogDescription className="sr-only">Notes recorded for this member</DialogDescription>
-                </DialogHeader>
+                    </SheetTitle>
+                    <SheetDescription className="sr-only">Notes recorded for this member</SheetDescription>
+                </SheetHeader>
 
-                <div className="flex items-center justify-between">
-                    {canViewTrashed && trashedNotes.length > 0 && (
-                        <Button size="sm" variant="ghost" onClick={() => setShowTrashed((v) => !v)}>
-                            <Trash2 /> {showTrashed ? 'Hide' : 'Show'} deleted ({trashedNotes.length})
-                        </Button>
-                    )}
-                    <Button size="sm" className="ml-auto" onClick={() => setAdding((v) => !v)}>
-                        <Plus /> Add note
-                    </Button>
-                </div>
-
-                {adding && (
-                    <form onSubmit={submit} className="space-y-3 rounded-md border border-border p-3">
-                        <div className="flex flex-wrap gap-2">
-                            {Object.entries(noteTypes).map(([value, label]) => (
-                                <label
-                                    key={value}
-                                    className={cn(
-                                        'cursor-pointer rounded-md border px-2.5 py-1 text-xs',
-                                        create.data.type === value ? 'border-primary bg-primary/10' : 'border-border',
-                                    )}
-                                >
-                                    <input
-                                        type="radio"
-                                        name="type"
-                                        value={value}
-                                        checked={create.data.type === value}
-                                        onChange={() => create.setData('type', value)}
-                                        className="sr-only"
-                                    />
-                                    {label}
-                                </label>
-                            ))}
-                        </div>
-                        <div className="grid gap-1.5">
-                            <Label htmlFor="note-body">Note content</Label>
-                            <textarea
-                                id="note-body"
-                                value={create.data.body}
-                                onChange={(e) => create.setData('body', e.target.value)}
-                                rows={3}
-                                className="w-full rounded-md border border-input bg-transparent p-2 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/40"
-                            />
-                            {create.errors.body && <p className="text-xs text-destructive">{create.errors.body}</p>}
-                        </div>
-                        <DialogFooter>
-                            <Button type="submit" size="sm" disabled={create.processing}>
-                                Save note
+                <div className="space-y-4 px-4 pb-8">
+                    <div className="flex items-center justify-between">
+                        {canViewTrashed && trashedNotes.length > 0 && (
+                            <Button size="sm" variant="ghost" onClick={() => setShowTrashed((v) => !v)}>
+                                <Trash2 /> {showTrashed ? 'Hide' : 'Show'} deleted ({trashedNotes.length})
                             </Button>
-                        </DialogFooter>
-                    </form>
-                )}
+                        )}
+                        <Button size="sm" className="ml-auto" onClick={() => setAdding((v) => !v)}>
+                            <Plus /> Add note
+                        </Button>
+                    </div>
 
-                <div className="space-y-2">
-                    {(showTrashed ? trashedNotes : notes).length === 0 ? (
-                        <p className="py-6 text-center text-sm text-muted-foreground">
-                            {showTrashed ? 'No deleted notes.' : 'No notes recorded for this member.'}
-                        </p>
-                    ) : (
-                        (showTrashed ? trashedNotes : notes).map((note) => (
-                            <NoteCard key={note.id} note={note} memberClanId={memberClanId} trashed={showTrashed} />
-                        ))
+                    {adding && (
+                        <form onSubmit={submit} className="space-y-3 rounded-md border border-border p-3">
+                            <div className="flex flex-wrap gap-2">
+                                {Object.entries(noteTypes).map(([value, label]) => (
+                                    <label
+                                        key={value}
+                                        className={cn(
+                                            'cursor-pointer rounded-md border px-2.5 py-1 text-xs',
+                                            create.data.type === value
+                                                ? 'border-primary bg-primary/10'
+                                                : 'border-border',
+                                        )}
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="type"
+                                            value={value}
+                                            checked={create.data.type === value}
+                                            onChange={() => create.setData('type', value)}
+                                            className="sr-only"
+                                        />
+                                        {label}
+                                    </label>
+                                ))}
+                            </div>
+                            <div className="grid gap-1.5">
+                                <Label htmlFor="note-body">Note content</Label>
+                                <textarea
+                                    id="note-body"
+                                    value={create.data.body}
+                                    onChange={(e) => create.setData('body', e.target.value)}
+                                    rows={3}
+                                    className="w-full rounded-md border border-input bg-transparent p-2 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/40"
+                                />
+                                {create.errors.body && (
+                                    <p className="text-xs text-destructive">{create.errors.body}</p>
+                                )}
+                            </div>
+                            <div className="flex justify-end">
+                                <Button type="submit" size="sm" disabled={create.processing}>
+                                    Save note
+                                </Button>
+                            </div>
+                        </form>
                     )}
+
+                    <div className="space-y-2">
+                        {(showTrashed ? trashedNotes : notes).length === 0 ? (
+                            <p className="py-6 text-center text-sm text-muted-foreground">
+                                {showTrashed ? 'No deleted notes.' : 'No notes recorded for this member.'}
+                            </p>
+                        ) : (
+                            (showTrashed ? trashedNotes : notes).map((note) => (
+                                <NoteCard key={note.id} note={note} memberClanId={memberClanId} trashed={showTrashed} />
+                            ))
+                        )}
+                    </div>
                 </div>
-            </DialogContent>
-        </Dialog>
+            </SheetContent>
+        </Sheet>
     );
 }

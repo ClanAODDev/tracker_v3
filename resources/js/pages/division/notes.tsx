@@ -1,9 +1,10 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { FileText, Lock, MessageSquare, Search, ThumbsDown, ThumbsUp, X } from 'lucide-react';
+import { FileText, Lock, MessageSquare, Search, Star, ThumbsDown, ThumbsUp, X } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 
 import { Input } from '@/components/ui/input';
 import { SimpleSelect } from '@/components/ui/simple-select';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
 
@@ -29,14 +30,21 @@ const TYPE_ICON: Record<string, typeof ThumbsUp> = {
     positive: ThumbsUp,
     negative: ThumbsDown,
     sr_ldr: Lock,
+    msgt: Star,
     misc: MessageSquare,
 };
 
 const TYPE_TONE: Record<string, string> = {
     positive: 'text-success',
     negative: 'text-destructive',
-    sr_ldr: 'text-primary',
+    sr_ldr: 'text-success',
+    msgt: 'text-[#CC00FF]',
     misc: 'text-muted-foreground',
+};
+
+const TYPE_HATCH: Record<string, string> = {
+    sr_ldr: 'tron-hatch-success',
+    msgt: 'tron-hatch-msgt',
 };
 
 export default function DivisionNotes({ division, noteTypes, tags, filters, notes }: Props) {
@@ -149,9 +157,17 @@ export default function DivisionNotes({ division, noteTypes, tags, filters, note
                                 <Link
                                     key={note.id}
                                     href={note.memberUrl}
-                                    className="flex gap-3 rounded-md border border-border bg-card p-3 transition-colors hover:border-primary/30"
+                                    className={cn(
+                                        'flex gap-3 rounded-md border border-border bg-card p-3 transition-colors hover:border-primary/30',
+                                        TYPE_HATCH[note.type] && cn('tron-hatch tron-hatch-bold', TYPE_HATCH[note.type]),
+                                    )}
                                 >
-                                    <Icon className={cn('mt-0.5 size-4 shrink-0', TYPE_TONE[note.type])} />
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Icon className={cn('mt-0.5 size-4 shrink-0', TYPE_TONE[note.type])} />
+                                        </TooltipTrigger>
+                                        <TooltipContent>{noteTypes[note.type] ?? note.type}</TooltipContent>
+                                    </Tooltip>
                                     <div className="min-w-0 flex-1">
                                         <p className="whitespace-pre-line break-words text-sm">{note.body}</p>
                                         <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">

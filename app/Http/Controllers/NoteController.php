@@ -8,6 +8,7 @@ use App\Models\Member;
 use App\Models\Note;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class NoteController extends Controller
 {
@@ -25,7 +26,11 @@ class NoteController extends Controller
         $this->authorize('edit', $note);
 
         $request->validate(
-            ['body' => 'required', 'forum_thread_id' => 'nullable|numeric'],
+            [
+                'body'            => 'required',
+                'type'            => ['required', Rule::in(array_keys(Note::allNoteTypes()))],
+                'forum_thread_id' => 'nullable|numeric',
+            ],
             [
                 'body.required'           => 'You must provide content for your note',
                 'forum_thread_id.numeric' => 'Forum thread ID must be a number',

@@ -33,6 +33,7 @@ export interface NoteSummary {
     negative: number;
     misc: number;
     srLdr: number;
+    msgt: number;
     latestType: string | null;
 }
 
@@ -215,7 +216,8 @@ export function ProfileStats({ stats, canCreateNote, onTenure, onRecruits, onRem
                                     <span className="text-destructive">−{stats.notes.negative}</span>
                                 )}
                                 {stats.notes.misc > 0 && <span>{stats.notes.misc} general</span>}
-                                {stats.notes.srLdr > 0 && <span className="text-primary">{stats.notes.srLdr} sr</span>}
+                                {stats.notes.srLdr > 0 && <span className="text-success">{stats.notes.srLdr} sr</span>}
+                                {stats.notes.msgt > 0 && <span className="text-[#CC00FF]">{stats.notes.msgt} msgt</span>}
                             </span>
                         ) : (
                             'No notes recorded'

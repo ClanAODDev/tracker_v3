@@ -43,13 +43,7 @@ class DivisionNoteController extends Controller
         $notes = $notes
             ->orderByDesc('created_at')
             ->get()
-            ->filter(function ($note) {
-                if ($note->type === 'sr_ldr') {
-                    return auth()->user()->isRole(['sr_ldr', 'admin']);
-                }
-
-                return true;
-            });
+            ->filter(fn ($note) => Note::isTypeVisibleTo($note->type, auth()->user()));
 
         $tags = DivisionTag::forDivision($division->id)
             ->visibleTo()
