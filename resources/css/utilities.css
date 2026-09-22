@@ -190,11 +190,11 @@
        identity — green for Sr Leader (Role::SENIOR_LEADER's badge color), purple
        for MSGT+ (Rank::MASTER_SERGEANT's own badge hex, #CC00FF). */
     .tron-hatch-success {
-        --hatch-color: color-mix(in srgb, var(--success) 8%, transparent);
+        --hatch-color: color-mix(in srgb, var(--success) 4%, transparent);
     }
 
     .tron-hatch-msgt {
-        --hatch-color: color-mix(in srgb, #cc00ff 8%, transparent);
+        --hatch-color: color-mix(in srgb, #cc00ff 4%, transparent);
     }
 
     /* Opt-in L-brackets on the corners of a panel.
