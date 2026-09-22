@@ -55,6 +55,7 @@ function NoteCard({ note, memberClanId, trashed }: { note: MemberNote; memberCla
         <div
             className={cn(
                 'rounded-md border border-border bg-card p-3',
+                note.type === 'msgt' && 'tron-hatch tron-hatch-bold',
                 trashed && 'border-destructive/30 opacity-80',
             )}
         >

@@ -151,7 +151,10 @@ export default function DivisionNotes({ division, noteTypes, tags, filters, note
                                 <Link
                                     key={note.id}
                                     href={note.memberUrl}
-                                    className="flex gap-3 rounded-md border border-border bg-card p-3 transition-colors hover:border-primary/30"
+                                    className={cn(
+                                        'flex gap-3 rounded-md border border-border bg-card p-3 transition-colors hover:border-primary/30',
+                                        note.type === 'msgt' && 'tron-hatch tron-hatch-bold',
+                                    )}
                                 >
                                     <Icon className={cn('mt-0.5 size-4 shrink-0', TYPE_TONE[note.type])} />
                                     <div className="min-w-0 flex-1">
