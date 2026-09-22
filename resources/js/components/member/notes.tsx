@@ -1,5 +1,5 @@
 import { router, useForm } from '@inertiajs/react';
-import { ExternalLink, MessageSquare, Pencil, Plus, RotateCcw, Shield, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
+import { ExternalLink, MessageSquare, Pencil, Plus, RotateCcw, Shield, Star, ThumbsDown, ThumbsUp, Trash2 } from 'lucide-react';
 import { type FormEvent, type ReactNode, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -36,6 +36,7 @@ const TYPE_META: Record<string, { icon: typeof ThumbsUp; className: string }> = 
     positive: { icon: ThumbsUp, className: 'text-success' },
     negative: { icon: ThumbsDown, className: 'text-destructive' },
     sr_ldr: { icon: Shield, className: 'text-primary' },
+    msgt: { icon: Star, className: 'text-warning' },
     general: { icon: MessageSquare, className: 'text-muted-foreground' },
 };
 

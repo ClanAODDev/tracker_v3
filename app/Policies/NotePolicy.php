@@ -31,6 +31,10 @@ class NotePolicy
 
     public function edit(User $user, Note $note): bool
     {
+        if ($note->type === 'msgt' && ! Note::canManageMsgt($user)) {
+            return false;
+        }
+
         return $user->isDivisionLeader() || $user->isRole(Role::SENIOR_LEADER);
     }
 
@@ -45,6 +49,10 @@ class NotePolicy
 
     public function delete(User $user, Note $note): bool
     {
+        if ($note->type === 'msgt' && ! Note::canManageMsgt($user)) {
+            return false;
+        }
+
         return $user->isDivisionLeader();
     }
 
@@ -55,11 +63,19 @@ class NotePolicy
 
     public function restore(User $user, Note $note): bool
     {
+        if ($note->type === 'msgt' && ! Note::canManageMsgt($user)) {
+            return false;
+        }
+
         return $user->isDivisionLeader();
     }
 
     public function forceDelete(User $user, Note $note): bool
     {
+        if ($note->type === 'msgt' && ! Note::canManageMsgt($user)) {
+            return false;
+        }
+
         return $user->isDivisionLeader();
     }
 }

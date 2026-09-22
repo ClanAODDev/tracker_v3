@@ -1,5 +1,5 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { FileText, Lock, MessageSquare, Search, ThumbsDown, ThumbsUp, X } from 'lucide-react';
+import { FileText, Lock, MessageSquare, Search, Star, ThumbsDown, ThumbsUp, X } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 
 import { Input } from '@/components/ui/input';
@@ -29,6 +29,7 @@ const TYPE_ICON: Record<string, typeof ThumbsUp> = {
     positive: ThumbsUp,
     negative: ThumbsDown,
     sr_ldr: Lock,
+    msgt: Star,
     misc: MessageSquare,
 };
 
@@ -36,6 +37,7 @@ const TYPE_TONE: Record<string, string> = {
     positive: 'text-success',
     negative: 'text-destructive',
     sr_ldr: 'text-primary',
+    msgt: 'text-warning',
     misc: 'text-muted-foreground',
 };
 

@@ -20,8 +20,6 @@ class MemberProfileData
 {
     private User $user;
 
-    private bool $canViewSrLdr;
-
     private bool $canViewNotes;
 
     private bool $canViewTrashed;
@@ -50,14 +48,13 @@ class MemberProfileData
         RankTimelineService $rankTimelineService,
     ) {
         $this->user           = auth()->user();
-        $this->canViewSrLdr   = $this->user->isRole(['sr_ldr', 'admin']);
         $this->canViewNotes   = $this->user->can('create', Note::class);
         $this->canViewTrashed = $this->user->can('viewTrashed', Note::class);
 
         $repository->loadProfileRelations($member);
         $this->division = $member->division;
 
-        $this->notes             = $this->canViewNotes ? $repository->getNotesForMember($member, $this->canViewSrLdr) : collect();
+        $this->notes             = $this->canViewNotes ? $repository->getNotesForMember($member, $this->user) : collect();
         $this->trashedNotes      = $this->canViewTrashed ? $repository->getTrashedNotesForMember($member) : collect();
         $this->transfers         = $repository->getTransfers($member);
         $this->partTimeDivisions = $member->partTimeDivisions()->whereActive(true)->get();
@@ -161,6 +158,7 @@ class MemberProfileData
                     'negative'   => $this->noteStats->negative,
                     'misc'       => $this->noteStats->misc,
                     'srLdr'      => $this->noteStats->sr_ldr,
+                    'msgt'       => $this->noteStats->msgt,
                     'latestType' => $this->noteStats->latestType,
                 ],
             ],

@@ -12,6 +12,7 @@ readonly class NoteStatsData
         public int $negative,
         public int $misc,
         public int $sr_ldr,
+        public int $msgt,
         public ?string $latestType,
     ) {}
 
@@ -25,6 +26,7 @@ readonly class NoteStatsData
             negative: $notes->where('type', 'negative')->count(),
             misc: $notes->where('type', 'misc')->count(),
             sr_ldr: $notes->where('type', 'sr_ldr')->count(),
+            msgt: $notes->where('type', 'msgt')->count(),
             latestType: $latestNote?->type,
         );
     }

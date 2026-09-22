@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Data\DivisionComparisonData;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\Note;
+use App\Models\User;
 use Illuminate\Support\Collection;
 
 class MemberRepository
@@ -50,12 +52,12 @@ class MemberRepository
         return str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $value);
     }
 
-    public function getNotesForMember(Member $member, bool $canViewSrLdr = false): Collection
+    public function getNotesForMember(Member $member, ?User $user = null): Collection
     {
         return $member->notes()
             ->with('author.member')
             ->get()
-            ->filter(fn ($note) => $note->type !== 'sr_ldr' || $canViewSrLdr);
+            ->filter(fn ($note) => Note::isTypeVisibleTo($note->type, $user));
     }
 
     public function getTrashedNotesForMember(Member $member): Collection
