@@ -31,25 +31,24 @@ class CreateTransfer extends CreateRecord
         $member      = $transfer->member;
         $oldDivision = $member->division;
         $newDivision = $transfer->division;
-        $newDivName  = $newDivision->name;
 
         $notifications = [
-            [$oldDivision, 'OUTGOING'],
-            [$newDivision, 'INCOMING'],
+            [$oldDivision, 'OUTGOING', $newDivision->name],
+            [$newDivision, 'INCOMING', $oldDivision->name],
         ];
 
-        foreach ($notifications as [$division, $type]) {
-            $this->sendTransferNotification($division, $member, $newDivName, $type);
+        foreach ($notifications as [$division, $type, $counterpartName]) {
+            $this->sendTransferNotification($division, $member, $counterpartName, $type);
         }
     }
 
     private function sendTransferNotification(
         Division $division,
         Member $member,
-        string $newDivisionName,
+        string $counterpartName,
         string $type,
     ): void {
-        $division->notify(new NotifyDivisionMemberTransferRequested($member, $newDivisionName, $type));
+        $division->notify(new NotifyDivisionMemberTransferRequested($member, $counterpartName, $type));
     }
 
     public function getSteps(): array
