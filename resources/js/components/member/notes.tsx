@@ -24,11 +24,11 @@ export interface MemberNote {
     forceDeleteUrl: string | null;
 }
 
-const TYPE_META: Record<string, { icon: typeof ThumbsUp; className: string }> = {
+const TYPE_META: Record<string, { icon: typeof ThumbsUp; className: string; hatch?: string }> = {
     positive: { icon: ThumbsUp, className: 'text-success' },
     negative: { icon: ThumbsDown, className: 'text-destructive' },
-    sr_ldr: { icon: Shield, className: 'text-primary' },
-    msgt: { icon: Star, className: 'text-warning' },
+    sr_ldr: { icon: Shield, className: 'text-success', hatch: 'tron-hatch-success' },
+    msgt: { icon: Star, className: 'text-[#CC00FF]', hatch: 'tron-hatch-msgt' },
     general: { icon: MessageSquare, className: 'text-muted-foreground' },
 };
 
@@ -47,7 +47,7 @@ function NoteCard({ note, memberClanId, trashed }: { note: MemberNote; memberCla
         <div
             className={cn(
                 'rounded-md border border-border bg-card p-3',
-                note.type === 'msgt' && 'tron-hatch tron-hatch-bold',
+                meta.hatch && cn('tron-hatch tron-hatch-bold', meta.hatch),
                 trashed && 'border-destructive/30 opacity-80',
             )}
         >
