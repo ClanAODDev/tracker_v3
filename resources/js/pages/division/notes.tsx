@@ -4,6 +4,7 @@ import { type FormEvent, useState } from 'react';
 
 import { Input } from '@/components/ui/input';
 import { SimpleSelect } from '@/components/ui/simple-select';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
 
@@ -161,7 +162,12 @@ export default function DivisionNotes({ division, noteTypes, tags, filters, note
                                         TYPE_HATCH[note.type] && cn('tron-hatch tron-hatch-bold', TYPE_HATCH[note.type]),
                                     )}
                                 >
-                                    <Icon className={cn('mt-0.5 size-4 shrink-0', TYPE_TONE[note.type])} />
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Icon className={cn('mt-0.5 size-4 shrink-0', TYPE_TONE[note.type])} />
+                                        </TooltipTrigger>
+                                        <TooltipContent>{noteTypes[note.type] ?? note.type}</TooltipContent>
+                                    </Tooltip>
                                     <div className="min-w-0 flex-1">
                                         <p className="whitespace-pre-line break-words text-sm">{note.body}</p>
                                         <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">

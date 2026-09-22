@@ -5,6 +5,7 @@ import { type FormEvent, type ReactNode, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 
 export interface MemberNote {
@@ -24,12 +25,12 @@ export interface MemberNote {
     forceDeleteUrl: string | null;
 }
 
-const TYPE_META: Record<string, { icon: typeof ThumbsUp; className: string; hatch?: string }> = {
-    positive: { icon: ThumbsUp, className: 'text-success' },
-    negative: { icon: ThumbsDown, className: 'text-destructive' },
-    sr_ldr: { icon: Shield, className: 'text-success', hatch: 'tron-hatch-success' },
-    msgt: { icon: Star, className: 'text-[#CC00FF]', hatch: 'tron-hatch-msgt' },
-    general: { icon: MessageSquare, className: 'text-muted-foreground' },
+const TYPE_META: Record<string, { icon: typeof ThumbsUp; className: string; hatch?: string; label: string }> = {
+    positive: { icon: ThumbsUp, className: 'text-success', label: 'Positive' },
+    negative: { icon: ThumbsDown, className: 'text-destructive', label: 'Negative' },
+    sr_ldr: { icon: Shield, className: 'text-success', hatch: 'tron-hatch-success', label: 'Sr Leaders Only' },
+    msgt: { icon: Star, className: 'text-[#CC00FF]', hatch: 'tron-hatch-msgt', label: 'MSGT+ Only' },
+    general: { icon: MessageSquare, className: 'text-muted-foreground', label: 'General' },
 };
 
 function NoteCard({ note, memberClanId, trashed }: { note: MemberNote; memberClanId: number; trashed?: boolean }) {
@@ -73,7 +74,12 @@ function NoteCard({ note, memberClanId, trashed }: { note: MemberNote; memberCla
             )}
 
             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                <Icon className={cn('size-3.5', meta.className)} />
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Icon className={cn('size-3.5', meta.className)} />
+                    </TooltipTrigger>
+                    <TooltipContent>{meta.label}</TooltipContent>
+                </Tooltip>
                 {note.authorUrl ? (
                     <a href={note.authorUrl} className="hover:text-foreground">
                         {note.authorName}
