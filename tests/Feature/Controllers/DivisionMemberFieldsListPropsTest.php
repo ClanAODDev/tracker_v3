@@ -29,8 +29,12 @@ class DivisionMemberFieldsListPropsTest extends TestCase
             'key'         => 'class',
             'label'       => 'Class',
             'type'        => DivisionMemberFieldType::SELECT,
-            'options'     => ['Tank', 'Healer', 'DPS'],
-            'filterable'  => true,
+            'options'     => [
+                ['value' => 'Tank', 'color' => 'blue'],
+                ['value' => 'Healer', 'color' => 'green'],
+                ['value' => 'DPS', 'color' => 'red'],
+            ],
+            'filterable' => true,
         ]);
         $member->fieldValues()->create(['division_member_field_id' => $field->id, 'value' => 'Healer']);
 
@@ -39,7 +43,11 @@ class DivisionMemberFieldsListPropsTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('division/members')
-                ->where('memberFields', fn ($fields) => collect($fields)->contains('key', 'class'))
+                ->where('memberFields', fn ($fields) => collect($fields)->firstWhere('key', 'class')['colors'] === [
+                    'Tank'   => 'blue',
+                    'Healer' => 'green',
+                    'DPS'    => 'red',
+                ])
                 ->where('members', fn ($members) => collect($members)
                     ->firstWhere('id', $member->clan_id)['customFields']['class'] === 'Healer'));
     }

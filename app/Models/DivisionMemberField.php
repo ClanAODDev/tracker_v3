@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DivisionMemberFieldColor;
 use App\Enums\DivisionMemberFieldType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -44,6 +45,17 @@ class DivisionMemberField extends Model
      */
     public function optionList(): array
     {
-        return $this->options ?? [];
+        return array_column($this->options ?? [], 'value');
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function optionColors(): array
+    {
+        return collect($this->options ?? [])
+            ->filter(fn (mixed $option) => is_array($option) && isset($option['value']))
+            ->mapWithKeys(fn (array $option) => [$option['value'] => $option['color'] ?? DivisionMemberFieldColor::GRAY->value])
+            ->all();
     }
 }

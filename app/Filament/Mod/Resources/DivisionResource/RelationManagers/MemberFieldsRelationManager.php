@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\DivisionResource\RelationManagers;
 
+use App\Enums\DivisionMemberFieldColor;
 use App\Enums\DivisionMemberFieldType;
 use App\Models\DivisionMemberField;
 use Filament\Actions\BulkActionGroup;
@@ -39,13 +40,20 @@ class MemberFieldsRelationManager extends RelationManager
                     ->required()
                     ->live(),
                 Repeater::make('options')
-                    ->simple(
-                        TextInput::make('value')->required()->maxLength(255)
-                    )
+                    ->schema([
+                        TextInput::make('value')
+                            ->required()
+                            ->maxLength(255),
+                        Select::make('color')
+                            ->options(DivisionMemberFieldColor::options())
+                            ->default(DivisionMemberFieldColor::GRAY->value)
+                            ->required(),
+                    ])
+                    ->columns(2)
                     ->visible(fn (Get $get) => $get('type') === DivisionMemberFieldType::SELECT->value)
                     ->required(fn (Get $get) => $get('type') === DivisionMemberFieldType::SELECT->value)
                     ->minItems(1)
-                    ->helperText('The choices available for this select field.'),
+                    ->helperText('The choices available for this select field, and the badge color shown for each on member listing tables.'),
                 TextInput::make('display_order')
                     ->numeric()
                     ->default(0)
@@ -76,7 +84,9 @@ class MemberFieldsRelationManager extends RelationManager
                             $state = json_decode($state, true) ?? [];
                         }
 
-                        return $state ? implode(', ', $state) : '--';
+                        $values = collect($state)->pluck('value')->filter()->all();
+
+                        return $values ? implode(', ', $values) : '--';
                     })
                     ->wrap(),
                 IconColumn::make('filterable')

@@ -63,7 +63,11 @@ class MemberResourceDivisionFieldsTest extends TestCase
             'key'         => 'role',
             'label'       => 'Role',
             'type'        => DivisionMemberFieldType::SELECT,
-            'options'     => ['Tank', 'Healer', 'DPS'],
+            'options'     => [
+                ['value' => 'Tank', 'color' => 'blue'],
+                ['value' => 'Healer', 'color' => 'green'],
+                ['value' => 'DPS', 'color' => 'red'],
+            ],
         ]);
 
         $this->actingAs($srLdr);

@@ -53,6 +53,7 @@ class MemberListProps
             'label'      => $field->label,
             'type'       => $field->type->value,
             'options'    => $field->optionList(),
+            'colors'     => $field->optionColors(),
             'filterable' => $field->filterable,
         ])->values()->all();
     }

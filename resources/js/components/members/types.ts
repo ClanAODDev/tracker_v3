@@ -31,6 +31,7 @@ export interface MemberFieldDefinition {
     label: string;
     type: 'text' | 'select';
     options: string[];
+    colors: Record<string, string>;
     filterable: boolean;
 }
 

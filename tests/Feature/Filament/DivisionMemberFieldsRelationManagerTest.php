@@ -85,9 +85,9 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
                 'label'   => 'Role',
                 'type'    => DivisionMemberFieldType::SELECT->value,
                 'options' => [
-                    ['value' => 'Tank'],
-                    ['value' => 'Healer'],
-                    ['value' => 'DPS'],
+                    ['value' => 'Tank', 'color' => 'blue'],
+                    ['value' => 'Healer', 'color' => 'green'],
+                    ['value' => 'DPS', 'color' => 'red'],
                 ],
                 'display_order' => 0,
                 'filterable'    => true,
@@ -97,7 +97,11 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
         $field = DivisionMemberField::where('division_id', $division->id)->where('key', 'role')->firstOrFail();
 
         $this->assertSame(DivisionMemberFieldType::SELECT, $field->type);
-        $this->assertSame(['Tank', 'Healer', 'DPS'], $field->options);
+        $this->assertSame(['Tank', 'Healer', 'DPS'], $field->optionList());
+        $this->assertSame(
+            ['Tank' => 'blue', 'Healer' => 'green', 'DPS' => 'red'],
+            $field->optionColors(),
+        );
     }
 
     #[Test]

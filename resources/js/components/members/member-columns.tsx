@@ -27,6 +27,15 @@ export function fieldColumnId(key: string): string {
     return `field:${key}`;
 }
 
+const FIELD_BADGE_COLORS: Record<string, string> = {
+    gray: 'bg-muted text-muted-foreground',
+    red: 'bg-chart-1/15 text-chart-1',
+    blue: 'bg-chart-2/15 text-chart-2',
+    yellow: 'bg-chart-3/15 text-chart-3',
+    green: 'bg-chart-4/15 text-chart-4',
+    violet: 'bg-chart-5/15 text-chart-5',
+};
+
 export function useMemberColumns({
     assignmentLabel,
     bulkMode,
@@ -276,9 +285,17 @@ export function useMemberColumns({
                     id: fieldColumnId(field.key),
                     accessorFn: (m) => m.customFields[field.key] ?? '',
                     header: field.label,
-                    cell: ({ row }) => (
-                        <span className="text-muted-foreground">{row.original.customFields[field.key] ?? '—'}</span>
-                    ),
+                    cell: ({ row }) => {
+                        const value = row.original.customFields[field.key];
+                        if (!value) return <span className="text-muted-foreground">—</span>;
+                        if (field.type !== 'select') {
+                            return <span className="text-muted-foreground">{value}</span>;
+                        }
+                        const colorClass = FIELD_BADGE_COLORS[field.colors[value] ?? 'gray'] ?? FIELD_BADGE_COLORS.gray;
+                        return (
+                            <span className={cn('rounded px-1.5 py-0.5 text-[11px]', colorClass)}>{value}</span>
+                        );
+                    },
                     filterFn:
                         field.type === 'select'
                             ? (row) => {
