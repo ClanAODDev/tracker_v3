@@ -43,9 +43,9 @@ class MemberFieldsRelationManager extends RelationManager
                     ->required()
                     ->maxLength(255)
                     ->alphaDash()
-                    ->helperText('Used internally; must be unique within this division. Changing it after members have values will orphan those values.')
+                    ->helperText('Used internally; must be unique within this division. Cannot be changed after creation.')
                     ->disabledOn('edit')
-                    ->dehydrated(),
+                    ->dehydrated(fn (string $operation) => $operation === 'create'),
                 Select::make('type')
                     ->options(DivisionMemberFieldType::options())
                     ->default(DivisionMemberFieldType::TEXT->value)

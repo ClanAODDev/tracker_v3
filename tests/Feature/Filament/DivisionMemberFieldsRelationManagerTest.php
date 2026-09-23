@@ -103,6 +103,42 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
     }
 
     #[Test]
+    public function editing_a_field_cannot_change_its_key(): void
+    {
+        $division = $this->createActiveDivision();
+        $co       = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'rank'        => Rank::CORPORAL,
+        ], [
+            'role' => Role::OFFICER,
+        ]);
+        $field = DivisionMemberField::create([
+            'division_id' => $division->id,
+            'key'         => 'class',
+            'label'       => 'Class',
+            'type'        => DivisionMemberFieldType::TEXT,
+        ]);
+
+        $this->actingAs($co);
+
+        Livewire::test(MemberFieldsRelationManager::class, [
+            'ownerRecord' => $division,
+            'pageClass'   => EditDivision::class,
+        ])
+            ->callTableAction('edit', $field, data: [
+                'label'         => 'Class',
+                'key'           => 'tampered',
+                'type'          => DivisionMemberFieldType::TEXT->value,
+                'display_order' => 0,
+                'filterable'    => true,
+            ])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertSame('class', $field->fresh()->key);
+    }
+
+    #[Test]
     public function division_leader_cannot_create_fields_for_another_division(): void
     {
         $division      = $this->createActiveDivision();
