@@ -40,9 +40,22 @@ class MemberListProps
                 'memberCount'    => $unitStats->memberCount,
                 'voiceActivity'  => $unitStats->voiceActivityGraph,
             ],
-            'tagFilter' => self::tagFilterOptions($division),
-            'bulk'      => self::bulkConfig($division, $user),
+            'tagFilter'    => self::tagFilterOptions($division),
+            'memberFields' => self::memberFieldDefinitions($division),
+            'bulk'         => self::bulkConfig($division, $user),
         ];
+    }
+
+    private static function memberFieldDefinitions(Division $division): array
+    {
+        return $division->memberFields->map(fn ($field) => [
+            'key'        => $field->key,
+            'label'      => $field->label,
+            'type'       => $field->type->value,
+            'options'    => $field->optionList(),
+            'colors'     => $field->optionColors(),
+            'filterable' => $field->filterable,
+        ])->values()->all();
     }
 
     private static function tagFilterOptions(Division $division): array

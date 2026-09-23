@@ -12,8 +12,8 @@ import { ArrowDown, ArrowUp, ChevronsUpDown, CircleDot, Clock, Columns3, Rows3, 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { BulkBar } from '@/components/members/bulk-bar';
-import { columnLabel, useMemberColumns } from '@/components/members/member-columns';
-import type { BulkConfig, MemberListDivision, MemberRow } from '@/components/members/types';
+import { columnLabel, fieldColumnId, useMemberColumns } from '@/components/members/member-columns';
+import type { BulkConfig, MemberFieldDefinition, MemberListDivision, MemberRow } from '@/components/members/types';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -40,6 +40,7 @@ interface Props {
     assignmentKind: 'platoon' | 'squad';
     bulk: BulkConfig;
     tagFilter: Array<{ id: number; name: string; count: number }>;
+    memberFields: MemberFieldDefinition[];
     storageKey: string;
 }
 
@@ -88,6 +89,7 @@ export function MemberTable({
     assignmentKind,
     bulk,
     tagFilter,
+    memberFields,
     storageKey,
 }: Props) {
     const persisted = useMemo(() => loadState(storageKey), [storageKey]);
@@ -103,6 +105,7 @@ export function MemberTable({
     const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
     const [bulkMode, setBulkMode] = useState(false);
     const [selectedTags, setSelectedTags] = useState<Set<number>>(new Set());
+    const [selectedFieldValues, setSelectedFieldValues] = useState<Record<string, Set<string>>>({});
     const [reminded, setReminded] = useState<Record<number, string>>({});
     const [activityStyle, setActivityStyle] = useState<ActivityStyle>(persisted.activityStyle ?? 'row');
 
@@ -123,6 +126,8 @@ export function MemberTable({
         reminded,
         setReminded,
         activityStyle,
+        memberFields,
+        selectedFieldValues,
     });
 
     const table = useReactTable({
@@ -143,7 +148,8 @@ export function MemberTable({
                 m.name.toLowerCase().includes(q) ||
                 (m.rankAbbr ?? '').toLowerCase().includes(q) ||
                 (m.handle?.value ?? '').toLowerCase().includes(q) ||
-                (m.assignment?.label ?? '').toLowerCase().includes(q)
+                (m.assignment?.label ?? '').toLowerCase().includes(q) ||
+                Object.values(m.customFields).some((v) => (v ?? '').toLowerCase().includes(q))
             );
         },
         getCoreRowModel: getCoreRowModel(),
@@ -160,11 +166,32 @@ export function MemberTable({
         table.getColumn('tags')?.setFilterValue(selectedTags.size > 0 ? [...selectedTags] : undefined);
     }, [selectedTags, table]);
 
+    useEffect(() => {
+        memberFields.forEach((field) => {
+            const selected = selectedFieldValues[field.key];
+            table.getColumn(fieldColumnId(field.key))?.setFilterValue(selected && selected.size > 0 ? [...selected] : undefined);
+        });
+    }, [selectedFieldValues, memberFields, table]);
+
     const selectedRows = table.getFilteredSelectedRowModel().rows.map((r) => r.original);
     const selectedIds = selectedRows.map((r) => r.id);
     const parttimersSelected = selectedRows.some((r) => r.isParttimer);
 
     const hasDirectRecruits = useMemo(() => rows.some((r) => r.directRecruit), [rows]);
+
+    const filterableFields = useMemo(
+        () =>
+            memberFields
+                .filter((field) => field.filterable && field.type === 'select')
+                .map((field) => ({
+                    field,
+                    counts: field.options.map((option) => ({
+                        option,
+                        count: rows.filter((r) => r.customFields[field.key] === option).length,
+                    })),
+                })),
+        [memberFields, rows],
+    );
 
     // drag-to-select
     const dragging = useRef(false);
@@ -221,6 +248,44 @@ export function MemberTable({
                     </DropdownMenu>
                 )}
 
+                {filterableFields.map(({ field, counts }) => {
+                    const selected = selectedFieldValues[field.key] ?? new Set<string>();
+                    return (
+                        <DropdownMenu key={field.key}>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                    {field.label}
+                                    {selected.size > 0 && (
+                                        <span className="numeric rounded bg-primary/15 px-1 text-primary">
+                                            {selected.size}
+                                        </span>
+                                    )}
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="start" className="max-h-72 overflow-y-auto">
+                                <DropdownMenuLabel>Filter by {field.label.toLowerCase()}</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                {counts.map(({ option, count }) => (
+                                    <DropdownMenuCheckboxItem
+                                        key={option}
+                                        checked={selected.has(option)}
+                                        onCheckedChange={() =>
+                                            setSelectedFieldValues((prev) => {
+                                                const next = new Set(prev[field.key] ?? []);
+                                                next.has(option) ? next.delete(option) : next.add(option);
+                                                return { ...prev, [field.key]: next };
+                                            })
+                                        }
+                                        onSelect={(e) => e.preventDefault()}
+                                    >
+                                        {option} <span className="ml-1 text-muted-foreground">({count})</span>
+                                    </DropdownMenuCheckboxItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    );
+                })}
+
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                         <Button variant="outline" size="sm">
@@ -236,7 +301,7 @@ export function MemberTable({
                                 onSelect={(e) => e.preventDefault()}
                                 className="capitalize"
                             >
-                                {columnLabel(column.id, assignmentLabel)}
+                                {columnLabel(column.id, assignmentLabel, memberFields)}
                             </DropdownMenuCheckboxItem>
                         ))}
                     </DropdownMenuContent>

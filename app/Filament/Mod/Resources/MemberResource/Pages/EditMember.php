@@ -3,6 +3,7 @@
 namespace App\Filament\Mod\Resources\MemberResource\Pages;
 
 use App\Enums\ActivityType;
+use App\Filament\Forms\Components\DivisionMemberFieldsForm;
 use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Filament\Forms\Components\PartTimeDivisionsForm;
 use App\Filament\Mod\Resources\MemberResource;
@@ -37,7 +38,8 @@ class EditMember extends EditRecord
         if (isset($data['id'])) {
             $member = Member::find($data['id']);
             if ($member) {
-                $data['handleGroups'] = IngameHandlesForm::getGroupedHandles($member);
+                $data['handleGroups']  = IngameHandlesForm::getGroupedHandles($member);
+                $data['custom_fields'] = DivisionMemberFieldsForm::getInitialValues($member);
             }
         }
 
@@ -57,7 +59,9 @@ class EditMember extends EditRecord
             PartTimeDivisionsForm::selectedFrom($this->data ?? [])
         );
 
-        unset($data['handleGroups']);
+        DivisionMemberFieldsForm::saveValues($record, $data['custom_fields'] ?? []);
+
+        unset($data['handleGroups'], $data['custom_fields']);
 
         $record->update($data);
 

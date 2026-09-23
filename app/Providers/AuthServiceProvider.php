@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Division;
+use App\Models\DivisionMemberField;
 use App\Models\DivisionTag;
 use App\Models\Leave;
 use App\Models\Member;
@@ -14,6 +15,7 @@ use App\Models\Squad;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Policies\ApiTokenPolicy;
+use App\Policies\DivisionMemberFieldPolicy;
 use App\Policies\DivisionPolicy;
 use App\Policies\DivisionTagPolicy;
 use App\Policies\LeavePolicy;
@@ -36,18 +38,19 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        Division::class       => DivisionPolicy::class,
-        DivisionTag::class    => DivisionTagPolicy::class,
-        Leave::class          => LeavePolicy::class,
-        Member::class         => MemberPolicy::class,
-        MemberRequest::class  => MemberRequestPolicy::class,
-        NewAccessToken::class => ApiTokenPolicy::class,
-        Note::class           => NotePolicy::class,
-        Platoon::class        => PlatoonPolicy::class,
-        RankAction::class     => RankActionPolicy::class,
-        Squad::class          => SquadPolicy::class,
-        Ticket::class         => TicketPolicy::class,
-        User::class           => UserPolicy::class,
+        Division::class            => DivisionPolicy::class,
+        DivisionMemberField::class => DivisionMemberFieldPolicy::class,
+        DivisionTag::class         => DivisionTagPolicy::class,
+        Leave::class               => LeavePolicy::class,
+        Member::class              => MemberPolicy::class,
+        MemberRequest::class       => MemberRequestPolicy::class,
+        NewAccessToken::class      => ApiTokenPolicy::class,
+        Note::class                => NotePolicy::class,
+        Platoon::class             => PlatoonPolicy::class,
+        RankAction::class          => RankActionPolicy::class,
+        Squad::class               => SquadPolicy::class,
+        Ticket::class              => TicketPolicy::class,
+        User::class                => UserPolicy::class,
     ];
 
     /**

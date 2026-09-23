@@ -23,6 +23,16 @@ export interface MemberRow {
     isParttimer: boolean;
     primaryDivision: string | null;
     directRecruit: boolean;
+    customFields: Record<string, string | null>;
+}
+
+export interface MemberFieldDefinition {
+    key: string;
+    label: string;
+    type: 'text' | 'select';
+    options: string[];
+    colors: Record<string, string>;
+    filterable: boolean;
 }
 
 export interface UnitStats {

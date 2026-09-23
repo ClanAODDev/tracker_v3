@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 
 class Member extends Model
 {
@@ -106,6 +107,26 @@ class Member extends Model
     public function notes(): HasMany
     {
         return $this->hasMany(Note::class, 'member_id')->latest();
+    }
+
+    public function fieldValues(): HasMany
+    {
+        return $this->hasMany(MemberFieldValue::class);
+    }
+
+    /**
+     * Values for this member's own division's currently-defined fields, keyed by field key.
+     * Stale values left over from a previous division (or a field since deleted) are excluded.
+     *
+     * @return Collection<string, string>
+     */
+    public function customFieldValues(): Collection
+    {
+        return $this->fieldValues()
+            ->whereHas('field', fn ($query) => $query->where('division_id', $this->division_id))
+            ->with('field')
+            ->get()
+            ->mapWithKeys(fn (MemberFieldValue $value) => [$value->field->key => $value->value]);
     }
 
     public function squadLeaderOf(): HasOne

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from '@/components/division/organize';
 import { MemberTable } from '@/components/members/member-table';
-import type { BulkConfig, MemberListDivision, MemberRow, UnitStats } from '@/components/members/types';
+import type { BulkConfig, MemberFieldDefinition, MemberListDivision, MemberRow, UnitStats } from '@/components/members/types';
 import { UnitStatsPanel } from '@/components/members/unit-stats-panel';
 import { Button } from '@/components/ui/button';
 import { postJson } from '@/lib/api';
@@ -44,6 +44,7 @@ interface Props {
     assignmentKind: 'platoon' | 'squad';
     unitStats: UnitStats;
     tagFilter: Array<{ id: number; name: string; count: number }>;
+    memberFields: MemberFieldDefinition[];
     bulk: BulkConfig;
     scope: Scope;
     includeParttimers?: boolean;
@@ -57,6 +58,7 @@ export default function MembersPage({
     assignmentKind,
     unitStats,
     tagFilter,
+    memberFields,
     bulk,
     scope,
     includeParttimers,
@@ -179,6 +181,7 @@ export default function MembersPage({
                     assignmentKind={assignmentKind}
                     bulk={bulk}
                     tagFilter={tagFilter}
+                    memberFields={memberFields}
                     storageKey={`member-table:${scope.kind}:${division.slug}`}
                 />
                 <div className="order-first space-y-6 xl:order-last">

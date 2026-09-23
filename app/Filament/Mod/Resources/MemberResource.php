@@ -5,6 +5,7 @@ namespace App\Filament\Mod\Resources;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Filament\Admin\Resources\MemberHasManyAwardsResource\RelationManagers\AwardsRelationManager;
+use App\Filament\Forms\Components\DivisionMemberFieldsForm;
 use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Filament\Forms\Components\PartTimeDivisionsForm;
 use App\Filament\Mod\Resources\MemberResource\Pages\EditMember;
@@ -148,6 +149,13 @@ class MemberResource extends Resource
                                 return [];
                             }),
                     ])->columns(3),
+
+                Section::make('Division Fields')
+                    ->columnSpanFull()
+                    ->description('Game-specific info defined by this division\'s leadership.')
+                    ->visible(fn (?Member $record) => (bool) $record?->division?->memberFields->isNotEmpty())
+                    ->schema(fn (?Member $record) => DivisionMemberFieldsForm::schema($record))
+                    ->columns(3),
 
                 Section::make('Part-time Divisions')
                     ->id('part-time-divisions')
