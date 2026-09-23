@@ -2,20 +2,14 @@
 
 namespace App\Filament\Mod\Resources\DivisionResource\RelationManagers;
 
-use App\Enums\DivisionMemberFieldColor;
-use App\Enums\DivisionMemberFieldType;
+use App\Filament\Forms\Components\DivisionMemberFieldForm;
 use App\Models\DivisionMemberField;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
 use Filament\Resources\RelationManagers\RelationManager;
-use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -29,39 +23,7 @@ class MemberFieldsRelationManager extends RelationManager
 
     public function form(Schema $schema): Schema
     {
-        return $schema
-            ->components([
-                TextInput::make('label')
-                    ->required()
-                    ->maxLength(255),
-                Select::make('type')
-                    ->options(DivisionMemberFieldType::options())
-                    ->default(DivisionMemberFieldType::TEXT->value)
-                    ->required()
-                    ->live(),
-                Repeater::make('options')
-                    ->schema([
-                        TextInput::make('value')
-                            ->required()
-                            ->maxLength(255),
-                        Select::make('color')
-                            ->options(DivisionMemberFieldColor::options())
-                            ->default(DivisionMemberFieldColor::GRAY->value)
-                            ->required(),
-                    ])
-                    ->columns(2)
-                    ->visible(fn (Get $get) => $get('type') === DivisionMemberFieldType::SELECT->value)
-                    ->required(fn (Get $get) => $get('type') === DivisionMemberFieldType::SELECT->value)
-                    ->minItems(1)
-                    ->helperText('The choices available for this select field, and the badge color shown for each on member listing tables.'),
-                TextInput::make('display_order')
-                    ->numeric()
-                    ->default(0)
-                    ->required(),
-                Toggle::make('filterable')
-                    ->default(true)
-                    ->helperText('Show a filter for this field on the member listing tables'),
-            ]);
+        return $schema->components(DivisionMemberFieldForm::schema());
     }
 
     public function table(Table $table): Table
@@ -79,15 +41,7 @@ class MemberFieldsRelationManager extends RelationManager
                     ->badge(),
                 TextColumn::make('options')
                     ->label('Choices')
-                    ->formatStateUsing(function (mixed $state): string {
-                        if (is_string($state)) {
-                            $state = json_decode($state, true) ?? [];
-                        }
-
-                        $values = collect($state)->pluck('value')->filter()->all();
-
-                        return $values ? implode(', ', $values) : '--';
-                    })
+                    ->formatStateUsing(fn (mixed $state) => DivisionMemberFieldForm::formatChoices($state))
                     ->wrap(),
                 IconColumn::make('filterable')
                     ->boolean(),
