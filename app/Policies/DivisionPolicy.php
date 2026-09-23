@@ -27,22 +27,11 @@ class DivisionPolicy
      */
     public function update(User $user, Division $division)
     {
-        /*
-         * is the user a division leader of the division?
-         * is the user a senior leader?
-         * is the user a SGT in the division?
-         */
         if ($user->isRole('admin')) {
             return true;
         }
 
-        if ($user->member->isDivisionLeader($division)
-            && $user->isRole('sr_ldr')
-        ) {
-            return true;
-        }
-
-        return false;
+        return $user->member->isDivisionLeader($division);
     }
 
     public function delete(User $user, Division $division)
