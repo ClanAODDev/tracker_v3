@@ -32,20 +32,7 @@ class MemberFieldsRelationManager extends RelationManager
             ->components([
                 TextInput::make('label')
                     ->required()
-                    ->maxLength(255)
-                    ->live(onBlur: true)
-                    ->afterStateUpdated(function (string $state, callable $set, Get $get, ?DivisionMemberField $record) {
-                        if (! $record) {
-                            $set('key', str($state)->slug('_'));
-                        }
-                    }),
-                TextInput::make('key')
-                    ->required()
-                    ->maxLength(255)
-                    ->alphaDash()
-                    ->helperText('Used internally; must be unique within this division. Cannot be changed after creation.')
-                    ->disabledOn('edit')
-                    ->dehydrated(fn (string $operation) => $operation === 'create'),
+                    ->maxLength(255),
                 Select::make('type')
                     ->options(DivisionMemberFieldType::options())
                     ->default(DivisionMemberFieldType::TEXT->value)
@@ -97,7 +84,12 @@ class MemberFieldsRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
-                    ->visible(fn () => auth()->user()->can('create', [DivisionMemberField::class, $this->getOwnerRecord()])),
+                    ->visible(fn () => auth()->user()->can('create', [DivisionMemberField::class, $this->getOwnerRecord()]))
+                    ->mutateFormDataUsing(function (array $data): array {
+                        $data['key'] = (string) str($data['label'])->slug('_');
+
+                        return $data;
+                    }),
             ])
             ->recordActions([
                 EditAction::make(),

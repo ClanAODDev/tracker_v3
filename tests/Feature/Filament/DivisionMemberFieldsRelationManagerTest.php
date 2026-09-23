@@ -49,7 +49,6 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
         ])
             ->callTableAction('create', data: [
                 'label'         => 'Class',
-                'key'           => 'class',
                 'type'          => DivisionMemberFieldType::TEXT->value,
                 'display_order' => 0,
                 'filterable'    => true,
@@ -84,7 +83,6 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
         ])
             ->callTableAction('create', data: [
                 'label'   => 'Role',
-                'key'     => 'role',
                 'type'    => DivisionMemberFieldType::SELECT->value,
                 'options' => [
                     ['value' => 'Tank'],
@@ -127,8 +125,7 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
             'pageClass'   => EditDivision::class,
         ])
             ->callTableAction('edit', $field, data: [
-                'label'         => 'Class',
-                'key'           => 'tampered',
+                'label'         => 'Class Renamed',
                 'type'          => DivisionMemberFieldType::TEXT->value,
                 'display_order' => 0,
                 'filterable'    => true,
