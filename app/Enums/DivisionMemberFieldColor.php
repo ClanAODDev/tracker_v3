@@ -10,8 +10,10 @@ enum DivisionMemberFieldColor: string
 
     case GRAY   = 'gray';
     case RED    = 'red';
-    case BLUE   = 'blue';
+    case ORANGE = 'orange';
     case YELLOW = 'yellow';
     case GREEN  = 'green';
+    case BLUE   = 'blue';
     case VIOLET = 'violet';
+    case PINK   = 'pink';
 }
