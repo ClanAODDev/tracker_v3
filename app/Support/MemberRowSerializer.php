@@ -64,6 +64,9 @@ class MemberRowSerializer
                 'reason'  => Leave::$reasons[$member->leave->reason] ?? null,
                 'pending' => $member->leave->approver_id === null,
             ] : null,
+            'customFields' => $member->fieldValues
+                ->mapWithKeys(fn ($value) => [$value->field->key => $value->value])
+                ->all(),
             'isParttimer'     => $isParttimer,
             'primaryDivision' => $isParttimer ? ($member->division?->name ?? 'None') : null,
             'directRecruit'   => $this->directRecruitOfClanId !== null

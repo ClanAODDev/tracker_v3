@@ -19,6 +19,11 @@ class MemberQueryService
             'tags.division',
             'platoon',
             'squad',
+            'fieldValues' => fn ($query) => $query->whereHas(
+                'field',
+                fn ($q) => $q->where('division_id', $division->id)
+            ),
+            'fieldValues.field',
         ]);
     }
 
