@@ -10,7 +10,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { postJson } from '@/lib/api';
-import { fieldBadgeClass } from '@/lib/field-colors';
+import { fieldOutlineClass } from '@/lib/field-colors';
 import { cn } from '@/lib/utils';
 
 export interface FieldBadgeData {
@@ -46,7 +46,7 @@ function FieldBadge({ field, canEdit, saveUrl }: { field: FieldBadgeData; canEdi
 
     if (!canEdit) {
         return (
-            <Badge variant="outline" className={fieldBadgeClass(field.color)} title={field.label}>
+            <Badge variant="outline" className={fieldOutlineClass(field.color)} title={field.label}>
                 <span className="tracking-wide uppercase">{field.label}</span>: {field.value}
             </Badge>
         );
@@ -72,7 +72,7 @@ function FieldBadge({ field, canEdit, saveUrl }: { field: FieldBadgeData; canEdi
                     <button type="button">
                         <Badge
                             variant="outline"
-                            className={cn('cursor-pointer transition-opacity hover:opacity-80', fieldBadgeClass(field.color))}
+                            className={cn('cursor-pointer transition-opacity hover:opacity-80', fieldOutlineClass(field.color))}
                         >
                             <span className="tracking-wide uppercase">{field.label}</span>: {field.value}
                         </Badge>
