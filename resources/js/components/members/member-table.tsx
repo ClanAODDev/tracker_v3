@@ -95,10 +95,16 @@ export function MemberTable({
     const persisted = useMemo(() => loadState(storageKey), [storageKey]);
 
     const [sorting, setSorting] = useState<SortingState>(withLeaveFirst(persisted.sorting ?? []));
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-        ...DEFAULT_HIDDEN,
-        ...(persisted.columnVisibility ?? {}),
-        select: false,
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
+        // Division fields start hidden — a division with many fields shouldn't blow
+        // out every viewer's default table width. Persisted choices still win.
+        const defaultFieldHidden = Object.fromEntries(memberFields.map((f) => [fieldColumnId(f.key), false]));
+        return {
+            ...DEFAULT_HIDDEN,
+            ...defaultFieldHidden,
+            ...(persisted.columnVisibility ?? {}),
+            select: false,
+        };
     });
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [globalFilter, setGlobalFilter] = useState('');
@@ -193,6 +199,8 @@ export function MemberTable({
         [memberFields, rows],
     );
 
+    const totalSelectedFieldValues = Object.values(selectedFieldValues).reduce((sum, set) => sum + set.size, 0);
+
     // drag-to-select
     const dragging = useRef(false);
     const dragValue = useRef(true);
@@ -248,43 +256,47 @@ export function MemberTable({
                     </DropdownMenu>
                 )}
 
-                {filterableFields.map(({ field, counts }) => {
-                    const selected = selectedFieldValues[field.key] ?? new Set<string>();
-                    return (
-                        <DropdownMenu key={field.key}>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="sm">
-                                    {field.label}
-                                    {selected.size > 0 && (
-                                        <span className="numeric rounded bg-primary/15 px-1 text-primary">
-                                            {selected.size}
-                                        </span>
-                                    )}
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="start" className="max-h-72 overflow-y-auto">
-                                <DropdownMenuLabel>Filter by {field.label.toLowerCase()}</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                {counts.map(({ option, count }) => (
-                                    <DropdownMenuCheckboxItem
-                                        key={option}
-                                        checked={selected.has(option)}
-                                        onCheckedChange={() =>
-                                            setSelectedFieldValues((prev) => {
-                                                const next = new Set(prev[field.key] ?? []);
-                                                next.has(option) ? next.delete(option) : next.add(option);
-                                                return { ...prev, [field.key]: next };
-                                            })
-                                        }
-                                        onSelect={(e) => e.preventDefault()}
-                                    >
-                                        {option} <span className="ml-1 text-muted-foreground">({count})</span>
-                                    </DropdownMenuCheckboxItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    );
-                })}
+                {filterableFields.length > 0 && (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="sm">
+                                Fields
+                                {totalSelectedFieldValues > 0 && (
+                                    <span className="numeric rounded bg-primary/15 px-1 text-primary">
+                                        {totalSelectedFieldValues}
+                                    </span>
+                                )}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" className="max-h-96 w-64 overflow-y-auto">
+                            {filterableFields.map(({ field, counts }, i) => {
+                                const selected = selectedFieldValues[field.key] ?? new Set<string>();
+                                return (
+                                    <div key={field.key}>
+                                        {i > 0 && <DropdownMenuSeparator />}
+                                        <DropdownMenuLabel>{field.label}</DropdownMenuLabel>
+                                        {counts.map(({ option, count }) => (
+                                            <DropdownMenuCheckboxItem
+                                                key={option}
+                                                checked={selected.has(option)}
+                                                onCheckedChange={() =>
+                                                    setSelectedFieldValues((prev) => {
+                                                        const next = new Set(prev[field.key] ?? []);
+                                                        next.has(option) ? next.delete(option) : next.add(option);
+                                                        return { ...prev, [field.key]: next };
+                                                    })
+                                                }
+                                                onSelect={(e) => e.preventDefault()}
+                                            >
+                                                {option} <span className="ml-1 text-muted-foreground">({count})</span>
+                                            </DropdownMenuCheckboxItem>
+                                        ))}
+                                    </div>
+                                );
+                            })}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
 
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -292,7 +304,7 @@ export function MemberTable({
                             <Columns3 /> Columns
                         </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start">
+                    <DropdownMenuContent align="start" className="max-h-96 overflow-y-auto">
                         {hideableColumns.map((column) => (
                             <DropdownMenuCheckboxItem
                                 key={column.id}
