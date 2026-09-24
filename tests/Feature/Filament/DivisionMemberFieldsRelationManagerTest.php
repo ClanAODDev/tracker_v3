@@ -50,7 +50,6 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
             ->callTableAction('create', data: [
                 'label'         => 'Class',
                 'type'          => DivisionMemberFieldType::TEXT->value,
-                'display_order' => 0,
                 'filterable'    => true,
                 'self_editable' => true,
             ])
@@ -91,8 +90,7 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
                     ['value' => 'Healer', 'color' => 'green'],
                     ['value' => 'DPS', 'color' => 'red'],
                 ],
-                'display_order' => 0,
-                'filterable'    => true,
+                'filterable' => true,
             ])
             ->assertHasNoTableActionErrors();
 
@@ -131,10 +129,9 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
             'pageClass'   => EditDivision::class,
         ])
             ->callTableAction('edit', $field, data: [
-                'label'         => 'Class Renamed',
-                'type'          => DivisionMemberFieldType::TEXT->value,
-                'display_order' => 0,
-                'filterable'    => true,
+                'label'      => 'Class Renamed',
+                'type'       => DivisionMemberFieldType::TEXT->value,
+                'filterable' => true,
             ])
             ->assertHasNoTableActionErrors();
 

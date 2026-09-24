@@ -40,10 +40,6 @@ class DivisionMemberFieldForm
                 ->required(fn (Get $get) => $get('type') === DivisionMemberFieldType::SELECT->value)
                 ->minItems(1)
                 ->helperText('The choices available for this select field, and the badge color shown for each on member listing tables.'),
-            TextInput::make('display_order')
-                ->numeric()
-                ->default(0)
-                ->required(),
             Toggle::make('filterable')
                 ->default(true)
                 ->helperText('Show a filter for this field on the member listing tables'),

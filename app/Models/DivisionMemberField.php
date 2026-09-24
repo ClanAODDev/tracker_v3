@@ -19,7 +19,6 @@ class DivisionMemberField extends Model
         'label',
         'type',
         'options',
-        'display_order',
         'filterable',
         'self_editable',
     ];
@@ -27,7 +26,6 @@ class DivisionMemberField extends Model
     protected $casts = [
         'type'          => DivisionMemberFieldType::class,
         'options'       => 'array',
-        'display_order' => 'integer',
         'filterable'    => 'boolean',
         'self_editable' => 'boolean',
     ];
