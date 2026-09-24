@@ -125,6 +125,43 @@ class MemberUpdateDetailsTest extends TestCase
     }
 
     #[Test]
+    public function saving_one_field_does_not_clear_a_sibling_field(): void
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $role     = DivisionMemberField::create([
+            'division_id' => $division->id,
+            'key'         => 'role',
+            'label'       => 'Role',
+            'type'        => DivisionMemberFieldType::TEXT,
+        ]);
+        $zone = DivisionMemberField::create([
+            'division_id' => $division->id,
+            'key'         => 'zone',
+            'label'       => 'Zone',
+            'type'        => DivisionMemberFieldType::TEXT,
+        ]);
+        $member->fieldValues()->create(['division_member_field_id' => $role->id, 'value' => 'Tank']);
+        $member->fieldValues()->create(['division_member_field_id' => $zone->id, 'value' => 'US']);
+
+        $this->actingAs($officer)
+            ->postJson(route('member.update-details', $member->clan_id), [
+                'fields' => ['zone' => 'EU'],
+            ])
+            ->assertOk();
+
+        $this->assertDatabaseHas('member_field_values', [
+            'division_member_field_id' => $role->id,
+            'value'                    => 'Tank',
+        ]);
+        $this->assertDatabaseHas('member_field_values', [
+            'division_member_field_id' => $zone->id,
+            'value'                    => 'EU',
+        ]);
+    }
+
+    #[Test]
     public function a_select_field_rejects_a_value_outside_its_defined_options(): void
     {
         $officer  = $this->createOfficer();

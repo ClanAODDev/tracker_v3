@@ -41,6 +41,12 @@ class DivisionMemberFieldsForm
         return $member->customFieldValues()->all();
     }
 
+    /**
+     * Save the given field values for a member. Only keys present in $values
+     * are touched — a partial array (e.g. a single field from an inline
+     * editor) leaves the member's other field values untouched. To clear a
+     * field, include its key with a null/empty value.
+     */
     public static function saveValues(Member $member, array $values): void
     {
         $division = $member->division;
@@ -50,7 +56,11 @@ class DivisionMemberFieldsForm
         }
 
         foreach ($division->memberFields as $field) {
-            $value = $values[$field->key] ?? null;
+            if (! array_key_exists($field->key, $values)) {
+                continue;
+            }
+
+            $value = $values[$field->key];
             $value = is_string($value) ? trim($value) : $value;
 
             if ($value === null || $value === '') {

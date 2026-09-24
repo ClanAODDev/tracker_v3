@@ -221,9 +221,31 @@ class MemberProfileTest extends TestCase
             ->get(route('member', $member->getUrlParams()))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('customFields.0.key', 'role')
                 ->where('customFields.0.label', 'Role')
                 ->where('customFields.0.value', 'Tank')
                 ->where('customFields.0.color', 'blue'));
+    }
+
+    #[Test]
+    public function unset_fields_still_appear_in_custom_fields_for_editors_to_fill_in()
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+        $member   = $this->createMember(['division_id' => $division->id]);
+        DivisionMemberField::create([
+            'division_id' => $division->id,
+            'key'         => 'zone',
+            'label'       => 'Zone',
+            'type'        => DivisionMemberFieldType::TEXT,
+        ]);
+
+        $this->actingAs($officer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('customFields.0.key', 'zone')
+                ->where('customFields.0.value', null));
     }
 
     #[Test]

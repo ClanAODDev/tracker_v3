@@ -222,6 +222,12 @@ class MemberProfileData
         ];
     }
 
+    /**
+     * Division field definitions with this member's current value, if any.
+     * Always includes every field (even unset ones) so an authorized editor
+     * can see what's available to fill in; unset fields are filtered out of
+     * display for viewers without edit rights (see MemberFieldBadges).
+     */
     private function customFields(): array
     {
         $member   = $this->member;
@@ -234,11 +240,13 @@ class MemberProfileData
         $values = $member->customFieldValues();
 
         return $division->memberFields
-            ->filter(fn ($field) => ! empty($values[$field->key]))
             ->map(fn ($field) => [
-                'label' => $field->label,
-                'value' => $values[$field->key],
-                'color' => $field->type === DivisionMemberFieldType::SELECT
+                'key'     => $field->key,
+                'label'   => $field->label,
+                'type'    => $field->type->value,
+                'options' => $field->optionList(),
+                'value'   => $values[$field->key] ?? null,
+                'color'   => $field->type === DivisionMemberFieldType::SELECT && isset($values[$field->key])
                     ? ($field->optionColors()[$values[$field->key]] ?? 'gray')
                     : null,
             ])
@@ -271,7 +279,6 @@ class MemberProfileData
                     ->values()
                     ->all()
                 : [],
-            'fields' => $canEditFields ? $this->fieldValuesForManagement() : [],
         ];
     }
 
@@ -289,26 +296,6 @@ class MemberProfileData
             ])
             ->values()
             ->all();
-    }
-
-    private function fieldValuesForManagement(): array
-    {
-        $member   = $this->member;
-        $division = $member->division;
-
-        if (! $division) {
-            return [];
-        }
-
-        $values = $member->customFieldValues();
-
-        return $division->memberFields->map(fn ($field) => [
-            'key'     => $field->key,
-            'label'   => $field->label,
-            'type'    => $field->type->value,
-            'options' => $field->optionList(),
-            'value'   => $values[$field->key] ?? null,
-        ])->values()->all();
     }
 
     private function notePayload(Note $note, bool $trashed = false): array

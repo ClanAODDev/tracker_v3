@@ -2,7 +2,8 @@ import { Head } from '@inertiajs/react';
 import { ListOrdered, TriangleAlert, Wrench } from 'lucide-react';
 import { useState } from 'react';
 
-import { MemberDetailsEditor, type DetailsManagement } from '@/components/member/details-editor';
+import { MemberFieldBadges, type FieldBadgeData } from '@/components/member/field-badges';
+import { HandleEditor, type DetailsManagement } from '@/components/member/handle-editor';
 import { NotesDialog, type MemberNote } from '@/components/member/notes';
 import {
     RankHistoryDialog,
@@ -18,7 +19,6 @@ import {
     ProfileStats,
     type AwardsData,
     type ComparisonData,
-    type CustomFieldDisplay,
     type DivisionsData,
     type HandlesData,
     type ProfileStatsData,
@@ -61,7 +61,7 @@ interface MemberShowProps {
     divisions: DivisionsData;
     notes: MemberNote[];
     trashedNotes: MemberNote[];
-    customFields: CustomFieldDisplay[];
+    customFields: FieldBadgeData[];
     detailsManagement: DetailsManagement | null;
 }
 
@@ -130,6 +130,7 @@ export default function MemberShow(props: MemberShowProps) {
                 <div className="flex flex-wrap items-center gap-3">
                     {member.avatarUrl && <img src={member.avatarUrl} alt="" className="size-12 rounded-full" />}
                     <MemberTagEditor tags={tags} management={tagManagement} />
+                    <MemberFieldBadges fields={customFields} management={detailsManagement} />
                 </div>
 
                 {notices.length > 0 && (
@@ -182,12 +183,8 @@ export default function MemberShow(props: MemberShowProps) {
 
                 {awards.list.length > 0 && <Achievements awards={awards} />}
 
-                {(handles.discord || handles.groups.length > 0 || customFields.length > 0 || detailsManagement) && (
-                    <HandlesSection
-                        handles={handles}
-                        customFields={customFields}
-                        editAction={<MemberDetailsEditor management={detailsManagement} />}
-                    />
+                {(handles.discord || handles.groups.length > 0 || detailsManagement?.canEditHandles) && (
+                    <HandlesSection handles={handles} editAction={<HandleEditor management={detailsManagement} />} />
                 )}
 
                 {(divisions.current || divisions.partTime.length > 0) && <DivisionsSection divisions={divisions} />}
