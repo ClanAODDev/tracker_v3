@@ -26,7 +26,23 @@ class SubmitRecruitmentRequest extends FormRequest
                 fn ($attr, $value, $fail) => Member::isValidForumName($value)
                     ?: $fail('Forum name cannot contain HTML special characters (< > & " \').'),
             ],
-            'ingame_name' => ['nullable', 'string', 'max:255', new HandleFormat($division?->handle)],
+            'ingame_name' => [
+                $division?->handle ? 'required' : 'nullable',
+                'string',
+                'max:255',
+                new HandleFormat($division?->handle),
+            ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        $division = Division::whereSlug($this->input('division'))->first();
+
+        return [
+            'ingame_name.required' => $division?->handle
+                ? "A {$division->handle->label} handle is required for this division."
+                : 'An in-game handle is required.',
         ];
     }
 
