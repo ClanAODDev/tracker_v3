@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Enums\Role;
 use App\Models\Division;
+use App\Models\DivisionMemberField;
 use App\Models\Member;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -15,7 +16,6 @@ class MemberPolicy
 
     public function before(User $user)
     {
-        // MSgts, SGTs, developers have access to all members
         if ($user->isRole('admin') || $user->isDeveloper()) {
             return true;
         }
@@ -160,12 +160,85 @@ class MemberPolicy
         return true;
     }
 
-    public function manageIngameHandles(User $user, Member $member): bool
+    /**
+     * Can the user manage this member's in-game handles?
+     *
+     * Always allowed for the member themselves, plus sr_ldr for anyone, officers
+     * within the member's own division, and squad/platoon leaders for members in
+     * their own squad/platoon respectively.
+     */
+    public function manageHandles(User $user, Member $member): bool
     {
-        if ($member->id === $user->member_id || $user->isRole('sr_ldr')) {
+        if ($member->id === $user->member_id) {
             return true;
         }
 
-        return $user->isRole('officer') && $user->member?->division_id === $member->division_id;
+        return $this->isLeaderOf($user, $member);
+    }
+
+    /**
+     * Can the user manage AT LEAST ONE of this member's division-defined field
+     * values? Used to decide whether the fields editor is reachable at all;
+     * manageField() below is the actual per-field authority.
+     */
+    public function manageFields(User $user, Member $member): bool
+    {
+        if ($this->isLeaderOf($user, $member)) {
+            return true;
+        }
+
+        if ($member->id !== $user->member_id) {
+            return false;
+        }
+
+        return $member->division?->memberFields->contains('self_editable', true) ?? false;
+    }
+
+    /**
+     * Can the user manage this specific field's value for this member?
+     *
+     * Leadership tiers (sr_ldr / officer-in-division / squad or platoon
+     * leader) can manage any field. A member editing their own value can
+     * only do so when the field itself has been marked self-editable.
+     */
+    public function manageField(User $user, Member $member, DivisionMemberField $field): bool
+    {
+        if ($this->isLeaderOf($user, $member)) {
+            return true;
+        }
+
+        return $member->id === $user->member_id && $field->self_editable;
+    }
+
+    /**
+     * Shared leadership check for manageHandles()/manageFields(): sr_ldr for
+     * anyone, officers within the member's own division, and squad/platoon
+     * leaders for members in their own squad/platoon respectively.
+     */
+    private function isLeaderOf(User $user, Member $member): bool
+    {
+        if ($user->isRole('sr_ldr')) {
+            return true;
+        }
+
+        $userMember = $user->member;
+
+        if (! $userMember) {
+            return false;
+        }
+
+        if ($user->isRole('officer') && $userMember->division_id === $member->division_id) {
+            return true;
+        }
+
+        if ($member->squad_id && $member->squad && $userMember->isSquadLeader($member->squad)) {
+            return true;
+        }
+
+        if ($member->platoon_id && $member->platoon && $userMember->isPlatoonLeader($member->platoon)) {
+            return true;
+        }
+
+        return false;
     }
 }

@@ -531,10 +531,10 @@ function HandleCard({
     );
 }
 
-export function HandlesSection({ handles }: { handles: HandlesData }) {
+export function HandlesSection({ handles, editAction }: { handles: HandlesData; editAction?: ReactNode }) {
     return (
         <section>
-            <SectionTitle>Handles</SectionTitle>
+            <SectionTitle action={editAction}>Handles</SectionTitle>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {handles.discord && (
                     <HandleCard

@@ -5,6 +5,7 @@ namespace App\Filament\Mod\Resources;
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
 use App\Filament\Mod\Resources\DivisionResource\Pages\ListDivisions;
+use App\Filament\Mod\Resources\DivisionResource\RelationManagers\MemberFieldsRelationManager;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Models\Division;
 use Filament\Actions\Action;
@@ -412,6 +413,7 @@ class DivisionResource extends Resource
     {
         return [
             PlatoonsRelationManager::class,
+            MemberFieldsRelationManager::class,
         ];
     }
 

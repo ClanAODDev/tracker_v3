@@ -2,11 +2,13 @@
 
 namespace App\Data;
 
+use App\Enums\DivisionMemberFieldType;
 use App\Enums\Rank;
 use App\Enums\TagVisibility;
 use App\Models\Award;
 use App\Models\Division;
 use App\Models\DivisionTag;
+use App\Models\Handle;
 use App\Models\Member;
 use App\Models\Note;
 use App\Models\User;
@@ -213,9 +215,89 @@ class MemberProfileData
                 ])->values(),
                 'past' => $this->pastDivisions($member->isPending || $member->division_id === 0),
             ],
-            'notes'        => $this->notes->map(fn (Note $n) => $this->notePayload($n))->values(),
-            'trashedNotes' => $this->trashedNotes->map(fn (Note $n) => $this->notePayload($n, true))->values(),
+            'notes'             => $this->notes->map(fn (Note $n) => $this->notePayload($n))->values(),
+            'trashedNotes'      => $this->trashedNotes->map(fn (Note $n) => $this->notePayload($n, true))->values(),
+            'customFields'      => $this->customFields(),
+            'detailsManagement' => $this->detailsManagement(),
         ];
+    }
+
+    /**
+     * Division field definitions with this member's current value, if any,
+     * and whether the current viewer can edit that specific field. Always
+     * includes every field (even unset ones) so an authorized editor can see
+     * what's available to fill in; unset fields the viewer can't edit are
+     * filtered out of display (see MemberFieldBadges).
+     */
+    private function customFields(): array
+    {
+        $member   = $this->member;
+        $division = $this->division;
+        $user     = $this->user;
+
+        if (! $division) {
+            return [];
+        }
+
+        $values = $member->customFieldValues();
+
+        return $division->memberFields
+            ->map(fn ($field) => [
+                'key'     => $field->key,
+                'label'   => $field->label,
+                'type'    => $field->type->value,
+                'options' => $field->optionList(),
+                'value'   => $values[$field->key] ?? null,
+                'color'   => $field->type === DivisionMemberFieldType::SELECT && isset($values[$field->key])
+                    ? ($field->optionColors()[$values[$field->key]] ?? 'gray')
+                    : null,
+                'canEdit' => $user->can('manageField', [$member, $field]),
+            ])
+            ->values()
+            ->all();
+    }
+
+    private function detailsManagement(): ?array
+    {
+        $member = $this->member;
+        $user   = $this->user;
+
+        $canEditHandles = $user->can('manageHandles', $member);
+        $canEditFields  = $user->can('manageFields', $member);
+
+        if (! $canEditHandles && ! $canEditFields) {
+            return null;
+        }
+
+        return [
+            'saveUrl'              => route('member.update-details', $member->clan_id),
+            'canEditHandles'       => $canEditHandles,
+            'handles'              => $canEditHandles ? $this->handlesForManagement() : [],
+            'availableHandleTypes' => $canEditHandles
+                ? Handle::where('enabled', true)
+                    ->orderBy('label')
+                    ->get()
+                    ->map(fn (Handle $h) => ['value' => $h->id, 'label' => $h->label])
+                    ->values()
+                    ->all()
+                : [],
+        ];
+    }
+
+    private function handlesForManagement(): array
+    {
+        return $this->member->memberHandles()
+            ->with('handle')
+            ->orderBy('handle_id')
+            ->get()
+            ->map(fn ($mh) => [
+                'id'       => $mh->id,
+                'handleId' => $mh->handle_id,
+                'value'    => $mh->value,
+                'primary'  => (bool) $mh->primary,
+            ])
+            ->values()
+            ->all();
     }
 
     private function notePayload(Note $note, bool $trashed = false): array

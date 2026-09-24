@@ -4,10 +4,11 @@ import { Bell, Clock } from 'lucide-react';
 import { type CSSProperties, type Dispatch, type ReactNode, type SetStateAction, useMemo } from 'react';
 import { toast } from 'sonner';
 
-import type { MemberRow } from '@/components/members/types';
+import type { MemberFieldDefinition, MemberRow } from '@/components/members/types';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { postJson } from '@/lib/api';
+import { fieldBadgeClass } from '@/lib/field-colors';
 import { cn } from '@/lib/utils';
 
 const DOT_TINT = ['bg-success', 'bg-warning', 'bg-destructive', 'bg-muted-foreground'] as const;
@@ -19,6 +20,12 @@ interface Options {
     reminded: Record<number, string>;
     setReminded: Dispatch<SetStateAction<Record<number, string>>>;
     activityStyle: 'row' | 'dot';
+    memberFields: MemberFieldDefinition[];
+    selectedFieldValues: Record<string, Set<string>>;
+}
+
+export function fieldColumnId(key: string): string {
+    return `field:${key}`;
 }
 
 export function useMemberColumns({
@@ -28,6 +35,8 @@ export function useMemberColumns({
     reminded,
     setReminded,
     activityStyle,
+    memberFields,
+    selectedFieldValues,
 }: Options): ColumnDef<MemberRow>[] {
     return useMemo<ColumnDef<MemberRow>[]>(
         () => [
@@ -263,12 +272,39 @@ export function useMemberColumns({
                 sortDescFirst: true,
                 cell: () => null,
             },
+            ...memberFields.map(
+                (field): ColumnDef<MemberRow> => ({
+                    id: fieldColumnId(field.key),
+                    accessorFn: (m) => m.customFields[field.key] ?? '',
+                    header: field.label,
+                    cell: ({ row }) => {
+                        const value = row.original.customFields[field.key];
+                        if (!value) return <span className="text-muted-foreground">—</span>;
+                        if (field.type !== 'select') {
+                            return <span className="text-muted-foreground">{value}</span>;
+                        }
+                        const colorClass = fieldBadgeClass(field.colors[value] ?? null);
+                        return (
+                            <span className={cn('rounded px-1.5 py-0.5 text-[11px]', colorClass)}>{value}</span>
+                        );
+                    },
+                    filterFn:
+                        field.type === 'select'
+                            ? (row) => {
+                                  const selected = selectedFieldValues[field.key];
+                                  if (!selected || selected.size === 0) return true;
+                                  const value = row.original.customFields[field.key];
+                                  return value != null && selected.has(value);
+                              }
+                            : undefined,
+                }),
+            ),
         ],
-        [assignmentLabel, selectedTags, reminded, bulkMode, activityStyle],
+        [assignmentLabel, selectedTags, reminded, bulkMode, activityStyle, memberFields, selectedFieldValues],
     );
 }
 
-export function columnLabel(id: string, assignmentLabel: string): ReactNode {
+export function columnLabel(id: string, assignmentLabel: string, memberFields: MemberFieldDefinition[]): ReactNode {
     switch (id) {
         case 'promoted':
             return 'Last promoted';
@@ -278,7 +314,9 @@ export function columnLabel(id: string, assignmentLabel: string): ReactNode {
             return 'Inactivity reminder';
         case 'assignment':
             return assignmentLabel;
-        default:
-            return id;
+        default: {
+            const field = memberFields.find((f) => fieldColumnId(f.key) === id);
+            return field ? field.label : id;
+        }
     }
 }

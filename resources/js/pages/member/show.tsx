@@ -2,6 +2,8 @@ import { Head } from '@inertiajs/react';
 import { ListOrdered, TriangleAlert, Wrench } from 'lucide-react';
 import { useState } from 'react';
 
+import { MemberFieldBadges, type FieldBadgeData } from '@/components/member/field-badges';
+import { HandleEditor, type DetailsManagement } from '@/components/member/handle-editor';
 import { NotesDialog, type MemberNote } from '@/components/member/notes';
 import {
     RankHistoryDialog,
@@ -59,6 +61,8 @@ interface MemberShowProps {
     divisions: DivisionsData;
     notes: MemberNote[];
     trashedNotes: MemberNote[];
+    customFields: FieldBadgeData[];
+    detailsManagement: DetailsManagement | null;
 }
 
 export default function MemberShow(props: MemberShowProps) {
@@ -66,6 +70,7 @@ export default function MemberShow(props: MemberShowProps) {
         props;
     const { divisionComparison, handles, divisions, notes, trashedNotes, noteTypes, canViewTrashed, canCreateNote } =
         props;
+    const { customFields, detailsManagement } = props;
 
     const [tenureOpen, setTenureOpen] = useState(false);
     const [recruitsOpen, setRecruitsOpen] = useState(false);
@@ -124,7 +129,10 @@ export default function MemberShow(props: MemberShowProps) {
             <div className="tron-stagger space-y-8">
                 <div className="flex flex-wrap items-center gap-3">
                     {member.avatarUrl && <img src={member.avatarUrl} alt="" className="size-12 rounded-full" />}
-                    <MemberTagEditor tags={tags} management={tagManagement} />
+                    <div className="flex flex-col gap-1">
+                        <MemberTagEditor tags={tags} management={tagManagement} />
+                        <MemberFieldBadges fields={customFields} management={detailsManagement} />
+                    </div>
                 </div>
 
                 {notices.length > 0 && (
@@ -177,7 +185,9 @@ export default function MemberShow(props: MemberShowProps) {
 
                 {awards.list.length > 0 && <Achievements awards={awards} />}
 
-                {(handles.discord || handles.groups.length > 0) && <HandlesSection handles={handles} />}
+                {(handles.discord || handles.groups.length > 0 || detailsManagement?.canEditHandles) && (
+                    <HandlesSection handles={handles} editAction={<HandleEditor management={detailsManagement} />} />
+                )}
 
                 {(divisions.current || divisions.partTime.length > 0) && <DivisionsSection divisions={divisions} />}
             </div>
