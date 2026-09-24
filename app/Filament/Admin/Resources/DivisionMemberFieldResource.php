@@ -13,7 +13,6 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -46,26 +45,10 @@ class DivisionMemberFieldResource extends Resource
                     ->label('Division')
                     ->sortable()
                     ->searchable(),
-                TextColumn::make('label')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('key')
-                    ->badge()
-                    ->color('gray'),
-                TextColumn::make('type')
-                    ->badge(),
-                TextColumn::make('options')
-                    ->label('Choices')
-                    ->formatStateUsing(fn (mixed $state) => DivisionMemberFieldForm::formatChoices($state))
-                    ->wrap(),
+                ...DivisionMemberFieldForm::tableColumns(),
                 TextColumn::make('values_count')
                     ->counts('values')
                     ->label('Members set'),
-                IconColumn::make('filterable')
-                    ->boolean(),
-                IconColumn::make('self_editable')
-                    ->label('Self-Editable')
-                    ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

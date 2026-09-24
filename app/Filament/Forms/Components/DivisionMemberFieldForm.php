@@ -9,6 +9,8 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
 
 class DivisionMemberFieldForm
 {
@@ -61,5 +63,35 @@ class DivisionMemberFieldForm
         $values = collect($state)->pluck('value')->filter()->all();
 
         return $values ? implode(', ', $values) : '--';
+    }
+
+    /**
+     * Table columns shared by every place a DivisionMemberField list is
+     * shown (the per-division Mod relation manager, the clan-wide Admin
+     * resource) — callers prepend/append their own context-specific columns.
+     *
+     * @return array<int, TextColumn|IconColumn>
+     */
+    public static function tableColumns(): array
+    {
+        return [
+            TextColumn::make('label')
+                ->searchable()
+                ->sortable(),
+            TextColumn::make('key')
+                ->badge()
+                ->color('gray'),
+            TextColumn::make('type')
+                ->badge(),
+            TextColumn::make('options')
+                ->label('Choices')
+                ->formatStateUsing(fn (mixed $state) => self::formatChoices($state))
+                ->wrap(),
+            IconColumn::make('filterable')
+                ->boolean(),
+            IconColumn::make('self_editable')
+                ->label('Self-Editable')
+                ->boolean(),
+        ];
     }
 }

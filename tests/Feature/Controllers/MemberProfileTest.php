@@ -300,12 +300,11 @@ class MemberProfileTest extends TestCase
             ->get(route('member', $viewer->member->getUrlParams()))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('detailsManagement.canEditHandles', true)
-                ->where('detailsManagement.canEditFields', false));
+                ->where('detailsManagement.canEditHandles', true));
     }
 
     #[Test]
-    public function details_management_allows_full_editing_for_a_senior_leader()
+    public function details_management_allows_handle_editing_for_a_senior_leader_over_others()
     {
         $viewer = $this->createSeniorLeader();
         $member = $this->createMember(['division_id' => $viewer->member->division_id]);
@@ -314,7 +313,6 @@ class MemberProfileTest extends TestCase
             ->get(route('member', $member->getUrlParams()))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('detailsManagement.canEditHandles', true)
-                ->where('detailsManagement.canEditFields', true));
+                ->where('detailsManagement.canEditHandles', true));
     }
 }

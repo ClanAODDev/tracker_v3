@@ -11,8 +11,6 @@ use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
-use Filament\Tables\Columns\IconColumn;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
 class MemberFieldsRelationManager extends RelationManager
@@ -31,24 +29,7 @@ class MemberFieldsRelationManager extends RelationManager
         return $table
             ->reorderable('display_order')
             ->defaultSort('display_order')
-            ->columns([
-                TextColumn::make('label')
-                    ->searchable(),
-                TextColumn::make('key')
-                    ->badge()
-                    ->color('gray'),
-                TextColumn::make('type')
-                    ->badge(),
-                TextColumn::make('options')
-                    ->label('Choices')
-                    ->formatStateUsing(fn (mixed $state) => DivisionMemberFieldForm::formatChoices($state))
-                    ->wrap(),
-                IconColumn::make('filterable')
-                    ->boolean(),
-                IconColumn::make('self_editable')
-                    ->label('Self-Editable')
-                    ->boolean(),
-            ])
+            ->columns(DivisionMemberFieldForm::tableColumns())
             ->headerActions([
                 CreateAction::make()
                     ->visible(fn () => auth()->user()->can('create', [DivisionMemberField::class, $this->getOwnerRecord()]))

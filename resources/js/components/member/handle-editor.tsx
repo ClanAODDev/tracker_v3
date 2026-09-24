@@ -21,7 +21,6 @@ import { postJson } from '@/lib/api';
 export interface DetailsManagement {
     saveUrl: string;
     canEditHandles: boolean;
-    canEditFields: boolean;
     handles: Array<{ id: number; handleId: number; value: string; primary: boolean }>;
     availableHandleTypes: Array<{ value: number; label: string }>;
 }

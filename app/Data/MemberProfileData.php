@@ -272,7 +272,6 @@ class MemberProfileData
         return [
             'saveUrl'              => route('member.update-details', $member->clan_id),
             'canEditHandles'       => $canEditHandles,
-            'canEditFields'        => $canEditFields,
             'handles'              => $canEditHandles ? $this->handlesForManagement() : [],
             'availableHandleTypes' => $canEditHandles
                 ? Handle::where('enabled', true)
