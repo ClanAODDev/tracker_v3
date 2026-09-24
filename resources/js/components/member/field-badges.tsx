@@ -47,7 +47,7 @@ function FieldBadge({ field, canEdit, saveUrl }: { field: FieldBadgeData; canEdi
     if (!canEdit) {
         return (
             <Badge variant="outline" className={fieldBadgeClass(field.color)} title={field.label}>
-                {field.label}: {field.value}
+                <span className="tracking-wide uppercase">{field.label}</span>: {field.value}
             </Badge>
         );
     }
@@ -74,12 +74,12 @@ function FieldBadge({ field, canEdit, saveUrl }: { field: FieldBadgeData; canEdi
                             variant="outline"
                             className={cn('cursor-pointer transition-opacity hover:opacity-80', fieldBadgeClass(field.color))}
                         >
-                            {field.label}: {field.value}
+                            <span className="tracking-wide uppercase">{field.label}</span>: {field.value}
                         </Badge>
                     </button>
                 ) : (
                     <Button variant="outline" size="xs" className="h-6 gap-1 border-dashed text-muted-foreground">
-                        <Plus className="size-3" /> {field.label}
+                        <Plus className="size-3" /> <span className="tracking-wide uppercase">{field.label}</span>
                     </Button>
                 )}
             </PopoverTrigger>
