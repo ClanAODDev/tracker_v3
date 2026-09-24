@@ -27,7 +27,8 @@ class ModPanelProvider extends PanelProvider
         return $panel
             ->id('mod')
             ->path('operations')
-            ->favicon(asset('images/logo-tron.svg'))
+            ->brandName('Operations')
+            ->favicon(asset('images/logo-tron-green.svg'))
             ->plugin(CommentionsPlugin::make())
             ->plugin(FilamentReactionsPlugin::make())
             ->colors([
