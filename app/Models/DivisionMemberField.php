@@ -21,6 +21,7 @@ class DivisionMemberField extends Model
         'options',
         'display_order',
         'filterable',
+        'self_editable',
     ];
 
     protected $casts = [
@@ -28,6 +29,7 @@ class DivisionMemberField extends Model
         'options'       => 'array',
         'display_order' => 'integer',
         'filterable'    => 'boolean',
+        'self_editable' => 'boolean',
     ];
 
     public function division(): BelongsTo

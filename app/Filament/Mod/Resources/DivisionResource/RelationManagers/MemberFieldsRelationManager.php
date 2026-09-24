@@ -45,6 +45,9 @@ class MemberFieldsRelationManager extends RelationManager
                     ->wrap(),
                 IconColumn::make('filterable')
                     ->boolean(),
+                IconColumn::make('self_editable')
+                    ->label('Self-Editable')
+                    ->boolean(),
             ])
             ->headerActions([
                 CreateAction::make()

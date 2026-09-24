@@ -78,15 +78,16 @@ class MemberUpdateDetailsTest extends TestCase
     }
 
     #[Test]
-    public function member_cannot_update_their_own_field_unless_division_opts_in(): void
+    public function member_cannot_update_their_own_field_unless_that_field_is_self_editable(): void
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
         $field    = DivisionMemberField::create([
-            'division_id' => $division->id,
-            'key'         => 'class',
-            'label'       => 'Class',
-            'type'        => DivisionMemberFieldType::TEXT,
+            'division_id'   => $division->id,
+            'key'           => 'class',
+            'label'         => 'Class',
+            'type'          => DivisionMemberFieldType::TEXT,
+            'self_editable' => false,
         ]);
 
         $this->actingAs($user)
@@ -95,7 +96,7 @@ class MemberUpdateDetailsTest extends TestCase
             ])
             ->assertForbidden();
 
-        $division->settings()->set('allow_member_field_self_edit', true);
+        $field->update(['self_editable' => true]);
 
         $this->actingAs($user)
             ->postJson(route('member.update-details', $user->member->clan_id), [
@@ -108,6 +109,37 @@ class MemberUpdateDetailsTest extends TestCase
             'division_member_field_id' => $field->id,
             'value'                    => 'Mage',
         ]);
+    }
+
+    #[Test]
+    public function member_cannot_touch_a_non_self_editable_field_even_alongside_one_they_can(): void
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+        $zone     = DivisionMemberField::create([
+            'division_id'   => $division->id,
+            'key'           => 'zone',
+            'label'         => 'Zone',
+            'type'          => DivisionMemberFieldType::TEXT,
+            'self_editable' => true,
+        ]);
+        $rating = DivisionMemberField::create([
+            'division_id'   => $division->id,
+            'key'           => 'rating',
+            'label'         => 'Rating',
+            'type'          => DivisionMemberFieldType::TEXT,
+            'self_editable' => false,
+        ]);
+
+        $this->actingAs($user)
+            ->postJson(route('member.update-details', $user->member->clan_id), [
+                'fields' => ['zone' => 'US', 'rating' => 'A'],
+            ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['fields.rating']);
+
+        $this->assertDatabaseMissing('member_field_values', ['division_member_field_id' => $zone->id]);
+        $this->assertDatabaseMissing('member_field_values', ['division_member_field_id' => $rating->id]);
     }
 
     #[Test]

@@ -63,6 +63,9 @@ class DivisionMemberFieldResource extends Resource
                     ->label('Members set'),
                 IconColumn::make('filterable')
                     ->boolean(),
+                IconColumn::make('self_editable')
+                    ->label('Self-Editable')
+                    ->boolean(),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

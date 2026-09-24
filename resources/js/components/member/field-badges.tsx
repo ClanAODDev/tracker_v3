@@ -20,11 +20,11 @@ export interface FieldBadgeData {
     options: string[];
     value: string | null;
     color: string | null;
+    canEdit: boolean;
 }
 
 export function MemberFieldBadges({ fields, management }: { fields: FieldBadgeData[]; management: DetailsManagement | null }) {
-    const canEdit = management?.canEditFields ?? false;
-    const visible = canEdit ? fields : fields.filter((f) => f.value !== null);
+    const visible = fields.filter((f) => f.value !== null || f.canEdit);
 
     if (visible.length === 0) {
         return null;
@@ -33,18 +33,18 @@ export function MemberFieldBadges({ fields, management }: { fields: FieldBadgeDa
     return (
         <div className="flex flex-wrap items-center gap-1.5">
             {visible.map((field) => (
-                <FieldBadge key={field.key} field={field} canEdit={canEdit} saveUrl={management?.saveUrl ?? ''} />
+                <FieldBadge key={field.key} field={field} saveUrl={management?.saveUrl ?? ''} />
             ))}
         </div>
     );
 }
 
-function FieldBadge({ field, canEdit, saveUrl }: { field: FieldBadgeData; canEdit: boolean; saveUrl: string }) {
+function FieldBadge({ field, saveUrl }: { field: FieldBadgeData; saveUrl: string }) {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(field.value ?? '');
     const [busy, setBusy] = useState(false);
 
-    if (!canEdit) {
+    if (!field.canEdit) {
         return (
             <Badge variant="outline" className={fieldOutlineClass(field.color)} title={field.label}>
                 <span className="tracking-wide uppercase">{field.label}</span>: {field.value}

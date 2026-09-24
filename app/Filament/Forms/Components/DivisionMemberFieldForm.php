@@ -45,6 +45,10 @@ class DivisionMemberFieldForm
             Toggle::make('filterable')
                 ->default(true)
                 ->helperText('Show a filter for this field on the member listing tables'),
+            Toggle::make('self_editable')
+                ->label('Allow Self-Editing')
+                ->default(false)
+                ->helperText('Let a member set their own value for this field from their profile page'),
         ];
     }
 

@@ -52,14 +52,16 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
                 'type'          => DivisionMemberFieldType::TEXT->value,
                 'display_order' => 0,
                 'filterable'    => true,
+                'self_editable' => true,
             ])
             ->assertHasNoTableActionErrors();
 
         $this->assertDatabaseHas('division_member_fields', [
-            'division_id' => $division->id,
-            'key'         => 'class',
-            'label'       => 'Class',
-            'type'        => 'text',
+            'division_id'   => $division->id,
+            'key'           => 'class',
+            'label'         => 'Class',
+            'type'          => 'text',
+            'self_editable' => true,
         ]);
     }
 

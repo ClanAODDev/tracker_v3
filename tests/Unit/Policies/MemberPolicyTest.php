@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\Policies;
 
+use App\Enums\DivisionMemberFieldType;
 use App\Enums\Rank;
 use App\Enums\Role;
+use App\Models\DivisionMemberField;
 use App\Models\User;
 use App\Policies\MemberPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -319,19 +321,44 @@ class MemberPolicyTest extends TestCase
     }
 
     #[Test]
-    public function member_cannot_manage_own_fields_unless_division_opts_in()
+    public function member_cannot_manage_own_field_unless_that_field_is_self_editable()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+        $field    = DivisionMemberField::create([
+            'division_id'   => $division->id,
+            'key'           => 'class',
+            'label'         => 'Class',
+            'type'          => DivisionMemberFieldType::TEXT,
+            'self_editable' => false,
+        ]);
 
         $this->actingAs($user);
+        $this->assertFalse($this->policy->manageField($user, $user->member, $field));
         $this->assertFalse($this->policy->manageFields($user, $user->member));
 
-        $division->settings()->set('allow_member_field_self_edit', true);
-        $user->member->refresh();
-        $user->member->division->refresh();
+        $field->update(['self_editable' => true]);
+        $freshMember = $user->member->fresh();
 
-        $this->assertTrue($this->policy->manageFields($user, $user->member));
+        $this->assertTrue($this->policy->manageField($user, $freshMember, $field));
+        $this->assertTrue($this->policy->manageFields($user, $freshMember));
+    }
+
+    #[Test]
+    public function leadership_can_manage_a_field_regardless_of_its_self_editable_flag()
+    {
+        $officer = $this->createOfficer();
+        $member  = $this->createMember(['division_id' => $officer->member->division_id]);
+        $field   = DivisionMemberField::create([
+            'division_id'   => $officer->member->division_id,
+            'key'           => 'class',
+            'label'         => 'Class',
+            'type'          => DivisionMemberFieldType::TEXT,
+            'self_editable' => false,
+        ]);
+
+        $this->actingAs($officer);
+        $this->assertTrue($this->policy->manageField($officer, $member, $field));
     }
 
     #[Test]

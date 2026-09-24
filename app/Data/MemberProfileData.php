@@ -223,15 +223,17 @@ class MemberProfileData
     }
 
     /**
-     * Division field definitions with this member's current value, if any.
-     * Always includes every field (even unset ones) so an authorized editor
-     * can see what's available to fill in; unset fields are filtered out of
-     * display for viewers without edit rights (see MemberFieldBadges).
+     * Division field definitions with this member's current value, if any,
+     * and whether the current viewer can edit that specific field. Always
+     * includes every field (even unset ones) so an authorized editor can see
+     * what's available to fill in; unset fields the viewer can't edit are
+     * filtered out of display (see MemberFieldBadges).
      */
     private function customFields(): array
     {
         $member   = $this->member;
         $division = $this->division;
+        $user     = $this->user;
 
         if (! $division) {
             return [];
@@ -249,6 +251,7 @@ class MemberProfileData
                 'color'   => $field->type === DivisionMemberFieldType::SELECT && isset($values[$field->key])
                     ? ($field->optionColors()[$values[$field->key]] ?? 'gray')
                     : null,
+                'canEdit' => $user->can('manageField', [$member, $field]),
             ])
             ->values()
             ->all();

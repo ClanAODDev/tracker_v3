@@ -50,6 +50,12 @@ class UpdateMemberDetails extends FormRequest
             $rules['fields'] = ['array'];
 
             foreach ($member->division?->memberFields ?? [] as $field) {
+                if (! $this->user()->can('manageField', [$member, $field])) {
+                    $rules["fields.{$field->key}"] = ['prohibited'];
+
+                    continue;
+                }
+
                 $rules["fields.{$field->key}"] = $field->type === DivisionMemberFieldType::SELECT
                     ? ['nullable', 'string', Rule::in($field->optionList())]
                     : ['nullable', 'string', 'max:255'];

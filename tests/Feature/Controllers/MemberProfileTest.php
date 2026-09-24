@@ -224,7 +224,8 @@ class MemberProfileTest extends TestCase
                 ->where('customFields.0.key', 'role')
                 ->where('customFields.0.label', 'Role')
                 ->where('customFields.0.value', 'Tank')
-                ->where('customFields.0.color', 'blue'));
+                ->where('customFields.0.color', 'blue')
+                ->where('customFields.0.canEdit', false));
     }
 
     #[Test]
@@ -245,7 +246,36 @@ class MemberProfileTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('customFields.0.key', 'zone')
-                ->where('customFields.0.value', null));
+                ->where('customFields.0.value', null)
+                ->where('customFields.0.canEdit', true));
+    }
+
+    #[Test]
+    public function a_member_can_edit_their_own_self_editable_field_but_not_a_locked_one()
+    {
+        $division = $this->createActiveDivision();
+        $viewer   = $this->createMemberWithUser(['division_id' => $division->id]);
+        DivisionMemberField::create([
+            'division_id'   => $division->id,
+            'key'           => 'zone',
+            'label'         => 'Zone',
+            'type'          => DivisionMemberFieldType::TEXT,
+            'self_editable' => true,
+        ]);
+        DivisionMemberField::create([
+            'division_id'   => $division->id,
+            'key'           => 'rating',
+            'label'         => 'Rating',
+            'type'          => DivisionMemberFieldType::TEXT,
+            'self_editable' => false,
+        ]);
+
+        $this->actingAs($viewer)
+            ->get(route('member', $viewer->member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('customFields', fn ($fields) => collect($fields)->firstWhere('key', 'zone')['canEdit'] === true
+                    && collect($fields)->firstWhere('key', 'rating')['canEdit'] === false));
     }
 
     #[Test]
