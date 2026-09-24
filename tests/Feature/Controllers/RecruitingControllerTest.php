@@ -194,12 +194,13 @@ class RecruitingControllerTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division'   => $division->slug,
-                'member_id'  => 99999,
-                'forum_name' => 'TestRecruit',
-                'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $platoon->id,
-                'squad'      => $squad->id,
+                'division'    => $division->slug,
+                'member_id'   => 99999,
+                'forum_name'  => 'TestRecruit',
+                'rank'        => Rank::RECRUIT->value,
+                'platoon'     => $platoon->id,
+                'squad'       => $squad->id,
+                'ingame_name' => 'GameHandle',
             ]);
 
         $this->assertDatabaseHas('members', [
@@ -218,11 +219,12 @@ class RecruitingControllerTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division'   => $division->slug,
-                'member_id'  => 88888,
-                'forum_name' => 'TransferTestRecruit',
-                'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $platoon->id,
+                'division'    => $division->slug,
+                'member_id'   => 88888,
+                'forum_name'  => 'TransferTestRecruit',
+                'rank'        => Rank::RECRUIT->value,
+                'platoon'     => $platoon->id,
+                'ingame_name' => 'GameHandle',
             ]);
 
         $this->assertDatabaseHas('transfers', [
@@ -239,11 +241,12 @@ class RecruitingControllerTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division'   => $division->slug,
-                'member_id'  => 77777,
-                'forum_name' => 'RankTestRecruit',
-                'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $platoon->id,
+                'division'    => $division->slug,
+                'member_id'   => 77777,
+                'forum_name'  => 'RankTestRecruit',
+                'rank'        => Rank::RECRUIT->value,
+                'platoon'     => $platoon->id,
+                'ingame_name' => 'GameHandle',
             ]);
 
         $this->assertDatabaseHas('rank_actions', [
@@ -264,11 +267,12 @@ class RecruitingControllerTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->postJson(route('recruiting.addMember'), [
-                'division'   => $division->slug,
-                'member_id'  => 66666,
-                'forum_name' => 'DuplicateTestRecruit',
-                'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $platoon->id,
+                'division'    => $division->slug,
+                'member_id'   => 66666,
+                'forum_name'  => 'DuplicateTestRecruit',
+                'rank'        => Rank::RECRUIT->value,
+                'platoon'     => $platoon->id,
+                'ingame_name' => 'GameHandle',
             ]);
 
         $response->assertStatus(409);
@@ -314,11 +318,12 @@ class RecruitingControllerTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division'   => $division->slug,
-                'member_id'  => $exMember->clan_id,
-                'forum_name' => 'ReturningMember',
-                'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $platoon->id,
+                'division'    => $division->slug,
+                'member_id'   => $exMember->clan_id,
+                'forum_name'  => 'ReturningMember',
+                'rank'        => Rank::RECRUIT->value,
+                'platoon'     => $platoon->id,
+                'ingame_name' => 'GameHandle',
             ]);
 
         $this->assertDatabaseHas('members', [
@@ -493,6 +498,52 @@ class RecruitingControllerTest extends TestCase
     }
 
     #[Test]
+    public function submit_recruitment_rejects_a_blank_ingame_name_when_the_division_requires_a_handle(): void
+    {
+        $handle   = Handle::create(['label' => 'Steam']);
+        $officer  = $this->createOfficer();
+        $division = $this->createActiveDivision(['handle_id' => $handle->id]);
+        $platoon  = $this->createPlatoon($division);
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'   => $division->slug,
+                'member_id'  => 22222,
+                'forum_name' => 'NoHandleRecruit',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+            ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('ingame_name');
+        $response->assertJson(['message' => 'A Steam handle is required for this division.']);
+        $this->assertDatabaseMissing('members', ['clan_id' => 22222]);
+    }
+
+    #[Test]
+    public function submit_recruitment_allows_a_blank_ingame_name_when_the_division_has_no_required_handle(): void
+    {
+        // `divisions.handle_id` has no DB-level foreign key, so a dangling
+        // reference (e.g. its Handle row was deleted) is a real, if rare, state
+        // — and the closest this schema gets to "no handle required".
+        $officer  = $this->createOfficer();
+        $division = $this->createActiveDivision(['handle_id' => 999999]);
+        $platoon  = $this->createPlatoon($division);
+
+        $response = $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'   => $division->slug,
+                'member_id'  => 23456,
+                'forum_name' => 'NoHandleRequiredRecruit',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+            ]);
+
+        $response->assertSuccessful();
+        $this->assertDatabaseHas('members', ['clan_id' => 23456, 'name' => 'NoHandleRequiredRecruit']);
+    }
+
+    #[Test]
     public function submit_discord_recruitment_rejects_concurrent_duplicate_submission(): void
     {
         $officer     = $this->createOfficer();
@@ -613,6 +664,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'NewForumName',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
+                'ingame_name'     => 'GameHandle',
             ]);
 
         $this->assertDatabaseHas('members', [
@@ -651,6 +703,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'DiscordRecruit',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
+                'ingame_name'     => 'GameHandle',
             ]);
     }
 
@@ -674,6 +727,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'MissingForumRecruit',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
+                'ingame_name'     => 'GameHandle',
             ]);
 
         $response->assertStatus(422);
