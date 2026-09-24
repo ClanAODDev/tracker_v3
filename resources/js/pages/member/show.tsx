@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import { ListOrdered, TriangleAlert, Wrench } from 'lucide-react';
+import { ListOrdered, Pencil, TriangleAlert, Wrench } from 'lucide-react';
 import { useState } from 'react';
 
 import { MemberFieldBadges, type FieldBadgeData } from '@/components/member/field-badges';
@@ -48,7 +48,7 @@ interface MemberShowProps {
     tags: DisplayTag[];
     tagManagement: TagManagement | null;
     breadcrumbs: Array<{ label: string; href?: string }>;
-    notices: Array<{ type: string; message: string; ctaLabel?: string; ctaUrl?: string }>;
+    notices: Array<{ type: string; message: string; ctaLabel?: string; ctaUrl?: string; ctaAction?: string }>;
     canCreateNote: boolean;
     canViewTrashed: boolean;
     noteTypes: Record<string, string>;
@@ -77,6 +77,7 @@ export default function MemberShow(props: MemberShowProps) {
     const [remindersOpen, setRemindersOpen] = useState(false);
     const [historyOpen, setHistoryOpen] = useState(false);
     const [notesOpen, setNotesOpen] = useState(false);
+    const [handleEditorOpen, setHandleEditorOpen] = useState(false);
 
     const statusLabel =
         member.status === 'pending'
@@ -144,10 +145,17 @@ export default function MemberShow(props: MemberShowProps) {
                             >
                                 <TriangleAlert className="size-4 shrink-0 text-warning" />
                                 <span className="flex-1">{notice.message}</span>
-                                {notice.ctaLabel && notice.ctaUrl && (
-                                    <Button size="xs" variant="outline" asChild>
-                                        <a href={notice.ctaUrl}>{notice.ctaLabel}</a>
+                                {notice.ctaLabel && notice.ctaAction === 'edit-handles' ? (
+                                    <Button size="xs" variant="outline" onClick={() => setHandleEditorOpen(true)}>
+                                        {notice.ctaLabel}
                                     </Button>
+                                ) : (
+                                    notice.ctaLabel &&
+                                    notice.ctaUrl && (
+                                        <Button size="xs" variant="outline" asChild>
+                                            <a href={notice.ctaUrl}>{notice.ctaLabel}</a>
+                                        </Button>
+                                    )
                                 )}
                             </div>
                         ))}
@@ -186,11 +194,22 @@ export default function MemberShow(props: MemberShowProps) {
                 {awards.list.length > 0 && <Achievements awards={awards} />}
 
                 {(handles.discord || handles.groups.length > 0 || detailsManagement?.canEditHandles) && (
-                    <HandlesSection handles={handles} editAction={<HandleEditor management={detailsManagement} />} />
+                    <HandlesSection
+                        handles={handles}
+                        editAction={
+                            detailsManagement?.canEditHandles ? (
+                                <Button size="xs" variant="ghost" onClick={() => setHandleEditorOpen(true)}>
+                                    <Pencil /> Edit
+                                </Button>
+                            ) : undefined
+                        }
+                    />
                 )}
 
                 {(divisions.current || divisions.partTime.length > 0) && <DivisionsSection divisions={divisions} />}
             </div>
+
+            <HandleEditor management={detailsManagement} open={handleEditorOpen} onOpenChange={setHandleEditorOpen} />
 
             {canCreateNote && (
                 <NotesDialog

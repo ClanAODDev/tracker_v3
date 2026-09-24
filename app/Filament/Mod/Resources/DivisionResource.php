@@ -310,6 +310,20 @@ class DivisionResource extends Resource
                                             ->label('Part‑Time Member Removal'),
                                     ]),
 
+                                Section::make('Leave of Absence')
+                                    ->statePath('settings.chat_alerts')
+                                    ->columns(3)
+                                    ->schema([
+                                        Select::make('loa_expiring')
+                                            ->options($channelOptions)
+                                            ->default(false)
+                                            ->label('LOA Expiring Soon (3 days out)'),
+                                        Select::make('loa_expired')
+                                            ->options($channelOptions)
+                                            ->default(false)
+                                            ->label('LOA Expired'),
+                                    ]),
+
                                 Section::make('Administrative Updates')
                                     ->statePath('settings.chat_alerts')
                                     ->columns(3)

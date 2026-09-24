@@ -7,8 +7,10 @@ use App\Enums\Rank;
 use App\Models\ActivityReminder;
 use App\Models\Award;
 use App\Models\DivisionMemberField;
+use App\Models\Handle;
 use App\Models\MemberAward;
 use App\Models\Note;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
@@ -314,5 +316,29 @@ class MemberProfileTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('detailsManagement.canEditHandles', true));
+    }
+
+    #[Test]
+    public function missing_required_handle_notice_opens_the_inline_editor_instead_of_linking_to_operations()
+    {
+        $requiredHandle = Handle::factory()->create();
+        $division       = $this->createActiveDivision(['handle_id' => $requiredHandle->id]);
+        $platoon        = $this->createPlatoon($division);
+        $squad          = $this->createSquad($platoon);
+        $leader         = $this->createSquadLeader($squad);
+        $viewer         = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
+        $member         = $this->createMember([
+            'division_id' => $division->id,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => $squad->id,
+        ]);
+
+        $this->actingAs($viewer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('notices', fn ($notices) => collect($notices)->contains(
+                    fn ($n) => ($n['ctaAction'] ?? null) === 'edit-handles' && ! isset($n['ctaUrl'])
+                )));
     }
 }

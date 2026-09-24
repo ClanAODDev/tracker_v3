@@ -5,6 +5,7 @@ use App\Console\Commands\DivisionCensus;
 use App\Console\Commands\FetchApplicationFeeds;
 use App\Console\Commands\LeaderboardSnapshot;
 use App\Console\Commands\MemberSync;
+use App\Console\Commands\NotifyExpiringLeaves;
 use App\Console\Commands\NotifyMilestoneAwards;
 use App\Jobs\CleanupUnassignedLeaders;
 use App\Jobs\PartTimeMemberCleanup;
@@ -36,6 +37,10 @@ Schedule::command(LeaderboardSnapshot::class)->weekly()
 Schedule::command(NotifyMilestoneAwards::class)->lastDayOfMonth('08:00')
     ->description('Send Discord notifications for milestone award recipients')
     ->when(fn () => scheduledTaskEnabled('tracker:notify-milestone-awards'));
+
+Schedule::command(NotifyExpiringLeaves::class)->dailyAt('15:00')
+    ->description('Notify division channels of leaves of absence expiring soon or just expired')
+    ->when(fn () => scheduledTaskEnabled('tracker:notify-expiring-loas'));
 
 Schedule::job(new ResetOrphanedUnitAssignments)->weekly()
     ->monitorName('reset-orphaned-unit-assignments')
