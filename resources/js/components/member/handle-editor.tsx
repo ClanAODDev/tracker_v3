@@ -1,19 +1,11 @@
 import { router } from '@inertiajs/react';
-import { Pencil, Plus, Trash2 } from 'lucide-react';
-import { useState } from 'react';
+import { Plus, Trash2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { SimpleSelect } from '@/components/ui/simple-select';
 import { postJson } from '@/lib/api';
@@ -32,19 +24,27 @@ interface HandleRow {
     primary: boolean;
 }
 
-export function HandleEditor({ management }: { management: DetailsManagement | null }) {
-    const [open, setOpen] = useState(false);
+export function HandleEditor({
+    management,
+    open,
+    onOpenChange,
+}: {
+    management: DetailsManagement | null;
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}) {
     const [saving, setSaving] = useState(false);
     const [handles, setHandles] = useState<HandleRow[]>([]);
+
+    useEffect(() => {
+        if (open && management) {
+            setHandles(management.handles.map((h) => ({ id: h.id, handleId: h.handleId, value: h.value, primary: h.primary })));
+        }
+    }, [open, management]);
 
     if (!management || !management.canEditHandles) {
         return null;
     }
-
-    const openDialog = () => {
-        setHandles(management.handles.map((h) => ({ id: h.id, handleId: h.handleId, value: h.value, primary: h.primary })));
-        setOpen(true);
-    };
 
     const addHandleRow = () =>
         setHandles((prev) => [...prev, { id: null, handleId: null, value: '', primary: prev.length === 0 }]);
@@ -62,7 +62,7 @@ export function HandleEditor({ management }: { management: DetailsManagement | n
             };
             await postJson(management.saveUrl, payload);
             toast.success('Handles updated');
-            setOpen(false);
+            onOpenChange(false);
             router.reload({ only: ['handles', 'detailsManagement'] });
         } catch (e) {
             toast.error(e instanceof Error ? e.message : 'Failed to save handles');
@@ -72,12 +72,7 @@ export function HandleEditor({ management }: { management: DetailsManagement | n
     };
 
     return (
-        <Dialog open={open} onOpenChange={(v) => (v ? openDialog() : setOpen(false))}>
-            <DialogTrigger asChild>
-                <Button size="xs" variant="ghost">
-                    <Pencil /> Edit
-                </Button>
-            </DialogTrigger>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-lg">
                 <DialogHeader>
                     <DialogTitle>Edit handles</DialogTitle>
@@ -117,7 +112,7 @@ export function HandleEditor({ management }: { management: DetailsManagement | n
                 </Button>
 
                 <DialogFooter>
-                    <Button variant="outline" onClick={() => setOpen(false)}>
+                    <Button variant="outline" onClick={() => onOpenChange(false)}>
                         Cancel
                     </Button>
                     <Button onClick={save} disabled={saving}>

@@ -337,12 +337,12 @@ class MemberProfileData
             ];
         }
 
-        if ($user->can('update', $member) && $division?->handle && ! $member->handles->contains($division->handle)) {
+        if ($user->can('manageHandles', $member) && $division?->handle && ! $member->handles->contains($division->handle)) {
             $notices[] = [
-                'type'     => 'warning',
-                'message'  => "The {$division->name} division requires a {$division->handle->label} handle, but {$member->name} does not have one.",
-                'ctaLabel' => 'Add handle',
-                'ctaUrl'   => route('filament.mod.resources.members.edit', $member) . '#ingame-handles',
+                'type'      => 'warning',
+                'message'   => "The {$division->name} division requires a {$division->handle->label} handle, but {$member->name} does not have one.",
+                'ctaLabel'  => 'Add handle',
+                'ctaAction' => 'edit-handles',
             ];
         }
 
