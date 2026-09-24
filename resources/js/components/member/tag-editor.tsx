@@ -44,8 +44,9 @@ interface AvailableTag {
 }
 
 const VISIBILITY_CLASS: Record<string, string> = {
-    senior_leader: 'border-primary/40 text-primary',
-    leadership: 'border-warning/40 text-warning',
+    public: 'bg-muted text-muted-foreground',
+    senior_leader: 'bg-primary/15 text-primary',
+    leadership: 'bg-warning/15 text-warning',
 };
 
 export function MemberTagEditor({ tags, management }: { tags: DisplayTag[]; management: TagManagement | null }) {
