@@ -129,8 +129,10 @@ export default function MemberShow(props: MemberShowProps) {
             <div className="tron-stagger space-y-8">
                 <div className="flex flex-wrap items-center gap-3">
                     {member.avatarUrl && <img src={member.avatarUrl} alt="" className="size-12 rounded-full" />}
-                    <MemberTagEditor tags={tags} management={tagManagement} />
-                    <MemberFieldBadges fields={customFields} management={detailsManagement} />
+                    <div className="flex flex-col gap-1">
+                        <MemberTagEditor tags={tags} management={tagManagement} />
+                        <MemberFieldBadges fields={customFields} management={detailsManagement} />
+                    </div>
                 </div>
 
                 {notices.length > 0 && (
