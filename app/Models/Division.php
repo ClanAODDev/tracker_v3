@@ -363,7 +363,7 @@ class Division extends Model
 
     public function memberFields(): HasMany
     {
-        return $this->hasMany(DivisionMemberField::class)->orderBy('display_order');
+        return $this->hasMany(DivisionMemberField::class)->orderBy('label');
     }
 
     public function applications(): HasMany

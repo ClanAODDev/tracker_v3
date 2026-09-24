@@ -30,6 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->brandName('Admin')
             ->favicon(asset('images/logo-tron.svg'))
             ->colors([
                 'primary' => '#e11d2e',
