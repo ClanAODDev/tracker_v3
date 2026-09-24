@@ -45,14 +45,14 @@ class HandleResourceTest extends TestCase
 
         Livewire::test(CreateHandle::class)
             ->fillForm([
-                'label' => 'Steam',
-                'type'  => 'steam',
+                'label' => 'Rejected Pattern Test',
+                'type'  => 'rejected-pattern-test',
                 'regex' => 'not a valid pattern [',
             ])
             ->call('create')
             ->assertHasFormErrors(['regex']);
 
-        $this->assertDatabaseMissing('handles', ['label' => 'Steam']);
+        $this->assertDatabaseMissing('handles', ['label' => 'Rejected Pattern Test']);
     }
 
     #[Test]
