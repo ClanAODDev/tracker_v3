@@ -4,6 +4,7 @@ namespace Tests\Unit\Policies;
 
 use App\Enums\Rank;
 use App\Enums\Role;
+use App\Models\User;
 use App\Policies\MemberPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -308,44 +309,117 @@ class MemberPolicyTest extends TestCase
     }
 
     #[Test]
-    public function member_can_manage_own_handles_via_policy()
+    public function member_can_always_manage_own_handles()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
 
         $this->actingAs($user);
-        $this->assertTrue($this->policy->manageIngameHandles($user, $user->member));
+        $this->assertTrue($this->policy->manageHandles($user, $user->member));
     }
 
     #[Test]
-    public function officer_can_manage_handles_within_own_division()
+    public function member_cannot_manage_own_fields_unless_division_opts_in()
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+
+        $this->actingAs($user);
+        $this->assertFalse($this->policy->manageFields($user, $user->member));
+
+        $division->settings()->set('allow_member_field_self_edit', true);
+        $user->member->refresh();
+        $user->member->division->refresh();
+
+        $this->assertTrue($this->policy->manageFields($user, $user->member));
+    }
+
+    #[Test]
+    public function officer_can_manage_handles_and_fields_within_own_division()
     {
         $officer = $this->createOfficer();
         $member  = $this->createMember(['division_id' => $officer->member->division_id]);
 
         $this->actingAs($officer);
-        $this->assertTrue($this->policy->manageIngameHandles($officer, $member));
+        $this->assertTrue($this->policy->manageHandles($officer, $member));
+        $this->assertTrue($this->policy->manageFields($officer, $member));
     }
 
     #[Test]
-    public function officer_cannot_manage_handles_in_different_division()
+    public function officer_cannot_manage_handles_or_fields_in_different_division()
     {
         $officer       = $this->createOfficer();
         $otherDivision = $this->createActiveDivision();
         $member        = $this->createMember(['division_id' => $otherDivision->id]);
 
         $this->actingAs($officer);
-        $this->assertFalse($this->policy->manageIngameHandles($officer, $member));
+        $this->assertFalse($this->policy->manageHandles($officer, $member));
+        $this->assertFalse($this->policy->manageFields($officer, $member));
     }
 
     #[Test]
-    public function member_cannot_manage_others_handles()
+    public function member_cannot_manage_others_handles_or_fields()
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
         $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($user);
-        $this->assertFalse($this->policy->manageIngameHandles($user, $member));
+        $this->assertFalse($this->policy->manageHandles($user, $member));
+        $this->assertFalse($this->policy->manageFields($user, $member));
+    }
+
+    #[Test]
+    public function squad_leader_can_manage_handles_and_fields_for_member_in_their_squad()
+    {
+        $squad  = $this->createSquad();
+        $leader = $this->createSquadLeader($squad);
+        $user   = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
+        $member = $this->createMember(['division_id' => $squad->platoon->division_id, 'squad_id' => $squad->id]);
+
+        $this->actingAs($user);
+        $this->assertTrue($this->policy->manageHandles($user, $member));
+        $this->assertTrue($this->policy->manageFields($user, $member));
+    }
+
+    #[Test]
+    public function squad_leader_cannot_manage_handles_or_fields_for_member_in_a_different_squad()
+    {
+        $squad      = $this->createSquad();
+        $otherSquad = $this->createSquad();
+        $leader     = $this->createSquadLeader($squad);
+        $user       = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
+        $member     = $this->createMember(['division_id' => $otherSquad->platoon->division_id, 'squad_id' => $otherSquad->id]);
+
+        $this->actingAs($user);
+        $this->assertFalse($this->policy->manageHandles($user, $member));
+        $this->assertFalse($this->policy->manageFields($user, $member));
+    }
+
+    #[Test]
+    public function platoon_leader_can_manage_handles_and_fields_for_member_in_their_platoon()
+    {
+        $platoon = $this->createPlatoon();
+        $leader  = $this->createPlatoonLeader($platoon);
+        $user    = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
+        $member  = $this->createMember(['division_id' => $platoon->division_id, 'platoon_id' => $platoon->id]);
+
+        $this->actingAs($user);
+        $this->assertTrue($this->policy->manageHandles($user, $member));
+        $this->assertTrue($this->policy->manageFields($user, $member));
+    }
+
+    #[Test]
+    public function platoon_leader_cannot_manage_handles_or_fields_for_member_in_a_different_platoon()
+    {
+        $platoon      = $this->createPlatoon();
+        $otherPlatoon = $this->createPlatoon();
+        $leader       = $this->createPlatoonLeader($platoon);
+        $user         = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
+        $member       = $this->createMember(['division_id' => $otherPlatoon->division_id, 'platoon_id' => $otherPlatoon->id]);
+
+        $this->actingAs($user);
+        $this->assertFalse($this->policy->manageHandles($user, $member));
+        $this->assertFalse($this->policy->manageFields($user, $member));
     }
 }

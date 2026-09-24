@@ -415,7 +415,7 @@ class MemberResource extends Resource
                 Action::make('manageHandles')
                     ->label('Handles')
                     ->icon('heroicon-o-identification')
-                    ->visible(fn (Member $record): bool => auth()->user()->can('manageIngameHandles', $record))
+                    ->visible(fn (Member $record): bool => auth()->user()->can('manageHandles', $record))
                     ->fillForm(fn (Member $record): array => [
                         'handleGroups' => IngameHandlesForm::getGroupedHandles($record),
                     ])

@@ -124,6 +124,9 @@ class DivisionResource extends Resource
                                                 Rank::PRIVATE_FIRST_CLASS->value => Rank::PRIVATE_FIRST_CLASS->getLabel(),
                                             ])
                                             ->helperText('Highest rank PLs can promote to without approval'),
+                                        Toggle::make('settings.allow_member_field_self_edit')
+                                            ->label('Allow Self-Editing Member Fields')
+                                            ->helperText('Let members edit their own custom field values (e.g. class/role) from their profile, without needing a leader'),
                                     ]),
 
                                 Section::make('Locality')

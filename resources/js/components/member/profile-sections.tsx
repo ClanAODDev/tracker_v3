@@ -25,6 +25,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import { fieldBadgeClass } from '@/lib/field-colors';
 import { cn } from '@/lib/utils';
 
 export interface NoteSummary {
@@ -531,10 +532,37 @@ function HandleCard({
     );
 }
 
-export function HandlesSection({ handles }: { handles: HandlesData }) {
+export interface CustomFieldDisplay {
+    label: string;
+    value: string;
+    color: string | null;
+}
+
+export function HandlesSection({
+    handles,
+    customFields = [],
+    editAction,
+}: {
+    handles: HandlesData;
+    customFields?: CustomFieldDisplay[];
+    editAction?: ReactNode;
+}) {
     return (
         <section>
-            <SectionTitle>Handles</SectionTitle>
+            <SectionTitle action={editAction}>Handles</SectionTitle>
+            {customFields.length > 0 && (
+                <div className="mb-3 flex flex-wrap gap-1.5">
+                    {customFields.map((field) => (
+                        <span
+                            key={field.label}
+                            className={cn('rounded px-1.5 py-0.5 text-[11px]', fieldBadgeClass(field.color))}
+                            title={field.label}
+                        >
+                            {field.label}: {field.value}
+                        </span>
+                    ))}
+                </div>
+            )}
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {handles.discord && (
                     <HandleCard

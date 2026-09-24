@@ -2,6 +2,7 @@ import { Head } from '@inertiajs/react';
 import { ListOrdered, TriangleAlert, Wrench } from 'lucide-react';
 import { useState } from 'react';
 
+import { MemberDetailsEditor, type DetailsManagement } from '@/components/member/details-editor';
 import { NotesDialog, type MemberNote } from '@/components/member/notes';
 import {
     RankHistoryDialog,
@@ -17,6 +18,7 @@ import {
     ProfileStats,
     type AwardsData,
     type ComparisonData,
+    type CustomFieldDisplay,
     type DivisionsData,
     type HandlesData,
     type ProfileStatsData,
@@ -59,6 +61,8 @@ interface MemberShowProps {
     divisions: DivisionsData;
     notes: MemberNote[];
     trashedNotes: MemberNote[];
+    customFields: CustomFieldDisplay[];
+    detailsManagement: DetailsManagement | null;
 }
 
 export default function MemberShow(props: MemberShowProps) {
@@ -66,6 +70,7 @@ export default function MemberShow(props: MemberShowProps) {
         props;
     const { divisionComparison, handles, divisions, notes, trashedNotes, noteTypes, canViewTrashed, canCreateNote } =
         props;
+    const { customFields, detailsManagement } = props;
 
     const [tenureOpen, setTenureOpen] = useState(false);
     const [recruitsOpen, setRecruitsOpen] = useState(false);
@@ -177,7 +182,13 @@ export default function MemberShow(props: MemberShowProps) {
 
                 {awards.list.length > 0 && <Achievements awards={awards} />}
 
-                {(handles.discord || handles.groups.length > 0) && <HandlesSection handles={handles} />}
+                {(handles.discord || handles.groups.length > 0 || customFields.length > 0 || detailsManagement) && (
+                    <HandlesSection
+                        handles={handles}
+                        customFields={customFields}
+                        editAction={<MemberDetailsEditor management={detailsManagement} />}
+                    />
+                )}
 
                 {(divisions.current || divisions.partTime.length > 0) && <DivisionsSection divisions={divisions} />}
             </div>

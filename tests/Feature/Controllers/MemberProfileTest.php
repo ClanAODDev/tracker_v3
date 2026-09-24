@@ -2,9 +2,11 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\DivisionMemberFieldType;
 use App\Enums\Rank;
 use App\Models\ActivityReminder;
 use App\Models\Award;
+use App\Models\DivisionMemberField;
 use App\Models\MemberAward;
 use App\Models\Note;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -198,5 +200,69 @@ class MemberProfileTest extends TestCase
                 ->has('awards.list', 2)
                 ->where('awards.list.0.name', 'Newer Award')
                 ->where('awards.list.1.name', 'Older Award'));
+    }
+
+    #[Test]
+    public function custom_field_values_are_shown_to_any_viewer()
+    {
+        $viewer   = $this->createMemberWithUser();
+        $division = $viewer->member->division;
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $field    = DivisionMemberField::create([
+            'division_id' => $division->id,
+            'key'         => 'role',
+            'label'       => 'Role',
+            'type'        => DivisionMemberFieldType::SELECT,
+            'options'     => [['value' => 'Tank', 'color' => 'blue']],
+        ]);
+        $member->fieldValues()->create(['division_member_field_id' => $field->id, 'value' => 'Tank']);
+
+        $this->actingAs($viewer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('customFields.0.label', 'Role')
+                ->where('customFields.0.value', 'Tank')
+                ->where('customFields.0.color', 'blue'));
+    }
+
+    #[Test]
+    public function details_management_is_null_for_an_unrelated_viewer()
+    {
+        $viewer = $this->createMemberWithUser();
+        $member = $this->createMember();
+
+        $this->actingAs($viewer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('detailsManagement', null));
+    }
+
+    #[Test]
+    public function details_management_allows_handle_editing_on_your_own_profile()
+    {
+        $viewer = $this->createMemberWithUser();
+
+        $this->actingAs($viewer)
+            ->get(route('member', $viewer->member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('detailsManagement.canEditHandles', true)
+                ->where('detailsManagement.canEditFields', false));
+    }
+
+    #[Test]
+    public function details_management_allows_full_editing_for_a_senior_leader()
+    {
+        $viewer = $this->createSeniorLeader();
+        $member = $this->createMember(['division_id' => $viewer->member->division_id]);
+
+        $this->actingAs($viewer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('detailsManagement.canEditHandles', true)
+                ->where('detailsManagement.canEditFields', true));
     }
 }

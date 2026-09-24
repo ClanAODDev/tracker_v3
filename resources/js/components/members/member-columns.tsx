@@ -8,6 +8,7 @@ import type { MemberFieldDefinition, MemberRow } from '@/components/members/type
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { postJson } from '@/lib/api';
+import { fieldBadgeClass } from '@/lib/field-colors';
 import { cn } from '@/lib/utils';
 
 const DOT_TINT = ['bg-success', 'bg-warning', 'bg-destructive', 'bg-muted-foreground'] as const;
@@ -26,17 +27,6 @@ interface Options {
 export function fieldColumnId(key: string): string {
     return `field:${key}`;
 }
-
-const FIELD_BADGE_COLORS: Record<string, string> = {
-    gray: 'bg-muted text-muted-foreground',
-    red: 'bg-chart-1/15 text-chart-1',
-    orange: 'bg-rarity-legendary/15 text-rarity-legendary',
-    yellow: 'bg-chart-3/15 text-chart-3',
-    green: 'bg-chart-4/15 text-chart-4',
-    blue: 'bg-chart-2/15 text-chart-2',
-    violet: 'bg-chart-5/15 text-chart-5',
-    pink: 'bg-rarity-epic/15 text-rarity-epic',
-};
 
 export function useMemberColumns({
     assignmentLabel,
@@ -293,7 +283,7 @@ export function useMemberColumns({
                         if (field.type !== 'select') {
                             return <span className="text-muted-foreground">{value}</span>;
                         }
-                        const colorClass = FIELD_BADGE_COLORS[field.colors[value] ?? 'gray'] ?? FIELD_BADGE_COLORS.gray;
+                        const colorClass = fieldBadgeClass(field.colors[value] ?? null);
                         return (
                             <span className={cn('rounded px-1.5 py-0.5 text-[11px]', colorClass)}>{value}</span>
                         );

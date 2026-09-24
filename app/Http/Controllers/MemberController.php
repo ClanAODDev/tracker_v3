@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Data\MemberProfileData;
 use App\Enums\ActivityType;
+use App\Filament\Forms\Components\DivisionMemberFieldsForm;
+use App\Filament\Forms\Components\IngameHandlesForm;
+use App\Http\Requests\Member\UpdateMemberDetails;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Repositories\MemberRepository;
@@ -62,6 +65,19 @@ class MemberController extends Controller
             'member/show',
             MemberProfileData::for($member, $this->memberRepository, $this->rankTimelineService)->toArray(),
         );
+    }
+
+    public function updateDetails(UpdateMemberDetails $request, Member $member): JsonResponse
+    {
+        if ($request->user()->can('manageHandles', $member)) {
+            IngameHandlesForm::saveHandles($member, $request->input('handles', []));
+        }
+
+        if ($request->user()->can('manageFields', $member)) {
+            DivisionMemberFieldsForm::saveValues($member, $request->input('fields', []));
+        }
+
+        return response()->json(['success' => true]);
     }
 
     #[Authorize('recruit', Member::class)]

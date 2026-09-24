@@ -15,7 +15,6 @@ class MemberPolicy
 
     public function before(User $user)
     {
-        // MSgts, SGTs, developers have access to all members
         if ($user->isRole('admin') || $user->isDeveloper()) {
             return true;
         }
@@ -160,12 +159,67 @@ class MemberPolicy
         return true;
     }
 
-    public function manageIngameHandles(User $user, Member $member): bool
+    /**
+     * Can the user manage this member's in-game handles?
+     *
+     * Always allowed for the member themselves, plus sr_ldr for anyone, officers
+     * within the member's own division, and squad/platoon leaders for members in
+     * their own squad/platoon respectively.
+     */
+    public function manageHandles(User $user, Member $member): bool
     {
-        if ($member->id === $user->member_id || $user->isRole('sr_ldr')) {
+        if ($member->id === $user->member_id) {
             return true;
         }
 
-        return $user->isRole('officer') && $user->member?->division_id === $member->division_id;
+        return $this->isLeaderOf($user, $member);
+    }
+
+    /**
+     * Can the user manage this member's division-defined field values?
+     *
+     * Self-editing is only allowed when the member's division has opted in via
+     * its `allow_member_field_self_edit` setting; otherwise the same leadership
+     * tiers as manageHandles() apply.
+     */
+    public function manageFields(User $user, Member $member): bool
+    {
+        if ($member->id === $user->member_id) {
+            return (bool) $member->division?->settings()->get('allow_member_field_self_edit', false);
+        }
+
+        return $this->isLeaderOf($user, $member);
+    }
+
+    /**
+     * Shared leadership check for manageHandles()/manageFields(): sr_ldr for
+     * anyone, officers within the member's own division, and squad/platoon
+     * leaders for members in their own squad/platoon respectively.
+     */
+    private function isLeaderOf(User $user, Member $member): bool
+    {
+        if ($user->isRole('sr_ldr')) {
+            return true;
+        }
+
+        $userMember = $user->member;
+
+        if (! $userMember) {
+            return false;
+        }
+
+        if ($user->isRole('officer') && $userMember->division_id === $member->division_id) {
+            return true;
+        }
+
+        if ($member->squad_id && $member->squad && $userMember->isSquadLeader($member->squad)) {
+            return true;
+        }
+
+        if ($member->platoon_id && $member->platoon && $userMember->isPlatoonLeader($member->platoon)) {
+            return true;
+        }
+
+        return false;
     }
 }

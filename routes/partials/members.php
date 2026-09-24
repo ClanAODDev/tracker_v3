@@ -21,6 +21,7 @@ Route::prefix('members')->group(function () {
         Route::get('{member}/confirm-reset', 'confirmUnassign')->name('member.confirm-reset');
         Route::post('{member}/unassign', 'unassignMember')->name('member.unassign');
         Route::post('{member}/assign-platoon', 'assignPlatoon')->name('member.assign-platoon');
+        Route::post('{member}/details', 'updateDetails')->name('member.update-details');
         Route::get('{member}-{slug?}', 'show')->name('member');
     });
 
