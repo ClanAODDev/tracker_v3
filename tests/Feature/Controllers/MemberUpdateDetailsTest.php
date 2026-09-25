@@ -194,6 +194,74 @@ class MemberUpdateDetailsTest extends TestCase
     }
 
     #[Test]
+    public function saving_a_field_does_not_clear_the_members_handles(): void
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $handle   = Handle::factory()->create(['enabled' => true, 'regex' => null]);
+        $field    = DivisionMemberField::create([
+            'division_id' => $division->id,
+            'key'         => 'class',
+            'label'       => 'Class',
+            'type'        => DivisionMemberFieldType::TEXT,
+        ]);
+        $member->handles()->attach($handle->id, ['value' => 'ExistingTag']);
+
+        $this->actingAs($officer)
+            ->postJson(route('member.update-details', $member->clan_id), [
+                'fields' => ['class' => 'Mage'],
+            ])
+            ->assertOk();
+
+        $this->assertDatabaseHas('handle_member', [
+            'member_id' => $member->id,
+            'handle_id' => $handle->id,
+            'value'     => 'ExistingTag',
+        ]);
+        $this->assertDatabaseHas('member_field_values', [
+            'member_id'                => $member->id,
+            'division_member_field_id' => $field->id,
+            'value'                    => 'Mage',
+        ]);
+    }
+
+    #[Test]
+    public function saving_handles_does_not_clear_the_members_fields(): void
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $handle   = Handle::factory()->create(['enabled' => true, 'regex' => null]);
+        $field    = DivisionMemberField::create([
+            'division_id' => $division->id,
+            'key'         => 'class',
+            'label'       => 'Class',
+            'type'        => DivisionMemberFieldType::TEXT,
+        ]);
+        $member->fieldValues()->create(['division_member_field_id' => $field->id, 'value' => 'Mage']);
+
+        $this->actingAs($officer)
+            ->postJson(route('member.update-details', $member->clan_id), [
+                'handles' => [
+                    ['handle_id' => $handle->id, 'value' => 'NewTag', 'primary' => true],
+                ],
+            ])
+            ->assertOk();
+
+        $this->assertDatabaseHas('handle_member', [
+            'member_id' => $member->id,
+            'handle_id' => $handle->id,
+            'value'     => 'NewTag',
+        ]);
+        $this->assertDatabaseHas('member_field_values', [
+            'member_id'                => $member->id,
+            'division_member_field_id' => $field->id,
+            'value'                    => 'Mage',
+        ]);
+    }
+
+    #[Test]
     public function a_select_field_rejects_a_value_outside_its_defined_options(): void
     {
         $officer  = $this->createOfficer();
