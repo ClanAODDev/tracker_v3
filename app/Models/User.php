@@ -73,6 +73,11 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         });
     }
 
+    public function getAuthPassword(): string
+    {
+        return '';
+    }
+
     public function getSettingsAttribute($value): array
     {
         $stored = is_string($value) ? json_decode($value, true) : ($value ?? []);
