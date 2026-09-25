@@ -59,7 +59,7 @@ class AwardNotificationServiceTest extends TestCase
 
         $this->service->notifyBulkApproval($awards);
 
-        Notification::assertSentToTimes($division, NotifyDivisionMemberAwardsBulk::class, 1);
+        Notification::assertSentToOnce($division, NotifyDivisionMemberAwardsBulk::class);
     }
 
     #[Test]
@@ -98,8 +98,8 @@ class AwardNotificationServiceTest extends TestCase
 
         $this->service->notifyBulkApproval($awards);
 
-        Notification::assertSentToTimes($divisionA, NotifyDivisionMemberAwardsBulk::class, 1);
-        Notification::assertSentToTimes($divisionB, NotifyDivisionMemberAwardsBulk::class, 1);
+        Notification::assertSentToOnce($divisionA, NotifyDivisionMemberAwardsBulk::class);
+        Notification::assertSentToOnce($divisionB, NotifyDivisionMemberAwardsBulk::class);
     }
 
     #[Test]

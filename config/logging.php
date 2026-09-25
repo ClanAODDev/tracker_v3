@@ -17,6 +17,16 @@ return [
 
     'default' => env('LOG_CHANNEL', 'stack'),
 
+    'redacted_query_columns' => [
+        'date_of_birth',
+        'email',
+        'forum_password',
+        'password',
+        'remember_token',
+        'session',
+        'token',
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Log Channels

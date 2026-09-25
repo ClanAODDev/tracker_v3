@@ -156,7 +156,7 @@ class NotifyExpiringLeavesTest extends TestCase
             ->assertSuccessful()
             ->expectsOutputToContain('Expiring flagged: 2');
 
-        Notification::assertSentToTimes($division, NotifyDivisionLoaExpiring::class, 1);
+        Notification::assertSentToOnce($division, NotifyDivisionLoaExpiring::class);
     }
 
     #[Test]

@@ -39,9 +39,7 @@ class MemberTransferController extends Controller
             return response()->json(['error' => 'You cannot transfer to your current division'], 400);
         }
 
-        $excludedTargetDivisions = Division::whereIn('name', ['Floater', "Bluntz' Reserves"])
-            ->pluck('id')
-            ->toArray();
+        $excludedTargetDivisions = Division::whereIn('name', ['Floater', "Bluntz' Reserves"])->modelKeys();
 
         if (in_array($targetDivision->id, $excludedTargetDivisions)) {
             return response()->json(['error' => 'You cannot transfer to this division'], 400);
