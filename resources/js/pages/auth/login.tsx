@@ -2,6 +2,7 @@ import { Head, useForm } from '@inertiajs/react';
 import { Clock, LockKeyhole } from 'lucide-react';
 import type { FormEvent } from 'react';
 
+import { LoginConstellation } from '@/components/auth/login-constellation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,17 +22,21 @@ export default function Login({ discordEnabled, expired }: LoginProps) {
     }
 
     return (
-        <BlankLayout>
+        <BlankLayout grid={false}>
             <Head title="Sign in" />
+            <LoginConstellation />
 
-            <div className="mx-auto flex min-h-[70vh] w-full max-w-sm flex-col justify-center">
+            <div className="relative z-10 mx-auto flex min-h-[70vh] w-full max-w-sm flex-col justify-center">
                 <div className="mb-8 flex items-center gap-3">
-                    <span className="flex size-10 items-center justify-center rounded-md border border-primary/40 bg-primary/10 text-primary tron-glow">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-sm border border-primary/40 bg-primary/10 text-primary tron-glow">
                         <LockKeyhole className="size-5" />
                     </span>
-                    <div>
+                    <div className="min-w-0 flex-1">
                         <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">AOD Tracker</p>
-                        <h1 className="text-lg font-semibold tracking-tight">Sign in</h1>
+                        <div className="flex items-center gap-3">
+                            <h1 className="text-lg font-semibold tracking-tight">Sign in</h1>
+                            <span className="tron-hatch h-3 flex-1" />
+                        </div>
                     </div>
                 </div>
 
@@ -42,7 +47,7 @@ export default function Login({ discordEnabled, expired }: LoginProps) {
                     </div>
                 )}
 
-                <form onSubmit={submit} className="tron-corners space-y-4 rounded-md border border-border bg-card p-6">
+                <form onSubmit={submit} className="tron-corners space-y-4 rounded-sm border border-border bg-card p-6">
                     <p className="text-sm text-muted-foreground">
                         Enter your <strong className="text-foreground">AOD forum credentials</strong>.
                     </p>
@@ -51,6 +56,7 @@ export default function Login({ discordEnabled, expired }: LoginProps) {
                         <Label htmlFor="username">Username</Label>
                         <Input
                             id="username"
+                            className="rounded-sm"
                             value={form.data.username}
                             onChange={(e) => form.setData('username', e.target.value)}
                             autoFocus
@@ -64,6 +70,7 @@ export default function Login({ discordEnabled, expired }: LoginProps) {
                         <Input
                             id="password"
                             type="password"
+                            className="rounded-sm"
                             value={form.data.password}
                             onChange={(e) => form.setData('password', e.target.value)}
                             autoComplete="current-password"
@@ -100,7 +107,7 @@ export default function Login({ discordEnabled, expired }: LoginProps) {
                                 Forgot
                             </a>
                         </div>
-                        <Button type="submit" disabled={form.processing}>
+                        <Button type="submit" className="rounded-sm" disabled={form.processing}>
                             {form.processing ? 'Signing in…' : 'Sign in'}
                         </Button>
                     </div>
@@ -109,7 +116,7 @@ export default function Login({ discordEnabled, expired }: LoginProps) {
                 {discordEnabled && (
                     <div className="mt-6 text-center">
                         <p className="mb-3 text-sm text-muted-foreground">or</p>
-                        <Button variant="outline" className="w-full" asChild>
+                        <Button variant="outline" className="w-full rounded-sm" asChild>
                             <a href="/auth/discord">Continue with Discord</a>
                         </Button>
                     </div>
