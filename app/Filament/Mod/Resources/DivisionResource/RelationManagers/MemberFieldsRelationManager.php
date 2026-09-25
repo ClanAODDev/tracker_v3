@@ -21,7 +21,7 @@ class MemberFieldsRelationManager extends RelationManager
 
     public function form(Schema $schema): Schema
     {
-        return $schema->components(DivisionMemberFieldForm::schema());
+        return $schema->components(DivisionMemberFieldForm::schema(division: $this->getOwnerRecord()));
     }
 
     public function table(Table $table): Table
@@ -33,7 +33,7 @@ class MemberFieldsRelationManager extends RelationManager
                 CreateAction::make()
                     ->visible(fn () => auth()->user()->can('create', [DivisionMemberField::class, $this->getOwnerRecord()]))
                     ->mutateFormDataUsing(function (array $data): array {
-                        $data['key'] = (string) str($data['label'])->slug('_');
+                        $data['key'] = DivisionMemberField::keyFor($data['label']);
 
                         return $data;
                     }),

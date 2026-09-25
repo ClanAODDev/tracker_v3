@@ -4,6 +4,9 @@ namespace App\Filament\Forms\Components;
 
 use App\Enums\DivisionMemberFieldColor;
 use App\Enums\DivisionMemberFieldType;
+use App\Models\Division;
+use App\Models\DivisionMemberField;
+use Closure;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -14,12 +17,20 @@ use Filament\Tables\Columns\TextColumn;
 
 class DivisionMemberFieldForm
 {
-    public static function schema(): array
+    public static function schema(?Division $division = null): array
     {
         return [
             TextInput::make('label')
                 ->required()
-                ->maxLength(255),
+                ->maxLength(255)
+                ->rule(
+                    fn (): Closure => function (string $attribute, mixed $value, Closure $fail) use ($division) {
+                        if ($division->memberFields()->where('key', DivisionMemberField::keyFor((string) $value))->exists()) {
+                            $fail('This division already has a member field with this name.');
+                        }
+                    },
+                    condition: fn (?DivisionMemberField $record) => $division !== null && $record === null,
+                ),
             Select::make('type')
                 ->options(DivisionMemberFieldType::options())
                 ->default(DivisionMemberFieldType::TEXT->value)

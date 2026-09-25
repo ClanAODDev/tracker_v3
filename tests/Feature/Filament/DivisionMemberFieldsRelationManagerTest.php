@@ -105,6 +105,73 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
     }
 
     #[Test]
+    public function creating_a_field_whose_key_already_exists_shows_a_validation_error(): void
+    {
+        $division = $this->createActiveDivision();
+        $co       = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'rank'        => Rank::CORPORAL,
+        ], [
+            'role' => Role::OFFICER,
+        ]);
+        DivisionMemberField::create([
+            'division_id' => $division->id,
+            'key'         => 'task_force',
+            'label'       => 'Task Force',
+            'type'        => DivisionMemberFieldType::TEXT,
+        ]);
+
+        $this->actingAs($co);
+
+        Livewire::test(MemberFieldsRelationManager::class, [
+            'ownerRecord' => $division,
+            'pageClass'   => EditDivision::class,
+        ])
+            ->callTableAction('create', data: [
+                'label' => 'Task-Force',
+                'type'  => DivisionMemberFieldType::TEXT->value,
+            ])
+            ->assertHasTableActionErrors(['label']);
+
+        $this->assertSame(1, DivisionMemberField::where('division_id', $division->id)->count());
+    }
+
+    #[Test]
+    public function the_same_field_key_can_exist_in_different_divisions(): void
+    {
+        $division      = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+        $co            = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'rank'        => Rank::CORPORAL,
+        ], [
+            'role' => Role::OFFICER,
+        ]);
+        DivisionMemberField::create([
+            'division_id' => $otherDivision->id,
+            'key'         => 'task_force',
+            'label'       => 'Task Force',
+            'type'        => DivisionMemberFieldType::TEXT,
+        ]);
+
+        $this->actingAs($co);
+
+        Livewire::test(MemberFieldsRelationManager::class, [
+            'ownerRecord' => $division,
+            'pageClass'   => EditDivision::class,
+        ])
+            ->callTableAction('create', data: [
+                'label' => 'Task Force',
+                'type'  => DivisionMemberFieldType::TEXT->value,
+            ])
+            ->assertHasNoTableActionErrors();
+
+        $this->assertDatabaseHas('division_member_fields', ['division_id' => $division->id, 'key' => 'task_force']);
+    }
+
+    #[Test]
     public function editing_a_field_cannot_change_its_key(): void
     {
         $division = $this->createActiveDivision();
