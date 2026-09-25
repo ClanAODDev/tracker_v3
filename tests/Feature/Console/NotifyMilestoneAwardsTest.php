@@ -116,7 +116,7 @@ class NotifyMilestoneAwardsTest extends TestCase
             ->expectsOutputToContain('Members flagged: 2')
             ->expectsOutputToContain('Divisions notified: 1');
 
-        Notification::assertSentToTimes($division, NotifyMilestoneAwardReminder::class, 1);
+        Notification::assertSentToOnce($division, NotifyMilestoneAwardReminder::class);
     }
 
     #[Test]
@@ -290,6 +290,6 @@ class NotifyMilestoneAwardsTest extends TestCase
             ->assertSuccessful()
             ->expectsOutputToContain('Members flagged: 4');
 
-        Notification::assertSentToTimes($division, NotifyMilestoneAwardReminder::class, 1);
+        Notification::assertSentToOnce($division, NotifyMilestoneAwardReminder::class);
     }
 }
