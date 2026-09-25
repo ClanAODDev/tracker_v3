@@ -37,6 +37,25 @@ class PartTimeMemberCleanupTest extends TestCase
     }
 
     #[Test]
+    public function cleans_up_every_member_when_results_span_multiple_chunks()
+    {
+        $division = $this->createActiveDivision();
+
+        $members = collect(range(1, 150))->map(function () use ($division) {
+            $member = $this->createMember(['division_id' => $division->id]);
+            $member->partTimeDivisions()->attach($division->id);
+
+            return $member;
+        });
+
+        (new PartTimeMemberCleanup)->handle();
+
+        $remaining = $members->filter(fn ($member) => $member->partTimeDivisions()->exists());
+
+        $this->assertCount(0, $remaining);
+    }
+
+    #[Test]
     public function keeps_part_time_entries_for_different_divisions()
     {
         $fullTimeDivision = $this->createActiveDivision();

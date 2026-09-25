@@ -19,7 +19,7 @@ class PartTimeMemberCleanup implements ShouldQueue
                 ->where('division_id', '>', 0)
                 ->whereHas('partTimeDivisions')
                 ->with('partTimeDivisions:id')
-                ->chunk(100, function ($members) {
+                ->chunkById(100, function ($members) {
                     foreach ($members as $member) {
                         $ptIds = $member->partTimeDivisions->pluck('id')->all();
 
