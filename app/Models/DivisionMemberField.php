@@ -30,6 +30,11 @@ class DivisionMemberField extends Model
         'self_editable' => 'boolean',
     ];
 
+    public static function keyFor(string $label): string
+    {
+        return (string) str($label)->slug('_');
+    }
+
     public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
