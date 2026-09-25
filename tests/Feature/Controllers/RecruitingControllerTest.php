@@ -521,11 +521,12 @@ class RecruitingControllerTest extends TestCase
     }
 
     #[Test]
-    public function submit_recruitment_allows_a_blank_ingame_name_when_the_division_has_no_required_handle(): void
+    public function submit_recruitment_rejects_a_blank_ingame_name_even_when_the_division_has_no_configured_handle(): void
     {
         // `divisions.handle_id` has no DB-level foreign key, so a dangling
         // reference (e.g. its Handle row was deleted) is a real, if rare, state
-        // — and the closest this schema gets to "no handle required".
+        // — the closest this schema gets to "no handle configured". An
+        // in-game name is still required regardless.
         $officer  = $this->createOfficer();
         $division = $this->createActiveDivision(['handle_id' => 999999]);
         $platoon  = $this->createPlatoon($division);
@@ -539,8 +540,9 @@ class RecruitingControllerTest extends TestCase
                 'platoon'    => $platoon->id,
             ]);
 
-        $response->assertSuccessful();
-        $this->assertDatabaseHas('members', ['clan_id' => 23456, 'name' => 'NoHandleRequiredRecruit']);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('ingame_name');
+        $this->assertDatabaseMissing('members', ['clan_id' => 23456]);
     }
 
     #[Test]

@@ -27,7 +27,7 @@ class SubmitRecruitmentRequest extends FormRequest
                     ?: $fail('Forum name cannot contain HTML special characters (< > & " \').'),
             ],
             'ingame_name' => [
-                $division?->handle ? 'required' : 'nullable',
+                'required',
                 'string',
                 'max:255',
                 new HandleFormat($division?->handle),
