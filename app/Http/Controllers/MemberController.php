@@ -69,11 +69,11 @@ class MemberController extends Controller
 
     public function updateDetails(UpdateMemberDetails $request, Member $member): JsonResponse
     {
-        if ($request->user()->can('manageHandles', $member)) {
+        if ($request->has('handles') && $request->user()->can('manageHandles', $member)) {
             IngameHandlesForm::saveHandles($member, $request->input('handles', []));
         }
 
-        if ($request->user()->can('manageFields', $member)) {
+        if ($request->has('fields') && $request->user()->can('manageFields', $member)) {
             DivisionMemberFieldsForm::saveValues($member, $request->input('fields', []));
         }
 
