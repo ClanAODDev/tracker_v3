@@ -9,6 +9,8 @@ use App\Http\Middleware\MustBeAdmin;
 use App\Http\Middleware\MustBeDeveloper;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\VerifyBotToken;
+use App\Support\QueryBindingRedactor;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -78,6 +80,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'password',
             'password_confirmation',
         ]);
+
+        $exceptions->context(fn (Throwable $e) => $e instanceof QueryException ? [
+            'sql'      => $e->getSql(),
+            'bindings' => (new QueryBindingRedactor(config('logging.redacted_query_columns', [])))
+                ->redact($e->getSql(), $e->getBindings()),
+        ] : []);
 
         $exceptions->render(function (InvalidSignatureException $e, Request $request) {
             if ($request->ajax() || $request->wantsJson()) {
