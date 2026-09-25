@@ -81,9 +81,7 @@ class IngameHandlesForm
 
     public static function saveHandles(Model $member, array $handles): void
     {
-        $existingIds = MemberHandle::where('member_id', $member->id)
-            ->pluck('id')
-            ->toArray();
+        $existingIds = MemberHandle::where('member_id', $member->id)->modelKeys();
 
         $formIds     = collect($handles)->pluck('id')->filter()->toArray();
         $idsToDelete = array_diff($existingIds, $formIds);

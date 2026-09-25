@@ -34,7 +34,7 @@ class SettingsController extends Controller
         ];
 
         if ($member) {
-            $excludedIds = Division::whereIn('name', self::EXCLUDED_DIVISIONS)->pluck('id')->all();
+            $excludedIds = Division::whereIn('name', self::EXCLUDED_DIVISIONS)->modelKeys();
             $pending     = $member->transfers()->pending()->with('division:id,name')->first();
 
             $payload['member'] = [
@@ -112,7 +112,7 @@ class SettingsController extends Controller
             return response()->json(['error' => 'No member record'], 400);
         }
 
-        $activeIds = Division::active()->pluck('id')->all();
+        $activeIds = Division::active()->modelKeys();
         $validIds  = array_values(array_intersect($request->input('divisions', []), $activeIds));
         $member->partTimeDivisions()->sync($validIds);
 

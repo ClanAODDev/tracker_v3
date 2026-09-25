@@ -40,7 +40,7 @@ class ClanActivityTrendsWidget extends ChartWidget
 
     protected function getData(): array
     {
-        $activeDivisionIds = Division::whereHas('members')->pluck('id');
+        $activeDivisionIds = Division::whereHas('members')->modelKeys();
         $days              = (int) ($this->filter ?? 30);
 
         $trends = Census::select(

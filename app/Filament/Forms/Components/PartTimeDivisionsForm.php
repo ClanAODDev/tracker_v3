@@ -52,8 +52,7 @@ class PartTimeDivisionsForm
 
     protected static function getValidOptions($member): array
     {
-        $excluded = Division::whereIn('name', ['Floater', "Bluntz' Reserves"])
-            ->pluck('id')->toArray();
+        $excluded = Division::whereIn('name', ['Floater', "Bluntz' Reserves"])->modelKeys();
 
         return Division::active()
             ->whereNotIn('id', $excluded)
@@ -76,7 +75,7 @@ class PartTimeDivisionsForm
     /** Helper to sync (only active divisions) */
     public static function sync($member, array $selectedIds): void
     {
-        $activeIds = Division::active()->pluck('id')->all();
+        $activeIds = Division::active()->modelKeys();
         $ids       = array_values(array_intersect($selectedIds, $activeIds));
         $member->partTimeDivisions()->sync($ids);
     }

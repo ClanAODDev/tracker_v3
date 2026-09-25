@@ -140,8 +140,7 @@ class BulkTagController extends Controller
         $policy = new DivisionTagPolicy;
         $tagIds = $policy->getAssignableTags($user)
             ->whereIn('id', $validated['tags'])
-            ->pluck('id')
-            ->all();
+            ->modelKeys();
 
         foreach ($members as $member) {
             if (! $user->can('assign', [DivisionTag::class, $member]) || empty($tagIds)) {
