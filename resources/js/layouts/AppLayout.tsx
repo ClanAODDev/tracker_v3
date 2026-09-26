@@ -26,6 +26,8 @@ interface AppLayoutProps {
     width?: LayoutWidth;
 }
 
+let appearanceAppliedFor: number | null | undefined;
+
 export default function AppLayout({ header, width = 'default', children }: PropsWithChildren<AppLayoutProps>) {
     const page = usePage<SharedProps>();
     const nav = page.props.nav;
@@ -34,19 +36,18 @@ export default function AppLayout({ header, width = 'default', children }: Props
     const reduceAnimations = page.props.auth.user?.settings.reduceAnimations ?? false;
     const theme = page.props.auth.user?.settings.theme === 'light' ? 'light' : 'tron';
     const accent = page.props.auth.user?.settings.accent ?? 'crimson';
+    const userId = page.props.auth.user?.id ?? null;
     const [navOpen, setNavOpen] = useState(false);
 
     useEffect(() => {
+        if (appearanceAppliedFor === userId) {
+            return;
+        }
+        appearanceAppliedFor = userId;
         document.documentElement.dataset.reduceMotion = reduceAnimations ? 'true' : 'false';
-    }, [reduceAnimations]);
-
-    useEffect(() => {
         document.documentElement.dataset.theme = theme;
-    }, [theme]);
-
-    useEffect(() => {
         document.documentElement.dataset.accent = accent;
-    }, [accent]);
+    }, [userId, reduceAnimations, theme, accent]);
 
     const sidebar = <NavSidebar items={nav ?? []} currentUrl={currentUrl} />;
 

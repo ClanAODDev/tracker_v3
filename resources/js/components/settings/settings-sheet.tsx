@@ -485,6 +485,7 @@ function AppearanceSection({ settings }: { settings: SettingsData['settings'] })
     async function persist(patch: Record<string, unknown>) {
         try {
             await postJson('/settings', patch);
+            router.flushAll();
             router.reload({ only: ['auth'] });
         } catch {
             toast.error('Failed to save preference');
