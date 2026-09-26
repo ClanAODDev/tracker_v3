@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ (auth()->user()?->settings['theme'] ?? 'dark') === 'light' ? 'light' : 'tron' }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="{{ (auth()->user()?->settings['theme'] ?? 'dark') === 'light' ? 'light' : 'tron' }}" data-accent="{{ auth()->user()?->accent()->value ?? 'crimson' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

@@ -11,15 +11,9 @@ const MIN_LOOP_LENGTH = 40;
 const SIMPLIFY_TOLERANCE = 0.8;
 const SEED = 1999;
 
-const THEMES = {
-    dark: {
-        minor: { color: '#e7e9ec', opacity: 0.0275, width: 1 },
-        major: { color: '#e11d2e', opacity: 0.16, width: 2.4 },
-    },
-    light: {
-        minor: { color: '#16181c', opacity: 0.045, width: 1 },
-        major: { color: '#e11d2e', opacity: 0.14, width: 2.4 },
-    },
+const LAYERS = {
+    minor: { width: 1 },
+    major: { width: 2.4 },
 };
 
 function mulberry32(seed) {
@@ -266,14 +260,10 @@ function buildContours() {
     return { minor: toPathData(minor), major: toPathData(major) };
 }
 
-function renderSvg(paths, theme) {
-    const stroke = ({ color, opacity, width }) =>
-        `fill="none" stroke="${color}" stroke-opacity="${opacity}" stroke-width="${width}" stroke-linejoin="round" stroke-linecap="round"`;
-
+function renderSvg(path, { width }) {
     return (
         `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">` +
-        `<path ${stroke(theme.minor)} d="${paths.minor}"/>` +
-        `<path ${stroke(theme.major)} d="${paths.major}"/>` +
+        `<path fill="none" stroke="#000" stroke-width="${width}" stroke-linejoin="round" stroke-linecap="round" d="${path}"/>` +
         `</svg>\n`
     );
 }
@@ -281,8 +271,9 @@ function renderSvg(paths, theme) {
 const outputDir = resolve(dirname(fileURLToPath(import.meta.url)), '../resources/images');
 const paths = buildContours();
 
-for (const [name, theme] of Object.entries(THEMES)) {
+for (const [name, layer] of Object.entries(LAYERS)) {
     const file = resolve(outputDir, `contours-${name}.svg`);
-    writeFileSync(file, renderSvg(paths, theme));
-    console.log(`${file} (${(renderSvg(paths, theme).length / 1024).toFixed(0)} KB)`);
+    const svg = renderSvg(paths[name], layer);
+    writeFileSync(file, svg);
+    console.log(`${file} (${(svg.length / 1024).toFixed(0)} KB)`);
 }

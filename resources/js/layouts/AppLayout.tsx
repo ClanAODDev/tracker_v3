@@ -33,6 +33,7 @@ export default function AppLayout({ header, width = 'default', children }: Props
     const navSide = page.props.auth.user?.settings.mobileNavSide === 'right' ? 'right' : 'left';
     const reduceAnimations = page.props.auth.user?.settings.reduceAnimations ?? false;
     const theme = page.props.auth.user?.settings.theme === 'light' ? 'light' : 'tron';
+    const accent = page.props.auth.user?.settings.accent ?? 'crimson';
     const [navOpen, setNavOpen] = useState(false);
 
     useEffect(() => {
@@ -42,6 +43,10 @@ export default function AppLayout({ header, width = 'default', children }: Props
     useEffect(() => {
         document.documentElement.dataset.theme = theme;
     }, [theme]);
+
+    useEffect(() => {
+        document.documentElement.dataset.accent = accent;
+    }, [accent]);
 
     const sidebar = <NavSidebar items={nav ?? []} currentUrl={currentUrl} />;
 

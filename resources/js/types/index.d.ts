@@ -11,8 +11,11 @@ export interface AuthUser {
         reduceAnimations: boolean;
         mobileNavSide: 'left' | 'right';
         theme: 'light' | 'dark';
+        accent: Accent;
     };
 }
+
+export type Accent = 'crimson' | 'violet' | 'emerald';
 
 export interface AuthPermissions {
     canWorkTickets: boolean;

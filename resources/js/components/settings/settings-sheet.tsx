@@ -20,6 +20,7 @@ import { SimpleSelect } from '@/components/ui/simple-select';
 import { Switch } from '@/components/ui/switch';
 import { ApiError, getJson, postJson } from '@/lib/api';
 import { cn } from '@/lib/utils';
+import type { Accent } from '@/types';
 
 interface DivisionRef {
     id: number;
@@ -27,7 +28,7 @@ interface DivisionRef {
 }
 
 interface SettingsData {
-    settings: { disable_animations: boolean; mobile_nav_side: 'left' | 'right'; theme: 'light' | 'dark' };
+    settings: { disable_animations: boolean; mobile_nav_side: 'left' | 'right'; theme: 'light' | 'dark'; accent: Accent };
     member: {
         name: string;
         avatarUrl: string | null;
@@ -467,10 +468,19 @@ function HandlesDialog({
     );
 }
 
+const ACCENTS: Accent[] = ['crimson', 'violet', 'emerald'];
+
+const ACCENT_SWATCH: Record<Accent, string> = {
+    crimson: '#e11d2e',
+    violet: '#8b5cf6',
+    emerald: '#22c55e',
+};
+
 function AppearanceSection({ settings }: { settings: SettingsData['settings'] }) {
     const [reduce, setReduce] = useState(settings.disable_animations);
     const [navSide, setNavSide] = useState<'left' | 'right'>(settings.mobile_nav_side);
     const [theme, setTheme] = useState<'light' | 'dark'>(settings.theme);
+    const [accent, setAccent] = useState<Accent>(settings.accent);
 
     async function persist(patch: Record<string, unknown>) {
         try {
@@ -498,6 +508,28 @@ function AppearanceSection({ settings }: { settings: SettingsData['settings'] })
                                 persist({ theme: option });
                             }}
                         >
+                            {option}
+                        </Button>
+                    ))}
+                </div>
+            </div>
+
+            <div className="space-y-1.5 text-sm">
+                <span className="block">Accent</span>
+                <div className="flex gap-1">
+                    {ACCENTS.map((option) => (
+                        <Button
+                            key={option}
+                            size="sm"
+                            variant={accent === option ? 'default' : 'outline'}
+                            className="flex-1 capitalize"
+                            onClick={() => {
+                                setAccent(option);
+                                document.documentElement.dataset.accent = option;
+                                persist({ accent: option });
+                            }}
+                        >
+                            <span className="size-2.5" style={{ backgroundColor: ACCENT_SWATCH[option] }} />
                             {option}
                         </Button>
                     ))}

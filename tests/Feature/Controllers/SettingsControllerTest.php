@@ -101,6 +101,43 @@ class SettingsControllerTest extends TestCase
     }
 
     #[Test]
+    public function accent_can_be_switched_to_a_supported_colour()
+    {
+        $user = $this->createMemberWithUser();
+
+        $this->actingAs($user)
+            ->postJson(route('settings.update'), ['accent' => 'violet'])
+            ->assertOk();
+
+        $this->assertSame('violet', $user->fresh()->settings()->get('accent'));
+
+        $this->actingAs($user)
+            ->postJson(route('settings.update'), ['accent' => 'chartreuse'])
+            ->assertStatus(422);
+    }
+
+    #[Test]
+    public function accent_defaults_to_crimson_and_is_rendered_on_the_html_element()
+    {
+        $user = $this->createMemberWithUser();
+
+        $this->actingAs($user)
+            ->getJson(route('settings.data'))
+            ->assertJsonPath('settings.accent', 'crimson');
+
+        $this->actingAs($user)
+            ->get(route('home'))
+            ->assertSee('data-accent="crimson"', escape: false);
+
+        $user->update(['settings' => [...$user->settings, 'accent' => 'emerald']]);
+
+        $this->actingAs($user->fresh())
+            ->get(route('home'))
+            ->assertSee('data-accent="emerald"', escape: false)
+            ->assertInertia(fn ($page) => $page->where('auth.user.settings.accent', 'emerald'));
+    }
+
+    #[Test]
     public function part_time_divisions_sync_to_active_divisions_only()
     {
         $division = $this->createActiveDivision();

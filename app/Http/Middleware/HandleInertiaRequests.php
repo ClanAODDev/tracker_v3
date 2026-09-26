@@ -51,6 +51,7 @@ class HandleInertiaRequests extends Middleware
                     'reduceAnimations' => (bool) $user->settings()->get('disable_animations', false),
                     'mobileNavSide'    => $user->settings()->get('mobile_nav_side', 'left'),
                     'theme'            => $user->settings()->get('theme', 'dark') === 'light' ? 'light' : 'dark',
+                    'accent'           => $user->accent()->value,
                 ],
             ],
             'permissions' => [
