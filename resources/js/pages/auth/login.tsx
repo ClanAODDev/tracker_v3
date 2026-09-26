@@ -2,7 +2,6 @@ import { Head, useForm } from '@inertiajs/react';
 import { Clock, LockKeyhole } from 'lucide-react';
 import type { FormEvent } from 'react';
 
-import { LoginConstellation } from '@/components/auth/login-constellation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -22,9 +21,8 @@ export default function Login({ discordEnabled, expired }: LoginProps) {
     }
 
     return (
-        <BlankLayout grid={false}>
+        <BlankLayout>
             <Head title="Sign in" />
-            <LoginConstellation />
 
             <div className="relative z-10 mx-auto flex min-h-[70vh] w-full max-w-sm flex-col justify-center">
                 <div className="mb-8 flex items-center gap-3">

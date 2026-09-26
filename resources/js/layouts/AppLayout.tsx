@@ -59,7 +59,7 @@ export default function AppLayout({ header, width = 'default', children }: Props
                     <AppTopbar onOpenNav={() => setNavOpen(true)} navSide={navSide} />
                     <ImpersonationBanner />
                     {header && <PageHeader {...header} width={width} />}
-                    <div className="tron-grid min-h-[calc(100vh-3.5rem)]">
+                    <div className="tron-contours min-h-[calc(100vh-3.5rem)]">
                         <main className={WIDTH_CLASS[width]}>{children}</main>
                     </div>
                 </div>
