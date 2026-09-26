@@ -1,6 +1,6 @@
 /* Utilities — hand-rolled classes that Tailwind can't express concisely.
  *   · Typography helpers      (.numeric, .prose-tron)
- *   · Tron surface treatments (.tron-grid, .tron-corners, .tron-eyebrow,
+ *   · Tron surface treatments (.tron-contours, .tron-corners, .tron-eyebrow,
  *                              .tron-glow, .tron-hairline) */
 
 @layer utilities {
@@ -141,23 +141,36 @@
 
     /* --- Tron surface treatments --------------------------------------- */
 
-    /* Faint perspective grid — sits behind page content, barely there.
-       Drifts upward one tile per cycle; `prefers-reduced-motion` handling
-       in base.css freezes the animation for anyone who needs that. */
-    .tron-grid {
-        background-image:
-            linear-gradient(to right, color-mix(in srgb, var(--foreground) 3%, transparent) 1px, transparent 1px),
-            linear-gradient(to bottom, color-mix(in srgb, var(--foreground) 3%, transparent) 1px, transparent 1px);
-        background-size: 44px 44px;
-        background-position-x: center;
-        background-position-y: 0;
-        animation: tron-grid-drift 7s linear infinite;
+    /* Topographic contour lines behind page content: faint minor contours with
+       accent-coloured index lines. The SVG tiles are colourless masks generated
+       by `scripts/generate-contours.mjs`; colour and strength come from the
+       `--contour-line` / `--contour-index` tokens, so they follow the theme and
+       accent. */
+    .tron-contours {
+        position: relative;
+        isolation: isolate;
     }
 
-    @keyframes tron-grid-drift {
-        to {
-            background-position-y: -88px;
-        }
+    .tron-contours::before,
+    .tron-contours::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        mask-size: 2400px 2400px;
+        mask-position: center top;
+        mask-repeat: repeat;
+    }
+
+    .tron-contours::before {
+        background-color: var(--contour-line);
+        mask-image: url('../images/contours-minor.svg');
+    }
+
+    .tron-contours::after {
+        background-color: var(--contour-index);
+        mask-image: url('../images/contours-major.svg');
     }
 
     /* Fine 45° diagonal hatch — a texture for empty states, header strips, and

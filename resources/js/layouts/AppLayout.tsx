@@ -26,6 +26,8 @@ interface AppLayoutProps {
     width?: LayoutWidth;
 }
 
+let appearanceAppliedFor: number | null | undefined;
+
 export default function AppLayout({ header, width = 'default', children }: PropsWithChildren<AppLayoutProps>) {
     const page = usePage<SharedProps>();
     const nav = page.props.nav;
@@ -33,15 +35,19 @@ export default function AppLayout({ header, width = 'default', children }: Props
     const navSide = page.props.auth.user?.settings.mobileNavSide === 'right' ? 'right' : 'left';
     const reduceAnimations = page.props.auth.user?.settings.reduceAnimations ?? false;
     const theme = page.props.auth.user?.settings.theme === 'light' ? 'light' : 'tron';
+    const accent = page.props.auth.user?.settings.accent ?? 'crimson';
+    const userId = page.props.auth.user?.id ?? null;
     const [navOpen, setNavOpen] = useState(false);
 
     useEffect(() => {
+        if (appearanceAppliedFor === userId) {
+            return;
+        }
+        appearanceAppliedFor = userId;
         document.documentElement.dataset.reduceMotion = reduceAnimations ? 'true' : 'false';
-    }, [reduceAnimations]);
-
-    useEffect(() => {
         document.documentElement.dataset.theme = theme;
-    }, [theme]);
+        document.documentElement.dataset.accent = accent;
+    }, [userId, reduceAnimations, theme, accent]);
 
     const sidebar = <NavSidebar items={nav ?? []} currentUrl={currentUrl} />;
 
@@ -59,7 +65,7 @@ export default function AppLayout({ header, width = 'default', children }: Props
                     <AppTopbar onOpenNav={() => setNavOpen(true)} navSide={navSide} />
                     <ImpersonationBanner />
                     {header && <PageHeader {...header} width={width} />}
-                    <div className="tron-grid min-h-[calc(100vh-3.5rem)]">
+                    <div className="tron-contours min-h-[calc(100vh-3.5rem)]">
                         <main className={WIDTH_CLASS[width]}>{children}</main>
                     </div>
                 </div>

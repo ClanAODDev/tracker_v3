@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Accent;
 use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Http\Requests\Member\SyncDiscordAvatar;
 use App\Models\Division;
@@ -11,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Throwable;
 
 #[Middleware('auth')]
@@ -29,6 +31,7 @@ class SettingsController extends Controller
                 'disable_animations' => (bool) $settings->get('disable_animations', false),
                 'mobile_nav_side'    => $settings->get('mobile_nav_side', 'left'),
                 'theme'              => $settings->get('theme', 'dark'),
+                'accent'             => $user->accent()->value,
             ],
             'member' => null,
         ];
@@ -95,6 +98,7 @@ class SettingsController extends Controller
             'disable_animations' => ['sometimes', 'boolean'],
             'mobile_nav_side'    => ['sometimes', 'in:left,right'],
             'theme'              => ['sometimes', 'in:light,dark'],
+            'accent'             => ['sometimes', Rule::enum(Accent::class)],
         ]);
 
         $user           = $request->user();

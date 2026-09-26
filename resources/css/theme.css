@@ -44,6 +44,9 @@
     --input: rgba(255, 255, 255, 0.12);
     --ring: rgba(225, 29, 46, 0.55);
 
+    --contour-line: color-mix(in srgb, var(--foreground) 1.65%, transparent);
+    --contour-index: color-mix(in srgb, var(--primary) 9.6%, transparent);
+
     /* Categorical series — validated as an ordered set for the dark surface
      * (dataviz skill: lightness band, chroma, CVD + normal-vision separation,
      * ≥3:1 contrast all pass). Order is the CVD-safety mechanism; do not cycle
@@ -106,6 +109,9 @@
     --input: rgba(15, 18, 25, 0.18);
     --ring: rgba(225, 29, 46, 0.45);
 
+    --contour-line: color-mix(in srgb, var(--foreground) 7%, transparent);
+    --contour-index: color-mix(in srgb, var(--primary) 8.4%, transparent);
+
     --chart-1: #d94f4f;
     --chart-2: #3379d6;
     --chart-3: #9c6500;
@@ -118,6 +124,37 @@
     --rarity-rare: #2563eb;
     --rarity-common: #64748b;
     --rarity-unclaimed: #cbd5e1;
+}
+
+/* Accents — an optional replacement for the crimson accent, chosen per user
+ * (`data-accent` on <html>). Each is tuned separately for the dark and light
+ * grounds so text-on-ground and button-label contrast match crimson's. */
+:root[data-accent='violet'] {
+    --primary: #8b5cf6;
+    --primary-foreground: #f5f0ff;
+    --primary-glow: rgba(139, 92, 246, 0.32);
+    --ring: rgba(139, 92, 246, 0.55);
+}
+
+:root[data-theme='light'][data-accent='violet'] {
+    --primary: #7c3aed;
+    --primary-foreground: #ffffff;
+    --primary-glow: rgba(124, 58, 237, 0.18);
+    --ring: rgba(124, 58, 237, 0.45);
+}
+
+:root[data-accent='emerald'] {
+    --primary: #22c55e;
+    --primary-foreground: #04210f;
+    --primary-glow: rgba(34, 197, 94, 0.3);
+    --ring: rgba(34, 197, 94, 0.55);
+}
+
+:root[data-theme='light'][data-accent='emerald'] {
+    --primary: #15803d;
+    --primary-foreground: #ffffff;
+    --primary-glow: rgba(21, 128, 61, 0.18);
+    --ring: rgba(21, 128, 61, 0.45);
 }
 
 @theme inline {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Accent;
 use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Enums\Rank;
@@ -34,6 +35,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         'disable_animations'   => false,
         'mobile_nav_side'      => 'left',
         'theme'                => 'dark',
+        'accent'               => 'crimson',
     ];
 
     protected $fillable = [
@@ -76,6 +78,11 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
     public function getAuthPassword(): string
     {
         return '';
+    }
+
+    public function accent(): Accent
+    {
+        return Accent::tryFrom((string) $this->settings()->get('accent')) ?? Accent::CRIMSON;
     }
 
     public function getSettingsAttribute($value): array

@@ -135,7 +135,7 @@ export default function Gallery() {
                         </div>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                        The page sits on a faint <code className="font-mono text-xs">.tron-grid</code> and every section
+                        The page sits on faint <code className="font-mono text-xs">.tron-contours</code> and every section
                         label is a <code className="font-mono text-xs">.tron-eyebrow</code> (tick + wide tracking).
                     </p>
 
