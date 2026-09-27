@@ -7,6 +7,7 @@ use App\Filament\Mod\Resources\SquadResource\Pages\ListSquads;
 use App\Filament\Mod\Resources\SquadResource\RelationManagers\MembersRelationManager;
 use App\Models\Member;
 use App\Models\Squad;
+use App\Rules\HoldsNoOtherPosition;
 use App\Rules\ResolvesToImage;
 use Closure;
 use Filament\Actions\BulkActionGroup;
@@ -86,6 +87,7 @@ class SquadResource extends Resource
                                     $fail('The selected leader must be a member of this division.');
                                 }
                             })
+                            ->rule(fn (?Squad $record) => new HoldsNoOtherPosition(exceptSquad: $record))
                             ->nullable(),
 
                         Hidden::make('original_leader_id')
