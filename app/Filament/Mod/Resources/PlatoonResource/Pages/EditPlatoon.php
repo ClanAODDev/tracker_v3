@@ -53,11 +53,14 @@ class EditPlatoon extends EditRecord
                 Platoon::where('leader_id', $newLeaderId)->where('id', '!=',
                     $this->record->id)->update(['leader_id' => null]);
 
-                Squad::where('leader_id', $newLeaderId)->where('id', '!=',
-                    $this->record->id)->update(['leader_id' => null]);
+                Squad::where('leader_id', $newLeaderId)->update(['leader_id' => null]);
             }
 
-            if ($originalLeaderId) {
+            $originalLeaderStillPlatoonLeader = $originalLeaderId && Member::where('clan_id', $originalLeaderId)
+                ->where('position', Position::PLATOON_LEADER)
+                ->exists();
+
+            if ($originalLeaderStillPlatoonLeader) {
                 Member::where('clan_id', $originalLeaderId)->update([
                     'position'   => Position::MEMBER,
                     'platoon_id' => null,

@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Filament;
 
+use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource;
 use App\Filament\Admin\Resources\DivisionResource\Pages\CreateDivision;
+use App\Filament\Admin\Resources\DivisionResource\Pages\EditDivision;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -71,5 +73,27 @@ class DivisionResourceTest extends TestCase
             ->fillForm(['name' => 'Battlefield'])
             ->call('create')
             ->assertHasNoFormErrors(['name']);
+    }
+
+    #[Test]
+    public function new_xo_has_stale_platoon_and_squad_leadership_cleared()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+        $squad    = $this->createSquad($platoon);
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $page = Livewire::actingAs($this->createAdmin())
+            ->test(EditDivision::class, ['record' => $division->getRouteKey()]);
+
+        $platoon->update(['leader_id' => $member->clan_id]);
+        $squad->update(['leader_id' => $member->clan_id]);
+
+        (new \ReflectionMethod(EditDivision::class, 'handleXOs'))
+            ->invoke($page->instance(), $division->id, ['executive_officers' => [['xo' => $member->id]]]);
+
+        $this->assertEquals(Position::EXECUTIVE_OFFICER, $member->fresh()->position);
+        $this->assertNull($platoon->fresh()->leader_id);
+        $this->assertNull($squad->fresh()->leader_id);
     }
 }

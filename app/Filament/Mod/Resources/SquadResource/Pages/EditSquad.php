@@ -54,7 +54,11 @@ class EditSquad extends EditRecord
                     ->update(['leader_id' => null]);
             }
 
-            if ($originalLeaderId) {
+            $originalLeaderStillSquadLeader = $originalLeaderId && Member::where('clan_id', $originalLeaderId)
+                ->where('position', Position::SQUAD_LEADER)
+                ->exists();
+
+            if ($originalLeaderStillSquadLeader) {
                 Member::where('clan_id', $originalLeaderId)->update([
                     'position'   => Position::MEMBER,
                     'platoon_id' => null,
