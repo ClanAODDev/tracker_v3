@@ -9,6 +9,7 @@ use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\SquadsRelationMa
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
+use App\Rules\HoldsNoOtherPosition;
 use App\Rules\ResolvesToImage;
 use Closure;
 use Filament\Actions\BulkActionGroup;
@@ -98,6 +99,7 @@ class PlatoonResource extends Resource
                                     $fail('The selected leader must be a member of this division.');
                                 }
                             })
+                            ->rule(fn (?Platoon $record) => new HoldsNoOtherPosition(exceptPlatoon: $record))
                             ->nullable(),
 
                         Hidden::make('original_leader_id')

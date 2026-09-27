@@ -9,7 +9,9 @@ use App\Filament\Admin\Resources\DivisionResource\Pages\ListDivisions;
 use App\Jobs\SyncDivisionDns;
 use App\Models\Division;
 use App\Models\Member;
+use App\Rules\HoldsNoOtherPosition;
 use App\Services\CloudflareDnsService;
+use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -25,6 +27,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\IconColumn;
@@ -88,7 +91,7 @@ class DivisionResource extends Resource
 
                             TextInput::make('abbreviation')
                                 ->helperText('Should match abbreviation used on forums')
-                                ->maxLength(3)
+                                ->maxLength(4)
                                 ->required(),
 
                             TextInput::make('slug')
@@ -130,7 +133,18 @@ class DivisionResource extends Resource
                                 ->label('New CO')
                                 ->searchable()
                                 ->options(fn () => Member::where('division_id', $schema->getRecord()?->id)
-                                    ->pluck('name', 'id')),
+                                    ->pluck('name', 'id'))
+                                ->rule(fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                                    $xoIds = collect($get('executive_officers') ?? [])->pluck('xo')->filter();
+
+                                    if ($value && $xoIds->contains($value)) {
+                                        $fail('The new CO cannot also be listed as an Executive Officer.');
+                                    }
+                                })
+                                ->rule(new HoldsNoOtherPosition(
+                                    column: 'id',
+                                    allowedPositions: [Position::COMMANDING_OFFICER, Position::EXECUTIVE_OFFICER],
+                                )),
                         ])->columns(),
 
                         Repeater::make('executive_officers')
@@ -140,7 +154,13 @@ class DivisionResource extends Resource
                                     ->label('Executive Officer')
                                     ->searchable()
                                     ->options(fn () => Member::where('division_id', $schema->getRecord()?->id)
-                                        ->pluck('name', 'id')),
+                                        ->pluck('name', 'id'))
+                                    ->rule(fn (Get $get) => new HoldsNoOtherPosition(
+                                        column: 'id',
+                                        allowedPositions: $get('../../new_co')
+                                            ? [Position::EXECUTIVE_OFFICER, Position::COMMANDING_OFFICER]
+                                            : [Position::EXECUTIVE_OFFICER],
+                                    )),
                             ])
                             ->minItems(0)
                             ->maxItems(3)

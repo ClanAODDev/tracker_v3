@@ -5,6 +5,8 @@ namespace App\Filament\Admin\Resources\DivisionResource\Pages;
 use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource;
 use App\Models\Member;
+use App\Models\Platoon;
+use App\Models\Squad;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
@@ -86,6 +88,8 @@ class EditDivision extends EditRecord
                 ]);
         }
 
+        $this->clearPlatoonAndSquadLeadership([$newCoId]);
+
         return $data;
     }
 
@@ -111,8 +115,18 @@ class EditDivision extends EditRecord
                     'platoon_id' => 0,
                     'squad_id'   => 0,
                 ]);
+
+            $this->clearPlatoonAndSquadLeadership($toAdd->all());
         }
 
         return $data;
+    }
+
+    protected function clearPlatoonAndSquadLeadership(array $memberIds): void
+    {
+        $clanIds = Member::whereIn('id', $memberIds)->pluck('clan_id');
+
+        Platoon::whereIn('leader_id', $clanIds)->update(['leader_id' => null]);
+        Squad::whereIn('leader_id', $clanIds)->update(['leader_id' => null]);
     }
 }

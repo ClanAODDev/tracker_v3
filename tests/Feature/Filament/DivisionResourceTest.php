@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Filament;
 
+use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource;
 use App\Filament\Admin\Resources\DivisionResource\Pages\CreateDivision;
+use App\Filament\Admin\Resources\DivisionResource\Pages\EditDivision;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -71,5 +73,98 @@ class DivisionResourceTest extends TestCase
             ->fillForm(['name' => 'Battlefield'])
             ->call('create')
             ->assertHasNoFormErrors(['name']);
+    }
+
+    #[Test]
+    public function a_platoon_leader_cannot_be_made_an_executive_officer()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+        $leader   = $this->createPlatoonLeader($platoon);
+
+        $this->actingAs($this->createAdmin());
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->fillForm(['executive_officers' => [['xo' => $leader->id]]])
+            ->call('save')
+            ->assertHasFormErrors(['executive_officers.0.xo']);
+
+        $this->assertEquals(Position::PLATOON_LEADER, $leader->fresh()->position);
+        $this->assertEquals($leader->clan_id, $platoon->fresh()->leader_id);
+    }
+
+    #[Test]
+    public function a_squad_leader_cannot_be_made_commanding_officer()
+    {
+        $division = $this->createActiveDivision();
+        $squad    = $this->createSquad($this->createPlatoon($division));
+        $leader   = $this->createSquadLeader($squad);
+
+        $this->actingAs($this->createAdmin());
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->fillForm(['new_co' => $leader->id])
+            ->call('save')
+            ->assertHasFormErrors(['new_co']);
+
+        $this->assertEquals(Position::SQUAD_LEADER, $leader->fresh()->position);
+    }
+
+    #[Test]
+    public function new_co_cannot_also_be_listed_as_an_executive_officer()
+    {
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($this->createAdmin());
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->fillForm([
+                'new_co'             => $member->id,
+                'executive_officers' => [['xo' => $member->id]],
+            ])
+            ->call('save')
+            ->assertHasFormErrors(['new_co']);
+
+        $this->assertEquals(Position::MEMBER, $member->fresh()->position);
+    }
+
+    #[Test]
+    public function an_xo_removed_from_the_xo_list_can_be_selected_as_co()
+    {
+        $division = $this->createActiveDivision();
+        $xo       = $this->createExecutiveOfficer($division);
+
+        $this->actingAs($this->createAdmin());
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->fillForm([
+                'new_co'             => $xo->id,
+                'executive_officers' => [],
+            ])
+            ->call('save')
+            ->assertHasNoFormErrors(['new_co']);
+    }
+
+    #[Test]
+    public function new_xo_has_stale_platoon_and_squad_leadership_cleared()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+        $squad    = $this->createSquad($platoon);
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $page = Livewire::actingAs($this->createAdmin())
+            ->test(EditDivision::class, ['record' => $division->getRouteKey()]);
+
+        $platoon->update(['leader_id' => $member->clan_id]);
+        $squad->update(['leader_id' => $member->clan_id]);
+
+        (new \ReflectionMethod(EditDivision::class, 'handleXOs'))
+            ->invoke($page->instance(), $division->id, ['executive_officers' => [['xo' => $member->id]]]);
+
+        $this->assertEquals(Position::EXECUTIVE_OFFICER, $member->fresh()->position);
+        $this->assertNull($platoon->fresh()->leader_id);
+        $this->assertNull($squad->fresh()->leader_id);
     }
 }

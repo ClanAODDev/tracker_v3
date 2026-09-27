@@ -44,8 +44,8 @@
     --input: rgba(255, 255, 255, 0.12);
     --ring: rgba(225, 29, 46, 0.55);
 
-    --contour-line: color-mix(in srgb, var(--foreground) 1.65%, transparent);
-    --contour-index: color-mix(in srgb, var(--primary) 9.6%, transparent);
+    --contour-line: color-mix(in srgb, var(--foreground) 4%, transparent);
+    --contour-index: color-mix(in srgb, var(--primary) 12%, transparent);
 
     /* Categorical series — validated as an ordered set for the dark surface
      * (dataviz skill: lightness band, chroma, CVD + normal-vision separation,
