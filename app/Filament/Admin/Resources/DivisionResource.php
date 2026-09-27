@@ -88,7 +88,7 @@ class DivisionResource extends Resource
 
                             TextInput::make('abbreviation')
                                 ->helperText('Should match abbreviation used on forums')
-                                ->maxLength(3)
+                                ->maxLength(4)
                                 ->required(),
 
                             TextInput::make('slug')
