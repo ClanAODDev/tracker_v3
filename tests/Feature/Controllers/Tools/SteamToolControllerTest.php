@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers\Tools;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Sleep;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Tests\Traits\CreatesMembers;
@@ -17,6 +18,7 @@ class SteamToolControllerTest extends TestCase
     {
         parent::setUp();
         config(['services.steam.api_key' => 'test-key']);
+        Sleep::fake();
     }
 
     #[Test]
@@ -101,7 +103,45 @@ class SteamToolControllerTest extends TestCase
         $this->actingAs($this->createMemberWithUser())
             ->postJson(route('tools.steam.resolve-vanity-url'), ['input' => 'not-a-real-vanity-name'])
             ->assertNotFound()
-            ->assertJson(['message' => 'No match']);
+            ->assertJson(['message' => 'No Steam account found for that custom URL.']);
+    }
+
+    #[Test]
+    public function it_converts_a_friend_code_without_calling_steam(): void
+    {
+        Http::fake();
+
+        $this->actingAs($this->createMemberWithUser())
+            ->postJson(route('tools.steam.resolve-vanity-url'), ['input' => '30555111'])
+            ->assertOk()
+            ->assertJson(['steamId' => '76561197990820839', 'resolved' => false]);
+
+        Http::assertNothingSent();
+    }
+
+    #[Test]
+    public function it_rejects_a_truncated_steamid64_without_calling_steam(): void
+    {
+        Http::fake();
+
+        $this->actingAs($this->createMemberWithUser())
+            ->postJson(route('tools.steam.resolve-vanity-url'), ['input' => '7656119810317823'])
+            ->assertUnprocessable()
+            ->assertJson(['message' => 'SteamID64 is missing digits.']);
+
+        Http::assertNothingSent();
+    }
+
+    #[Test]
+    public function it_returns_a_503_when_steam_is_unavailable(): void
+    {
+        Http::fake(['api.steampowered.com/*' => Http::response([], 429)]);
+
+        $this->actingAs($this->createMemberWithUser())
+            ->postJson(route('tools.steam.resolve-vanity-url'), ['input' => 'gaben'])
+            ->assertServiceUnavailable();
+
+        Http::assertSentCount(3);
     }
 
     #[Test]

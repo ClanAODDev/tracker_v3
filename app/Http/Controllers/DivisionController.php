@@ -178,7 +178,7 @@ class DivisionController extends Controller
 
         if (! empty($validated['handle_value']) && $division->handle_id) {
             $member->handles()->syncWithoutDetaching([
-                $division->handle_id => ['value' => $validated['handle_value']],
+                $division->handle_id => ['value' => $division->handle?->normalize($validated['handle_value']) ?? $validated['handle_value']],
             ]);
         }
 
