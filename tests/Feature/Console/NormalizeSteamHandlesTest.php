@@ -134,6 +134,44 @@ class NormalizeSteamHandlesTest extends TestCase
         Http::assertNothingSent();
     }
 
+    #[Test]
+    public function it_lists_unfixable_handles_without_calling_steam_or_writing(): void
+    {
+        Http::fake();
+
+        $this->steamHandle('76561197960311641');
+        $this->steamHandle('https://steamcommunity.com/profiles/76561197968443902');
+        $vanity  = $this->steamHandle('AOD_PhoenixATL');
+        $invalid = $this->steamHandle('-=312th=- Cowboy');
+
+        $this->artisan('tracker:normalize-steam-handles', ['--unfixable' => true])
+            ->expectsOutputToContain('AOD_PhoenixATL')
+            ->expectsOutputToContain('Not a SteamID or custom URL name')
+            ->doesntExpectOutputToContain('76561197960311641')
+            ->doesntExpectOutputToContain('76561197968443902')
+            ->expectsOutputToContain('2 members need to re-enter their SteamID64.')
+            ->assertSuccessful();
+
+        $this->assertHandleValue($vanity, 'AOD_PhoenixATL');
+        $this->assertHandleValue($invalid, '-=312th=- Cowboy');
+        Http::assertNothingSent();
+    }
+
+    #[Test]
+    public function it_limits_the_unfixable_list_to_active_members(): void
+    {
+        $active   = $this->createMember(['name' => 'ActiveMember']);
+        $inactive = $this->createMember(['name' => 'FormerMember', 'division_id' => 0]);
+
+        $active->handles()->attach($this->steam->id, ['value' => 'ActiveVanity']);
+        $inactive->handles()->attach($this->steam->id, ['value' => 'FormerVanity']);
+
+        $this->artisan('tracker:normalize-steam-handles', ['--unfixable' => true, '--active' => true])
+            ->expectsOutputToContain('ActiveVanity')
+            ->doesntExpectOutputToContain('FormerVanity')
+            ->assertSuccessful();
+    }
+
     private function fakeSteam(array $vanities = [], array $personas = []): void
     {
         Http::fake(function ($request) use ($vanities, $personas) {
