@@ -9,7 +9,6 @@ use App\Services\SteamApiService;
 use App\Support\Steam\SteamIdParser;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class NormalizeSteamHandles extends BaseCommand
 {
@@ -25,7 +24,9 @@ class NormalizeSteamHandles extends BaseCommand
                             {--dry-run : Report what would change without writing anything}
                             {--include-vanity : Also write SteamIDs resolved from custom URL names}
                             {--skip=* : handle_member IDs to leave untouched}
-                            {--delay=1000 : Minimum milliseconds between Steam API calls}';
+                            {--delay=1000 : Minimum milliseconds between Steam API calls}
+                            {--unfixable : After normalizing, list members whose Steam handle could not be converted, without calling Steam or writing}
+                            {--active : With --unfixable, only list members currently in a division}';
 
     protected $description = 'Convert stored Steam handles to SteamID64 and write a CSV report for review';
 
@@ -37,6 +38,10 @@ class NormalizeSteamHandles extends BaseCommand
 
         if (! $handle) {
             return $this->failWithError('No steam_profile handle type exists.');
+        }
+
+        if ($this->option('unfixable')) {
+            return $this->listUnfixable($handle);
         }
 
         if (! config('services.steam.api_key')) {
@@ -70,7 +75,7 @@ class NormalizeSteamHandles extends BaseCommand
     {
         return MemberHandle::query()
             ->where('handle_id', $handle->id)
-            ->with(['member' => fn ($query) => $query->withTrashed()->select('id', 'name', 'division_id', 'deleted_at')])
+            ->with(['member' => fn ($query) => $query->withTrashed()->select('id', 'name', 'clan_id', 'division_id', 'deleted_at')->with('division:id,name')])
             ->orderBy('id')
             ->get()
             ->reject(fn (MemberHandle $memberHandle) => SteamIdParser::isValidId64($memberHandle->value))
@@ -78,6 +83,8 @@ class NormalizeSteamHandles extends BaseCommand
                 'id'          => $memberHandle->id,
                 'member_id'   => $memberHandle->member_id,
                 'member_name' => $memberHandle->member?->name,
+                'clan_id'     => $memberHandle->member?->clan_id,
+                'division'    => $memberHandle->member?->division?->name,
                 'active'      => (bool) $memberHandle->member?->division_id && ! $memberHandle->member?->trashed(),
                 'original'    => $memberHandle->value,
                 'parsed'      => SteamIdParser::parse($memberHandle->value),
@@ -87,6 +94,35 @@ class NormalizeSteamHandles extends BaseCommand
                 'note'        => null,
             ])
             ->values();
+    }
+
+    private function listUnfixable(Handle $handle): int
+    {
+        $rows = $this->loadRows($handle)
+            ->filter(fn (array $row) => ! $row['parsed']->steamId || $row['parsed']->format->isGuessedFromNumber())
+            ->when($this->option('active'), fn (Collection $rows) => $rows->where('active', true))
+            ->sortBy([['division', 'asc'], ['member_name', 'asc']]);
+
+        if ($rows->isEmpty()) {
+            $this->info('Every Steam handle is a SteamID64.');
+
+            return self::SUCCESS;
+        }
+
+        $this->table(
+            ['Member', 'Clan ID', 'Division', 'Value', 'Reason'],
+            $rows->map(fn (array $row) => [
+                $row['member_name'],
+                $row['clan_id'],
+                $row['division'] ?? '—',
+                $row['original'],
+                $row['parsed']->reason ?? ($row['parsed']->needsLookup() ? 'No Steam account uses this custom URL' : 'No Steam account has this friend code'),
+            ]),
+        );
+
+        $this->info("{$rows->count()} members need to re-enter their SteamID64.");
+
+        return self::SUCCESS;
     }
 
     private function resolveVanities(Collection $rows, SteamApiService $steam): Collection
@@ -184,22 +220,10 @@ class NormalizeSteamHandles extends BaseCommand
         }
 
         if ($row['parsed']->needsLookup()) {
-            return [...$row, 'status' => self::STATUS_RESOLVED, 'note' => $this->nameMatches($row) ? null : 'Persona does not resemble member name'];
+            return [...$row, 'status' => self::STATUS_RESOLVED];
         }
 
         return [...$row, 'status' => self::STATUS_FIXED];
-    }
-
-    private function nameMatches(array $row): bool
-    {
-        $normalize = fn (?string $name) => Str::of($name ?? '')->lower()->replaceMatches('/[^a-z0-9]/', '')->toString();
-
-        $member = $normalize($row['member_name']);
-
-        return $member !== '' && collect([$row['persona'], $row['parsed']->vanity])
-            ->map($normalize)
-            ->filter()
-            ->contains(fn (string $candidate) => str_contains($candidate, $member) || str_contains($member, $candidate));
     }
 
     private function write(Collection $rows): int
@@ -231,7 +255,7 @@ class NormalizeSteamHandles extends BaseCommand
         $this->info($this->option('dry-run') ? 'Dry run: nothing was written.' : "Updated {$written} Steam handles.");
 
         if (! $this->option('include-vanity') && $rows->contains('status', self::STATUS_RESOLVED)) {
-            $this->warn('Resolved custom URLs were not written. Review them in the report, then re-run with --include-vanity (and --skip=ID for any wrong matches).');
+            $this->warn('Resolved custom URLs were not written. Re-run with --include-vanity to write them.');
         }
 
         $this->info("Report: {$path}");

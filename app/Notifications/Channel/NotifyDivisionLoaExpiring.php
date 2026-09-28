@@ -4,6 +4,7 @@ namespace App\Notifications\Channel;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
+use App\Traits\DivisionSettableNotification;
 use App\Traits\RetryableNotification;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -13,7 +14,9 @@ use Illuminate\Support\Collection;
 
 class NotifyDivisionLoaExpiring extends Notification implements ShouldQueue
 {
-    use Queueable, RetryableNotification;
+    use DivisionSettableNotification, Queueable, RetryableNotification;
+
+    private string $alertSetting = 'chat_alerts.loa_expiring';
 
     /**
      * @param  Collection<int, array{name: string, reason: string, end_date: string}>  $leaves
@@ -36,7 +39,7 @@ class NotifyDivisionLoaExpiring extends Notification implements ShouldQueue
 
         return new BotChannelMessage($notifiable)
             ->title($notifiable->name . ' Division')
-            ->target($notifiable->settings()->get('chat_alerts.loa_expiring'))
+            ->target($notifiable->settings()->get($this->alertSetting))
             ->thumbnail($notifiable->getLogoPath())
             ->message(
                 ":calendar: **Leave of Absence Ending Soon**\n\n"
