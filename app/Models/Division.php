@@ -55,6 +55,8 @@ class Division extends Model
 
         'chat_alerts' => [
             'division_edited'    => false,
+            'loa_expired'        => false,
+            'loa_expiring'       => false,
             'member_applied'     => false,
             'member_approved'    => false,
             'member_awarded'     => false,
@@ -299,7 +301,10 @@ class Division extends Model
     {
         $this->fireCustomModelEvent('settingsRead', true);
 
-        $mergedSettings = array_merge($this->defaultSettings, $this->settings ?? []);
+        $stored         = $this->settings ?? [];
+        $mergedSettings = array_merge($this->defaultSettings, $stored);
+
+        $mergedSettings['chat_alerts'] = array_merge($this->defaultSettings['chat_alerts'], $stored['chat_alerts'] ?? []);
 
         return new DivisionSettings($mergedSettings, $this);
     }

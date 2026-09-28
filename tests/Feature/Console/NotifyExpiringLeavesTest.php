@@ -53,6 +53,29 @@ class NotifyExpiringLeavesTest extends TestCase
         ]);
     }
 
+    private function createLoaAlertDivision(array $attributes = []): Division
+    {
+        $division = $this->createActiveDivision($attributes);
+
+        $division->update(['settings' => array_replace_recursive($division->settings, [
+            'chat_alerts' => ['loa_expiring' => 'officers', 'loa_expired' => 'officers'],
+        ])]);
+
+        return $division;
+    }
+
+    #[Test]
+    public function divisions_without_loa_alerts_enabled_are_not_notified(): void
+    {
+        $division = $this->createActiveDivision();
+        $this->createLeave(Member::factory()->create(['division_id' => $division->id]), today()->addDays(3));
+        $this->createLeave(Member::factory()->create(['division_id' => $division->id]), today()->subDay());
+
+        $this->artisan('tracker:notify-expiring-loas')->assertSuccessful();
+
+        Notification::assertNothingSent();
+    }
+
     #[Test]
     public function command_exits_successfully_with_no_active_divisions(): void
     {
@@ -68,7 +91,7 @@ class NotifyExpiringLeavesTest extends TestCase
     #[Test]
     public function command_sends_no_notification_when_no_leaves_are_ending(): void
     {
-        $division = $this->createActiveDivision();
+        $division = $this->createLoaAlertDivision();
         $member   = Member::factory()->create(['division_id' => $division->id]);
         $this->createLeave($member, now()->addWeeks(2));
 
@@ -83,7 +106,7 @@ class NotifyExpiringLeavesTest extends TestCase
     #[Test]
     public function command_notifies_when_a_leave_expires_in_three_days(): void
     {
-        $division = $this->createActiveDivision();
+        $division = $this->createLoaAlertDivision();
         $member   = Member::factory()->create(['division_id' => $division->id]);
         $this->createLeave($member, today()->addDays(3));
 
@@ -98,7 +121,7 @@ class NotifyExpiringLeavesTest extends TestCase
     #[Test]
     public function command_notifies_when_a_leave_expired_yesterday(): void
     {
-        $division = $this->createActiveDivision();
+        $division = $this->createLoaAlertDivision();
         $member   = Member::factory()->create(['division_id' => $division->id]);
         $this->createLeave($member, today()->subDay());
 
@@ -113,7 +136,7 @@ class NotifyExpiringLeavesTest extends TestCase
     #[Test]
     public function leaves_outside_the_exact_thresholds_are_ignored(): void
     {
-        $division = $this->createActiveDivision();
+        $division = $this->createLoaAlertDivision();
         $memberA  = Member::factory()->create(['division_id' => $division->id]);
         $memberB  = Member::factory()->create(['division_id' => $division->id]);
         $memberC  = Member::factory()->create(['division_id' => $division->id]);
@@ -132,7 +155,7 @@ class NotifyExpiringLeavesTest extends TestCase
     #[Test]
     public function unapproved_leaves_are_not_flagged(): void
     {
-        $division = $this->createActiveDivision();
+        $division = $this->createLoaAlertDivision();
         $member   = Member::factory()->create(['division_id' => $division->id]);
         $this->createLeave($member, today()->addDays(3), approved: false);
 
@@ -146,7 +169,7 @@ class NotifyExpiringLeavesTest extends TestCase
     #[Test]
     public function multiple_expiring_leaves_in_the_same_division_send_a_single_notification(): void
     {
-        $division = $this->createActiveDivision();
+        $division = $this->createLoaAlertDivision();
         $memberA  = Member::factory()->create(['division_id' => $division->id]);
         $memberB  = Member::factory()->create(['division_id' => $division->id]);
         $this->createLeave($memberA, today()->addDays(3));
@@ -162,8 +185,8 @@ class NotifyExpiringLeavesTest extends TestCase
     #[Test]
     public function separate_divisions_get_separate_notifications(): void
     {
-        $divisionA = $this->createActiveDivision();
-        $divisionB = $this->createActiveDivision();
+        $divisionA = $this->createLoaAlertDivision();
+        $divisionB = $this->createLoaAlertDivision();
         $memberA   = Member::factory()->create(['division_id' => $divisionA->id]);
         $memberB   = Member::factory()->create(['division_id' => $divisionB->id]);
         $this->createLeave($memberA, today()->addDays(3));
@@ -180,7 +203,7 @@ class NotifyExpiringLeavesTest extends TestCase
     #[Test]
     public function dry_run_outputs_leaves_without_sending_notifications(): void
     {
-        $division = $this->createActiveDivision(['name' => 'Alpha']);
+        $division = $this->createLoaAlertDivision(['name' => 'Alpha']);
         $member   = Member::factory()->create(['division_id' => $division->id, 'name' => 'OnLeaveMember']);
         $this->createLeave($member, today()->addDays(3));
 
@@ -195,8 +218,8 @@ class NotifyExpiringLeavesTest extends TestCase
     #[Test]
     public function division_option_limits_command_to_a_single_division(): void
     {
-        $target  = $this->createActiveDivision(['name' => 'Target Division']);
-        $other   = $this->createActiveDivision();
+        $target  = $this->createLoaAlertDivision(['name' => 'Target Division']);
+        $other   = $this->createLoaAlertDivision();
         $memberA = Member::factory()->create(['division_id' => $target->id]);
         $memberB = Member::factory()->create(['division_id' => $other->id]);
         $this->createLeave($memberA, today()->addDays(3));
