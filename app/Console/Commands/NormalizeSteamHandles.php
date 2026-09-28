@@ -9,7 +9,6 @@ use App\Services\SteamApiService;
 use App\Support\Steam\SteamIdParser;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class NormalizeSteamHandles extends BaseCommand
 {
@@ -184,22 +183,10 @@ class NormalizeSteamHandles extends BaseCommand
         }
 
         if ($row['parsed']->needsLookup()) {
-            return [...$row, 'status' => self::STATUS_RESOLVED, 'note' => $this->nameMatches($row) ? null : 'Persona does not resemble member name'];
+            return [...$row, 'status' => self::STATUS_RESOLVED];
         }
 
         return [...$row, 'status' => self::STATUS_FIXED];
-    }
-
-    private function nameMatches(array $row): bool
-    {
-        $normalize = fn (?string $name) => Str::of($name ?? '')->lower()->replaceMatches('/[^a-z0-9]/', '')->toString();
-
-        $member = $normalize($row['member_name']);
-
-        return $member !== '' && collect([$row['persona'], $row['parsed']->vanity])
-            ->map($normalize)
-            ->filter()
-            ->contains(fn (string $candidate) => str_contains($candidate, $member) || str_contains($member, $candidate));
     }
 
     private function write(Collection $rows): int
@@ -231,7 +218,7 @@ class NormalizeSteamHandles extends BaseCommand
         $this->info($this->option('dry-run') ? 'Dry run: nothing was written.' : "Updated {$written} Steam handles.");
 
         if (! $this->option('include-vanity') && $rows->contains('status', self::STATUS_RESOLVED)) {
-            $this->warn('Resolved custom URLs were not written. Review them in the report, then re-run with --include-vanity (and --skip=ID for any wrong matches).');
+            $this->warn('Resolved custom URLs were not written. Re-run with --include-vanity to write them.');
         }
 
         $this->info("Report: {$path}");
