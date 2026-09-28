@@ -12,7 +12,7 @@ class HandleFormat implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (! $this->handle || ! is_string($value) || $this->handle->matches($value)) {
+        if (! $this->handle || ! is_string($value) || $this->handle->matches($this->handle->normalize($value))) {
             return;
         }
 

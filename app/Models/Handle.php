@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Handle\HasCustomAttributes;
+use App\Support\Steam\SteamIdParser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,8 @@ class Handle extends Model
 {
     use HasCustomAttributes;
     use HasFactory;
+
+    public const STEAM_PROFILE = 'steam_profile';
 
     protected $casts = [
         'visible' => 'boolean',
@@ -42,5 +45,14 @@ class Handle extends Model
         }
 
         return @preg_match($this->regex, $value) === 1;
+    }
+
+    public function normalize(?string $value): ?string
+    {
+        if ($value === null || $this->type !== self::STEAM_PROFILE) {
+            return $value;
+        }
+
+        return SteamIdParser::parse($value)->steamId ?? trim($value);
     }
 }

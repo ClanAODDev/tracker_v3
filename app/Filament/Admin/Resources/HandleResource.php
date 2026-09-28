@@ -87,7 +87,7 @@ class HandleResource extends Resource
                             ->columnSpanFull(),
                         TextInput::make('regex')
                             ->label('Validation regex')
-                            ->helperText('Optional PCRE pattern a handle value must match, e.g. /^[0-9]+$/ for a numeric-only Steam ID. Leave blank to allow any format.')
+                            ->helperText('Optional PCRE pattern a handle value must match, e.g. /^[0-9]+$/ for a numeric-only ID. Leave blank to allow any format.')
                             ->rule(static fn (): Closure => static function (string $attribute, $value, Closure $fail): void {
                                 if ($value !== null && $value !== '' && @preg_match($value, '') === false) {
                                     $fail('Enter a valid PCRE pattern, e.g. /^[0-9]+$/.');
@@ -110,9 +110,9 @@ class HandleResource extends Resource
     {
         return [
             'steam' => [
-                'label' => 'Steam ID (numeric)',
-                'regex' => '/^[0-9]+$/',
-                'hint'  => 'Steam ID must be numeric.',
+                'label' => 'SteamID64',
+                'regex' => '/^7656119[0-9]{10}$/',
+                'hint'  => 'Enter your 17-digit SteamID64 or steamcommunity.com/profiles link. Use Tools → Steam Vanity URL → ID to look up a custom URL.',
             ],
             'discord' => [
                 'label' => 'Discord username',

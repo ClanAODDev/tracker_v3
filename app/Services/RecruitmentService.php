@@ -102,7 +102,7 @@ class RecruitmentService
         }
 
         $member->handles()->syncWithoutDetaching([
-            $division->handle_id => ['value' => $ingameName],
+            $division->handle_id => ['value' => $division->handle?->normalize($ingameName) ?? $ingameName],
         ]);
     }
 

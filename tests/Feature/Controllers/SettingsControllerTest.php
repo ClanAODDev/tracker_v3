@@ -221,4 +221,28 @@ class SettingsControllerTest extends TestCase
         $response->assertJson(['message' => 'Steam ID must be numeric.', 'index' => 1]);
         $this->assertDatabaseMissing('handle_member', ['member_id' => $user->member->id]);
     }
+
+    #[Test]
+    public function ingame_handles_store_a_steam_profile_url_as_a_steamid64()
+    {
+        $user  = $this->createMemberWithUser();
+        $steam = Handle::create([
+            'label' => 'Steam Profile',
+            'type'  => Handle::STEAM_PROFILE,
+            'regex' => '/^7656119[0-9]{10}$/',
+        ]);
+
+        $this->actingAs($user)
+            ->postJson(route('settings.ingame-handles'), [
+                'handles' => [
+                    ['id' => '', 'handle_id' => $steam->id, 'value' => 'https://steamcommunity.com/profiles/76561197968443902/', 'primary' => true],
+                ],
+            ])
+            ->assertOk();
+
+        $this->assertDatabaseHas('handle_member', [
+            'member_id' => $user->member->id,
+            'value'     => '76561197968443902',
+        ]);
+    }
 }

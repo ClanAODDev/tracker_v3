@@ -92,6 +92,7 @@ class IngameHandlesForm
                 ->delete();
         }
 
+        $handleTypes   = Handle::whereIn('id', collect($handles)->pluck('handle_id')->filter())->get()->keyBy('id');
         $handlesByType = collect($handles)->groupBy('handle_id');
 
         foreach ($handlesByType as $handleId => $handlesOfType) {
@@ -112,11 +113,13 @@ class IngameHandlesForm
                     }
                 }
 
+                $value = $handleTypes->get($row['handle_id'])?->normalize($row['value']) ?? $row['value'];
+
                 if (! empty($row['id'])) {
                     MemberHandle::where('id', $row['id'])
                         ->update([
                             'handle_id'  => $row['handle_id'],
-                            'value'      => $row['value'],
+                            'value'      => $value,
                             'primary'    => $isPrimary,
                             'updated_at' => now(),
                         ]);
@@ -124,7 +127,7 @@ class IngameHandlesForm
                     MemberHandle::create([
                         'member_id'  => $member->id,
                         'handle_id'  => $row['handle_id'],
-                        'value'      => $row['value'],
+                        'value'      => $value,
                         'primary'    => $isPrimary,
                         'created_at' => now(),
                         'updated_at' => now(),
