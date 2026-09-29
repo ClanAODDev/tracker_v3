@@ -1,0 +1,504 @@
+ActivityResource::canAccess | -                                        | admin                    | allow
+ActivityResource::canAccess | -                                        | developer                | deny
+ActivityResource::canAccess | -                                        | admin_viewing_as_officer | deny
+ActivityResource::canAccess | -                                        | senior_leader            | allow
+ActivityResource::canAccess | -                                        | commanding_officer       | allow
+ActivityResource::canAccess | -                                        | executive_officer        | allow
+ActivityResource::canAccess | -                                        | officer                  | deny
+ActivityResource::canAccess | -                                        | platoon_leader           | deny
+ActivityResource::canAccess | -                                        | squad_leader             | deny
+ActivityResource::canAccess | -                                        | member                   | deny
+ActivityResource::canAccess | -                                        | banned                   | deny
+ActivityResource::canAccess | -                                        | pending                  | deny
+ActivityResource::canViewAny | -                                        | admin                    | allow
+ActivityResource::canViewAny | -                                        | developer                | allow
+ActivityResource::canViewAny | -                                        | admin_viewing_as_officer | allow
+ActivityResource::canViewAny | -                                        | senior_leader            | allow
+ActivityResource::canViewAny | -                                        | commanding_officer       | allow
+ActivityResource::canViewAny | -                                        | executive_officer        | allow
+ActivityResource::canViewAny | -                                        | officer                  | allow
+ActivityResource::canViewAny | -                                        | platoon_leader           | allow
+ActivityResource::canViewAny | -                                        | squad_leader             | allow
+ActivityResource::canViewAny | -                                        | member                   | allow
+ActivityResource::canViewAny | -                                        | banned                   | allow
+ActivityResource::canViewAny | -                                        | pending                  | allow
+ActivityResource::canCreate | -                                        | admin                    | deny
+ActivityResource::canCreate | -                                        | developer                | deny
+ActivityResource::canCreate | -                                        | admin_viewing_as_officer | deny
+ActivityResource::canCreate | -                                        | senior_leader            | deny
+ActivityResource::canCreate | -                                        | commanding_officer       | deny
+ActivityResource::canCreate | -                                        | executive_officer        | deny
+ActivityResource::canCreate | -                                        | officer                  | deny
+ActivityResource::canCreate | -                                        | platoon_leader           | deny
+ActivityResource::canCreate | -                                        | squad_leader             | deny
+ActivityResource::canCreate | -                                        | member                   | deny
+ActivityResource::canCreate | -                                        | banned                   | deny
+ActivityResource::canCreate | -                                        | pending                  | deny
+DivisionResource::canAccess | -                                        | admin                    | allow
+DivisionResource::canAccess | -                                        | developer                | allow
+DivisionResource::canAccess | -                                        | admin_viewing_as_officer | deny
+DivisionResource::canAccess | -                                        | senior_leader            | deny
+DivisionResource::canAccess | -                                        | commanding_officer       | allow
+DivisionResource::canAccess | -                                        | executive_officer        | allow
+DivisionResource::canAccess | -                                        | officer                  | deny
+DivisionResource::canAccess | -                                        | platoon_leader           | deny
+DivisionResource::canAccess | -                                        | squad_leader             | deny
+DivisionResource::canAccess | -                                        | member                   | deny
+DivisionResource::canAccess | -                                        | banned                   | deny
+DivisionResource::canAccess | -                                        | pending                  | error:ErrorException
+DivisionResource::canViewAny | -                                        | admin                    | allow
+DivisionResource::canViewAny | -                                        | developer                | allow
+DivisionResource::canViewAny | -                                        | admin_viewing_as_officer | deny
+DivisionResource::canViewAny | -                                        | senior_leader            | deny
+DivisionResource::canViewAny | -                                        | commanding_officer       | allow
+DivisionResource::canViewAny | -                                        | executive_officer        | allow
+DivisionResource::canViewAny | -                                        | officer                  | deny
+DivisionResource::canViewAny | -                                        | platoon_leader           | deny
+DivisionResource::canViewAny | -                                        | squad_leader             | deny
+DivisionResource::canViewAny | -                                        | member                   | deny
+DivisionResource::canViewAny | -                                        | banned                   | deny
+DivisionResource::canViewAny | -                                        | pending                  | error:ErrorException
+DivisionResource::canCreate | -                                        | admin                    | allow
+DivisionResource::canCreate | -                                        | developer                | allow
+DivisionResource::canCreate | -                                        | admin_viewing_as_officer | deny
+DivisionResource::canCreate | -                                        | senior_leader            | deny
+DivisionResource::canCreate | -                                        | commanding_officer       | deny
+DivisionResource::canCreate | -                                        | executive_officer        | deny
+DivisionResource::canCreate | -                                        | officer                  | deny
+DivisionResource::canCreate | -                                        | platoon_leader           | deny
+DivisionResource::canCreate | -                                        | squad_leader             | deny
+DivisionResource::canCreate | -                                        | member                   | deny
+DivisionResource::canCreate | -                                        | banned                   | deny
+DivisionResource::canCreate | -                                        | pending                  | deny
+DivisionTagResource::canAccess | -                                        | admin                    | allow
+DivisionTagResource::canAccess | -                                        | developer                | allow
+DivisionTagResource::canAccess | -                                        | admin_viewing_as_officer | allow
+DivisionTagResource::canAccess | -                                        | senior_leader            | allow
+DivisionTagResource::canAccess | -                                        | commanding_officer       | allow
+DivisionTagResource::canAccess | -                                        | executive_officer        | allow
+DivisionTagResource::canAccess | -                                        | officer                  | allow
+DivisionTagResource::canAccess | -                                        | platoon_leader           | allow
+DivisionTagResource::canAccess | -                                        | squad_leader             | allow
+DivisionTagResource::canAccess | -                                        | member                   | allow
+DivisionTagResource::canAccess | -                                        | banned                   | allow
+DivisionTagResource::canAccess | -                                        | pending                  | allow
+DivisionTagResource::canViewAny | -                                        | admin                    | allow
+DivisionTagResource::canViewAny | -                                        | developer                | allow
+DivisionTagResource::canViewAny | -                                        | admin_viewing_as_officer | allow
+DivisionTagResource::canViewAny | -                                        | senior_leader            | allow
+DivisionTagResource::canViewAny | -                                        | commanding_officer       | allow
+DivisionTagResource::canViewAny | -                                        | executive_officer        | allow
+DivisionTagResource::canViewAny | -                                        | officer                  | allow
+DivisionTagResource::canViewAny | -                                        | platoon_leader           | allow
+DivisionTagResource::canViewAny | -                                        | squad_leader             | allow
+DivisionTagResource::canViewAny | -                                        | member                   | allow
+DivisionTagResource::canViewAny | -                                        | banned                   | allow
+DivisionTagResource::canViewAny | -                                        | pending                  | allow
+DivisionTagResource::canCreate | -                                        | admin                    | allow
+DivisionTagResource::canCreate | -                                        | developer                | deny
+DivisionTagResource::canCreate | -                                        | admin_viewing_as_officer | deny
+DivisionTagResource::canCreate | -                                        | senior_leader            | allow
+DivisionTagResource::canCreate | -                                        | commanding_officer       | allow
+DivisionTagResource::canCreate | -                                        | executive_officer        | allow
+DivisionTagResource::canCreate | -                                        | officer                  | deny
+DivisionTagResource::canCreate | -                                        | platoon_leader           | deny
+DivisionTagResource::canCreate | -                                        | squad_leader             | deny
+DivisionTagResource::canCreate | -                                        | member                   | deny
+DivisionTagResource::canCreate | -                                        | banned                   | deny
+DivisionTagResource::canCreate | -                                        | pending                  | deny
+LeaveResource::canAccess | -                                        | admin                    | allow
+LeaveResource::canAccess | -                                        | developer                | deny
+LeaveResource::canAccess | -                                        | admin_viewing_as_officer | allow
+LeaveResource::canAccess | -                                        | senior_leader            | allow
+LeaveResource::canAccess | -                                        | commanding_officer       | allow
+LeaveResource::canAccess | -                                        | executive_officer        | allow
+LeaveResource::canAccess | -                                        | officer                  | allow
+LeaveResource::canAccess | -                                        | platoon_leader           | allow
+LeaveResource::canAccess | -                                        | squad_leader             | allow
+LeaveResource::canAccess | -                                        | member                   | deny
+LeaveResource::canAccess | -                                        | banned                   | allow
+LeaveResource::canAccess | -                                        | pending                  | deny
+LeaveResource::canViewAny | -                                        | admin                    | allow
+LeaveResource::canViewAny | -                                        | developer                | deny
+LeaveResource::canViewAny | -                                        | admin_viewing_as_officer | allow
+LeaveResource::canViewAny | -                                        | senior_leader            | allow
+LeaveResource::canViewAny | -                                        | commanding_officer       | allow
+LeaveResource::canViewAny | -                                        | executive_officer        | allow
+LeaveResource::canViewAny | -                                        | officer                  | allow
+LeaveResource::canViewAny | -                                        | platoon_leader           | allow
+LeaveResource::canViewAny | -                                        | squad_leader             | allow
+LeaveResource::canViewAny | -                                        | member                   | deny
+LeaveResource::canViewAny | -                                        | banned                   | allow
+LeaveResource::canViewAny | -                                        | pending                  | deny
+LeaveResource::canCreate | -                                        | admin                    | allow
+LeaveResource::canCreate | -                                        | developer                | deny
+LeaveResource::canCreate | -                                        | admin_viewing_as_officer | allow
+LeaveResource::canCreate | -                                        | senior_leader            | allow
+LeaveResource::canCreate | -                                        | commanding_officer       | allow
+LeaveResource::canCreate | -                                        | executive_officer        | allow
+LeaveResource::canCreate | -                                        | officer                  | allow
+LeaveResource::canCreate | -                                        | platoon_leader           | allow
+LeaveResource::canCreate | -                                        | squad_leader             | allow
+LeaveResource::canCreate | -                                        | member                   | deny
+LeaveResource::canCreate | -                                        | banned                   | allow
+LeaveResource::canCreate | -                                        | pending                  | deny
+MemberAwardResource::canAccess | -                                        | admin                    | allow
+MemberAwardResource::canAccess | -                                        | developer                | allow
+MemberAwardResource::canAccess | -                                        | admin_viewing_as_officer | allow
+MemberAwardResource::canAccess | -                                        | senior_leader            | allow
+MemberAwardResource::canAccess | -                                        | commanding_officer       | allow
+MemberAwardResource::canAccess | -                                        | executive_officer        | allow
+MemberAwardResource::canAccess | -                                        | officer                  | allow
+MemberAwardResource::canAccess | -                                        | platoon_leader           | allow
+MemberAwardResource::canAccess | -                                        | squad_leader             | allow
+MemberAwardResource::canAccess | -                                        | member                   | allow
+MemberAwardResource::canAccess | -                                        | banned                   | allow
+MemberAwardResource::canAccess | -                                        | pending                  | allow
+MemberAwardResource::canViewAny | -                                        | admin                    | allow
+MemberAwardResource::canViewAny | -                                        | developer                | allow
+MemberAwardResource::canViewAny | -                                        | admin_viewing_as_officer | allow
+MemberAwardResource::canViewAny | -                                        | senior_leader            | allow
+MemberAwardResource::canViewAny | -                                        | commanding_officer       | allow
+MemberAwardResource::canViewAny | -                                        | executive_officer        | allow
+MemberAwardResource::canViewAny | -                                        | officer                  | allow
+MemberAwardResource::canViewAny | -                                        | platoon_leader           | allow
+MemberAwardResource::canViewAny | -                                        | squad_leader             | allow
+MemberAwardResource::canViewAny | -                                        | member                   | allow
+MemberAwardResource::canViewAny | -                                        | banned                   | allow
+MemberAwardResource::canViewAny | -                                        | pending                  | allow
+MemberAwardResource::canCreate | -                                        | admin                    | allow
+MemberAwardResource::canCreate | -                                        | developer                | allow
+MemberAwardResource::canCreate | -                                        | admin_viewing_as_officer | allow
+MemberAwardResource::canCreate | -                                        | senior_leader            | allow
+MemberAwardResource::canCreate | -                                        | commanding_officer       | allow
+MemberAwardResource::canCreate | -                                        | executive_officer        | allow
+MemberAwardResource::canCreate | -                                        | officer                  | allow
+MemberAwardResource::canCreate | -                                        | platoon_leader           | allow
+MemberAwardResource::canCreate | -                                        | squad_leader             | allow
+MemberAwardResource::canCreate | -                                        | member                   | allow
+MemberAwardResource::canCreate | -                                        | banned                   | allow
+MemberAwardResource::canCreate | -                                        | pending                  | allow
+MemberRequestResource::canAccess | -                                        | admin                    | allow
+MemberRequestResource::canAccess | -                                        | developer                | allow
+MemberRequestResource::canAccess | -                                        | admin_viewing_as_officer | deny
+MemberRequestResource::canAccess | -                                        | senior_leader            | deny
+MemberRequestResource::canAccess | -                                        | commanding_officer       | allow
+MemberRequestResource::canAccess | -                                        | executive_officer        | allow
+MemberRequestResource::canAccess | -                                        | officer                  | deny
+MemberRequestResource::canAccess | -                                        | platoon_leader           | deny
+MemberRequestResource::canAccess | -                                        | squad_leader             | deny
+MemberRequestResource::canAccess | -                                        | member                   | deny
+MemberRequestResource::canAccess | -                                        | banned                   | deny
+MemberRequestResource::canAccess | -                                        | pending                  | deny
+MemberRequestResource::canViewAny | -                                        | admin                    | allow
+MemberRequestResource::canViewAny | -                                        | developer                | allow
+MemberRequestResource::canViewAny | -                                        | admin_viewing_as_officer | deny
+MemberRequestResource::canViewAny | -                                        | senior_leader            | deny
+MemberRequestResource::canViewAny | -                                        | commanding_officer       | allow
+MemberRequestResource::canViewAny | -                                        | executive_officer        | allow
+MemberRequestResource::canViewAny | -                                        | officer                  | deny
+MemberRequestResource::canViewAny | -                                        | platoon_leader           | deny
+MemberRequestResource::canViewAny | -                                        | squad_leader             | deny
+MemberRequestResource::canViewAny | -                                        | member                   | deny
+MemberRequestResource::canViewAny | -                                        | banned                   | deny
+MemberRequestResource::canViewAny | -                                        | pending                  | deny
+MemberRequestResource::canCreate | -                                        | admin                    | deny
+MemberRequestResource::canCreate | -                                        | developer                | deny
+MemberRequestResource::canCreate | -                                        | admin_viewing_as_officer | deny
+MemberRequestResource::canCreate | -                                        | senior_leader            | deny
+MemberRequestResource::canCreate | -                                        | commanding_officer       | deny
+MemberRequestResource::canCreate | -                                        | executive_officer        | deny
+MemberRequestResource::canCreate | -                                        | officer                  | deny
+MemberRequestResource::canCreate | -                                        | platoon_leader           | deny
+MemberRequestResource::canCreate | -                                        | squad_leader             | deny
+MemberRequestResource::canCreate | -                                        | member                   | deny
+MemberRequestResource::canCreate | -                                        | banned                   | deny
+MemberRequestResource::canCreate | -                                        | pending                  | deny
+MemberResource::canAccess | -                                        | admin                    | allow
+MemberResource::canAccess | -                                        | developer                | allow
+MemberResource::canAccess | -                                        | admin_viewing_as_officer | allow
+MemberResource::canAccess | -                                        | senior_leader            | allow
+MemberResource::canAccess | -                                        | commanding_officer       | allow
+MemberResource::canAccess | -                                        | executive_officer        | allow
+MemberResource::canAccess | -                                        | officer                  | allow
+MemberResource::canAccess | -                                        | platoon_leader           | allow
+MemberResource::canAccess | -                                        | squad_leader             | allow
+MemberResource::canAccess | -                                        | member                   | allow
+MemberResource::canAccess | -                                        | banned                   | allow
+MemberResource::canAccess | -                                        | pending                  | allow
+MemberResource::canViewAny | -                                        | admin                    | allow
+MemberResource::canViewAny | -                                        | developer                | allow
+MemberResource::canViewAny | -                                        | admin_viewing_as_officer | allow
+MemberResource::canViewAny | -                                        | senior_leader            | allow
+MemberResource::canViewAny | -                                        | commanding_officer       | allow
+MemberResource::canViewAny | -                                        | executive_officer        | allow
+MemberResource::canViewAny | -                                        | officer                  | allow
+MemberResource::canViewAny | -                                        | platoon_leader           | allow
+MemberResource::canViewAny | -                                        | squad_leader             | allow
+MemberResource::canViewAny | -                                        | member                   | allow
+MemberResource::canViewAny | -                                        | banned                   | allow
+MemberResource::canViewAny | -                                        | pending                  | allow
+MemberResource::canCreate | -                                        | admin                    | allow
+MemberResource::canCreate | -                                        | developer                | allow
+MemberResource::canCreate | -                                        | admin_viewing_as_officer | deny
+MemberResource::canCreate | -                                        | senior_leader            | deny
+MemberResource::canCreate | -                                        | commanding_officer       | deny
+MemberResource::canCreate | -                                        | executive_officer        | deny
+MemberResource::canCreate | -                                        | officer                  | deny
+MemberResource::canCreate | -                                        | platoon_leader           | deny
+MemberResource::canCreate | -                                        | squad_leader             | deny
+MemberResource::canCreate | -                                        | member                   | deny
+MemberResource::canCreate | -                                        | banned                   | deny
+MemberResource::canCreate | -                                        | pending                  | deny
+PlatoonResource::canAccess | -                                        | admin                    | allow
+PlatoonResource::canAccess | -                                        | developer                | allow
+PlatoonResource::canAccess | -                                        | admin_viewing_as_officer | allow
+PlatoonResource::canAccess | -                                        | senior_leader            | allow
+PlatoonResource::canAccess | -                                        | commanding_officer       | allow
+PlatoonResource::canAccess | -                                        | executive_officer        | allow
+PlatoonResource::canAccess | -                                        | officer                  | allow
+PlatoonResource::canAccess | -                                        | platoon_leader           | allow
+PlatoonResource::canAccess | -                                        | squad_leader             | allow
+PlatoonResource::canAccess | -                                        | member                   | deny
+PlatoonResource::canAccess | -                                        | banned                   | deny
+PlatoonResource::canAccess | -                                        | pending                  | deny
+PlatoonResource::canViewAny | -                                        | admin                    | allow
+PlatoonResource::canViewAny | -                                        | developer                | allow
+PlatoonResource::canViewAny | -                                        | admin_viewing_as_officer | allow
+PlatoonResource::canViewAny | -                                        | senior_leader            | allow
+PlatoonResource::canViewAny | -                                        | commanding_officer       | allow
+PlatoonResource::canViewAny | -                                        | executive_officer        | allow
+PlatoonResource::canViewAny | -                                        | officer                  | allow
+PlatoonResource::canViewAny | -                                        | platoon_leader           | allow
+PlatoonResource::canViewAny | -                                        | squad_leader             | allow
+PlatoonResource::canViewAny | -                                        | member                   | deny
+PlatoonResource::canViewAny | -                                        | banned                   | deny
+PlatoonResource::canViewAny | -                                        | pending                  | deny
+PlatoonResource::canCreate | -                                        | admin                    | allow
+PlatoonResource::canCreate | -                                        | developer                | allow
+PlatoonResource::canCreate | -                                        | admin_viewing_as_officer | deny
+PlatoonResource::canCreate | -                                        | senior_leader            | allow
+PlatoonResource::canCreate | -                                        | commanding_officer       | allow
+PlatoonResource::canCreate | -                                        | executive_officer        | allow
+PlatoonResource::canCreate | -                                        | officer                  | deny
+PlatoonResource::canCreate | -                                        | platoon_leader           | deny
+PlatoonResource::canCreate | -                                        | squad_leader             | deny
+PlatoonResource::canCreate | -                                        | member                   | deny
+PlatoonResource::canCreate | -                                        | banned                   | deny
+PlatoonResource::canCreate | -                                        | pending                  | deny
+RankActionResource::canAccess | -                                        | admin                    | allow
+RankActionResource::canAccess | -                                        | developer                | deny
+RankActionResource::canAccess | -                                        | admin_viewing_as_officer | allow
+RankActionResource::canAccess | -                                        | senior_leader            | allow
+RankActionResource::canAccess | -                                        | commanding_officer       | allow
+RankActionResource::canAccess | -                                        | executive_officer        | allow
+RankActionResource::canAccess | -                                        | officer                  | allow
+RankActionResource::canAccess | -                                        | platoon_leader           | allow
+RankActionResource::canAccess | -                                        | squad_leader             | allow
+RankActionResource::canAccess | -                                        | member                   | deny
+RankActionResource::canAccess | -                                        | banned                   | deny
+RankActionResource::canAccess | -                                        | pending                  | deny
+RankActionResource::canViewAny | -                                        | admin                    | allow
+RankActionResource::canViewAny | -                                        | developer                | deny
+RankActionResource::canViewAny | -                                        | admin_viewing_as_officer | allow
+RankActionResource::canViewAny | -                                        | senior_leader            | allow
+RankActionResource::canViewAny | -                                        | commanding_officer       | allow
+RankActionResource::canViewAny | -                                        | executive_officer        | allow
+RankActionResource::canViewAny | -                                        | officer                  | allow
+RankActionResource::canViewAny | -                                        | platoon_leader           | allow
+RankActionResource::canViewAny | -                                        | squad_leader             | allow
+RankActionResource::canViewAny | -                                        | member                   | deny
+RankActionResource::canViewAny | -                                        | banned                   | deny
+RankActionResource::canViewAny | -                                        | pending                  | deny
+RankActionResource::canCreate | -                                        | admin                    | allow
+RankActionResource::canCreate | -                                        | developer                | allow
+RankActionResource::canCreate | -                                        | admin_viewing_as_officer | allow
+RankActionResource::canCreate | -                                        | senior_leader            | allow
+RankActionResource::canCreate | -                                        | commanding_officer       | allow
+RankActionResource::canCreate | -                                        | executive_officer        | allow
+RankActionResource::canCreate | -                                        | officer                  | allow
+RankActionResource::canCreate | -                                        | platoon_leader           | allow
+RankActionResource::canCreate | -                                        | squad_leader             | allow
+RankActionResource::canCreate | -                                        | member                   | allow
+RankActionResource::canCreate | -                                        | banned                   | allow
+RankActionResource::canCreate | -                                        | pending                  | allow
+SquadResource::canAccess | -                                        | admin                    | allow
+SquadResource::canAccess | -                                        | developer                | allow
+SquadResource::canAccess | -                                        | admin_viewing_as_officer | allow
+SquadResource::canAccess | -                                        | senior_leader            | allow
+SquadResource::canAccess | -                                        | commanding_officer       | allow
+SquadResource::canAccess | -                                        | executive_officer        | allow
+SquadResource::canAccess | -                                        | officer                  | allow
+SquadResource::canAccess | -                                        | platoon_leader           | allow
+SquadResource::canAccess | -                                        | squad_leader             | allow
+SquadResource::canAccess | -                                        | member                   | deny
+SquadResource::canAccess | -                                        | banned                   | deny
+SquadResource::canAccess | -                                        | pending                  | deny
+SquadResource::canViewAny | -                                        | admin                    | allow
+SquadResource::canViewAny | -                                        | developer                | allow
+SquadResource::canViewAny | -                                        | admin_viewing_as_officer | allow
+SquadResource::canViewAny | -                                        | senior_leader            | allow
+SquadResource::canViewAny | -                                        | commanding_officer       | allow
+SquadResource::canViewAny | -                                        | executive_officer        | allow
+SquadResource::canViewAny | -                                        | officer                  | allow
+SquadResource::canViewAny | -                                        | platoon_leader           | allow
+SquadResource::canViewAny | -                                        | squad_leader             | allow
+SquadResource::canViewAny | -                                        | member                   | deny
+SquadResource::canViewAny | -                                        | banned                   | deny
+SquadResource::canViewAny | -                                        | pending                  | deny
+SquadResource::canCreate | -                                        | admin                    | allow
+SquadResource::canCreate | -                                        | developer                | allow
+SquadResource::canCreate | -                                        | admin_viewing_as_officer | deny
+SquadResource::canCreate | -                                        | senior_leader            | allow
+SquadResource::canCreate | -                                        | commanding_officer       | allow
+SquadResource::canCreate | -                                        | executive_officer        | allow
+SquadResource::canCreate | -                                        | officer                  | deny
+SquadResource::canCreate | -                                        | platoon_leader           | deny
+SquadResource::canCreate | -                                        | squad_leader             | deny
+SquadResource::canCreate | -                                        | member                   | deny
+SquadResource::canCreate | -                                        | banned                   | deny
+SquadResource::canCreate | -                                        | pending                  | deny
+TransferResource::canAccess | -                                        | admin                    | allow
+TransferResource::canAccess | -                                        | developer                | allow
+TransferResource::canAccess | -                                        | admin_viewing_as_officer | allow
+TransferResource::canAccess | -                                        | senior_leader            | allow
+TransferResource::canAccess | -                                        | commanding_officer       | allow
+TransferResource::canAccess | -                                        | executive_officer        | allow
+TransferResource::canAccess | -                                        | officer                  | allow
+TransferResource::canAccess | -                                        | platoon_leader           | allow
+TransferResource::canAccess | -                                        | squad_leader             | allow
+TransferResource::canAccess | -                                        | member                   | deny
+TransferResource::canAccess | -                                        | banned                   | deny
+TransferResource::canAccess | -                                        | pending                  | deny
+TransferResource::canViewAny | -                                        | admin                    | allow
+TransferResource::canViewAny | -                                        | developer                | allow
+TransferResource::canViewAny | -                                        | admin_viewing_as_officer | allow
+TransferResource::canViewAny | -                                        | senior_leader            | allow
+TransferResource::canViewAny | -                                        | commanding_officer       | allow
+TransferResource::canViewAny | -                                        | executive_officer        | allow
+TransferResource::canViewAny | -                                        | officer                  | allow
+TransferResource::canViewAny | -                                        | platoon_leader           | allow
+TransferResource::canViewAny | -                                        | squad_leader             | allow
+TransferResource::canViewAny | -                                        | member                   | deny
+TransferResource::canViewAny | -                                        | banned                   | deny
+TransferResource::canViewAny | -                                        | pending                  | deny
+TransferResource::canCreate | -                                        | admin                    | allow
+TransferResource::canCreate | -                                        | developer                | allow
+TransferResource::canCreate | -                                        | admin_viewing_as_officer | allow
+TransferResource::canCreate | -                                        | senior_leader            | allow
+TransferResource::canCreate | -                                        | commanding_officer       | allow
+TransferResource::canCreate | -                                        | executive_officer        | allow
+TransferResource::canCreate | -                                        | officer                  | allow
+TransferResource::canCreate | -                                        | platoon_leader           | allow
+TransferResource::canCreate | -                                        | squad_leader             | allow
+TransferResource::canCreate | -                                        | member                   | allow
+TransferResource::canCreate | -                                        | banned                   | allow
+TransferResource::canCreate | -                                        | pending                  | error:ErrorException
+MemberAwardResource query | (visible records)                        | admin                    | [clan-wide award]
+MemberAwardResource query | (visible records)                        | developer                | [clan-wide award, division A award, division B award]
+MemberAwardResource query | (visible records)                        | admin_viewing_as_officer | [clan-wide award, division A award, division B award]
+MemberAwardResource query | (visible records)                        | senior_leader            | [clan-wide award, division A award, division B award]
+MemberAwardResource query | (visible records)                        | commanding_officer       | [division A award]
+MemberAwardResource query | (visible records)                        | executive_officer        | [division A award]
+MemberAwardResource query | (visible records)                        | officer                  | [clan-wide award, division A award, division B award]
+MemberAwardResource query | (visible records)                        | platoon_leader           | [clan-wide award, division A award, division B award]
+MemberAwardResource query | (visible records)                        | squad_leader             | [clan-wide award, division A award, division B award]
+MemberAwardResource query | (visible records)                        | member                   | [clan-wide award, division A award, division B award]
+MemberAwardResource query | (visible records)                        | banned                   | [clan-wide award, division A award, division B award]
+MemberAwardResource query | (visible records)                        | pending                  | [clan-wide award, division A award, division B award]
+MemberRequestResource query | (visible records)                        | admin                    | [Division A, Division B]
+MemberRequestResource query | (visible records)                        | developer                | [Division A, Division B]
+MemberRequestResource query | (visible records)                        | admin_viewing_as_officer | [Division A, Division B]
+MemberRequestResource query | (visible records)                        | senior_leader            | [Division A, Division B]
+MemberRequestResource query | (visible records)                        | commanding_officer       | [Division A]
+MemberRequestResource query | (visible records)                        | executive_officer        | [Division A]
+MemberRequestResource query | (visible records)                        | officer                  | [Division A, Division B]
+MemberRequestResource query | (visible records)                        | platoon_leader           | [Division A, Division B]
+MemberRequestResource query | (visible records)                        | squad_leader             | [Division A, Division B]
+MemberRequestResource query | (visible records)                        | member                   | [Division A, Division B]
+MemberRequestResource query | (visible records)                        | banned                   | [Division A, Division B]
+MemberRequestResource query | (visible records)                        | pending                  | [Division A, Division B]
+ActivityResource query   | (visible records)                        | admin                    | [Division A activity, Division B activity]
+ActivityResource query   | (visible records)                        | developer                | [Division A activity]
+ActivityResource query   | (visible records)                        | admin_viewing_as_officer | [Division A activity]
+ActivityResource query   | (visible records)                        | senior_leader            | [Division A activity]
+ActivityResource query   | (visible records)                        | commanding_officer       | [Division A activity]
+ActivityResource query   | (visible records)                        | executive_officer        | [Division A activity]
+ActivityResource query   | (visible records)                        | officer                  | [Division A activity]
+ActivityResource query   | (visible records)                        | platoon_leader           | [Division A activity]
+ActivityResource query   | (visible records)                        | squad_leader             | [Division A activity]
+ActivityResource query   | (visible records)                        | member                   | [Division A activity]
+ActivityResource query   | (visible records)                        | banned                   | [Division A activity]
+ActivityResource query   | (visible records)                        | pending                  | []
+DivisionTagResource query | (visible records)                        | admin                    | [division_a_officers, division_a_public, division_a_senior_leaders, global_public]
+DivisionTagResource query | (visible records)                        | developer                | []
+DivisionTagResource query | (visible records)                        | admin_viewing_as_officer | [division_a_officers, division_a_public, global_public]
+DivisionTagResource query | (visible records)                        | senior_leader            | [division_a_officers, division_a_public, division_a_senior_leaders, global_public]
+DivisionTagResource query | (visible records)                        | commanding_officer       | [division_a_officers, division_a_public, division_a_senior_leaders, global_public]
+DivisionTagResource query | (visible records)                        | executive_officer        | [division_a_officers, division_a_public, division_a_senior_leaders, global_public]
+DivisionTagResource query | (visible records)                        | officer                  | [division_a_officers, division_a_public, global_public]
+DivisionTagResource query | (visible records)                        | platoon_leader           | [division_a_officers, division_a_public, global_public]
+DivisionTagResource query | (visible records)                        | squad_leader             | [division_a_officers, division_a_public, global_public]
+DivisionTagResource query | (visible records)                        | member                   | []
+DivisionTagResource query | (visible records)                        | banned                   | []
+DivisionTagResource query | (visible records)                        | pending                  | error:TypeError
+MemberAwardResource::canEdit | any award                                | admin                    | allow
+MemberAwardResource::canEdit | any award                                | developer                | deny
+MemberAwardResource::canEdit | any award                                | admin_viewing_as_officer | deny
+MemberAwardResource::canEdit | any award                                | senior_leader            | allow
+MemberAwardResource::canEdit | any award                                | commanding_officer       | allow
+MemberAwardResource::canEdit | any award                                | executive_officer        | allow
+MemberAwardResource::canEdit | any award                                | officer                  | deny
+MemberAwardResource::canEdit | any award                                | platoon_leader           | deny
+MemberAwardResource::canEdit | any award                                | squad_leader             | deny
+MemberAwardResource::canEdit | any award                                | member                   | deny
+MemberAwardResource::canEdit | any award                                | banned                   | deny
+MemberAwardResource::canEdit | any award                                | pending                  | deny
+MemberAwardResource::canDelete | any award                                | admin                    | allow
+MemberAwardResource::canDelete | any award                                | developer                | allow
+MemberAwardResource::canDelete | any award                                | admin_viewing_as_officer | allow
+MemberAwardResource::canDelete | any award                                | senior_leader            | allow
+MemberAwardResource::canDelete | any award                                | commanding_officer       | allow
+MemberAwardResource::canDelete | any award                                | executive_officer        | allow
+MemberAwardResource::canDelete | any award                                | officer                  | allow
+MemberAwardResource::canDelete | any award                                | platoon_leader           | allow
+MemberAwardResource::canDelete | any award                                | squad_leader             | allow
+MemberAwardResource::canDelete | any award                                | member                   | allow
+MemberAwardResource::canDelete | any award                                | banned                   | allow
+MemberAwardResource::canDelete | any award                                | pending                  | allow
+MemberAwardResource::canDeleteAny | -                                        | admin                    | allow
+MemberAwardResource::canDeleteAny | -                                        | developer                | deny
+MemberAwardResource::canDeleteAny | -                                        | admin_viewing_as_officer | deny
+MemberAwardResource::canDeleteAny | -                                        | senior_leader            | allow
+MemberAwardResource::canDeleteAny | -                                        | commanding_officer       | allow
+MemberAwardResource::canDeleteAny | -                                        | executive_officer        | allow
+MemberAwardResource::canDeleteAny | -                                        | officer                  | deny
+MemberAwardResource::canDeleteAny | -                                        | platoon_leader           | deny
+MemberAwardResource::canDeleteAny | -                                        | squad_leader             | deny
+MemberAwardResource::canDeleteAny | -                                        | member                   | deny
+MemberAwardResource::canDeleteAny | -                                        | banned                   | deny
+MemberAwardResource::canDeleteAny | -                                        | pending                  | deny
+GET member awards index  | (status)                                 | admin                    | 200
+GET member awards index  | (status)                                 | developer                | 200
+GET member awards index  | (status)                                 | admin_viewing_as_officer | 200
+GET member awards index  | (status)                                 | senior_leader            | 200
+GET member awards index  | (status)                                 | commanding_officer       | 200
+GET member awards index  | (status)                                 | executive_officer        | 200
+GET member awards index  | (status)                                 | officer                  | 200
+GET member awards index  | (status)                                 | platoon_leader           | 200
+GET member awards index  | (status)                                 | squad_leader             | 200
+GET member awards index  | (status)                                 | member                   | 403
+GET member awards index  | (status)                                 | banned                   | 403
+GET member awards index  | (status)                                 | pending                  | 403
+GET member award edit    | (status)                                 | admin                    | 200
+GET member award edit    | (status)                                 | developer                | 403
+GET member award edit    | (status)                                 | admin_viewing_as_officer | 403
+GET member award edit    | (status)                                 | senior_leader            | 200
+GET member award edit    | (status)                                 | commanding_officer       | 404
+GET member award edit    | (status)                                 | executive_officer        | 404
+GET member award edit    | (status)                                 | officer                  | 403
+GET member award edit    | (status)                                 | platoon_leader           | 403
+GET member award edit    | (status)                                 | squad_leader             | 403
+GET member award edit    | (status)                                 | member                   | 403
+GET member award edit    | (status)                                 | banned                   | 403
+GET member award edit    | (status)                                 | pending                  | 403
