@@ -8,6 +8,7 @@ use App\Filament\Admin\Resources\DivisionResource\Pages\EditDivision;
 use App\Filament\Admin\Resources\DivisionResource\Pages\ListDivisions;
 use App\Jobs\SyncDivisionDns;
 use App\Models\Division;
+use App\Models\Handle;
 use App\Models\Member;
 use App\Rules\HoldsNoOtherPosition;
 use App\Services\CloudflareDnsService;
@@ -109,11 +110,32 @@ class DivisionResource extends Resource
                             ->simple(
                                 Select::make('handle_id')
                                     ->relationship('handle', 'label')
+                                    ->getOptionLabelFromRecordUsing(fn (Handle $handle) => $handle->selectLabel())
                                     ->searchable()
                                     ->preload()
                                     ->required()
                                     ->distinct()
-                                    ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
+                                    ->disableOptionsWhenSelectedInSiblingRepeaterItems()
+                                    ->live()
+                                    ->helperText(fn (Get $get, $state) => self::warnsAboutDisabledHandle($get, $state)
+                                        ? 'This handle type is disabled, so these handles are hidden on member profiles and can\'t be picked in handle editors.'
+                                        : null)
+                                    ->hintColor('warning')
+                                    ->hintIcon(fn (Get $get, $state) => self::warnsAboutDisabledHandle($get, $state) ? 'heroicon-m-exclamation-triangle' : null)
+                                    ->hintAction(
+                                        Action::make('enableHandleType')
+                                            ->label('Enable')
+                                            ->visible(fn (Get $get, $state) => self::warnsAboutDisabledHandle($get, $state))
+                                            ->action(function ($state) {
+                                                $handle = Handle::find($state);
+                                                $handle?->update(['enabled' => true]);
+
+                                                Notification::make()
+                                                    ->title("{$handle?->label} enabled")
+                                                    ->success()
+                                                    ->send();
+                                            }),
+                                    ),
                             ),
 
                         TextInput::make('description')
@@ -320,5 +342,12 @@ class DivisionResource extends Resource
             'create' => CreateDivision::route('/create'),
             'edit'   => EditDivision::route('/{record}/edit'),
         ];
+    }
+
+    private static function warnsAboutDisabledHandle(Get $get, $handleId): bool
+    {
+        return $handleId
+            && (bool) $get('../../active')
+            && Handle::whereKey($handleId)->where('enabled', false)->exists();
     }
 }

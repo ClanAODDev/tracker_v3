@@ -6,6 +6,8 @@ use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource;
 use App\Filament\Admin\Resources\DivisionResource\Pages\CreateDivision;
 use App\Filament\Admin\Resources\DivisionResource\Pages\EditDivision;
+use App\Models\Handle;
+use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -166,5 +168,52 @@ class DivisionResourceTest extends TestCase
         $this->assertEquals(Position::EXECUTIVE_OFFICER, $member->fresh()->position);
         $this->assertNull($platoon->fresh()->leader_id);
         $this->assertNull($squad->fresh()->leader_id);
+    }
+
+    #[Test]
+    public function warns_when_an_active_division_uses_a_disabled_handle_type()
+    {
+        $this->actingAs($this->createAdmin());
+        $disabled = Handle::factory()->create(['label' => 'Warships EU', 'enabled' => false]);
+        $division = $this->createDivisionWithHandles([$disabled]);
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->assertSee('This handle type is disabled');
+    }
+
+    #[Test]
+    public function does_not_warn_about_disabled_handle_types_on_an_inactive_division()
+    {
+        $this->actingAs($this->createAdmin());
+        $disabled = Handle::factory()->create(['enabled' => false]);
+        $division = $this->createDivisionWithHandles([$disabled], ['active' => false]);
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->assertDontSee('This handle type is disabled');
+    }
+
+    #[Test]
+    public function does_not_warn_about_enabled_handle_types()
+    {
+        $this->actingAs($this->createAdmin());
+        $division = $this->createDivisionWithHandles([Handle::factory()->create(['enabled' => true])]);
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->assertDontSee('This handle type is disabled');
+    }
+
+    #[Test]
+    public function the_warning_offers_to_enable_the_handle_type()
+    {
+        $this->actingAs($this->createAdmin());
+        $disabled = Handle::factory()->create(['enabled' => false]);
+        $division = $this->createDivisionWithHandles([$disabled]);
+
+        $page    = Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()]);
+        $itemKey = array_key_first($page->get('data.handleAssignments'));
+
+        $page->callAction(TestAction::make('enableHandleType')->schemaComponent("handleAssignments.{$itemKey}.handle_id"));
+
+        $this->assertTrue($disabled->fresh()->enabled);
     }
 }
