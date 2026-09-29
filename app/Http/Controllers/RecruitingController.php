@@ -76,7 +76,7 @@ class RecruitingController extends Controller
                         (int) $request->rank,
                         (int) $request->platoon,
                         $request->squad ? (int) $request->squad : null,
-                        $request->ingame_name,
+                        $request->input('handles', []),
                         $recruiter
                     );
                 } catch (RecruitmentFailedException $e) {
@@ -192,8 +192,7 @@ class RecruitingController extends Controller
 
         return [
             'name'        => $division->name,
-            'handleLabel' => $division->handles->first()?->label,
-            'handleHint'  => $division->handles->first()?->regex_hint,
+            'handleTypes' => $division->handleTypes(),
             'platoons'    => $platoons->map(fn ($p) => [
                 'id'            => $p->id,
                 'name'          => $p->name,

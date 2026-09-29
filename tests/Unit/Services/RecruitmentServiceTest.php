@@ -39,7 +39,7 @@ class RecruitmentServiceTest extends TestCase
             1,
             $platoon->id,
             null,
-            'GameHandle',
+            [],
             $recruiter
         );
 
@@ -73,7 +73,7 @@ class RecruitmentServiceTest extends TestCase
             1,
             $platoon->id,
             null,
-            'GameHandle',
+            [],
             $recruiter
         );
 
@@ -100,7 +100,7 @@ class RecruitmentServiceTest extends TestCase
             1,
             $platoon->id,
             null,
-            'GameHandle',
+            [],
             $recruiter
         );
 
@@ -126,7 +126,7 @@ class RecruitmentServiceTest extends TestCase
             1,
             $otherPlatoon->id,
             null,
-            'GameHandle',
+            [],
             $recruiter
         );
     }
@@ -149,7 +149,7 @@ class RecruitmentServiceTest extends TestCase
             1,
             $platoon->id,
             $otherSquad->id,
-            'GameHandle',
+            [],
             $recruiter
         );
     }
@@ -170,14 +170,14 @@ class RecruitmentServiceTest extends TestCase
             1,
             $platoon->id,
             null,
-            'MyGameHandle',
+            [$handle->id => 'MyGameHandle'],
             $recruiter
         );
 
         $this->assertDatabaseHas('handle_member', [
             'member_id' => $member->id,
             'handle_id' => $handle->id,
-            'value'     => 'MyGameHandle',
+            'value'     => [$handle->id => 'MyGameHandle'],
         ]);
     }
 

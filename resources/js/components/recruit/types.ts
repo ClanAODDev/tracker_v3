@@ -1,3 +1,5 @@
+import type { HandleType } from '@/components/members/types';
+
 export interface RecruitSquad {
     id: number;
     name: string | null;
@@ -38,8 +40,7 @@ export interface PendingDiscordUser {
 
 export interface DivisionRecruitData {
     name: string;
-    handleLabel: string | null;
-    handleHint: string | null;
+    handleTypes: HandleType[];
     platoons: RecruitPlatoon[];
     threads: RecruitThread[];
     tasks: RecruitTask[];

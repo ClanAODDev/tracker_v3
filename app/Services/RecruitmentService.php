@@ -29,7 +29,7 @@ class RecruitmentService
         int $rankId,
         int $platoonId,
         ?int $squadId,
-        ?string $ingameName,
+        array $handles,
         Member $recruiter
     ): Member {
         $existing = Member::where('clan_id', $clanId)->first();
@@ -55,7 +55,7 @@ class RecruitmentService
             $rankId,
             $platoonId,
             $squadId,
-            $ingameName,
+            $handles,
             $recruiter
         ) {
             $member = Member::firstOrNew(['clan_id' => $clanId]);
@@ -74,7 +74,7 @@ class RecruitmentService
                 'squad_id'               => $squadId ?? 0,
             ])->save();
 
-            $this->attachIngameHandle($member, $division, $ingameName);
+            $division->saveHandlesFor($member, $handles);
 
             $member->recordActivity(ActivityType::RECRUITED);
 
@@ -93,17 +93,6 @@ class RecruitmentService
 
             return $member;
         });
-    }
-
-    private function attachIngameHandle(Member $member, Division $division, ?string $ingameName): void
-    {
-        $handle = $division->handles->first();
-
-        if (! $ingameName || ! $handle) {
-            return;
-        }
-
-        $division->saveHandlesFor($member, [$handle->id => $ingameName]);
     }
 
     public function createMemberRequest(Member $member, Division $division, Member $requester): void

@@ -244,7 +244,7 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                                     onChange={(e) =>
                                         form.setData('handles', { ...form.data.handles, [type.id]: e.target.value })
                                     }
-                                    placeholder={`Their ${type.label.toLowerCase()} name…`}
+                                    placeholder={`Their ${type.label} name…`}
                                 />
                                 <p className="text-xs text-muted-foreground">
                                     {type.hint ?? `Sets their ${type.label} handle for ${division.name}.`}
