@@ -32,6 +32,16 @@ abstract class PermissionMatrixTestCase extends TestCase
         }
     }
 
+    protected function asActor(string $actor): static
+    {
+        $role = $this->world->impersonatedRole($actor);
+
+        $this->flushSession();
+
+        return $this->actingAs($this->world->users[$actor])
+            ->withSession($role ? ['impersonatingRole' => $role->value] : []);
+    }
+
     protected function gate(string $actor, string $ability, array $arguments): string
     {
         $this->actAs($actor);

@@ -1,0 +1,88 @@
+canAccessPanel           | mod                                      | admin                    | allow
+canAccessPanel           | admin                                    | admin                    | allow
+navigation               | (labels)                                 | admin                    | [Dashboard, AOD Forums, Add New Recruit, Member Requests, Get Help, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Division Turnover, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Admin, Admin Panel, Operations, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank, Documentation > Recruiting, Documentation > Contributing, Training, # Account, Tracker Profile, Forum Profile]
+canAccessPanel           | mod                                      | developer                | allow
+canAccessPanel           | admin                                    | developer                | allow
+navigation               | (labels)                                 | developer                | [Dashboard, AOD Forums, Add New Recruit, Member Requests, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Admin, Log Viewer, Admin Panel, Operations, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank, Training, # Account, Tracker Profile, Forum Profile]
+canAccessPanel           | mod                                      | admin_viewing_as_officer | allow
+canAccessPanel           | admin                                    | admin_viewing_as_officer | deny
+navigation               | (labels)                                 | admin_viewing_as_officer | [Dashboard, AOD Forums, Add New Recruit, Get Help, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Admin, Operations, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank, Documentation > Recruiting, Training, # Account, Tracker Profile, Forum Profile]
+canAccessPanel           | mod                                      | senior_leader            | allow
+canAccessPanel           | admin                                    | senior_leader            | deny
+navigation               | (labels)                                 | senior_leader            | [Dashboard, AOD Forums, Add New Recruit, Get Help, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Admin, Operations, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank, Documentation > Recruiting, # Account, Tracker Profile, Forum Profile]
+canAccessPanel           | mod                                      | commanding_officer       | allow
+canAccessPanel           | admin                                    | commanding_officer       | deny
+navigation               | (labels)                                 | commanding_officer       | [Dashboard, AOD Forums, Add New Recruit, Member Requests, Get Help, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Admin, Operations, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank, Documentation > Recruiting, Training, # Account, Tracker Profile, Forum Profile]
+canAccessPanel           | mod                                      | executive_officer        | allow
+canAccessPanel           | admin                                    | executive_officer        | deny
+navigation               | (labels)                                 | executive_officer        | [Dashboard, AOD Forums, Add New Recruit, Member Requests, Get Help, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Admin, Operations, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank, Documentation > Recruiting, Training, # Account, Tracker Profile, Forum Profile]
+canAccessPanel           | mod                                      | officer                  | allow
+canAccessPanel           | admin                                    | officer                  | deny
+navigation               | (labels)                                 | officer                  | [Dashboard, AOD Forums, Add New Recruit, Get Help, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Admin, Operations, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank, Documentation > Recruiting, # Account, Tracker Profile, Forum Profile]
+canAccessPanel           | mod                                      | platoon_leader           | allow
+canAccessPanel           | admin                                    | platoon_leader           | deny
+navigation               | (labels)                                 | platoon_leader           | [Dashboard, AOD Forums, Add New Recruit, Get Help, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Admin, Operations, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank, Documentation > Recruiting, # Account, Tracker Profile, Forum Profile]
+canAccessPanel           | mod                                      | squad_leader             | allow
+canAccessPanel           | admin                                    | squad_leader             | deny
+navigation               | (labels)                                 | squad_leader             | [Dashboard, AOD Forums, Add New Recruit, Get Help, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Admin, Operations, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank, Documentation > Recruiting, # Account, Tracker Profile, Forum Profile]
+canAccessPanel           | mod                                      | member                   | deny
+canAccessPanel           | admin                                    | member                   | deny
+navigation               | (labels)                                 | member                   | [Dashboard, AOD Forums, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank, # Account, Tracker Profile, Forum Profile]
+canAccessPanel           | mod                                      | banned                   | deny
+canAccessPanel           | admin                                    | banned                   | deny
+navigation               | (labels)                                 | banned                   | [Dashboard, AOD Forums, Add New Recruit, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank, # Account, Tracker Profile, Forum Profile]
+canAccessPanel           | mod                                      | pending                  | deny
+canAccessPanel           | admin                                    | pending                  | deny
+navigation               | (labels)                                 | pending                  | [Dashboard, AOD Forums, Clan Information, Clan Information > Achievements, Clan Information > Clan Census Data, Clan Information > Leadership Structure, Clan Information > Ranking Structure, Clan Information > Code of Conduct, Clan Information > Outstanding Inactives, # Application, Documentation, Documentation > General, Documentation > Awards Images, Documentation > Managing Rank]
+GET home                 | (status)                                 | admin                    | 200
+shared permission        | canWorkTickets                           | admin                    | true
+shared permission        | canUseBulkMode                           | admin                    | true
+shared permission        | isAdmin                                  | admin                    | true
+shared permission        | isDeveloper                              | admin                    | false
+GET home                 | (status)                                 | developer                | 200
+shared permission        | canWorkTickets                           | developer                | false
+shared permission        | canUseBulkMode                           | developer                | true
+shared permission        | isAdmin                                  | developer                | false
+shared permission        | isDeveloper                              | developer                | true
+GET home                 | (status)                                 | admin_viewing_as_officer | 200
+shared permission        | canWorkTickets                           | admin_viewing_as_officer | true
+shared permission        | canUseBulkMode                           | admin_viewing_as_officer | true
+shared permission        | isAdmin                                  | admin_viewing_as_officer | false
+shared permission        | isDeveloper                              | admin_viewing_as_officer | false
+GET home                 | (status)                                 | senior_leader            | 200
+shared permission        | canWorkTickets                           | senior_leader            | true
+shared permission        | canUseBulkMode                           | senior_leader            | true
+shared permission        | isAdmin                                  | senior_leader            | false
+shared permission        | isDeveloper                              | senior_leader            | false
+GET home                 | (status)                                 | commanding_officer       | 200
+shared permission        | canWorkTickets                           | commanding_officer       | true
+shared permission        | canUseBulkMode                           | commanding_officer       | true
+shared permission        | isAdmin                                  | commanding_officer       | false
+shared permission        | isDeveloper                              | commanding_officer       | false
+GET home                 | (status)                                 | executive_officer        | 200
+shared permission        | canWorkTickets                           | executive_officer        | true
+shared permission        | canUseBulkMode                           | executive_officer        | true
+shared permission        | isAdmin                                  | executive_officer        | false
+shared permission        | isDeveloper                              | executive_officer        | false
+GET home                 | (status)                                 | officer                  | 200
+shared permission        | canWorkTickets                           | officer                  | false
+shared permission        | canUseBulkMode                           | officer                  | true
+shared permission        | isAdmin                                  | officer                  | false
+shared permission        | isDeveloper                              | officer                  | false
+GET home                 | (status)                                 | platoon_leader           | 200
+shared permission        | canWorkTickets                           | platoon_leader           | false
+shared permission        | canUseBulkMode                           | platoon_leader           | true
+shared permission        | isAdmin                                  | platoon_leader           | false
+shared permission        | isDeveloper                              | platoon_leader           | false
+GET home                 | (status)                                 | squad_leader             | 200
+shared permission        | canWorkTickets                           | squad_leader             | false
+shared permission        | canUseBulkMode                           | squad_leader             | true
+shared permission        | isAdmin                                  | squad_leader             | false
+shared permission        | isDeveloper                              | squad_leader             | false
+GET home                 | (status)                                 | member                   | 200
+shared permission        | canWorkTickets                           | member                   | false
+shared permission        | canUseBulkMode                           | member                   | false
+shared permission        | isAdmin                                  | member                   | false
+shared permission        | isDeveloper                              | member                   | false
+GET home                 | (status)                                 | banned                   | 403
+GET home                 | (status)                                 | pending                  | 408
