@@ -18,6 +18,7 @@ use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
+use App\Services\MemberHandleService;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -423,7 +424,7 @@ class MemberResource extends Resource
                         IngameHandlesForm::make(),
                     ])
                     ->action(function (Member $record, array $data): void {
-                        IngameHandlesForm::saveHandles($record, $data['handleGroups']);
+                        app(MemberHandleService::class)->sync($record, $data['handleGroups']);
 
                         Notification::make()
                             ->title('Handles updated')

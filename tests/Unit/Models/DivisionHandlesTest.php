@@ -85,32 +85,4 @@ class DivisionHandlesTest extends TestCase
 
         $this->assertNull($division->handleSummaryFor($this->createMember()));
     }
-
-    #[Test]
-    public function save_handles_for_stores_filled_values_for_division_types_only()
-    {
-        $na       = Handle::factory()->create();
-        $eu       = Handle::factory()->create();
-        $other    = Handle::factory()->create();
-        $division = $this->createDivisionWithHandles([$na, $eu]);
-        $member   = $this->createMember();
-
-        $division->saveHandlesFor($member, [$na->id => 'na_name', $eu->id => '', $other->id => 'ignored']);
-
-        $this->assertDatabaseHas('handle_member', ['member_id' => $member->id, 'handle_id' => $na->id, 'value' => 'na_name']);
-        $this->assertDatabaseMissing('handle_member', ['member_id' => $member->id, 'handle_id' => $eu->id]);
-        $this->assertDatabaseMissing('handle_member', ['member_id' => $member->id, 'handle_id' => $other->id]);
-    }
-
-    #[Test]
-    public function save_handles_for_normalizes_steam_values()
-    {
-        $steam    = Handle::factory()->create(['type' => Handle::STEAM_PROFILE]);
-        $division = $this->createDivisionWithHandles([$steam]);
-        $member   = $this->createMember();
-
-        $division->saveHandlesFor($member, [$steam->id => 'https://steamcommunity.com/profiles/76561197968443902/']);
-
-        $this->assertDatabaseHas('handle_member', ['member_id' => $member->id, 'value' => '76561197968443902']);
-    }
 }

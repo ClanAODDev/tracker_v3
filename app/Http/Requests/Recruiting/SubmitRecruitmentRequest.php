@@ -4,6 +4,7 @@ namespace App\Http\Requests\Recruiting;
 
 use App\Models\Division;
 use App\Models\Member;
+use App\Support\HandleRules;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -31,7 +32,7 @@ class SubmitRecruitmentRequest extends FormRequest
             return [
                 ...$rules,
                 'handles' => ['nullable', 'array'],
-                ...$this->division()->handleRules(),
+                ...HandleRules::forDivision($this->division()),
             ];
         }
 

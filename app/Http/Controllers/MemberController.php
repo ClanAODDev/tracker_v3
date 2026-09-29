@@ -5,11 +5,11 @@ namespace App\Http\Controllers;
 use App\Data\MemberProfileData;
 use App\Enums\ActivityType;
 use App\Filament\Forms\Components\DivisionMemberFieldsForm;
-use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Http\Requests\Member\UpdateMemberDetails;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Repositories\MemberRepository;
+use App\Services\MemberHandleService;
 use App\Services\RankTimelineService;
 use App\Support\MemberCard;
 use Illuminate\Http\JsonResponse;
@@ -67,10 +67,10 @@ class MemberController extends Controller
         );
     }
 
-    public function updateDetails(UpdateMemberDetails $request, Member $member): JsonResponse
+    public function updateDetails(UpdateMemberDetails $request, Member $member, MemberHandleService $handles): JsonResponse
     {
         if ($request->has('handles') && $request->user()->can('manageHandles', $member)) {
-            IngameHandlesForm::saveHandles($member, $request->input('handles', []));
+            $handles->sync($member, $request->input('handles', []));
         }
 
         if ($request->has('fields') && $request->user()->can('manageFields', $member)) {

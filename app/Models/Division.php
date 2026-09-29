@@ -8,7 +8,6 @@ use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Presenters\DivisionPresenter;
-use App\Rules\HandleFormat;
 use App\Settings\DivisionSettings;
 use Illuminate\Database\Eloquent\Attributes\RouteKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -292,23 +291,6 @@ class Division extends Model
             ->map(fn (Handle $handle) => ['id' => $handle->id, 'label' => $handle->label, 'hint' => $handle->regex_hint])
             ->values()
             ->all();
-    }
-
-    public function handleRules(string $prefix = 'handles'): array
-    {
-        return $this->handles
-            ->mapWithKeys(fn (Handle $handle) => ["{$prefix}.{$handle->id}" => ['nullable', 'string', 'max:255', new HandleFormat($handle)]])
-            ->all();
-    }
-
-    public function saveHandlesFor(Member $member, array $values): void
-    {
-        $member->handles()->syncWithoutDetaching(
-            $this->handles
-                ->filter(fn (Handle $handle) => filled($values[$handle->id] ?? null))
-                ->mapWithKeys(fn (Handle $handle) => [$handle->id => ['value' => $handle->normalize($values[$handle->id])]])
-                ->all()
-        );
     }
 
     public function handleSummaryFor(Member $member): ?string

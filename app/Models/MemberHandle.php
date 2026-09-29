@@ -10,6 +10,8 @@ class MemberHandle extends Pivot
 {
     use HasFactory;
 
+    public $incrementing = true;
+
     protected $guarded = [];
 
     protected $table = 'handle_member';

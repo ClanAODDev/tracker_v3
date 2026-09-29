@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\DB;
 
 class RecruitmentService
 {
+    public function __construct(private MemberHandleService $handles = new MemberHandleService) {}
+
     /**
      * @throws RecruitmentFailedException
      */
@@ -74,7 +76,7 @@ class RecruitmentService
                 'squad_id'               => $squadId ?? 0,
             ])->save();
 
-            $division->saveHandlesFor($member, $handles);
+            $this->handles->setForDivision($member, $division, $handles);
 
             $member->recordActivity(ActivityType::RECRUITED);
 

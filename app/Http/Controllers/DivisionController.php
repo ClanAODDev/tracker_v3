@@ -10,7 +10,9 @@ use App\Models\Member;
 use App\Models\User;
 use App\Repositories\DivisionRepository;
 use App\Services\DivisionShowService;
+use App\Services\MemberHandleService;
 use App\Services\MemberQueryService;
+use App\Support\HandleRules;
 use App\Support\MemberCard;
 use App\Support\MemberListProps;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -154,12 +156,12 @@ class DivisionController extends Controller
         return response()->json(['members' => $members]);
     }
 
-    public function addPartTimer(Division $division): JsonResponse|RedirectResponse
+    public function addPartTimer(Division $division, MemberHandleService $handles): JsonResponse|RedirectResponse
     {
         $validated = request()->validate([
             'member_id' => 'required|exists:members,clan_id',
             'handles'   => ['nullable', 'array'],
-            ...$division->handleRules(),
+            ...HandleRules::forDivision($division),
         ]);
 
         $member = Member::where('clan_id', $validated['member_id'])->firstOrFail();
@@ -177,7 +179,7 @@ class DivisionController extends Controller
 
         $division->partTimeMembers()->attach($member->id);
 
-        $division->saveHandlesFor($member, $validated['handles'] ?? []);
+        $handles->setForDivision($member, $division, $validated['handles'] ?? []);
 
         $member->recordActivity(ActivityType::ADD_PART_TIME, [
             'division' => $division->name,
