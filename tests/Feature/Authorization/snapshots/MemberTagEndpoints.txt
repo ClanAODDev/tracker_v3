@@ -1,0 +1,84 @@
+GET member tags          | same_squad                               | admin                    | 200
+GET member tags          | same_squad                               | developer                | 403
+GET member tags          | same_squad                               | admin_viewing_as_officer | 200
+GET member tags          | same_squad                               | senior_leader            | 200
+GET member tags          | same_squad                               | commanding_officer       | 200
+GET member tags          | same_squad                               | executive_officer        | 200
+GET member tags          | same_squad                               | officer                  | 200
+GET member tags          | same_squad                               | platoon_leader           | 200
+GET member tags          | same_squad                               | squad_leader             | 200
+GET member tags          | same_squad                               | member                   | 403
+GET member tags          | same_squad                               | banned                   | 403
+GET member tags          | same_squad                               | pending                  | 408
+POST add global tag      | same_squad                               | admin                    | 200
+POST add global tag      | same_squad                               | developer                | 403
+POST add global tag      | same_squad                               | admin_viewing_as_officer | 200
+POST add global tag      | same_squad                               | senior_leader            | 200
+POST add global tag      | same_squad                               | commanding_officer       | 200
+POST add global tag      | same_squad                               | executive_officer        | 200
+POST add global tag      | same_squad                               | officer                  | 200
+POST add global tag      | same_squad                               | platoon_leader           | 200
+POST add global tag      | same_squad                               | squad_leader             | 200
+POST add global tag      | same_squad                               | member                   | 403
+POST add global tag      | same_squad                               | banned                   | 403
+POST add global tag      | same_squad                               | pending                  | 408
+GET member tags          | other_division                           | admin                    | 200
+GET member tags          | other_division                           | developer                | 403
+GET member tags          | other_division                           | admin_viewing_as_officer | 200
+GET member tags          | other_division                           | senior_leader            | 200
+GET member tags          | other_division                           | commanding_officer       | 200
+GET member tags          | other_division                           | executive_officer        | 200
+GET member tags          | other_division                           | officer                  | 403
+GET member tags          | other_division                           | platoon_leader           | 403
+GET member tags          | other_division                           | squad_leader             | 403
+GET member tags          | other_division                           | member                   | 403
+GET member tags          | other_division                           | banned                   | 403
+GET member tags          | other_division                           | pending                  | 408
+POST add global tag      | other_division                           | admin                    | 200
+POST add global tag      | other_division                           | developer                | 403
+POST add global tag      | other_division                           | admin_viewing_as_officer | 200
+POST add global tag      | other_division                           | senior_leader            | 200
+POST add global tag      | other_division                           | commanding_officer       | 200
+POST add global tag      | other_division                           | executive_officer        | 200
+POST add global tag      | other_division                           | officer                  | 403
+POST add global tag      | other_division                           | platoon_leader           | 403
+POST add global tag      | other_division                           | squad_leader             | 403
+POST add global tag      | other_division                           | member                   | 403
+POST add global tag      | other_division                           | banned                   | 403
+POST add global tag      | other_division                           | pending                  | 408
+POST create tag          | via division A URL                       | admin                    | 200 created in Division A
+POST create tag          | via division A URL                       | developer                | 403 created in none
+POST create tag          | via division A URL                       | admin_viewing_as_officer | 403 created in none
+POST create tag          | via division A URL                       | senior_leader            | 200 created in Division A
+POST create tag          | via division A URL                       | commanding_officer       | 200 created in Division A
+POST create tag          | via division A URL                       | executive_officer        | 200 created in Division A
+POST create tag          | via division A URL                       | officer                  | 403 created in none
+POST create tag          | via division A URL                       | platoon_leader           | 403 created in none
+POST create tag          | via division A URL                       | squad_leader             | 403 created in none
+POST create tag          | via division A URL                       | member                   | 403 created in none
+POST create tag          | via division A URL                       | banned                   | 403 created in none
+POST create tag          | via division A URL                       | pending                  | 408 created in none
+POST create tag          | via division B URL                       | admin                    | 200 created in Division B
+POST create tag          | via division B URL                       | developer                | 403 created in none
+POST create tag          | via division B URL                       | admin_viewing_as_officer | 403 created in none
+POST create tag          | via division B URL                       | senior_leader            | 200 created in Division A
+POST create tag          | via division B URL                       | commanding_officer       | 200 created in Division A
+POST create tag          | via division B URL                       | executive_officer        | 200 created in Division A
+POST create tag          | via division B URL                       | officer                  | 403 created in none
+POST create tag          | via division B URL                       | platoon_leader           | 403 created in none
+POST create tag          | via division B URL                       | squad_leader             | 403 created in none
+POST create tag          | via division B URL                       | member                   | 403 created in none
+POST create tag          | via division B URL                       | banned                   | 403 created in none
+POST create tag          | via division B URL                       | pending                  | 408 created in none
+POST bulk assign         | same_squad + other_division              | admin                    | 200 same_squad:division_a_public+global_public, other_division:division_a_public+global_public
+POST bulk assign         | same_squad + other_division              | developer                | 403 same_squad:, other_division:
+POST bulk assign         | same_squad + other_division              | admin_viewing_as_officer | 200 same_squad:division_a_public+global_public, other_division:division_a_public+global_public
+POST bulk assign         | same_squad + other_division              | senior_leader            | 200 same_squad:division_a_public+global_public, other_division:division_a_public+global_public
+POST bulk assign         | same_squad + other_division              | commanding_officer       | 200 same_squad:division_a_public+global_public, other_division:division_a_public+global_public
+POST bulk assign         | same_squad + other_division              | executive_officer        | 200 same_squad:division_a_public+global_public, other_division:division_a_public+global_public
+POST bulk assign         | same_squad + other_division              | officer                  | 200 same_squad:division_a_public+global_public, other_division:
+POST bulk assign         | same_squad + other_division              | platoon_leader           | 200 same_squad:division_a_public+global_public, other_division:
+POST bulk assign         | same_squad + other_division              | squad_leader             | 200 same_squad:division_a_public+global_public, other_division:
+POST bulk assign         | same_squad + other_division              | member                   | 403 same_squad:, other_division:
+POST bulk assign         | same_squad + other_division              | banned                   | 403 same_squad:, other_division:
+POST bulk assign         | same_squad + other_division              | pending                  | 408 same_squad:, other_division:
