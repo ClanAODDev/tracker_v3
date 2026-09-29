@@ -184,7 +184,8 @@ class MemberProfileData
             'handles' => [
                 'discord'    => $member->discord,
                 'discordUrl' => $member->getDiscordUrl(),
-                'groups'     => $member->handles->groupBy('label')->map(function ($handles, $label) {
+                'groups'     => $member->handles->where('enabled', true)->groupBy('label')->map(function ($handles, $label) {
+                    $handles = $handles->sortByDesc(fn ($h) => (bool) $h->pivot->primary)->values();
                     $primary = $handles->first();
 
                     return [

@@ -401,4 +401,28 @@ class MemberProfileTest extends TestCase
                         && ! $labels->has($unused->id);
                 }));
     }
+
+    #[Test]
+    public function profile_hides_handles_of_disabled_types_and_leads_with_the_primary_value()
+    {
+        $active   = Handle::factory()->create(['label' => 'Active Type', 'enabled' => true]);
+        $retired  = Handle::factory()->create(['label' => 'Retired Type', 'enabled' => false]);
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $member->handles()->attach($active->id, ['value' => 'Alternate', 'primary' => false]);
+        $member->handles()->attach($active->id, ['value' => 'Main', 'primary' => true]);
+        $member->handles()->attach($retired->id, ['value' => 'Hidden', 'primary' => true]);
+
+        $this->actingAs($this->createAdmin())
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('handles.groups', function ($groups) {
+                    $groups = collect($groups);
+
+                    return $groups->pluck('label')->all() === ['Active Type']
+                        && $groups->first()['value'] === 'Main'
+                        && collect($groups->first()['extras'])->pluck('value')->all() === ['Alternate'];
+                }));
+    }
 }
