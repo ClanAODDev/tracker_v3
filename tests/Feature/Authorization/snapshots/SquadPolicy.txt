@@ -1,0 +1,132 @@
+viewAny                  | (any squad)                              | admin                    | allow
+viewAny                  | (any squad)                              | developer                | allow
+viewAny                  | (any squad)                              | admin_viewing_as_officer | allow
+viewAny                  | (any squad)                              | senior_leader            | allow
+viewAny                  | (any squad)                              | commanding_officer       | allow
+viewAny                  | (any squad)                              | executive_officer        | allow
+viewAny                  | (any squad)                              | officer                  | allow
+viewAny                  | (any squad)                              | platoon_leader           | allow
+viewAny                  | (any squad)                              | squad_leader             | allow
+viewAny                  | (any squad)                              | member                   | deny
+viewAny                  | (any squad)                              | banned                   | deny
+viewAny                  | (any squad)                              | pending                  | deny
+deleteAny                | (any squad)                              | admin                    | allow
+deleteAny                | (any squad)                              | developer                | allow
+deleteAny                | (any squad)                              | admin_viewing_as_officer | deny
+deleteAny                | (any squad)                              | senior_leader            | allow
+deleteAny                | (any squad)                              | commanding_officer       | allow
+deleteAny                | (any squad)                              | executive_officer        | allow
+deleteAny                | (any squad)                              | officer                  | deny
+deleteAny                | (any squad)                              | platoon_leader           | deny
+deleteAny                | (any squad)                              | squad_leader             | deny
+deleteAny                | (any squad)                              | member                   | deny
+deleteAny                | (any squad)                              | banned                   | deny
+deleteAny                | (any squad)                              | pending                  | deny
+create                   | (any squad)                              | admin                    | allow
+create                   | (any squad)                              | developer                | allow
+create                   | (any squad)                              | admin_viewing_as_officer | deny
+create                   | (any squad)                              | senior_leader            | allow
+create                   | (any squad)                              | commanding_officer       | allow
+create                   | (any squad)                              | executive_officer        | allow
+create                   | (any squad)                              | officer                  | deny
+create                   | (any squad)                              | platoon_leader           | deny
+create                   | (any squad)                              | squad_leader             | deny
+create                   | (any squad)                              | member                   | deny
+create                   | (any squad)                              | banned                   | deny
+create                   | (any squad)                              | pending                  | deny
+update                   | own_squad                                | admin                    | allow
+update                   | own_squad                                | developer                | allow
+update                   | own_squad                                | admin_viewing_as_officer | deny
+update                   | own_squad                                | senior_leader            | allow
+update                   | own_squad                                | commanding_officer       | allow
+update                   | own_squad                                | executive_officer        | allow
+update                   | own_squad                                | officer                  | deny
+update                   | own_squad                                | platoon_leader           | allow
+update                   | own_squad                                | squad_leader             | deny
+update                   | own_squad                                | member                   | deny
+update                   | own_squad                                | banned                   | deny
+update                   | own_squad                                | pending                  | deny
+update                   | same_platoon_other_squad                 | admin                    | allow
+update                   | same_platoon_other_squad                 | developer                | allow
+update                   | same_platoon_other_squad                 | admin_viewing_as_officer | deny
+update                   | same_platoon_other_squad                 | senior_leader            | allow
+update                   | same_platoon_other_squad                 | commanding_officer       | allow
+update                   | same_platoon_other_squad                 | executive_officer        | allow
+update                   | same_platoon_other_squad                 | officer                  | deny
+update                   | same_platoon_other_squad                 | platoon_leader           | allow
+update                   | same_platoon_other_squad                 | squad_leader             | deny
+update                   | same_platoon_other_squad                 | member                   | deny
+update                   | same_platoon_other_squad                 | banned                   | deny
+update                   | same_platoon_other_squad                 | pending                  | deny
+update                   | other_platoon_squad                      | admin                    | allow
+update                   | other_platoon_squad                      | developer                | allow
+update                   | other_platoon_squad                      | admin_viewing_as_officer | deny
+update                   | other_platoon_squad                      | senior_leader            | allow
+update                   | other_platoon_squad                      | commanding_officer       | allow
+update                   | other_platoon_squad                      | executive_officer        | allow
+update                   | other_platoon_squad                      | officer                  | deny
+update                   | other_platoon_squad                      | platoon_leader           | deny
+update                   | other_platoon_squad                      | squad_leader             | deny
+update                   | other_platoon_squad                      | member                   | deny
+update                   | other_platoon_squad                      | banned                   | deny
+update                   | other_platoon_squad                      | pending                  | deny
+update                   | other_division_squad                     | admin                    | allow
+update                   | other_division_squad                     | developer                | allow
+update                   | other_division_squad                     | admin_viewing_as_officer | deny
+update                   | other_division_squad                     | senior_leader            | deny
+update                   | other_division_squad                     | commanding_officer       | deny
+update                   | other_division_squad                     | executive_officer        | deny
+update                   | other_division_squad                     | officer                  | deny
+update                   | other_division_squad                     | platoon_leader           | deny
+update                   | other_division_squad                     | squad_leader             | deny
+update                   | other_division_squad                     | member                   | deny
+update                   | other_division_squad                     | banned                   | deny
+update                   | other_division_squad                     | pending                  | deny
+delete                   | own_squad                                | admin                    | allow
+delete                   | own_squad                                | developer                | allow
+delete                   | own_squad                                | admin_viewing_as_officer | deny
+delete                   | own_squad                                | senior_leader            | allow
+delete                   | own_squad                                | commanding_officer       | allow
+delete                   | own_squad                                | executive_officer        | allow
+delete                   | own_squad                                | officer                  | deny
+delete                   | own_squad                                | platoon_leader           | allow
+delete                   | own_squad                                | squad_leader             | deny
+delete                   | own_squad                                | member                   | deny
+delete                   | own_squad                                | banned                   | deny
+delete                   | own_squad                                | pending                  | deny
+delete                   | same_platoon_other_squad                 | admin                    | allow
+delete                   | same_platoon_other_squad                 | developer                | allow
+delete                   | same_platoon_other_squad                 | admin_viewing_as_officer | deny
+delete                   | same_platoon_other_squad                 | senior_leader            | allow
+delete                   | same_platoon_other_squad                 | commanding_officer       | allow
+delete                   | same_platoon_other_squad                 | executive_officer        | allow
+delete                   | same_platoon_other_squad                 | officer                  | deny
+delete                   | same_platoon_other_squad                 | platoon_leader           | allow
+delete                   | same_platoon_other_squad                 | squad_leader             | deny
+delete                   | same_platoon_other_squad                 | member                   | deny
+delete                   | same_platoon_other_squad                 | banned                   | deny
+delete                   | same_platoon_other_squad                 | pending                  | deny
+delete                   | other_platoon_squad                      | admin                    | allow
+delete                   | other_platoon_squad                      | developer                | allow
+delete                   | other_platoon_squad                      | admin_viewing_as_officer | deny
+delete                   | other_platoon_squad                      | senior_leader            | allow
+delete                   | other_platoon_squad                      | commanding_officer       | allow
+delete                   | other_platoon_squad                      | executive_officer        | allow
+delete                   | other_platoon_squad                      | officer                  | deny
+delete                   | other_platoon_squad                      | platoon_leader           | deny
+delete                   | other_platoon_squad                      | squad_leader             | deny
+delete                   | other_platoon_squad                      | member                   | deny
+delete                   | other_platoon_squad                      | banned                   | deny
+delete                   | other_platoon_squad                      | pending                  | deny
+delete                   | other_division_squad                     | admin                    | allow
+delete                   | other_division_squad                     | developer                | allow
+delete                   | other_division_squad                     | admin_viewing_as_officer | deny
+delete                   | other_division_squad                     | senior_leader            | allow
+delete                   | other_division_squad                     | commanding_officer       | allow
+delete                   | other_division_squad                     | executive_officer        | allow
+delete                   | other_division_squad                     | officer                  | deny
+delete                   | other_division_squad                     | platoon_leader           | deny
+delete                   | other_division_squad                     | squad_leader             | deny
+delete                   | other_division_squad                     | member                   | deny
+delete                   | other_division_squad                     | banned                   | deny
+delete                   | other_division_squad                     | pending                  | deny

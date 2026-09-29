@@ -39,6 +39,21 @@ abstract class PermissionMatrixTestCase extends TestCase
         return $this->outcome(fn () => Gate::forUser($this->world->users[$actor])->inspect($ability, $arguments)->allowed());
     }
 
+    protected function evaluate(array $actors, array $checks): array
+    {
+        $lines = [];
+
+        foreach ($checks as [$ability, $target, $arguments]) {
+            foreach ($actors as $actor) {
+                $resolved = $arguments($actor);
+
+                $lines[] = self::line($ability, $target, $actor, $resolved === null ? 'n/a' : $this->gate($actor, $ability, $resolved));
+            }
+        }
+
+        return $lines;
+    }
+
     protected function outcome(Closure $check): string
     {
         try {
