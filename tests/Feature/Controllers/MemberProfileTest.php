@@ -322,7 +322,7 @@ class MemberProfileTest extends TestCase
     public function missing_required_handle_notice_opens_the_inline_editor_instead_of_linking_to_operations()
     {
         $requiredHandle = Handle::factory()->create();
-        $division       = $this->createActiveDivision(['handle_id' => $requiredHandle->id]);
+        $division       = $this->createDivisionWithHandles([$requiredHandle]);
         $platoon        = $this->createPlatoon($division);
         $squad          = $this->createSquad($platoon);
         $leader         = $this->createSquadLeader($squad);
@@ -340,5 +340,89 @@ class MemberProfileTest extends TestCase
                 ->where('notices', fn ($notices) => collect($notices)->contains(
                     fn ($n) => ($n['ctaAction'] ?? null) === 'edit-handles' && ! isset($n['ctaUrl'])
                 )));
+    }
+
+    #[Test]
+    public function no_missing_handle_notice_when_the_member_has_one_of_several_division_handles()
+    {
+        $na       = Handle::factory()->create(['label' => 'Warships NA']);
+        $eu       = Handle::factory()->create(['label' => 'Warships EU']);
+        $division = $this->createDivisionWithHandles([$na, $eu]);
+        $viewer   = $this->createAdmin();
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $member->handles()->attach($eu->id, ['value' => 'EuCaptain', 'primary' => true]);
+
+        $this->actingAs($viewer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('notices', fn ($notices) => ! collect($notices)->contains(
+                    fn ($n) => ($n['ctaAction'] ?? null) === 'edit-handles'
+                )));
+    }
+
+    #[Test]
+    public function missing_handle_notice_lists_every_division_handle_type_when_the_member_has_none()
+    {
+        $na       = Handle::factory()->create(['label' => 'Warships NA']);
+        $eu       = Handle::factory()->create(['label' => 'Warships EU']);
+        $division = $this->createDivisionWithHandles([$na, $eu]);
+        $viewer   = $this->createAdmin();
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($viewer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('notices', fn ($notices) => collect($notices)->contains(
+                    fn ($n) => str_contains($n['message'], 'Warships NA, Warships EU')
+                )));
+    }
+
+    #[Test]
+    public function handle_editor_offers_a_disabled_type_the_member_already_uses()
+    {
+        $enabled  = Handle::factory()->create(['label' => 'Enabled Type', 'enabled' => true]);
+        $inUse    = Handle::factory()->create(['label' => 'Retired Type', 'enabled' => false]);
+        $unused   = Handle::factory()->create(['label' => 'Unused Retired', 'enabled' => false]);
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $member->handles()->attach($inUse->id, ['value' => 'OldName', 'primary' => true]);
+
+        $this->actingAs($this->createAdmin())
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('detailsManagement.availableHandleTypes', function ($types) use ($enabled, $inUse, $unused) {
+                    $labels = collect($types)->pluck('label', 'value');
+
+                    return $labels[$enabled->id] === 'Enabled Type'
+                        && $labels[$inUse->id] === 'Retired Type (disabled)'
+                        && ! $labels->has($unused->id);
+                }));
+    }
+
+    #[Test]
+    public function profile_hides_handles_of_disabled_types_and_leads_with_the_primary_value()
+    {
+        $active   = Handle::factory()->create(['label' => 'Active Type', 'enabled' => true]);
+        $retired  = Handle::factory()->create(['label' => 'Retired Type', 'enabled' => false]);
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $member->handles()->attach($active->id, ['value' => 'Alternate', 'primary' => false]);
+        $member->handles()->attach($active->id, ['value' => 'Main', 'primary' => true]);
+        $member->handles()->attach($retired->id, ['value' => 'Hidden', 'primary' => true]);
+
+        $this->actingAs($this->createAdmin())
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('handles.groups', function ($groups) {
+                    $groups = collect($groups);
+
+                    return $groups->pluck('label')->all() === ['Active Type']
+                        && $groups->first()['value'] === 'Main'
+                        && collect($groups->first()['extras'])->pluck('value')->all() === ['Alternate'];
+                }));
     }
 }

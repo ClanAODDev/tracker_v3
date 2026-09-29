@@ -27,13 +27,35 @@ class DivisionFactory extends Factory
         return [
             'name'         => $name,
             'slug'         => Str::slug($name),
-            'handle_id'    => Handle::factory(),
             'abbreviation' => 'td' . $uniqueId,
             'description'  => $this->faker->sentence,
             'forum_app_id' => rand(100, 999),
             'active'       => true,
             'settings'     => '[]',
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Division $division) {
+            if ($division->handles()->doesntExist()) {
+                $division->handles()->attach(Handle::factory()->create());
+            }
+        });
+    }
+
+    public function withHandles(Handle ...$handles): static
+    {
+        return $this->afterCreating(function (Division $division) use ($handles) {
+            $division->handles()->sync(
+                collect($handles)->mapWithKeys(fn (Handle $handle, int $index) => [$handle->id => ['sort_order' => $index]])->all()
+            );
+        });
+    }
+
+    public function withoutHandles(): static
+    {
+        return $this->afterCreating(fn (Division $division) => $division->handles()->detach());
     }
 
     public function inactive(): self

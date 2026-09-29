@@ -49,8 +49,6 @@ class NotifyDivisionPartTimeMemberRemoved extends Notification implements Should
      */
     public function toBot($notifiable)
     {
-        $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $notifiable->handle_id)->first();
-
         return new BotChannelMessage($notifiable)
             ->title($this->primaryDivision->name . ' Division')
             ->target($notifiable->settings()->get($this->alertSetting))
@@ -70,10 +68,7 @@ class NotifyDivisionPartTimeMemberRemoved extends Notification implements Should
                     'name'  => 'Reason',
                     'value' => addslashes($this->removalReason),
                 ],
-                [
-                    'name'  => $handle->label ?? 'In-Game Handle',
-                    'value' => $handle->pivot->value ?? 'N/A',
-                ],
+                $notifiable->handleFieldFor($this->member),
             ])->error()
             ->send();
     }

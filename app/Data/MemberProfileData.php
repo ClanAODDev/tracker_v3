@@ -184,16 +184,17 @@ class MemberProfileData
             'handles' => [
                 'discord'    => $member->discord,
                 'discordUrl' => $member->getDiscordUrl(),
-                'groups'     => $member->handles->groupBy('label')->map(function ($handles, $label) {
+                'groups'     => $member->handles->where('enabled', true)->groupBy('label')->map(function ($handles, $label) {
+                    $handles = $handles->sortByDesc(fn ($h) => (bool) $h->pivot->primary)->values();
                     $primary = $handles->first();
 
                     return [
                         'label'  => $label,
                         'value'  => $primary->pivot->value,
-                        'url'    => $primary->url ? $primary->full_url : null,
+                        'url'    => $primary->full_url,
                         'extras' => $handles->slice(1)->map(fn ($h) => [
                             'value' => $h->pivot->value,
-                            'url'   => $h->url ? $h->full_url : null,
+                            'url'   => $h->full_url,
                         ])->values(),
                     ];
                 })->values(),
@@ -274,10 +275,9 @@ class MemberProfileData
             'canEditHandles'       => $canEditHandles,
             'handles'              => $canEditHandles ? $this->handlesForManagement() : [],
             'availableHandleTypes' => $canEditHandles
-                ? Handle::where('enabled', true)
-                    ->orderBy('label')
+                ? Handle::selectable($this->member->memberHandles()->pluck('handle_id'))
                     ->get()
-                    ->map(fn (Handle $h) => ['value' => $h->id, 'label' => $h->label])
+                    ->map(fn (Handle $h) => ['value' => $h->id, 'label' => $h->selectLabel()])
                     ->values()
                     ->all()
                 : [],
@@ -337,10 +337,12 @@ class MemberProfileData
             ];
         }
 
-        if ($user->can('manageHandles', $member) && $division?->handle && ! $member->handles->contains($division->handle)) {
+        if ($user->can('manageHandles', $member) && $division?->handles->isNotEmpty() && $division->handlesOf($member)->isEmpty()) {
             $notices[] = [
-                'type'      => 'warning',
-                'message'   => "The {$division->name} division requires a {$division->handle->label} handle, but {$member->name} does not have one.",
+                'type'    => 'warning',
+                'message' => $division->handles->count() > 1
+                    ? "The {$division->name} division requires one of these handles, but {$member->name} has none: {$division->handles->pluck('label')->implode(', ')}."
+                    : "The {$division->name} division requires a {$division->handles->first()->label} handle, but {$member->name} does not have one.",
                 'ctaLabel'  => 'Add handle',
                 'ctaAction' => 'edit-handles',
             ];

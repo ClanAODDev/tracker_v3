@@ -6,6 +6,7 @@ use App\Enums\ForumGroup;
 use App\Enums\Rank;
 use App\Enums\Role;
 use App\Models\Handle;
+use App\Models\Member;
 use App\Models\User;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
@@ -111,7 +112,7 @@ class RecruitingControllerTest extends TestCase
     }
 
     #[Test]
-    public function form_passes_the_divisions_handle_label_and_hint()
+    public function form_passes_the_divisions_handle_types()
     {
         $officer = $this->createOfficer();
         $handle  = Handle::create([
@@ -119,32 +120,28 @@ class RecruitingControllerTest extends TestCase
             'regex'      => '/^[0-9]+$/',
             'regex_hint' => 'Steam ID must be numeric.',
         ]);
-        $division = $this->createActiveDivision(['handle_id' => $handle->id]);
+        $division = $this->createDivisionWithHandles([$handle]);
 
         $response = $this->actingAs($officer)
             ->get(route('recruiting.form', $division->slug));
 
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page
-            ->where('handleLabel', 'Steam Profile')
-            ->where('handleHint', 'Steam ID must be numeric.'));
+            ->where('handleTypes', [['id' => $handle->id, 'label' => 'Steam Profile', 'hint' => 'Steam ID must be numeric.']]));
     }
 
     #[Test]
-    public function form_passes_null_handle_label_when_the_divisions_handle_type_no_longer_exists()
+    public function form_passes_no_handle_types_when_the_division_has_none()
     {
-        // `divisions.handle_id` has no DB-level foreign key, so a dangling
-        // reference (e.g. its Handle row was deleted) is a real, if rare, state.
         $officer  = $this->createOfficer();
-        $division = $this->createActiveDivision(['handle_id' => 999999]);
+        $division = $this->createDivisionWithHandles([]);
 
         $response = $this->actingAs($officer)
             ->get(route('recruiting.form', $division->slug));
 
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page
-            ->where('handleLabel', null)
-            ->where('handleHint', null));
+            ->where('handleTypes', []));
     }
 
     #[Test]
@@ -194,13 +191,13 @@ class RecruitingControllerTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division'    => $division->slug,
-                'member_id'   => 99999,
-                'forum_name'  => 'TestRecruit',
-                'rank'        => Rank::RECRUIT->value,
-                'platoon'     => $platoon->id,
-                'squad'       => $squad->id,
-                'ingame_name' => 'GameHandle',
+                'division'   => $division->slug,
+                'member_id'  => 99999,
+                'forum_name' => 'TestRecruit',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+                'squad'      => $squad->id,
+                'handles'    => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $this->assertDatabaseHas('members', [
@@ -219,12 +216,12 @@ class RecruitingControllerTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division'    => $division->slug,
-                'member_id'   => 88888,
-                'forum_name'  => 'TransferTestRecruit',
-                'rank'        => Rank::RECRUIT->value,
-                'platoon'     => $platoon->id,
-                'ingame_name' => 'GameHandle',
+                'division'   => $division->slug,
+                'member_id'  => 88888,
+                'forum_name' => 'TransferTestRecruit',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+                'handles'    => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $this->assertDatabaseHas('transfers', [
@@ -241,12 +238,12 @@ class RecruitingControllerTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division'    => $division->slug,
-                'member_id'   => 77777,
-                'forum_name'  => 'RankTestRecruit',
-                'rank'        => Rank::RECRUIT->value,
-                'platoon'     => $platoon->id,
-                'ingame_name' => 'GameHandle',
+                'division'   => $division->slug,
+                'member_id'  => 77777,
+                'forum_name' => 'RankTestRecruit',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+                'handles'    => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $this->assertDatabaseHas('rank_actions', [
@@ -267,12 +264,12 @@ class RecruitingControllerTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->postJson(route('recruiting.addMember'), [
-                'division'    => $division->slug,
-                'member_id'   => 66666,
-                'forum_name'  => 'DuplicateTestRecruit',
-                'rank'        => Rank::RECRUIT->value,
-                'platoon'     => $platoon->id,
-                'ingame_name' => 'GameHandle',
+                'division'   => $division->slug,
+                'member_id'  => 66666,
+                'forum_name' => 'DuplicateTestRecruit',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+                'handles'    => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $response->assertStatus(409);
@@ -318,12 +315,12 @@ class RecruitingControllerTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->post(route('recruiting.addMember'), [
-                'division'    => $division->slug,
-                'member_id'   => $exMember->clan_id,
-                'forum_name'  => 'ReturningMember',
-                'rank'        => Rank::RECRUIT->value,
-                'platoon'     => $platoon->id,
-                'ingame_name' => 'GameHandle',
+                'division'   => $division->slug,
+                'member_id'  => $exMember->clan_id,
+                'forum_name' => 'ReturningMember',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+                'handles'    => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $this->assertDatabaseHas('members', [
@@ -430,7 +427,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'DiscordRecruit',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
-                'ingame_name'     => 'GameHandle',
+                'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $this->assertDatabaseHas('members', [
@@ -458,7 +455,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => '<script>alert(1)</script>',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
-                'ingame_name'     => 'GameHandle',
+                'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $response->assertStatus(422);
@@ -476,7 +473,7 @@ class RecruitingControllerTest extends TestCase
             'regex_hint' => 'Steam ID must be numeric.',
         ]);
         $officer     = $this->createOfficer();
-        $division    = $this->createActiveDivision(['handle_id' => $handle->id]);
+        $division    = $this->createDivisionWithHandles([$handle]);
         $platoon     = $this->createPlatoon($division);
         $pendingUser = User::factory()->pending()->create();
 
@@ -487,11 +484,11 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'DiscordRecruit',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
-                'ingame_name'     => 'not-numeric',
+                'handles'         => [$handle->id => 'not-numeric'],
             ]);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors('ingame_name');
+        $response->assertJsonValidationErrors("handles.{$handle->id}");
         $response->assertJson(['message' => 'Steam ID must be numeric.']);
         $pendingUser->refresh();
         $this->assertNull($pendingUser->member_id);
@@ -502,7 +499,7 @@ class RecruitingControllerTest extends TestCase
     {
         $handle   = Handle::create(['label' => 'Steam']);
         $officer  = $this->createOfficer();
-        $division = $this->createActiveDivision(['handle_id' => $handle->id]);
+        $division = $this->createDivisionWithHandles([$handle]);
         $platoon  = $this->createPlatoon($division);
 
         $response = $this->actingAs($officer)
@@ -515,7 +512,7 @@ class RecruitingControllerTest extends TestCase
             ]);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors('ingame_name');
+        $response->assertJsonValidationErrors('handles');
         $response->assertJson(['message' => 'A Steam handle is required for this division.']);
         $this->assertDatabaseMissing('members', ['clan_id' => 22222]);
     }
@@ -523,12 +520,8 @@ class RecruitingControllerTest extends TestCase
     #[Test]
     public function submit_recruitment_rejects_a_blank_ingame_name_even_when_the_division_has_no_configured_handle(): void
     {
-        // `divisions.handle_id` has no DB-level foreign key, so a dangling
-        // reference (e.g. its Handle row was deleted) is a real, if rare, state
-        // — the closest this schema gets to "no handle configured". An
-        // in-game name is still required regardless.
         $officer  = $this->createOfficer();
-        $division = $this->createActiveDivision(['handle_id' => 999999]);
+        $division = $this->createDivisionWithHandles([]);
         $platoon  = $this->createPlatoon($division);
 
         $response = $this->actingAs($officer)
@@ -563,7 +556,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'DiscordRecruit',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
-                'ingame_name'     => 'GameHandle',
+                'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $response->assertStatus(409);
@@ -589,7 +582,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'TakenName',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
-                'ingame_name'     => 'GameHandle',
+                'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $response->assertStatus(422);
@@ -610,7 +603,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'TestRecruit',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
-                'ingame_name'     => 'GameHandle',
+                'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $response->assertStatus(422);
@@ -638,7 +631,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'LinkedRecruit',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
-                'ingame_name'     => 'GameHandle',
+                'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $pendingUser->refresh();
@@ -666,7 +659,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'NewForumName',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
-                'ingame_name'     => 'GameHandle',
+                'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $this->assertDatabaseHas('members', [
@@ -705,7 +698,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'DiscordRecruit',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
-                'ingame_name'     => 'GameHandle',
+                'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
     }
 
@@ -729,7 +722,7 @@ class RecruitingControllerTest extends TestCase
                 'forum_name'      => 'MissingForumRecruit',
                 'rank'            => Rank::RECRUIT->value,
                 'platoon'         => $platoon->id,
-                'ingame_name'     => 'GameHandle',
+                'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
         $response->assertStatus(422);
@@ -895,5 +888,108 @@ class RecruitingControllerTest extends TestCase
         $this->actingAs($officer)
             ->postJson(route('validate-name'), ['name' => 'SomeForumName'])
             ->assertOk();
+    }
+
+    #[Test]
+    public function submit_recruitment_accepts_one_of_several_division_handles(): void
+    {
+        $na       = Handle::create(['label' => 'Warships NA']);
+        $eu       = Handle::create(['label' => 'Warships EU']);
+        $officer  = $this->createOfficer();
+        $division = $this->createDivisionWithHandles([$na, $eu]);
+        $platoon  = $this->createPlatoon($division);
+
+        $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'   => $division->slug,
+                'member_id'  => 31313,
+                'forum_name' => 'EuRecruit',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+                'handles'    => [$na->id => '', $eu->id => 'EuCaptain'],
+            ])
+            ->assertSuccessful();
+
+        $member = Member::where('clan_id', 31313)->firstOrFail();
+        $this->assertDatabaseHas('handle_member', ['member_id' => $member->id, 'handle_id' => $eu->id, 'value' => 'EuCaptain']);
+        $this->assertDatabaseMissing('handle_member', ['member_id' => $member->id, 'handle_id' => $na->id]);
+    }
+
+    #[Test]
+    public function submit_recruitment_stores_every_filled_division_handle(): void
+    {
+        $na       = Handle::create(['label' => 'Warships NA']);
+        $eu       = Handle::create(['label' => 'Warships EU']);
+        $officer  = $this->createOfficer();
+        $division = $this->createDivisionWithHandles([$na, $eu]);
+        $platoon  = $this->createPlatoon($division);
+
+        $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'   => $division->slug,
+                'member_id'  => 32323,
+                'forum_name' => 'BothRecruit',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+                'handles'    => [$na->id => 'NaCaptain', $eu->id => 'EuCaptain'],
+            ])
+            ->assertSuccessful();
+
+        $member = Member::where('clan_id', 32323)->firstOrFail();
+        $this->assertSame(2, $member->handles()->count());
+    }
+
+    #[Test]
+    public function submit_recruitment_requires_at_least_one_of_several_division_handles(): void
+    {
+        $na       = Handle::create(['label' => 'Warships NA']);
+        $eu       = Handle::create(['label' => 'Warships EU']);
+        $officer  = $this->createOfficer();
+        $division = $this->createDivisionWithHandles([$na, $eu]);
+        $platoon  = $this->createPlatoon($division);
+
+        $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'   => $division->slug,
+                'member_id'  => 33333,
+                'forum_name' => 'NoHandles',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+                'handles'    => [$na->id => '', $eu->id => ''],
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors('handles')
+            ->assertJson(['message' => 'Enter at least one handle: Warships NA, Warships EU.']);
+
+        $this->assertDatabaseMissing('members', ['clan_id' => 33333]);
+    }
+
+    #[Test]
+    public function submit_recruitment_validates_each_filled_handle_against_its_own_format(): void
+    {
+        $na = Handle::create(['label' => 'Warships NA']);
+        $eu = Handle::create([
+            'label'      => 'Warships EU',
+            'regex'      => '/^[a-z]+$/',
+            'regex_hint' => 'EU names are lowercase letters.',
+        ]);
+        $officer  = $this->createOfficer();
+        $division = $this->createDivisionWithHandles([$na, $eu]);
+        $platoon  = $this->createPlatoon($division);
+
+        $this->actingAs($officer)
+            ->postJson(route('recruiting.addMember'), [
+                'division'   => $division->slug,
+                'member_id'  => 34343,
+                'forum_name' => 'BadEu',
+                'rank'       => Rank::RECRUIT->value,
+                'platoon'    => $platoon->id,
+                'handles'    => [$na->id => 'NaCaptain', $eu->id => 'NOT-VALID'],
+            ])
+            ->assertStatus(422)
+            ->assertJsonValidationErrors("handles.{$eu->id}")
+            ->assertJson(['message' => 'EU names are lowercase letters.']);
+
+        $this->assertDatabaseMissing('members', ['clan_id' => 34343]);
     }
 }

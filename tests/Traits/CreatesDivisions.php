@@ -21,6 +21,13 @@ trait CreatesDivisions
         ], $attributes));
     }
 
+    protected function createDivisionWithHandles(array $handles, array $attributes = []): Division
+    {
+        return Division::factory()->withHandles(...$handles)->create(array_merge([
+            'active' => true,
+        ], $attributes));
+    }
+
     protected function createInactiveDivision(array $attributes = []): Division
     {
         return Division::factory()->create(array_merge([

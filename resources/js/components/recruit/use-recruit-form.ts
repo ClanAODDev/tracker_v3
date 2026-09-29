@@ -18,12 +18,21 @@ interface MemberFields {
     id: string;
     forum_name: string;
     ingame_name: string;
+    handles: Record<number, string>;
     rank: string;
     platoon: string;
     squad: string;
 }
 
-const BLANK_MEMBER: MemberFields = { id: '', forum_name: '', ingame_name: '', rank: '', platoon: '', squad: '' };
+const BLANK_MEMBER: MemberFields = {
+    id: '',
+    forum_name: '',
+    ingame_name: '',
+    handles: {},
+    rank: '',
+    platoon: '',
+    squad: '',
+};
 
 function formatName(raw: string): string {
     return raw.replace(/\b\w/g, (c) => c.toUpperCase());
@@ -56,6 +65,20 @@ export function useRecruitForm(props: RecruitFormProps) {
     }, []);
 
     const patchMember = useCallback((patch: Partial<MemberFields>) => setMember((m) => ({ ...m, ...patch })), []);
+    const patchHandle = useCallback(
+        (id: number, value: string) => setMember((m) => ({ ...m, handles: { ...m.handles, [id]: value } })),
+        [],
+    );
+
+    const filledHandles = useMemo(
+        () =>
+            props.handleTypes
+                .map((type) => ({ ...type, value: (member.handles[type.id] ?? '').trim() }))
+                .filter((handle) => handle.value !== ''),
+        [props.handleTypes, member.handles],
+    );
+    const hasHandle = props.handleTypes.length > 0 ? filledHandles.length > 0 : Boolean(member.ingame_name.trim());
+    const welcomeHandle = props.handleTypes.length > 0 ? (filledHandles[0]?.value ?? '') : member.ingame_name;
 
     const validateForumName = useCallback(
         (name: string, memberId: string, email?: string) => {
@@ -252,7 +275,7 @@ export function useRecruitForm(props: RecruitFormProps) {
     }, [path, selectedPending, emailCheck, memberIdValidation]);
 
     const detailsComplete = Boolean(
-        member.forum_name && forumNameValidation.valid && member.ingame_name && member.rank,
+        member.forum_name && forumNameValidation.valid && hasHandle && member.rank,
     );
     const assignmentComplete =
         props.platoons.length === 0 ||
@@ -267,11 +290,12 @@ export function useRecruitForm(props: RecruitFormProps) {
             hasPending || Boolean(member.id && memberIdValidation.valid && memberIdValidation.verifiedEmail);
         return (
             idValid &&
-            Boolean(member.forum_name && member.ingame_name && member.rank && member.platoon) &&
+            hasHandle &&
+            Boolean(member.forum_name && member.rank && member.platoon) &&
             (selectedPlatoonSquads.length === 0 || Boolean(member.squad)) &&
             forumNameValidation.valid
         );
-    }, [selectedPending, emailCheck, member, memberIdValidation, forumNameValidation, selectedPlatoonSquads]);
+    }, [selectedPending, emailCheck, member, memberIdValidation, forumNameValidation, selectedPlatoonSquads, hasHandle]);
 
     const submit = useCallback(async () => {
         if (!formValid || submitting) return;
@@ -282,7 +306,7 @@ export function useRecruitForm(props: RecruitFormProps) {
                 division: props.divisionSlug,
                 member_id: member.id,
                 forum_name: member.forum_name,
-                ingame_name: member.ingame_name,
+                ...(props.handleTypes.length > 0 ? { handles: member.handles } : { ingame_name: member.ingame_name }),
                 platoon: member.platoon,
                 rank: member.rank,
                 squad: member.squad,
@@ -295,7 +319,7 @@ export function useRecruitForm(props: RecruitFormProps) {
         } finally {
             setSubmitting(false);
         }
-    }, [formValid, submitting, member, props.divisionSlug, selectedPending]);
+    }, [formValid, submitting, member, props.divisionSlug, props.handleTypes.length, selectedPending]);
 
     const reset = useCallback(() => {
         setStep('form');
@@ -338,6 +362,9 @@ export function useRecruitForm(props: RecruitFormProps) {
         setPath,
         member,
         patchMember,
+        patchHandle,
+        filledHandles,
+        welcomeHandle,
         memberIdValidation,
         forumNameValidation,
         validating,

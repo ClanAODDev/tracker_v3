@@ -27,6 +27,10 @@ class MemberListProps
                 'slug'         => $division->slug,
                 'platoonLabel' => $division->locality('Platoon'),
                 'squadLabel'   => $division->locality('Squad'),
+                'handleTypes'  => $division->handles
+                    ->map(fn ($handle) => ['id' => $handle->id, 'label' => $handle->label])
+                    ->values()
+                    ->all(),
             ],
             'members'        => $serializer->collection($members),
             'assignmentKind' => $assignmentKind,

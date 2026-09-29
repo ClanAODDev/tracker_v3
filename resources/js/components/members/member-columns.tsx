@@ -4,7 +4,7 @@ import { Bell, Clock } from 'lucide-react';
 import { type CSSProperties, type Dispatch, type ReactNode, type SetStateAction, useMemo } from 'react';
 import { toast } from 'sonner';
 
-import type { MemberFieldDefinition, MemberRow } from '@/components/members/types';
+import type { HandleType, MemberFieldDefinition, MemberRow } from '@/components/members/types';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { postJson } from '@/lib/api';
@@ -22,10 +22,19 @@ interface Options {
     activityStyle: 'row' | 'dot';
     memberFields: MemberFieldDefinition[];
     selectedFieldValues: Record<string, Set<string>>;
+    handleTypes: HandleType[];
 }
 
 export function fieldColumnId(key: string): string {
     return `field:${key}`;
+}
+
+export function handleColumnId(id: number): string {
+    return `handle:${id}`;
+}
+
+export function matchesHandle(member: MemberRow, query: string): boolean {
+    return Object.values(member.handles).some((h) => h.value.toLowerCase().includes(query));
 }
 
 export function useMemberColumns({
@@ -37,6 +46,7 @@ export function useMemberColumns({
     activityStyle,
     memberFields,
     selectedFieldValues,
+    handleTypes,
 }: Options): ColumnDef<MemberRow>[] {
     return useMemo<ColumnDef<MemberRow>[]>(
         () => [
@@ -135,7 +145,7 @@ export function useMemberColumns({
                     return (
                         m.name.toLowerCase().includes(q) ||
                         (m.rankAbbr ?? '').toLowerCase().includes(q) ||
-                        (m.handle?.value ?? '').toLowerCase().includes(q) ||
+                        matchesHandle(m, q) ||
                         (m.assignment?.label ?? '').toLowerCase().includes(q)
                     );
                 },
@@ -242,22 +252,24 @@ export function useMemberColumns({
                     </div>
                 ),
             },
-            {
-                id: 'handle',
-                accessorFn: (m) => m.handle?.value ?? '',
-                header: 'Handle',
-                cell: ({ row }) => {
-                    const h = row.original.handle;
-                    if (!h) return <span className="text-destructive">N/A</span>;
-                    return h.url ? (
-                        <a href={h.url} target="_blank" rel="noreferrer" className="hover:text-foreground">
-                            {h.value}
-                        </a>
-                    ) : (
-                        <code className="text-xs">{h.value}</code>
-                    );
-                },
-            },
+            ...handleTypes.map(
+                (type): ColumnDef<MemberRow> => ({
+                    id: handleColumnId(type.id),
+                    accessorFn: (m) => m.handles[type.id]?.value ?? '',
+                    header: type.label,
+                    cell: ({ row }) => {
+                        const h = row.original.handles[type.id];
+                        if (!h) return <span className="text-destructive">N/A</span>;
+                        return h.url ? (
+                            <a href={h.url} target="_blank" rel="noreferrer" className="hover:text-foreground">
+                                {h.value}
+                            </a>
+                        ) : (
+                            <code className="text-xs">{h.value}</code>
+                        );
+                    },
+                }),
+            ),
             {
                 id: 'posts',
                 accessorKey: 'posts',
@@ -300,11 +312,25 @@ export function useMemberColumns({
                 }),
             ),
         ],
-        [assignmentLabel, selectedTags, reminded, bulkMode, activityStyle, memberFields, selectedFieldValues],
+        [
+            assignmentLabel,
+            selectedTags,
+            reminded,
+            bulkMode,
+            activityStyle,
+            memberFields,
+            selectedFieldValues,
+            handleTypes,
+        ],
     );
 }
 
-export function columnLabel(id: string, assignmentLabel: string, memberFields: MemberFieldDefinition[]): ReactNode {
+export function columnLabel(
+    id: string,
+    assignmentLabel: string,
+    memberFields: MemberFieldDefinition[],
+    handleTypes: HandleType[],
+): ReactNode {
     switch (id) {
         case 'promoted':
             return 'Last promoted';
@@ -316,7 +342,8 @@ export function columnLabel(id: string, assignmentLabel: string, memberFields: M
             return assignmentLabel;
         default: {
             const field = memberFields.find((f) => fieldColumnId(f.key) === id);
-            return field ? field.label : id;
+            if (field) return field.label;
+            return handleTypes.find((h) => handleColumnId(h.id) === id)?.label ?? id;
         }
     }
 }

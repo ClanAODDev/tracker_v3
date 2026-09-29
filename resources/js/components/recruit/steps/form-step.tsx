@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { ArrowRight, Check, Copy, IdCard, Loader2, Mail, MessageSquare, Users } from 'lucide-react';
+import { ArrowRight, Check, Copy, CornerDownRight, IdCard, Loader2, Mail, MessageSquare, Users } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -28,7 +28,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
     const [guided, setGuided] = useState(() => localStorage.getItem(GUIDED_MODE_KEY) === '1');
     const welcomePm = (props.welcome_pm || '')
         .replace(/\{\{\s*name\s*\}\}/g, form.member.forum_name)
-        .replace(/\{\{\s*ingame_name\s*\}\}/g, form.member.ingame_name);
+        .replace(/\{\{\s*ingame_name\s*\}\}/g, form.welcomeHandle);
 
     /*
      * revealed[k] gates whether the (k+1)th section may show in guided mode — revealed[0] is
@@ -110,49 +110,22 @@ export function FormStep({ form }: { form: RecruitForm }) {
                     step={2}
                     complete={form.detailsComplete}
                 >
-                    <div className="grid gap-4 sm:grid-cols-3">
+                    <div className="grid gap-4 sm:grid-cols-2">
                         <div className="grid gap-1.5">
-                            <Label htmlFor="forum_name" className="min-h-9 leading-tight">
-                                Forum name *
-                            </Label>
-                            <div className="flex gap-1.5">
-                                <Input
-                                    id="forum_name"
-                                    value={form.member.forum_name}
-                                    onChange={(e) => {
-                                        form.patchMember({ forum_name: e.target.value });
-                                        form.validateForumName(e.target.value, form.member.id);
-                                    }}
-                                    placeholder="Desired forum name"
-                                />
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="icon-sm"
-                                    title={`Copy to ${(props.handleLabel ?? 'in-game handle').toLowerCase()}`}
-                                    onClick={() => form.patchMember({ ingame_name: form.member.forum_name })}
-                                >
-                                    <ArrowRight />
-                                </Button>
-                            </div>
+                            <Label htmlFor="forum_name">Forum name *</Label>
+                            <Input
+                                id="forum_name"
+                                value={form.member.forum_name}
+                                onChange={(e) => {
+                                    form.patchMember({ forum_name: e.target.value });
+                                    form.validateForumName(e.target.value, form.member.id);
+                                }}
+                                placeholder="Desired forum name"
+                            />
                             <ForumNameHint form={form} />
                         </div>
-                        <div className="grid gap-1.5">
-                            <Label htmlFor="ingame" className="min-h-9 leading-tight">
-                                {props.handleLabel ?? 'In-game handle'} *
-                            </Label>
-                            <Input
-                                id="ingame"
-                                value={form.member.ingame_name}
-                                onChange={(e) => form.patchMember({ ingame_name: e.target.value })}
-                                placeholder={
-                                    props.handleLabel ? `Their ${props.handleLabel.toLowerCase()}` : 'In-game name'
-                                }
-                            />
-                            {props.handleHint && <p className="text-xs text-muted-foreground">{props.handleHint}</p>}
-                        </div>
-                        <div className="grid gap-1.5">
-                            <Label className="min-h-9 leading-tight">Rank *</Label>
+                        <div className="grid content-start gap-1.5">
+                            <Label>Rank *</Label>
                             <SimpleSelect
                                 value={form.member.rank || '__all'}
                                 onChange={(v) => form.patchMember({ rank: v === '__all' ? '' : v })}
@@ -163,6 +136,38 @@ export function FormStep({ form }: { form: RecruitForm }) {
                                 ]}
                             />
                         </div>
+                    </div>
+                    {props.handleTypes.length > 1 && (
+                        <p className="text-sm text-muted-foreground">
+                            Ask the recruit which of these they have and fill in every one that applies. At least one
+                            is required.
+                        </p>
+                    )}
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        {props.handleTypes.length === 0 ? (
+                            <HandleInput
+                                id="ingame"
+                                label="In-game handle *"
+                                placeholder="In-game name"
+                                hint={null}
+                                value={form.member.ingame_name}
+                                onChange={(value) => form.patchMember({ ingame_name: value })}
+                                onUseForumName={() => form.patchMember({ ingame_name: form.member.forum_name })}
+                            />
+                        ) : (
+                            props.handleTypes.map((type) => (
+                                <HandleInput
+                                    key={type.id}
+                                    id={`handle_${type.id}`}
+                                    label={props.handleTypes.length === 1 ? `${type.label} *` : type.label}
+                                    placeholder={`Their ${type.label}`}
+                                    hint={type.hint}
+                                    value={form.member.handles[type.id] ?? ''}
+                                    onChange={(value) => form.patchHandle(type.id, value)}
+                                    onUseForumName={() => form.patchHandle(type.id, form.member.forum_name)}
+                                />
+                            ))
+                        )}
                     </div>
                 </Section>
             )}
@@ -403,6 +408,12 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 </Section>
             )}
 
+            {props.handleTypes.length > 1 && form.filledHandles.length > 0 && (
+                <p className="text-right text-xs text-muted-foreground">
+                    Handles: {form.filledHandles.map((h) => `${h.label}: ${h.value}`).join(' · ')}
+                </p>
+            )}
+
             {form.submitError && (
                 <p className="rounded-md border border-destructive/40 bg-destructive/5 px-4 py-2 text-sm">
                     {form.submitError}
@@ -422,5 +433,36 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 <p className="text-right text-xs text-muted-foreground">Complete the required fields above.</p>
             )}
         </form>
+    );
+}
+
+function HandleInput({
+    id,
+    label,
+    placeholder,
+    hint,
+    value,
+    onChange,
+    onUseForumName,
+}: {
+    id: string;
+    label: string;
+    placeholder: string;
+    hint: string | null;
+    value: string;
+    onChange: (value: string) => void;
+    onUseForumName: () => void;
+}) {
+    return (
+        <div className="grid content-start gap-1.5">
+            <Label htmlFor={id}>{label}</Label>
+            <div className="flex gap-1.5">
+                <Input id={id} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
+                <Button type="button" variant="outline" size="icon-sm" title="Use forum name" onClick={onUseForumName}>
+                    <CornerDownRight />
+                </Button>
+            </div>
+            {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+        </div>
     );
 }

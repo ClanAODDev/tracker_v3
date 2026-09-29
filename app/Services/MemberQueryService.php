@@ -14,7 +14,7 @@ class MemberQueryService
     public function withStandardRelations(Builder|BelongsToMany|HasMany $query, Division $division): Builder|BelongsToMany|HasMany
     {
         return $query->with([
-            'handles' => $this->primaryHandleConstraint($division),
+            'handles' => $this->divisionHandlesConstraint($division),
             'leave',
             'tags.division',
             'platoon',
@@ -27,26 +27,19 @@ class MemberQueryService
         ]);
     }
 
-    public function primaryHandleConstraint(Division $division): Closure
+    public function divisionHandlesConstraint(Division $division): Closure
     {
         return function ($query) use ($division) {
-            $query->where('handles.id', $division->handle_id)
+            $query->whereIn('handles.id', $division->handles->pluck('id'))
                 ->wherePivot('primary', true);
         };
     }
 
-    public function extractHandles(Collection $members): Collection
-    {
-        return $members->each(fn ($member) => $member->handle = $member->handles->first());
-    }
-
     public function loadSortedMembers(Builder|BelongsToMany|HasMany $query, Division $division): Collection
     {
-        return $this->extractHandles(
-            $this->withStandardRelations($query, $division)
-                ->where('division_id', $division->id)
-                ->get()
-                ->sortByDesc(fn ($m) => $m->rank->value)
-        );
+        return $this->withStandardRelations($query, $division)
+            ->where('division_id', $division->id)
+            ->get()
+            ->sortByDesc(fn ($m) => $m->rank->value);
     }
 }

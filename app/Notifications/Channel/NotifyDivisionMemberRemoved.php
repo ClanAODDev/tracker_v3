@@ -51,7 +51,6 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
     {
         $removerName = $this->remover?->name ?? 'Forum sync';
 
-        $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $notifiable->handle_id)->first();
         $reason = $this->removalReason
             ? ['name' => 'Reason', 'value' => $this->removalReason]
             : null;
@@ -84,10 +83,7 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
                         $this->squad?->name ?? 'Unassigned',
                     ),
                 ],
-                [
-                    'name'  => $handle?->label ?? 'In-Game Handle',
-                    'value' => $handle?->pivot?->value ?? 'N/A',
-                ],
+                $notifiable->handleFieldFor($this->member),
             ], fn ($field) => $field !== null)))->error()
             ->send();
     }

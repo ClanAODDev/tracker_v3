@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\DB;
 
 class RecruitmentService
 {
+    public function __construct(private MemberHandleService $handles = new MemberHandleService) {}
+
     /**
      * @throws RecruitmentFailedException
      */
@@ -29,7 +31,7 @@ class RecruitmentService
         int $rankId,
         int $platoonId,
         ?int $squadId,
-        ?string $ingameName,
+        array $handles,
         Member $recruiter
     ): Member {
         $existing = Member::where('clan_id', $clanId)->first();
@@ -55,7 +57,7 @@ class RecruitmentService
             $rankId,
             $platoonId,
             $squadId,
-            $ingameName,
+            $handles,
             $recruiter
         ) {
             $member = Member::firstOrNew(['clan_id' => $clanId]);
@@ -74,7 +76,7 @@ class RecruitmentService
                 'squad_id'               => $squadId ?? 0,
             ])->save();
 
-            $this->attachIngameHandle($member, $division, $ingameName);
+            $this->handles->setForDivision($member, $division, $handles);
 
             $member->recordActivity(ActivityType::RECRUITED);
 
@@ -93,17 +95,6 @@ class RecruitmentService
 
             return $member;
         });
-    }
-
-    private function attachIngameHandle(Member $member, Division $division, ?string $ingameName): void
-    {
-        if (! $ingameName || ! $division->handle_id) {
-            return;
-        }
-
-        $member->handles()->syncWithoutDetaching([
-            $division->handle_id => ['value' => $division->handle?->normalize($ingameName) ?? $ingameName],
-        ]);
     }
 
     public function createMemberRequest(Member $member, Division $division, Member $requester): void

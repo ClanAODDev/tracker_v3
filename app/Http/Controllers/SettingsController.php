@@ -3,15 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Accent;
-use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Http\Requests\Member\SyncDiscordAvatar;
+use App\Http\Requests\Settings\UpdateIngameHandles;
 use App\Models\Division;
 use App\Models\Handle;
-use App\Rules\HandleFormat;
+use App\Services\MemberHandleService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Throwable;
 
@@ -72,14 +71,9 @@ class SettingsController extends Controller
             $usedHandleIds = $memberHandles->pluck('handle_id');
 
             $payload['handles'] = [
-                'types' => Handle::query()
-                    ->where(fn ($q) => $q->where('enabled', true)->orWhereIn('id', $usedHandleIds))
-                    ->orderBy('label')
+                'types' => Handle::selectable($usedHandleIds)
                     ->get()
-                    ->map(fn (Handle $h) => [
-                        'id'    => $h->id,
-                        'label' => $h->enabled ? $h->label : "{$h->label} (disabled)",
-                    ]),
+                    ->map(fn (Handle $h) => ['id' => $h->id, 'label' => $h->selectLabel()]),
                 'current' => $memberHandles->map(fn ($mh) => [
                     'id'       => $mh->id,
                     'handleId' => $mh->handle_id,
@@ -123,7 +117,7 @@ class SettingsController extends Controller
         return response()->json(['success' => true, 'count' => count($validIds)]);
     }
 
-    public function ingameHandles(Request $request): JsonResponse
+    public function ingameHandles(UpdateIngameHandles $request, MemberHandleService $handles): JsonResponse
     {
         $member = $request->user()->member;
 
@@ -131,27 +125,7 @@ class SettingsController extends Controller
             return response()->json(['error' => 'No member record'], 400);
         }
 
-        $handles = $request->input('handles', []);
-
-        $rules = [];
-        foreach ($handles as $i => $row) {
-            $handle                    = ! empty($row['handle_id']) ? Handle::find($row['handle_id']) : null;
-            $rules["handles.$i.value"] = [new HandleFormat($handle)];
-        }
-
-        $validator = Validator::make($request->all(), $rules);
-
-        if ($validator->fails()) {
-            $failedField = array_key_first($validator->errors()->messages());
-            preg_match('/^handles\.(\d+)\.value$/', $failedField, $matches);
-
-            return response()->json([
-                'message' => $validator->errors()->first(),
-                'index'   => isset($matches[1]) ? (int) $matches[1] : null,
-            ], 422);
-        }
-
-        IngameHandlesForm::saveHandles($member, $handles);
+        $handles->sync($member, $request->input('handles', []));
 
         return response()->json(['success' => true, 'count' => $member->memberHandles()->count()]);
     }

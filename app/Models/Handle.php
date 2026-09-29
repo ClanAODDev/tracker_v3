@@ -4,10 +4,11 @@ namespace App\Models;
 
 use App\Models\Handle\HasCustomAttributes;
 use App\Support\Steam\SteamIdParser;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Handle extends Model
 {
@@ -23,9 +24,9 @@ class Handle extends Model
 
     protected $guarded = [];
 
-    public function divisions(): HasMany
+    public function divisions(): BelongsToMany
     {
-        return $this->hasMany(Division::class);
+        return $this->belongsToMany(Division::class);
     }
 
     public function member(): BelongsTo
@@ -38,6 +39,17 @@ class Handle extends Model
      * A blank value or a type without a regex is always considered valid —
      * required-ness is a separate concern handled by the caller's rules.
      */
+    public function scopeSelectable(Builder $query, iterable $includeIds = []): void
+    {
+        $query->where(fn (Builder $q) => $q->where('enabled', true)->orWhereIn('id', collect($includeIds)))
+            ->orderBy('label');
+    }
+
+    public function selectLabel(): string
+    {
+        return $this->enabled ? $this->label : "{$this->label} (disabled)";
+    }
+
     public function matches(?string $value): bool
     {
         if (! $this->regex || $value === null || $value === '') {

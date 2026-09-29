@@ -12,7 +12,13 @@ import { ArrowDown, ArrowUp, ChevronsUpDown, CircleDot, Clock, Columns3, Rows3, 
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { BulkBar } from '@/components/members/bulk-bar';
-import { columnLabel, fieldColumnId, useMemberColumns } from '@/components/members/member-columns';
+import {
+    columnLabel,
+    fieldColumnId,
+    handleColumnId,
+    matchesHandle,
+    useMemberColumns,
+} from '@/components/members/member-columns';
 import type { BulkConfig, MemberFieldDefinition, MemberListDivision, MemberRow } from '@/components/members/types';
 import { Button } from '@/components/ui/button';
 import {
@@ -57,7 +63,6 @@ const DEFAULT_HIDDEN: VisibilityState = {
     leave: false,
     tags: false,
     reminder: false,
-    handle: false,
     posts: false,
 };
 
@@ -99,9 +104,11 @@ export function MemberTable({
         // Division fields start hidden — a division with many fields shouldn't blow
         // out every viewer's default table width. Persisted choices still win.
         const defaultFieldHidden = Object.fromEntries(memberFields.map((f) => [fieldColumnId(f.key), false]));
+        const defaultHandleHidden = Object.fromEntries(division.handleTypes.map((h) => [handleColumnId(h.id), false]));
         return {
             ...DEFAULT_HIDDEN,
             ...defaultFieldHidden,
+            ...defaultHandleHidden,
             ...(persisted.columnVisibility ?? {}),
             select: false,
         };
@@ -134,6 +141,7 @@ export function MemberTable({
         activityStyle,
         memberFields,
         selectedFieldValues,
+        handleTypes: division.handleTypes,
     });
 
     const table = useReactTable({
@@ -153,7 +161,7 @@ export function MemberTable({
             return (
                 m.name.toLowerCase().includes(q) ||
                 (m.rankAbbr ?? '').toLowerCase().includes(q) ||
-                (m.handle?.value ?? '').toLowerCase().includes(q) ||
+                matchesHandle(m, q) ||
                 (m.assignment?.label ?? '').toLowerCase().includes(q) ||
                 Object.values(m.customFields).some((v) => (v ?? '').toLowerCase().includes(q))
             );
@@ -313,7 +321,7 @@ export function MemberTable({
                                 onSelect={(e) => e.preventDefault()}
                                 className="capitalize"
                             >
-                                {columnLabel(column.id, assignmentLabel, memberFields)}
+                                {columnLabel(column.id, assignmentLabel, memberFields, division.handleTypes)}
                             </DropdownMenuCheckboxItem>
                         ))}
                     </DropdownMenuContent>

@@ -7,12 +7,12 @@ use App\Data\DivisionLeaderboardData;
 use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Enums\Rank;
+use App\Models\Division\HasHandles;
 use App\Presenters\DivisionPresenter;
 use App\Settings\DivisionSettings;
 use Illuminate\Database\Eloquent\Attributes\RouteKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
@@ -27,6 +27,7 @@ use Illuminate\Support\Str;
 class Division extends Model
 {
     use HasFactory;
+    use HasHandles;
     use Notifiable;
     use RecordsActivity;
     use SoftDeletes;
@@ -259,11 +260,6 @@ class Division extends Model
     public function membersActiveOnDiscordSinceDaysAgo(int $days): HasMany
     {
         return $this->members()->where('last_voice_activity', '>=', now()->subDays($days)->toDateString());
-    }
-
-    public function handle(): BelongsTo
-    {
-        return $this->belongsTo(Handle::class);
     }
 
     public function unassigned(): HasMany

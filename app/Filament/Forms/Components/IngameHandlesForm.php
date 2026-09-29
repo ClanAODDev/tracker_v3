@@ -4,14 +4,12 @@ namespace App\Filament\Forms\Components;
 
 use App\Models\Handle;
 use App\Models\Member;
-use App\Models\MemberHandle;
 use App\Rules\HandleFormat;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
-use Illuminate\Database\Eloquent\Model;
 
 class IngameHandlesForm
 {
@@ -38,13 +36,9 @@ class IngameHandlesForm
                     ->options(function (Get $get) {
                         $current = $get('handle_id');
 
-                        return Handle::query()
-                            ->where(fn ($query) => $query->where('enabled', true)->when($current, fn ($q) => $q->orWhere('id', $current)))
-                            ->orderBy('label')
+                        return Handle::selectable(array_filter([$current]))
                             ->get()
-                            ->mapWithKeys(fn (Handle $handle) => [
-                                $handle->id => $handle->enabled ? $handle->label : "{$handle->label} (disabled)",
-                            ]);
+                            ->mapWithKeys(fn (Handle $handle) => [$handle->id => $handle->selectLabel()]);
                     })
                     ->searchable()
                     ->live()
@@ -77,63 +71,5 @@ class IngameHandlesForm
                 ];
             })
             ->toArray();
-    }
-
-    public static function saveHandles(Model $member, array $handles): void
-    {
-        $existingIds = MemberHandle::where('member_id', $member->id)->modelKeys();
-
-        $formIds     = collect($handles)->pluck('id')->filter()->toArray();
-        $idsToDelete = array_diff($existingIds, $formIds);
-
-        if (! empty($idsToDelete)) {
-            MemberHandle::where('member_id', $member->id)
-                ->whereIn('id', $idsToDelete)
-                ->delete();
-        }
-
-        $handleTypes   = Handle::whereIn('id', collect($handles)->pluck('handle_id')->filter())->get()->keyBy('id');
-        $handlesByType = collect($handles)->groupBy('handle_id');
-
-        foreach ($handlesByType as $handleId => $handlesOfType) {
-            $primaryAssigned = false;
-
-            foreach ($handlesOfType as $index => $row) {
-                if (empty($row['handle_id']) || empty($row['value'])) {
-                    continue;
-                }
-
-                $isPrimary = false;
-                if (! $primaryAssigned) {
-                    if ($row['primary'] ?? false) {
-                        $isPrimary       = true;
-                        $primaryAssigned = true;
-                    } elseif ($index === $handlesOfType->keys()->last()) {
-                        $isPrimary = true;
-                    }
-                }
-
-                $value = $handleTypes->get($row['handle_id'])?->normalize($row['value']) ?? $row['value'];
-
-                if (! empty($row['id'])) {
-                    MemberHandle::where('id', $row['id'])
-                        ->update([
-                            'handle_id'  => $row['handle_id'],
-                            'value'      => $value,
-                            'primary'    => $isPrimary,
-                            'updated_at' => now(),
-                        ]);
-                } else {
-                    MemberHandle::create([
-                        'member_id'  => $member->id,
-                        'handle_id'  => $row['handle_id'],
-                        'value'      => $value,
-                        'primary'    => $isPrimary,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ]);
-                }
-            }
-        }
     }
 }

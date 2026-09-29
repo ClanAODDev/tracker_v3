@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Http\Responses\LogoutResponse;
 use App\Models\Division;
-use App\Models\Handle;
 use App\Models\Member;
 use App\Models\Observers\TicketTypeObserver;
 use App\Models\Platoon;
@@ -38,8 +37,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Route::bind('username', fn ($username) => User::whereName($username)->firstOrFail());
-
-        Route::bind('handle', fn ($handle) => Handle::whereId($handle)->with('divisions')->first());
 
         Route::bind('platoon', function ($platoon) {
             return Platoon::whereId($platoon)->with('members')->first();

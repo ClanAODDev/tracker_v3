@@ -238,7 +238,7 @@ class Member extends Model
 
     public function handles(): BelongsToMany
     {
-        return $this->belongsToMany(Handle::class)->withPivot('value');
+        return $this->belongsToMany(Handle::class)->withPivot('value', 'primary');
     }
 
     public function tags(): BelongsToMany

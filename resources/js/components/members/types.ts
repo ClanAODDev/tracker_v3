@@ -17,13 +17,19 @@ export interface MemberRow {
     canRemind: boolean;
     tags: Array<{ id: number; name: string; visibility: string }>;
     tagIds: number[];
-    handle: { value: string; url: string | null } | null;
+    handles: Record<number, { value: string; url: string | null }>;
     posts: number;
     leave: { until: string | null; reason: string | null; pending: boolean } | null;
     isParttimer: boolean;
     primaryDivision: string | null;
     directRecruit: boolean;
     customFields: Record<string, string | null>;
+}
+
+export interface HandleType {
+    id: number;
+    label: string;
+    hint: string | null;
 }
 
 export interface MemberFieldDefinition {
@@ -66,4 +72,5 @@ export interface MemberListDivision {
     slug: string;
     platoonLabel: string;
     squadLabel: string;
+    handleTypes: HandleType[];
 }

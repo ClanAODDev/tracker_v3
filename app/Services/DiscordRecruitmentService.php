@@ -50,7 +50,7 @@ class DiscordRecruitmentService
             (int) $request->rank,
             (int) $request->platoon,
             $request->squad ? (int) $request->squad : null,
-            $request->ingame_name,
+            $request->input('handles', []),
             $recruiter
         );
 

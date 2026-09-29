@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Models\Division;
+use App\Models\Handle;
 use App\Models\Leave;
 use App\Models\Member;
 use Illuminate\Support\Collection;
@@ -54,10 +55,13 @@ class MemberRowSerializer
                     'name'       => $tag->name,
                     'visibility' => $tag->visibility->value,
                 ])->values()->all(),
-            'tagIds' => $member->tags->pluck('id')->all(),
-            'handle' => $member->handle
-                ? ['value' => $member->handle->pivot->value, 'url' => $member->handle->url ? $member->handle->full_url : null]
-                : null,
+            'tagIds'  => $member->tags->pluck('id')->all(),
+            'handles' => $this->division->handlesOf($member)
+                ->mapWithKeys(fn (Handle $handle) => [$handle->id => [
+                    'value' => $handle->pivot->value,
+                    'url'   => $handle->full_url,
+                ]])
+                ->all(),
             'posts' => $member->posts,
             'leave' => $member->leave ? [
                 'until'   => $member->leave->end_date?->format('M j'),

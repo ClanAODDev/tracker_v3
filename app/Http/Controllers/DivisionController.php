@@ -9,9 +9,10 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\User;
 use App\Repositories\DivisionRepository;
-use App\Rules\HandleFormat;
 use App\Services\DivisionShowService;
+use App\Services\MemberHandleService;
 use App\Services\MemberQueryService;
+use App\Support\HandleRules;
 use App\Support\MemberCard;
 use App\Support\MemberListProps;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -42,17 +43,20 @@ class DivisionController extends Controller
             ->get();
 
         $rows = $members->map(function (Member $member) use ($division) {
-            $handle = $member->handles->firstWhere('id', $division->handle_id);
             $status = $member->division_id === 0 ? 'removed' : ($member->leave ? 'onLeave' : 'active');
 
             return [
                 ...MemberCard::from($member),
                 'primaryDivision' => $member->division_id > 0 ? $member->division?->name : null,
                 'status'          => $status,
-                'handle'          => $handle ? [
-                    'value' => $handle->pivot->value,
-                    'url'   => $handle->url ? $handle->url . $handle->pivot->value : null,
-                ] : null,
+                'handles'         => $division->handlesOf($member)
+                    ->map(fn ($handle) => [
+                        'label' => $handle->label,
+                        'value' => $handle->pivot->value,
+                        'url'   => $handle->full_url,
+                    ])
+                    ->values()
+                    ->all(),
                 'removeUrl' => route('removePartTimer', [$division->slug, $member->clan_id]),
             ];
         })->values();
@@ -61,8 +65,7 @@ class DivisionController extends Controller
             'division' => [
                 'name'        => $division->name,
                 'slug'        => $division->slug,
-                'handleLabel' => $division->handle?->label,
-                'handleHint'  => $division->handle?->regex_hint,
+                'handleTypes' => $division->handleTypes(),
             ],
             'members' => $rows,
             'stats'   => [
@@ -118,7 +121,6 @@ class DivisionController extends Controller
             $parttimeMembers = $this->memberQuery->withStandardRelations($parttimeQuery, $division)
                 ->with('division')
                 ->get();
-            $this->memberQuery->extractHandles($parttimeMembers);
 
             $members = $members->merge($parttimeMembers)->sortByDesc('rank');
         }
@@ -154,11 +156,12 @@ class DivisionController extends Controller
         return response()->json(['members' => $members]);
     }
 
-    public function addPartTimer(Division $division): JsonResponse|RedirectResponse
+    public function addPartTimer(Division $division, MemberHandleService $handles): JsonResponse|RedirectResponse
     {
         $validated = request()->validate([
-            'member_id'    => 'required|exists:members,clan_id',
-            'handle_value' => ['nullable', 'string', 'max:255', new HandleFormat($division->handle)],
+            'member_id' => 'required|exists:members,clan_id',
+            'handles'   => ['nullable', 'array'],
+            ...HandleRules::forDivision($division),
         ]);
 
         $member = Member::where('clan_id', $validated['member_id'])->firstOrFail();
@@ -176,11 +179,7 @@ class DivisionController extends Controller
 
         $division->partTimeMembers()->attach($member->id);
 
-        if (! empty($validated['handle_value']) && $division->handle_id) {
-            $member->handles()->syncWithoutDetaching([
-                $division->handle_id => ['value' => $division->handle?->normalize($validated['handle_value']) ?? $validated['handle_value']],
-            ]);
-        }
+        $handles->setForDivision($member, $division, $validated['handles'] ?? []);
 
         $member->recordActivity(ActivityType::ADD_PART_TIME, [
             'division' => $division->name,

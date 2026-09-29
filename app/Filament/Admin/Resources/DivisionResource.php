@@ -85,10 +85,6 @@ class DivisionResource extends Resource
                                     modifyRuleUsing: fn (Unique $rule) => $rule->whereNull('deleted_at'),
                                 ),
 
-                            Select::make('handle_id')
-                                ->label('Game Handle')
-                                ->relationship('handle', 'label'),
-
                             TextInput::make('abbreviation')
                                 ->helperText('Should match abbreviation used on forums')
                                 ->maxLength(4)
@@ -101,6 +97,24 @@ class DivisionResource extends Resource
                                 ->columnStart(2),
 
                         ])->columns(3),
+
+                        Repeater::make('handleAssignments')
+                            ->label('Game handles')
+                            ->helperText('Handle types members of this division use, e.g. separate NA and EU accounts. The first is used for the recruit welcome message. Recruits need at least one.')
+                            ->relationship()
+                            ->orderColumn('sort_order')
+                            ->reorderable()
+                            ->addActionLabel('Add handle type')
+                            ->defaultItems(0)
+                            ->simple(
+                                Select::make('handle_id')
+                                    ->relationship('handle', 'label')
+                                    ->searchable()
+                                    ->preload()
+                                    ->required()
+                                    ->distinct()
+                                    ->disableOptionsWhenSelectedInSiblingRepeaterItems(),
+                            ),
 
                         TextInput::make('description')
                             ->default('Another AOD Division')

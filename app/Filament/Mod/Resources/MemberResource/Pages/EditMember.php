@@ -15,6 +15,7 @@ use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionPartTimeMemberRemoved;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
+use App\Services\MemberHandleService;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -52,7 +53,7 @@ class EditMember extends EditRecord
             $data['last_trained_at'] = now();
         }
 
-        IngameHandlesForm::saveHandles($record, $data['handleGroups']);
+        app(MemberHandleService::class)->sync($record, $data['handleGroups']);
 
         PartTimeDivisionsForm::sync(
             $this->record,

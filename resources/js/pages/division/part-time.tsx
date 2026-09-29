@@ -17,17 +17,18 @@ import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
+import type { HandleType } from '@/components/members/types';
 import type { MemberCard } from '@/types';
 
 interface Row extends MemberCard {
     primaryDivision: string | null;
     status: 'active' | 'onLeave' | 'removed';
-    handle: { value: string; url: string | null } | null;
+    handles: Array<{ label: string; value: string; url: string | null }>;
     removeUrl: string;
 }
 
 interface Props {
-    division: { name: string; slug: string; handleLabel: string | null; handleHint: string | null };
+    division: { name: string; slug: string; handleTypes: HandleType[] };
     members: Row[];
     stats: { total: number; active: number; onLeave: number; removed: number };
     canManage: boolean;
@@ -45,7 +46,9 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
     const [addOpen, setAddOpen] = useState(false);
     const [selected, setSelected] = useState<MemberResult | null>(null);
 
-    const form = useForm({ member_id: '', handle_value: '' });
+    const form = useForm<{ member_id: string; handles: Record<number, string> }>({ member_id: '', handles: {} });
+    const labelHandles = division.handleTypes.length > 1;
+    const formErrors = form.errors as Record<string, string | undefined>;
 
     const filtered = useMemo(() => {
         const q = search.trim().toLowerCase();
@@ -122,7 +125,7 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                                     <TableRow>
                                         <TableHead>Member</TableHead>
                                         <TableHead>Primary division</TableHead>
-                                        <TableHead>In-game name</TableHead>
+                                        <TableHead>{labelHandles ? 'Handles' : 'In-game name'}</TableHead>
                                         <TableHead>Status</TableHead>
                                         {canManage && <TableHead className="text-right">Actions</TableHead>}
                                     </TableRow>
@@ -146,22 +149,32 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                                                     )}
                                                 </TableCell>
                                                 <TableCell>
-                                                    {member.handle ? (
-                                                        <span className="inline-flex items-center gap-1.5">
-                                                            <code className="numeric text-xs">
-                                                                {member.handle.value}
-                                                            </code>
-                                                            {member.handle.url && (
-                                                                <a
-                                                                    href={member.handle.url}
-                                                                    target="_blank"
-                                                                    rel="noreferrer"
-                                                                    className="text-muted-foreground hover:text-primary"
+                                                    {member.handles.length > 0 ? (
+                                                        <div className="flex flex-col gap-0.5">
+                                                            {member.handles.map((handle) => (
+                                                                <span
+                                                                    key={handle.label}
+                                                                    className="inline-flex items-center gap-1.5"
                                                                 >
-                                                                    <ExternalLink className="size-3" />
-                                                                </a>
-                                                            )}
-                                                        </span>
+                                                                    {labelHandles && (
+                                                                        <span className="text-xs text-muted-foreground">
+                                                                            {handle.label}
+                                                                        </span>
+                                                                    )}
+                                                                    <code className="numeric text-xs">{handle.value}</code>
+                                                                    {handle.url && (
+                                                                        <a
+                                                                            href={handle.url}
+                                                                            target="_blank"
+                                                                            rel="noreferrer"
+                                                                            className="text-muted-foreground hover:text-primary"
+                                                                        >
+                                                                            <ExternalLink className="size-3" />
+                                                                        </a>
+                                                                    )}
+                                                                </span>
+                                                            ))}
+                                                        </div>
                                                     ) : (
                                                         <span className="text-muted-foreground">—</span>
                                                     )}
@@ -220,26 +233,27 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                                 <p className="text-xs text-destructive">{form.errors.member_id}</p>
                             )}
                         </div>
-                        {division.handleLabel && (
-                            <div className="grid gap-1.5">
-                                <Label htmlFor="handle_value">
-                                    {division.handleLabel} handle{' '}
-                                    <span className="text-muted-foreground">(optional)</span>
+                        {division.handleTypes.map((type) => (
+                            <div key={type.id} className="grid gap-1.5">
+                                <Label htmlFor={`handle_${type.id}`}>
+                                    {type.label} handle <span className="text-muted-foreground">(optional)</span>
                                 </Label>
                                 <Input
-                                    id="handle_value"
-                                    value={form.data.handle_value}
-                                    onChange={(e) => form.setData('handle_value', e.target.value)}
-                                    placeholder={`Their ${division.handleLabel.toLowerCase()} name…`}
+                                    id={`handle_${type.id}`}
+                                    value={form.data.handles[type.id] ?? ''}
+                                    onChange={(e) =>
+                                        form.setData('handles', { ...form.data.handles, [type.id]: e.target.value })
+                                    }
+                                    placeholder={`Their ${type.label} name…`}
                                 />
                                 <p className="text-xs text-muted-foreground">
-                                    {division.handleHint ?? `Sets their in-game handle for ${division.name}.`}
+                                    {type.hint ?? `Sets their ${type.label} handle for ${division.name}.`}
                                 </p>
-                                {form.errors.handle_value && (
-                                    <p className="text-xs text-destructive">{form.errors.handle_value}</p>
+                                {formErrors[`handles.${type.id}`] && (
+                                    <p className="text-xs text-destructive">{formErrors[`handles.${type.id}`]}</p>
                                 )}
                             </div>
-                        )}
+                        ))}
                         <DialogFooter>
                             <Button type="button" variant="outline" onClick={() => setAddOpen(false)}>
                                 Cancel

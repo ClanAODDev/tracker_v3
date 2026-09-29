@@ -10,11 +10,11 @@ use App\Models\Squad;
 
 class OrgChartTransformer
 {
-    private ?int $divisionHandleId;
+    private Division $division;
 
     public function transform(Division $division, $leaders): array
     {
-        $this->divisionHandleId = $division->handle_id;
+        $this->division = $division;
 
         $children = [];
 
@@ -129,12 +129,6 @@ class OrgChartTransformer
 
     private function getMemberHandle(Member $member): ?string
     {
-        if (! $this->divisionHandleId) {
-            return null;
-        }
-
-        $handle = $member->handles->firstWhere('id', $this->divisionHandleId);
-
-        return $handle?->pivot?->value;
+        return $this->division->handleSummaryFor($member);
     }
 }

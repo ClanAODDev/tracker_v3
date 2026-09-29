@@ -99,7 +99,7 @@ class MemberRepositoryTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember(['name' => 'NameMatch', 'division_id' => $division->id]);
-        $member->handles()->attach($division->handle_id, ['value' => 'unrelated-handle', 'primary' => true]);
+        $member->handles()->attach($division->handles->first()->id, ['value' => 'unrelated-handle', 'primary' => true]);
 
         $results = $this->repository->search('NameMatch');
         $result  = $results->first();
@@ -115,7 +115,7 @@ class MemberRepositoryTest extends TestCase
         $division  = $this->createActiveDivision();
         $otherType = Handle::factory()->create();
         $member    = $this->createMember(['division_id' => $division->id]);
-        $member->handles()->attach($division->handle_id, ['value' => 'matching-handle', 'primary' => true]);
+        $member->handles()->attach($division->handles->first()->id, ['value' => 'matching-handle', 'primary' => true]);
         $member->handles()->attach($otherType->id, ['value' => 'other-handle', 'primary' => false]);
 
         $results = $this->repository->search('matching-handle');
