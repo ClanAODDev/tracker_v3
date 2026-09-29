@@ -97,13 +97,13 @@ class RecruitmentService
 
     private function attachIngameHandle(Member $member, Division $division, ?string $ingameName): void
     {
-        if (! $ingameName || ! $division->handle_id) {
+        $handle = $division->handles->first();
+
+        if (! $ingameName || ! $handle) {
             return;
         }
 
-        $member->handles()->syncWithoutDetaching([
-            $division->handle_id => ['value' => $division->handle?->normalize($ingameName) ?? $ingameName],
-        ]);
+        $division->saveHandlesFor($member, [$handle->id => $ingameName]);
     }
 
     public function createMemberRequest(Member $member, Division $division, Member $requester): void

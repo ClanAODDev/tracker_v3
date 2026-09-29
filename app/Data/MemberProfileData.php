@@ -337,10 +337,12 @@ class MemberProfileData
             ];
         }
 
-        if ($user->can('manageHandles', $member) && $division?->handle && ! $member->handles->contains($division->handle)) {
+        if ($user->can('manageHandles', $member) && $division?->handles->isNotEmpty() && $division->handlesOf($member)->isEmpty()) {
             $notices[] = [
-                'type'      => 'warning',
-                'message'   => "The {$division->name} division requires a {$division->handle->label} handle, but {$member->name} does not have one.",
+                'type'    => 'warning',
+                'message' => $division->handles->count() > 1
+                    ? "The {$division->name} division requires one of these handles, but {$member->name} has none: {$division->handles->pluck('label')->implode(', ')}."
+                    : "The {$division->name} division requires a {$division->handles->first()->label} handle, but {$member->name} does not have one.",
                 'ctaLabel'  => 'Add handle',
                 'ctaAction' => 'edit-handles',
             ];

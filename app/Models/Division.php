@@ -8,17 +8,18 @@ use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Presenters\DivisionPresenter;
+use App\Rules\HandleFormat;
 use App\Settings\DivisionSettings;
 use Illuminate\Database\Eloquent\Attributes\RouteKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -261,9 +262,68 @@ class Division extends Model
         return $this->members()->where('last_voice_activity', '>=', now()->subDays($days)->toDateString());
     }
 
-    public function handle(): BelongsTo
+    public function handles(): BelongsToMany
     {
-        return $this->belongsTo(Handle::class);
+        return $this->belongsToMany(Handle::class)
+            ->withPivot('sort_order')
+            ->orderByPivot('sort_order')
+            ->orderBy('handles.id');
+    }
+
+    public function handleAssignments(): HasMany
+    {
+        return $this->hasMany(DivisionHandle::class)->orderBy('sort_order');
+    }
+
+    public function handlesOf(Member $member): Collection
+    {
+        return $this->handles
+            ->map(fn (Handle $type) => $member->handles
+                ->where('id', $type->id)
+                ->sortByDesc(fn (Handle $handle) => (bool) $handle->pivot->primary)
+                ->first())
+            ->filter()
+            ->values();
+    }
+
+    public function handleTypes(): array
+    {
+        return $this->handles
+            ->map(fn (Handle $handle) => ['id' => $handle->id, 'label' => $handle->label, 'hint' => $handle->regex_hint])
+            ->values()
+            ->all();
+    }
+
+    public function handleRules(string $prefix = 'handles'): array
+    {
+        return $this->handles
+            ->mapWithKeys(fn (Handle $handle) => ["{$prefix}.{$handle->id}" => ['nullable', 'string', 'max:255', new HandleFormat($handle)]])
+            ->all();
+    }
+
+    public function saveHandlesFor(Member $member, array $values): void
+    {
+        $member->handles()->syncWithoutDetaching(
+            $this->handles
+                ->filter(fn (Handle $handle) => filled($values[$handle->id] ?? null))
+                ->mapWithKeys(fn (Handle $handle) => [$handle->id => ['value' => $handle->normalize($values[$handle->id])]])
+                ->all()
+        );
+    }
+
+    public function handleSummaryFor(Member $member): ?string
+    {
+        $handles = $this->handlesOf($member);
+
+        if ($handles->isEmpty()) {
+            return null;
+        }
+
+        if ($this->handles->count() === 1) {
+            return $handles->first()->pivot->value;
+        }
+
+        return $handles->map(fn (Handle $handle) => "{$handle->label}: {$handle->pivot->value}")->implode(' · ');
     }
 
     public function unassigned(): HasMany

@@ -192,8 +192,8 @@ class RecruitingController extends Controller
 
         return [
             'name'        => $division->name,
-            'handleLabel' => $division->handle?->label,
-            'handleHint'  => $division->handle?->regex_hint,
+            'handleLabel' => $division->handles->first()?->label,
+            'handleHint'  => $division->handles->first()?->regex_hint,
             'platoons'    => $platoons->map(fn ($p) => [
                 'id'            => $p->id,
                 'name'          => $p->name,

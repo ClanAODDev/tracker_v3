@@ -322,7 +322,7 @@ class MemberProfileTest extends TestCase
     public function missing_required_handle_notice_opens_the_inline_editor_instead_of_linking_to_operations()
     {
         $requiredHandle = Handle::factory()->create();
-        $division       = $this->createActiveDivision(['handle_id' => $requiredHandle->id]);
+        $division       = $this->createDivisionWithHandles([$requiredHandle]);
         $platoon        = $this->createPlatoon($division);
         $squad          = $this->createSquad($platoon);
         $leader         = $this->createSquadLeader($squad);
@@ -339,6 +339,43 @@ class MemberProfileTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('notices', fn ($notices) => collect($notices)->contains(
                     fn ($n) => ($n['ctaAction'] ?? null) === 'edit-handles' && ! isset($n['ctaUrl'])
+                )));
+    }
+
+    #[Test]
+    public function no_missing_handle_notice_when_the_member_has_one_of_several_division_handles()
+    {
+        $na       = Handle::factory()->create(['label' => 'Warships NA']);
+        $eu       = Handle::factory()->create(['label' => 'Warships EU']);
+        $division = $this->createDivisionWithHandles([$na, $eu]);
+        $viewer   = $this->createAdmin();
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $member->handles()->attach($eu->id, ['value' => 'EuCaptain', 'primary' => true]);
+
+        $this->actingAs($viewer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('notices', fn ($notices) => ! collect($notices)->contains(
+                    fn ($n) => ($n['ctaAction'] ?? null) === 'edit-handles'
+                )));
+    }
+
+    #[Test]
+    public function missing_handle_notice_lists_every_division_handle_type_when_the_member_has_none()
+    {
+        $na       = Handle::factory()->create(['label' => 'Warships NA']);
+        $eu       = Handle::factory()->create(['label' => 'Warships EU']);
+        $division = $this->createDivisionWithHandles([$na, $eu]);
+        $viewer   = $this->createAdmin();
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($viewer)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('notices', fn ($notices) => collect($notices)->contains(
+                    fn ($n) => str_contains($n['message'], 'Warships NA, Warships EU')
                 )));
     }
 }

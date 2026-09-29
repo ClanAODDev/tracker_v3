@@ -119,7 +119,7 @@ class RecruitingControllerTest extends TestCase
             'regex'      => '/^[0-9]+$/',
             'regex_hint' => 'Steam ID must be numeric.',
         ]);
-        $division = $this->createActiveDivision(['handle_id' => $handle->id]);
+        $division = $this->createDivisionWithHandles([$handle]);
 
         $response = $this->actingAs($officer)
             ->get(route('recruiting.form', $division->slug));
@@ -131,12 +131,10 @@ class RecruitingControllerTest extends TestCase
     }
 
     #[Test]
-    public function form_passes_null_handle_label_when_the_divisions_handle_type_no_longer_exists()
+    public function form_passes_null_handle_label_when_the_division_has_no_handle_types()
     {
-        // `divisions.handle_id` has no DB-level foreign key, so a dangling
-        // reference (e.g. its Handle row was deleted) is a real, if rare, state.
         $officer  = $this->createOfficer();
-        $division = $this->createActiveDivision(['handle_id' => 999999]);
+        $division = $this->createDivisionWithHandles([]);
 
         $response = $this->actingAs($officer)
             ->get(route('recruiting.form', $division->slug));
@@ -476,7 +474,7 @@ class RecruitingControllerTest extends TestCase
             'regex_hint' => 'Steam ID must be numeric.',
         ]);
         $officer     = $this->createOfficer();
-        $division    = $this->createActiveDivision(['handle_id' => $handle->id]);
+        $division    = $this->createDivisionWithHandles([$handle]);
         $platoon     = $this->createPlatoon($division);
         $pendingUser = User::factory()->pending()->create();
 
@@ -502,7 +500,7 @@ class RecruitingControllerTest extends TestCase
     {
         $handle   = Handle::create(['label' => 'Steam']);
         $officer  = $this->createOfficer();
-        $division = $this->createActiveDivision(['handle_id' => $handle->id]);
+        $division = $this->createDivisionWithHandles([$handle]);
         $platoon  = $this->createPlatoon($division);
 
         $response = $this->actingAs($officer)
@@ -523,12 +521,8 @@ class RecruitingControllerTest extends TestCase
     #[Test]
     public function submit_recruitment_rejects_a_blank_ingame_name_even_when_the_division_has_no_configured_handle(): void
     {
-        // `divisions.handle_id` has no DB-level foreign key, so a dangling
-        // reference (e.g. its Handle row was deleted) is a real, if rare, state
-        // — the closest this schema gets to "no handle configured". An
-        // in-game name is still required regardless.
         $officer  = $this->createOfficer();
-        $division = $this->createActiveDivision(['handle_id' => 999999]);
+        $division = $this->createDivisionWithHandles([]);
         $platoon  = $this->createPlatoon($division);
 
         $response = $this->actingAs($officer)

@@ -31,7 +31,7 @@ class MemberQueryServiceTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember(['division_id' => $division->id]);
-        $member->handles()->attach($division->handle_id, ['value' => 'testhandle', 'primary' => true]);
+        $member->handles()->attach($division->handles->first()->id, ['value' => 'testhandle', 'primary' => true]);
 
         $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
@@ -98,13 +98,13 @@ class MemberQueryServiceTest extends TestCase
     }
 
     #[Test]
-    public function primary_handle_constraint_filters_to_division_handle()
+    public function division_handles_constraint_excludes_other_handle_types()
     {
         $division    = $this->createActiveDivision();
         $otherHandle = Handle::factory()->create();
         $member      = $this->createMember(['division_id' => $division->id]);
 
-        $member->handles()->attach($division->handle_id, ['value' => 'primary_handle', 'primary' => true]);
+        $member->handles()->attach($division->handles->first()->id, ['value' => 'primary_handle', 'primary' => true]);
         $member->handles()->attach($otherHandle->id, ['value' => 'other_handle', 'primary' => false]);
 
         $query  = Member::where('id', $member->id);
@@ -115,18 +115,21 @@ class MemberQueryServiceTest extends TestCase
     }
 
     #[Test]
-    public function extract_handles_sets_handle_attribute_on_members()
+    public function division_handles_constraint_includes_every_division_handle_type()
     {
-        $division = $this->createActiveDivision();
+        $na       = Handle::factory()->create();
+        $eu       = Handle::factory()->create();
+        $other    = Handle::factory()->create();
+        $division = $this->createDivisionWithHandles([$na, $eu]);
         $member   = $this->createMember(['division_id' => $division->id]);
-        $member->handles()->attach($division->handle_id, ['value' => 'testhandle', 'primary' => true]);
 
-        $query   = Member::where('id', $member->id);
-        $members = $this->service->withStandardRelations($query, $division)->get();
-        $result  = $this->service->extractHandles($members);
+        $member->handles()->attach($na->id, ['value' => 'na_handle', 'primary' => true]);
+        $member->handles()->attach($eu->id, ['value' => 'eu_handle', 'primary' => true]);
+        $member->handles()->attach($other->id, ['value' => 'other_handle', 'primary' => true]);
 
-        $this->assertNotNull($result->first()->handle);
-        $this->assertEquals($division->handle_id, $result->first()->handle->id);
+        $result = $this->service->withStandardRelations(Member::where('id', $member->id), $division)->first();
+
+        $this->assertEqualsCanonicalizing(['na_handle', 'eu_handle'], $result->handles->pluck('pivot.value')->all());
     }
 
     #[Test]
@@ -156,14 +159,14 @@ class MemberQueryServiceTest extends TestCase
     }
 
     #[Test]
-    public function load_sorted_members_extracts_handles()
+    public function load_sorted_members_loads_division_handles()
     {
         $division = $this->createActiveDivision();
         $member   = $this->createMember(['division_id' => $division->id]);
-        $member->handles()->attach($division->handle_id, ['value' => 'testhandle', 'primary' => true]);
+        $member->handles()->attach($division->handles->first()->id, ['value' => 'testhandle', 'primary' => true]);
 
         $result = $this->service->loadSortedMembers($division->members(), $division);
 
-        $this->assertNotNull($result->first()->handle);
+        $this->assertSame('testhandle', $result->first()->handles->first()->pivot->value);
     }
 }

@@ -87,7 +87,7 @@ class MemberRepository
     public function loadProfileRelations(Member $member): Member
     {
         return $member->load([
-            'division.handle',
+            'division.handles',
             'recruiter',
             'recruits',
             'recruits.division',

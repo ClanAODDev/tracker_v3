@@ -7,7 +7,7 @@ use App\Support\Steam\SteamIdParser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Handle extends Model
 {
@@ -23,9 +23,9 @@ class Handle extends Model
 
     protected $guarded = [];
 
-    public function divisions(): HasMany
+    public function divisions(): BelongsToMany
     {
-        return $this->hasMany(Division::class);
+        return $this->belongsToMany(Division::class);
     }
 
     public function member(): BelongsTo

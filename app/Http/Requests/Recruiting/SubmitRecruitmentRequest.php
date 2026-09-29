@@ -30,7 +30,7 @@ class SubmitRecruitmentRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                new HandleFormat($division?->handle),
+                new HandleFormat($division?->handles->first()),
             ],
         ];
     }
@@ -40,8 +40,8 @@ class SubmitRecruitmentRequest extends FormRequest
         $division = Division::whereSlug($this->input('division'))->first();
 
         return [
-            'ingame_name.required' => $division?->handle
-                ? "A {$division->handle->label} handle is required for this division."
+            'ingame_name.required' => $division?->handles->isNotEmpty()
+                ? "A {$division->handles->first()->label} handle is required for this division."
                 : 'An in-game handle is required.',
         ];
     }

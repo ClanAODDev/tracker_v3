@@ -9,6 +9,7 @@ use App\Models\Member;
 use App\Models\Squad;
 use App\Models\User;
 use App\Traits\DivisionSettableNotification;
+use App\Traits\HasRecruitmentFields;
 use App\Traits\RetryableNotification;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -17,7 +18,7 @@ use Illuminate\Notifications\Notification;
 
 class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
 {
-    use DivisionSettableNotification, Queueable, RetryableNotification;
+    use DivisionSettableNotification, HasRecruitmentFields, Queueable, RetryableNotification;
 
     private string $alertSetting = 'chat_alerts.member_removed';
 
@@ -51,7 +52,6 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
     {
         $removerName = $this->remover?->name ?? 'Forum sync';
 
-        $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $notifiable->handle_id)->first();
         $reason = $this->removalReason
             ? ['name' => 'Reason', 'value' => $this->removalReason]
             : null;
@@ -84,10 +84,7 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
                         $this->squad?->name ?? 'Unassigned',
                     ),
                 ],
-                [
-                    'name'  => $handle?->label ?? 'In-Game Handle',
-                    'value' => $handle?->pivot?->value ?? 'N/A',
-                ],
+                $this->buildHandleField($this->member, $notifiable),
             ], fn ($field) => $field !== null)))->error()
             ->send();
     }

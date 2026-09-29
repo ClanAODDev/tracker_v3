@@ -28,7 +28,7 @@ class DivisionOrgChartController extends Controller
 
     private function buildTree(Division $division): array
     {
-        $handleFilter = $this->filterHandlesToPrimaryHandle($division);
+        $handleFilter = $this->filterHandlesToDivisionHandles($division);
 
         $division->load([
             'platoons.leader.handles'         => $handleFilter,
@@ -45,8 +45,8 @@ class DivisionOrgChartController extends Controller
         return (new OrgChartTransformer)->transform($division, $leaders);
     }
 
-    private function filterHandlesToPrimaryHandle(Division $division): Closure
+    private function filterHandlesToDivisionHandles(Division $division): Closure
     {
-        return fn ($query) => $query->where('handles.id', $division->handle_id);
+        return fn ($query) => $query->whereIn('handles.id', $division->handles->pluck('id'));
     }
 }

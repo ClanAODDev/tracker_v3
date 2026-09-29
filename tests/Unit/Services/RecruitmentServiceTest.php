@@ -157,11 +157,10 @@ class RecruitmentServiceTest extends TestCase
     #[Test]
     public function create_member_attaches_ingame_handle(): void
     {
-        $division            = $this->createActiveDivision();
-        $platoon             = $this->createPlatoon($division);
-        $handle              = Handle::factory()->create();
-        $division->handle_id = $handle->id;
-        $division->save();
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+        $handle   = Handle::factory()->create();
+        $division->handles()->sync([$handle->id]);
         $recruiter = Member::factory()->create(['clan_id' => 99999]);
 
         $member = $this->service->createMember(

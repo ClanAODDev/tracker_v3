@@ -7,6 +7,7 @@ use App\Channels\Messages\BotChannelMessage;
 use App\Models\Division;
 use App\Models\Member;
 use App\Traits\DivisionSettableNotification;
+use App\Traits\HasRecruitmentFields;
 use App\Traits\RetryableNotification;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -15,7 +16,7 @@ use Illuminate\Notifications\Notification;
 
 class NotifyDivisionPartTimeMemberRemoved extends Notification implements ShouldQueue
 {
-    use DivisionSettableNotification, Queueable, RetryableNotification;
+    use DivisionSettableNotification, HasRecruitmentFields, Queueable, RetryableNotification;
 
     private Division $primaryDivision;
 
@@ -49,8 +50,6 @@ class NotifyDivisionPartTimeMemberRemoved extends Notification implements Should
      */
     public function toBot($notifiable)
     {
-        $handle = $this->member->handles->filter(fn ($handle) => $handle->id === $notifiable->handle_id)->first();
-
         return new BotChannelMessage($notifiable)
             ->title($this->primaryDivision->name . ' Division')
             ->target($notifiable->settings()->get($this->alertSetting))
@@ -70,10 +69,7 @@ class NotifyDivisionPartTimeMemberRemoved extends Notification implements Should
                     'name'  => 'Reason',
                     'value' => addslashes($this->removalReason),
                 ],
-                [
-                    'name'  => $handle->label ?? 'In-Game Handle',
-                    'value' => $handle->pivot->value ?? 'N/A',
-                ],
+                $this->buildHandleField($this->member, $notifiable),
             ])->error()
             ->send();
     }
