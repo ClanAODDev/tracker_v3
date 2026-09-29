@@ -274,10 +274,9 @@ class MemberProfileData
             'canEditHandles'       => $canEditHandles,
             'handles'              => $canEditHandles ? $this->handlesForManagement() : [],
             'availableHandleTypes' => $canEditHandles
-                ? Handle::where('enabled', true)
-                    ->orderBy('label')
+                ? Handle::selectable($this->member->memberHandles()->pluck('handle_id'))
                     ->get()
-                    ->map(fn (Handle $h) => ['value' => $h->id, 'label' => $h->label])
+                    ->map(fn (Handle $h) => ['value' => $h->id, 'label' => $h->selectLabel()])
                     ->values()
                     ->all()
                 : [],

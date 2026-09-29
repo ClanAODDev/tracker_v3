@@ -72,14 +72,9 @@ class SettingsController extends Controller
             $usedHandleIds = $memberHandles->pluck('handle_id');
 
             $payload['handles'] = [
-                'types' => Handle::query()
-                    ->where(fn ($q) => $q->where('enabled', true)->orWhereIn('id', $usedHandleIds))
-                    ->orderBy('label')
+                'types' => Handle::selectable($usedHandleIds)
                     ->get()
-                    ->map(fn (Handle $h) => [
-                        'id'    => $h->id,
-                        'label' => $h->enabled ? $h->label : "{$h->label} (disabled)",
-                    ]),
+                    ->map(fn (Handle $h) => ['id' => $h->id, 'label' => $h->selectLabel()]),
                 'current' => $memberHandles->map(fn ($mh) => [
                     'id'       => $mh->id,
                     'handleId' => $mh->handle_id,

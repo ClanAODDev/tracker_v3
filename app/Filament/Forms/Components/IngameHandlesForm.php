@@ -38,13 +38,9 @@ class IngameHandlesForm
                     ->options(function (Get $get) {
                         $current = $get('handle_id');
 
-                        return Handle::query()
-                            ->where(fn ($query) => $query->where('enabled', true)->when($current, fn ($q) => $q->orWhere('id', $current)))
-                            ->orderBy('label')
+                        return Handle::selectable(array_filter([$current]))
                             ->get()
-                            ->mapWithKeys(fn (Handle $handle) => [
-                                $handle->id => $handle->enabled ? $handle->label : "{$handle->label} (disabled)",
-                            ]);
+                            ->mapWithKeys(fn (Handle $handle) => [$handle->id => $handle->selectLabel()]);
                     })
                     ->searchable()
                     ->live()

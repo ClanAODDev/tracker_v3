@@ -378,4 +378,27 @@ class MemberProfileTest extends TestCase
                     fn ($n) => str_contains($n['message'], 'Warships NA, Warships EU')
                 )));
     }
+
+    #[Test]
+    public function handle_editor_offers_a_disabled_type_the_member_already_uses()
+    {
+        $enabled  = Handle::factory()->create(['label' => 'Enabled Type', 'enabled' => true]);
+        $inUse    = Handle::factory()->create(['label' => 'Retired Type', 'enabled' => false]);
+        $unused   = Handle::factory()->create(['label' => 'Unused Retired', 'enabled' => false]);
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id]);
+        $member->handles()->attach($inUse->id, ['value' => 'OldName', 'primary' => true]);
+
+        $this->actingAs($this->createAdmin())
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('detailsManagement.availableHandleTypes', function ($types) use ($enabled, $inUse, $unused) {
+                    $labels = collect($types)->pluck('label', 'value');
+
+                    return $labels[$enabled->id] === 'Enabled Type'
+                        && $labels[$inUse->id] === 'Retired Type (disabled)'
+                        && ! $labels->has($unused->id);
+                }));
+    }
 }
