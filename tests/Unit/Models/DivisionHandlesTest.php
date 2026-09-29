@@ -85,4 +85,36 @@ class DivisionHandlesTest extends TestCase
 
         $this->assertNull($division->handleSummaryFor($this->createMember()));
     }
+
+    #[Test]
+    public function handle_field_uses_the_type_label_for_a_single_handle_type()
+    {
+        $handle   = Handle::factory()->create(['label' => 'Steam Profile']);
+        $division = $this->createDivisionWithHandles([$handle]);
+        $member   = $this->createMember();
+        $member->handles()->attach($handle->id, ['value' => 'solo', 'primary' => true]);
+
+        $this->assertSame(['name' => 'Steam Profile', 'value' => 'solo'], $division->handleFieldFor($member->fresh()));
+    }
+
+    #[Test]
+    public function handle_field_lists_each_value_when_the_division_has_several_types()
+    {
+        $na       = Handle::factory()->create(['label' => 'NA']);
+        $eu       = Handle::factory()->create(['label' => 'EU']);
+        $division = $this->createDivisionWithHandles([$na, $eu]);
+        $member   = $this->createMember();
+        $member->handles()->attach($na->id, ['value' => 'x', 'primary' => true]);
+        $member->handles()->attach($eu->id, ['value' => 'y', 'primary' => true]);
+
+        $this->assertSame(['name' => 'In-Game Handles', 'value' => "NA: x\nEU: y"], $division->handleFieldFor($member->fresh()));
+    }
+
+    #[Test]
+    public function handle_field_falls_back_to_na_when_the_member_has_none()
+    {
+        $division = $this->createDivisionWithHandles([]);
+
+        $this->assertSame(['name' => 'In-Game Handle', 'value' => 'N/A'], $division->handleFieldFor($this->createMember()));
+    }
 }

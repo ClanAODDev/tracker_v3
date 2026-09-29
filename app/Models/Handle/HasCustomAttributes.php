@@ -2,10 +2,12 @@
 
 namespace App\Models\Handle;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
 trait HasCustomAttributes
 {
-    public function getFullUrlAttribute()
+    protected function fullUrl(): Attribute
     {
-        return $this->url . urlencode($this->pivot->value);
+        return Attribute::get(fn () => $this->url && $this->pivot ? $this->url . urlencode($this->pivot->value) : null);
     }
 }

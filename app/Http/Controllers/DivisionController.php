@@ -53,7 +53,7 @@ class DivisionController extends Controller
                     ->map(fn ($handle) => [
                         'label' => $handle->label,
                         'value' => $handle->pivot->value,
-                        'url'   => $handle->url ? $handle->full_url : null,
+                        'url'   => $handle->full_url,
                     ])
                     ->values()
                     ->all(),

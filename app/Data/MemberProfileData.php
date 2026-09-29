@@ -191,10 +191,10 @@ class MemberProfileData
                     return [
                         'label'  => $label,
                         'value'  => $primary->pivot->value,
-                        'url'    => $primary->url ? $primary->full_url : null,
+                        'url'    => $primary->full_url,
                         'extras' => $handles->slice(1)->map(fn ($h) => [
                             'value' => $h->pivot->value,
-                            'url'   => $h->url ? $h->full_url : null,
+                            'url'   => $h->full_url,
                         ])->values(),
                     ];
                 })->values(),

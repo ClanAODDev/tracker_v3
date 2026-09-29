@@ -59,7 +59,7 @@ class MemberRowSerializer
             'handles' => $this->division->handlesOf($member)
                 ->mapWithKeys(fn (Handle $handle) => [$handle->id => [
                     'value' => $handle->pivot->value,
-                    'url'   => $handle->url ? $handle->full_url : null,
+                    'url'   => $handle->full_url,
                 ]])
                 ->all(),
             'posts' => $member->posts,

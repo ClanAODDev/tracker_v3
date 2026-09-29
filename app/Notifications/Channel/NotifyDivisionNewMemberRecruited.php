@@ -39,7 +39,7 @@ class NotifyDivisionNewMemberRecruited extends BaseNotification
                     ),
                 ],
                 $this->buildAssignmentField($this->member),
-                $this->buildHandleField($this->member),
+                $this->member->division->handleFieldFor($this->member),
             ])
             ->success()
             ->send();
