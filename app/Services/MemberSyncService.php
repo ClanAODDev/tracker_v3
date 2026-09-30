@@ -320,6 +320,11 @@ class MemberSyncService
             $user->update(['name' => $updates['name']]);
         }
 
+        if (isset($updates['division_id'])) {
+            $member->moveToDivision($updates['division_id']);
+            unset($updates['division_id']);
+        }
+
         $member->update($updates);
     }
 

@@ -3,9 +3,12 @@
 namespace Tests\Unit\Services;
 
 use App\AOD\MemberSync\GetDivisionInfo;
+use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
+use App\Models\Platoon;
+use App\Models\Squad;
 use App\Services\MemberSyncService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
@@ -351,5 +354,90 @@ class MemberSyncServiceTest extends TestCase
             'last_activity'       => null,
             'last_voice_activity' => null,
         ]);
+    }
+
+    #[Test]
+    public function a_forum_division_change_resets_platoon_and_squad(): void
+    {
+        [$from, $to] = [Division::factory()->create(), Division::factory()->create()];
+        $platoon     = Platoon::factory()->create(['division_id' => $from->id]);
+        $squad       = Squad::factory()->create(['platoon_id' => $platoon->id]);
+        $member      = Member::factory()->create([
+            'clan_id'     => 66666,
+            'division_id' => $from->id,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => $squad->id,
+            'position'    => Position::MEMBER,
+        ]);
+
+        (new MemberSyncService($this->forumInfo(66666, $to->name)))->sync();
+
+        $member->refresh();
+        $this->assertSame($to->id, $member->division_id);
+        $this->assertEquals(0, $member->platoon_id);
+        $this->assertEquals(0, $member->squad_id);
+    }
+
+    #[Test]
+    public function a_forum_division_change_vacates_the_platoon_the_member_led(): void
+    {
+        [$from, $to] = [Division::factory()->create(), Division::factory()->create()];
+        $platoon     = Platoon::factory()->create(['division_id' => $from->id]);
+        $member      = Member::factory()->create([
+            'clan_id'     => 77777,
+            'division_id' => $from->id,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => 0,
+            'position'    => Position::PLATOON_LEADER,
+        ]);
+        $platoon->update(['leader_id' => $member->clan_id]);
+
+        (new MemberSyncService($this->forumInfo(77777, $to->name)))->sync();
+
+        $this->assertSame(Position::MEMBER, $member->fresh()->position);
+        $this->assertEquals(0, $platoon->fresh()->leader_id);
+    }
+
+    #[Test]
+    public function a_sync_without_a_division_change_keeps_platoon_and_squad(): void
+    {
+        $division = Division::factory()->create();
+        $platoon  = Platoon::factory()->create(['division_id' => $division->id]);
+        $squad    = Squad::factory()->create(['platoon_id' => $platoon->id]);
+        $member   = Member::factory()->create([
+            'clan_id'     => 88888,
+            'division_id' => $division->id,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => $squad->id,
+            'posts'       => 1,
+        ]);
+
+        (new MemberSyncService($this->forumInfo(88888, $division->name)))->sync();
+
+        $member->refresh();
+        $this->assertSame([$platoon->id, $squad->id], [$member->platoon_id, $member->squad_id]);
+    }
+
+    private function forumInfo(int $userId, string $divisionName): GetDivisionInfo
+    {
+        $info       = Mockery::mock(GetDivisionInfo::class);
+        $info->data = [[
+            'userid'              => $userId,
+            'username'            => 'AOD_Mover' . $userId,
+            'joindate'            => '2024-01-01',
+            'aoddivision'         => $divisionName,
+            'aodrankval'          => 3,
+            'discordtag'          => 'mover',
+            'discordid'           => (string) $userId,
+            'postcount'           => 50,
+            'allow_pm'            => 1,
+            'allow_export'        => 'yes',
+            'tsid'                => '',
+            'lastdiscord_status'  => 'connected',
+            'lastactivity'        => time(),
+            'lastdiscord_connect' => time(),
+        ]];
+
+        return $info;
     }
 }

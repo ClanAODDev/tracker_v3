@@ -139,6 +139,24 @@ class Member extends Model
         return $this->division_id === null || $this->division_id === 0;
     }
 
+    public function moveToDivision(int $divisionId): void
+    {
+        if ($this->position === Position::SQUAD_LEADER && $this->squad?->leader_id === $this->clan_id) {
+            $this->squad->update(['leader_id' => 0]);
+        }
+
+        if ($this->position === Position::PLATOON_LEADER && $this->platoon?->leader_id === $this->clan_id) {
+            $this->platoon->update(['leader_id' => 0]);
+        }
+
+        $this->update([
+            'division_id' => $divisionId,
+            'position'    => $this->position === Position::CLAN_ADMIN ? Position::CLAN_ADMIN : Position::MEMBER,
+            'platoon_id'  => 0,
+            'squad_id'    => 0,
+        ]);
+    }
+
     public function reset(): void
     {
         $this->update([
