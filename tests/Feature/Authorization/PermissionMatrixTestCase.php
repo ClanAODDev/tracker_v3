@@ -6,6 +6,7 @@ use App\Enums\Role;
 use Closure;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
+use Livewire\Livewire;
 use Tests\TestCase;
 use Throwable;
 
@@ -14,6 +15,8 @@ abstract class PermissionMatrixTestCase extends TestCase
     use RefreshDatabase;
 
     protected PermissionWorld $world;
+
+    private ?object $laravelRedirector = null;
 
     protected function buildWorld(Role $unitLeaderRole = Role::OFFICER): void
     {
@@ -24,6 +27,7 @@ abstract class PermissionMatrixTestCase extends TestCase
     {
         $user = $this->world->users[$actor];
 
+        $this->resetRequestState();
         $this->actingAs($user);
         session()->forget('impersonatingRole');
 
@@ -37,9 +41,18 @@ abstract class PermissionMatrixTestCase extends TestCase
         $role = $this->world->impersonatedRole($actor);
 
         $this->flushSession();
+        $this->resetRequestState();
 
         return $this->actingAs($this->world->users[$actor])
             ->withSession($role ? ['impersonatingRole' => $role->value] : []);
+    }
+
+    private function resetRequestState(): void
+    {
+        $this->laravelRedirector ??= $this->app->make('redirect');
+
+        Livewire::flushState();
+        $this->app->instance('redirect', $this->laravelRedirector);
     }
 
     protected function gate(string $actor, string $ability, array $arguments): string

@@ -1,0 +1,168 @@
+ListMembers unit filter: division field | -                                        | admin                    | visible
+ListMembers unit filter: division field | -                                        | developer                | hidden
+ListMembers unit filter: division field | -                                        | admin_viewing_as_officer | hidden
+ListMembers unit filter: division field | -                                        | senior_leader            | hidden
+ListMembers unit filter: division field | -                                        | commanding_officer       | hidden
+ListMembers unit filter: division field | -                                        | executive_officer        | hidden
+ListMembers unit filter: division field | -                                        | officer                  | hidden
+ListMembers unit filter: division field | -                                        | platoon_leader           | hidden
+ListMembers unit filter: division field | -                                        | squad_leader             | hidden
+ListMembers unit filter: division field | -                                        | member                   | hidden
+ListMembers unit filter: division field | -                                        | banned                   | hidden
+ListMembers unit filter: division field | -                                        | pending                  | hidden
+ListMembers member_scope filter | -                                        | admin                    | hidden
+ListMembers member_scope filter | -                                        | developer                | visible
+ListMembers member_scope filter | -                                        | admin_viewing_as_officer | visible
+ListMembers member_scope filter | -                                        | senior_leader            | visible
+ListMembers member_scope filter | -                                        | commanding_officer       | visible
+ListMembers member_scope filter | -                                        | executive_officer        | visible
+ListMembers member_scope filter | -                                        | officer                  | visible
+ListMembers member_scope filter | -                                        | platoon_leader           | visible
+ListMembers member_scope filter | -                                        | squad_leader             | visible
+ListMembers member_scope filter | -                                        | member                   | visible
+ListMembers member_scope filter | -                                        | banned                   | visible
+ListMembers member_scope filter | -                                        | pending                  | visible
+ListMembers member_transfer bulk action | -                                        | admin                    | visible
+ListMembers member_transfer bulk action | -                                        | developer                | hidden
+ListMembers member_transfer bulk action | -                                        | admin_viewing_as_officer | hidden
+ListMembers member_transfer bulk action | -                                        | senior_leader            | visible
+ListMembers member_transfer bulk action | -                                        | commanding_officer       | visible
+ListMembers member_transfer bulk action | -                                        | executive_officer        | visible
+ListMembers member_transfer bulk action | -                                        | officer                  | hidden
+ListMembers member_transfer bulk action | -                                        | platoon_leader           | hidden
+ListMembers member_transfer bulk action | -                                        | squad_leader             | hidden
+ListMembers member_transfer bulk action | -                                        | member                   | hidden
+ListMembers member_transfer bulk action | -                                        | banned                   | hidden
+ListMembers member_transfer bulk action | -                                        | pending                  | hidden
+ListRankActions division column | -                                        | admin                    | visible
+ListRankActions division column | -                                        | developer                | page not accessible
+ListRankActions division column | -                                        | admin_viewing_as_officer | hidden
+ListRankActions division column | -                                        | senior_leader            | hidden
+ListRankActions division column | -                                        | commanding_officer       | hidden
+ListRankActions division column | -                                        | executive_officer        | hidden
+ListRankActions division column | -                                        | officer                  | hidden
+ListRankActions division column | -                                        | platoon_leader           | hidden
+ListRankActions division column | -                                        | squad_leader             | hidden
+ListRankActions division column | -                                        | member                   | page not accessible
+ListRankActions division column | -                                        | banned                   | page not accessible
+ListRankActions division column | -                                        | pending                  | page not accessible
+ListActivities division column | -                                        | admin                    | visible
+ListActivities division column | -                                        | developer                | page not accessible
+ListActivities division column | -                                        | admin_viewing_as_officer | page not accessible
+ListActivities division column | -                                        | senior_leader            | hidden
+ListActivities division column | -                                        | commanding_officer       | hidden
+ListActivities division column | -                                        | executive_officer        | hidden
+ListActivities division column | -                                        | officer                  | page not accessible
+ListActivities division column | -                                        | platoon_leader           | page not accessible
+ListActivities division column | -                                        | squad_leader             | page not accessible
+ListActivities division column | -                                        | member                   | page not accessible
+ListActivities division column | -                                        | banned                   | page not accessible
+ListActivities division column | -                                        | pending                  | page not accessible
+ListActivities division filter | -                                        | admin                    | visible
+ListActivities division filter | -                                        | developer                | page not accessible
+ListActivities division filter | -                                        | admin_viewing_as_officer | page not accessible
+ListActivities division filter | -                                        | senior_leader            | hidden
+ListActivities division filter | -                                        | commanding_officer       | hidden
+ListActivities division filter | -                                        | executive_officer        | hidden
+ListActivities division filter | -                                        | officer                  | page not accessible
+ListActivities division filter | -                                        | platoon_leader           | page not accessible
+ListActivities division filter | -                                        | squad_leader             | page not accessible
+ListActivities division filter | -                                        | member                   | page not accessible
+ListActivities division filter | -                                        | banned                   | page not accessible
+ListActivities division filter | -                                        | pending                  | page not accessible
+ListDivisionTags delete on global tag | -                                        | admin                    | visible
+ListDivisionTags delete on global tag | -                                        | developer                | record not listed
+ListDivisionTags delete on global tag | -                                        | admin_viewing_as_officer | hidden
+ListDivisionTags delete on global tag | -                                        | senior_leader            | hidden
+ListDivisionTags delete on global tag | -                                        | commanding_officer       | hidden
+ListDivisionTags delete on global tag | -                                        | executive_officer        | hidden
+ListDivisionTags delete on global tag | -                                        | officer                  | hidden
+ListDivisionTags delete on global tag | -                                        | platoon_leader           | hidden
+ListDivisionTags delete on global tag | -                                        | squad_leader             | hidden
+ListDivisionTags delete on global tag | -                                        | member                   | record not listed
+ListDivisionTags delete on global tag | -                                        | banned                   | record not listed
+ListDivisionTags delete on global tag | -                                        | pending                  | error:ViewException
+ListTransfers delete bulk action | -                                        | admin                    | visible
+ListTransfers delete bulk action | -                                        | developer                | hidden
+ListTransfers delete bulk action | -                                        | admin_viewing_as_officer | hidden
+ListTransfers delete bulk action | -                                        | senior_leader            | hidden
+ListTransfers delete bulk action | -                                        | commanding_officer       | hidden
+ListTransfers delete bulk action | -                                        | executive_officer        | hidden
+ListTransfers delete bulk action | -                                        | officer                  | hidden
+ListTransfers delete bulk action | -                                        | platoon_leader           | hidden
+ListTransfers delete bulk action | -                                        | squad_leader             | hidden
+ListTransfers delete bulk action | -                                        | member                   | page not accessible
+ListTransfers delete bulk action | -                                        | banned                   | page not accessible
+ListTransfers delete bulk action | -                                        | pending                  | page not accessible
+EditRankAction cancel action | -                                        | admin                    | visible
+EditRankAction cancel action | -                                        | developer                | page not accessible
+EditRankAction cancel action | -                                        | admin_viewing_as_officer | page not accessible
+EditRankAction cancel action | -                                        | senior_leader            | page not accessible
+EditRankAction cancel action | -                                        | commanding_officer       | visible
+EditRankAction cancel action | -                                        | executive_officer        | visible
+EditRankAction cancel action | -                                        | officer                  | page not accessible
+EditRankAction cancel action | -                                        | platoon_leader           | hidden
+EditRankAction cancel action | -                                        | squad_leader             | page not accessible
+EditRankAction cancel action | -                                        | member                   | page not accessible
+EditRankAction cancel action | -                                        | banned                   | page not accessible
+EditRankAction cancel action | -                                        | pending                  | page not accessible
+EditRankAction requeue action | -                                        | admin                    | visible
+EditRankAction requeue action | -                                        | developer                | page not accessible
+EditRankAction requeue action | -                                        | admin_viewing_as_officer | page not accessible
+EditRankAction requeue action | -                                        | senior_leader            | page not accessible
+EditRankAction requeue action | -                                        | commanding_officer       | visible
+EditRankAction requeue action | -                                        | executive_officer        | visible
+EditRankAction requeue action | -                                        | officer                  | page not accessible
+EditRankAction requeue action | -                                        | platoon_leader           | hidden
+EditRankAction requeue action | -                                        | squad_leader             | page not accessible
+EditRankAction requeue action | -                                        | member                   | page not accessible
+EditRankAction requeue action | -                                        | banned                   | page not accessible
+EditRankAction requeue action | -                                        | pending                  | page not accessible
+Platoon A1 members: transfer bulk action | -                                        | admin                    | visible
+Platoon A1 members: transfer bulk action | -                                        | developer                | hidden
+Platoon A1 members: transfer bulk action | -                                        | admin_viewing_as_officer | hidden
+Platoon A1 members: transfer bulk action | -                                        | senior_leader            | visible
+Platoon A1 members: transfer bulk action | -                                        | commanding_officer       | visible
+Platoon A1 members: transfer bulk action | -                                        | executive_officer        | visible
+Platoon A1 members: transfer bulk action | -                                        | officer                  | hidden
+Platoon A1 members: transfer bulk action | -                                        | platoon_leader           | visible
+Platoon A1 members: transfer bulk action | -                                        | squad_leader             | hidden
+Platoon A1 members: transfer bulk action | -                                        | member                   | hidden
+Platoon A1 members: transfer bulk action | -                                        | banned                   | hidden
+Platoon A1 members: transfer bulk action | -                                        | pending                  | hidden
+DivisionResource::shouldRegisterNavigation | -                                        | admin                    | allow
+ListMembers default filtered records | (names)                                  | admin                    | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | admin                    | [has options]
+DivisionResource::shouldRegisterNavigation | -                                        | developer                | deny
+ListMembers default filtered records | (names)                                  | developer                | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | developer                | page not accessible
+DivisionResource::shouldRegisterNavigation | -                                        | admin_viewing_as_officer | deny
+ListMembers default filtered records | (names)                                  | admin_viewing_as_officer | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | admin_viewing_as_officer | page not accessible
+DivisionResource::shouldRegisterNavigation | -                                        | senior_leader            | allow
+ListMembers default filtered records | (names)                                  | senior_leader            | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | senior_leader            | [has options]
+DivisionResource::shouldRegisterNavigation | -                                        | commanding_officer       | allow
+ListMembers default filtered records | (names)                                  | commanding_officer       | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | commanding_officer       | [has options]
+DivisionResource::shouldRegisterNavigation | -                                        | executive_officer        | allow
+ListMembers default filtered records | (names)                                  | executive_officer        | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | executive_officer        | [has options]
+DivisionResource::shouldRegisterNavigation | -                                        | officer                  | deny
+ListMembers default filtered records | (names)                                  | officer                  | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | officer                  | page not accessible
+DivisionResource::shouldRegisterNavigation | -                                        | platoon_leader           | deny
+ListMembers default filtered records | (names)                                  | platoon_leader           | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | platoon_leader           | page not accessible
+DivisionResource::shouldRegisterNavigation | -                                        | squad_leader             | deny
+ListMembers default filtered records | (names)                                  | squad_leader             | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | squad_leader             | page not accessible
+DivisionResource::shouldRegisterNavigation | -                                        | member                   | deny
+ListMembers default filtered records | (names)                                  | member                   | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | member                   | page not accessible
+DivisionResource::shouldRegisterNavigation | -                                        | banned                   | deny
+ListMembers default filtered records | (names)                                  | banned                   | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | banned                   | page not accessible
+DivisionResource::shouldRegisterNavigation | -                                        | pending                  | deny
+ListMembers default filtered records | (names)                                  | pending                  | [admin, admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_division, other_platoon, part_timer, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+ListActivities performed-by options | (count)                                  | pending                  | page not accessible

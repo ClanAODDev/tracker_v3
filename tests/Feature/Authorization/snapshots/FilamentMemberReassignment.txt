@@ -1,0 +1,24 @@
+member_transfer bulk action | own division member                      | admin                    | moved
+member_transfer bulk action | own division member                      | developer                | action unavailable
+member_transfer bulk action | own division member                      | admin_viewing_as_officer | action unavailable
+member_transfer bulk action | own division member                      | senior_leader            | moved
+member_transfer bulk action | own division member                      | commanding_officer       | moved
+member_transfer bulk action | own division member                      | executive_officer        | moved
+member_transfer bulk action | own division member                      | officer                  | action unavailable
+member_transfer bulk action | own division member                      | platoon_leader           | action unavailable
+member_transfer bulk action | own division member                      | squad_leader             | action unavailable
+member_transfer bulk action | own division member                      | member                   | action unavailable
+member_transfer bulk action | own division member                      | banned                   | action unavailable
+member_transfer bulk action | own division member                      | pending                  | action unavailable
+member_transfer bulk action | other division member                    | admin                    | not moved
+member_transfer bulk action | other division member                    | developer                | action unavailable
+member_transfer bulk action | other division member                    | admin_viewing_as_officer | action unavailable
+member_transfer bulk action | other division member                    | senior_leader            | not moved
+member_transfer bulk action | other division member                    | commanding_officer       | not moved
+member_transfer bulk action | other division member                    | executive_officer        | not moved
+member_transfer bulk action | other division member                    | officer                  | action unavailable
+member_transfer bulk action | other division member                    | platoon_leader           | action unavailable
+member_transfer bulk action | other division member                    | squad_leader             | action unavailable
+member_transfer bulk action | other division member                    | member                   | action unavailable
+member_transfer bulk action | other division member                    | banned                   | action unavailable
+member_transfer bulk action | other division member                    | pending                  | action unavailable
