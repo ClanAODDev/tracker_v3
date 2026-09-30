@@ -91,4 +91,101 @@ class ResetOrphanedUnitAssignmentsTest extends TestCase
             class_uses_recursive($job)
         ));
     }
+
+    #[Test]
+    public function resets_a_member_whose_platoon_belongs_to_another_division()
+    {
+        $division      = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+        $otherPlatoon  = $this->createPlatoon($otherDivision);
+        $otherSquad    = $this->createSquad($otherPlatoon);
+
+        $member = $this->createMember([
+            'division_id' => $division->id,
+            'platoon_id'  => $otherPlatoon->id,
+            'squad_id'    => $otherSquad->id,
+        ]);
+
+        (new ResetOrphanedUnitAssignments)->handle();
+
+        $this->assertUnassignedInDivision($member, $division->id);
+    }
+
+    #[Test]
+    public function resets_a_member_whose_platoon_no_longer_exists()
+    {
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => 999999, 'squad_id' => 0]);
+
+        (new ResetOrphanedUnitAssignments)->handle();
+
+        $this->assertUnassignedInDivision($member, $division->id);
+    }
+
+    #[Test]
+    public function resets_a_member_whose_squad_no_longer_exists()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'squad_id' => 999999]);
+
+        (new ResetOrphanedUnitAssignments)->handle();
+
+        $this->assertUnassignedInDivision($member, $division->id);
+    }
+
+    #[Test]
+    public function resets_a_member_whose_squad_belongs_to_a_different_platoon()
+    {
+        $division   = $this->createActiveDivision();
+        $platoon    = $this->createPlatoon($division);
+        $otherSquad = $this->createSquad($this->createPlatoon($division));
+
+        $member = $this->createMember([
+            'division_id' => $division->id,
+            'platoon_id'  => $platoon->id,
+            'squad_id'    => $otherSquad->id,
+        ]);
+
+        (new ResetOrphanedUnitAssignments)->handle();
+
+        $this->assertUnassignedInDivision($member, $division->id);
+    }
+
+    #[Test]
+    public function resets_a_member_with_a_squad_but_no_platoon()
+    {
+        $division = $this->createActiveDivision();
+        $squad    = $this->createSquad($this->createPlatoon($division));
+        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => 0, 'squad_id' => $squad->id]);
+
+        (new ResetOrphanedUnitAssignments)->handle();
+
+        $this->assertUnassignedInDivision($member, $division->id);
+    }
+
+    #[Test]
+    public function leaves_consistent_platoon_only_and_squad_assignments_alone()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+        $squad    = $this->createSquad($platoon);
+
+        $inSquad     = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'squad_id' => $squad->id]);
+        $platoonOnly = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'squad_id' => 0]);
+
+        (new ResetOrphanedUnitAssignments)->handle();
+
+        $this->assertSame([$platoon->id, $squad->id], [$inSquad->fresh()->platoon_id, $inSquad->fresh()->squad_id]);
+        $this->assertSame([$platoon->id, 0], [$platoonOnly->fresh()->platoon_id, $platoonOnly->fresh()->squad_id]);
+    }
+
+    private function assertUnassignedInDivision($member, int $divisionId): void
+    {
+        $member->refresh();
+
+        $this->assertSame($divisionId, $member->division_id);
+        $this->assertEquals(0, $member->platoon_id);
+        $this->assertEquals(0, $member->squad_id);
+    }
 }
