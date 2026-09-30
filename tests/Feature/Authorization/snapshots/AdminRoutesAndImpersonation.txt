@@ -46,3 +46,15 @@ GET impersonate role     | (status)                                 | squad_lead
 GET impersonate role     | (status)                                 | member                   | 403
 GET impersonate role     | (status)                                 | banned                   | 403
 GET impersonate role     | (status)                                 | pending                  | 408
+GET developers           | (status)                                 | admin                    | 200
+GET developers           | (status)                                 | developer                | 200
+GET developers           | (status)                                 | admin_viewing_as_officer | 403
+GET developers           | (status)                                 | senior_leader            | 403
+GET developers           | (status)                                 | commanding_officer       | 403
+GET developers           | (status)                                 | executive_officer        | 403
+GET developers           | (status)                                 | officer                  | 403
+GET developers           | (status)                                 | platoon_leader           | 403
+GET developers           | (status)                                 | squad_leader             | 403
+GET developers           | (status)                                 | member                   | 403
+GET developers           | (status)                                 | banned                   | 403
+GET developers           | (status)                                 | pending                  | 408

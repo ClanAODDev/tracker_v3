@@ -77,6 +77,7 @@ class EndpointMatrixTest extends PermissionMatrixTestCase
             'GET division turnover'  => fn () => route('reports.division-turnover'),
             'GET impersonate member' => fn () => route('impersonate', $this->world->users['member']),
             'GET impersonate role'   => fn () => route('impersonate-role', 'officer'),
+            'GET developers'         => fn () => route('developer'),
         ];
 
         foreach ($pages as $label => $url) {
