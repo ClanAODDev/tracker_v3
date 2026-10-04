@@ -103,4 +103,31 @@ class HandleResourceTest extends TestCase
 
         $this->assertFalse($handle->fresh()->enabled);
     }
+
+    #[Test]
+    public function a_stored_profile_url_with_stray_whitespace_saves_trimmed()
+    {
+        $this->actingAs($this->createAdmin());
+        $handle = Handle::factory()->create(['url' => ' https://profile.worldofwarships.eu/statistics/']);
+
+        Livewire::test(EditHandle::class, ['record' => $handle->getRouteKey()])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame('https://profile.worldofwarships.eu/statistics/', $handle->fresh()->url);
+    }
+
+    #[Test]
+    public function an_entered_profile_url_with_invisible_characters_saves_trimmed()
+    {
+        $this->actingAs($this->createAdmin());
+        $handle = Handle::factory()->create();
+
+        Livewire::test(EditHandle::class, ['record' => $handle->getRouteKey()])
+            ->fillForm(['url' => "\u{FEFF}\u{00A0}https://steamcommunity.com/profiles/ "])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame('https://steamcommunity.com/profiles/', $handle->fresh()->url);
+    }
 }
