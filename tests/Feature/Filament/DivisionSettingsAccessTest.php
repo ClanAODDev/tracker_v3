@@ -58,4 +58,22 @@ class DivisionSettingsAccessTest extends TestCase
         $this->get(route('filament.mod.resources.divisions.edit', $division))
             ->assertForbidden();
     }
+
+    #[Test]
+    public function division_settings_show_the_division_channel_read_only(): void
+    {
+        $division = $this->createActiveDivision(['division_channel' => '123456789012345678']);
+        $co       = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+        ], [
+            'role' => Role::OFFICER,
+        ]);
+
+        $this->actingAs($co);
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->assertSee('Division: 123456789012345678')
+            ->assertFormFieldDoesNotExist('division_channel');
+    }
 }
