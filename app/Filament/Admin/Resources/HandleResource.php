@@ -53,6 +53,9 @@ class HandleResource extends Resource
                             ->columnSpanFull(),
                         TextInput::make('url')
                             ->label('Profile URL prefix')
+                            ->afterStateHydrated(fn (TextInput $component, $state) => $component->state(self::trimUrl($state)))
+                            ->mutateStateForValidationUsing(fn ($state) => self::trimUrl($state))
+                            ->dehydrateStateUsing(fn ($state) => self::trimUrl($state))
                             ->url()
                             ->prefixIcon('heroicon-o-link')
                             ->placeholder('https://steamcommunity.com/profiles/')
@@ -207,5 +210,16 @@ class HandleResource extends Resource
             'create' => CreateHandle::route('/create'),
             'edit'   => EditHandle::route('/{record}/edit'),
         ];
+    }
+
+    private static function trimUrl(mixed $state): mixed
+    {
+        if (! is_string($state)) {
+            return $state;
+        }
+
+        $trimmed = preg_replace('/^[\s\x{00A0}\x{200B}\x{FEFF}]+|[\s\x{00A0}\x{200B}\x{FEFF}]+$/u', '', $state);
+
+        return $trimmed === '' ? null : $trimmed;
     }
 }
