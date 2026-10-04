@@ -1,0 +1,48 @@
+award form division_filter | (options / default)                      | admin                    | [Clan-Wide] default=clan-wide
+award form award_id rule | clan-wide award                          | admin                    | accepted
+award form award_id rule | division A award                         | admin                    | rejected: The selected award is invalid. | Admins can only grant clan-wide awards here.
+award form award_id rule | division B award                         | admin                    | rejected: The selected award is invalid. | Admins can only grant clan-wide awards here.
+award form division_filter | (options / default)                      | developer                | [Clan-Wide, Division A, Division B] default=none
+award form award_id rule | clan-wide award                          | developer                | accepted
+award form award_id rule | division A award                         | developer                | accepted
+award form award_id rule | division B award                         | developer                | accepted
+award form division_filter | (options / default)                      | admin_viewing_as_officer | [Clan-Wide, Division A, Division B] default=none
+award form award_id rule | clan-wide award                          | admin_viewing_as_officer | accepted
+award form award_id rule | division A award                         | admin_viewing_as_officer | accepted
+award form award_id rule | division B award                         | admin_viewing_as_officer | accepted
+award form division_filter | (options / default)                      | senior_leader            | [Clan-Wide, Division A, Division B] default=none
+award form award_id rule | clan-wide award                          | senior_leader            | accepted
+award form award_id rule | division A award                         | senior_leader            | accepted
+award form award_id rule | division B award                         | senior_leader            | accepted
+award form division_filter | (options / default)                      | commanding_officer       | [Division A] default=Division A
+award form award_id rule | clan-wide award                          | commanding_officer       | rejected: The selected award is invalid. | You can only grant awards for your own division.
+award form award_id rule | division A award                         | commanding_officer       | accepted
+award form award_id rule | division B award                         | commanding_officer       | rejected: The selected award is invalid. | You can only grant awards for your own division.
+award form division_filter | (options / default)                      | executive_officer        | [Division A] default=Division A
+award form award_id rule | clan-wide award                          | executive_officer        | rejected: The selected award is invalid. | You can only grant awards for your own division.
+award form award_id rule | division A award                         | executive_officer        | accepted
+award form award_id rule | division B award                         | executive_officer        | rejected: The selected award is invalid. | You can only grant awards for your own division.
+award form division_filter | (options / default)                      | officer                  | [Clan-Wide, Division A, Division B] default=none
+award form award_id rule | clan-wide award                          | officer                  | accepted
+award form award_id rule | division A award                         | officer                  | accepted
+award form award_id rule | division B award                         | officer                  | accepted
+award form division_filter | (options / default)                      | platoon_leader           | [Clan-Wide, Division A, Division B] default=none
+award form award_id rule | clan-wide award                          | platoon_leader           | accepted
+award form award_id rule | division A award                         | platoon_leader           | accepted
+award form award_id rule | division B award                         | platoon_leader           | accepted
+award form division_filter | (options / default)                      | squad_leader             | [Clan-Wide, Division A, Division B] default=none
+award form award_id rule | clan-wide award                          | squad_leader             | accepted
+award form award_id rule | division A award                         | squad_leader             | accepted
+award form award_id rule | division B award                         | squad_leader             | accepted
+award form division_filter | (options / default)                      | member                   | [Clan-Wide, Division A, Division B] default=none
+award form award_id rule | clan-wide award                          | member                   | accepted
+award form award_id rule | division A award                         | member                   | accepted
+award form award_id rule | division B award                         | member                   | accepted
+award form division_filter | (options / default)                      | banned                   | [Clan-Wide, Division A, Division B] default=none
+award form award_id rule | clan-wide award                          | banned                   | accepted
+award form award_id rule | division A award                         | banned                   | accepted
+award form award_id rule | division B award                         | banned                   | accepted
+award form division_filter | (options / default)                      | pending                  | [Clan-Wide, Division A, Division B] default=none
+award form award_id rule | clan-wide award                          | pending                  | accepted
+award form award_id rule | division A award                         | pending                  | accepted
+award form award_id rule | division B award                         | pending                  | accepted
