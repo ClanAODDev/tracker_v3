@@ -116,6 +116,25 @@ final class DivisionApiTest extends TestCase
     }
 
     #[Test]
+    public function division_read_ability_exposes_discord_channels()
+    {
+        Sanctum::actingAs($this->user, ['division:read']);
+
+        $division = Division::factory()->create(['division_channel' => '123456789012345678']);
+        $division->settings()->merge([
+            'officer_channel' => '223456789012345678',
+            'member_channel'  => '323456789012345678',
+        ]);
+
+        $response = $this->json('get', route('v1.divisions.show', $division->slug));
+
+        $response->assertOk();
+        $response->assertJsonPath('data.division.division_channel', '123456789012345678');
+        $response->assertJsonPath('data.division.officer_channel', '223456789012345678');
+        $response->assertJsonPath('data.division.member_channel', '323456789012345678');
+    }
+
+    #[Test]
     public function division_show_can_be_looked_up_by_guid()
     {
         Sanctum::actingAs($this->user, ['division:read']);

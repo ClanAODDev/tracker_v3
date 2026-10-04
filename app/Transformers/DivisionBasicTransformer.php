@@ -11,16 +11,18 @@ class DivisionBasicTransformer extends Transformer
     public function transform($item): array
     {
         $data = [
-            'guid'            => $item->guid,
-            'name'            => $item->name,
-            'slug'            => $item->slug,
-            'abbreviation'    => $item->abbreviation,
-            'description'     => $item->description,
-            'forum_app_id'    => $item->forum_app_id,
-            'members_count'   => $item->members_count,
-            'show_on_site'    => $item->show_on_site,
-            'officer_channel' => $item->settings()->get('officer_channel', null),
-            'icon'            => $item->getLogoPath(),
+            'guid'             => $item->guid,
+            'name'             => $item->name,
+            'slug'             => $item->slug,
+            'abbreviation'     => $item->abbreviation,
+            'description'      => $item->description,
+            'forum_app_id'     => $item->forum_app_id,
+            'members_count'    => $item->members_count,
+            'show_on_site'     => $item->show_on_site,
+            'officer_channel'  => $item->settings()->get('officer_channel', null),
+            'member_channel'   => $item->settings()->get('member_channel', null),
+            'division_channel' => $item->division_channel,
+            'icon'             => $item->getLogoPath(),
             // leadership is exposed at the base division:read ability, but Discord IDs
             // are meant to require division:read-advanced, so they're stripped here
             // unless the current token holds that ability.
