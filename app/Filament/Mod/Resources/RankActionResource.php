@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource\Pages\CreateRankAction;
 use App\Filament\Mod\Resources\RankActionResource\Pages\EditRankAction;
@@ -123,7 +124,7 @@ class RankActionResource extends Resource
                 TextColumn::make('member.name'),
                 TextColumn::make('member.division.name')
                     ->sortable()
-                    ->visible(fn () => auth()->user()->isRole('admin')),
+                    ->visible(fn () => auth()->user()->can(Ability::ActAcrossDivisions)),
                 TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
@@ -293,7 +294,7 @@ class RankActionResource extends Resource
                         $min_days_rank_action
                     ) {
                         $user     = auth()->user();
-                        $skipRule = ($user->isDivisionLeader() || $user->isRole('admin')) && $get('override_existing');
+                        $skipRule = ($user->isDivisionLeader() || $user->can(Ability::OverrideRankActionRules)) && $get('override_existing');
 
                         if (! $skipRule) {
                             $exists = RankAction::where('member_id', $value)
@@ -311,7 +312,7 @@ class RankActionResource extends Resource
                 ]),
         ];
 
-        if (auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin')) {
+        if (auth()->user()->isDivisionLeader() || auth()->user()->can(Ability::OverrideRankActionRules)) {
             $fields[] = Checkbox::make('override_existing')
                 ->label("Override {$min_days_rank_action} Day Rule")
                 ->helperText(sprintf(
@@ -369,7 +370,7 @@ class RankActionResource extends Resource
 
                     // Only permit demotions for admin or division leaders.
                     if (
-                        ($user->isDivisionLeader() || $user->isRole('admin'))
+                        ($user->isDivisionLeader() || $user->can(Ability::DemoteMembers))
                         && isset($member)
                         && $member->isAtLeast(Rank::CADET)
                     ) {

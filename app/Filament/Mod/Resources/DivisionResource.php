@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
 use App\Filament\Mod\Resources\DivisionResource\Pages\ListDivisions;
@@ -44,18 +45,18 @@ class DivisionResource extends Resource
     {
         $user = auth()->user();
 
-        if ($user?->isRole('admin')) {
+        if ($user?->can(Ability::ManageDivisions)) {
             return true;
         }
 
-        return $user?->member?->division_id !== null && $user->isRole('sr_ldr');
+        return $user?->member?->division_id !== null && $user->can(Ability::ViewDivisionSettings);
     }
 
     public static function getNavigationUrl(): string
     {
         $user = auth()->user();
 
-        if ($user?->isRole('admin')) {
+        if ($user?->can(Ability::ManageDivisions)) {
             return static::getUrl('index');
         }
 

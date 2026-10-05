@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Ability;
 use App\Enums\ActivityType;
 use App\Filament\Mod\Resources\ActivityResource\Pages\ListActivities;
 use App\Models\Activity;
@@ -41,7 +42,7 @@ class ActivityResource extends Resource
     {
         $user = auth()->user();
 
-        return $user && $user->isRole(['sr_ldr', 'admin']);
+        return $user && $user->can(Ability::ViewAllActivity);
     }
 
     public static function table(Table $table): Table
@@ -52,7 +53,7 @@ class ActivityResource extends Resource
                     ->label('Division')
                     ->sortable()
                     ->searchable()
-                    ->visible(fn () => auth()->user()->isRole('admin')),
+                    ->visible(fn () => auth()->user()->can(Ability::ActAcrossDivisions)),
                 TextColumn::make('created_at')
                     ->label('Date')
                     ->since()
@@ -93,7 +94,7 @@ class ActivityResource extends Resource
                     ->label('Division')
                     ->options(fn () => Division::active()->orderBy('name')->pluck('name', 'id'))
                     ->searchable()
-                    ->visible(fn () => auth()->user()->isRole('admin')),
+                    ->visible(fn () => auth()->user()->can(Ability::ActAcrossDivisions)),
                 SelectFilter::make('name')
                     ->label('Activity Type')
                     ->options(ActivityType::options()),
@@ -101,7 +102,7 @@ class ActivityResource extends Resource
                     ->label('Performed By')
                     ->options(function () {
                         $user = auth()->user();
-                        if ($user->isRole('admin')) {
+                        if ($user->can(Ability::ActAcrossDivisions)) {
                             return User::whereHas('member')
                                 ->orderBy('name')
                                 ->pluck('name', 'id');
@@ -175,7 +176,7 @@ class ActivityResource extends Resource
             ->whereIn('name', ActivityType::values())
             ->with(['user', 'subject', 'division']);
 
-        if (! $user->isRole('admin')) {
+        if (! $user->can(Ability::ActAcrossDivisions)) {
             $query->where('division_id', $user->member?->division_id);
         }
 

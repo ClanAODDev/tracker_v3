@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Ability;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Filament\Admin\Resources\MemberHasManyAwardsResource\RelationManagers\AwardsRelationManager;
@@ -262,7 +263,7 @@ class MemberResource extends Resource
                             ->preload()
                             ->default(optional(auth()->user()->member)->division_id)
                             ->live()
-                            ->visible(fn () => auth()->user()->isRole('admin'))
+                            ->visible(fn () => auth()->user()->can(Ability::ActAcrossDivisions))
                             ->afterStateUpdated(function (callable $set) {
 
                                 $set('platoon', []);
@@ -327,7 +328,7 @@ class MemberResource extends Resource
                     ->indicateUsing(function (array $data) {
                         $parts = [];
 
-                        if (! empty($data['division']) && auth()->user()->isRole('admin')) {
+                        if (! empty($data['division']) && auth()->user()->can(Ability::ActAcrossDivisions)) {
                             if ($name = Division::whereKey($data['division'])->value('name')) {
                                 $parts[] = "Division: {$name}";
                             }
@@ -384,10 +385,10 @@ class MemberResource extends Resource
                         'with_parttimers' => 'Include Part-Timers',
                     ])
                     ->default('division')
-                    ->visible(fn () => ! auth()->user()->isRole('admin'))
+                    ->visible(fn () => ! auth()->user()->can(Ability::ActAcrossDivisions))
                     ->query(function (Builder $query, array $data) {
                         $user = auth()->user();
-                        if ($user->isRole('admin')) {
+                        if ($user->can(Ability::ActAcrossDivisions)) {
                             return;
                         }
 
@@ -438,7 +439,7 @@ class MemberResource extends Resource
                         ->label('Transfer member(s)')
                         ->modalWidth('lg')
                         ->modalDescription('Only members of the same division can be transferred.')
-                        ->visible(fn (): bool => auth()->user()->isRole(['admin', 'sr_ldr']))
+                        ->visible(fn (): bool => auth()->user()->can(Ability::TransferMembers))
                         ->icon('heroicon-o-adjustments-vertical')
                         ->form([
                             Select::make('platoon_id')
@@ -483,7 +484,7 @@ class MemberResource extends Resource
                                 $action->cancel();
                             }
 
-                            if (! $user->isRole('admin') && $userDivisionId) {
+                            if (! $user->can(Ability::ActAcrossDivisions) && $userDivisionId) {
                                 $partTimersSelected = $records->contains(fn ($member) => $member->division_id !== $userDivisionId);
 
                                 if ($partTimersSelected) {

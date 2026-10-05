@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\DivisionResource\Pages;
 
+use App\Enums\Ability;
 use App\Filament\Mod\Resources\DivisionResource;
 use App\Notifications\Channel\NotifyDivisionSettingsEdited;
 use App\Notifications\Channel\TestChannelNotification;
@@ -21,7 +22,7 @@ class EditDivision extends EditRecord
 
         $user = auth()->user();
 
-        if ($user?->isRole('admin')) {
+        if ($user?->can(Ability::ManageDivisions)) {
             return;
         }
 

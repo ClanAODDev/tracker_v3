@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
 
+use App\Enums\Ability;
 use App\Models\Squad;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -61,7 +62,7 @@ class MembersRelationManager extends RelationManager
                         ->label('Transfer member(s)')
                         ->modalWidth('lg')
                         ->modalDescription('Only members of the same division can be transferred.')
-                        ->visible(fn (): bool => auth()->user()->isRole(['admin', 'sr_ldr'])
+                        ->visible(fn (): bool => auth()->user()->can(Ability::TransferMembers)
                             || (auth()->user()->isPlatoonLeader() && auth()->user()->member->clan_id ==
                                 $this->ownerRecord->leader_id)
                         )

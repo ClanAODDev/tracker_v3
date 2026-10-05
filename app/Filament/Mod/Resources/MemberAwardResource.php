@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Ability;
 use App\Filament\Mod\Resources\MemberAwardResource\Pages\CreateMemberAward;
 use App\Filament\Mod\Resources\MemberAwardResource\Pages\EditMemberAward;
 use App\Filament\Mod\Resources\MemberAwardResource\Pages\ListMemberAwards;
@@ -90,12 +91,12 @@ class MemberAwardResource extends Resource
 
     public static function canDeleteAny(): bool
     {
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
+        return auth()->user()->can(Ability::ManageMemberAwards);
     }
 
     public static function canEdit(Model $record): bool
     {
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
+        return auth()->user()->can(Ability::ManageMemberAwards);
     }
 
     public static function form(Schema $schema): Schema
@@ -226,7 +227,7 @@ class MemberAwardResource extends Resource
                             ->label('Auto-approve')
                             ->helperText('Skip the approval queue and grant immediately')
                             ->default(false)
-                            ->visible(fn () => auth()->user()->isRole(['admin', 'sr_ldr'])),
+                            ->visible(fn () => auth()->user()->can(Ability::ApproveAwards)),
                     ]),
 
                 Section::make('Metadata')
@@ -280,12 +281,12 @@ class MemberAwardResource extends Resource
 
                     BulkAction::make('approve')
                         ->label('Approve')
-                        ->hidden(fn () => ! auth()->user()->isRole(['admin', 'sr_ldr']))
+                        ->hidden(fn () => ! auth()->user()->can(Ability::ApproveAwards))
                         ->action(fn (Collection $records) => $records->each->update(['approved' => true])),
 
                     BulkAction::make('approve_and_notify')
                         ->label('Approve and Notify')
-                        ->hidden(fn () => ! auth()->user()->isRole(['admin', 'sr_ldr']))
+                        ->hidden(fn () => ! auth()->user()->can(Ability::ApproveAwards))
                         ->action(fn (Collection $records) => $records->each->update(['approved' => true]))
                         ->requiresConfirmation()
                         ->modalDescription('This will generate one consolidated notification per division, grouped by award type.')
