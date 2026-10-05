@@ -2,6 +2,7 @@
 
 namespace App\Data;
 
+use App\Enums\Ability;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
@@ -42,7 +43,7 @@ readonly class DivisionShowData
                 'shutdownPending'       => (bool) $division->shutdown_at?->isFuture(),
                 'applicationRequired'   => (bool) $division->settings()->get('application_required', false),
                 'applicationsUrl'       => url('/api/divisions/' . $division->slug . '/applications'),
-                'canDeleteApplications' => $user->isRole(['sr_ldr', 'admin']),
+                'canDeleteApplications' => $user->can(Ability::DeleteApplications),
                 'canRecruit'            => $user->can('recruit', Member::class),
                 'canCreatePlatoon'      => $user->can('create', [Platoon::class, $division]),
                 'canManageUnassigned'   => $user->can('manageUnassigned', User::class),
@@ -99,10 +100,10 @@ readonly class DivisionShowData
                 'label' => $action->label,
                 'style' => $action->style,
             ])->values(),
-            'recentActivityCount' => $user->isRole('member')
+            'recentActivityCount' => ! $user->can(Ability::ViewDivisionActivity)
                 ? 0
                 : $this->recentActivity->sum(fn ($group) => $group['events']->count()),
-            'recentActivity' => $user->isRole('member')
+            'recentActivity' => ! $user->can(Ability::ViewDivisionActivity)
                 ? []
                 : $this->recentActivity->map(function (array $group) {
                     $type  = $group['type'];
@@ -119,7 +120,7 @@ readonly class DivisionShowData
                             : ['name' => 'Unknown', 'url' => null])->values(),
                     ];
                 })->values(),
-            'canViewAllActivity' => $user->isRole(['sr_ldr', 'admin']),
+            'canViewAllActivity' => $user->can(Ability::ViewAllActivity),
             'allActivityUrl'     => route('filament.mod.resources.activities.index'),
             'organize'           => [
                 'canOrganize' => $user->can('manageUnassigned', User::class),

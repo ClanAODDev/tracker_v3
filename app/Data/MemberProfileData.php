@@ -2,6 +2,7 @@
 
 namespace App\Data;
 
+use App\Enums\Ability;
 use App\Enums\DivisionMemberFieldType;
 use App\Enums\Rank;
 use App\Enums\TagVisibility;
@@ -66,7 +67,7 @@ class MemberProfileData
         $this->rankTimeline = $rankTimelineService->buildTimeline($member, $repository->getRankHistory($member));
 
         $isOwnProfile         = $this->user->member?->id === $member->id;
-        $this->canFullHistory = ! $this->user->isRole('member') || $isOwnProfile;
+        $this->canFullHistory = $this->user->can(Ability::ViewMemberHistory) || $isOwnProfile;
     }
 
     public static function for(Member $member, MemberRepository $repository, RankTimelineService $rankTimelineService): self
@@ -131,7 +132,7 @@ class MemberProfileData
                     'health'         => $this->stats->activity->health,
                     'healthPct'      => $this->stats->activity->healthPct,
                     'divisionMax'    => $this->stats->activity->divisionMax,
-                    'reminders'      => ! $user->isRole('member')
+                    'reminders'      => $user->can(Ability::ViewMemberHistory)
                         ? $member->activityReminders->map(fn ($r) => [
                             'date' => $r->created_at->format('M j, Y'),
                             'by'   => $r->remindedBy?->name ?? 'Unknown',
@@ -140,7 +141,7 @@ class MemberProfileData
                     'remindedToday'     => $member->activityReminders->contains(fn ($r) => $r->created_at->isToday()),
                     'canRemind'         => $user->can('remindActivity', $member),
                     'remindUrl'         => route('member.set-activity-reminder', $member->clan_id),
-                    'canClearReminders' => $user->isRole(['sr_ldr', 'admin']) && $user->member?->clan_id !== $member->clan_id,
+                    'canClearReminders' => $user->can(Ability::ClearActivityReminders) && $user->member?->clan_id !== $member->clan_id,
                     'clearRemindersUrl' => route('member.clear-activity-reminders', $member->clan_id),
                 ],
                 'recruiting' => [
@@ -419,7 +420,7 @@ class MemberProfileData
             'createUrl'         => route('member-tags.create', [$division, $member->clan_id]),
             'canCreate'         => $user->can('create', DivisionTag::class),
             'visibilityOptions' => collect(TagVisibility::cases())
-                ->filter(fn (TagVisibility $v) => $v !== TagVisibility::SENIOR_LEADERS || $user->isRole(['sr_ldr', 'admin']))
+                ->filter(fn (TagVisibility $v) => $v !== TagVisibility::SENIOR_LEADERS || $user->can(Ability::UseSeniorLeaderTags))
                 ->map(fn (TagVisibility $v) => ['value' => $v->value, 'label' => $v->label()])
                 ->values()
                 ->all(),

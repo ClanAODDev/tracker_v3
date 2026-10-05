@@ -2,6 +2,7 @@
 
 namespace App\Data;
 
+use App\Enums\Ability;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Models\Division;
@@ -71,7 +72,7 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->isRole('sr_ldr')) {
+        if ($user->can(Ability::SeeDivisionHealthAlerts)) {
             self::pushAction(
                 $actions,
                 $division->members()
@@ -125,7 +126,7 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->isDivisionLeader() || $user->isRole(['admin', 'sr_ldr'])) {
+        if ($user->isDivisionLeader() || $user->can(Ability::EditLeaves)) {
             self::pushAction(
                 $actions,
                 Leave::whereNull('approver_id')
@@ -164,7 +165,7 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->isRole('sr_ldr')) {
+        if ($user->can(Ability::SeeDivisionHealthAlerts)) {
             self::pushAction(
                 $actions,
                 $division->members()->misconfiguredDiscord()->count(),
@@ -202,7 +203,7 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageAllTickets)) {
             self::pushAction(
                 $actions,
                 Ticket::whereIn('state', ['new', 'assigned'])->count(),

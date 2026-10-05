@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Ability;
 use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -40,7 +41,7 @@ class ImpersonationController extends Controller
 
     public function impersonateRole(string $role): RedirectResponse
     {
-        if (! auth()->user()->isRole('admin') && ! auth()->user()->isDeveloper()) {
+        if (! auth()->user()->can(Ability::ImpersonateRoles) && ! auth()->user()->isDeveloper()) {
             abort(403);
         }
 
