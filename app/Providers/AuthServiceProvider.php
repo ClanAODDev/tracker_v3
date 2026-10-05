@@ -2,6 +2,11 @@
 
 namespace App\Providers;
 
+use App\Authorization\AbilityMap;
+use App\Authorization\CodeAbilityMap;
+use App\Authorization\ForumRoleSource;
+use App\Authorization\RoleSource;
+use App\Enums\Ability;
 use App\Models\Division;
 use App\Models\DivisionMemberField;
 use App\Models\DivisionTag;
@@ -28,6 +33,7 @@ use App\Policies\SquadPolicy;
 use App\Policies\TicketPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Laravel\Sanctum\NewAccessToken;
 
 class AuthServiceProvider extends ServiceProvider
@@ -53,11 +59,23 @@ class AuthServiceProvider extends ServiceProvider
         User::class                => UserPolicy::class,
     ];
 
+    public function register(): void
+    {
+        parent::register();
+
+        $this->app->singleton(RoleSource::class, ForumRoleSource::class);
+        $this->app->singleton(AbilityMap::class, CodeAbilityMap::class);
+    }
+
     /**
      * Register any application authentication / authorization services.
      */
     public function boot(): void
     {
         $this->registerPolicies();
+
+        foreach (Ability::cases() as $ability) {
+            Gate::define($ability, fn (User $user) => $this->app->make(AbilityMap::class)->allows($user, $ability));
+        }
     }
 }
