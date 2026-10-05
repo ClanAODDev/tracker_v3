@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,7 +33,7 @@ class TicketType extends Model
 
     public function userCanWork(User $user): bool
     {
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageAllTickets)) {
             return true;
         }
 

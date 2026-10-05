@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use Flashadvocate\FilamentReactions\Concerns\HasReactions;
 use Illuminate\Database\Eloquent\Builder;
@@ -70,7 +71,7 @@ class RankAction extends Model implements Commentable
             $memberQuery
                 ->when($user->isPlatoonLeader(), fn ($q) => $q->where('platoon_id', $member->platoon_id))
                 ->when($user->isSquadLeader(), fn ($q) => $q->where('squad_id', $member->squad_id))
-                ->when(! $user->isRole('admin'), fn ($q) => $q->where('division_id', $member->division_id));
+                ->when(! $user->can(Ability::ActAcrossDivisions), fn ($q) => $q->where('division_id', $member->division_id));
         });
 
         $query->where(function ($q) use ($userRank, $currentMemberId) {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Ability;
 use App\Enums\ActivityType;
 use App\Enums\Rank;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -67,12 +68,12 @@ class Note extends Model
 
     public static function canManageSrLdr(?User $user): bool
     {
-        return $user?->isRole(['admin', 'sr_ldr']) ?? false;
+        return $user?->can(Ability::UseSeniorLeaderNotes) ?? false;
     }
 
     public static function canManageMsgt(?User $user): bool
     {
-        return $user?->isRole('admin') || ($user?->member?->isAtLeast(Rank::MASTER_SERGEANT) ?? false);
+        return $user?->can(Ability::UseMasterSergeantNotes) || ($user?->member?->isAtLeast(Rank::MASTER_SERGEANT) ?? false);
     }
 
     public static function isTypeVisibleTo(string $type, ?User $user): bool

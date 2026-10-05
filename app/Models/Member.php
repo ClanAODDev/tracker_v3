@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Enums\Ability;
 use App\Enums\DiscordStatus;
 use App\Enums\Position;
 use App\Enums\Rank;
@@ -415,11 +416,11 @@ class Member extends Model
                 ->where('platoon_id', $currentMember->platoon_id)
                 ->where('rank', '<', $roleLimits['platoonLeader'])
             )
-            ->when($user->isDivisionLeader() && ! $user->isRole('admin'), fn (Builder $query) => $query
+            ->when($user->isDivisionLeader() && ! $user->can(Ability::ActAcrossDivisions), fn (Builder $query) => $query
                 ->where('division_id', $currentMember->division_id)
                 ->where('rank', '<', $roleLimits['divisionLeader'])
             )
-            ->when($user->isRole('admin'), fn (Builder $query) => $query
+            ->when($user->can(Ability::ActAcrossDivisions), fn (Builder $query) => $query
                 ->where('division_id', '!=', 0)
             )
             ->where('rank', '<=', $currentMember->rank->value);

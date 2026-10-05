@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Ability;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -113,7 +114,7 @@ class Award extends Model
             return false;
         }
 
-        $isOfficerOrAbove = $user->isRole(['officer', 'sr_ldr', 'admin']);
+        $isOfficerOrAbove = $user->can(Ability::RequestAwards);
         $isRequestable    = $this->allow_request || $isOfficerOrAbove;
         $isDivisionActive = $this->division?->active ?? true;
 

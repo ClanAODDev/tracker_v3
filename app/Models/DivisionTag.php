@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Enums\TagVisibility;
 use Illuminate\Database\Eloquent\Builder;
@@ -67,11 +68,11 @@ class DivisionTag extends Model
             return $this->visibility === TagVisibility::PUBLIC;
         }
 
-        if ($user->isRole(['admin', 'sr_ldr'])) {
+        if ($user->can(Ability::UseSeniorLeaderTags)) {
             return true;
         }
 
-        if ($user->isRole('officer')) {
+        if ($user->can(Ability::UseOfficerTags)) {
             return in_array($this->visibility, [TagVisibility::PUBLIC, TagVisibility::OFFICERS]);
         }
 
@@ -86,11 +87,11 @@ class DivisionTag extends Model
             return $query->where('visibility', TagVisibility::PUBLIC);
         }
 
-        if ($user->isRole(['admin', 'sr_ldr'])) {
+        if ($user->can(Ability::UseSeniorLeaderTags)) {
             return $query;
         }
 
-        if ($user->isRole('officer')) {
+        if ($user->can(Ability::UseOfficerTags)) {
             return $query->whereIn('visibility', [
                 TagVisibility::PUBLIC,
                 TagVisibility::OFFICERS,
@@ -108,11 +109,11 @@ class DivisionTag extends Model
             return $query->whereRaw('1 = 0');
         }
 
-        if ($user->isRole(['admin', 'sr_ldr'])) {
+        if ($user->can(Ability::UseSeniorLeaderTags)) {
             return $query;
         }
 
-        if ($user->isRole('officer')) {
+        if ($user->can(Ability::UseOfficerTags)) {
             return $query->whereIn('visibility', [
                 TagVisibility::PUBLIC,
                 TagVisibility::OFFICERS,

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Ability;
 use App\Enums\Accent;
 use App\Enums\ActivityType;
 use App\Enums\Position;
@@ -266,13 +267,13 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
         $panelId = $panel->getId();
 
-        $panelToRoleMapping = [
-            'mod'   => ['admin', 'sr_ldr', 'officer'],
-            'admin' => 'admin',
+        $panelToAbility = [
+            'mod'   => Ability::AccessModPanel,
+            'admin' => Ability::AccessAdminPanel,
         ];
 
-        if (isset($panelToRoleMapping[$panelId])) {
-            return $this->isRole($panelToRoleMapping[$panelId]);
+        if (isset($panelToAbility[$panelId])) {
+            return $this->can($panelToAbility[$panelId]);
         }
 
         return false;
@@ -302,7 +303,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         }
 
         // Admins can auto-approve for ranks up to Corporal
-        if ($user->isRole('admin') && $targetRank->value <= Rank::CORPORAL->value) {
+        if ($user->can(Ability::AutoApproveJuniorPromotions) && $targetRank->value <= Rank::CORPORAL->value) {
             return $asBoolean ? true : now();
         }
 
