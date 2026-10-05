@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Authorization\RoleSource;
 use App\Enums\Ability;
 use App\Enums\Accent;
 use App\Enums\ActivityType;
@@ -140,7 +141,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function isRole(string|array|Role $role): bool
     {
-        $userRole = $this->getEffectiveRole();
+        $userRole = app(RoleSource::class)->effectiveRole($this);
 
         if (! $userRole) {
             return false;
