@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Enums\Ability;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\User;
@@ -24,7 +25,7 @@ class Navigation
                 ? ['label' => 'Member Requests', 'href' => route('filament.mod.resources.member-requests.index') . '?filters[status][value]=pending', 'external' => true, 'icon' => 'inbox']
                 : null,
 
-            $user->isRole(['admin', 'sr_ldr', 'officer'])
+            $user->can(Ability::UseHelpDesk)
                 ? ['label' => 'Get Help', 'route' => 'help.tickets.widget', 'match' => ['help/tickets', 'help/tickets/*'], 'icon' => 'life-buoy']
                 : null,
 
@@ -35,7 +36,7 @@ class Navigation
                 'children' => array_filter([
                     ['label' => 'Achievements', 'route' => 'awards.index', 'match' => ['clan/awards', 'clan/awards/*']],
                     ['label' => 'Clan Census Data', 'route' => 'reports.clan-census', 'match' => ['clan/census']],
-                    $user->isRole('admin')
+                    $user->can(Ability::ViewAdminPages)
                         ? ['label' => 'Division Turnover', 'route' => 'reports.division-turnover', 'match' => ['clan/division-turnover']]
                         : null,
                     ['label' => 'Leadership Structure', 'route' => 'leadership', 'match' => ['clan/leadership']],
@@ -45,16 +46,16 @@ class Navigation
                 ]),
             ],
 
-            $user->isRole(['admin', 'sr_ldr', 'officer']) || $user->isDeveloper()
+            $user->can(Ability::AccessModPanel) || $user->isDeveloper()
                 ? ['type' => 'heading', 'label' => 'Admin']
                 : null,
             $user->isDeveloper()
                 ? ['label' => 'Log Viewer', 'href' => url('/log-viewer'), 'external' => true, 'icon' => 'scroll-text']
                 : null,
-            $user->isRole('admin') || $user->isDeveloper()
+            $user->can(Ability::AccessAdminPanel) || $user->isDeveloper()
                 ? ['label' => 'Admin Panel', 'href' => url('/admin'), 'external' => true, 'icon' => 'sliders-horizontal']
                 : null,
-            $user->isRole(['sr_ldr', 'admin', 'officer']) || $user->isDeveloper()
+            $user->can(Ability::AccessModPanel) || $user->isDeveloper()
                 ? ['label' => 'Operations', 'href' => url('/operations'), 'external' => true, 'icon' => 'radio']
                 : null,
 
@@ -67,10 +68,10 @@ class Navigation
                     ['label' => 'General', 'route' => 'help', 'match' => ['help/docs']],
                     ['label' => 'Awards Images', 'route' => 'help.member-awards', 'match' => ['help/docs/member-awards']],
                     ['label' => 'Managing Rank', 'route' => 'help.managing-rank', 'match' => ['help/docs/managing-rank']],
-                    $user->isRole(['admin', 'sr_ldr', 'officer'])
+                    $user->can(Ability::ViewRecruitingGuide)
                         ? ['label' => 'Recruiting', 'route' => 'help.recruiting', 'match' => ['help/docs/recruiting']]
                         : null,
-                    $user->isRole('admin')
+                    $user->can(Ability::ViewAdminPages)
                         ? ['label' => 'Contributing', 'route' => 'help.admin.home', 'match' => ['help/docs/admin']]
                         : null,
                 ]),

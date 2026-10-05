@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Ability;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,7 @@ class MustBeAdmin
             return redirect()->guest('login');
         }
 
-        if (auth()->check() && $request->user()->isRole('admin')) {
+        if (auth()->check() && $request->user()->can(Ability::ViewAdminPages)) {
             return $next($request);
         }
 
