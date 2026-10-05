@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use App\Models\Squad;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -18,7 +19,7 @@ class SquadPolicy
      */
     public function before(User $user)
     {
-        if ($user->isRole(['admin'])
+        if ($user->can(Ability::ManageAllUnits)
             || $user->isDeveloper()
         ) {
             return true;
@@ -27,17 +28,17 @@ class SquadPolicy
 
     public static function viewAny(User $user): bool
     {
-        return $user->isRole(['officer', 'sr_ldr']);
+        return $user->can(Ability::ViewUnits);
     }
 
     public static function deleteAny(User $user): bool
     {
-        return $user->isRole(['admin', 'sr_ldr']) || $user->isDivisionLeader();
+        return $user->can(Ability::ManageUnits) || $user->isDivisionLeader();
     }
 
     public static function delete(User $user, Squad $squad): bool
     {
-        if ($user->isRole(['admin', 'sr_ldr']) || $user->isDivisionLeader()) {
+        if ($user->can(Ability::ManageUnits) || $user->isDivisionLeader()) {
             return true;
         }
 
@@ -50,7 +51,7 @@ class SquadPolicy
 
     public static function update(User $user, Squad $squad): bool
     {
-        if ($user->isRole('sr_ldr') && $user->member->division_id === $squad->division->id) {
+        if ($user->can(Ability::ManageUnits) && $user->member->division_id === $squad->division->id) {
             return true;
         }
 
@@ -70,7 +71,7 @@ class SquadPolicy
      */
     public function create(User $user)
     {
-        if ($user->isRole(['sr_ldr'])) {
+        if ($user->can(Ability::ManageUnits)) {
             return true;
         }
 

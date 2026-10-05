@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use App\Models\Platoon;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -20,21 +21,21 @@ class PlatoonPolicy
      */
     public function before(User $user)
     {
-        if ($user->isRole('admin') || $user->isDeveloper()) {
+        if ($user->can(Ability::ManageAllUnits) || $user->isDeveloper()) {
             return true;
         }
     }
 
     public function viewAny(User $user): bool
     {
-        return $user->isRole(['officer', 'sr_ldr']);
+        return $user->can(Ability::ViewUnits);
     }
 
     public function update(User $user, Platoon $platoon): bool
     {
         $member = $user->member;
 
-        if ($user->isRole('sr_ldr') || $user->isDivisionLeader()) {
+        if ($user->can(Ability::ManageUnits) || $user->isDivisionLeader()) {
             return $platoon->division_id === $member->division_id;
         }
 
@@ -50,7 +51,7 @@ class PlatoonPolicy
      */
     public function delete(User $user, Platoon $platoon)
     {
-        if (auth()->user()->isRole('sr_ldr') || auth()->user()->isDivisionLeader()) {
+        if (auth()->user()->can(Ability::ManageUnits) || auth()->user()->isDivisionLeader()) {
             return $platoon->division_id === auth()->user()->member->division_id;
         }
 
@@ -59,7 +60,7 @@ class PlatoonPolicy
 
     public function create(User $user, $division = null): bool
     {
-        if (! $user->isRole('sr_ldr')) {
+        if (! $user->can(Ability::ManageUnits)) {
             return false;
         }
 

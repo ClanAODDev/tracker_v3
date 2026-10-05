@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -11,7 +12,7 @@ class ApiTokenPolicy
 
     public function before(User $user)
     {
-        if ($user->isDeveloper() || $user->isRole('admin')) {
+        if ($user->isDeveloper() || $user->can(Ability::ManageApiTokens)) {
             return true;
         }
     }

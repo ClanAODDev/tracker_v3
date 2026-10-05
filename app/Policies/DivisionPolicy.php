@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use App\Models\Division;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -27,7 +28,7 @@ class DivisionPolicy
      */
     public function update(User $user, Division $division)
     {
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageDivisions)) {
             return true;
         }
 
@@ -46,7 +47,7 @@ class DivisionPolicy
 
     public function show(User $user)
     {
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageDivisions)) {
             return true;
         }
 
@@ -57,7 +58,7 @@ class DivisionPolicy
     {
         $division = $user->member->division;
 
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageDivisions)) {
             return true;
         }
 
@@ -70,7 +71,7 @@ class DivisionPolicy
 
     public function view(User $user, Division $division)
     {
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageDivisions)) {
             return true;
         }
 
@@ -83,7 +84,7 @@ class DivisionPolicy
 
     public function create(User $user)
     {
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageDivisions)) {
             return true;
         }
 

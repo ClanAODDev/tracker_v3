@@ -2,7 +2,7 @@
 
 namespace App\Policies;
 
-use App\Enums\Role;
+use App\Enums\Ability;
 use App\Models\Note;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -15,14 +15,14 @@ class NotePolicy
 
     public function before(User $user)
     {
-        if ($user->isRole('admin') || $user->isDeveloper()) {
+        if ($user->can(Ability::ManageAllNotes) || $user->isDeveloper()) {
             return true;
         }
     }
 
     public function show(User $user): bool
     {
-        if ($user->isRole('member')) {
+        if (! $user->can(Ability::ViewNotes)) {
             return false;
         }
 
@@ -35,12 +35,12 @@ class NotePolicy
             return false;
         }
 
-        return $user->isDivisionLeader() || $user->isRole(Role::SENIOR_LEADER);
+        return $user->isDivisionLeader() || $user->can(Ability::EditAnyNote);
     }
 
     public function create(User $user): bool
     {
-        if ($user->isRole('member')) {
+        if (! $user->can(Ability::CreateNotes)) {
             return false;
         }
 

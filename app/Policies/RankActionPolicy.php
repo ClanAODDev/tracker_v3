@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Models\RankAction;
 use App\Models\User;
@@ -13,7 +14,7 @@ class RankActionPolicy
 
     public static function viewAny(User $user): bool
     {
-        return $user->isRole(['officer', 'sr_ldr', 'admin']);
+        return $user->can(Ability::ViewRankActions);
     }
 
     public static function update(User $user, RankAction $record): bool
@@ -26,7 +27,7 @@ class RankActionPolicy
         }
 
         // admins can see all requests
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageAllRankActions)) {
             return true;
         }
 
@@ -58,7 +59,7 @@ class RankActionPolicy
 
     public static function deleteAny(): bool
     {
-        return auth()->user()->isRole(['admin']);
+        return auth()->user()->can(Ability::ManageAllRankActions);
     }
 
     public static function approve(User $user, RankAction $action): bool
@@ -107,6 +108,6 @@ class RankActionPolicy
 
     private static function isAdminOrDivisionLeader(User $user): bool
     {
-        return $user->isDivisionLeader() || $user->isRole('admin');
+        return $user->isDivisionLeader() || $user->can(Ability::ManageAllRankActions);
     }
 }
