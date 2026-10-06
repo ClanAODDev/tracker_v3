@@ -15,8 +15,12 @@ class MemberPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user)
+    public function before(User $user, ?string $ability = null, mixed ...$arguments)
     {
+        if ($ability === 'clearActivityReminders' && ($arguments[0] ?? null) instanceof Member && $arguments[0]->id === $user->member_id) {
+            return Response::deny('Cannot clear your own reminders');
+        }
+
         if ($user->can(Ability::ManageAllMembers) || $user->isDeveloper()) {
             return true;
         }
@@ -85,10 +89,6 @@ class MemberPolicy
      */
     public function clearActivityReminders(User $user, Member $member): Response
     {
-        if ($member->id === $user->member_id) {
-            return Response::deny('Cannot clear your own reminders');
-        }
-
         return $user->can(Ability::ClearActivityReminders)
             ? Response::allow()
             : Response::deny();

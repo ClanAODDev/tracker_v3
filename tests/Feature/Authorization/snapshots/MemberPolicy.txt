@@ -826,8 +826,8 @@ remindActivity           | part_timer                               | squad_lead
 remindActivity           | part_timer                               | member                   | deny
 remindActivity           | part_timer                               | banned                   | deny
 remindActivity           | part_timer                               | pending                  | deny
-clearActivityReminders   | self                                     | admin                    | allow
-clearActivityReminders   | self                                     | developer                | allow
+clearActivityReminders   | self                                     | admin                    | deny
+clearActivityReminders   | self                                     | developer                | deny
 clearActivityReminders   | self                                     | admin_viewing_as_officer | deny
 clearActivityReminders   | self                                     | senior_leader            | deny
 clearActivityReminders   | self                                     | commanding_officer       | deny
