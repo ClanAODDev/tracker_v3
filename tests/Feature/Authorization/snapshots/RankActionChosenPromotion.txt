@@ -1,10 +1,10 @@
 create promotion         | PFC asking for Cpl                       | admin                    | saved as Specialist, approved
 create promotion         | PFC asking for Cpl                       | developer                | error:Error
 create promotion         | PFC asking for Cpl                       | admin_viewing_as_officer | saved as Specialist, pending
-create promotion         | PFC asking for Cpl                       | senior_leader            | saved as Specialist, pending
+create promotion         | PFC asking for Cpl                       | senior_leader            | not saved: data.member_id
 create promotion         | PFC asking for Cpl                       | commanding_officer       | saved as Corporal, approved
 create promotion         | PFC asking for Cpl                       | executive_officer        | saved as Corporal, approved
-create promotion         | PFC asking for Cpl                       | officer                  | saved as Specialist, pending
+create promotion         | PFC asking for Cpl                       | officer                  | not saved: data.member_id
 create promotion         | PFC asking for Cpl                       | platoon_leader           | saved as Specialist, pending
 create promotion         | PFC asking for Cpl                       | squad_leader             | saved as Specialist, pending
 create promotion         | PFC asking for Cpl                       | member                   | error:Error

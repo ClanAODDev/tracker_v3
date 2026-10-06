@@ -293,6 +293,11 @@ class RankActionResource extends Resource
                 })
                 ->rules([
                     'required',
+                    fn (): Closure => function (string $attribute, $value, Closure $fail) {
+                        if (! Member::query()->eligibleForRankAction(auth()->user())->whereKey($value)->exists()) {
+                            $fail('You cannot request a rank action for this member.');
+                        }
+                    },
                     fn (callable $get): Closure => function (string $attribute, $value, Closure $fail) use (
                         $get,
                         $min_days_rank_action
