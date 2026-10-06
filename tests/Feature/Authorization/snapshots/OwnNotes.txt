@@ -6,7 +6,8 @@ own notes                | mod member notes tab shown               | admin     
 own notes                | admin note list includes it              | admin                    | no
 own notes                | admin note form saves a note about self  | admin                    | not created
 own notes                | admin note edit page for own note        | admin                    | 404
-own notes                | leave note tab shown on own leave        | admin                    | yes
+own notes                | leave note tab shown on own leave        | admin                    | no
+own notes                | leave note tab shown on others' leave    | admin                    | yes
 own notes                | admin note list includes others' notes   | admin                    | yes
 own notes                | profile notes listed                     | developer                | 0
 own notes                | profile note count in stats              | developer                | 0
@@ -16,7 +17,8 @@ own notes                | mod member notes tab shown               | developer 
 own notes                | admin note list includes it              | developer                | no
 own notes                | admin note form saves a note about self  | developer                | not created
 own notes                | admin note edit page for own note        | developer                | 404
-own notes                | leave note tab shown on own leave        | developer                | yes
+own notes                | leave note tab shown on own leave        | developer                | no
+own notes                | leave note tab shown on others' leave    | developer                | yes
 own notes                | admin note list includes others' notes   | developer                | yes
 own notes                | profile notes listed                     | admin_viewing_as_officer | 0
 own notes                | profile note count in stats              | admin_viewing_as_officer | 0
@@ -26,7 +28,8 @@ own notes                | mod member notes tab shown               | admin_view
 own notes                | admin note list includes it              | admin_viewing_as_officer | no panel access
 own notes                | admin note form saves a note about self  | admin_viewing_as_officer | no panel access
 own notes                | admin note edit page for own note        | admin_viewing_as_officer | no panel access
-own notes                | leave note tab shown on own leave        | admin_viewing_as_officer | yes
+own notes                | leave note tab shown on own leave        | admin_viewing_as_officer | no
+own notes                | leave note tab shown on others' leave    | admin_viewing_as_officer | yes
 own notes                | admin note list includes others' notes   | admin_viewing_as_officer | no panel access
 own notes                | profile notes listed                     | senior_leader            | 0
 own notes                | profile note count in stats              | senior_leader            | 0
@@ -36,7 +39,8 @@ own notes                | mod member notes tab shown               | senior_lea
 own notes                | admin note list includes it              | senior_leader            | no panel access
 own notes                | admin note form saves a note about self  | senior_leader            | no panel access
 own notes                | admin note edit page for own note        | senior_leader            | no panel access
-own notes                | leave note tab shown on own leave        | senior_leader            | yes
+own notes                | leave note tab shown on own leave        | senior_leader            | no
+own notes                | leave note tab shown on others' leave    | senior_leader            | yes
 own notes                | admin note list includes others' notes   | senior_leader            | no panel access
 own notes                | profile notes listed                     | commanding_officer       | 0
 own notes                | profile note count in stats              | commanding_officer       | 0
@@ -46,7 +50,8 @@ own notes                | mod member notes tab shown               | commanding
 own notes                | admin note list includes it              | commanding_officer       | no panel access
 own notes                | admin note form saves a note about self  | commanding_officer       | no panel access
 own notes                | admin note edit page for own note        | commanding_officer       | no panel access
-own notes                | leave note tab shown on own leave        | commanding_officer       | yes
+own notes                | leave note tab shown on own leave        | commanding_officer       | no
+own notes                | leave note tab shown on others' leave    | commanding_officer       | yes
 own notes                | admin note list includes others' notes   | commanding_officer       | no panel access
 own notes                | profile notes listed                     | executive_officer        | 0
 own notes                | profile note count in stats              | executive_officer        | 0
@@ -56,7 +61,8 @@ own notes                | mod member notes tab shown               | executive_
 own notes                | admin note list includes it              | executive_officer        | no panel access
 own notes                | admin note form saves a note about self  | executive_officer        | no panel access
 own notes                | admin note edit page for own note        | executive_officer        | no panel access
-own notes                | leave note tab shown on own leave        | executive_officer        | yes
+own notes                | leave note tab shown on own leave        | executive_officer        | no
+own notes                | leave note tab shown on others' leave    | executive_officer        | yes
 own notes                | admin note list includes others' notes   | executive_officer        | no panel access
 own notes                | profile notes listed                     | officer                  | 0
 own notes                | profile note count in stats              | officer                  | 0
@@ -66,7 +72,8 @@ own notes                | mod member notes tab shown               | officer   
 own notes                | admin note list includes it              | officer                  | no panel access
 own notes                | admin note form saves a note about self  | officer                  | no panel access
 own notes                | admin note edit page for own note        | officer                  | no panel access
-own notes                | leave note tab shown on own leave        | officer                  | yes
+own notes                | leave note tab shown on own leave        | officer                  | no
+own notes                | leave note tab shown on others' leave    | officer                  | yes
 own notes                | admin note list includes others' notes   | officer                  | no panel access
 own notes                | profile notes listed                     | platoon_leader           | 0
 own notes                | profile note count in stats              | platoon_leader           | 0
@@ -76,7 +83,8 @@ own notes                | mod member notes tab shown               | platoon_le
 own notes                | admin note list includes it              | platoon_leader           | no panel access
 own notes                | admin note form saves a note about self  | platoon_leader           | no panel access
 own notes                | admin note edit page for own note        | platoon_leader           | no panel access
-own notes                | leave note tab shown on own leave        | platoon_leader           | yes
+own notes                | leave note tab shown on own leave        | platoon_leader           | no
+own notes                | leave note tab shown on others' leave    | platoon_leader           | yes
 own notes                | admin note list includes others' notes   | platoon_leader           | no panel access
 own notes                | profile notes listed                     | squad_leader             | 0
 own notes                | profile note count in stats              | squad_leader             | 0
@@ -86,7 +94,8 @@ own notes                | mod member notes tab shown               | squad_lead
 own notes                | admin note list includes it              | squad_leader             | no panel access
 own notes                | admin note form saves a note about self  | squad_leader             | no panel access
 own notes                | admin note edit page for own note        | squad_leader             | no panel access
-own notes                | leave note tab shown on own leave        | squad_leader             | yes
+own notes                | leave note tab shown on own leave        | squad_leader             | no
+own notes                | leave note tab shown on others' leave    | squad_leader             | yes
 own notes                | admin note list includes others' notes   | squad_leader             | no panel access
 own notes                | profile notes listed                     | member                   | 0
 own notes                | profile note count in stats              | member                   | 0
@@ -97,6 +106,7 @@ own notes                | admin note list includes it              | member    
 own notes                | admin note form saves a note about self  | member                   | no panel access
 own notes                | admin note edit page for own note        | member                   | no panel access
 own notes                | leave note tab shown on own leave        | member                   | no panel access
+own notes                | leave note tab shown on others' leave    | member                   | no panel access
 own notes                | admin note list includes others' notes   | member                   | no panel access
 own notes                | profile notes listed                     | banned                   | 403
 own notes                | profile note count in stats              | banned                   | 403
@@ -107,5 +117,6 @@ own notes                | admin note list includes it              | banned    
 own notes                | admin note form saves a note about self  | banned                   | no panel access
 own notes                | admin note edit page for own note        | banned                   | no panel access
 own notes                | leave note tab shown on own leave        | banned                   | no panel access
+own notes                | leave note tab shown on others' leave    | banned                   | no panel access
 own notes                | admin note list includes others' notes   | banned                   | no panel access
 own notes                | (all surfaces)                           | pending                  | n/a

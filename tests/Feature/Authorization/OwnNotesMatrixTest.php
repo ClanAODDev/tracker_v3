@@ -85,6 +85,12 @@ class OwnNotesMatrixTest extends PermissionMatrixTestCase
                 : 'no panel access');
             $leave->delete();
 
+            $otherLeave = Leave::factory()->create(['member_id' => $this->world->targets['other_division']->id]);
+            $lines[]    = self::line('own notes', "leave note tab shown on others' leave", $actor, $user->canAccessPanel(Filament::getPanel('mod'))
+                ? (LeaveNoteRelationManager::canViewForRecord($otherLeave, EditLeave::class) ? 'yes' : 'no')
+                : 'no panel access');
+            $otherLeave->delete();
+
             $lines[] = self::line('own notes', "admin note list includes others' notes", $actor, $user->canAccessPanel(Filament::getPanel('admin'))
                 ? (NoteResource::getEloquentQuery()->whereKey($otherNote->id)->exists() ? 'yes' : 'no')
                 : 'no panel access');
