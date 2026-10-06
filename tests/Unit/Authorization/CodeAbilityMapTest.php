@@ -91,6 +91,16 @@ class CodeAbilityMapTest extends TestCase
     }
 
     #[Test]
+    public function every_ability_is_described_for_the_permissions_screen(): void
+    {
+        foreach (Ability::cases() as $ability) {
+            $this->assertNotSame('', $ability->label(), $ability->name);
+            $this->assertNotSame('', $ability->area(), $ability->name);
+            $this->assertNotSame('', $ability->description(), $ability->name);
+        }
+    }
+
+    #[Test]
     public function guests_hold_no_abilities(): void
     {
         foreach (Ability::cases() as $ability) {
@@ -167,6 +177,7 @@ class CodeAbilityMapTest extends TestCase
             Ability::UseSeniorLeaderTags->value         => [$is(['admin', 'sr_ldr']), null],
             Ability::UseOfficerTags->value              => [$is('officer'), $is(['admin', 'sr_ldr'])],
             Ability::ManageAllTickets->value            => [$is('admin'), null],
+            Ability::ManagePermissions->value           => [$is('admin'), null],
         ];
 
         return $checks;
