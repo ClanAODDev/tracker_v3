@@ -3,6 +3,8 @@
 namespace Tests\Unit\Authorization;
 
 use App\Authorization\AbilityMap;
+use App\Authorization\CodeAbilityMap;
+use App\Authorization\ForumRoleSource;
 use App\Enums\Ability;
 use App\Enums\Role;
 use App\Models\User;
@@ -12,6 +14,13 @@ use Tests\TestCase;
 
 class CodeAbilityMapTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->app->instance(AbilityMap::class, new CodeAbilityMap(new ForumRoleSource));
+    }
+
     #[Test]
     public function every_ability_reproduces_todays_role_checks_for_every_role_and_impersonation(): void
     {

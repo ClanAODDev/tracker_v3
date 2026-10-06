@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Authorization\AbilityMap;
-use App\Authorization\CodeAbilityMap;
+use App\Authorization\DatabaseAbilityMap;
 use App\Authorization\ForumRoleSource;
 use App\Authorization\RoleSource;
 use App\Enums\Ability;
@@ -64,7 +64,7 @@ class AuthServiceProvider extends ServiceProvider
         parent::register();
 
         $this->app->singleton(RoleSource::class, ForumRoleSource::class);
-        $this->app->singleton(AbilityMap::class, CodeAbilityMap::class);
+        $this->app->scoped(AbilityMap::class, DatabaseAbilityMap::class);
     }
 
     /**
