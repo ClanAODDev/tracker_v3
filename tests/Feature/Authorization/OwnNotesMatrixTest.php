@@ -4,8 +4,11 @@ namespace Tests\Feature\Authorization;
 
 use App\Filament\Admin\Resources\NoteResource;
 use App\Filament\Admin\Resources\NoteResource\Pages\CreateNote;
+use App\Filament\Mod\Resources\LeaveResource\Pages\EditLeave;
+use App\Filament\Mod\Resources\LeaveResource\RelationManagers\NoteRelationManager as LeaveNoteRelationManager;
 use App\Filament\Mod\Resources\MemberResource\Pages\EditMember;
 use App\Filament\Mod\Resources\MemberResource\RelationManagers\NotesRelationManager;
+use App\Models\Leave;
 use App\Models\Note;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
@@ -75,6 +78,12 @@ class OwnNotesMatrixTest extends PermissionMatrixTestCase
             $lines[] = self::line('own notes', 'admin note edit page for own note', $actor, $user->canAccessPanel(Filament::getPanel('admin'))
                 ? $this->adminEditPageStatus($actor, $note)
                 : 'no panel access');
+
+            $leave   = Leave::factory()->create(['member_id' => $member->id]);
+            $lines[] = self::line('own notes', 'leave note tab shown on own leave', $actor, $user->canAccessPanel(Filament::getPanel('mod'))
+                ? (LeaveNoteRelationManager::canViewForRecord($leave, EditLeave::class) ? 'yes' : 'no')
+                : 'no panel access');
+            $leave->delete();
 
             $lines[] = self::line('own notes', "admin note list includes others' notes", $actor, $user->canAccessPanel(Filament::getPanel('admin'))
                 ? (NoteResource::getEloquentQuery()->whereKey($otherNote->id)->exists() ? 'yes' : 'no')
