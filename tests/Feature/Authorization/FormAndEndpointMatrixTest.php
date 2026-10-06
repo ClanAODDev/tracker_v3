@@ -124,7 +124,7 @@ class FormAndEndpointMatrixTest extends PermissionMatrixTestCase
                     ->fillForm(['member_id' => $target->id, 'override_existing' => true])
                     ->call('create');
 
-                return str_contains((string) $page->errors()->first('data.member_id'), 'already exists') ? 'blocked by 30-day rule' : 'not blocked';
+                return collect($page->errors()->get('data.member_id'))->contains(fn ($error) => str_contains($error, 'already exists')) ? 'blocked by 30-day rule' : 'not blocked';
             }));
         }
 
