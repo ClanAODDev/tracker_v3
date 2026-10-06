@@ -141,7 +141,7 @@ class MemberProfileData
                     'remindedToday'     => $member->activityReminders->contains(fn ($r) => $r->created_at->isToday()),
                     'canRemind'         => $user->can('remindActivity', $member),
                     'remindUrl'         => route('member.set-activity-reminder', $member->clan_id),
-                    'canClearReminders' => $user->can(Ability::ClearActivityReminders) && $user->member?->clan_id !== $member->clan_id,
+                    'canClearReminders' => $user->can('clearActivityReminders', $member),
                     'clearRemindersUrl' => route('member.clear-activity-reminders', $member->clan_id),
                 ],
                 'recruiting' => [

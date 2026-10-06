@@ -103,7 +103,7 @@ profile of same_squad    | canFullHistory                           | developer 
 profile of same_squad    | canViewTrashed                           | developer                | true
 profile of same_squad    | customFields[].canEdit                   | developer                | true
 profile of same_squad    | detailsManagement.canEditHandles         | developer                | true
-profile of same_squad    | stats.activity.canClearReminders         | developer                | false
+profile of same_squad    | stats.activity.canClearReminders         | developer                | true
 profile of same_squad    | stats.activity.canRemind                 | developer                | true
 profile of same_squad    | (status)                                 | admin_viewing_as_officer | 200
 profile of same_squad    | canCreateNote                            | admin_viewing_as_officer | true
@@ -192,7 +192,7 @@ profile of same_platoon_other_squad | canFullHistory                           |
 profile of same_platoon_other_squad | canViewTrashed                           | developer                | true
 profile of same_platoon_other_squad | customFields[].canEdit                   | developer                | true
 profile of same_platoon_other_squad | detailsManagement.canEditHandles         | developer                | true
-profile of same_platoon_other_squad | stats.activity.canClearReminders         | developer                | false
+profile of same_platoon_other_squad | stats.activity.canClearReminders         | developer                | true
 profile of same_platoon_other_squad | stats.activity.canRemind                 | developer                | true
 profile of same_platoon_other_squad | (status)                                 | admin_viewing_as_officer | 200
 profile of same_platoon_other_squad | canCreateNote                            | admin_viewing_as_officer | true
@@ -281,7 +281,7 @@ profile of other_platoon | canFullHistory                           | developer 
 profile of other_platoon | canViewTrashed                           | developer                | true
 profile of other_platoon | customFields[].canEdit                   | developer                | true
 profile of other_platoon | detailsManagement.canEditHandles         | developer                | true
-profile of other_platoon | stats.activity.canClearReminders         | developer                | false
+profile of other_platoon | stats.activity.canClearReminders         | developer                | true
 profile of other_platoon | stats.activity.canRemind                 | developer                | true
 profile of other_platoon | (status)                                 | admin_viewing_as_officer | 200
 profile of other_platoon | canCreateNote                            | admin_viewing_as_officer | true
@@ -370,7 +370,7 @@ profile of unassigned    | canFullHistory                           | developer 
 profile of unassigned    | canViewTrashed                           | developer                | true
 profile of unassigned    | customFields[].canEdit                   | developer                | true
 profile of unassigned    | detailsManagement.canEditHandles         | developer                | true
-profile of unassigned    | stats.activity.canClearReminders         | developer                | false
+profile of unassigned    | stats.activity.canClearReminders         | developer                | true
 profile of unassigned    | stats.activity.canRemind                 | developer                | true
 profile of unassigned    | (status)                                 | admin_viewing_as_officer | 200
 profile of unassigned    | canCreateNote                            | admin_viewing_as_officer | true
@@ -457,7 +457,7 @@ profile of other_division | canCreateNote                            | developer
 profile of other_division | canFullHistory                           | developer                | false
 profile of other_division | canViewTrashed                           | developer                | true
 profile of other_division | detailsManagement.canEditHandles         | developer                | true
-profile of other_division | stats.activity.canClearReminders         | developer                | false
+profile of other_division | stats.activity.canClearReminders         | developer                | true
 profile of other_division | stats.activity.canRemind                 | developer                | true
 profile of other_division | (status)                                 | admin_viewing_as_officer | 200
 profile of other_division | canCreateNote                            | admin_viewing_as_officer | true
@@ -531,7 +531,7 @@ profile of higher_rank   | canFullHistory                           | developer 
 profile of higher_rank   | canViewTrashed                           | developer                | true
 profile of higher_rank   | customFields[].canEdit                   | developer                | true
 profile of higher_rank   | detailsManagement.canEditHandles         | developer                | true
-profile of higher_rank   | stats.activity.canClearReminders         | developer                | false
+profile of higher_rank   | stats.activity.canClearReminders         | developer                | true
 profile of higher_rank   | stats.activity.canRemind                 | developer                | true
 profile of higher_rank   | (status)                                 | admin_viewing_as_officer | 200
 profile of higher_rank   | canCreateNote                            | admin_viewing_as_officer | true
@@ -618,7 +618,7 @@ profile of part_timer    | canCreateNote                            | developer 
 profile of part_timer    | canFullHistory                           | developer                | false
 profile of part_timer    | canViewTrashed                           | developer                | true
 profile of part_timer    | detailsManagement.canEditHandles         | developer                | true
-profile of part_timer    | stats.activity.canClearReminders         | developer                | false
+profile of part_timer    | stats.activity.canClearReminders         | developer                | true
 profile of part_timer    | stats.activity.canRemind                 | developer                | true
 profile of part_timer    | (status)                                 | admin_viewing_as_officer | 200
 profile of part_timer    | canCreateNote                            | admin_viewing_as_officer | true
