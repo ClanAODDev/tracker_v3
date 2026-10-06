@@ -1,0 +1,56 @@
+own notes                | profile notes listed                     | admin                    | 1
+own notes                | profile note count in stats              | admin                    | 1
+own notes                | division notes page lists it             | admin                    | no
+own notes                | mod member notes tab shown               | admin                    | yes
+own notes                | admin note list includes it              | admin                    | yes
+own notes                | profile notes listed                     | developer                | 1
+own notes                | profile note count in stats              | developer                | 1
+own notes                | division notes page lists it             | developer                | no
+own notes                | mod member notes tab shown               | developer                | yes
+own notes                | admin note list includes it              | developer                | yes
+own notes                | profile notes listed                     | admin_viewing_as_officer | 1
+own notes                | profile note count in stats              | admin_viewing_as_officer | 1
+own notes                | division notes page lists it             | admin_viewing_as_officer | no
+own notes                | mod member notes tab shown               | admin_viewing_as_officer | yes
+own notes                | admin note list includes it              | admin_viewing_as_officer | no panel access
+own notes                | profile notes listed                     | senior_leader            | 1
+own notes                | profile note count in stats              | senior_leader            | 1
+own notes                | division notes page lists it             | senior_leader            | no
+own notes                | mod member notes tab shown               | senior_leader            | yes
+own notes                | admin note list includes it              | senior_leader            | no panel access
+own notes                | profile notes listed                     | commanding_officer       | 1
+own notes                | profile note count in stats              | commanding_officer       | 1
+own notes                | division notes page lists it             | commanding_officer       | no
+own notes                | mod member notes tab shown               | commanding_officer       | yes
+own notes                | admin note list includes it              | commanding_officer       | no panel access
+own notes                | profile notes listed                     | executive_officer        | 1
+own notes                | profile note count in stats              | executive_officer        | 1
+own notes                | division notes page lists it             | executive_officer        | no
+own notes                | mod member notes tab shown               | executive_officer        | yes
+own notes                | admin note list includes it              | executive_officer        | no panel access
+own notes                | profile notes listed                     | officer                  | 1
+own notes                | profile note count in stats              | officer                  | 1
+own notes                | division notes page lists it             | officer                  | no
+own notes                | mod member notes tab shown               | officer                  | yes
+own notes                | admin note list includes it              | officer                  | no panel access
+own notes                | profile notes listed                     | platoon_leader           | 1
+own notes                | profile note count in stats              | platoon_leader           | 1
+own notes                | division notes page lists it             | platoon_leader           | no
+own notes                | mod member notes tab shown               | platoon_leader           | yes
+own notes                | admin note list includes it              | platoon_leader           | no panel access
+own notes                | profile notes listed                     | squad_leader             | 1
+own notes                | profile note count in stats              | squad_leader             | 1
+own notes                | division notes page lists it             | squad_leader             | no
+own notes                | mod member notes tab shown               | squad_leader             | yes
+own notes                | admin note list includes it              | squad_leader             | no panel access
+own notes                | profile notes listed                     | member                   | 0
+own notes                | profile note count in stats              | member                   | 0
+own notes                | division notes page lists it             | member                   | 403
+own notes                | mod member notes tab shown               | member                   | no panel access
+own notes                | admin note list includes it              | member                   | no panel access
+own notes                | profile notes listed                     | banned                   | 403
+own notes                | profile note count in stats              | banned                   | 403
+own notes                | division notes page lists it             | banned                   | 403
+own notes                | mod member notes tab shown               | banned                   | no panel access
+own notes                | admin note list includes it              | banned                   | no panel access
+own notes                | (all surfaces)                           | pending                  | n/a
