@@ -86,6 +86,25 @@ class TagAndNotePolicyMatrixTest extends PermissionMatrixTestCase
             }
         }
 
+        $ownNotes = [];
+
+        foreach (PermissionWorld::ACTORS as $actor) {
+            $member = $this->world->target($actor, 'self');
+
+            if ($member) {
+                $ownNotes[$actor] = Note::create([
+                    'body'      => "{$actor} own misc",
+                    'member_id' => $member->id,
+                    'author_id' => $author->id,
+                    'type'      => 'misc',
+                ]);
+            }
+        }
+
+        foreach (['edit', 'delete', 'restore', 'forceDelete'] as $ability) {
+            $checks[] = [$ability, 'self misc', fn (string $actor) => isset($ownNotes[$actor]) ? [$ownNotes[$actor]->fresh()] : null];
+        }
+
         $this->assertMatchesSnapshot('NotePolicy', $this->evaluate(PermissionWorld::ACTORS, $checks));
     }
 
