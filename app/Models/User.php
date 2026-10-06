@@ -119,6 +119,11 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return $this->hasMany(Note::class);
     }
 
+    public function grantedAbilities(): HasMany
+    {
+        return $this->hasMany(UserAbility::class);
+    }
+
     public function scopeAdmins($query): void
     {
         $query->whereRole(Role::ADMIN)->orderBy('name', 'ASC');
