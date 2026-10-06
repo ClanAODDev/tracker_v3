@@ -6,6 +6,7 @@ use App\Enums\Ability;
 use App\Models\Note;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class NotePolicy
 {
@@ -13,8 +14,15 @@ class NotePolicy
 
     public function __construct() {}
 
-    public function before(User $user)
+    public function before(User $user, ?string $ability = null, mixed ...$arguments)
     {
+        if (in_array($ability, ['edit', 'delete', 'forceDelete'], true)
+            && ($arguments[0] ?? null) instanceof Note
+            && $user->member_id !== null
+            && $arguments[0]->member_id === $user->member_id) {
+            return Response::deny('You cannot edit or delete notes on your own profile');
+        }
+
         if ($user->can(Ability::ManageAllNotes) || $user->isDeveloper()) {
             return true;
         }
