@@ -33,6 +33,11 @@ class NotePolicy
         return $this->show($user);
     }
 
+    public function createForMember(User $user, Member $member): bool
+    {
+        return $this->create($user);
+    }
+
     public function show(User $user): bool
     {
         if (! $user->can(Ability::ViewNotes)) {
@@ -95,9 +100,9 @@ class NotePolicy
     private function concernsOwnProfile(User $user, ?string $ability, mixed $subject): bool
     {
         $memberId = match (true) {
-            $subject instanceof Note && in_array($ability, ['edit', 'delete', 'forceDelete'], true) => $subject->member_id,
-            $subject instanceof Member && $ability === 'viewForMember'                              => $subject->id,
-            default                                                                                 => null,
+            $subject instanceof Note && in_array($ability, ['edit', 'delete', 'forceDelete'], true)      => $subject->member_id,
+            $subject instanceof Member && in_array($ability, ['viewForMember', 'createForMember'], true) => $subject->id,
+            default                                                                                      => null,
         };
 
         return $memberId !== null && $memberId === $user->member_id;

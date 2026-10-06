@@ -43,7 +43,11 @@ class NoteResource extends Resource
                     ->numeric()
                     ->default(null),
                 Select::make('member')
-                    ->relationship('member', 'name')
+                    ->relationship('member', 'name', fn (Builder $query) => $query->when(
+                        auth()->user()?->member_id,
+                        fn (Builder $query, int $memberId) => $query->whereKeyNot($memberId)
+                    ))
+                    ->notIn(fn () => array_filter([auth()->user()?->member_id]))
                     ->searchable(),
                 Select::make('author')
                     ->relationship('author', 'name')
