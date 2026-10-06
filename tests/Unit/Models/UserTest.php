@@ -115,40 +115,6 @@ class UserTest extends TestCase
     }
 
     #[Test]
-    public function is_squad_leader_returns_correct_value()
-    {
-        $division        = $this->createActiveDivision();
-        $squadLeaderUser = $this->createMemberWithUser([
-            'division_id' => $division->id,
-            'position'    => Position::SQUAD_LEADER,
-        ]);
-        $memberUser = $this->createMemberWithUser([
-            'division_id' => $division->id,
-            'position'    => Position::MEMBER,
-        ]);
-
-        $this->assertTrue($squadLeaderUser->isSquadLeader());
-        $this->assertFalse($memberUser->isSquadLeader());
-    }
-
-    #[Test]
-    public function is_platoon_leader_returns_correct_value()
-    {
-        $division          = $this->createActiveDivision();
-        $platoonLeaderUser = $this->createMemberWithUser([
-            'division_id' => $division->id,
-            'position'    => Position::PLATOON_LEADER,
-        ]);
-        $memberUser = $this->createMemberWithUser([
-            'division_id' => $division->id,
-            'position'    => Position::MEMBER,
-        ]);
-
-        $this->assertTrue($platoonLeaderUser->isPlatoonLeader());
-        $this->assertFalse($memberUser->isPlatoonLeader());
-    }
-
-    #[Test]
     public function is_division_leader_returns_true_for_co_or_xo()
     {
         $division = $this->createActiveDivision();

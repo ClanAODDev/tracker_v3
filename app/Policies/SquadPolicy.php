@@ -2,7 +2,9 @@
 
 namespace App\Policies;
 
+use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
+use App\Enums\UnitLevel;
 use App\Models\Squad;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -42,7 +44,7 @@ class SquadPolicy
             return true;
         }
 
-        if ($user->isPlatoonLeader() && $squad->platoon->leader_id === $user->member->clan_id) {
+        if (app(UnitHierarchy::class)->leadershipLevel($user) === UnitLevel::Platoon && app(UnitHierarchy::class)->leads($user->member, $squad->platoon)) {
             return true;
         }
 
@@ -59,7 +61,7 @@ class SquadPolicy
             return true;
         }
 
-        if ($user->isPlatoonLeader() && $squad->platoon->leader_id === $user->member->clan_id) {
+        if (app(UnitHierarchy::class)->leadershipLevel($user) === UnitLevel::Platoon && app(UnitHierarchy::class)->leads($user->member, $squad->platoon)) {
             return true;
         }
 

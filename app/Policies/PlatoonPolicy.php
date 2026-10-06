@@ -2,7 +2,9 @@
 
 namespace App\Policies;
 
+use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
+use App\Enums\UnitLevel;
 use App\Models\Platoon;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -39,7 +41,7 @@ class PlatoonPolicy
             return $platoon->division_id === $member->division_id;
         }
 
-        if ($user->isPlatoonLeader() && $member->clan_id == $platoon->leader_id) {
+        if (app(UnitHierarchy::class)->leadershipLevel($user) === UnitLevel::Platoon && app(UnitHierarchy::class)->leads($member, $platoon)) {
             return $platoon->division_id === $member->division_id;
         }
 

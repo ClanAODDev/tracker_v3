@@ -23,42 +23,6 @@ class MemberTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function is_squad_leader_returns_true_when_member_is_squad_leader()
-    {
-        $squad  = $this->createSquad();
-        $member = $this->createSquadLeader($squad);
-
-        $this->assertTrue($member->isSquadLeader($squad));
-    }
-
-    #[Test]
-    public function is_squad_leader_returns_false_when_member_is_not_squad_leader()
-    {
-        $squad  = $this->createSquad();
-        $member = $this->createMember(['squad_id' => $squad->id]);
-
-        $this->assertFalse($member->isSquadLeader($squad));
-    }
-
-    #[Test]
-    public function is_platoon_leader_returns_true_when_member_is_platoon_leader()
-    {
-        $platoon = $this->createPlatoon();
-        $member  = $this->createPlatoonLeader($platoon);
-
-        $this->assertTrue($member->isPlatoonLeader($platoon));
-    }
-
-    #[Test]
-    public function is_platoon_leader_returns_false_when_member_is_not_platoon_leader()
-    {
-        $platoon = $this->createPlatoon();
-        $member  = $this->createMember(['platoon_id' => $platoon->id]);
-
-        $this->assertFalse($member->isPlatoonLeader($platoon));
-    }
-
-    #[Test]
     public function is_division_leader_returns_true_for_commanding_officer()
     {
         $division = $this->createActiveDivision();

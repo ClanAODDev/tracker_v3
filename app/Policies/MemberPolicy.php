@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
 use App\Enums\Role;
 use App\Models\Division;
@@ -232,11 +233,7 @@ class MemberPolicy
             return true;
         }
 
-        if ($member->squad_id && $member->squad && $userMember->isSquadLeader($member->squad)) {
-            return true;
-        }
-
-        if ($member->platoon_id && $member->platoon && $userMember->isPlatoonLeader($member->platoon)) {
+        if (app(UnitHierarchy::class)->leadsUnitOf($userMember, $member)) {
             return true;
         }
 

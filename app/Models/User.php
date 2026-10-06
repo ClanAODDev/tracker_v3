@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Authorization\RoleSource;
+use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
 use App\Enums\Accent;
 use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Enums\Role;
+use App\Enums\UnitLevel;
 use App\Settings\UserSettings;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
@@ -186,16 +188,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return $this->member?->position === Position::MEMBER;
     }
 
-    public function isSquadLeader(): bool
-    {
-        return $this->member?->position === Position::SQUAD_LEADER;
-    }
-
-    public function isPlatoonLeader(): bool
-    {
-        return $this->member?->position === Position::PLATOON_LEADER;
-    }
-
     public function isDivisionLeader(): bool
     {
         return in_array($this->member?->position, [
@@ -369,6 +361,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
     {
         $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
 
-        return $this->isPlatoonLeader() && $targetRank->value <= $maxPlRank->value;
+        return app(UnitHierarchy::class)->leadershipLevel($this) === UnitLevel::Platoon && $targetRank->value <= $maxPlRank->value;
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Policies;
 
+use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
 use App\Enums\Rank;
+use App\Enums\UnitLevel;
 use App\Models\RankAction;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -47,8 +49,8 @@ class RankActionPolicy
 
         // platoon leader can see requests in their platoon below their rank
         if (
-            $user->isPlatoonLeader() &&
-            $record->member->platoon_id == $user->member->platoon_id &&
+            app(UnitHierarchy::class)->leadershipLevel($user) === UnitLevel::Platoon &&
+            app(UnitHierarchy::class)->sharesLedUnit($user->member, $record->member, UnitLevel::Platoon) &&
             $record->rank->isBelow($user->member->rank)
         ) {
             return true;

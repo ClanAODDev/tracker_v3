@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Activities\RecordsActivity;
+use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
 use App\Enums\DiscordStatus;
 use App\Enums\Position;
 use App\Enums\Rank;
+use App\Enums\UnitLevel;
 use App\Models\Member\HasCustomAttributes;
 use App\Presenters\MemberPresenter;
 use Illuminate\Database\Eloquent\Builder;
@@ -142,11 +144,11 @@ class Member extends Model
 
     public function moveToDivision(int $divisionId): void
     {
-        if ($this->position === Position::SQUAD_LEADER && $this->squad?->leader_id === $this->clan_id) {
+        if ($this->position === Position::SQUAD_LEADER && $this->squad && app(UnitHierarchy::class)->leads($this, $this->squad)) {
             $this->squad->update(['leader_id' => 0]);
         }
 
-        if ($this->position === Position::PLATOON_LEADER && $this->platoon?->leader_id === $this->clan_id) {
+        if ($this->position === Position::PLATOON_LEADER && $this->platoon && app(UnitHierarchy::class)->leads($this, $this->platoon)) {
             $this->platoon->update(['leader_id' => 0]);
         }
 
@@ -265,16 +267,6 @@ class Member extends Model
         return $this->belongsToMany(DivisionTag::class, 'member_tag')
             ->withPivot('assigned_by')
             ->withTimestamps();
-    }
-
-    public function isSquadLeader(Squad $squad): bool
-    {
-        return $this->clan_id === $squad->leader_id;
-    }
-
-    public function isPlatoonLeader(Platoon $platoon): bool
-    {
-        return $this->clan_id === $platoon->leader_id;
     }
 
     public function isDivisionLeader(Division $division): bool
@@ -406,14 +398,16 @@ class Member extends Model
             $query->where('name', 'like', "%{$search}%");
         }
 
+        $units = app(UnitHierarchy::class);
+
         return $query
             ->where('id', '<>', $currentMember->id)
-            ->when($user->isMember() || $user->isSquadLeader(), fn (Builder $query) => $query
-                ->where('squad_id', $currentMember->squad_id)
+            ->when($user->isMember() || $units->leadershipLevel($user) === UnitLevel::Squad, fn (Builder $query) => $units
+                ->scopeToLedUnit($query, $currentMember, UnitLevel::Squad)
                 ->where('rank', '<', $roleLimits['squadLeader'])
             )
-            ->when($user->isPlatoonLeader(), fn (Builder $query) => $query
-                ->where('platoon_id', $currentMember->platoon_id)
+            ->when($units->leadershipLevel($user) === UnitLevel::Platoon, fn (Builder $query) => $units
+                ->scopeToLedUnit($query, $currentMember, UnitLevel::Platoon)
                 ->where('rank', '<', $roleLimits['platoonLeader'])
             )
             ->when($user->isDivisionLeader() && ! $user->can(Ability::ActAcrossDivisions), fn (Builder $query) => $query

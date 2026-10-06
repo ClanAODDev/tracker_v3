@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
 use App\Enums\Rank;
+use App\Enums\UnitLevel;
 use Flashadvocate\FilamentReactions\Concerns\HasReactions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -69,8 +71,7 @@ class RankAction extends Model implements Commentable
 
         $query->whereHas('member', function (Builder $memberQuery) use ($user, $member) {
             $memberQuery
-                ->when($user->isPlatoonLeader(), fn ($q) => $q->where('platoon_id', $member->platoon_id))
-                ->when($user->isSquadLeader(), fn ($q) => $q->where('squad_id', $member->squad_id))
+                ->when(app(UnitHierarchy::class)->leadershipLevel($user), fn ($q, UnitLevel $level) => app(UnitHierarchy::class)->scopeToLedUnit($q, $member, $level))
                 ->when(! $user->can(Ability::ActAcrossDivisions), fn ($q) => $q->where('division_id', $member->division_id));
         });
 

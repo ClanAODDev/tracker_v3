@@ -2,8 +2,10 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
 use App\Enums\Rank;
+use App\Enums\UnitLevel;
 use App\Filament\Mod\Resources\RankActionResource\Pages\CreateRankAction;
 use App\Filament\Mod\Resources\RankActionResource\Pages\EditRankAction;
 use App\Filament\Mod\Resources\RankActionResource\Pages\ImportRankHistory;
@@ -280,11 +282,13 @@ class RankActionResource extends Resource
                     $user   = auth()->user();
                     $append = 'You cannot select yourself or others of greater rank.';
 
+                    $level = app(UnitHierarchy::class)->leadershipLevel($user);
+
                     return match (true) {
-                        $user->isSquadLeader()    => "Only squad members up to PFC can be selected. {$append}",
-                        $user->isPlatoonLeader()  => "Only platoon members up to LCpl can be selected. {$append}",
-                        $user->isDivisionLeader() => "Only division members up to SGT can be selected. {$append}",
-                        default                   => $append,
+                        $level === UnitLevel::Squad   => "Only squad members up to PFC can be selected. {$append}",
+                        $level === UnitLevel::Platoon => "Only platoon members up to LCpl can be selected. {$append}",
+                        $user->isDivisionLeader()     => "Only division members up to SGT can be selected. {$append}",
+                        default                       => $append,
                     };
                 })
                 ->rules([
