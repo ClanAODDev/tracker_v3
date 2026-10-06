@@ -16,8 +16,14 @@ class OwnNotesMatrixTest extends PermissionMatrixTestCase
     {
         $this->buildWorld();
 
-        $author = $this->world->users['admin'];
-        $lines  = [];
+        $author    = $this->world->users['admin'];
+        $lines     = [];
+        $otherNote = Note::create([
+            'body'      => 'note about someone else',
+            'member_id' => $this->world->targets['other_division']->id,
+            'author_id' => $author->id,
+            'type'      => 'misc',
+        ]);
 
         foreach (PermissionWorld::ACTORS as $actor) {
             $member = $this->world->target($actor, 'self');
@@ -53,6 +59,10 @@ class OwnNotesMatrixTest extends PermissionMatrixTestCase
 
             $lines[] = self::line('own notes', 'admin note list includes it', $actor, $user->canAccessPanel(Filament::getPanel('admin'))
                 ? (NoteResource::getEloquentQuery()->whereKey($note->id)->exists() ? 'yes' : 'no')
+                : 'no panel access');
+
+            $lines[] = self::line('own notes', "admin note list includes others' notes", $actor, $user->canAccessPanel(Filament::getPanel('admin'))
+                ? (NoteResource::getEloquentQuery()->whereKey($otherNote->id)->exists() ? 'yes' : 'no')
                 : 'no panel access');
         }
 

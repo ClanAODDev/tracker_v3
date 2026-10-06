@@ -51,8 +51,8 @@ class MemberProfileData
         RankTimelineService $rankTimelineService,
     ) {
         $this->user           = auth()->user();
-        $this->canViewNotes   = $this->user->can('create', Note::class);
-        $this->canViewTrashed = $this->user->can('viewTrashed', Note::class);
+        $this->canViewNotes   = $this->user->can('create', Note::class) && $this->user->can('viewForMember', [Note::class, $member]);
+        $this->canViewTrashed = $this->user->can('viewTrashed', Note::class) && $this->user->can('viewForMember', [Note::class, $member]);
 
         $repository->loadProfileRelations($member);
         $this->division = $member->division;

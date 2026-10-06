@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Enums\Ability;
+use App\Models\Member;
 use App\Models\Note;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -16,16 +17,20 @@ class NotePolicy
 
     public function before(User $user, ?string $ability = null, mixed ...$arguments)
     {
-        if (in_array($ability, ['edit', 'delete', 'forceDelete'], true)
-            && ($arguments[0] ?? null) instanceof Note
-            && $user->member_id !== null
-            && $arguments[0]->member_id === $user->member_id) {
-            return Response::deny('You cannot edit or delete notes on your own profile');
+        $subject = is_string($arguments[0] ?? null) ? ($arguments[1] ?? null) : ($arguments[0] ?? null);
+
+        if ($this->concernsOwnProfile($user, $ability, $subject)) {
+            return Response::deny('Notes on your own profile are not available to you');
         }
 
         if ($user->can(Ability::ManageAllNotes) || $user->isDeveloper()) {
             return true;
         }
+    }
+
+    public function viewForMember(User $user, Member $member): bool
+    {
+        return $this->show($user);
     }
 
     public function show(User $user): bool
@@ -85,6 +90,17 @@ class NotePolicy
         }
 
         return $user->isDivisionLeader();
+    }
+
+    private function concernsOwnProfile(User $user, ?string $ability, mixed $subject): bool
+    {
+        $memberId = match (true) {
+            $subject instanceof Note && in_array($ability, ['edit', 'delete', 'forceDelete'], true) => $subject->member_id,
+            $subject instanceof Member && $ability === 'viewForMember'                              => $subject->id,
+            default                                                                                 => null,
+        };
+
+        return $memberId !== null && $memberId === $user->member_id;
     }
 
     private function restrictedByType(User $user, Note $note): bool
