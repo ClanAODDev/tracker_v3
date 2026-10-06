@@ -78,7 +78,7 @@ enum Ability: string
 
     public function label(): string
     {
-        return Str::headline($this->name);
+        return str_replace('Api ', 'API ', Str::headline($this->name));
     }
 
     public function area(): string
