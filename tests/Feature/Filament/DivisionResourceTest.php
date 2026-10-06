@@ -171,6 +171,46 @@ class DivisionResourceTest extends TestCase
     }
 
     #[Test]
+    public function appointing_a_new_co_steps_the_previous_co_down()
+    {
+        $division = $this->createActiveDivision();
+        $squad    = $this->createSquad($this->createPlatoon($division));
+        $previous = $this->createCommander($division);
+        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id]);
+
+        $this->invokeLeadershipHandler($division, 'handleNewCO', ['new_co' => $member->id]);
+
+        $this->assertEquals(Position::MEMBER, $previous->fresh()->position);
+        $this->assertEquals(Position::COMMANDING_OFFICER, $member->fresh()->position);
+        $this->assertSame(0, $member->fresh()->platoon_id);
+        $this->assertSame(0, $member->fresh()->squad_id);
+    }
+
+    #[Test]
+    public function appointing_the_first_co_clears_their_unit_assignment()
+    {
+        $division = $this->createActiveDivision();
+        $squad    = $this->createSquad($this->createPlatoon($division));
+        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id]);
+
+        $this->invokeLeadershipHandler($division, 'handleNewCO', ['new_co' => $member->id]);
+
+        $this->assertEquals(Position::COMMANDING_OFFICER, $member->fresh()->position);
+        $this->assertSame(0, $member->fresh()->squad_id);
+    }
+
+    #[Test]
+    public function removing_an_xo_returns_them_to_member()
+    {
+        $division = $this->createActiveDivision();
+        $xo       = $this->createExecutiveOfficer($division);
+
+        $this->invokeLeadershipHandler($division, 'handleXOs', ['executive_officers' => []]);
+
+        $this->assertEquals(Position::MEMBER, $xo->fresh()->position);
+    }
+
+    #[Test]
     public function warns_when_an_active_division_uses_a_disabled_handle_type()
     {
         $this->actingAs($this->createAdmin());
@@ -215,5 +255,13 @@ class DivisionResourceTest extends TestCase
         $page->callAction(TestAction::make('enableHandleType')->schemaComponent("handleAssignments.{$itemKey}.handle_id"));
 
         $this->assertTrue($disabled->fresh()->enabled);
+    }
+
+    private function invokeLeadershipHandler($division, string $method, array $data): void
+    {
+        $page = Livewire::actingAs($this->createAdmin())
+            ->test(EditDivision::class, ['record' => $division->getRouteKey()]);
+
+        (new \ReflectionMethod(EditDivision::class, $method))->invoke($page->instance(), $division->id, $data);
     }
 }

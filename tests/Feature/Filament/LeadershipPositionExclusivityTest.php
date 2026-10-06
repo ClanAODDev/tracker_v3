@@ -169,4 +169,26 @@ class LeadershipPositionExclusivityTest extends TestCase
         $this->assertEquals(Position::EXECUTIVE_OFFICER, $xo->fresh()->position);
         $this->assertNull($squad->fresh()->leader_id);
     }
+
+    #[Test]
+    public function replacing_a_squad_leader_returns_the_old_leader_to_member(): void
+    {
+        $division = $this->createActiveDivision();
+        $squad    = $this->createSquad($this->createPlatoon($division));
+        $previous = $this->createSquadLeader($squad);
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($this->createSeniorLeader($division));
+
+        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+            ->fillForm(['leader_id' => $member->clan_id])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertEquals(Position::SQUAD_LEADER, $member->fresh()->position);
+        $this->assertSame($squad->id, $member->fresh()->squad_id);
+        $this->assertEquals(Position::MEMBER, $previous->fresh()->position);
+        $this->assertSame(0, $previous->fresh()->platoon_id);
+        $this->assertSame(0, $previous->fresh()->squad_id);
+    }
 }

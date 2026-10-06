@@ -42,4 +42,20 @@ class DivisionOrgChartControllerTest extends TestCase
             ->assertOk()
             ->assertJsonPath('type', 'division');
     }
+
+    #[Test]
+    public function a_squad_leader_is_not_repeated_among_their_squads_members(): void
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+        $squad    = $this->createSquad($this->createPlatoon($division));
+        $leader   = $this->createSquadLeader($squad, ['name' => 'Squad Boss']);
+        $this->createMember(['division_id' => $division->id, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id, 'name' => 'Squad Grunt']);
+
+        $tree      = $this->actingAs($officer)->getJson(route('division.structure.data', $division->slug))->json();
+        $squadNode = collect($tree['children'])->firstWhere('type', 'platoon')['children'][0];
+
+        $this->assertSame(['Squad Grunt'], collect($squadNode['children'])->pluck('name')->all());
+        $this->assertNotNull($leader);
+    }
 }
