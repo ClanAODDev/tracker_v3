@@ -1,67 +1,100 @@
 own notes                | profile notes listed                     | admin                    | 0
 own notes                | profile note count in stats              | admin                    | 0
 own notes                | division notes page lists it             | admin                    | no
+own notes                | POST note on own profile                 | admin                    | 302 created
 own notes                | mod member notes tab shown               | admin                    | no
 own notes                | admin note list includes it              | admin                    | no
+own notes                | admin note form saves a note about self  | admin                    | created
+own notes                | admin note edit page for own note        | admin                    | 404
 own notes                | admin note list includes others' notes   | admin                    | yes
 own notes                | profile notes listed                     | developer                | 0
 own notes                | profile note count in stats              | developer                | 0
 own notes                | division notes page lists it             | developer                | no
+own notes                | POST note on own profile                 | developer                | 302 created
 own notes                | mod member notes tab shown               | developer                | no
 own notes                | admin note list includes it              | developer                | no
+own notes                | admin note form saves a note about self  | developer                | created
+own notes                | admin note edit page for own note        | developer                | 404
 own notes                | admin note list includes others' notes   | developer                | yes
 own notes                | profile notes listed                     | admin_viewing_as_officer | 0
 own notes                | profile note count in stats              | admin_viewing_as_officer | 0
 own notes                | division notes page lists it             | admin_viewing_as_officer | no
+own notes                | POST note on own profile                 | admin_viewing_as_officer | 302 created
 own notes                | mod member notes tab shown               | admin_viewing_as_officer | no
 own notes                | admin note list includes it              | admin_viewing_as_officer | no panel access
+own notes                | admin note form saves a note about self  | admin_viewing_as_officer | no panel access
+own notes                | admin note edit page for own note        | admin_viewing_as_officer | no panel access
 own notes                | admin note list includes others' notes   | admin_viewing_as_officer | no panel access
 own notes                | profile notes listed                     | senior_leader            | 0
 own notes                | profile note count in stats              | senior_leader            | 0
 own notes                | division notes page lists it             | senior_leader            | no
+own notes                | POST note on own profile                 | senior_leader            | 302 created
 own notes                | mod member notes tab shown               | senior_leader            | no
 own notes                | admin note list includes it              | senior_leader            | no panel access
+own notes                | admin note form saves a note about self  | senior_leader            | no panel access
+own notes                | admin note edit page for own note        | senior_leader            | no panel access
 own notes                | admin note list includes others' notes   | senior_leader            | no panel access
 own notes                | profile notes listed                     | commanding_officer       | 0
 own notes                | profile note count in stats              | commanding_officer       | 0
 own notes                | division notes page lists it             | commanding_officer       | no
+own notes                | POST note on own profile                 | commanding_officer       | 302 created
 own notes                | mod member notes tab shown               | commanding_officer       | no
 own notes                | admin note list includes it              | commanding_officer       | no panel access
+own notes                | admin note form saves a note about self  | commanding_officer       | no panel access
+own notes                | admin note edit page for own note        | commanding_officer       | no panel access
 own notes                | admin note list includes others' notes   | commanding_officer       | no panel access
 own notes                | profile notes listed                     | executive_officer        | 0
 own notes                | profile note count in stats              | executive_officer        | 0
 own notes                | division notes page lists it             | executive_officer        | no
+own notes                | POST note on own profile                 | executive_officer        | 302 created
 own notes                | mod member notes tab shown               | executive_officer        | no
 own notes                | admin note list includes it              | executive_officer        | no panel access
+own notes                | admin note form saves a note about self  | executive_officer        | no panel access
+own notes                | admin note edit page for own note        | executive_officer        | no panel access
 own notes                | admin note list includes others' notes   | executive_officer        | no panel access
 own notes                | profile notes listed                     | officer                  | 0
 own notes                | profile note count in stats              | officer                  | 0
 own notes                | division notes page lists it             | officer                  | no
+own notes                | POST note on own profile                 | officer                  | 302 created
 own notes                | mod member notes tab shown               | officer                  | no
 own notes                | admin note list includes it              | officer                  | no panel access
+own notes                | admin note form saves a note about self  | officer                  | no panel access
+own notes                | admin note edit page for own note        | officer                  | no panel access
 own notes                | admin note list includes others' notes   | officer                  | no panel access
 own notes                | profile notes listed                     | platoon_leader           | 0
 own notes                | profile note count in stats              | platoon_leader           | 0
 own notes                | division notes page lists it             | platoon_leader           | no
+own notes                | POST note on own profile                 | platoon_leader           | 302 created
 own notes                | mod member notes tab shown               | platoon_leader           | no
 own notes                | admin note list includes it              | platoon_leader           | no panel access
+own notes                | admin note form saves a note about self  | platoon_leader           | no panel access
+own notes                | admin note edit page for own note        | platoon_leader           | no panel access
 own notes                | admin note list includes others' notes   | platoon_leader           | no panel access
 own notes                | profile notes listed                     | squad_leader             | 0
 own notes                | profile note count in stats              | squad_leader             | 0
 own notes                | division notes page lists it             | squad_leader             | no
+own notes                | POST note on own profile                 | squad_leader             | 302 created
 own notes                | mod member notes tab shown               | squad_leader             | no
 own notes                | admin note list includes it              | squad_leader             | no panel access
+own notes                | admin note form saves a note about self  | squad_leader             | no panel access
+own notes                | admin note edit page for own note        | squad_leader             | no panel access
 own notes                | admin note list includes others' notes   | squad_leader             | no panel access
 own notes                | profile notes listed                     | member                   | 0
 own notes                | profile note count in stats              | member                   | 0
 own notes                | division notes page lists it             | member                   | 403
+own notes                | POST note on own profile                 | member                   | 403 not created
 own notes                | mod member notes tab shown               | member                   | no panel access
 own notes                | admin note list includes it              | member                   | no panel access
+own notes                | admin note form saves a note about self  | member                   | no panel access
+own notes                | admin note edit page for own note        | member                   | no panel access
 own notes                | admin note list includes others' notes   | member                   | no panel access
 own notes                | profile notes listed                     | banned                   | 403
 own notes                | profile note count in stats              | banned                   | 403
 own notes                | division notes page lists it             | banned                   | 403
+own notes                | POST note on own profile                 | banned                   | 403 not created
 own notes                | mod member notes tab shown               | banned                   | no panel access
 own notes                | admin note list includes it              | banned                   | no panel access
+own notes                | admin note form saves a note about self  | banned                   | no panel access
+own notes                | admin note edit page for own note        | banned                   | no panel access
 own notes                | admin note list includes others' notes   | banned                   | no panel access
 own notes                | (all surfaces)                           | pending                  | n/a
