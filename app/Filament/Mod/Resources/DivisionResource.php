@@ -4,6 +4,7 @@ namespace App\Filament\Mod\Resources;
 
 use App\Enums\Ability;
 use App\Enums\Rank;
+use App\Enums\UnitLeaderPower;
 use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
 use App\Filament\Mod\Resources\DivisionResource\Pages\ListDivisions;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\MemberFieldsRelationManager;
@@ -25,11 +26,13 @@ use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 
 class DivisionResource extends Resource
 {
@@ -119,6 +122,7 @@ class DivisionResource extends Resource
                                             ->helperText('Days without VoIP before marking inactive'),
                                         Select::make('settings.max_platoon_leader_rank')
                                             ->label('PL Promotion Cap')
+                                            ->live()
                                             ->options([
                                                 Rank::CADET->value               => Rank::CADET->getLabel(),
                                                 Rank::PRIVATE->value             => Rank::PRIVATE->getLabel(),
@@ -127,24 +131,29 @@ class DivisionResource extends Resource
                                             ->helperText('Highest rank PLs can promote to without approval'),
                                     ]),
 
-                                Section::make('Locality')
-                                    ->description('Update common vernacular to match division needs')
+                                Section::make('Structure')
+                                    ->description('Name each level of your division and see what its leaders can do.')
                                     ->collapsible()
-                                    ->statePath('settings')
+                                    ->columns(2)
                                     ->schema([
-                                        Repeater::make('locality')
-                                            ->schema([
-                                                TextInput::make('old-string')
-                                                    ->label('Replace')
-                                                    ->readOnly(),
-                                                TextInput::make('new-string')
-                                                    ->required()
-                                                    ->label('With'),
-                                            ])
+                                        Repeater::make('unitLevels')
+                                            ->label('Levels')
+                                            ->relationship('unitLevels')
+                                            ->orderColumn('depth')
                                             ->reorderable(false)
-                                            ->columns(2)
-                                            ->addable(false)
-                                            ->deletable(false),
+                                            ->minItems(fn (Division $record) => max(1, (int) $record->units()->max('depth')))
+                                            ->maxItems(2)
+                                            ->live()
+                                            ->schema([
+                                                TextInput::make('label')->required()->maxLength(50),
+                                                TextInput::make('label_plural')->label('Plural')->required()->maxLength(50),
+                                                TextInput::make('leader_title')->required()->maxLength(50),
+                                            ])
+                                            ->itemLabel(fn (array $state) => $state['label'] ?? null)
+                                            ->helperText('Levels can only be removed once no units use them. Up to two levels until the platoon and squad tables are retired.'),
+                                        Placeholder::make('leader_powers')
+                                            ->label('What leaders can do')
+                                            ->content(fn (Get $get, Division $record) => self::leaderPowersPreview($get, $record)),
                                     ]),
                             ]),
 
@@ -438,5 +447,22 @@ class DivisionResource extends Resource
             'index' => ListDivisions::route('/'),
             'edit'  => EditDivision::route('/{record}/edit'),
         ];
+    }
+
+    private static function leaderPowersPreview(Get $get, Division $division): HtmlString
+    {
+        $levels = collect(array_values($get('unitLevels') ?? []))
+            ->map(fn (array $level, int $index) => [...$level, 'depth' => $index + 1]);
+
+        $limit = Rank::tryFrom((int) $get('settings.max_platoon_leader_rank'))
+            ?? Rank::from($division->settings()->get('max_platoon_leader_rank'));
+
+        $preview = $levels->map(fn (array $level) => [
+            ...$level,
+            'covers' => strtolower($levels->firstWhere('depth', $level['depth'] + 1)['label'] ?? ''),
+            'powers' => UnitLeaderPower::forLevel($levels, $level['depth'], $limit),
+        ]);
+
+        return new HtmlString(view('filament.forms.components.unit-levels-preview', ['levels' => $preview])->render());
     }
 }

@@ -290,6 +290,17 @@ class Division extends Model
 
     public function locality(string $string): string
     {
+        $key   = strtolower($string);
+        $level = match ($key) {
+            'platoon', 'platoon leader' => $this->unitLevels->firstWhere('depth', 1),
+            'squad', 'squad leader'     => $this->unitLevels->firstWhere('depth', 2),
+            default                     => null,
+        };
+
+        if ($level) {
+            return ucwords(str_ends_with($key, 'leader') ? $level->leader_title : $level->label);
+        }
+
         $locality = collect($this->settings()->locality);
         if (! $locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");

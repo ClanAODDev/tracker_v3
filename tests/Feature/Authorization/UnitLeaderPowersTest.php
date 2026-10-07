@@ -63,16 +63,20 @@ class UnitLeaderPowersTest extends TestCase
     public function every_power_has_a_description_for_each_tier_it_applies_to(): void
     {
         $division = $this->platoon->division;
+        $levels   = $division->unitLevels->map->only('depth', 'label', 'label_plural');
+        $limit    = Rank::from($division->settings()->get('max_platoon_leader_rank'));
 
         foreach (UnitLeaderPower::cases() as $power) {
             foreach (UnitLevel::cases() as $tier) {
-                $text = $power->describe($tier, $division, $tier->value);
+                $text = $power->describe($tier, $levels, $tier->value, $limit);
                 $this->assertSame($power->appliesTo($tier), $text !== null, "{$power->name} at {$tier->name}");
             }
         }
 
-        $this->assertSame('Request promotions for members of their squad ranked below Specialist', UnitLeaderPower::RequestPromotions->describe(UnitLevel::Squad, $division, 2));
-        $this->assertSame('Approve promotions in their platoon and every squad under it up to Private First Class', UnitLeaderPower::ApprovePromotions->describe(UnitLevel::Platoon, $division, 1));
+        $this->assertSame('Request promotions for members of their squad ranked below Specialist', UnitLeaderPower::RequestPromotions->describe(UnitLevel::Squad, $levels, 2, $limit));
+        $this->assertSame('Approve promotions in their platoon and every squad under it up to Private First Class', UnitLeaderPower::ApprovePromotions->describe(UnitLevel::Platoon, $levels, 1, $limit));
+        $this->assertCount(6, UnitLeaderPower::forDivision($division, 1));
+        $this->assertCount(2, UnitLeaderPower::forDivision($division, 2));
     }
 
     #[Test]

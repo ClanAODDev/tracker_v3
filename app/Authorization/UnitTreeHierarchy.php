@@ -28,7 +28,7 @@ class UnitTreeHierarchy implements UnitHierarchy
     {
         $deepest = $unit->division?->deepestUnitLevel() ?? 2;
 
-        return $unit->depth < $deepest || $deepest === 1 ? UnitLevel::Platoon : UnitLevel::Squad;
+        return UnitLevel::forDepth($unit->depth, $deepest);
     }
 
     public function flush(): void

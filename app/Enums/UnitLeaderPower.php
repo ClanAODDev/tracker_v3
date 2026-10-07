@@ -4,6 +4,7 @@ namespace App\Enums;
 
 use App\Models\Division;
 use App\Models\DivisionUnitLevel;
+use Illuminate\Support\Collection;
 
 enum UnitLeaderPower: string
 {
@@ -27,18 +28,38 @@ enum UnitLeaderPower: string
         return in_array($tier, $this->tiers(), true);
     }
 
-    public function describe(UnitLevel $tier, Division $division, int $depth): ?string
+    public static function forLevel(Collection $levels, int $depth, Rank $approveLimit): array
+    {
+        $tier = UnitLevel::forDepth($depth, (int) $levels->max('depth'));
+
+        return collect(self::cases())
+            ->map(fn (self $power) => $power->describe($tier, $levels, $depth, $approveLimit))
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    public static function forDivision(Division $division, int $depth): array
+    {
+        return self::forLevel(
+            $division->unitLevels->map(fn (DivisionUnitLevel $level) => $level->only('depth', 'label', 'label_plural')),
+            $depth,
+            Rank::from($division->settings()->get('max_platoon_leader_rank')),
+        );
+    }
+
+    public function describe(UnitLevel $tier, Collection $levels, int $depth, Rank $approveLimit): ?string
     {
         if (! $this->appliesTo($tier)) {
             return null;
         }
 
-        $levels   = $division->unitLevels->keyBy('depth');
-        $unit     = strtolower($levels->get($depth)?->label ?? 'unit');
-        $below    = $levels->filter(fn (DivisionUnitLevel $level) => $level->depth > $depth);
-        $children = $below->isEmpty() ? null : strtolower($below->sortBy('depth')->first()->label_plural);
-        $subtree  = $children ? "their {$unit} and every {$this->singular($below)} under it" : "their {$unit}";
-        $approve  = Rank::from($division->settings()->get('max_platoon_leader_rank'))->getLabel();
+        $levels   = $levels->map(fn ($level) => (array) $level)->keyBy('depth');
+        $unit     = strtolower($levels->get($depth)['label'] ?? 'unit');
+        $below    = $levels->filter(fn (array $level) => $level['depth'] > $depth)->sortBy('depth');
+        $children = $below->isEmpty() ? null : strtolower($below->first()['label_plural']);
+        $subtree  = $children ? "their {$unit} and every " . strtolower($below->first()['label']) . ' under it' : "their {$unit}";
+        $approve  = $approveLimit->getLabel();
         $request  = config($tier === UnitLevel::Platoon ? 'aod.rank.max_platoon_leader' : 'aod.rank.max_squad_leader')->getLabel();
 
         return match ($this) {
@@ -51,10 +72,5 @@ enum UnitLeaderPower: string
                 : "Edit their {$unit}",
             self::ManageHandlesAndFields => "Edit in-game handles and division fields for members of {$subtree}",
         };
-    }
-
-    private function singular($levels): string
-    {
-        return strtolower($levels->sortBy('depth')->first()->label);
     }
 }
