@@ -32,6 +32,27 @@ class DivisionOrgChartControllerTest extends TestCase
     }
 
     #[Test]
+    public function structure_includes_unit_depths_and_leader_powers_per_level(): void
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+        $this->createSquad($this->createPlatoon($division));
+
+        $tree    = $this->actingAs($officer)->getJson(route('division.structure.data', $division->slug))->json();
+        $platoon = collect($tree['children'])->firstWhere('type', 'platoon');
+        $this->assertSame(1, $platoon['depth']);
+        $this->assertSame(2, $platoon['children'][0]['depth']);
+
+        $this->actingAs($officer)
+            ->get(route('division.structure', $division->slug))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('powers.1.powers')
+                ->has('powers.2.powers')
+                ->where('powers.1.title', $division->locality('platoon leader'))
+                ->where('powers.2.title', $division->locality('squad leader')));
+    }
+
+    #[Test]
     public function data_endpoint_still_returns_json(): void
     {
         $officer  = $this->createOfficer();

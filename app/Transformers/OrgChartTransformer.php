@@ -64,6 +64,7 @@ class OrgChartTransformer
             'name'        => $platoon->name,
             'description' => $platoon->description,
             'type'        => 'platoon',
+            'depth'       => $platoon->depth,
             'logo'        => $platoon->logo ? $platoon->getLogoPath() : null,
             'children'    => $children,
         ];
@@ -92,6 +93,7 @@ class OrgChartTransformer
             'id'       => "squad-{$squad->id}",
             'name'     => $squad->name,
             'type'     => 'squad',
+            'depth'    => $squad->depth,
             'children' => $children,
         ];
 
