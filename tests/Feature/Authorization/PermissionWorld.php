@@ -12,6 +12,7 @@ use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
 use App\Models\User;
+use App\Services\Units\LegacyUnitSync;
 
 class PermissionWorld
 {
@@ -127,6 +128,8 @@ class PermissionWorld
 
         $this->platoons['A1']->update(['leader_id' => $this->users['platoon_leader']->member->clan_id]);
         $this->squads['A1a']->update(['leader_id' => $this->users['squad_leader']->member->clan_id]);
+        app(LegacyUnitSync::class)->syncPlatoon($this->platoons['A1']->id);
+        app(LegacyUnitSync::class)->syncSquad($this->squads['A1a']->id);
     }
 
     private function buildTargets(): void

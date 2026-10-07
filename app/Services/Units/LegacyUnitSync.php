@@ -23,11 +23,38 @@ class LegacyUnitSync
         });
     }
 
-    private function syncPlatoons(): int
+    public function syncPlatoon(int $id): void
+    {
+        DB::transaction(function () use ($id) {
+            $this->syncPlatoons([$id]);
+            $this->rebuildPaths();
+        });
+    }
+
+    public function syncSquad(int $id): void
+    {
+        DB::transaction(function () use ($id) {
+            $platoonId = DB::table('squads')->where('id', $id)->value('platoon_id');
+
+            if ($platoonId) {
+                $this->syncPlatoons([$platoonId]);
+            }
+
+            $this->syncSquads([$id]);
+            $this->rebuildPaths();
+        });
+    }
+
+    public function syncMember(int $id): void
+    {
+        $this->assignMembers([$id]);
+    }
+
+    private function syncPlatoons(?array $ids = null): int
     {
         $divisions = DB::table('divisions')->pluck('id')->flip();
 
-        $rows = DB::table('platoons')->get()->map(fn ($platoon) => [
+        $rows = DB::table('platoons')->when($ids !== null, fn ($query) => $query->whereIn('id', $ids))->get()->map(fn ($platoon) => [
             'legacy_type' => Unit::LEGACY_PLATOON,
             'legacy_id'   => $platoon->id,
             'division_id' => $divisions->has($platoon->division_id) ? $platoon->division_id : null,
@@ -49,14 +76,14 @@ class LegacyUnitSync
         return $rows->count();
     }
 
-    private function syncSquads(): int
+    private function syncSquads(?array $ids = null): int
     {
         $platoonUnits = DB::table('units')
             ->where('legacy_type', Unit::LEGACY_PLATOON)
             ->get(['id', 'legacy_id', 'division_id', 'deleted_at'])
             ->keyBy('legacy_id');
 
-        $rows = DB::table('squads')->get()->map(function ($squad) use ($platoonUnits) {
+        $rows = DB::table('squads')->when($ids !== null, fn ($query) => $query->whereIn('id', $ids))->get()->map(function ($squad) use ($platoonUnits) {
             $parent = $platoonUnits->get($squad->platoon_id);
 
             return [
@@ -119,11 +146,12 @@ class LegacyUnitSync
         DB::table('units')->where('depth', 2)->whereNull('parent_id')->update(['path' => DB::raw("concat('/', id, '/')")]);
     }
 
-    private function assignMembers(): int
+    private function assignMembers(?array $ids = null): int
     {
-        DB::table('members')->whereNotNull('unit_id')->update(['unit_id' => null]);
+        DB::table('members')->when($ids !== null, fn ($query) => $query->whereIn('id', $ids))->whereNotNull('unit_id')->update(['unit_id' => null]);
 
         $squads = DB::table('members as m')
+            ->when($ids !== null, fn ($query) => $query->whereIn('m.id', $ids))
             ->join('units as squad', fn ($join) => $join->on('squad.legacy_id', '=', 'm.squad_id')->where('squad.legacy_type', Unit::LEGACY_SQUAD))
             ->join('units as platoon', 'platoon.id', '=', 'squad.parent_id')
             ->where('m.squad_id', '>', 0)
@@ -133,6 +161,7 @@ class LegacyUnitSync
             ->update(['m.unit_id' => DB::raw('squad.id')]);
 
         $platoons = DB::table('members as m')
+            ->when($ids !== null, fn ($query) => $query->whereIn('m.id', $ids))
             ->join('units as platoon', fn ($join) => $join->on('platoon.legacy_id', '=', 'm.platoon_id')->where('platoon.legacy_type', Unit::LEGACY_PLATOON))
             ->where('m.platoon_id', '>', 0)
             ->where('m.squad_id', 0)

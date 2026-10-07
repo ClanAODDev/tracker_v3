@@ -43,4 +43,19 @@ class Unit extends Model
     {
         return $this->hasMany(Member::class);
     }
+
+    public function leader(): BelongsTo
+    {
+        return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
+    }
+
+    public function isPlatoon(): bool
+    {
+        return $this->legacy_type === self::LEGACY_PLATOON;
+    }
+
+    public function isSquad(): bool
+    {
+        return $this->legacy_type === self::LEGACY_SQUAD;
+    }
 }

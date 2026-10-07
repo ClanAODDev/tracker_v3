@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Platoon;
 use App\Models\Squad;
+use App\Services\Units\LegacyUnitSync;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class SquadFactory extends Factory
@@ -20,6 +21,11 @@ class SquadFactory extends Factory
      *
      * @return array
      */
+    public function configure(): static
+    {
+        return $this->afterCreating(fn (Squad $squad) => app(LegacyUnitSync::class)->syncSquad($squad->id));
+    }
+
     public function definition()
     {
         return [

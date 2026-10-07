@@ -10,6 +10,7 @@ use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
 use App\Models\User;
+use App\Services\Units\LegacyUnitSync;
 use Illuminate\Support\Collection;
 
 trait CreatesMembers
@@ -87,6 +88,7 @@ trait CreatesMembers
         ], $memberAttributes));
 
         $squad->update(['leader_id' => $member->clan_id]);
+        app(LegacyUnitSync::class)->syncSquad($squad->id);
 
         return $member;
     }
@@ -99,6 +101,7 @@ trait CreatesMembers
         ], $memberAttributes));
 
         $platoon->update(['leader_id' => $member->clan_id]);
+        app(LegacyUnitSync::class)->syncPlatoon($platoon->id);
 
         return $member;
     }
