@@ -7,6 +7,7 @@ use App\Enums\UnitLevel;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
+use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
@@ -21,7 +22,7 @@ class PlatoonSquadHierarchy implements UnitHierarchy
         };
     }
 
-    public function leads(Member $leader, Platoon|Squad $unit): bool
+    public function leads(Member $leader, Platoon|Squad|Unit $unit): bool
     {
         return $unit->leader_id !== null && (int) $unit->leader_id === (int) $leader->clan_id;
     }

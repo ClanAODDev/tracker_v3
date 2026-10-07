@@ -2,11 +2,12 @@
 
 namespace Tests\Unit\Authorization;
 
-use App\Authorization\PlatoonSquadHierarchy;
 use App\Authorization\UnitHierarchy;
+use App\Authorization\UnitTreeHierarchy;
 use App\Enums\Position;
 use App\Enums\UnitLevel;
 use App\Models\Member;
+use App\Services\Units\UnitAssignment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -29,9 +30,9 @@ class PlatoonSquadHierarchyTest extends TestCase
     }
 
     #[Test]
-    public function it_is_the_bound_hierarchy(): void
+    public function units_back_the_bound_hierarchy(): void
     {
-        $this->assertInstanceOf(PlatoonSquadHierarchy::class, $this->units);
+        $this->assertInstanceOf(UnitTreeHierarchy::class, $this->units);
     }
 
     #[Test]
@@ -60,7 +61,7 @@ class PlatoonSquadHierarchyTest extends TestCase
         $squad   = $this->createSquad();
         $platoon = $squad->platoon;
         $leader  = $this->createSquadLeader($squad);
-        $other   = $this->createMember(['squad_id' => $squad->id]);
+        $other   = $this->createMember(['division_id' => $platoon->division_id, 'platoon_id' => $platoon->id, 'squad_id' => $squad->id]);
         $pl      = $this->createPlatoonLeader($platoon);
 
         $this->assertTrue($this->units->leads($leader, $squad));
@@ -68,7 +69,8 @@ class PlatoonSquadHierarchyTest extends TestCase
         $this->assertTrue($this->units->leads($pl, $platoon->fresh()));
         $this->assertFalse($this->units->leads($leader, $platoon->fresh()));
 
-        $squad->update(['leader_id' => null]);
+        $assignment = app(UnitAssignment::class);
+        $assignment->setLeader($assignment->forLegacy($squad), null);
         $this->assertFalse($this->units->leads($leader, $squad->fresh()));
     }
 
@@ -91,10 +93,11 @@ class PlatoonSquadHierarchyTest extends TestCase
     #[Test]
     public function shares_led_unit_and_scope_compare_the_leaders_own_assignment(): void
     {
-        $squad   = $this->createSquad();
-        $leader  = $this->createMember(['platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id]);
-        $sameSq  = $this->createMember(['platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id]);
-        $otherSq = $this->createMember(['platoon_id' => $squad->platoon_id, 'squad_id' => $this->createSquad($squad->platoon)->id]);
+        $squad    = $this->createSquad();
+        $division = $squad->platoon->division_id;
+        $leader   = $this->createMember(['division_id' => $division, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id]);
+        $sameSq   = $this->createMember(['division_id' => $division, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id]);
+        $otherSq  = $this->createMember(['division_id' => $division, 'platoon_id' => $squad->platoon_id, 'squad_id' => $this->createSquad($squad->platoon)->id]);
 
         $this->assertTrue($this->units->sharesLedUnit($leader, $sameSq, UnitLevel::Squad));
         $this->assertFalse($this->units->sharesLedUnit($leader, $otherSq, UnitLevel::Squad));

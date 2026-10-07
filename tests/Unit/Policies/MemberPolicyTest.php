@@ -402,7 +402,7 @@ class MemberPolicyTest extends TestCase
         $squad  = $this->createSquad();
         $leader = $this->createSquadLeader($squad);
         $user   = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member = $this->createMember(['division_id' => $squad->platoon->division_id, 'squad_id' => $squad->id]);
+        $member = $this->createMember(['division_id' => $squad->platoon->division_id, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id]);
 
         $this->actingAs($user);
         $this->assertTrue($this->policy->manageHandles($user, $member));
@@ -416,7 +416,7 @@ class MemberPolicyTest extends TestCase
         $otherSquad = $this->createSquad();
         $leader     = $this->createSquadLeader($squad);
         $user       = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member     = $this->createMember(['division_id' => $otherSquad->platoon->division_id, 'squad_id' => $otherSquad->id]);
+        $member     = $this->createMember(['division_id' => $otherSquad->platoon->division_id, 'platoon_id' => $otherSquad->platoon_id, 'squad_id' => $otherSquad->id]);
 
         $this->actingAs($user);
         $this->assertFalse($this->policy->manageHandles($user, $member));

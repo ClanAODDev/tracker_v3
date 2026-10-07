@@ -203,6 +203,11 @@ class Member extends Model
         return $this->belongsToMany(Division::class, 'division_parttimer')->withTimestamps();
     }
 
+    public function unit(): BelongsTo
+    {
+        return $this->belongsTo(Unit::class);
+    }
+
     public function platoon(): BelongsTo
     {
         return $this->belongsTo(Platoon::class);

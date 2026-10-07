@@ -45,9 +45,11 @@ class LegacyUnitSync
         });
     }
 
-    public function syncMember(int $id): void
+    public function syncMember(int $id): ?int
     {
         $this->assignMembers([$id]);
+
+        return DB::table('members')->where('id', $id)->value('unit_id');
     }
 
     private function syncPlatoons(?array $ids = null): int

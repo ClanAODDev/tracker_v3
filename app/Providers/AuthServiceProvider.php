@@ -5,9 +5,9 @@ namespace App\Providers;
 use App\Authorization\AbilityMap;
 use App\Authorization\DatabaseAbilityMap;
 use App\Authorization\ForumRoleSource;
-use App\Authorization\PlatoonSquadHierarchy;
 use App\Authorization\RoleSource;
 use App\Authorization\UnitHierarchy;
+use App\Authorization\UnitTreeHierarchy;
 use App\Enums\Ability;
 use App\Models\Division;
 use App\Models\DivisionMemberField;
@@ -67,7 +67,7 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app->singleton(RoleSource::class, ForumRoleSource::class);
         $this->app->scoped(AbilityMap::class, DatabaseAbilityMap::class);
-        $this->app->singleton(UnitHierarchy::class, PlatoonSquadHierarchy::class);
+        $this->app->singleton(UnitHierarchy::class, UnitTreeHierarchy::class);
     }
 
     /**

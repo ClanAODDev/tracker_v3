@@ -23,7 +23,10 @@ class MemberFactory extends Factory
      */
     public function configure(): static
     {
-        return $this->afterCreating(fn (Member $member) => app(LegacyUnitSync::class)->syncMember($member->id));
+        return $this->afterCreating(function (Member $member) {
+            $member->setAttribute('unit_id', app(LegacyUnitSync::class)->syncMember($member->id));
+            $member->syncOriginalAttribute('unit_id');
+        });
     }
 
     public function definition(): array

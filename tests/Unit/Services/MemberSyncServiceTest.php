@@ -10,6 +10,7 @@ use App\Models\MemberRequest;
 use App\Models\Platoon;
 use App\Models\Squad;
 use App\Services\MemberSyncService;
+use App\Services\Units\UnitAssignment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -390,7 +391,8 @@ class MemberSyncServiceTest extends TestCase
             'squad_id'    => 0,
             'position'    => Position::PLATOON_LEADER,
         ]);
-        $platoon->update(['leader_id' => $member->clan_id]);
+        $units = app(UnitAssignment::class);
+        $units->setLeader($units->forLegacy($platoon), $member->clan_id);
 
         (new MemberSyncService($this->forumInfo(77777, $to->name)))->sync();
 

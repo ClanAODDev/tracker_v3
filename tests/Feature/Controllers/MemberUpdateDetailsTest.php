@@ -25,7 +25,7 @@ class MemberUpdateDetailsTest extends TestCase
         $division = $squad->platoon->division;
         $leader   = $this->createSquadLeader($squad);
         $user     = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member   = $this->createMember(['division_id' => $division->id, 'squad_id' => $squad->id]);
+        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id]);
         $handle   = Handle::factory()->create(['enabled' => true, 'regex' => null]);
         $field    = DivisionMemberField::create([
             'division_id' => $division->id,
