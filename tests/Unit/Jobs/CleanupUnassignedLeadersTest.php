@@ -201,4 +201,20 @@ class CleanupUnassignedLeadersTest extends TestCase
         $this->assertEquals(Position::PLATOON_LEADER, $pl->fresh()->position);
         $this->assertEquals(Position::SQUAD_LEADER, $sl->fresh()->position);
     }
+
+    #[Test]
+    public function a_leader_of_an_archived_unit_returns_to_member()
+    {
+        $platoon = $this->createPlatoon();
+        $squad   = $this->createSquad($platoon);
+        $pl      = $this->createPlatoonLeader($platoon);
+        $sl      = $this->createSquadLeader($squad);
+        $squad->delete();
+        $platoon->delete();
+
+        (new CleanupUnassignedLeaders)->handle();
+
+        $this->assertEquals(Position::MEMBER, $pl->fresh()->position);
+        $this->assertEquals(Position::MEMBER, $sl->fresh()->position);
+    }
 }
