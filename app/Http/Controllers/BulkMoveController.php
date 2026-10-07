@@ -8,6 +8,7 @@ use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
 use App\Models\User;
+use App\Services\Units\UnitAssignment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
@@ -59,11 +60,10 @@ class BulkMoveController extends Controller
             ->where('division_id', $division->id)
             ->get();
 
+        $units            = app(UnitAssignment::class);
         $transferredCount = 0;
         foreach ($members as $member) {
-            $member->platoon_id = $platoon->id;
-            $member->squad_id   = $squad ? $squad->id : 0;
-            $member->save();
+            $member->update($units->columnsFor($units->forLegacyIds($platoon->id, $squad?->id)));
 
             $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
                 'platoon' => $platoon->name,

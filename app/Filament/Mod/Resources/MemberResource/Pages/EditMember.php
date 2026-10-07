@@ -16,6 +16,7 @@ use App\Notifications\Channel\NotifyDivisionPartTimeMemberRemoved;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use App\Services\MemberHandleService;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -63,6 +64,11 @@ class EditMember extends EditRecord
         DivisionMemberFieldsForm::saveValues($record, $data['custom_fields'] ?? []);
 
         unset($data['handleGroups'], $data['custom_fields']);
+
+        if (array_key_exists('platoon_id', $data) || array_key_exists('squad_id', $data)) {
+            $units = app(UnitAssignment::class);
+            $data  = [...$data, ...$units->columnsFor($units->forLegacyIds($data['platoon_id'] ?? null, $data['squad_id'] ?? null))];
+        }
 
         $record->update($data);
 

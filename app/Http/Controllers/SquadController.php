@@ -11,6 +11,7 @@ use App\Models\Platoon;
 use App\Models\Squad;
 use App\Repositories\SquadRepository;
 use App\Services\MemberQueryService;
+use App\Services\Units\UnitAssignment;
 use App\Support\MemberListProps;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
@@ -74,17 +75,14 @@ class SquadController extends Controller
 
             $this->authorize('update', $member->platoon);
 
-            $member->platoon()->dissociate();
-            $member->squad()->dissociate();
-            $member->save();
+            $member->update(app(UnitAssignment::class)->columnsFor(null));
             $member->recordActivity(ActivityType::UNASSIGNED);
         } else {
             $squad = Squad::findOrFail($request->squad_id);
             $this->authorize('update', $squad->platoon);
 
-            $member->platoon()->associate($squad->platoon);
-            $member->squad()->associate($squad);
-            $member->save();
+            $units = app(UnitAssignment::class);
+            $member->update($units->columnsFor($units->forLegacyIds($squad->platoon_id, $squad->id)));
             $member->recordActivity(ActivityType::ASSIGNED_SQUAD, [
                 'platoon' => $squad->platoon->name,
                 'squad'   => $squad->name,

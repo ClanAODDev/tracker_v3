@@ -26,6 +26,19 @@ class UnitAssignment
             ->firstOr(fn () => throw new LogicException('No unit for ' . class_basename($legacy) . " {$legacy->getKey()}; run tracker:units-sync."));
     }
 
+    public function forLegacyIds(?int $platoonId, ?int $squadId): ?Unit
+    {
+        if ($squadId) {
+            return $this->forLegacy(Squad::withTrashed()->findOrFail($squadId));
+        }
+
+        if ($platoonId) {
+            return $this->forLegacy(Platoon::withTrashed()->findOrFail($platoonId));
+        }
+
+        return null;
+    }
+
     public function columnsFor(?Unit $unit): array
     {
         if ($unit === null) {

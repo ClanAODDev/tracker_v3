@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\Member;
+use App\Services\Units\UnitAssignment;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Queue\Queueable;
@@ -22,10 +23,7 @@ class ResetOrphanedUnitAssignments implements ShouldQueue
                 $query->where('platoon_id', '>', 0)
                     ->orWhere('squad_id', '>', 0);
             })
-            ->update([
-                'platoon_id' => 0,
-                'squad_id'   => 0,
-            ]);
+            ->update(app(UnitAssignment::class)->columnsFor(null));
 
         Member::query()
             ->where('division_id', '>', 0)
@@ -43,9 +41,6 @@ class ResetOrphanedUnitAssignments implements ShouldQueue
                             ->whereColumn('squads.id', 'members.squad_id')
                             ->whereColumn('squads.platoon_id', 'members.platoon_id')));
             })
-            ->update([
-                'platoon_id' => 0,
-                'squad_id'   => 0,
-            ]);
+            ->update(app(UnitAssignment::class)->columnsFor(null));
     }
 }

@@ -6,6 +6,7 @@ use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
 use App\Enums\UnitLevel;
 use App\Models\Squad;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
@@ -78,11 +79,10 @@ class MembersRelationManager extends RelationManager
                                 ->required(),
                         ])
                         ->action(function (Collection $records, array $data): void {
-                            $records->each(function ($member) use ($data) {
-                                $member->update([
-                                    'squad_id' => $data['squad_id'],
-                                ]);
-                            });
+                            $units   = app(UnitAssignment::class);
+                            $columns = $units->columnsFor($units->forLegacyIds($this->ownerRecord->id, (int) $data['squad_id']));
+
+                            $records->each(fn ($member) => $member->update($columns));
                         })
                         ->deselectRecordsAfterCompletion()
                         ->color('primary'),

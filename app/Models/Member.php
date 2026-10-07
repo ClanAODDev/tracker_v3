@@ -11,6 +11,7 @@ use App\Enums\Rank;
 use App\Enums\UnitLevel;
 use App\Models\Member\HasCustomAttributes;
 use App\Presenters\MemberPresenter;
+use App\Services\Units\UnitAssignment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -144,28 +145,28 @@ class Member extends Model
 
     public function moveToDivision(int $divisionId): void
     {
+        $units = app(UnitAssignment::class);
+
         if ($this->position === Position::SQUAD_LEADER && $this->squad && app(UnitHierarchy::class)->leads($this, $this->squad)) {
-            $this->squad->update(['leader_id' => 0]);
+            $units->setLeader($units->forLegacy($this->squad), null);
         }
 
         if ($this->position === Position::PLATOON_LEADER && $this->platoon && app(UnitHierarchy::class)->leads($this, $this->platoon)) {
-            $this->platoon->update(['leader_id' => 0]);
+            $units->setLeader($units->forLegacy($this->platoon), null);
         }
 
         $this->update([
+            ...$units->columnsFor(null),
             'division_id' => $divisionId,
             'position'    => $this->position === Position::CLAN_ADMIN ? Position::CLAN_ADMIN : Position::MEMBER,
-            'platoon_id'  => 0,
-            'squad_id'    => 0,
         ]);
     }
 
     public function reset(): void
     {
         $this->update([
+            ...app(UnitAssignment::class)->columnsFor(null),
             'division_id'            => 0,
-            'platoon_id'             => 0,
-            'squad_id'               => 0,
             'position'               => Position::MEMBER,
             'flagged_for_inactivity' => false,
             'groups'                 => null,

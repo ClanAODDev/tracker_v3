@@ -20,6 +20,7 @@ use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
 use App\Services\MemberHandleService;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -500,10 +501,10 @@ class MemberResource extends Resource
                             }
                         })
                         ->action(function (Collection $records, array $data): void {
-                            $records->each->update([
-                                'platoon_id' => $data['platoon_id'],
-                                'squad_id'   => $data['squad_id'],
-                            ]);
+                            $units   = app(UnitAssignment::class);
+                            $columns = $units->columnsFor($units->forLegacyIds($data['platoon_id'] ?? null, $data['squad_id'] ?? null));
+
+                            $records->each->update($columns);
                         })
                         ->color('primary'),
 

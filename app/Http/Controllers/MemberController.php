@@ -11,6 +11,7 @@ use App\Models\Platoon;
 use App\Repositories\MemberRepository;
 use App\Services\MemberHandleService;
 use App\Services\RankTimelineService;
+use App\Services\Units\UnitAssignment;
 use App\Support\MemberCard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -87,8 +88,9 @@ class MemberController extends Controller
             ->where('division_id', $member->division_id)
             ->firstOrFail();
 
-        $member->platoon_id = $platoon->id;
-        $member->save();
+        $units   = app(UnitAssignment::class);
+        $squadId = $member->squad?->platoon_id === $platoon->id ? $member->squad_id : null;
+        $member->update($units->columnsFor($units->forLegacyIds($platoon->id, $squadId)));
         $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
             'platoon' => $platoon->name,
         ]);
@@ -110,9 +112,7 @@ class MemberController extends Controller
     {
         $this->authorize('reset', $member);
 
-        $member->squad_id   = 0;
-        $member->platoon_id = 0;
-        $member->save();
+        $member->update(app(UnitAssignment::class)->columnsFor(null));
         $member->recordActivity(ActivityType::UNASSIGNED);
 
         $this->showSuccessToast('Member assignments reset successfully');
