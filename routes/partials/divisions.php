@@ -5,6 +5,7 @@ use App\Http\Controllers\BulkMoveController;
 use App\Http\Controllers\BulkTagController;
 use App\Http\Controllers\Division\ReportController;
 use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\DivisionLeaderPowersController;
 use App\Http\Controllers\DivisionNoteController;
 use App\Http\Controllers\DivisionOrgChartController;
 use App\Http\Controllers\InactiveMemberController;
@@ -36,6 +37,8 @@ Route::prefix('divisions/{division}')->group(function () {
         Route::get('/', 'show')->name('division.structure');
         Route::get('data', 'data')->name('division.structure.data');
     });
+
+    Route::get('leader-powers', DivisionLeaderPowersController::class)->name('division.leader-powers');
 
     Route::controller(InactiveMemberController::class)->scopeBindings()->group(function () {
         Route::get('inactive-members/{unit?}', 'index')->name('division.inactive-members');
