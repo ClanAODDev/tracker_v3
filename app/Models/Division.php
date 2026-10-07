@@ -207,6 +207,16 @@ class Division extends Model
         return $this->hasMany(Unit::class);
     }
 
+    public function unitLevels(): HasMany
+    {
+        return $this->hasMany(DivisionUnitLevel::class)->orderBy('depth');
+    }
+
+    public function deepestUnitLevel(): int
+    {
+        return (int) ($this->unitLevels->max('depth') ?? 2);
+    }
+
     public function topUnits(): HasMany
     {
         return $this->units()->whereNull('parent_id')->orderBy('order')->orderBy('id');

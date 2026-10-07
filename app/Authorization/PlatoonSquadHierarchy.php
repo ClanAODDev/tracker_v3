@@ -57,4 +57,6 @@ class PlatoonSquadHierarchy implements UnitHierarchy
             UnitLevel::Squad   => 'squad_id',
         };
     }
+
+    public function flush(): void {}
 }

@@ -11,6 +11,7 @@ use App\Models\Platoon;
 use App\Models\Squad;
 use App\Models\User;
 use App\Services\Units\LegacyUnitSync;
+use App\Services\Units\UnitAssignment;
 use Illuminate\Support\Collection;
 
 trait CreatesMembers
@@ -144,5 +145,11 @@ trait CreatesMembers
         return Member::factory()->count($count)->create(array_merge([
             'division_id' => $division->id,
         ], $attributes));
+    }
+
+    protected function makeLeader(User $user, Platoon|Squad $unit): void
+    {
+        $units = app(UnitAssignment::class);
+        $units->setLeader($units->forLegacy($unit), $user->member->clan_id, recordActivity: false);
     }
 }

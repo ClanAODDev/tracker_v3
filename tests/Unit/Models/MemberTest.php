@@ -379,6 +379,7 @@ class MemberTest extends TestCase
             'position' => Position::SQUAD_LEADER,
             'rank'     => Rank::SERGEANT,
         ]);
+        $this->makeLeader($user, $squad);
 
         $eligible       = $this->createMember([...$this->inSquad($squad), 'rank' => Rank::RECRUIT]);
         $differentSquad = $this->createMember([...$this->inSquad($this->createSquad()), 'rank' => Rank::RECRUIT]);
@@ -401,6 +402,7 @@ class MemberTest extends TestCase
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::STAFF_SERGEANT,
         ]);
+        $this->makeLeader($user, $platoon);
 
         $eligible         = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'rank' => Rank::RECRUIT]);
         $rankTooHigh      = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'rank' => Rank::CORPORAL]);

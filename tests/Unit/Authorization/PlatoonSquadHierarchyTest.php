@@ -6,7 +6,9 @@ use App\Authorization\UnitHierarchy;
 use App\Authorization\UnitTreeHierarchy;
 use App\Enums\Position;
 use App\Enums\UnitLevel;
+use App\Models\DivisionUnitLevel;
 use App\Models\Member;
+use App\Models\User;
 use App\Services\Units\UnitAssignment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -36,23 +38,31 @@ class PlatoonSquadHierarchyTest extends TestCase
     }
 
     #[Test]
-    public function leadership_level_follows_the_members_position(): void
+    public function leadership_tier_comes_from_the_unit_a_member_leads(): void
     {
-        $division = $this->createActiveDivision();
+        $squad    = $this->createSquad();
+        $platoon  = $squad->platoon;
+        $pl       = $this->createPlatoonLeader($platoon);
+        $sl       = $this->createSquadLeader($squad);
+        $withUser = fn ($member) => User::factory()->create(['member_id' => $member->id]);
 
-        foreach (Position::cases() as $position) {
-            $user = $this->createMemberWithUser(['division_id' => $division->id, 'position' => $position]);
+        $this->assertSame(UnitLevel::Platoon, $this->units->leadershipLevel($withUser($pl)));
+        $this->assertSame(UnitLevel::Squad, $this->units->leadershipLevel($withUser($sl)));
 
-            $expected = match ($position) {
-                Position::PLATOON_LEADER => UnitLevel::Platoon,
-                Position::SQUAD_LEADER   => UnitLevel::Squad,
-                default                  => null,
-            };
-
-            $this->assertSame($expected, $this->units->leadershipLevel($user), $position->name);
-        }
-
+        $titleOnly = $this->createMemberWithUser(['division_id' => $platoon->division_id, 'position' => Position::PLATOON_LEADER]);
+        $this->assertNull($this->units->leadershipLevel($titleOnly));
         $this->assertNull($this->units->leadershipLevel($this->createMemberWithUser()->setRelation('member', null)));
+    }
+
+    #[Test]
+    public function in_a_one_level_division_the_only_level_has_platoon_powers(): void
+    {
+        $platoon = $this->createPlatoon();
+        DivisionUnitLevel::where('division_id', $platoon->division_id)->where('depth', 2)->delete();
+        DivisionUnitLevel::updateOrCreate(['division_id' => $platoon->division_id, 'depth' => 1], ['label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Lead']);
+        $leader = $this->createPlatoonLeader($platoon);
+
+        $this->assertSame(UnitLevel::Platoon, $this->units->leadershipLevel(User::factory()->create(['member_id' => $leader->id])));
     }
 
     #[Test]

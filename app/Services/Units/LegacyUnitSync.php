@@ -2,6 +2,7 @@
 
 namespace App\Services\Units;
 
+use App\Authorization\UnitHierarchy;
 use App\Models\Division;
 use App\Models\Unit;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,7 @@ class LegacyUnitSync
             $this->rebuildPaths();
             $members = $this->assignMembers();
             $levels  = $this->createMissingLevels();
+            app(UnitHierarchy::class)->flush();
 
             return compact('platoons', 'squads', 'removed', 'members', 'levels');
         });
@@ -28,6 +30,7 @@ class LegacyUnitSync
         DB::transaction(function () use ($id) {
             $this->syncPlatoons([$id]);
             $this->rebuildPaths();
+            app(UnitHierarchy::class)->flush();
         });
     }
 
@@ -42,6 +45,7 @@ class LegacyUnitSync
 
             $this->syncSquads([$id]);
             $this->rebuildPaths();
+            app(UnitHierarchy::class)->flush();
         });
     }
 

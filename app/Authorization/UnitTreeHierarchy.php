@@ -2,7 +2,6 @@
 
 namespace App\Authorization;
 
-use App\Enums\Position;
 use App\Enums\UnitLevel;
 use App\Models\Member;
 use App\Models\Platoon;
@@ -16,13 +15,41 @@ class UnitTreeHierarchy implements UnitHierarchy
 {
     public function __construct(private readonly UnitAssignment $units) {}
 
+    private array $ledUnits = [];
+
     public function leadershipLevel(User $user): ?UnitLevel
     {
-        return match ($user->member?->position) {
-            Position::PLATOON_LEADER => UnitLevel::Platoon,
-            Position::SQUAD_LEADER   => UnitLevel::Squad,
-            default                  => null,
-        };
+        $unit = $this->ledUnit($user->member);
+
+        return $unit ? $this->tierFor($unit) : null;
+    }
+
+    public function tierFor(Unit $unit): UnitLevel
+    {
+        $deepest = $unit->division?->deepestUnitLevel() ?? 2;
+
+        return $unit->depth < $deepest || $deepest === 1 ? UnitLevel::Platoon : UnitLevel::Squad;
+    }
+
+    public function flush(): void
+    {
+        $this->ledUnits = [];
+    }
+
+    private function ledUnit(?Member $member): ?Unit
+    {
+        if (! $member) {
+            return null;
+        }
+
+        if (! array_key_exists($member->clan_id, $this->ledUnits)) {
+            $this->ledUnits[$member->clan_id] = Unit::query()
+                ->where('leader_id', $member->clan_id)
+                ->orderBy('depth')
+                ->first();
+        }
+
+        return $this->ledUnits[$member->clan_id];
     }
 
     public function leads(Member $leader, Platoon|Squad|Unit $unit): bool

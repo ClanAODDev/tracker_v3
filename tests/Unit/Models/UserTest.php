@@ -349,6 +349,7 @@ class UserTest extends TestCase
             'platoon_id'  => $platoon->id,
             'position'    => Position::PLATOON_LEADER,
         ]);
+        $this->makeLeader($leader, $platoon);
 
         // default max_platoon_leader_rank setting is Rank::PRIVATE_FIRST_CLASS
         $this->assertTrue($leader->isWithinPlatoonLimit(Rank::PRIVATE_FIRST_CLASS, $division));

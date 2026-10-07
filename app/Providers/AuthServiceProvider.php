@@ -70,7 +70,7 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app->singleton(RoleSource::class, ForumRoleSource::class);
         $this->app->scoped(AbilityMap::class, DatabaseAbilityMap::class);
-        $this->app->singleton(UnitHierarchy::class, UnitTreeHierarchy::class);
+        $this->app->scoped(UnitHierarchy::class, UnitTreeHierarchy::class);
     }
 
     /**

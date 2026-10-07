@@ -21,4 +21,6 @@ interface UnitHierarchy
     public function sharesLedUnit(Member $leader, Member $member, UnitLevel $level): bool;
 
     public function scopeToLedUnit(Builder $members, Member $leader, UnitLevel $level): Builder;
+
+    public function flush(): void;
 }

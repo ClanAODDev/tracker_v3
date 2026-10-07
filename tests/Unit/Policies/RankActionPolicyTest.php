@@ -172,6 +172,7 @@ class RankActionPolicyTest extends TestCase
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::STAFF_SERGEANT,
         ]);
+        $this->makeLeader($leader, $platoon);
 
         $member = $this->createMember([
             'division_id' => $division->id,
@@ -302,6 +303,7 @@ class RankActionPolicyTest extends TestCase
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::STAFF_SERGEANT,
         ]);
+        $this->makeLeader($leader, $platoon);
         $member = $this->createMember([
             'division_id' => $division->id,
             'platoon_id'  => $platoon->id,

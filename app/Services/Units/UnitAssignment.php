@@ -2,6 +2,7 @@
 
 namespace App\Services\Units;
 
+use App\Authorization\UnitHierarchy;
 use App\Enums\ActivityType;
 use App\Models\Activity;
 use App\Models\Division;
@@ -167,6 +168,10 @@ class UnitAssignment
 
     private function writeBack(Unit $unit, array $columns): void
     {
+        if (array_key_exists('leader_id', $columns) || array_key_exists('deleted_at', $columns)) {
+            $this->flushHierarchy();
+        }
+
         if ($columns === []) {
             return;
         }
@@ -192,5 +197,10 @@ class UnitAssignment
             'division_id'  => $unit->division_id ?? $actor->member?->division_id,
             'properties'   => null,
         ]);
+    }
+
+    private function flushHierarchy(): void
+    {
+        app(UnitHierarchy::class)->flush();
     }
 }
