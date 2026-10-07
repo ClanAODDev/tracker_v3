@@ -37,7 +37,7 @@ class RecruitmentServiceTest extends TestCase
             'TestMember',
             $division,
             1,
-            $platoon->id,
+            $this->unitFor($platoon)->id,
             null,
             [],
             $recruiter
@@ -71,7 +71,7 @@ class RecruitmentServiceTest extends TestCase
             'NewName',
             $division,
             1,
-            $platoon->id,
+            $this->unitFor($platoon)->id,
             null,
             [],
             $recruiter
@@ -98,7 +98,7 @@ class RecruitmentServiceTest extends TestCase
             'NewName',
             $division,
             1,
-            $platoon->id,
+            $this->unitFor($platoon)->id,
             null,
             [],
             $recruiter
@@ -124,7 +124,7 @@ class RecruitmentServiceTest extends TestCase
             'NewName',
             $division,
             1,
-            $otherPlatoon->id,
+            $this->unitFor($otherPlatoon)->id,
             null,
             [],
             $recruiter
@@ -147,8 +147,8 @@ class RecruitmentServiceTest extends TestCase
             'NewName',
             $division,
             1,
-            $platoon->id,
-            $otherSquad->id,
+            $this->unitFor($platoon)->id,
+            $this->unitFor($otherSquad)->id,
             [],
             $recruiter
         );
@@ -168,7 +168,7 @@ class RecruitmentServiceTest extends TestCase
             'HandleTest',
             $division,
             1,
-            $platoon->id,
+            $this->unitFor($platoon)->id,
             null,
             [$handle->id => 'MyGameHandle'],
             $recruiter

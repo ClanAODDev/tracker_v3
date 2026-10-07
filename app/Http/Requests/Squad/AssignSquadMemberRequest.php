@@ -15,7 +15,7 @@ class AssignSquadMemberRequest extends FormRequest
     {
         return [
             'member_id' => 'required|integer|exists:members,id',
-            'squad_id'  => 'required|integer',
+            'unit_id'   => 'required|integer',
         ];
     }
 }

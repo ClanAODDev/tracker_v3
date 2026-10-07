@@ -7,7 +7,7 @@ use App\Enums\ActivityType;
 use App\Filament\Forms\Components\DivisionMemberFieldsForm;
 use App\Http\Requests\Member\UpdateMemberDetails;
 use App\Models\Member;
-use App\Models\Platoon;
+use App\Models\Unit;
 use App\Repositories\MemberRepository;
 use App\Services\MemberHandleService;
 use App\Services\RankTimelineService;
@@ -84,13 +84,13 @@ class MemberController extends Controller
     #[Authorize('recruit', Member::class)]
     public function assignPlatoon(Member $member): JsonResponse
     {
-        $platoon = Platoon::where('id', request()->platoon_id)
+        $platoon = Unit::query()
+            ->whereNull('parent_id')
             ->where('division_id', $member->division_id)
-            ->firstOrFail();
+            ->findOrFail(request()->platoon_id);
 
-        $units   = app(UnitAssignment::class);
-        $squadId = $member->squad?->platoon_id === $platoon->id ? $member->squad_id : null;
-        $member->update($units->columnsFor($units->forLegacyIds($platoon->id, $squadId)));
+        $squad = $member->squadUnit();
+        $member->update(app(UnitAssignment::class)->columnsFor($squad?->parent_id === $platoon->id ? $squad : $platoon));
         $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
             'platoon' => $platoon->name,
         ]);

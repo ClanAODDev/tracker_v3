@@ -165,7 +165,7 @@ export default function ManageMembers({
 
         const squadId = target === REMOVE || target === UNASSIGNED ? 0 : target;
         try {
-            await postJson(assignUrl, { member_id: card.id, squad_id: squadId });
+            await postJson(assignUrl, { member_id: card.id, unit_id: squadId });
             toast.success(
                 target === REMOVE
                     ? `${card.name} removed from the ${division.platoonLabel}`

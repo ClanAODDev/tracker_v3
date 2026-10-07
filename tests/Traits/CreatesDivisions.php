@@ -6,6 +6,8 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
+use App\Models\Unit;
+use App\Services\Units\UnitAssignment;
 
 trait CreatesDivisions
 {
@@ -125,5 +127,10 @@ trait CreatesDivisions
         ]);
 
         return $squad->fresh(['members']);
+    }
+
+    protected function unitFor(Platoon|Squad $legacy): Unit
+    {
+        return app(UnitAssignment::class)->forLegacy($legacy);
     }
 }

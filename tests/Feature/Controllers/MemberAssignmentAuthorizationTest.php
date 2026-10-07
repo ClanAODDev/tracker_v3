@@ -94,7 +94,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
         $this->actingAs($officer)
             ->post('/members/assign-squad', [
                 'member_id' => $target->id,
-                'squad_id'  => $squad->id,
+                'unit_id'   => $this->unitFor($squad)->id,
             ])
             ->assertForbidden();
 
@@ -113,7 +113,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
         $this->actingAs($srLdr)
             ->post('/members/assign-squad', [
                 'member_id' => $target->id,
-                'squad_id'  => $squad->id,
+                'unit_id'   => $this->unitFor($squad)->id,
             ])
             ->assertOk();
 
@@ -133,7 +133,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
         $this->actingAs($srLdr)
             ->post('/members/assign-squad', [
                 'member_id' => $target->id,
-                'squad_id'  => $squad->id,
+                'unit_id'   => $this->unitFor($squad)->id,
             ])
             ->assertForbidden();
     }
@@ -148,7 +148,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
 
         $this->actingAs($srLdr)
             ->post(route('member.assign-platoon', $target->getUrlParams()), [
-                'platoon_id' => $platoon->id,
+                'platoon_id' => $this->unitFor($platoon)->id,
             ])
             ->assertOk();
 
@@ -166,7 +166,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
 
         $this->actingAs($srLdr)
             ->post(route('member.assign-platoon', $target->getUrlParams()), [
-                'platoon_id' => $otherPlatoon->id,
+                'platoon_id' => $this->unitFor($otherPlatoon)->id,
             ])
             ->assertNotFound();
 

@@ -26,7 +26,7 @@ class UnitMemberListTest extends TestCase
         $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id]);
 
         $this->actingAs($officer)
-            ->get(route('platoon', [$division->slug, $platoon->id]))
+            ->get(route('unit', [$division->slug, $this->unitFor($platoon)]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('division/members')
@@ -55,12 +55,12 @@ class UnitMemberListTest extends TestCase
         ]);
 
         $this->actingAs($srLdr)
-            ->get(route('platoon.manage-squads', [$division->slug, $platoon->id]))
+            ->get(route('unit.manage', [$division->slug, $this->unitFor($platoon)]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('platoon/manage-members')
                 ->where('squads', fn ($squads) => collect($squads)
-                    ->firstWhere('id', $squad->id)['members'][0]['id'] === $assigned->id)
+                    ->firstWhere('id', $this->unitFor($squad)->id)['members'][0]['id'] === $assigned->id)
                 ->where('unassigned', fn ($unassigned) => collect($unassigned)->contains('id', $floating->id))
                 ->has('assignUrl'));
     }
@@ -76,7 +76,7 @@ class UnitMemberListTest extends TestCase
         );
 
         $this->actingAs($user)
-            ->get(route('platoon.manage-squads', [$division->slug, $platoon->id]))
+            ->get(route('unit.manage', [$division->slug, $this->unitFor($platoon)]))
             ->assertForbidden();
     }
 
@@ -94,7 +94,7 @@ class UnitMemberListTest extends TestCase
         ]);
 
         $this->actingAs($officer)
-            ->get(route('squad.show', [$division->slug, $platoon->id, $squad->id]))
+            ->get(route('unit', [$division->slug, $this->unitFor($squad)]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('division/members')

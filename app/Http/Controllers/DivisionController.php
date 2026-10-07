@@ -7,6 +7,7 @@ use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\Unit;
 use App\Models\User;
 use App\Repositories\DivisionRepository;
 use App\Services\DivisionShowService;
@@ -140,17 +141,16 @@ class DivisionController extends Controller
         $this->authorize('manageUnassigned', User::class);
 
         $members = $division->members()
-            ->with('platoon:id,name')
-            ->where('platoon_id', '>', 0)
-            ->where('squad_id', 0)
+            ->with('unit')
+            ->whereIn('unit_id', Unit::query()->whereNull('parent_id')->select('id'))
             ->where('position', Position::MEMBER)
-            ->get(['id', 'clan_id', 'name', 'rank', 'platoon_id'])
+            ->get(['id', 'clan_id', 'name', 'rank', 'unit_id'])
             ->map(fn ($member) => [
                 'id'         => $member->clan_id,
                 'name'       => $member->present()->rankName,
-                'platoon'    => $member->platoon?->name ?? 'Unknown',
-                'platoon_id' => $member->platoon_id,
-                'manage_url' => route('platoon', [$division, $member->platoon_id]) . '?organize=1',
+                'platoon'    => $member->unit?->name ?? 'Unknown',
+                'platoon_id' => $member->unit_id,
+                'manage_url' => route('unit', [$division, $member->unit_id]) . '?organize=1',
             ]);
 
         return response()->json(['members' => $members]);

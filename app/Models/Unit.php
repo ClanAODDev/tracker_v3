@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -62,9 +63,12 @@ class Unit extends Model
 
     public function url(Division $division): string
     {
-        return $this->isSquad()
-            ? route('squad.show', [$division->slug, $this->parent?->legacy_id, $this->legacy_id])
-            : route('platoon', [$division->slug, $this->legacy_id]);
+        return route('unit', [$division->slug, $this->id]);
+    }
+
+    public function allMembers(): Builder
+    {
+        return Member::query()->whereIn('unit_id', self::query()->where('path', 'like', $this->path . '%')->select('id'));
     }
 
     public function getLogoPath(): string

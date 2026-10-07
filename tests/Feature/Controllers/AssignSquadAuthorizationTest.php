@@ -23,7 +23,7 @@ class AssignSquadAuthorizationTest extends TestCase
 
         $this->postJson('/members/assign-squad', [
             'member_id' => $member->id,
-            'squad_id'  => $squad->id,
+            'unit_id'   => $this->unitFor($squad)->id,
         ])->assertUnauthorized();
     }
 
@@ -38,7 +38,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $this->actingAs($user)
             ->postJson('/members/assign-squad', [
                 'member_id' => $target->id,
-                'squad_id'  => $squad->id,
+                'unit_id'   => $this->unitFor($squad)->id,
             ])->assertForbidden();
     }
 
@@ -53,7 +53,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $this->actingAs($officer)
             ->postJson('/members/assign-squad', [
                 'member_id' => $target->id,
-                'squad_id'  => $squad->id,
+                'unit_id'   => $this->unitFor($squad)->id,
             ])->assertOk();
 
         $target->refresh();
@@ -76,7 +76,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $this->actingAs($officer)
             ->postJson('/members/assign-squad', [
                 'member_id' => $target->id,
-                'squad_id'  => 0,
+                'unit_id'   => 0,
             ])->assertOk();
 
         $target->refresh();
@@ -100,7 +100,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $this->actingAs($officer)
             ->postJson('/members/assign-squad', [
                 'member_id' => $target->id,
-                'squad_id'  => 0,
+                'unit_id'   => 0,
             ])->assertForbidden();
 
         $target->refresh();
@@ -117,7 +117,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $this->actingAs($user)
             ->postJson('/members/assign-squad', [
                 'member_id' => $target->id,
-                'squad_id'  => 0,
+                'unit_id'   => 0,
             ])->assertOk();
     }
 }

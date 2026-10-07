@@ -20,6 +20,7 @@ use App\Models\Platoon;
 use App\Models\RankAction;
 use App\Models\Squad;
 use App\Models\Ticket;
+use App\Models\Unit;
 use App\Models\User;
 use App\Policies\ApiTokenPolicy;
 use App\Policies\DivisionMemberFieldPolicy;
@@ -33,6 +34,7 @@ use App\Policies\PlatoonPolicy;
 use App\Policies\RankActionPolicy;
 use App\Policies\SquadPolicy;
 use App\Policies\TicketPolicy;
+use App\Policies\UnitPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -58,6 +60,7 @@ class AuthServiceProvider extends ServiceProvider
         RankAction::class          => RankActionPolicy::class,
         Squad::class               => SquadPolicy::class,
         Ticket::class              => TicketPolicy::class,
+        Unit::class                => UnitPolicy::class,
         User::class                => UserPolicy::class,
     ];
 

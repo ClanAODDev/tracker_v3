@@ -84,7 +84,7 @@ class UnitWritersTest extends TestCase
     {
         $recruiter = $this->createMember(['division_id' => $this->division->id]);
 
-        $member = app(RecruitmentService::class)->createMember(999123, 'Recruit', $this->division, Rank::RECRUIT->value, $this->platoon->id, $this->squad->id, [], $recruiter);
+        $member = app(RecruitmentService::class)->createMember(999123, 'Recruit', $this->division, Rank::RECRUIT->value, $this->unitFor($this->platoon)->id, $this->unitFor($this->squad)->id, [], $recruiter);
 
         $this->assertSame($this->unit($this->squad)->id, $member->fresh()->unit_id);
         $this->assertSynced();
@@ -96,16 +96,16 @@ class UnitWritersTest extends TestCase
         $this->actingAs($this->createSeniorLeader($this->division));
         $member = $this->createMember(['division_id' => $this->division->id]);
 
-        $this->postJson(route('bulk-transfer.store', $this->division->slug), ['member_ids' => [$member->clan_id], 'platoon_id' => $this->platoon->id])->assertOk();
+        $this->postJson(route('bulk-transfer.store', $this->division->slug), ['member_ids' => [$member->clan_id], 'platoon_id' => $this->unit($this->platoon)->id])->assertOk();
         $this->assertSame($this->unit($this->platoon)->id, $member->fresh()->unit_id);
 
-        $this->postJson('/members/assign-squad', ['member_id' => $member->id, 'squad_id' => $this->squad->id])->assertOk();
+        $this->postJson('/members/assign-squad', ['member_id' => $member->id, 'unit_id' => $this->unit($this->squad)->id])->assertOk();
         $this->assertSame($this->unit($this->squad)->id, $member->fresh()->unit_id);
 
         $this->post(route('member.unassign', $member->clan_id))->assertRedirect();
         $this->assertNull($member->fresh()->unit_id);
 
-        $this->postJson(route('member.assign-platoon', $member->clan_id), ['platoon_id' => $this->platoon->id])->assertOk();
+        $this->postJson(route('member.assign-platoon', $member->clan_id), ['platoon_id' => $this->unit($this->platoon)->id])->assertOk();
         $this->assertSame($this->unit($this->platoon)->id, $member->fresh()->unit_id);
         $this->assertSynced();
     }
@@ -116,7 +116,7 @@ class UnitWritersTest extends TestCase
         $this->actingAs($this->createSeniorLeader($this->division));
         $member = $this->assigned();
 
-        $this->postJson(route('member.assign-platoon', $member->clan_id), ['platoon_id' => $this->platoon->id])->assertOk();
+        $this->postJson(route('member.assign-platoon', $member->clan_id), ['platoon_id' => $this->unit($this->platoon)->id])->assertOk();
 
         $this->assertSame($this->unit($this->squad)->id, $member->fresh()->unit_id);
     }
