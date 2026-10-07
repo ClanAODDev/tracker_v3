@@ -133,4 +133,72 @@ class CleanupUnassignedLeadersTest extends TestCase
             class_uses_recursive($job)
         ));
     }
+
+    #[Test]
+    public function clears_a_platoon_leader_who_left_the_division()
+    {
+        $platoon = $this->createPlatoon();
+        $leader  = $this->createPlatoonLeader($platoon);
+        $leader->update(['division_id' => 0, 'platoon_id' => 0, 'position' => Position::MEMBER]);
+
+        (new CleanupUnassignedLeaders)->handle();
+
+        $this->assertNull($platoon->fresh()->leader_id);
+    }
+
+    #[Test]
+    public function clears_a_platoon_leader_who_became_an_executive_officer_and_keeps_them_xo()
+    {
+        $platoon = $this->createPlatoon();
+        $leader  = $this->createPlatoonLeader($platoon);
+        $leader->update(['position' => Position::EXECUTIVE_OFFICER, 'platoon_id' => 0]);
+
+        (new CleanupUnassignedLeaders)->handle();
+
+        $this->assertNull($platoon->fresh()->leader_id);
+        $this->assertEquals(Position::EXECUTIVE_OFFICER, $leader->fresh()->position);
+    }
+
+    #[Test]
+    public function clears_a_squad_leader_assigned_to_a_different_squad_and_returns_them_to_member()
+    {
+        $platoon = $this->createPlatoon();
+        $squad   = $this->createSquad($platoon);
+        $other   = $this->createSquad($platoon);
+        $leader  = $this->createSquadLeader($squad);
+        $leader->update(['squad_id' => $other->id]);
+
+        (new CleanupUnassignedLeaders)->handle();
+
+        $this->assertNull($squad->fresh()->leader_id);
+        $this->assertEquals(Position::MEMBER, $leader->fresh()->position);
+    }
+
+    #[Test]
+    public function clears_a_squad_leader_who_moved_to_another_division()
+    {
+        $squad  = $this->createSquad($this->createPlatoon());
+        $leader = $this->createSquadLeader($squad);
+        $leader->update(['division_id' => $this->createActiveDivision()->id]);
+
+        (new CleanupUnassignedLeaders)->handle();
+
+        $this->assertNull($squad->fresh()->leader_id);
+    }
+
+    #[Test]
+    public function keeps_leaders_who_still_fit()
+    {
+        $platoon = $this->createPlatoon();
+        $squad   = $this->createSquad($platoon);
+        $pl      = $this->createPlatoonLeader($platoon);
+        $sl      = $this->createSquadLeader($squad);
+
+        (new CleanupUnassignedLeaders)->handle();
+
+        $this->assertSame($pl->clan_id, $platoon->fresh()->leader_id);
+        $this->assertSame($sl->clan_id, $squad->fresh()->leader_id);
+        $this->assertEquals(Position::PLATOON_LEADER, $pl->fresh()->position);
+        $this->assertEquals(Position::SQUAD_LEADER, $sl->fresh()->position);
+    }
 }

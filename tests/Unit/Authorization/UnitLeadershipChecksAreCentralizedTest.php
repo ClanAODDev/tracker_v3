@@ -13,8 +13,10 @@ class UnitLeadershipChecksAreCentralizedTest extends TestCase
 
     private const ALLOWED = [
         'Authorization/PlatoonSquadHierarchy.php'                      => 4,
+        'Console/Commands/UnitsPreflight.php'                          => 6,
         'Filament/Mod/Resources/PlatoonResource/Pages/EditPlatoon.php' => 2,
         'Filament/Mod/Resources/SquadResource/Pages/EditSquad.php'     => 2,
+        'Jobs/CleanupUnassignedLeaders.php'                            => 2,
         'Models/Member.php'                                            => 4,
         'Models/Platoon.php'                                           => 1,
         'Transformers/OrgChartTransformer.php'                         => 1,
