@@ -118,6 +118,8 @@ class Division extends Model
         });
 
         static::created(function (Division $division) {
+            DivisionUnitLevel::createDefaultsFor($division);
+
             $division->recordActivity(ActivityType::CREATED_DIVISION);
             $division->applicationFields()->createMany(DivisionApplicationField::DEFAULTS);
         });

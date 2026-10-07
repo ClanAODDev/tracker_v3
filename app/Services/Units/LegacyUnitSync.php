@@ -4,9 +4,9 @@ namespace App\Services\Units;
 
 use App\Authorization\UnitHierarchy;
 use App\Models\Division;
+use App\Models\DivisionUnitLevel;
 use App\Models\Unit;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class LegacyUnitSync
 {
@@ -180,25 +180,6 @@ class LegacyUnitSync
 
     private function createMissingLevels(): int
     {
-        $created = 0;
-        $now     = now();
-
-        Division::withTrashed()->get()->each(function (Division $division) use (&$created, $now) {
-            foreach ([1 => ['platoon', 'platoon leader'], 2 => ['squad', 'squad leader']] as $depth => [$unit, $leader]) {
-                $label = $division->locality($unit);
-
-                $created += DB::table('division_unit_levels')->insertOrIgnore([
-                    'division_id'  => $division->id,
-                    'depth'        => $depth,
-                    'label'        => $label,
-                    'label_plural' => Str::plural($label),
-                    'leader_title' => $division->locality($leader),
-                    'created_at'   => $now,
-                    'updated_at'   => $now,
-                ]);
-            }
-        });
-
-        return $created;
+        return Division::withTrashed()->get()->sum(fn (Division $division) => DivisionUnitLevel::createDefaultsFor($division));
     }
 }

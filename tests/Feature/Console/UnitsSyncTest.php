@@ -121,6 +121,7 @@ class UnitsSyncTest extends TestCase
             ['old-string' => 'squad leader', 'new-string' => 'team lead'],
             ['old-string' => 'platoon leader', 'new-string' => 'company commander'],
         ]);
+        DivisionUnitLevel::where('division_id', $division->id)->delete();
 
         $this->artisan('tracker:units-sync')->assertSuccessful();
 
