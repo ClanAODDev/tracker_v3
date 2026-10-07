@@ -31,14 +31,14 @@ class MemberResourceUnitsTest extends TestCase
         $division = $leader->member->division;
         $platoon  = $this->createPlatoon($division);
         $squad    = $this->createSquad($platoon);
-        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'squad_id' => $squad->id]);
+        $member   = $this->createMember(['division_id' => $division->id, 'unit_id' => $squad->id]);
 
         $this->actingAs($leader);
 
         Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
             ->assertFormSet([
-                'platoon_unit_id' => $this->unitFor($platoon)->id,
-                'squad_unit_id'   => $this->unitFor($squad)->id,
+                'platoon_unit_id' => $platoon->id,
+                'squad_unit_id'   => $squad->id,
             ]);
     }
 
@@ -49,19 +49,19 @@ class MemberResourceUnitsTest extends TestCase
         $division  = $leader->member->division;
         $platoon   = $this->createPlatoon($division);
         $squad     = $this->createSquad($platoon);
-        $inPlatoon = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id]);
-        $inSquad   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'squad_id' => $squad->id]);
-        $elsewhere = $this->createMember(['division_id' => $division->id, 'platoon_id' => $this->createPlatoon($division)->id]);
+        $inPlatoon = $this->createMember(['division_id' => $division->id, 'unit_id' => $platoon->id]);
+        $inSquad   = $this->createMember(['division_id' => $division->id, 'unit_id' => $squad->id]);
+        $elsewhere = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->createPlatoon($division)->id]);
 
         $this->actingAs($leader);
 
         Livewire::test(ListMembers::class)
-            ->filterTable('unit', ['division' => $division->id, 'platoon' => [$this->unitFor($platoon)->id], 'squad' => []])
+            ->filterTable('unit', ['division' => $division->id, 'platoon' => [$platoon->id], 'squad' => []])
             ->assertCanSeeTableRecords([$inPlatoon, $inSquad])
             ->assertCanNotSeeTableRecords([$elsewhere]);
 
         Livewire::test(ListMembers::class)
-            ->filterTable('unit', ['division' => $division->id, 'platoon' => [$this->unitFor($platoon)->id], 'squad' => [$this->unitFor($squad)->id]])
+            ->filterTable('unit', ['division' => $division->id, 'platoon' => [$platoon->id], 'squad' => [$squad->id]])
             ->assertCanSeeTableRecords([$inSquad])
             ->assertCanNotSeeTableRecords([$inPlatoon, $elsewhere]);
     }
@@ -72,7 +72,7 @@ class MemberResourceUnitsTest extends TestCase
         $leader   = $this->createSeniorLeader();
         $division = $leader->member->division;
         $platoon  = $this->createPlatoon($division);
-        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id]);
+        $member   = $this->createMember(['division_id' => $division->id, 'unit_id' => $platoon->id]);
 
         $this->actingAs($leader);
 
@@ -81,6 +81,6 @@ class MemberResourceUnitsTest extends TestCase
             ->call('save')
             ->assertHasNoFormErrors();
 
-        $this->assertSame([null, 0, 0], [$member->fresh()->unit_id, $member->fresh()->platoon_id, $member->fresh()->squad_id]);
+        $this->assertNull($member->fresh()->unit_id);
     }
 }

@@ -7,10 +7,8 @@ use App\Enums\Rank;
 use App\Enums\Role;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Models\Unit;
 use App\Models\User;
-use App\Services\Units\LegacyUnitSync;
 use App\Services\Units\UnitAssignment;
 use Illuminate\Support\Collection;
 
@@ -80,29 +78,26 @@ trait CreatesMembers
         ], $userAttributes));
     }
 
-    protected function createSquadLeader(Squad $squad, array $memberAttributes = []): Member
+    protected function createSquadLeader(Unit $squad, array $memberAttributes = []): Member
     {
         $member = Member::factory()->ofTypeSquadLeader()->create(array_merge([
-            'division_id' => $squad->platoon->division_id,
-            'platoon_id'  => $squad->platoon_id,
-            'squad_id'    => $squad->id,
+            'division_id' => $squad->division_id,
+            'unit_id'     => $squad->id,
         ], $memberAttributes));
 
         $squad->update(['leader_id' => $member->clan_id]);
-        app(LegacyUnitSync::class)->syncSquad($squad->id);
 
         return $member;
     }
 
-    protected function createPlatoonLeader(Platoon $platoon, array $memberAttributes = []): Member
+    protected function createPlatoonLeader(Unit $platoon, array $memberAttributes = []): Member
     {
         $member = Member::factory()->ofTypePlatoonLeader()->create(array_merge([
             'division_id' => $platoon->division_id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ], $memberAttributes));
 
         $platoon->update(['leader_id' => $member->clan_id]);
-        app(LegacyUnitSync::class)->syncPlatoon($platoon->id);
 
         return $member;
     }
@@ -123,20 +118,11 @@ trait CreatesMembers
         ], $memberAttributes));
     }
 
-    protected function createMembersInSquad(Squad $squad, int $count = 3, array $attributes = []): Collection
+    protected function createMembersInUnit(Unit $unit, int $count = 3, array $attributes = []): Collection
     {
         return Member::factory()->count($count)->create(array_merge([
-            'division_id' => $squad->platoon->division_id,
-            'platoon_id'  => $squad->platoon_id,
-            'squad_id'    => $squad->id,
-        ], $attributes));
-    }
-
-    protected function createMembersInPlatoon(Platoon $platoon, int $count = 3, array $attributes = []): Collection
-    {
-        return Member::factory()->count($count)->create(array_merge([
-            'division_id' => $platoon->division_id,
-            'platoon_id'  => $platoon->id,
+            'division_id' => $unit->division_id,
+            'unit_id'     => $unit->id,
         ], $attributes));
     }
 
@@ -147,9 +133,8 @@ trait CreatesMembers
         ], $attributes));
     }
 
-    protected function makeLeader(User $user, Platoon|Squad $unit): void
+    protected function makeLeader(User $user, Unit $unit): void
     {
-        $units = app(UnitAssignment::class);
-        $units->setLeader($units->forLegacy($unit), $user->member->clan_id, recordActivity: false);
+        app(UnitAssignment::class)->setLeader($unit, $user->member->clan_id, recordActivity: false);
     }
 }

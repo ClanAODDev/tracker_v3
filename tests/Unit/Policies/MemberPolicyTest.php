@@ -402,7 +402,7 @@ class MemberPolicyTest extends TestCase
         $squad  = $this->createSquad();
         $leader = $this->createSquadLeader($squad);
         $user   = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member = $this->createMember(['division_id' => $squad->platoon->division_id, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id]);
+        $member = $this->createMember(['division_id' => $squad->division_id, 'unit_id' => $squad->id]);
 
         $this->actingAs($user);
         $this->assertTrue($this->policy->manageHandles($user, $member));
@@ -416,7 +416,7 @@ class MemberPolicyTest extends TestCase
         $otherSquad = $this->createSquad();
         $leader     = $this->createSquadLeader($squad);
         $user       = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member     = $this->createMember(['division_id' => $otherSquad->platoon->division_id, 'platoon_id' => $otherSquad->platoon_id, 'squad_id' => $otherSquad->id]);
+        $member     = $this->createMember(['division_id' => $otherSquad->division_id, 'unit_id' => $otherSquad->id]);
 
         $this->actingAs($user);
         $this->assertFalse($this->policy->manageHandles($user, $member));
@@ -429,7 +429,7 @@ class MemberPolicyTest extends TestCase
         $platoon = $this->createPlatoon();
         $leader  = $this->createPlatoonLeader($platoon);
         $user    = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member  = $this->createMember(['division_id' => $platoon->division_id, 'platoon_id' => $platoon->id]);
+        $member  = $this->createMember(['division_id' => $platoon->division_id, 'unit_id' => $platoon->id]);
 
         $this->actingAs($user);
         $this->assertTrue($this->policy->manageHandles($user, $member));
@@ -443,7 +443,7 @@ class MemberPolicyTest extends TestCase
         $otherPlatoon = $this->createPlatoon();
         $leader       = $this->createPlatoonLeader($platoon);
         $user         = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member       = $this->createMember(['division_id' => $otherPlatoon->division_id, 'platoon_id' => $otherPlatoon->id]);
+        $member       = $this->createMember(['division_id' => $otherPlatoon->division_id, 'unit_id' => $otherPlatoon->id]);
 
         $this->actingAs($user);
         $this->assertFalse($this->policy->manageHandles($user, $member));

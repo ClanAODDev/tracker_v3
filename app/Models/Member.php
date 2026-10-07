@@ -154,7 +154,7 @@ class Member extends Model
         }
 
         $this->update([
-            ...$units->columnsFor(null),
+            'unit_id'     => null,
             'division_id' => $divisionId,
             'position'    => $this->position === Position::CLAN_ADMIN ? Position::CLAN_ADMIN : Position::MEMBER,
         ]);
@@ -163,7 +163,7 @@ class Member extends Model
     public function reset(): void
     {
         $this->update([
-            ...app(UnitAssignment::class)->columnsFor(null),
+            'unit_id'                => null,
             'division_id'            => 0,
             'position'               => Position::MEMBER,
             'flagged_for_inactivity' => false,
@@ -183,7 +183,7 @@ class Member extends Model
         $query
             ->where('position', Position::SQUAD_LEADER)
             ->whereNotIn('clan_id', function ($q) {
-                $q->select('leader_id')->from('units')->where('legacy_type', Unit::LEGACY_SQUAD)->whereNotNull('leader_id')->whereNull('deleted_at');
+                $q->select('leader_id')->from('units')->where('depth', '>', 1)->whereNotNull('leader_id')->whereNull('deleted_at');
             });
     }
 
@@ -192,7 +192,7 @@ class Member extends Model
         $query
             ->where('position', Position::PLATOON_LEADER)
             ->whereNotIn('clan_id', function ($q) {
-                $q->select('leader_id')->from('units')->where('legacy_type', Unit::LEGACY_PLATOON)->whereNotNull('leader_id')->whereNull('deleted_at');
+                $q->select('leader_id')->from('units')->where('depth', 1)->whereNotNull('leader_id')->whereNull('deleted_at');
             });
     }
 
@@ -225,16 +225,6 @@ class Member extends Model
     public function squadUnit(): ?Unit
     {
         return $this->unitAt(2);
-    }
-
-    public function platoon(): BelongsTo
-    {
-        return $this->belongsTo(Platoon::class);
-    }
-
-    public function squad(): BelongsTo
-    {
-        return $this->belongsTo(Squad::class);
     }
 
     public function division(): BelongsTo

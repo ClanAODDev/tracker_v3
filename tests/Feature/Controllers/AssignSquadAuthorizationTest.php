@@ -23,7 +23,7 @@ class AssignSquadAuthorizationTest extends TestCase
 
         $this->postJson('/members/assign-squad', [
             'member_id' => $member->id,
-            'unit_id'   => $this->unitFor($squad)->id,
+            'unit_id'   => $squad->id,
         ])->assertUnauthorized();
     }
 
@@ -38,7 +38,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $this->actingAs($user)
             ->postJson('/members/assign-squad', [
                 'member_id' => $target->id,
-                'unit_id'   => $this->unitFor($squad)->id,
+                'unit_id'   => $squad->id,
             ])->assertForbidden();
     }
 
@@ -53,12 +53,12 @@ class AssignSquadAuthorizationTest extends TestCase
         $this->actingAs($officer)
             ->postJson('/members/assign-squad', [
                 'member_id' => $target->id,
-                'unit_id'   => $this->unitFor($squad)->id,
+                'unit_id'   => $squad->id,
             ])->assertOk();
 
         $target->refresh();
-        $this->assertEquals($squad->id, $target->squad_id);
-        $this->assertEquals($platoon->id, $target->platoon_id);
+        $this->assertEquals($squad->id, $target->unit_id);
+        $this->assertEquals($platoon->id, $target->unit->parent_id);
     }
 
     #[Test]
@@ -69,8 +69,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $squad   = $this->createSquad($platoon);
         $target  = $this->createMember([
             'division_id' => $officer->member->division_id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => $squad->id,
+            'unit_id'     => $squad->id,
         ]);
 
         $this->actingAs($officer)
@@ -80,7 +79,7 @@ class AssignSquadAuthorizationTest extends TestCase
             ])->assertOk();
 
         $target->refresh();
-        $this->assertNotEquals($squad->id, $target->squad_id);
+        $this->assertNotEquals($squad->id, $target->unit_id);
     }
 
     #[Test]
@@ -92,8 +91,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $squad         = $this->createSquad($platoon);
         $target        = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => $squad->id,
+            'unit_id'     => $squad->id,
         ]);
         $officer = $this->createOfficer($otherDivision);
 
@@ -104,7 +102,7 @@ class AssignSquadAuthorizationTest extends TestCase
             ])->assertForbidden();
 
         $target->refresh();
-        $this->assertEquals($squad->id, $target->squad_id);
+        $this->assertEquals($squad->id, $target->unit_id);
     }
 
     #[Test]
@@ -112,7 +110,7 @@ class AssignSquadAuthorizationTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
-        $target   = $this->createMember(['division_id' => $division->id, 'platoon_id' => 0, 'squad_id' => 0]);
+        $target   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($user)
             ->postJson('/members/assign-squad', [

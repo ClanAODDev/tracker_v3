@@ -195,8 +195,8 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 99999,
                 'forum_name' => 'TestRecruit',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
-                'squad'      => $this->unitFor($squad)->id,
+                'platoon'    => $platoon->id,
+                'squad'      => $squad->id,
                 'handles'    => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -220,7 +220,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 88888,
                 'forum_name' => 'TransferTestRecruit',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
+                'platoon'    => $platoon->id,
                 'handles'    => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -242,7 +242,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 77777,
                 'forum_name' => 'RankTestRecruit',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
+                'platoon'    => $platoon->id,
                 'handles'    => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -268,7 +268,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 66666,
                 'forum_name' => 'DuplicateTestRecruit',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
+                'platoon'    => $platoon->id,
                 'handles'    => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -293,7 +293,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => $existing->clan_id,
                 'forum_name' => 'HijackAttempt',
                 'rank'       => Rank::SERGEANT_MAJOR->value,
-                'platoon'    => $this->unitFor($platoon)->id,
+                'platoon'    => $platoon->id,
             ]);
 
         $response->assertStatus(422);
@@ -319,7 +319,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => $exMember->clan_id,
                 'forum_name' => 'ReturningMember',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
+                'platoon'    => $platoon->id,
                 'handles'    => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -343,7 +343,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 55555,
                 'forum_name' => 'CrossDivisionRecruit',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($otherPlatoon)->id,
+                'platoon'    => $otherPlatoon->id,
             ]);
 
         $response->assertStatus(422);
@@ -365,8 +365,8 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 44444,
                 'forum_name' => 'CrossPlatoonRecruit',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
-                'squad'      => $this->unitFor($otherSquad)->id,
+                'platoon'    => $platoon->id,
+                'squad'      => $otherSquad->id,
             ]);
 
         $response->assertStatus(422);
@@ -426,7 +426,7 @@ class RecruitingControllerTest extends TestCase
                 'pending_user_id' => $pendingUser->id,
                 'forum_name'      => 'DiscordRecruit',
                 'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $this->unitFor($platoon)->id,
+                'platoon'         => $platoon->id,
                 'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -454,7 +454,7 @@ class RecruitingControllerTest extends TestCase
                 'pending_user_id' => $pendingUser->id,
                 'forum_name'      => '<script>alert(1)</script>',
                 'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $this->unitFor($platoon)->id,
+                'platoon'         => $platoon->id,
                 'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -483,7 +483,7 @@ class RecruitingControllerTest extends TestCase
                 'pending_user_id' => $pendingUser->id,
                 'forum_name'      => 'DiscordRecruit',
                 'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $this->unitFor($platoon)->id,
+                'platoon'         => $platoon->id,
                 'handles'         => [$handle->id => 'not-numeric'],
             ]);
 
@@ -508,7 +508,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 22222,
                 'forum_name' => 'NoHandleRecruit',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
+                'platoon'    => $platoon->id,
             ]);
 
         $response->assertStatus(422);
@@ -530,7 +530,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 23456,
                 'forum_name' => 'NoHandleRequiredRecruit',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
+                'platoon'    => $platoon->id,
             ]);
 
         $response->assertStatus(422);
@@ -555,7 +555,7 @@ class RecruitingControllerTest extends TestCase
                 'pending_user_id' => $pendingUser->id,
                 'forum_name'      => 'DiscordRecruit',
                 'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $this->unitFor($platoon)->id,
+                'platoon'         => $platoon->id,
                 'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -581,7 +581,7 @@ class RecruitingControllerTest extends TestCase
                 'pending_user_id' => $pendingUser->id,
                 'forum_name'      => 'TakenName',
                 'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $this->unitFor($platoon)->id,
+                'platoon'         => $platoon->id,
                 'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -602,7 +602,7 @@ class RecruitingControllerTest extends TestCase
                 'pending_user_id' => 99999,
                 'forum_name'      => 'TestRecruit',
                 'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $this->unitFor($platoon)->id,
+                'platoon'         => $platoon->id,
                 'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -630,7 +630,7 @@ class RecruitingControllerTest extends TestCase
                 'pending_user_id' => $pendingUser->id,
                 'forum_name'      => 'LinkedRecruit',
                 'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $this->unitFor($platoon)->id,
+                'platoon'         => $platoon->id,
                 'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -658,7 +658,7 @@ class RecruitingControllerTest extends TestCase
                 'pending_user_id' => $pendingUser->id,
                 'forum_name'      => 'NewForumName',
                 'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $this->unitFor($platoon)->id,
+                'platoon'         => $platoon->id,
                 'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -697,7 +697,7 @@ class RecruitingControllerTest extends TestCase
                 'pending_user_id' => $pendingUser->id,
                 'forum_name'      => 'DiscordRecruit',
                 'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $this->unitFor($platoon)->id,
+                'platoon'         => $platoon->id,
                 'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
     }
@@ -721,7 +721,7 @@ class RecruitingControllerTest extends TestCase
                 'pending_user_id' => $pendingUser->id,
                 'forum_name'      => 'MissingForumRecruit',
                 'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $this->unitFor($platoon)->id,
+                'platoon'         => $platoon->id,
                 'handles'         => [$division->handles->first()->id => 'GameHandle'],
             ]);
 
@@ -751,7 +751,7 @@ class RecruitingControllerTest extends TestCase
                 'pending_user_id' => $pendingUser->id,
                 'forum_name'      => 'BlockedRecruit',
                 'rank'            => Rank::RECRUIT->value,
-                'platoon'         => $this->unitFor($platoon)->id,
+                'platoon'         => $platoon->id,
             ]);
 
         $response->assertStatus(422);
@@ -905,7 +905,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 31313,
                 'forum_name' => 'EuRecruit',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
+                'platoon'    => $platoon->id,
                 'handles'    => [$na->id => '', $eu->id => 'EuCaptain'],
             ])
             ->assertSuccessful();
@@ -930,7 +930,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 32323,
                 'forum_name' => 'BothRecruit',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
+                'platoon'    => $platoon->id,
                 'handles'    => [$na->id => 'NaCaptain', $eu->id => 'EuCaptain'],
             ])
             ->assertSuccessful();
@@ -954,7 +954,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 33333,
                 'forum_name' => 'NoHandles',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
+                'platoon'    => $platoon->id,
                 'handles'    => [$na->id => '', $eu->id => ''],
             ])
             ->assertStatus(422)
@@ -983,7 +983,7 @@ class RecruitingControllerTest extends TestCase
                 'member_id'  => 34343,
                 'forum_name' => 'BadEu',
                 'rank'       => Rank::RECRUIT->value,
-                'platoon'    => $this->unitFor($platoon)->id,
+                'platoon'    => $platoon->id,
                 'handles'    => [$na->id => 'NaCaptain', $eu->id => 'NOT-VALID'],
             ])
             ->assertStatus(422)

@@ -161,8 +161,8 @@ class DivisionResourceTest extends TestCase
             ->test(EditDivision::class, ['record' => $division->getRouteKey()]);
 
         $units = app(UnitAssignment::class);
-        $units->setLeader($units->forLegacy($platoon), $member->clan_id);
-        $units->setLeader($units->forLegacy($squad), $member->clan_id);
+        $units->setLeader($platoon, $member->clan_id);
+        $units->setLeader($squad, $member->clan_id);
 
         (new \ReflectionMethod(EditDivision::class, 'handleXOs'))
             ->invoke($page->instance(), $division->id, ['executive_officers' => [['xo' => $member->id]]]);
@@ -178,14 +178,13 @@ class DivisionResourceTest extends TestCase
         $division = $this->createActiveDivision();
         $squad    = $this->createSquad($this->createPlatoon($division));
         $previous = $this->createCommander($division);
-        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id]);
+        $member   = $this->createMember(['division_id' => $division->id, 'unit_id' => $squad->id]);
 
         $this->invokeLeadershipHandler($division, 'handleNewCO', ['new_co' => $member->id]);
 
         $this->assertEquals(Position::MEMBER, $previous->fresh()->position);
         $this->assertEquals(Position::COMMANDING_OFFICER, $member->fresh()->position);
-        $this->assertSame(0, $member->fresh()->platoon_id);
-        $this->assertSame(0, $member->fresh()->squad_id);
+        $this->assertNull($member->fresh()->unit_id);
     }
 
     #[Test]
@@ -193,12 +192,12 @@ class DivisionResourceTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $squad    = $this->createSquad($this->createPlatoon($division));
-        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id]);
+        $member   = $this->createMember(['division_id' => $division->id, 'unit_id' => $squad->id]);
 
         $this->invokeLeadershipHandler($division, 'handleNewCO', ['new_co' => $member->id]);
 
         $this->assertEquals(Position::COMMANDING_OFFICER, $member->fresh()->position);
-        $this->assertSame(0, $member->fresh()->squad_id);
+        $this->assertNull($member->fresh()->unit_id);
     }
 
     #[Test]

@@ -11,7 +11,7 @@ use App\Models\Division;
 use App\Models\Leave;
 use App\Models\Member;
 use App\Models\MemberAward;
-use App\Models\Platoon;
+use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
@@ -240,7 +240,7 @@ final class PendingActionsDataTest extends TestCase
 
         Member::factory()->create([
             'division_id' => $this->division->id,
-            'platoon_id'  => 0,
+            'unit_id'     => null,
         ]);
 
         $this->division->refresh();
@@ -257,11 +257,10 @@ final class PendingActionsDataTest extends TestCase
     {
         $user = $this->createUserWithRole('sr_ldr');
 
-        $platoon = Platoon::factory()->create(['division_id' => $this->division->id]);
+        $platoon = Unit::factory()->create(['division_id' => $this->division->id]);
         Member::factory()->create([
             'division_id' => $this->division->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => 0,
+            'unit_id'     => $platoon->id,
             'position'    => Position::MEMBER,
         ]);
 

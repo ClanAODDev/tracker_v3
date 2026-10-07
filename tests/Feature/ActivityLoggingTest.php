@@ -7,8 +7,8 @@ use App\Models\Activity;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Note;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Models\Unit;
+use App\Services\Units\UnitAssignment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -45,7 +45,7 @@ class ActivityLoggingTest extends TestCase
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $platoon  = Platoon::factory()->create(['division_id' => $division->id]);
+        $platoon  = Unit::factory()->create(['division_id' => $division->id]);
         $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($officer);
@@ -142,20 +142,17 @@ class ActivityLoggingTest extends TestCase
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $platoon  = Platoon::factory()->create(['division_id' => $division->id]);
+        $platoon  = Unit::factory()->create(['division_id' => $division->id]);
 
         $this->actingAs($officer);
 
-        $squad = Squad::create([
-            'name'       => 'Alpha Squad',
-            'platoon_id' => $platoon->id,
-        ]);
+        $squad = app(UnitAssignment::class)->create($division, $platoon, ['name' => 'Alpha Squad']);
 
         $activity = Activity::where('name', ActivityType::CREATED_SQUAD)->first();
 
         $this->assertNotNull($activity);
         $this->assertEquals($squad->id, $activity->subject_id);
-        $this->assertEquals(Squad::class, $activity->subject_type);
+        $this->assertEquals(Unit::class, $activity->subject_type);
     }
 
     #[Test]
@@ -166,16 +163,13 @@ class ActivityLoggingTest extends TestCase
 
         $this->actingAs($officer);
 
-        $platoon = Platoon::create([
-            'name'        => 'Bravo Platoon',
-            'division_id' => $division->id,
-        ]);
+        $platoon = app(UnitAssignment::class)->create($division, null, ['name' => 'Bravo Platoon']);
 
         $activity = Activity::where('name', ActivityType::CREATED_PLATOON)->first();
 
         $this->assertNotNull($activity);
         $this->assertEquals($platoon->id, $activity->subject_id);
-        $this->assertEquals(Platoon::class, $activity->subject_type);
+        $this->assertEquals(Unit::class, $activity->subject_type);
     }
 
     #[Test]
@@ -197,8 +191,8 @@ class ActivityLoggingTest extends TestCase
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $platoon  = Platoon::factory()->create(['division_id' => $division->id, 'name' => 'Delta Platoon']);
-        $squad    = Squad::factory()->create(['platoon_id' => $platoon->id, 'name' => 'Echo Squad']);
+        $platoon  = Unit::factory()->create(['division_id' => $division->id, 'name' => 'Delta Platoon']);
+        $squad    = Unit::factory()->childOf($platoon)->create(['name' => 'Echo Squad']);
         $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($officer);

@@ -16,9 +16,7 @@ use App\Models\Leave;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Note;
-use App\Models\Platoon;
 use App\Models\RankAction;
-use App\Models\Squad;
 use App\Models\Ticket;
 use App\Models\Unit;
 use App\Models\User;
@@ -30,9 +28,7 @@ use App\Policies\LeavePolicy;
 use App\Policies\MemberPolicy;
 use App\Policies\MemberRequestPolicy;
 use App\Policies\NotePolicy;
-use App\Policies\PlatoonPolicy;
 use App\Policies\RankActionPolicy;
-use App\Policies\SquadPolicy;
 use App\Policies\TicketPolicy;
 use App\Policies\UnitPolicy;
 use App\Policies\UserPolicy;
@@ -56,9 +52,7 @@ class AuthServiceProvider extends ServiceProvider
         MemberRequest::class       => MemberRequestPolicy::class,
         NewAccessToken::class      => ApiTokenPolicy::class,
         Note::class                => NotePolicy::class,
-        Platoon::class             => PlatoonPolicy::class,
         RankAction::class          => RankActionPolicy::class,
-        Squad::class               => SquadPolicy::class,
         Ticket::class              => TicketPolicy::class,
         Unit::class                => UnitPolicy::class,
         User::class                => UserPolicy::class,

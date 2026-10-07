@@ -5,7 +5,6 @@ namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
 use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
 use App\Enums\UnitLevel;
-use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
@@ -48,7 +47,8 @@ class MembersRelationManager extends RelationManager
                     ->sortable()
                     ->badge(),
                 TextColumn::make('position'),
-                TextColumn::make('squad.name')
+                TextColumn::make('squad')
+                    ->state(fn ($record) => $record->squadUnit()?->name)
                     ->toggleable(),
             ])
             ->filters([
@@ -81,10 +81,9 @@ class MembersRelationManager extends RelationManager
                                 ->required(),
                         ])
                         ->action(function (Collection $records, array $data): void {
-                            $units   = app(UnitAssignment::class);
-                            $columns = $units->columnsFor($this->ownerRecord->children()->findOrFail($data['squad_id']));
+                            $squad = $this->ownerRecord->children()->findOrFail($data['squad_id']);
 
-                            $records->each(fn ($member) => $member->update($columns));
+                            $records->each(fn ($member) => $member->update(['unit_id' => $squad->id]));
                         })
                         ->deselectRecordsAfterCompletion()
                         ->color('primary'),

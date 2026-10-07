@@ -62,7 +62,7 @@ class BulkMoveController extends Controller
         $units            = app(UnitAssignment::class);
         $transferredCount = 0;
         foreach ($members as $member) {
-            $member->update($units->columnsFor($squad ?? $platoon));
+            $member->update(['unit_id' => ($squad ?? $platoon)->id]);
 
             $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
                 'platoon' => $platoon->name,

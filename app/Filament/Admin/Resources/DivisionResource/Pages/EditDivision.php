@@ -75,13 +75,13 @@ class EditDivision extends EditRecord
             Member::where('id', $newCoId)
                 ->update([
                     'position' => Position::COMMANDING_OFFICER,
-                    ...app(UnitAssignment::class)->columnsFor(null),
+                    'unit_id'  => null,
                 ]);
         } elseif (! $previousCoId) {
             Member::where('id', $newCoId)
                 ->update([
                     'position' => Position::COMMANDING_OFFICER,
-                    ...app(UnitAssignment::class)->columnsFor(null),
+                    'unit_id'  => null,
                 ]);
         }
 
@@ -109,7 +109,7 @@ class EditDivision extends EditRecord
             Member::whereIn('id', $toAdd)
                 ->update([
                     'position' => Position::EXECUTIVE_OFFICER,
-                    ...app(UnitAssignment::class)->columnsFor(null),
+                    'unit_id'  => null,
                 ]);
 
             $this->clearPlatoonAndSquadLeadership($toAdd->all());

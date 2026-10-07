@@ -28,17 +28,17 @@ class SquadController extends Controller
 
             $this->authorize('update', $platoon);
 
-            $member->update($this->units->columnsFor(null));
+            $member->update(['unit_id' => null]);
             $member->recordActivity(ActivityType::UNASSIGNED);
 
             return response()->json(['success' => true]);
         }
 
-        $squad = Unit::query()->where('legacy_type', Unit::LEGACY_SQUAD)->findOrFail($request->unit_id);
+        $squad = Unit::query()->where('depth', '>', 1)->findOrFail($request->unit_id);
         abort_if($squad->parent === null, 404);
         $this->authorize('update', $squad->parent);
 
-        $member->update($this->units->columnsFor($squad));
+        $member->update(['unit_id' => $squad->id]);
         $member->recordActivity(ActivityType::ASSIGNED_SQUAD, [
             'platoon' => $squad->parent->name,
             'squad'   => $squad->name,

@@ -7,8 +7,7 @@ use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Models\Unit;
 use App\Services\MemberSyncService;
 use App\Services\Units\UnitAssignment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -361,13 +360,12 @@ class MemberSyncServiceTest extends TestCase
     public function a_forum_division_change_resets_platoon_and_squad(): void
     {
         [$from, $to] = [Division::factory()->create(), Division::factory()->create()];
-        $platoon     = Platoon::factory()->create(['division_id' => $from->id]);
-        $squad       = Squad::factory()->create(['platoon_id' => $platoon->id]);
+        $platoon     = Unit::factory()->create(['division_id' => $from->id]);
+        $squad       = Unit::factory()->childOf($platoon)->create();
         $member      = Member::factory()->create([
             'clan_id'     => 66666,
             'division_id' => $from->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => $squad->id,
+            'unit_id'     => $squad->id,
             'position'    => Position::MEMBER,
         ]);
 
@@ -375,49 +373,46 @@ class MemberSyncServiceTest extends TestCase
 
         $member->refresh();
         $this->assertSame($to->id, $member->division_id);
-        $this->assertEquals(0, $member->platoon_id);
-        $this->assertEquals(0, $member->squad_id);
+        $this->assertNull($member->unit_id);
     }
 
     #[Test]
     public function a_forum_division_change_vacates_the_platoon_the_member_led(): void
     {
         [$from, $to] = [Division::factory()->create(), Division::factory()->create()];
-        $platoon     = Platoon::factory()->create(['division_id' => $from->id]);
+        $platoon     = Unit::factory()->create(['division_id' => $from->id]);
         $member      = Member::factory()->create([
             'clan_id'     => 77777,
             'division_id' => $from->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => 0,
+            'unit_id'     => $platoon->id,
             'position'    => Position::PLATOON_LEADER,
         ]);
         $units = app(UnitAssignment::class);
-        $units->setLeader($units->forLegacy($platoon), $member->clan_id);
+        $units->setLeader($platoon, $member->clan_id);
 
         (new MemberSyncService($this->forumInfo(77777, $to->name)))->sync();
 
         $this->assertSame(Position::MEMBER, $member->fresh()->position);
-        $this->assertEquals(0, $platoon->fresh()->leader_id);
+        $this->assertNull($platoon->fresh()->leader_id);
     }
 
     #[Test]
     public function a_sync_without_a_division_change_keeps_platoon_and_squad(): void
     {
         $division = Division::factory()->create();
-        $platoon  = Platoon::factory()->create(['division_id' => $division->id]);
-        $squad    = Squad::factory()->create(['platoon_id' => $platoon->id]);
+        $platoon  = Unit::factory()->create(['division_id' => $division->id]);
+        $squad    = Unit::factory()->childOf($platoon)->create();
         $member   = Member::factory()->create([
             'clan_id'     => 88888,
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => $squad->id,
+            'unit_id'     => $squad->id,
             'posts'       => 1,
         ]);
 
         (new MemberSyncService($this->forumInfo(88888, $division->name)))->sync();
 
         $member->refresh();
-        $this->assertSame([$platoon->id, $squad->id], [$member->platoon_id, $member->squad_id]);
+        $this->assertSame($squad->id, $member->unit_id);
     }
 
     private function forumInfo(int $userId, string $divisionName): GetDivisionInfo

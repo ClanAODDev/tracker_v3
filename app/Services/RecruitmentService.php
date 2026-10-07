@@ -14,7 +14,6 @@ use App\Models\Transfer;
 use App\Models\Unit;
 use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
 use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
-use App\Services\Units\UnitAssignment;
 use Illuminate\Support\Facades\DB;
 
 class RecruitmentService
@@ -76,7 +75,7 @@ class RecruitmentService
                 'division_id'            => $division->id,
                 'flagged_for_inactivity' => false,
                 'last_promoted_at'       => now(),
-                ...app(UnitAssignment::class)->columnsFor($squad ?? $platoon),
+                'unit_id'                => ($squad ?? $platoon)->id,
             ])->save();
 
             $this->handles->setForDivision($member, $division, $handles);

@@ -22,7 +22,7 @@ class AssignPlatoonAuthorizationTest extends TestCase
         $platoon  = $this->createPlatoon($division);
 
         $this->postJson(route('member.assign-platoon', $member->clan_id), [
-            'platoon_id' => $this->unitFor($platoon)->id,
+            'platoon_id' => $platoon->id,
         ])->assertUnauthorized();
     }
 
@@ -36,7 +36,7 @@ class AssignPlatoonAuthorizationTest extends TestCase
 
         $this->actingAs($user)
             ->postJson(route('member.assign-platoon', $target->clan_id), [
-                'platoon_id' => $this->unitFor($platoon)->id,
+                'platoon_id' => $platoon->id,
             ])->assertForbidden();
     }
 
@@ -49,9 +49,9 @@ class AssignPlatoonAuthorizationTest extends TestCase
 
         $this->actingAs($officer)
             ->postJson(route('member.assign-platoon', $target->clan_id), [
-                'platoon_id' => $this->unitFor($platoon)->id,
+                'platoon_id' => $platoon->id,
             ])->assertOk();
 
-        $this->assertEquals($platoon->id, $target->fresh()->platoon_id);
+        $this->assertEquals($platoon->id, $target->fresh()->unit_id);
     }
 }

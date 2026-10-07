@@ -335,13 +335,13 @@ class DivisionTest extends TestCase
 
         $unassigned = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => 0,
+            'unit_id'     => null,
             'position'    => Position::MEMBER,
         ]);
 
         $assigned = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::MEMBER,
         ]);
 

@@ -4,8 +4,6 @@ namespace App\Authorization;
 
 use App\Enums\UnitLevel;
 use App\Models\Member;
-use App\Models\Platoon;
-use App\Models\Squad;
 use App\Models\Unit;
 use App\Models\User;
 use App\Services\Units\UnitAssignment;
@@ -52,10 +50,8 @@ class UnitTreeHierarchy implements UnitHierarchy
         return $this->ledUnits[$member->clan_id];
     }
 
-    public function leads(Member $leader, Platoon|Squad|Unit $unit): bool
+    public function leads(Member $leader, Unit $unit): bool
     {
-        $unit = $unit instanceof Unit ? $unit : $this->units->forLegacy($unit);
-
         return $unit->leader_id !== null && (int) $unit->leader_id === (int) $leader->clan_id;
     }
 

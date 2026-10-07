@@ -48,7 +48,7 @@ class HoldsNoOtherPosition implements ValidationRule
         }
 
         $platoon = Unit::where('leader_id', $member->clan_id)
-            ->where('legacy_type', Unit::LEGACY_PLATOON)
+            ->where('depth', 1)
             ->when($this->exceptUnit, fn ($query, $except) => $query->whereKeyNot($except->getKey()))
             ->first();
 
@@ -57,7 +57,7 @@ class HoldsNoOtherPosition implements ValidationRule
         }
 
         $squad = Unit::where('leader_id', $member->clan_id)
-            ->where('legacy_type', Unit::LEGACY_SQUAD)
+            ->where('depth', '>', 1)
             ->when($this->exceptUnit, fn ($query, $except) => $query->whereKeyNot($except->getKey()))
             ->first();
 

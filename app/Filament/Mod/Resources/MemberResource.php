@@ -19,7 +19,6 @@ use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Unit;
 use App\Services\MemberHandleService;
-use App\Services\Units\UnitAssignment;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -512,11 +511,9 @@ class MemberResource extends Resource
                             }
                         })
                         ->action(function (Collection $records, array $data): void {
-                            $units   = app(UnitAssignment::class);
-                            $target  = Unit::find(($data['squad_id'] ?? null) ?: ($data['platoon_id'] ?? null));
-                            $columns = $units->columnsFor($target);
+                            $target = Unit::find(($data['squad_id'] ?? null) ?: ($data['platoon_id'] ?? null));
 
-                            $records->each->update($columns);
+                            $records->each->update(['unit_id' => $target?->id]);
                         })
                         ->color('primary'),
 

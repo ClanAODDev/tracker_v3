@@ -68,8 +68,7 @@ class RankActionAutoApprovalMatrixTest extends PermissionMatrixTestCase
                 'rank'        => Rank::PRIVATE_FIRST_CLASS,
                 'position'    => Position::MEMBER,
                 'division_id' => $this->world->divisionA->id,
-                'platoon_id'  => $this->world->platoons['A1']->id,
-                'squad_id'    => $this->world->squads['A1a']->id,
+                'unit_id'     => $this->world->squads['A1a']->id,
             ]);
 
             $lines[] = self::line('create promotion', 'PFC asking for Cpl', $actor, $this->safely(function () use ($target) {

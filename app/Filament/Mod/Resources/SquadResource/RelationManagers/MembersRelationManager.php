@@ -47,7 +47,7 @@ class MembersRelationManager extends RelationManager
                 CreateAction::make()->using(function (array $data) {
                     $units = app(UnitAssignment::class);
 
-                    return Member::create([...$data, ...$units->columnsFor($this->getOwnerRecord())]);
+                    return Member::create([...$data, 'unit_id' => $this->getOwnerRecord()->id]);
                 }),
             ])
             ->recordActions([

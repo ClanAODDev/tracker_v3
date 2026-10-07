@@ -346,7 +346,7 @@ class UserTest extends TestCase
 
         $leader = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::PLATOON_LEADER,
         ]);
         $this->makeLeader($leader, $platoon);
@@ -363,7 +363,7 @@ class UserTest extends TestCase
 
         $leader = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::PLATOON_LEADER,
         ]);
 

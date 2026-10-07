@@ -54,7 +54,7 @@ class EditSquad extends EditRecord
         if ($originalLeaderId !== $newLeaderId) {
             if ($newLeaderId) {
                 Member::where('clan_id', $newLeaderId)->update([
-                    ...$units->columnsFor($unit),
+                    'unit_id'  => $unit->id,
                     'position' => Position::SQUAD_LEADER,
                 ]);
 
@@ -67,7 +67,7 @@ class EditSquad extends EditRecord
 
             if ($originalLeaderStillSquadLeader) {
                 Member::where('clan_id', $originalLeaderId)->update([
-                    ...$units->columnsFor(null),
+                    'unit_id'  => null,
                     'position' => Position::MEMBER,
                 ]);
 
@@ -87,7 +87,7 @@ class EditSquad extends EditRecord
                     $units = app(UnitAssignment::class);
                     $unit  = $record;
 
-                    $unit->members()->update($units->columnsFor($unit->parent));
+                    $unit->members()->update(['unit_id' => $unit->parent_id]);
 
                     $units->archive($unit);
 

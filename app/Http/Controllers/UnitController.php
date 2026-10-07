@@ -72,7 +72,7 @@ class UnitController extends Controller
             'unassigned'     => $unassigned,
             'assignUrl'      => url('/members/assign-squad'),
             'backUrl'        => $unit->url($division),
-            'createSquadUrl' => route('filament.mod.resources.platoons.edit', $unit->legacy_id),
+            'createSquadUrl' => route('filament.mod.resources.platoons.edit', $unit->id),
         ]);
     }
 
@@ -100,7 +100,7 @@ class UnitController extends Controller
                 'squadLabel'      => $division->locality('squad'),
                 'logo'            => $platoon->getLogoPath(),
                 'canManage'       => $canManage,
-                'editUrl'         => $canManage ? route('filament.mod.resources.platoons.edit', $platoon->legacy_id) : null,
+                'editUrl'         => $canManage ? route('filament.mod.resources.platoons.edit', $platoon->id) : null,
                 'manageUrl'       => $canManage ? route('unit.manage', [$division->slug, $platoon]) : null,
                 'unassignedCount' => $unassigned->count(),
                 'breadcrumbs'     => [
@@ -156,7 +156,7 @@ class UnitController extends Controller
                 'kind'        => 'squad',
                 'name'        => $squad->name ?: 'Untitled ' . $division->locality('squad'),
                 'canManage'   => $canManage,
-                'editUrl'     => $canManage ? route('filament.mod.resources.squads.edit', $squad->legacy_id) : null,
+                'editUrl'     => $canManage ? route('filament.mod.resources.squads.edit', $squad->id) : null,
                 'breadcrumbs' => array_values(array_filter([
                     ['label' => $division->name, 'href' => route('division', $division->slug)],
                     $platoon ? ['label' => $platoon->name ?: 'Untitled', 'href' => $platoon->url($division)] : null,

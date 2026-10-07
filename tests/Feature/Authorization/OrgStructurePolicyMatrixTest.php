@@ -4,8 +4,7 @@ namespace Tests\Feature\Authorization;
 
 use App\Enums\Role;
 use App\Models\Division;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Models\Unit;
 use PHPUnit\Framework\Attributes\Test;
 
 class OrgStructurePolicyMatrixTest extends PermissionMatrixTestCase
@@ -73,10 +72,10 @@ class OrgStructurePolicyMatrixTest extends PermissionMatrixTestCase
     private function platoonChecks(): array
     {
         $checks = [
-            ['viewAny', '(any platoon)', fn () => [Platoon::class]],
-            ['create', '(no division)', fn ()  => [Platoon::class]],
-            ['create', 'own_division', fn ()   => [Platoon::class, $this->world->divisionA->fresh()]],
-            ['create', 'other_division', fn () => [Platoon::class, $this->world->divisionB->fresh()]],
+            ['viewAny', '(any platoon)', fn () => [Unit::class]],
+            ['create', '(no division)', fn ()  => [Unit::class]],
+            ['create', 'own_division', fn ()   => [Unit::class, $this->world->divisionA->fresh()]],
+            ['create', 'other_division', fn () => [Unit::class, $this->world->divisionB->fresh()]],
         ];
 
         foreach (['update', 'delete'] as $ability) {
@@ -93,7 +92,7 @@ class OrgStructurePolicyMatrixTest extends PermissionMatrixTestCase
         $checks = [];
 
         foreach (['viewAny', 'deleteAny', 'create'] as $ability) {
-            $checks[] = [$ability, '(any squad)', fn () => [Squad::class]];
+            $checks[] = [$ability, '(any squad)', fn () => [Unit::class]];
         }
 
         foreach (['update', 'delete'] as $ability) {

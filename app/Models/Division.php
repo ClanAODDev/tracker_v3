@@ -199,11 +199,6 @@ class Division extends Model
             ?: ($this->abbreviation ? $this->abbreviation . '-officers' : null);
     }
 
-    public function platoons(): HasMany
-    {
-        return $this->hasMany(Platoon::class)->orderBy('order');
-    }
-
     public function units(): HasMany
     {
         return $this->hasMany(Unit::class);

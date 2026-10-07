@@ -6,7 +6,6 @@ use App\Enums\Position;
 use App\Enums\Rank;
 use App\Models\Division;
 use App\Models\Member;
-use App\Services\Units\LegacyUnitSync;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MemberFactory extends Factory
@@ -21,14 +20,6 @@ class MemberFactory extends Factory
     /**
      * Define the model's default state.
      */
-    public function configure(): static
-    {
-        return $this->afterCreating(function (Member $member) {
-            $member->setAttribute('unit_id', app(LegacyUnitSync::class)->syncMember($member->id));
-            $member->syncOriginalAttribute('unit_id');
-        });
-    }
-
     public function definition(): array
     {
         return [

@@ -7,11 +7,8 @@ use App\Enums\Rank;
 use App\Filament\Mod\Resources\MemberResource\Pages\EditMember;
 use App\Jobs\ResetOrphanedUnitAssignments;
 use App\Models\Member;
-use App\Models\Platoon;
-use App\Models\Squad;
 use App\Models\Unit;
 use App\Services\RecruitmentService;
-use App\Services\Units\UnitAssignment;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
@@ -31,9 +28,9 @@ class UnitWritersTest extends TestCase
 
     private $division;
 
-    private Platoon $platoon;
+    private Unit $platoon;
 
-    private Squad $squad;
+    private Unit $squad;
 
     protected function setUp(): void
     {
@@ -57,14 +54,12 @@ class UnitWritersTest extends TestCase
         $leader->moveToDivision($other->id);
 
         $this->assertNull($leader->fresh()->unit_id);
-        $this->assertNull($this->unit($this->squad)->leader_id);
-        $this->assertSynced();
+        $this->assertNull($this->squad->fresh()->leader_id);
 
         $member = $this->assigned();
         $member->reset();
 
         $this->assertNull($member->fresh()->unit_id);
-        $this->assertSynced();
     }
 
     #[Test]
@@ -75,8 +70,7 @@ class UnitWritersTest extends TestCase
 
         (new ResetOrphanedUnitAssignments)->handle();
 
-        $this->assertSame([null, 0, 0], [$member->fresh()->unit_id, $member->fresh()->platoon_id, $member->fresh()->squad_id]);
-        $this->assertSynced();
+        $this->assertNull($member->fresh()->unit_id);
     }
 
     #[Test]
@@ -84,10 +78,9 @@ class UnitWritersTest extends TestCase
     {
         $recruiter = $this->createMember(['division_id' => $this->division->id]);
 
-        $member = app(RecruitmentService::class)->createMember(999123, 'Recruit', $this->division, Rank::RECRUIT->value, $this->unitFor($this->platoon)->id, $this->unitFor($this->squad)->id, [], $recruiter);
+        $member = app(RecruitmentService::class)->createMember(999123, 'Recruit', $this->division, Rank::RECRUIT->value, $this->platoon->id, $this->squad->id, [], $recruiter);
 
-        $this->assertSame($this->unit($this->squad)->id, $member->fresh()->unit_id);
-        $this->assertSynced();
+        $this->assertSame($this->squad->fresh()->id, $member->fresh()->unit_id);
     }
 
     #[Test]
@@ -96,18 +89,17 @@ class UnitWritersTest extends TestCase
         $this->actingAs($this->createSeniorLeader($this->division));
         $member = $this->createMember(['division_id' => $this->division->id]);
 
-        $this->postJson(route('bulk-transfer.store', $this->division->slug), ['member_ids' => [$member->clan_id], 'platoon_id' => $this->unit($this->platoon)->id])->assertOk();
-        $this->assertSame($this->unit($this->platoon)->id, $member->fresh()->unit_id);
+        $this->postJson(route('bulk-transfer.store', $this->division->slug), ['member_ids' => [$member->clan_id], 'platoon_id' => $this->platoon->fresh()->id])->assertOk();
+        $this->assertSame($this->platoon->fresh()->id, $member->fresh()->unit_id);
 
-        $this->postJson('/members/assign-squad', ['member_id' => $member->id, 'unit_id' => $this->unit($this->squad)->id])->assertOk();
-        $this->assertSame($this->unit($this->squad)->id, $member->fresh()->unit_id);
+        $this->postJson('/members/assign-squad', ['member_id' => $member->id, 'unit_id' => $this->squad->fresh()->id])->assertOk();
+        $this->assertSame($this->squad->fresh()->id, $member->fresh()->unit_id);
 
         $this->post(route('member.unassign', $member->clan_id))->assertRedirect();
         $this->assertNull($member->fresh()->unit_id);
 
-        $this->postJson(route('member.assign-platoon', $member->clan_id), ['platoon_id' => $this->unit($this->platoon)->id])->assertOk();
-        $this->assertSame($this->unit($this->platoon)->id, $member->fresh()->unit_id);
-        $this->assertSynced();
+        $this->postJson(route('member.assign-platoon', $member->clan_id), ['platoon_id' => $this->platoon->fresh()->id])->assertOk();
+        $this->assertSame($this->platoon->fresh()->id, $member->fresh()->unit_id);
     }
 
     #[Test]
@@ -116,9 +108,9 @@ class UnitWritersTest extends TestCase
         $this->actingAs($this->createSeniorLeader($this->division));
         $member = $this->assigned();
 
-        $this->postJson(route('member.assign-platoon', $member->clan_id), ['platoon_id' => $this->unit($this->platoon)->id])->assertOk();
+        $this->postJson(route('member.assign-platoon', $member->clan_id), ['platoon_id' => $this->platoon->fresh()->id])->assertOk();
 
-        $this->assertSame($this->unit($this->squad)->id, $member->fresh()->unit_id);
+        $this->assertSame($this->squad->fresh()->id, $member->fresh()->unit_id);
     }
 
     #[Test]
@@ -129,26 +121,15 @@ class UnitWritersTest extends TestCase
         $member = $this->createMember(['division_id' => $this->division->id, 'position' => Position::MEMBER]);
 
         Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
-            ->fillForm(['platoon_unit_id' => $this->unit($this->platoon)->id, 'squad_unit_id' => $this->unit($this->squad)->id])
+            ->fillForm(['platoon_unit_id' => $this->platoon->fresh()->id, 'squad_unit_id' => $this->squad->fresh()->id])
             ->call('save')
             ->assertHasNoFormErrors();
 
-        $this->assertSame($this->unit($this->squad)->id, $member->fresh()->unit_id);
-        $this->assertSynced();
+        $this->assertSame($this->squad->fresh()->id, $member->fresh()->unit_id);
     }
 
     private function assigned(): Member
     {
-        return $this->createMember(['division_id' => $this->division->id, 'platoon_id' => $this->platoon->id, 'squad_id' => $this->squad->id]);
-    }
-
-    private function unit(Platoon|Squad $legacy): Unit
-    {
-        return app(UnitAssignment::class)->forLegacy($legacy)->fresh();
-    }
-
-    private function assertSynced(): void
-    {
-        $this->artisan('tracker:units-verify')->assertSuccessful();
+        return $this->createMember(['division_id' => $this->division->id, 'unit_id' => $this->squad->id]);
     }
 }

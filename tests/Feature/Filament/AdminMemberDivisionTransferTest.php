@@ -39,8 +39,7 @@ class AdminMemberDivisionTransferTest extends TestCase
         $target = $this->createActiveDivision();
         $member = $this->createMember([
             'division_id' => $source->id,
-            'platoon_id'  => 3,
-            'squad_id'    => 7,
+            'unit_id'     => $this->createSquad($this->createPlatoon($source))->id,
             'position'    => Position::MEMBER,
         ]);
 
@@ -53,8 +52,7 @@ class AdminMemberDivisionTransferTest extends TestCase
 
         $member->refresh();
         $this->assertSame($target->id, $member->division_id);
-        $this->assertSame(0, $member->platoon_id);
-        $this->assertSame(0, $member->squad_id);
+        $this->assertNull($member->unit_id);
 
         $transfer = Transfer::where('member_id', $member->id)->first();
         $this->assertNotNull($transfer);

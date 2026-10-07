@@ -3,35 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\Division;
-use App\Models\Platoon;
-use App\Models\Squad;
 use App\Models\Unit;
-use App\Services\Units\UnitAssignment;
 use Illuminate\Http\RedirectResponse;
 
 class LegacyUnitRedirectController extends Controller
 {
-    public function __construct(private UnitAssignment $units) {}
-
-    public function platoon(Division $division, ?Platoon $platoon): RedirectResponse
+    public function platoon(Division $division, int $platoon): RedirectResponse
     {
-        abort_if($platoon === null, 404);
-
-        return $this->to('unit', $division, $this->units->forLegacy($platoon));
+        return $this->to('unit', $division, $this->find(Unit::LEGACY_PLATOON, $platoon));
     }
 
-    public function manage(Division $division, ?Platoon $platoon): RedirectResponse
+    public function manage(Division $division, int $platoon): RedirectResponse
     {
-        abort_if($platoon === null, 404);
-
-        return $this->to('unit.manage', $division, $this->units->forLegacy($platoon));
+        return $this->to('unit.manage', $division, $this->find(Unit::LEGACY_PLATOON, $platoon));
     }
 
-    public function squad(Division $division, ?Platoon $platoon, ?Squad $squad): RedirectResponse
+    public function squad(Division $division, int $platoon, int $squad): RedirectResponse
     {
-        abort_if($squad === null, 404);
+        return $this->to('unit', $division, $this->find(Unit::LEGACY_SQUAD, $squad));
+    }
 
-        return $this->to('unit', $division, $this->units->forLegacy($squad));
+    private function find(string $type, int $legacyId): Unit
+    {
+        return Unit::withTrashed()
+            ->where('legacy_type', $type)
+            ->where('legacy_id', $legacyId)
+            ->firstOrFail();
     }
 
     private function to(string $route, Division $division, Unit $unit): RedirectResponse

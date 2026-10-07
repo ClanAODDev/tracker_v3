@@ -20,9 +20,9 @@ class CleanupUnassignedLeaders implements ShouldQueue
         DB::transaction(function () {
             $units = app(UnitAssignment::class);
 
-            foreach ([Unit::LEGACY_PLATOON => Position::PLATOON_LEADER, Unit::LEGACY_SQUAD => Position::SQUAD_LEADER] as $type => $position) {
+            foreach ([1 => Position::PLATOON_LEADER, 2 => Position::SQUAD_LEADER] as $depth => $position) {
                 Unit::query()
-                    ->where('legacy_type', $type)
+                    ->where('depth', $depth)
                     ->where('leader_id', '>', 0)
                     ->whereNotExists(fn (Builder $query) => $query
                         ->from('members')

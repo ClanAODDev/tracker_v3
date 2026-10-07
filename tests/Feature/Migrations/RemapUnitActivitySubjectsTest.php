@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Migrations;
 
-use App\Models\Platoon;
-use App\Models\Squad;
 use App\Models\Unit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -16,28 +14,34 @@ class RemapUnitActivitySubjectsTest extends TestCase
     use CreatesDivisions;
     use RefreshDatabase;
 
+    private const PLATOON = 'App\Models\Platoon';
+
+    private const SQUAD = 'App\Models\Squad';
+
     #[Test]
     public function platoon_and_squad_activity_points_at_their_units_and_back(): void
     {
         $platoon = $this->createPlatoon();
         $squad   = $this->createSquad($platoon);
-        $rows    = [
-            $this->activity(Platoon::class, $platoon->id),
-            $this->activity(Squad::class, $squad->id),
-            $this->activity('App\Models\Member', $squad->id),
+        $platoon->update(['legacy_type' => Unit::LEGACY_PLATOON, 'legacy_id' => 31]);
+        $squad->update(['legacy_type' => Unit::LEGACY_SQUAD, 'legacy_id' => 52]);
+        $rows = [
+            $this->activity(self::PLATOON, 31),
+            $this->activity(self::SQUAD, 52),
+            $this->activity('App\Models\Member', 52),
         ];
 
         $migration = require database_path('migrations/2026_10_07_000002_remap_unit_activity_subjects.php');
         $migration->up();
 
-        $this->assertSame([Unit::class, $this->unitFor($platoon)->id], $this->subject($rows[0]));
-        $this->assertSame([Unit::class, $this->unitFor($squad)->id], $this->subject($rows[1]));
-        $this->assertSame(['App\Models\Member', $squad->id], $this->subject($rows[2]));
+        $this->assertSame([Unit::class, $platoon->id], $this->subject($rows[0]));
+        $this->assertSame([Unit::class, $squad->id], $this->subject($rows[1]));
+        $this->assertSame(['App\Models\Member', 52], $this->subject($rows[2]));
 
         $migration->down();
 
-        $this->assertSame([Platoon::class, $platoon->id], $this->subject($rows[0]));
-        $this->assertSame([Squad::class, $squad->id], $this->subject($rows[1]));
+        $this->assertSame([self::PLATOON, 31], $this->subject($rows[0]));
+        $this->assertSame([self::SQUAD, 52], $this->subject($rows[1]));
     }
 
     private function activity(string $type, int $id): int

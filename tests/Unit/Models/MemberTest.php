@@ -9,8 +9,8 @@ use App\Models\DivisionTag;
 use App\Models\Leave;
 use App\Models\Member;
 use App\Models\MemberRequest;
-use App\Models\Squad;
 use App\Models\Transfer;
+use App\Models\Unit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -63,14 +63,12 @@ class MemberTest extends TestCase
     #[Test]
     public function reset_clears_division_assignments()
     {
-        $division = $this->createDivisionWithFullStructure(1, 1, 1);
-        $platoon  = $division->platoons->first();
-        $squad    = $platoon->squads->first();
+        $division = $this->createActiveDivision();
+        $squad    = $this->createSquad($this->createPlatoon($division));
 
         $member = $this->createMember([
             'division_id'            => $division->id,
-            'platoon_id'             => $platoon->id,
-            'squad_id'               => $squad->id,
+            'unit_id'                => $squad->id,
             'position'               => Position::SQUAD_LEADER,
             'flagged_for_inactivity' => true,
         ]);
@@ -79,8 +77,7 @@ class MemberTest extends TestCase
         $member->refresh();
 
         $this->assertEquals(0, $member->division_id);
-        $this->assertEquals(0, $member->platoon_id);
-        $this->assertEquals(0, $member->squad_id);
+        $this->assertNull($member->unit_id);
         $this->assertEquals(Position::MEMBER, $member->position);
         $this->assertFalse($member->flagged_for_inactivity);
     }
@@ -398,15 +395,15 @@ class MemberTest extends TestCase
 
         $user = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::STAFF_SERGEANT,
         ]);
         $this->makeLeader($user, $platoon);
 
-        $eligible         = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'rank' => Rank::RECRUIT]);
-        $rankTooHigh      = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'rank' => Rank::CORPORAL]);
-        $differentPlatoon = $this->createMember(['division_id' => $division->id, 'platoon_id' => $this->createPlatoon($division)->id, 'rank' => Rank::RECRUIT]);
+        $eligible         = $this->createMember(['division_id' => $division->id, 'unit_id' => $platoon->id, 'rank' => Rank::RECRUIT]);
+        $rankTooHigh      = $this->createMember(['division_id' => $division->id, 'unit_id' => $platoon->id, 'rank' => Rank::CORPORAL]);
+        $differentPlatoon = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->createPlatoon($division)->id, 'rank' => Rank::RECRUIT]);
 
         $results = Member::eligibleForRankAction($user)->get();
 
@@ -655,8 +652,8 @@ class MemberTest extends TestCase
         $this->assertFalse($member->isRank(Rank::SERGEANT));
     }
 
-    private function inSquad(Squad $squad): array
+    private function inSquad(Unit $squad): array
     {
-        return ['division_id' => $squad->platoon->division_id, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id];
+        return ['division_id' => $squad->division_id, 'unit_id' => $squad->id];
     }
 }

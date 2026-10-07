@@ -109,11 +109,11 @@ class DivisionShowServiceTest extends TestCase
         $platoon  = $this->createPlatoon($division);
         $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
         $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
         $user = $this->createMemberWithUser(['division_id' => $division->id]);
         $this->actingAs($user);
@@ -131,11 +131,11 @@ class DivisionShowServiceTest extends TestCase
         $platoon       = $this->createPlatoon($division);
         $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
         $this->createMember([
             'division_id' => $otherDivision->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
         $user = $this->createMemberWithUser(['division_id' => $division->id]);
         $this->actingAs($user);
@@ -153,12 +153,12 @@ class DivisionShowServiceTest extends TestCase
 
         $this->createMember([
             'division_id'         => $division->id,
-            'platoon_id'          => $platoon->id,
+            'unit_id'             => $platoon->id,
             'last_voice_activity' => Carbon::now()->subDays(5),
         ]);
         $this->createMember([
             'division_id'         => $division->id,
-            'platoon_id'          => $platoon->id,
+            'unit_id'             => $platoon->id,
             'last_voice_activity' => Carbon::now()->subDays(60),
         ]);
         $user = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -281,9 +281,9 @@ class DivisionShowServiceTest extends TestCase
         $platoon  = $this->createPlatoon($division);
         $squadA   = $this->createSquad($platoon);
         $squadB   = $this->createSquad($platoon);
-        $inSquad  = fn ($squad, $voice) => $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'squad_id' => $squad->id, 'last_voice_activity' => $voice]);
+        $inSquad  = fn ($squad, $voice) => $this->createMember(['division_id' => $division->id, 'unit_id' => $squad->id, 'last_voice_activity' => $voice]);
 
-        $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'last_voice_activity' => now()]);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $platoon->id, 'last_voice_activity' => now()]);
         $inSquad($squadA, now());
         $inSquad($squadA, now()->subYear());
         $inSquad($squadB, null);

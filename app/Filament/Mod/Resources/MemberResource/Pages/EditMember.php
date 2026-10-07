@@ -11,13 +11,11 @@ use App\Jobs\RemoveClanMember;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Note;
-use App\Models\Unit;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionPartTimeMemberRemoved;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use App\Services\MemberHandleService;
-use App\Services\Units\UnitAssignment;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -71,7 +69,7 @@ class EditMember extends EditRecord
             $unitId = ($data['squad_unit_id'] ?? null) ?: ($data['platoon_unit_id'] ?? null);
             $data   = [
                 ...Arr::except($data, ['platoon_unit_id', 'squad_unit_id']),
-                ...app(UnitAssignment::class)->columnsFor($unitId ? Unit::find($unitId) : null),
+                'unit_id' => $unitId ?: null,
             ];
         }
 

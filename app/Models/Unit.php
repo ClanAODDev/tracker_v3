@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -11,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Unit extends Model
 {
+    use HasFactory;
     use SoftDeletes;
 
     public const LEGACY_PLATOON = 'platoon';
@@ -53,12 +55,12 @@ class Unit extends Model
 
     public function isPlatoon(): bool
     {
-        return $this->legacy_type === self::LEGACY_PLATOON;
+        return $this->depth === 1;
     }
 
     public function isSquad(): bool
     {
-        return $this->legacy_type === self::LEGACY_SQUAD;
+        return $this->depth > 1;
     }
 
     public function url(Division $division): string

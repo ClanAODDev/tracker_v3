@@ -57,7 +57,7 @@ class EditPlatoon extends EditRecord
         if ($originalLeaderId !== $newLeaderId) {
             if ($newLeaderId) {
                 Member::where('clan_id', $newLeaderId)->update([
-                    ...$units->columnsFor($unit),
+                    'unit_id'  => $unit->id,
                     'position' => Position::PLATOON_LEADER,
                 ]);
 
@@ -70,7 +70,7 @@ class EditPlatoon extends EditRecord
 
             if ($originalLeaderStillPlatoonLeader) {
                 Member::where('clan_id', $originalLeaderId)->update([
-                    ...$units->columnsFor(null),
+                    'unit_id'  => null,
                     'position' => Position::MEMBER,
                 ]);
 
@@ -89,7 +89,7 @@ class EditPlatoon extends EditRecord
                     $units = app(UnitAssignment::class);
                     $unit  = $record;
 
-                    $unit->allMembers()->update($units->columnsFor(null));
+                    $unit->allMembers()->update(['unit_id' => null]);
 
                     $unit->children()->get()->each(fn (Unit $squad) => $units->archive($squad, recordActivity: false));
 

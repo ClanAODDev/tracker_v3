@@ -8,9 +8,9 @@ use App\Enums\UnitLeaderPower;
 use App\Enums\UnitLevel;
 use App\Models\Member;
 use App\Models\RankAction;
+use App\Models\Unit;
 use App\Models\User;
 use App\Policies\RankActionPolicy;
-use App\Services\Units\UnitAssignment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
 use PHPUnit\Framework\Attributes\Test;
@@ -34,9 +34,9 @@ class UnitLeaderPowersTest extends TestCase
 
     private Member $inOtherPlatoon;
 
-    private $platoon;
+    private Unit $platoon;
 
-    private $squad;
+    private Unit $squad;
 
     protected function setUp(): void
     {
@@ -47,10 +47,10 @@ class UnitLeaderPowersTest extends TestCase
         $this->squad   = $this->createSquad($this->platoon);
         $otherSquad    = $this->createSquad($this->platoon);
         $otherPlatoon  = $this->createPlatoon($division);
-        $member        = fn ($platoon, $squad = null) => $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'squad_id' => $squad?->id ?? 0, 'rank' => Rank::PRIVATE]);
+        $member        = fn ($platoon, $squad = null) => $this->createMember(['division_id' => $division->id, 'unit_id' => ($squad ?? $platoon)->id, 'rank' => Rank::PRIVATE]);
 
-        $this->platoonLeader = $this->createMemberWithUser(['division_id' => $division->id, 'platoon_id' => $this->platoon->id, 'position' => Position::PLATOON_LEADER, 'rank' => Rank::STAFF_SERGEANT]);
-        $this->squadLeader   = $this->createMemberWithUser(['division_id' => $division->id, 'platoon_id' => $this->platoon->id, 'squad_id' => $this->squad->id, 'position' => Position::SQUAD_LEADER, 'rank' => Rank::CORPORAL]);
+        $this->platoonLeader = $this->createMemberWithUser(['division_id' => $division->id, 'unit_id' => $this->platoon->id, 'position' => Position::PLATOON_LEADER, 'rank' => Rank::STAFF_SERGEANT]);
+        $this->squadLeader   = $this->createMemberWithUser(['division_id' => $division->id, 'unit_id' => $this->squad->id, 'position' => Position::SQUAD_LEADER, 'rank' => Rank::CORPORAL]);
         $this->makeLeader($this->platoonLeader, $this->platoon);
         $this->makeLeader($this->squadLeader, $this->squad);
 
@@ -114,12 +114,10 @@ class UnitLeaderPowersTest extends TestCase
     #[Test]
     public function manage_unit_covers_the_platoon_and_its_squads_for_platoon_leaders(): void
     {
-        $units = app(UnitAssignment::class);
-
-        $this->assertTrue(Gate::forUser($this->platoonLeader)->allows('update', $units->forLegacy($this->platoon)));
-        $this->assertTrue(Gate::forUser($this->platoonLeader)->allows('update', $units->forLegacy($this->squad)));
-        $this->assertTrue(Gate::forUser($this->platoonLeader)->allows('delete', $units->forLegacy($this->squad)));
-        $this->assertFalse(Gate::forUser($this->squadLeader)->allows('update', $units->forLegacy($this->squad)));
+        $this->assertTrue(Gate::forUser($this->platoonLeader)->allows('update', $this->platoon->fresh()));
+        $this->assertTrue(Gate::forUser($this->platoonLeader)->allows('update', $this->squad->fresh()));
+        $this->assertTrue(Gate::forUser($this->platoonLeader)->allows('delete', $this->squad->fresh()));
+        $this->assertFalse(Gate::forUser($this->squadLeader)->allows('update', $this->squad->fresh()));
     }
 
     #[Test]

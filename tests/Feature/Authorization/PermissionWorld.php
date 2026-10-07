@@ -9,10 +9,8 @@ use App\Enums\Role;
 use App\Models\Division;
 use App\Models\DivisionMemberField;
 use App\Models\Member;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Models\Unit;
 use App\Models\User;
-use App\Services\Units\LegacyUnitSync;
 
 class PermissionWorld
 {
@@ -48,10 +46,10 @@ class PermissionWorld
 
     public Division $divisionB;
 
-    /** @var array<string, Platoon> */
+    /** @var array<string, Unit> */
     public array $platoons = [];
 
-    /** @var array<string, Squad> */
+    /** @var array<string, Unit> */
     public array $squads = [];
 
     /** @var array<string, User> */
@@ -92,15 +90,14 @@ class PermissionWorld
         $this->divisionA = Division::factory()->withoutHandles()->create(['name' => 'Division A', 'active' => true]);
         $this->divisionB = Division::factory()->withoutHandles()->create(['name' => 'Division B', 'active' => true]);
 
-        $this->platoons['A1'] = Platoon::factory()->create(['division_id' => $this->divisionA->id, 'name' => 'A1', 'leader_id' => 0]);
-        $this->platoons['A2'] = Platoon::factory()->create(['division_id' => $this->divisionA->id, 'name' => 'A2', 'leader_id' => 0]);
-        $this->platoons['B1'] = Platoon::factory()->create(['division_id' => $this->divisionB->id, 'name' => 'B1', 'leader_id' => 0]);
+        $this->platoons['A1'] = Unit::factory()->create(['division_id' => $this->divisionA->id, 'name' => 'A1', 'leader_id' => null]);
+        $this->platoons['A2'] = Unit::factory()->create(['division_id' => $this->divisionA->id, 'name' => 'A2', 'leader_id' => null]);
+        $this->platoons['B1'] = Unit::factory()->create(['division_id' => $this->divisionB->id, 'name' => 'B1', 'leader_id' => null]);
 
         foreach (self::SQUAD_PLATOONS as $squad => $platoon) {
-            $this->squads[$squad] = Squad::factory()->create([
-                'platoon_id' => $this->platoons[$platoon]->id,
-                'name'       => $squad,
-                'leader_id'  => 0,
+            $this->squads[$squad] = Unit::factory()->childOf($this->platoons[$platoon])->create([
+                'name'      => $squad,
+                'leader_id' => null,
             ]);
         }
     }
@@ -128,8 +125,6 @@ class PermissionWorld
 
         $this->platoons['A1']->update(['leader_id' => $this->users['platoon_leader']->member->clan_id]);
         $this->squads['A1a']->update(['leader_id' => $this->users['squad_leader']->member->clan_id]);
-        app(LegacyUnitSync::class)->syncPlatoon($this->platoons['A1']->id);
-        app(LegacyUnitSync::class)->syncSquad($this->squads['A1a']->id);
     }
 
     private function buildTargets(): void
@@ -193,8 +188,7 @@ class PermissionWorld
             'rank'        => $rank,
             'position'    => $position,
             'division_id' => $division->id,
-            'platoon_id'  => $platoonModel?->id ?? 0,
-            'squad_id'    => $squadModel?->id ?? 0,
+            'unit_id'     => ($squadModel ?? $platoonModel)?->id,
         ]);
     }
 }

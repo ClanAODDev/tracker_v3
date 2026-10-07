@@ -140,7 +140,7 @@ class CleanupUnassignedLeadersTest extends TestCase
     {
         $platoon = $this->createPlatoon();
         $leader  = $this->createPlatoonLeader($platoon);
-        $leader->update(['division_id' => 0, 'platoon_id' => 0, 'position' => Position::MEMBER]);
+        $leader->update(['division_id' => 0, 'unit_id' => null, 'position' => Position::MEMBER]);
 
         (new CleanupUnassignedLeaders)->handle();
 
@@ -152,7 +152,7 @@ class CleanupUnassignedLeadersTest extends TestCase
     {
         $platoon = $this->createPlatoon();
         $leader  = $this->createPlatoonLeader($platoon);
-        $leader->update(['position' => Position::EXECUTIVE_OFFICER, 'platoon_id' => 0]);
+        $leader->update(['position' => Position::EXECUTIVE_OFFICER, 'unit_id' => null]);
 
         (new CleanupUnassignedLeaders)->handle();
 
@@ -167,7 +167,7 @@ class CleanupUnassignedLeadersTest extends TestCase
         $squad   = $this->createSquad($platoon);
         $other   = $this->createSquad($platoon);
         $leader  = $this->createSquadLeader($squad);
-        $leader->update(app(UnitAssignment::class)->columnsFor($this->unitFor($other)));
+        $leader->update(['unit_id' => $other->id]);
 
         (new CleanupUnassignedLeaders)->handle();
 
@@ -211,8 +211,8 @@ class CleanupUnassignedLeadersTest extends TestCase
         $pl      = $this->createPlatoonLeader($platoon);
         $sl      = $this->createSquadLeader($squad);
         $units   = app(UnitAssignment::class);
-        $units->archive($units->forLegacy($squad));
-        $units->archive($units->forLegacy($platoon));
+        $units->archive($squad);
+        $units->archive($platoon);
 
         (new CleanupUnassignedLeaders)->handle();
 

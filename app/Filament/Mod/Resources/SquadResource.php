@@ -131,7 +131,7 @@ class SquadResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])->modifyQueryUsing(function ($query) {
-                $query->where('legacy_type', Unit::LEGACY_SQUAD)
+                $query->where('depth', 2)
                     ->whereHas('parent', fn ($query) => $query->where('division_id', auth()->user()->member->division_id));
             })
             ->filters([
@@ -173,6 +173,6 @@ class SquadResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ])
-            ->where('legacy_type', Unit::LEGACY_SQUAD);
+            ->where('depth', 2);
     }
 }

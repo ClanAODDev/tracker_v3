@@ -50,7 +50,7 @@ class DivisionOrgChartControllerTest extends TestCase
         $division = $officer->member->division;
         $squad    = $this->createSquad($this->createPlatoon($division));
         $leader   = $this->createSquadLeader($squad, ['name' => 'Squad Boss']);
-        $this->createMember(['division_id' => $division->id, 'platoon_id' => $squad->platoon_id, 'squad_id' => $squad->id, 'name' => 'Squad Grunt']);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $squad->id, 'name' => 'Squad Grunt']);
 
         $tree      = $this->actingAs($officer)->getJson(route('division.structure.data', $division->slug))->json();
         $squadNode = collect($tree['children'])->firstWhere('type', 'platoon')['children'][0];

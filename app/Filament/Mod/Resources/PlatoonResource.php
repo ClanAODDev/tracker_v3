@@ -193,6 +193,6 @@ class PlatoonResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ])
-            ->where('legacy_type', Unit::LEGACY_PLATOON);
+            ->where('depth', 1);
     }
 }

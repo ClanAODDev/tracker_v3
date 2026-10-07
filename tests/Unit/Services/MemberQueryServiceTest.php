@@ -70,14 +70,14 @@ class MemberQueryServiceTest extends TestCase
         $platoon  = $this->createPlatoon($division);
         $member   = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
 
         $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
 
         $this->assertTrue($result->relationLoaded('unit'));
-        $this->assertSame($platoon->id, $result->platoonUnit()->legacy_id);
+        $this->assertSame($platoon->id, $result->platoonUnit()->id);
     }
 
     #[Test]
@@ -88,8 +88,7 @@ class MemberQueryServiceTest extends TestCase
         $squad    = $this->createSquad($platoon);
         $member   = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => $squad->id,
+            'unit_id'     => $squad->id,
         ]);
 
         $query  = Member::where('id', $member->id);
@@ -97,7 +96,7 @@ class MemberQueryServiceTest extends TestCase
 
         $this->assertTrue($result->relationLoaded('unit'));
         $this->assertTrue($result->unit->relationLoaded('parent'));
-        $this->assertSame([$squad->id, $platoon->id], [$result->squadUnit()->legacy_id, $result->platoonUnit()->legacy_id]);
+        $this->assertSame([$squad->id, $platoon->id], [$result->squadUnit()->id, $result->platoonUnit()->id]);
     }
 
     #[Test]
