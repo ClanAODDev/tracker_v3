@@ -89,7 +89,7 @@ class UnitAssignment
             ]);
 
             $unit->update(['path' => ($parent?->path ?? '/') . $unit->id . '/']);
-            $this->recordLegacyActivity($unit, $parent ? ActivityType::CREATED_SQUAD : ActivityType::CREATED_PLATOON);
+            $this->recordActivity($unit, $parent ? ActivityType::CREATED_SQUAD : ActivityType::CREATED_PLATOON);
 
             return $unit;
         });
@@ -104,7 +104,7 @@ class UnitAssignment
         DB::transaction(function () use ($unit, $attributes) {
             $unit->update(array_intersect_key($attributes, array_flip(self::UNIT_COLUMNS)));
             $this->writeBack($unit, array_intersect_key($attributes, array_flip($unit->isPlatoon() ? self::PLATOON_COLUMNS : self::SQUAD_COLUMNS)));
-            $this->recordLegacyActivity($unit, $unit->isPlatoon() ? ActivityType::UPDATED_PLATOON : ActivityType::UPDATED_SQUAD);
+            $this->recordActivity($unit, $unit->isPlatoon() ? ActivityType::UPDATED_PLATOON : ActivityType::UPDATED_SQUAD);
         });
 
         return $unit;
@@ -117,7 +117,7 @@ class UnitAssignment
             $this->writeBack($unit, ['deleted_at' => $unit->deleted_at]);
 
             if ($recordActivity) {
-                $this->recordLegacyActivity($unit, $unit->isPlatoon() ? ActivityType::DELETED_PLATOON : ActivityType::DELETED_SQUAD);
+                $this->recordActivity($unit, $unit->isPlatoon() ? ActivityType::DELETED_PLATOON : ActivityType::DELETED_SQUAD);
             }
         });
     }
@@ -137,7 +137,7 @@ class UnitAssignment
             $this->writeBack($unit, ['leader_id' => $clanId ?: null]);
 
             if ($recordActivity) {
-                $this->recordLegacyActivity($unit, $unit->isPlatoon() ? ActivityType::UPDATED_PLATOON : ActivityType::UPDATED_SQUAD);
+                $this->recordActivity($unit, $unit->isPlatoon() ? ActivityType::UPDATED_PLATOON : ActivityType::UPDATED_SQUAD);
             }
         });
     }
@@ -176,7 +176,7 @@ class UnitAssignment
             ->update([...$columns, 'updated_at' => now()]);
     }
 
-    private function recordLegacyActivity(Unit $unit, ActivityType $type): void
+    private function recordActivity(Unit $unit, ActivityType $type): void
     {
         if (! auth()->check()) {
             return;
@@ -187,9 +187,9 @@ class UnitAssignment
         Activity::create([
             'name'         => $type,
             'user_id'      => $actor->id,
-            'subject_id'   => $unit->legacy_id,
-            'subject_type' => $unit->isPlatoon() ? Platoon::class : Squad::class,
-            'division_id'  => $unit->isPlatoon() ? $unit->division_id : ($actor->member?->division_id),
+            'subject_id'   => $unit->id,
+            'subject_type' => Unit::class,
+            'division_id'  => $unit->division_id ?? $actor->member?->division_id,
             'properties'   => null,
         ]);
     }

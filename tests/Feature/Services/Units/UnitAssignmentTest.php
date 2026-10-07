@@ -4,6 +4,7 @@ namespace Tests\Feature\Services\Units;
 
 use App\Models\Platoon;
 use App\Models\Squad;
+use App\Models\Unit;
 use App\Services\Units\UnitAssignment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -43,7 +44,7 @@ class UnitAssignmentTest extends TestCase
         $this->assertSame(['Alpha', 'First', 3, $division->id], [$platoon->name, $platoon->description, $platoon->order, $platoon->division_id]);
         $this->assertSame(['Alpha One', $platoon->id, true], [$squad->name, $squad->platoon_id, (bool) $squad->gen_pop]);
         $this->assertSame("/{$platoonUnit->id}/{$squadUnit->id}/", $squadUnit->fresh()->path);
-        $this->assertSame(2, DB::table('activities')->whereIn('subject_type', [Platoon::class, Squad::class])->count());
+        $this->assertEqualsCanonicalizing([$platoonUnit->id, $squadUnit->id], DB::table('activities')->where('subject_type', Unit::class)->pluck('subject_id')->all());
         $this->artisan('tracker:units-verify')->assertSuccessful();
     }
 
