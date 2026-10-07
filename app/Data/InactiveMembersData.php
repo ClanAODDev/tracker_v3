@@ -29,7 +29,7 @@ class InactiveMembersData
 
         $this->flaggedMembers = $division->members()
             ->whereFlaggedForInactivity(true)
-            ->with(['squad', 'platoon', 'leave'])
+            ->with(['unit.parent', 'leave'])
             ->get();
     }
 
@@ -113,7 +113,7 @@ class InactiveMembersData
                 'human'         => $reminder ? 'Reminded ' . $reminder->diffForHumans() : 'Not reminded',
             ],
             'status'     => $member->last_voice_status?->getLabel() ?? 'Unknown',
-            'unit'       => trim(($member->platoon->name ?? 'Unassigned') . ($member->squad ? ' / ' . $member->squad->name : '')),
+            'unit'       => trim(($member->platoonUnit()?->name ?? 'Unassigned') . (($squad = $member->squadUnit()) ? ' / ' . $squad->name : '')),
             'severity'   => $severity,
             'forumPmUrl' => doForumFunction([$member->clan_id], 'pm'),
             'flagUrl'    => route('member.flag-inactive', $member->clan_id),
@@ -135,7 +135,7 @@ class InactiveMembersData
             })
             ->where('flagged_for_inactivity', false)
             ->whereDoesntHave('leave', fn ($q) => $q->whereDate('end_date', '>', today()))
-            ->with(['squad', 'platoon'])
+            ->with(['unit.parent'])
             ->orderBy('last_voice_activity')
             ->get();
     }

@@ -230,7 +230,7 @@ class DivisionShowServiceTest extends TestCase
     }
 
     #[Test]
-    public function get_show_data_platoons_load_squads()
+    public function get_show_data_platoons_load_their_squads()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -240,8 +240,8 @@ class DivisionShowServiceTest extends TestCase
 
         $result = $this->service->getShowData($division);
 
-        $this->assertTrue($result->platoons->first()->relationLoaded('squads'));
-        $this->assertCount(1, $result->platoons->first()->squads);
+        $this->assertTrue($result->platoons->first()->relationLoaded('children'));
+        $this->assertCount(1, $result->platoons->first()->children);
     }
 
     #[Test]
@@ -271,6 +271,28 @@ class DivisionShowServiceTest extends TestCase
 
         $result = $this->service->getShowData($division);
 
-        $this->assertTrue($result->platoons->first()->squads->first()->leader->relationLoaded('division'));
+        $this->assertTrue($result->platoons->first()->children->first()->leader->relationLoaded('division'));
+    }
+
+    #[Test]
+    public function platoon_counts_include_their_squads_and_squads_count_their_own_members()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+        $squadA   = $this->createSquad($platoon);
+        $squadB   = $this->createSquad($platoon);
+        $inSquad  = fn ($squad, $voice) => $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'squad_id' => $squad->id, 'last_voice_activity' => $voice]);
+
+        $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id, 'last_voice_activity' => now()]);
+        $inSquad($squadA, now());
+        $inSquad($squadA, now()->subYear());
+        $inSquad($squadB, null);
+        $this->actingAs($this->createMemberWithUser(['division_id' => $division->id]));
+
+        $card = $this->service->getShowData($division)->platoons->first();
+
+        $this->assertSame(4, $card->members_count);
+        $this->assertSame(2, $card->voice_active_count);
+        $this->assertSame([2, 1], $card->children->map->members_count->all());
     }
 }

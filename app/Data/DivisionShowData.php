@@ -6,6 +6,7 @@ use App\Enums\Ability;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Platoon;
+use App\Models\Unit;
 use App\Models\User;
 use App\Support\DivisionToolbar;
 use App\Support\MemberCard;
@@ -66,18 +67,18 @@ readonly class DivisionShowData
                     : null,
             ],
             'leaders'  => $this->divisionLeaders->map(fn (Member $leader) => MemberCard::from($leader))->values(),
-            'platoons' => $this->platoons->map(fn (Platoon $platoon) => [
+            'platoons' => $this->platoons->map(fn (Unit $platoon) => [
                 'id'          => $platoon->id,
                 'name'        => $platoon->name,
                 'description' => $platoon->description,
                 'logo'        => $platoon->logo,
-                'url'         => route('platoon', [$division->slug, $platoon->id]),
+                'url'         => $platoon->url($division),
                 'memberCount' => (int) $platoon->members_count,
                 'voiceRate'   => $platoon->members_count > 0
                     ? (int) round(($platoon->voice_active_count / $platoon->members_count) * 100)
                     : 0,
                 'leader' => MemberCard::from($platoon->leader),
-                'squads' => $platoon->squads->map(fn ($squad) => [
+                'squads' => $platoon->children->map(fn (Unit $squad) => [
                     'id'          => $squad->id,
                     'name'        => $squad->name,
                     'memberCount' => (int) $squad->members_count,

@@ -381,15 +381,12 @@ class MemberProfileData
         if ($division) {
             $crumbs[] = ['label' => $division->name, 'href' => route('division', $division->slug)];
 
-            if ($member->platoon_id !== 0 && $member->platoon) {
-                $crumbs[] = ['label' => $member->platoon->name, 'href' => route('platoon', [$division->slug, $member->platoon->id])];
+            if ($platoon = $member->platoonUnit()) {
+                $crumbs[] = ['label' => $platoon->name, 'href' => $platoon->url($division)];
             }
 
-            if ($member->squad_id !== 0 && $member->squad) {
-                $crumbs[] = [
-                    'label' => $member->squad->name ?: 'Untitled',
-                    'href'  => route('squad.show', [$division->slug, $member->platoon->id, $member->squad]),
-                ];
+            if ($squad = $member->squadUnit()) {
+                $crumbs[] = ['label' => $squad->name ?: 'Untitled', 'href' => $squad->url($division)];
             }
         }
 

@@ -5,8 +5,7 @@ namespace App\Transformers;
 use App\Enums\Position;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Models\Unit;
 
 class OrgChartTransformer
 {
@@ -22,7 +21,7 @@ class OrgChartTransformer
             $children[] = $this->transformLeadershipGroup($leaders);
         }
 
-        foreach ($division->platoons as $platoon) {
+        foreach ($division->topUnits as $platoon) {
             $children[] = $this->transformPlatoon($platoon);
         }
 
@@ -52,11 +51,11 @@ class OrgChartTransformer
         ];
     }
 
-    private function transformPlatoon(Platoon $platoon): array
+    private function transformPlatoon(Unit $platoon): array
     {
         $children = [];
 
-        foreach ($platoon->squads as $squad) {
+        foreach ($platoon->children as $squad) {
             $children[] = $this->transformSquad($squad);
         }
 
@@ -76,7 +75,7 @@ class OrgChartTransformer
         return $node;
     }
 
-    private function transformSquad(Squad $squad): array
+    private function transformSquad(Unit $squad): array
     {
         $members = $squad->members
             ->filter(fn ($m) => $m->clan_id !== $squad->leader_id)

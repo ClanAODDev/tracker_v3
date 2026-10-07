@@ -31,9 +31,9 @@ class DivisionOrgChartController extends Controller
         $handleFilter = $this->filterHandlesToDivisionHandles($division);
 
         $division->load([
-            'platoons.leader.handles'         => $handleFilter,
-            'platoons.squads.leader.handles'  => $handleFilter,
-            'platoons.squads.members.handles' => $handleFilter,
+            'topUnits.leader.handles'           => $handleFilter,
+            'topUnits.children.leader.handles'  => $handleFilter,
+            'topUnits.children.members.handles' => $handleFilter,
         ]);
 
         $leaders = $division->leaders()

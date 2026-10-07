@@ -208,6 +208,27 @@ class Member extends Model
         return $this->belongsTo(Unit::class);
     }
 
+    public function unitAt(int $depth): ?Unit
+    {
+        $unit = $this->unit;
+
+        while ($unit !== null && $unit->depth > $depth) {
+            $unit = $unit->parent;
+        }
+
+        return $unit?->depth === $depth ? $unit : null;
+    }
+
+    public function platoonUnit(): ?Unit
+    {
+        return $this->unitAt(1);
+    }
+
+    public function squadUnit(): ?Unit
+    {
+        return $this->unitAt(2);
+    }
+
     public function platoon(): BelongsTo
     {
         return $this->belongsTo(Platoon::class);

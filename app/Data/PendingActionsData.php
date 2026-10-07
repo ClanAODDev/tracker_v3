@@ -13,6 +13,7 @@ use App\Models\MemberAward;
 use App\Models\MemberRequest;
 use App\Models\RankAction;
 use App\Models\Ticket;
+use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
@@ -191,8 +192,7 @@ readonly class PendingActionsData
             self::pushAction(
                 $actions,
                 $division->members()
-                    ->where('platoon_id', '>', 0)
-                    ->where('squad_id', 0)
+                    ->whereIn('unit_id', Unit::query()->where('depth', 1)->select('id'))
                     ->where('position', Position::MEMBER)
                     ->count(),
                 key: 'unassigned-to-squad',

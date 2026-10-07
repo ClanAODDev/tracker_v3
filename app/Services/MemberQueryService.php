@@ -17,8 +17,7 @@ class MemberQueryService
             'handles' => $this->divisionHandlesConstraint($division),
             'leave',
             'tags.division',
-            'platoon',
-            'squad',
+            'unit.parent',
             'fieldValues' => fn ($query) => $query->whereHas(
                 'field',
                 fn ($q) => $q->where('division_id', $division->id)

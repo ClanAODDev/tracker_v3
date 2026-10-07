@@ -16,7 +16,7 @@ class DivisionVoiceReportData
     {
         $this->discordIssues = $division->members()
             ->misconfiguredDiscord()
-            ->with('platoon')
+            ->with('unit.parent')
             ->orderBy('last_voice_status')
             ->orderBy('name')
             ->get();
@@ -49,7 +49,7 @@ class DivisionVoiceReportData
                 'rankName'    => $member->present()->rankName,
                 'status'      => $member->last_voice_status->value,
                 'statusLabel' => $member->last_voice_status->getLabel(),
-                'platoon'     => $member->platoon?->name,
+                'platoon'     => $member->platoonUnit()?->name,
                 'discord'     => $member->discord,
                 'lastActive'  => $member->present()->lastActive('last_voice_activity'),
                 'url'         => route('member', $member->getUrlParams()),

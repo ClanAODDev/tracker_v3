@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Unit extends Model
 {
@@ -36,7 +37,7 @@ class Unit extends Model
 
     public function children(): HasMany
     {
-        return $this->hasMany(self::class, 'parent_id');
+        return $this->hasMany(self::class, 'parent_id')->orderBy('order')->orderBy('id');
     }
 
     public function members(): HasMany
@@ -57,5 +58,27 @@ class Unit extends Model
     public function isSquad(): bool
     {
         return $this->legacy_type === self::LEGACY_SQUAD;
+    }
+
+    public function url(Division $division): string
+    {
+        return $this->isSquad()
+            ? route('squad.show', [$division->slug, $this->parent?->legacy_id, $this->legacy_id])
+            : route('platoon', [$division->slug, $this->legacy_id]);
+    }
+
+    public function getLogoPath(): string
+    {
+        if ($this->logo) {
+            if (str_starts_with($this->logo, 'http')) {
+                return $this->logo;
+            }
+
+            if (Storage::disk('public')->exists($this->logo)) {
+                return asset(Storage::url($this->logo));
+            }
+        }
+
+        return $this->division->getLogoPath();
     }
 }

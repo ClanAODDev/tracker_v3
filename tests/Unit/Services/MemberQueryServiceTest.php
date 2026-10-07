@@ -64,7 +64,7 @@ class MemberQueryServiceTest extends TestCase
     }
 
     #[Test]
-    public function with_standard_relations_includes_platoon()
+    public function with_standard_relations_includes_the_platoon_level_unit()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -76,11 +76,12 @@ class MemberQueryServiceTest extends TestCase
         $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
 
-        $this->assertTrue($result->relationLoaded('platoon'));
+        $this->assertTrue($result->relationLoaded('unit'));
+        $this->assertSame($platoon->id, $result->platoonUnit()->legacy_id);
     }
 
     #[Test]
-    public function with_standard_relations_includes_squad()
+    public function with_standard_relations_includes_the_squad_and_its_platoon()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -94,7 +95,9 @@ class MemberQueryServiceTest extends TestCase
         $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
 
-        $this->assertTrue($result->relationLoaded('squad'));
+        $this->assertTrue($result->relationLoaded('unit'));
+        $this->assertTrue($result->unit->relationLoaded('parent'));
+        $this->assertSame([$squad->id, $platoon->id], [$result->squadUnit()->legacy_id, $result->platoonUnit()->legacy_id]);
     }
 
     #[Test]

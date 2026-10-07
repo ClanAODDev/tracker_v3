@@ -207,6 +207,16 @@ class Division extends Model
         return $this->hasMany(Platoon::class)->orderBy('order');
     }
 
+    public function units(): HasMany
+    {
+        return $this->hasMany(Unit::class);
+    }
+
+    public function topUnits(): HasMany
+    {
+        return $this->units()->whereNull('parent_id')->orderBy('order')->orderBy('id');
+    }
+
     public function activity(): HasMany
     {
         return $this->hasMany(Activity::class);
@@ -265,7 +275,7 @@ class Division extends Model
     public function unassigned(): HasMany
     {
         return $this->members()
-            ->where('platoon_id', 0)
+            ->whereNull('unit_id')
             ->whereIn('position', [Position::MEMBER])
             ->orderBy('rank', 'asc')
             ->orderBy('name', 'asc');

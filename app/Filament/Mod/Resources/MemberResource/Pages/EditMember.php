@@ -170,7 +170,7 @@ class EditMember extends EditRecord
     private function notifyDivisions(Member $member, ?string $reason = null): void
     {
         if ($member->division()->exists()) {
-            $member->division->notify(new NotifyDivisionMemberRemoved($member, auth()->user(), $reason, $member->squad)
+            $member->division->notify(new NotifyDivisionMemberRemoved($member, auth()->user(), $reason, $member->squadUnit())
             );
         }
 

@@ -14,8 +14,8 @@ trait HasRecruitmentFields
                 $member->division->locality('platoon'),
                 $member->division->locality('squad')
             ),
-            'value' => $member->squad
-                ? sprintf('%s / %s', $member->platoon->name, $member->squad->name)
+            'value' => ($squad = $member->squadUnit())
+                ? sprintf('%s / %s', $squad->parent?->name, $squad->name)
                 : 'Unassigned',
         ];
     }
