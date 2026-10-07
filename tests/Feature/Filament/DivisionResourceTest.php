@@ -7,6 +7,7 @@ use App\Filament\Admin\Resources\DivisionResource;
 use App\Filament\Admin\Resources\DivisionResource\Pages\CreateDivision;
 use App\Filament\Admin\Resources\DivisionResource\Pages\EditDivision;
 use App\Models\Handle;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -159,8 +160,9 @@ class DivisionResourceTest extends TestCase
         $page = Livewire::actingAs($this->createAdmin())
             ->test(EditDivision::class, ['record' => $division->getRouteKey()]);
 
-        $platoon->update(['leader_id' => $member->clan_id]);
-        $squad->update(['leader_id' => $member->clan_id]);
+        $units = app(UnitAssignment::class);
+        $units->setLeader($units->forLegacy($platoon), $member->clan_id);
+        $units->setLeader($units->forLegacy($squad), $member->clan_id);
 
         (new \ReflectionMethod(EditDivision::class, 'handleXOs'))
             ->invoke($page->instance(), $division->id, ['executive_officers' => [['xo' => $member->id]]]);

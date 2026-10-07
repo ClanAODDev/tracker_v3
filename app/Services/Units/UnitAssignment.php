@@ -14,9 +14,11 @@ use LogicException;
 
 class UnitAssignment
 {
-    private const PLATOON_COLUMNS = ['name', 'description', 'logo', 'order'];
+    private const PLATOON_COLUMNS = ['name', 'description', 'logo', 'order', 'leader_id'];
 
-    private const SQUAD_COLUMNS = ['name', 'logo', 'gen_pop'];
+    private const SQUAD_COLUMNS = ['name', 'logo', 'gen_pop', 'leader_id'];
+
+    private const UNIT_COLUMNS = ['name', 'description', 'logo', 'order', 'gen_pop', 'leader_id'];
 
     public function forLegacy(Platoon|Squad $legacy): Unit
     {
@@ -95,8 +97,12 @@ class UnitAssignment
 
     public function update(Unit $unit, array $attributes): Unit
     {
+        if (array_key_exists('leader_id', $attributes)) {
+            $attributes['leader_id'] = ((int) $attributes['leader_id']) ?: null;
+        }
+
         DB::transaction(function () use ($unit, $attributes) {
-            $unit->update(array_intersect_key($attributes, array_flip(['name', 'description', 'logo', 'order', 'gen_pop'])));
+            $unit->update(array_intersect_key($attributes, array_flip(self::UNIT_COLUMNS)));
             $this->writeBack($unit, array_intersect_key($attributes, array_flip($unit->isPlatoon() ? self::PLATOON_COLUMNS : self::SQUAD_COLUMNS)));
             $this->recordLegacyActivity($unit, $unit->isPlatoon() ? ActivityType::UPDATED_PLATOON : ActivityType::UPDATED_SQUAD);
         });
@@ -104,12 +110,15 @@ class UnitAssignment
         return $unit;
     }
 
-    public function archive(Unit $unit): void
+    public function archive(Unit $unit, bool $recordActivity = true): void
     {
-        DB::transaction(function () use ($unit) {
+        DB::transaction(function () use ($unit, $recordActivity) {
             $unit->delete();
             $this->writeBack($unit, ['deleted_at' => $unit->deleted_at]);
-            $this->recordLegacyActivity($unit, $unit->isPlatoon() ? ActivityType::DELETED_PLATOON : ActivityType::DELETED_SQUAD);
+
+            if ($recordActivity) {
+                $this->recordLegacyActivity($unit, $unit->isPlatoon() ? ActivityType::DELETED_PLATOON : ActivityType::DELETED_SQUAD);
+            }
         });
     }
 
@@ -121,12 +130,15 @@ class UnitAssignment
         });
     }
 
-    public function setLeader(Unit $unit, ?int $clanId): void
+    public function setLeader(Unit $unit, ?int $clanId, bool $recordActivity = true): void
     {
-        DB::transaction(function () use ($unit, $clanId) {
+        DB::transaction(function () use ($unit, $clanId, $recordActivity) {
             $unit->update(['leader_id' => $clanId ?: null]);
             $this->writeBack($unit, ['leader_id' => $clanId ?: null]);
-            $this->recordLegacyActivity($unit, $unit->isPlatoon() ? ActivityType::UPDATED_PLATOON : ActivityType::UPDATED_SQUAD);
+
+            if ($recordActivity) {
+                $this->recordLegacyActivity($unit, $unit->isPlatoon() ? ActivityType::UPDATED_PLATOON : ActivityType::UPDATED_SQUAD);
+            }
         });
     }
 

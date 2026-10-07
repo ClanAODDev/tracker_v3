@@ -6,6 +6,8 @@ use App\Enums\Position;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\Squad;
+use App\Models\Unit;
+use App\Services\Units\UnitAssignment;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Queue\Queueable;
@@ -18,7 +20,7 @@ class CleanupUnassignedLeaders implements ShouldQueue
     public function handle(): void
     {
         DB::transaction(function () {
-            Platoon::query()
+            $stalePlatoons = Platoon::query()
                 ->where('leader_id', '>', 0)
                 ->whereNotExists(fn (Builder $query) => $query
                     ->from('members')
@@ -27,9 +29,9 @@ class CleanupUnassignedLeaders implements ShouldQueue
                     ->where('members.position', Position::PLATOON_LEADER->value)
                     ->whereColumn('members.platoon_id', 'platoons.id')
                     ->whereColumn('members.division_id', 'platoons.division_id'))
-                ->update(['leader_id' => null]);
+                ->pluck('id');
 
-            Squad::query()
+            $staleSquads = Squad::query()
                 ->where('leader_id', '>', 0)
                 ->whereNotExists(fn (Builder $query) => $query
                     ->from('members')
@@ -41,7 +43,16 @@ class CleanupUnassignedLeaders implements ShouldQueue
                         ->from('platoons')
                         ->whereColumn('platoons.id', 'squads.platoon_id')
                         ->whereColumn('platoons.division_id', 'members.division_id')))
-                ->update(['leader_id' => null]);
+                ->pluck('id');
+
+            $units = app(UnitAssignment::class);
+
+            Unit::query()
+                ->where(fn ($query) => $query
+                    ->where(fn ($q) => $q->where('legacy_type', Unit::LEGACY_PLATOON)->whereIn('legacy_id', $stalePlatoons))
+                    ->orWhere(fn ($q) => $q->where('legacy_type', Unit::LEGACY_SQUAD)->whereIn('legacy_id', $staleSquads)))
+                ->get()
+                ->each(fn (Unit $unit) => $units->setLeader($unit, null, recordActivity: false));
 
             Member::unassignedSquadLeaders()
                 ->update(['position' => Position::MEMBER]);

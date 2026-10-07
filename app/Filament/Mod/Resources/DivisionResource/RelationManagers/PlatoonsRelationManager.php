@@ -5,6 +5,7 @@ namespace App\Filament\Mod\Resources\DivisionResource\RelationManagers;
 use App\Filament\Mod\Resources\PlatoonResource;
 use App\Models\Platoon;
 use App\Rules\ResolvesToImage;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
@@ -46,7 +47,13 @@ class PlatoonsRelationManager extends RelationManager
             ->columns([
                 TextInputColumn::make('order')
                     ->width('10px')
-                    ->sortable(),
+                    ->sortable()
+                    ->updateStateUsing(function (Platoon $record, $state) {
+                        $units = app(UnitAssignment::class);
+                        $units->update($units->forLegacy($record), ['order' => (int) $state]);
+
+                        return $state;
+                    }),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('leader.name')
@@ -70,12 +77,23 @@ class PlatoonsRelationManager extends RelationManager
                 TrashedFilter::make(),
             ])
             ->headerActions([
-                CreateAction::make()->visible(fn () => auth()->user()->can('create', Platoon::class)),
+                CreateAction::make()
+                    ->visible(fn () => auth()->user()->can('create', Platoon::class))
+                    ->using(function (array $data) {
+                        $unit = app(UnitAssignment::class)->create($this->getOwnerRecord(), null, $data);
+
+                        return Platoon::findOrFail($unit->legacy_id);
+                    }),
             ])
             ->recordActions([
                 EditAction::make()->url(fn (Model $record): string => PlatoonResource::getUrl('edit',
                     ['record' => $record])),
-                RestoreAction::make(),
+                RestoreAction::make()->using(function (Platoon $record) {
+                    $units = app(UnitAssignment::class);
+                    $units->restore($units->forLegacy($record));
+
+                    return true;
+                }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

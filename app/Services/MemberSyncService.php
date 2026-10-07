@@ -7,9 +7,8 @@ use App\Enums\Role;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
-use App\Models\Platoon;
-use App\Models\Squad;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
+use App\Services\Units\UnitAssignment;
 use Closure;
 use Exception;
 use Illuminate\Support\Collection;
@@ -174,11 +173,7 @@ class MemberSyncService
 
     protected function clearLeadershipAssignments(Member $member): void
     {
-        Squad::whereLeaderId($member->clan_id)
-            ->update(['leader_id' => null]);
-
-        Platoon::whereLeaderId($member->clan_id)
-            ->update(['leader_id' => null]);
+        app(UnitAssignment::class)->clearLeadership([$member->clan_id]);
     }
 
     protected function updateMemberIfChanged(Member $member, object $forumData): void

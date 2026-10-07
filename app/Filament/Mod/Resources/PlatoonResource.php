@@ -11,6 +11,7 @@ use App\Models\Member;
 use App\Models\Platoon;
 use App\Rules\HoldsNoOtherPosition;
 use App\Rules\ResolvesToImage;
+use App\Services\Units\UnitAssignment;
 use Closure;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
@@ -121,7 +122,13 @@ class PlatoonResource extends Resource
             ->columns([
                 TextInputColumn::make('order')
                     ->width('10px')
-                    ->sortable(),
+                    ->sortable()
+                    ->updateStateUsing(function (Platoon $record, $state) {
+                        $units = app(UnitAssignment::class);
+                        $units->update($units->forLegacy($record), ['order' => (int) $state]);
+
+                        return $state;
+                    }),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('division.name')
@@ -150,7 +157,12 @@ class PlatoonResource extends Resource
             ])
             ->recordActions([
                 EditAction::make(),
-                RestoreAction::make(),
+                RestoreAction::make()->using(function (Platoon $record) {
+                    $units = app(UnitAssignment::class);
+                    $units->restore($units->forLegacy($record));
+
+                    return true;
+                }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

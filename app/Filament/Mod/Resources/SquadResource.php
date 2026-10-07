@@ -9,6 +9,7 @@ use App\Models\Member;
 use App\Models\Squad;
 use App\Rules\HoldsNoOtherPosition;
 use App\Rules\ResolvesToImage;
+use App\Services\Units\UnitAssignment;
 use Closure;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
@@ -136,7 +137,12 @@ class SquadResource extends Resource
             ])
             ->recordActions([
                 EditAction::make(),
-                RestoreAction::make(),
+                RestoreAction::make()->using(function (Squad $record) {
+                    $units = app(UnitAssignment::class);
+                    $units->restore($units->forLegacy($record));
+
+                    return true;
+                }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

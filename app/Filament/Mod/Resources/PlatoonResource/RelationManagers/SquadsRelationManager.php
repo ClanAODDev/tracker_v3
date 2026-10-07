@@ -3,7 +3,9 @@
 namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
 
 use App\Filament\Mod\Resources\SquadResource;
+use App\Models\Squad;
 use App\Rules\ResolvesToImage;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
@@ -59,7 +61,12 @@ class SquadsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()->using(function (array $data) {
+                    $units = app(UnitAssignment::class);
+                    $unit  = $units->create($this->getOwnerRecord()->division, $units->forLegacy($this->getOwnerRecord()), $data);
+
+                    return Squad::findOrFail($unit->legacy_id);
+                }),
             ])
             ->recordActions([
                 EditAction::make()->url(fn (Model $record): string => SquadResource::getUrl('edit',

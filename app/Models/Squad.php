@@ -64,11 +64,4 @@ class Squad extends Model
     {
         return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
     }
-
-    public function assignLeaderTo(Member $member): self
-    {
-        $this->leader()->associate($member);
-
-        return $this;
-    }
 }
