@@ -41,7 +41,6 @@ export interface OrgNode {
     id: string;
     name: string;
     type: string;
-    depth?: number;
     logo?: string | null;
     description?: string | null;
     clanId?: number;
@@ -60,21 +59,7 @@ export interface SearchMatch {
     handle?: string | null;
 }
 
-export interface UnitSelection {
-    id: string;
-    name: string;
-    depth: number;
-    memberCount: number;
-    unitCount: number;
-}
-
-export interface OrgChartOptions {
-    onUnitSelect?: (selection: UnitSelection | null) => void;
-}
-
 export interface OrgChartHandle {
-    setInspecting(on: boolean): void;
-    clearSelection(): void;
     zoomIn(): void;
     zoomOut(): void;
     resetView(): void;
@@ -134,16 +119,13 @@ function truncate(str: string | null | undefined, len: number) {
     return str.length > len ? str.substring(0, len - 1) + '…' : str;
 }
 
-export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode, options: OrgChartOptions = {}): OrgChartHandle {
+export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHandle {
     const container = svgEl.parentElement as HTMLElement;
 
     let isMobile = window.innerWidth < LAYOUT.MOBILE_BREAKPOINT;
     const collapsed = new Set<string>();
     let showHandles = false;
     let searchTerm = '';
-    let inspecting = false;
-    let selectedId: string | null = null;
-    let covered = new Set<string>();
     let root: any;
 
     const nodeWidth = () => (isMobile ? LAYOUT.MOBILE_NODE_WIDTH : LAYOUT.NODE_WIDTH);
@@ -316,66 +298,6 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode, options: Org
         return handle.toLowerCase().includes(searchTerm.toLowerCase());
     };
 
-    function isUnit(data: any) {
-        return data.type === 'platoon' || data.type === 'squad';
-    }
-
-    function coveredIds(unit: OrgNode) {
-        const ids = new Set<string>();
-        const walk = (node: OrgNode) => {
-            ids.add(node.id);
-            node.children?.forEach(walk);
-        };
-        walk(unit);
-        return ids;
-    }
-
-    function selectUnit(d: any) {
-        if (selectedId === d.data.id) {
-            clearSelection();
-            return;
-        }
-        selectedId = d.data.id;
-        covered = coveredIds(d.data);
-        collapsed.delete(d.data.id);
-        const members = [...covered].filter((id) => id.startsWith('member-')).length;
-        const units = [...covered].filter((id) => id !== d.data.id && !id.startsWith('member-')).length;
-        options.onUnitSelect?.({
-            id: d.data.id,
-            name: d.data.name,
-            depth: d.data.depth ?? 1,
-            memberCount: members + countLeaders(d.data),
-            unitCount: units,
-        });
-        update(d);
-    }
-
-    function countLeaders(unit: OrgNode) {
-        let count = 0;
-        const walk = (node: OrgNode) => {
-            if (node.leader) count++;
-            node.children?.forEach(walk);
-        };
-        walk(unit);
-        return count;
-    }
-
-    function clearSelection() {
-        if (!selectedId) return;
-        selectedId = null;
-        covered = new Set();
-        options.onUnitSelect?.(null);
-        if (root) update(root);
-    }
-
-    function activate(d: any, isCollapsible: boolean) {
-        if (inspecting && isUnit(d.data)) {
-            selectUnit(d);
-            return;
-        }
-        if (isCollapsible) toggleNode(d);
-    }
-
     function toggleNode(d: any) {
         collapsed.has(d.data.id) ? collapsed.delete(d.data.id) : collapsed.add(d.data.id);
         update(d);
@@ -444,35 +366,14 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode, options: Org
 
     function renderNode(ng: any, d: any, colors: any) {
         const hl = isHighlighted(d.data);
-        const isSelected = selectedId === d.data.id;
-        const isCovered = covered.has(d.data.id);
         ng.classed('highlighted', hl);
-        ng.classed('covered', isCovered);
         paintNode(ng, d, colors);
+        if (!hl) return;
 
         const box = ng.select('rect');
         if (box.empty()) return;
         const bx = +box.attr('x');
         const by = +box.attr('y');
-
-        if (isCovered) {
-            ng.append('rect')
-                .attr('x', bx - 4)
-                .attr('y', by - 4)
-                .attr('width', +box.attr('width') + 8)
-                .attr('height', +box.attr('height') + 8)
-                .attr('rx', 8)
-                .attr('fill', isSelected ? colors.glow : 'none')
-                .attr('stroke', colors.accent)
-                .attr('stroke-width', isSelected ? 3 : 1.5)
-                .attr('stroke-dasharray', isSelected ? null : '5 4')
-                .style('pointer-events', 'none')
-                .style('filter', `drop-shadow(0 0 6px ${colors.glow})`)
-                .lower();
-        }
-
-        if (!hl) return;
-
         ng.append('rect')
             .attr('x', bx - 3)
             .attr('y', by - 3)
@@ -594,7 +495,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode, options: Org
                 .attr('stroke-width', 1)
                 .attr('stroke-opacity', 0.5)
                 .style('cursor', isCollapsible ? 'pointer' : 'default')
-                .on('click', () => activate(d, isCollapsible));
+                .on('click', () => isCollapsible && toggleNode(d));
             if (data.leader) renderLeaderContent(ng, data.leader, colors, { fontSize: FONT.LEADER_NAME_SMALL });
             else renderTBA(ng, colors, FONT.LEADER_NAME_SMALL);
             ng.append('text')
@@ -636,7 +537,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode, options: Org
                 .attr('stroke', leaderColor || colors.border)
                 .attr('stroke-opacity', 0.4)
                 .style('cursor', isCollapsible ? 'pointer' : 'default')
-                .on('click', () => activate(d, isCollapsible));
+                .on('click', () => isCollapsible && toggleNode(d));
             if (data.leader)
                 renderLeaderContent(ng, data.leader, colors, { fontSize: '11px', handleFontSize: FONT.HANDLE_SMALL });
             else renderTBA(ng, colors, '11px');
@@ -854,11 +755,6 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode, options: Org
     window.addEventListener('resize', onResize);
 
     return {
-        setInspecting: (on: boolean) => {
-            inspecting = on;
-            if (!on) clearSelection();
-        },
-        clearSelection,
         zoomIn: () => svg.transition().call(zoom.scaleBy as any, 1.3),
         zoomOut: () => svg.transition().call(zoom.scaleBy as any, 0.7),
         resetView: () => centerTree(),

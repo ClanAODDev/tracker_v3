@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\UnitLeaderPower;
 use App\Models\Division;
-use App\Models\DivisionUnitLevel;
 use App\Transformers\OrgChartTransformer;
 use Closure;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +18,6 @@ class DivisionOrgChartController extends Controller
         return Inertia::render('division/org-chart', [
             'division' => ['name' => $division->name, 'slug' => $division->slug],
             'tree'     => $this->buildTree($division),
-            'powers'   => $this->leaderPowers($division),
         ]);
     }
 
@@ -46,19 +43,6 @@ class DivisionOrgChartController extends Controller
             ->get();
 
         return (new OrgChartTransformer)->transform($division, $leaders);
-    }
-
-    private function leaderPowers(Division $division): array
-    {
-        return $division->unitLevels
-            ->mapWithKeys(fn (DivisionUnitLevel $level) => [
-                $level->depth => [
-                    'label'  => $level->label,
-                    'title'  => $level->leader_title,
-                    'powers' => UnitLeaderPower::forDivision($division, $level->depth),
-                ],
-            ])
-            ->all();
     }
 
     private function filterHandlesToDivisionHandles(Division $division): Closure
