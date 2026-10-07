@@ -17,6 +17,7 @@ use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Platoon;
 use App\Models\RankAction;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\Exceptions\ActionNotResolvableException;
 use Filament\Facades\Filament;
 use Livewire\Livewire;
@@ -57,7 +58,7 @@ class FilamentVisibilityMatrixTest extends PermissionMatrixTestCase
             'EditRankAction cancel action'             => fn () => $this->assertHeaderActionVisible($rankAction, 'delete'),
             'EditRankAction requeue action'            => fn () => $this->assertHeaderActionVisible($awaitingAcceptance, 'requeue'),
             'Platoon A1 members: transfer bulk action' => fn () => Livewire::test(MembersRelationManager::class, [
-                'ownerRecord' => $this->world->platoons['A1'],
+                'ownerRecord' => app(UnitAssignment::class)->forLegacy($this->world->platoons['A1']),
                 'pageClass'   => EditPlatoon::class,
             ])->assertTableBulkActionVisible('member_transfer'),
         ];
@@ -123,17 +124,17 @@ class FilamentVisibilityMatrixTest extends PermissionMatrixTestCase
         foreach ($cases as $label => [$target, $destination]) {
             foreach (PermissionWorld::ACTORS as $actor) {
                 $member   = $this->world->targets[$target]->fresh();
-                $original = [$member->platoon_id, $member->squad_id];
+                $original = [$member->platoon_id, $member->squad_id, $member->unit_id];
                 $this->actAs($actor);
 
                 $outcome = $this->outcome(function () use ($member, $destination, $original) {
                     Livewire::test(ListMembers::class)
-                        ->callTableBulkAction('member_transfer', [$member], data: ['platoon_id' => $destination->id, 'squad_id' => null]);
+                        ->callTableBulkAction('member_transfer', [$member], data: ['platoon_id' => app(UnitAssignment::class)->forLegacy($destination)->id, 'squad_id' => null]);
 
                     return $member->fresh()->platoon_id !== $original[0];
                 });
 
-                Member::whereKey($member->id)->update(['platoon_id' => $original[0], 'squad_id' => $original[1]]);
+                Member::whereKey($member->id)->update(['platoon_id' => $original[0], 'squad_id' => $original[1], 'unit_id' => $original[2]]);
                 $lines[] = self::line('member_transfer bulk action', $label, $actor, match (true) {
                     $outcome === 'allow'                                 => 'moved',
                     $outcome === 'deny'                                  => 'not moved',

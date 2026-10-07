@@ -51,7 +51,7 @@ class UnitLeadershipWritersTest extends TestCase
         $old = $this->createPlatoonLeader($this->platoon, ['division_id' => $this->division->id]);
         $new = $this->createMember(['division_id' => $this->division->id]);
 
-        Livewire::test(EditPlatoon::class, ['record' => $this->platoon->getRouteKey()])
+        Livewire::test(EditPlatoon::class, ['record' => $this->unitFor($this->platoon)->getRouteKey()])
             ->fillForm(['leader_id' => $new->clan_id, 'name' => 'Renamed'])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -69,7 +69,7 @@ class UnitLeadershipWritersTest extends TestCase
         $old = $this->createSquadLeader($this->squad, ['division_id' => $this->division->id]);
         $new = $this->createMember(['division_id' => $this->division->id]);
 
-        Livewire::test(EditSquad::class, ['record' => $this->squad->getRouteKey()])
+        Livewire::test(EditSquad::class, ['record' => $this->unitFor($this->squad)->getRouteKey()])
             ->fillForm(['leader_id' => $new->clan_id])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -86,7 +86,7 @@ class UnitLeadershipWritersTest extends TestCase
     {
         $member = $this->createMember(['division_id' => $this->division->id, 'platoon_id' => $this->platoon->id, 'squad_id' => $this->squad->id]);
 
-        Livewire::test(EditSquad::class, ['record' => $this->squad->getRouteKey()])->callAction('delete');
+        Livewire::test(EditSquad::class, ['record' => $this->unitFor($this->squad)->getRouteKey()])->callAction('delete');
 
         $this->assertSoftDeleted('units', ['id' => $this->unit($this->squad)->id]);
         $this->assertSame($this->unit($this->platoon)->id, $member->fresh()->unit_id);
@@ -98,7 +98,7 @@ class UnitLeadershipWritersTest extends TestCase
     {
         $member = $this->createMember(['division_id' => $this->division->id, 'platoon_id' => $this->platoon->id, 'squad_id' => $this->squad->id]);
 
-        Livewire::test(EditPlatoon::class, ['record' => $this->platoon->getRouteKey()])->callAction('delete');
+        Livewire::test(EditPlatoon::class, ['record' => $this->unitFor($this->platoon)->getRouteKey()])->callAction('delete');
 
         $this->assertSoftDeleted('units', ['id' => $this->unit($this->platoon)->id]);
         $this->assertSoftDeleted('units', ['id' => $this->unit($this->squad)->id]);
@@ -115,7 +115,7 @@ class UnitLeadershipWritersTest extends TestCase
         $platoon = Platoon::where('name', 'Bravo')->sole();
         $this->assertSame('Bravo', $this->unit($platoon)->name);
 
-        Livewire::test(SquadsRelationManager::class, ['ownerRecord' => $platoon, 'pageClass' => EditPlatoon::class])
+        Livewire::test(SquadsRelationManager::class, ['ownerRecord' => $this->unitFor($platoon), 'pageClass' => EditPlatoon::class])
             ->callAction(TestAction::make('create')->table(), ['name' => 'Bravo One']);
 
         $squad = Squad::where('name', 'Bravo One')->sole();

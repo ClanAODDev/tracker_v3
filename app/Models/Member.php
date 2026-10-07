@@ -185,7 +185,7 @@ class Member extends Model
         $query
             ->where('position', Position::SQUAD_LEADER)
             ->whereNotIn('clan_id', function ($q) {
-                $q->select('leader_id')->from('squads')->whereNotNull('leader_id')->whereNull('deleted_at');
+                $q->select('leader_id')->from('units')->where('legacy_type', Unit::LEGACY_SQUAD)->whereNotNull('leader_id')->whereNull('deleted_at');
             });
     }
 
@@ -194,7 +194,7 @@ class Member extends Model
         $query
             ->where('position', Position::PLATOON_LEADER)
             ->whereNotIn('clan_id', function ($q) {
-                $q->select('leader_id')->from('platoons')->whereNotNull('leader_id')->whereNull('deleted_at');
+                $q->select('leader_id')->from('units')->where('legacy_type', Unit::LEGACY_PLATOON)->whereNotNull('leader_id')->whereNull('deleted_at');
             });
     }
 

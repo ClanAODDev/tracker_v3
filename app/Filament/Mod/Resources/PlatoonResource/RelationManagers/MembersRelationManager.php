@@ -5,7 +5,6 @@ namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
 use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
 use App\Enums\UnitLevel;
-use App\Models\Squad;
 use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -21,7 +20,11 @@ use Illuminate\Support\Collection;
 
 class MembersRelationManager extends RelationManager
 {
-    protected static string $relationship = 'members';
+    protected static string $relationship = 'subtreeMembers';
+
+    protected static ?string $title = 'Members';
+
+    protected static ?string $modelLabel = 'member';
 
     public function form(Schema $schema): Schema
     {
@@ -73,14 +76,13 @@ class MembersRelationManager extends RelationManager
                         ->form([
                             Select::make('squad_id')
                                 ->label('Squad')
-                                ->options(fn () => Squad::where('platoon_id', $this->ownerRecord->id)
-                                    ->pluck('name', 'id'))
+                                ->options(fn () => $this->ownerRecord->children()->pluck('name', 'id'))
                                 ->searchable()
                                 ->required(),
                         ])
                         ->action(function (Collection $records, array $data): void {
                             $units   = app(UnitAssignment::class);
-                            $columns = $units->columnsFor($units->forLegacyIds($this->ownerRecord->id, (int) $data['squad_id']));
+                            $columns = $units->columnsFor($this->ownerRecord->children()->findOrFail($data['squad_id']));
 
                             $records->each(fn ($member) => $member->update($columns));
                         })

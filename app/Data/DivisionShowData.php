@@ -5,7 +5,6 @@ namespace App\Data;
 use App\Enums\Ability;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Platoon;
 use App\Models\Unit;
 use App\Models\User;
 use App\Support\DivisionToolbar;
@@ -46,7 +45,7 @@ readonly class DivisionShowData
                 'applicationsUrl'       => url('/api/divisions/' . $division->slug . '/applications'),
                 'canDeleteApplications' => $user->can(Ability::DeleteApplications),
                 'canRecruit'            => $user->can('recruit', Member::class),
-                'canCreatePlatoon'      => $user->can('create', [Platoon::class, $division]),
+                'canCreatePlatoon'      => $user->can('create', [Unit::class, $division]),
                 'canManageUnassigned'   => $user->can('manageUnassigned', User::class),
                 'editUrl'               => route('filament.mod.resources.divisions.edit', $division),
                 'recruitUrl'            => route('recruiting.form', $division),

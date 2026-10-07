@@ -3,7 +3,7 @@
 namespace App\Filament\Mod\Resources\DivisionResource\RelationManagers;
 
 use App\Filament\Mod\Resources\PlatoonResource;
-use App\Models\Platoon;
+use App\Models\Unit;
 use App\Rules\ResolvesToImage;
 use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkActionGroup;
@@ -24,7 +24,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PlatoonsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'platoons';
+    protected static string $relationship = 'topUnits';
+
+    protected static ?string $title = 'Platoons';
+
+    protected static ?string $modelLabel = 'platoon';
 
     public function form(Schema $schema): Schema
     {
@@ -48,9 +52,8 @@ class PlatoonsRelationManager extends RelationManager
                 TextInputColumn::make('order')
                     ->width('10px')
                     ->sortable()
-                    ->updateStateUsing(function (Platoon $record, $state) {
-                        $units = app(UnitAssignment::class);
-                        $units->update($units->forLegacy($record), ['order' => (int) $state]);
+                    ->updateStateUsing(function (Unit $record, $state) {
+                        app(UnitAssignment::class)->update($record, ['order' => (int) $state]);
 
                         return $state;
                     }),
@@ -78,19 +81,16 @@ class PlatoonsRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
-                    ->visible(fn () => auth()->user()->can('create', Platoon::class))
+                    ->visible(fn () => auth()->user()->can('create', Unit::class))
                     ->using(function (array $data) {
-                        $unit = app(UnitAssignment::class)->create($this->getOwnerRecord(), null, $data);
-
-                        return Platoon::findOrFail($unit->legacy_id);
+                        return app(UnitAssignment::class)->create($this->getOwnerRecord(), null, $data);
                     }),
             ])
             ->recordActions([
                 EditAction::make()->url(fn (Model $record): string => PlatoonResource::getUrl('edit',
                     ['record' => $record])),
-                RestoreAction::make()->using(function (Platoon $record) {
-                    $units = app(UnitAssignment::class);
-                    $units->restore($units->forLegacy($record));
+                RestoreAction::make()->using(function (Unit $record) {
+                    app(UnitAssignment::class)->restore($record);
 
                     return true;
                 }),

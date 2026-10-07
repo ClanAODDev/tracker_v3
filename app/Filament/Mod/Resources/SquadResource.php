@@ -6,7 +6,7 @@ use App\Filament\Mod\Resources\SquadResource\Pages\EditSquad;
 use App\Filament\Mod\Resources\SquadResource\Pages\ListSquads;
 use App\Filament\Mod\Resources\SquadResource\RelationManagers\MembersRelationManager;
 use App\Models\Member;
-use App\Models\Squad;
+use App\Models\Unit;
 use App\Rules\HoldsNoOtherPosition;
 use App\Rules\ResolvesToImage;
 use App\Services\Units\UnitAssignment;
@@ -30,7 +30,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SquadResource extends Resource
 {
-    protected static ?string $model = Squad::class;
+    protected static ?string $model = Unit::class;
+
+    protected static ?string $modelLabel = 'squad';
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-squares-2x2';
 
@@ -40,7 +42,7 @@ class SquadResource extends Resource
     {
         return $schema
             ->columns(1)
-            ->components(fn (?Squad $record) => [
+            ->components(fn (?Unit $record) => [
                 Section::make('Basic Info')
                     ->columnSpanFull()
                     ->schema([
@@ -61,7 +63,7 @@ class SquadResource extends Resource
                             ->searchable()
                             ->reactive()
                             ->getSearchResultsUsing(function (string $search) use ($record) {
-                                $divisionId = $record->platoon->division_id;
+                                $divisionId = $record->division_id;
                                 if (! $divisionId) {
                                     return [];
                                 }
@@ -79,16 +81,16 @@ class SquadResource extends Resource
                             ->getOptionLabelUsing(fn ($value) => Member::where('clan_id',
                                 $value)->value('name'))
                             ->helperText('Leave blank if position not yet assigned. Must be from the same division as the squad being assigned.')
-                            ->rule(fn (?Squad $record): Closure => function (string $attribute, $value, Closure $fail) use ($record) {
+                            ->rule(fn (?Unit $record): Closure => function (string $attribute, $value, Closure $fail) use ($record) {
                                 if (! $value) {
                                     return;
                                 }
 
-                                if (! Member::where('clan_id', $value)->where('division_id', $record->platoon->division_id)->exists()) {
+                                if (! Member::where('clan_id', $value)->where('division_id', $record->division_id)->exists()) {
                                     $fail('The selected leader must be a member of this division.');
                                 }
                             })
-                            ->rule(fn (?Squad $record) => new HoldsNoOtherPosition(exceptSquad: $record))
+                            ->rule(fn (?Unit $record) => new HoldsNoOtherPosition(exceptUnit: $record))
                             ->nullable(),
 
                         Hidden::make('original_leader_id')
@@ -109,7 +111,8 @@ class SquadResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name'),
-                TextColumn::make('platoon.name')
+                TextColumn::make('parent.name')
+                    ->label('Platoon')
                     ->sortable(),
                 TextColumn::make('division.name'),
                 TextColumn::make('leader.name')
@@ -128,18 +131,16 @@ class SquadResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])->modifyQueryUsing(function ($query) {
-                $query->whereHas('platoon', function ($query) {
-                    $query->where('division_id', auth()->user()->member->division_id);
-                });
+                $query->where('legacy_type', Unit::LEGACY_SQUAD)
+                    ->whereHas('parent', fn ($query) => $query->where('division_id', auth()->user()->member->division_id));
             })
             ->filters([
                 TrashedFilter::make(),
             ])
             ->recordActions([
                 EditAction::make(),
-                RestoreAction::make()->using(function (Squad $record) {
-                    $units = app(UnitAssignment::class);
-                    $units->restore($units->forLegacy($record));
+                RestoreAction::make()->using(function (Unit $record) {
+                    app(UnitAssignment::class)->restore($record);
 
                     return true;
                 }),
@@ -171,6 +172,7 @@ class SquadResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
+            ])
+            ->where('legacy_type', Unit::LEGACY_SQUAD);
     }
 }

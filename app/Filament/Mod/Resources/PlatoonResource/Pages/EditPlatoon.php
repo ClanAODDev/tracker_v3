@@ -40,7 +40,7 @@ class EditPlatoon extends EditRecord
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         $units = app(UnitAssignment::class);
-        $units->update($units->forLegacy($record), Arr::only($data, ['name', 'description', 'logo', 'order', 'leader_id']));
+        $units->update($record, Arr::only($data, ['name', 'description', 'logo', 'order', 'leader_id']));
 
         return $record->refresh();
     }
@@ -49,7 +49,7 @@ class EditPlatoon extends EditRecord
     {
         $state = $this->form->getState();
         $units = app(UnitAssignment::class);
-        $unit  = $units->forLegacy($this->record);
+        $unit  = $this->record;
 
         $originalLeaderId = $state['original_leader_id'] ?? null;
         $newLeaderId      = (int) $this->record->leader_id;
@@ -87,9 +87,9 @@ class EditPlatoon extends EditRecord
                 ->modalDescription('Assigned members will be removed from this platoon and any squads within. Are you sure?')
                 ->action(function ($record) {
                     $units = app(UnitAssignment::class);
-                    $unit  = $units->forLegacy($record);
+                    $unit  = $record;
 
-                    Member::where('platoon_id', $record->id)->update($units->columnsFor(null));
+                    $unit->allMembers()->update($units->columnsFor(null));
 
                     $unit->children()->get()->each(fn (Unit $squad) => $units->archive($squad, recordActivity: false));
 

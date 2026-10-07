@@ -4,6 +4,7 @@ namespace Tests\Unit\Jobs;
 
 use App\Enums\Position;
 use App\Jobs\CleanupUnassignedLeaders;
+use App\Services\Units\UnitAssignment;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -209,8 +210,9 @@ class CleanupUnassignedLeadersTest extends TestCase
         $squad   = $this->createSquad($platoon);
         $pl      = $this->createPlatoonLeader($platoon);
         $sl      = $this->createSquadLeader($squad);
-        $squad->delete();
-        $platoon->delete();
+        $units   = app(UnitAssignment::class);
+        $units->archive($units->forLegacy($squad));
+        $units->archive($units->forLegacy($platoon));
 
         (new CleanupUnassignedLeaders)->handle();
 

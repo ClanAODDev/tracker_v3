@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\DivisionTagResource\RelationManagers;
 
+use App\Models\Member;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DetachAction;
 use Filament\Actions\DetachBulkAction;
@@ -27,14 +28,14 @@ class MembersRelationManager extends RelationManager
                 TextColumn::make('rank')
                     ->badge()
                     ->sortable(),
-                TextColumn::make('platoon.name')
+                TextColumn::make('platoon_unit')
                     ->label('Platoon')
-                    ->default('—')
-                    ->sortable(),
-                TextColumn::make('squad.name')
+                    ->state(fn (Member $record) => $record->platoonUnit()?->name)
+                    ->default('—'),
+                TextColumn::make('squad_unit')
                     ->label('Squad')
-                    ->default('—')
-                    ->sortable(),
+                    ->state(fn (Member $record) => $record->squadUnit()?->name)
+                    ->default('—'),
                 TextColumn::make('pivot.created_at')
                     ->label('Tagged At')
                     ->dateTime()

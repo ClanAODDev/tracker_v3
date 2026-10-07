@@ -10,6 +10,7 @@ use App\Filament\Admin\Resources\MemberResource\Pages\EditMember;
 use App\Filament\Admin\Resources\MemberResource\Pages\ListMembers;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\Unit;
 use App\Services\BulkTransferService;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -234,10 +235,13 @@ class MemberResource extends Resource
                 SelectFilter::make('division')
                     ->relationship('division', 'name'),
                 SelectFilter::make('platoon')
-                    ->relationship('platoon', 'name')
+                    ->options(fn () => Unit::whereNull('parent_id')->orderBy('name')->pluck('name', 'id'))
+                    ->query(fn (Builder $query, array $data) => $query->when($data['value'] ?? null, fn (Builder $query, $platoon) => $query
+                        ->whereIn('unit_id', Unit::query()->where('id', $platoon)->orWhere('parent_id', $platoon)->select('id'))))
                     ->searchable(),
                 SelectFilter::make('squad')
-                    ->relationship('squad', 'name')
+                    ->options(fn () => Unit::whereNotNull('parent_id')->orderBy('name')->pluck('name', 'id'))
+                    ->query(fn (Builder $query, array $data) => $query->when($data['value'] ?? null, fn (Builder $query, $squad) => $query->where('unit_id', $squad)))
                     ->searchable(),
                 Filter::make('Has Active Division')
                     ->query(function (Builder $query) {

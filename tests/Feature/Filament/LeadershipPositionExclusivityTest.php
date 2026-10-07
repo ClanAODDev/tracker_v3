@@ -35,7 +35,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditPlatoon::class, ['record' => $this->unitFor($platoon)->getRouteKey()])
             ->fillForm(['leader_id' => null])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -53,7 +53,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditPlatoon::class, ['record' => $this->unitFor($platoon)->getRouteKey()])
             ->fillForm(['leader_id' => null])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -70,7 +70,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditPlatoon::class, ['record' => $this->unitFor($platoon)->getRouteKey()])
             ->fillForm(['leader_id' => $xo->clan_id])
             ->call('save')
             ->assertHasFormErrors(['leader_id']);
@@ -89,7 +89,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditPlatoon::class, ['record' => $this->unitFor($platoon)->getRouteKey()])
             ->fillForm(['leader_id' => $leader->clan_id])
             ->call('save')
             ->assertHasFormErrors(['leader_id']);
@@ -107,7 +107,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditPlatoon::class, ['record' => $this->unitFor($platoon)->getRouteKey()])
             ->fillForm(['leader_id' => $leader->clan_id])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -125,7 +125,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditSquad::class, ['record' => $this->unitFor($squad)->getRouteKey()])
             ->fillForm(['leader_id' => $leader->clan_id])
             ->call('save')
             ->assertHasFormErrors(['leader_id']);
@@ -143,7 +143,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditSquad::class, ['record' => $this->unitFor($squad)->getRouteKey()])
             ->fillForm(['leader_id' => $co->clan_id])
             ->call('save')
             ->assertHasFormErrors(['leader_id']);
@@ -161,7 +161,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditSquad::class, ['record' => $this->unitFor($squad)->getRouteKey()])
             ->fillForm(['leader_id' => null])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -180,7 +180,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditSquad::class, ['record' => $this->unitFor($squad)->getRouteKey()])
             ->fillForm(['leader_id' => $member->clan_id])
             ->call('save')
             ->assertHasNoFormErrors();

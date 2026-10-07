@@ -36,7 +36,7 @@ class SquadResourceLeaderScopeTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditSquad::class, ['record' => $this->unitFor($squad)->getRouteKey()])
             ->fillForm(['leader_id' => $outsider->clan_id])
             ->call('save')
             ->assertHasFormErrors(['leader_id']);
@@ -55,7 +55,7 @@ class SquadResourceLeaderScopeTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditSquad::class, ['record' => $this->unitFor($squad)->getRouteKey()])
             ->fillForm(['leader_id' => $member->clan_id])
             ->call('save')
             ->assertHasNoFormErrors();

@@ -3,7 +3,6 @@
 namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
 
 use App\Filament\Mod\Resources\SquadResource;
-use App\Models\Squad;
 use App\Rules\ResolvesToImage;
 use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkActionGroup;
@@ -18,7 +17,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class SquadsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'Squads';
+    protected static string $relationship = 'children';
+
+    protected static ?string $title = 'Squads';
+
+    protected static ?string $modelLabel = 'squad';
 
     public function form(Schema $schema): Schema
     {
@@ -63,9 +66,8 @@ class SquadsRelationManager extends RelationManager
             ->headerActions([
                 CreateAction::make()->using(function (array $data) {
                     $units = app(UnitAssignment::class);
-                    $unit  = $units->create($this->getOwnerRecord()->division, $units->forLegacy($this->getOwnerRecord()), $data);
 
-                    return Squad::findOrFail($unit->legacy_id);
+                    return $units->create($this->getOwnerRecord()->division, $this->getOwnerRecord(), $data);
                 }),
             ])
             ->recordActions([

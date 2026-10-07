@@ -8,7 +8,7 @@ use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\MembersRelationM
 use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\SquadsRelationManager;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Platoon;
+use App\Models\Unit;
 use App\Rules\HoldsNoOtherPosition;
 use App\Rules\ResolvesToImage;
 use App\Services\Units\UnitAssignment;
@@ -33,7 +33,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PlatoonResource extends Resource
 {
-    protected static ?string $model = Platoon::class;
+    protected static ?string $model = Unit::class;
+
+    protected static ?string $modelLabel = 'platoon';
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-square-2-stack';
 
@@ -45,7 +47,7 @@ class PlatoonResource extends Resource
 
         return $schema
             ->columns(1)
-            ->components(fn (?Platoon $record) => [
+            ->components(fn (?Unit $record) => [
 
                 Hidden::make('division_id')->default($divisionId),
 
@@ -91,7 +93,7 @@ class PlatoonResource extends Resource
                             ->getOptionLabelUsing(fn ($value) => Member::where('clan_id',
                                 $value)->value('name'))
                             ->helperText('Leave blank if position not yet assigned. Must be from the same division as the platoon being assigned.')
-                            ->rule(fn (?Platoon $record): Closure => function (string $attribute, $value, Closure $fail) use ($record) {
+                            ->rule(fn (?Unit $record): Closure => function (string $attribute, $value, Closure $fail) use ($record) {
                                 if (! $value) {
                                     return;
                                 }
@@ -100,7 +102,7 @@ class PlatoonResource extends Resource
                                     $fail('The selected leader must be a member of this division.');
                                 }
                             })
-                            ->rule(fn (?Platoon $record) => new HoldsNoOtherPosition(exceptPlatoon: $record))
+                            ->rule(fn (?Unit $record) => new HoldsNoOtherPosition(exceptUnit: $record))
                             ->nullable(),
 
                         Hidden::make('original_leader_id')
@@ -123,9 +125,8 @@ class PlatoonResource extends Resource
                 TextInputColumn::make('order')
                     ->width('10px')
                     ->sortable()
-                    ->updateStateUsing(function (Platoon $record, $state) {
-                        $units = app(UnitAssignment::class);
-                        $units->update($units->forLegacy($record), ['order' => (int) $state]);
+                    ->updateStateUsing(function (Unit $record, $state) {
+                        app(UnitAssignment::class)->update($record, ['order' => (int) $state]);
 
                         return $state;
                     }),
@@ -157,9 +158,8 @@ class PlatoonResource extends Resource
             ])
             ->recordActions([
                 EditAction::make(),
-                RestoreAction::make()->using(function (Platoon $record) {
-                    $units = app(UnitAssignment::class);
-                    $units->restore($units->forLegacy($record));
+                RestoreAction::make()->using(function (Unit $record) {
+                    app(UnitAssignment::class)->restore($record);
 
                     return true;
                 }),
@@ -192,6 +192,7 @@ class PlatoonResource extends Resource
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
-            ]);
+            ])
+            ->where('legacy_type', Unit::LEGACY_PLATOON);
     }
 }

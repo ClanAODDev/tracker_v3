@@ -37,7 +37,7 @@ class EditSquad extends EditRecord
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         $units = app(UnitAssignment::class);
-        $units->update($units->forLegacy($record), Arr::only($data, ['name', 'logo', 'gen_pop', 'leader_id']));
+        $units->update($record, Arr::only($data, ['name', 'logo', 'gen_pop', 'leader_id']));
 
         return $record->refresh();
     }
@@ -46,7 +46,7 @@ class EditSquad extends EditRecord
     {
         $state = $this->form->getState();
         $units = app(UnitAssignment::class);
-        $unit  = $units->forLegacy($this->record);
+        $unit  = $this->record;
 
         $originalLeaderId = $state['original_leader_id'] ?? null;
         $newLeaderId      = (int) $this->record->leader_id;
@@ -85,9 +85,9 @@ class EditSquad extends EditRecord
                 ->modalDescription('Assigned members will be removed from this squad. Are you sure?')
                 ->action(function ($record) {
                     $units = app(UnitAssignment::class);
-                    $unit  = $units->forLegacy($record);
+                    $unit  = $record;
 
-                    Member::where('squad_id', $record->id)->update($units->columnsFor($unit->parent));
+                    $unit->members()->update($units->columnsFor($unit->parent));
 
                     $units->archive($unit);
 
@@ -97,7 +97,7 @@ class EditSquad extends EditRecord
                         ->body('Assigned members have been updated.')
                         ->send();
 
-                    return redirect()->route('filament.mod.resources.platoons.edit', $record->platoon);
+                    return redirect()->route('filament.mod.resources.platoons.edit', $record->parent);
                 }),
         ];
     }

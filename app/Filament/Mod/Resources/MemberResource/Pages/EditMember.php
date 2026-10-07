@@ -11,6 +11,7 @@ use App\Jobs\RemoveClanMember;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Note;
+use App\Models\Unit;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionPartTimeMemberRemoved;
 use App\Services\AODForumService;
@@ -23,6 +24,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class EditMember extends EditRecord
 {
@@ -65,9 +67,12 @@ class EditMember extends EditRecord
 
         unset($data['handleGroups'], $data['custom_fields']);
 
-        if (array_key_exists('platoon_id', $data) || array_key_exists('squad_id', $data)) {
-            $units = app(UnitAssignment::class);
-            $data  = [...$data, ...$units->columnsFor($units->forLegacyIds($data['platoon_id'] ?? null, $data['squad_id'] ?? null))];
+        if (array_key_exists('platoon_unit_id', $data) || array_key_exists('squad_unit_id', $data)) {
+            $unitId = ($data['squad_unit_id'] ?? null) ?: ($data['platoon_unit_id'] ?? null);
+            $data   = [
+                ...Arr::except($data, ['platoon_unit_id', 'squad_unit_id']),
+                ...app(UnitAssignment::class)->columnsFor($unitId ? Unit::find($unitId) : null),
+            ];
         }
 
         $record->update($data);

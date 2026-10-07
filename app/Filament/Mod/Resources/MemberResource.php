@@ -17,8 +17,7 @@ use App\Filament\Mod\Resources\MemberResource\RelationManagers\TransfersRelation
 use App\Models\Division;
 use App\Models\DivisionTag;
 use App\Models\Member;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Models\Unit;
 use App\Services\MemberHandleService;
 use App\Services\Units\UnitAssignment;
 use Filament\Actions\Action;
@@ -111,40 +110,29 @@ class MemberResource extends Resource
                     ->schema([
                         Placeholder::make('Division')
                             ->content(fn (Member $record): string => $record->division?->name ?? 'None'),
-                        Select::make('platoon_id')
+                        Select::make('platoon_unit_id')
                             ->nullable(true)
                             ->label('Platoon')
-                            ->relationship('platoon', 'name')
                             ->options(function (Get $get) {
-                                $divisionId = $get('division_id');
-
-                                return Platoon::where('division_id', $divisionId)
+                                return Unit::where('division_id', $get('division_id'))
+                                    ->whereNull('parent_id')
                                     ->pluck('name', 'id')
                                     ->toArray();
                             })
-                            ->afterStateHydrated(function ($state, callable $set) {
-                                if ($state === 0) {
-                                    $set('platoon_id', null);
-                                }
-                            })
+                            ->afterStateHydrated(fn (Select $component, ?Member $record) => $component->state($record?->platoonUnit()?->id))
                             ->reactive()
                             ->afterStateUpdated(function ($state, callable $set) {
-                                $set('squad_id', null);
+                                $set('squad_unit_id', null);
                             }),
-                        Select::make('squad_id')
+                        Select::make('squad_unit_id')
                             ->label('Squad')
                             ->nullable(true)
-                            ->relationship('squad', 'name')
-                            ->afterStateHydrated(function ($state, callable $set) {
-                                if ($state === 0) {
-                                    $set('squad_id', null);
-                                }
-                            })
+                            ->afterStateHydrated(fn (Select $component, ?Member $record) => $component->state($record?->squadUnit()?->id))
                             ->options(function (Get $get) {
-                                $platoonId = $get('platoon_id');
+                                $platoonId = $get('platoon_unit_id');
 
                                 if ($platoonId) {
-                                    return Squad::where('platoon_id', $platoonId)
+                                    return Unit::where('parent_id', $platoonId)
                                         ->pluck('name', 'id')
                                         ->toArray();
                                 }
@@ -214,6 +202,7 @@ class MemberResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (Builder $query) => $query->with('unit.parent'))
             ->columns([
                 TextColumn::make('name')
                     ->searchable(),
@@ -223,13 +212,33 @@ class MemberResource extends Resource
                 TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
-                TextColumn::make('platoon.name')
-                    ->searchable()
-                    ->toggleable()
-                    ->sortable(),
-                TextColumn::make('squad.name')
-                    ->searchable()
-                    ->sortable()
+                TextColumn::make('platoon_unit')
+                    ->label('Platoon')
+                    ->state(fn (Member $record) => $record->platoonUnit()?->name)
+                    ->searchable(query: function (Builder $query, string $search) {
+                        $platoons = Unit::query()->where('name', 'like', "%{$search}%")->whereNull('parent_id')->select('id');
+
+                        return $query->whereIn('unit_id', Unit::query()
+                            ->where(fn ($units) => $units->whereIn('id', $platoons)->orWhereIn('parent_id', $platoons))
+                            ->select('id'));
+                    })
+                    ->sortable(query: fn (Builder $query, string $direction) => $query->orderBy(Unit::query()
+                        ->from('units as u')
+                        ->leftJoin('units as p', 'p.id', '=', 'u.parent_id')
+                        ->selectRaw('coalesce(p.name, u.name)')
+                        ->whereColumn('u.id', 'members.unit_id'), $direction))
+                    ->toggleable(),
+                TextColumn::make('squad_unit')
+                    ->label('Squad')
+                    ->state(fn (Member $record) => $record->squadUnit()?->name)
+                    ->searchable(query: fn (Builder $query, string $search) => $query->whereIn('unit_id', Unit::query()
+                        ->where('name', 'like', "%{$search}%")
+                        ->whereNotNull('parent_id')
+                        ->select('id')))
+                    ->sortable(query: fn (Builder $query, string $direction) => $query->orderBy(Unit::query()
+                        ->select('name')
+                        ->whereNotNull('parent_id')
+                        ->whereColumn('units.id', 'members.unit_id'), $direction))
                     ->toggleable(),
                 TextColumn::make('position')
                     ->toggleable()
@@ -279,7 +288,8 @@ class MemberResource extends Resource
                                     return [];
                                 }
 
-                                return Platoon::where('division_id', $divisionId)
+                                return Unit::where('division_id', $divisionId)
+                                    ->whereNull('parent_id')
                                     ->orderBy('name')
                                     ->pluck('name', 'id');
                             })
@@ -299,7 +309,7 @@ class MemberResource extends Resource
                                     return [];
                                 }
 
-                                return Squad::whereIn('platoon_id', $platoons)
+                                return Unit::whereIn('parent_id', $platoons)
                                     ->orderBy('name')
                                     ->pluck('name', 'id');
                             })
@@ -315,10 +325,10 @@ class MemberResource extends Resource
                         $squads   = $data['squad'] ?? [];
 
                         if ($squads) {
-                            return $query->whereIn('squad_id', $squads);
+                            return $query->whereIn('unit_id', $squads);
                         }
                         if ($platoons) {
-                            return $query->whereIn('platoon_id', $platoons);
+                            return $query->whereIn('unit_id', Unit::query()->whereIn('id', $platoons)->orWhereIn('parent_id', $platoons)->select('id'));
                         }
                         if ($division) {
                             return $query->where('division_id', $division);
@@ -335,10 +345,10 @@ class MemberResource extends Resource
                             }
                         }
                         if (! empty($data['platoon'])) {
-                            $parts[] = 'Platoon: ' . Platoon::whereIn('id', $data['platoon'])->pluck('name')->implode(', ');
+                            $parts[] = 'Platoon: ' . Unit::whereIn('id', $data['platoon'])->pluck('name')->implode(', ');
                         }
                         if (! empty($data['squad'])) {
-                            $parts[] = 'Squad: ' . Squad::whereIn('id', $data['squad'])->pluck('name')->implode(', ');
+                            $parts[] = 'Squad: ' . Unit::whereIn('id', $data['squad'])->pluck('name')->implode(', ');
                         }
 
                         return $parts ? implode(' | ', $parts) : null;
@@ -445,14 +455,15 @@ class MemberResource extends Resource
                         ->form([
                             Select::make('platoon_id')
                                 ->label('Platoon')
-                                ->options(fn (HasTable $livewire): array => Platoon::with('division')
+                                ->options(fn (HasTable $livewire): array => Unit::with('division')
+                                    ->whereNull('parent_id')
                                     ->where('division_id', $livewire
                                         ->getSelectedTableRecords()
                                         ->pluck('division_id')
                                         ->first()
                                     )
                                     ->get()
-                                    ->mapWithKeys(fn (Platoon $p) => [
+                                    ->mapWithKeys(fn (Unit $p) => [
                                         $p->id => "{$p->division->name} – {$p->name}",
                                     ])
                                     ->toArray()
@@ -463,7 +474,7 @@ class MemberResource extends Resource
 
                             Select::make('squad_id')
                                 ->label('Squad')
-                                ->options(fn (callable $get) => Squad::where('platoon_id', $get('platoon_id'))
+                                ->options(fn (callable $get) => Unit::where('parent_id', $get('platoon_id'))
                                     ->pluck('name', 'id')
                                     ->toArray()
                                 )
@@ -502,7 +513,8 @@ class MemberResource extends Resource
                         })
                         ->action(function (Collection $records, array $data): void {
                             $units   = app(UnitAssignment::class);
-                            $columns = $units->columnsFor($units->forLegacyIds($data['platoon_id'] ?? null, $data['squad_id'] ?? null));
+                            $target  = Unit::find(($data['squad_id'] ?? null) ?: ($data['platoon_id'] ?? null));
+                            $columns = $units->columnsFor($target);
 
                             $records->each->update($columns);
                         })

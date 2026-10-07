@@ -17,6 +17,50 @@ class UnitPolicy
         }
     }
 
+    public function viewAny(User $user): bool
+    {
+        return $user->can(Ability::ViewUnits);
+    }
+
+    public function create(User $user, $division = null): bool
+    {
+        if (! $user->can(Ability::ManageUnits)) {
+            return false;
+        }
+
+        if ($division) {
+            return $user->member->division_id === $division->id;
+        }
+
+        return true;
+    }
+
+    public function deleteAny(User $user): bool
+    {
+        return $user->can(Ability::ManageUnits) || $user->isDivisionLeader();
+    }
+
+    public function delete(User $user, Unit $unit): bool
+    {
+        $units = app(UnitHierarchy::class);
+
+        if ($unit->isPlatoon()) {
+            if ($user->can(Ability::ManageUnits) || $user->isDivisionLeader()) {
+                return $unit->division_id === $user->member->division_id;
+            }
+
+            return false;
+        }
+
+        if ($user->can(Ability::ManageUnits) || $user->isDivisionLeader()) {
+            return true;
+        }
+
+        return $unit->parent !== null
+            && $units->leadershipLevel($user) === UnitLevel::Platoon
+            && $units->leads($user->member, $unit->parent);
+    }
+
     public function update(User $user, Unit $unit): bool
     {
         $member = $user->member;

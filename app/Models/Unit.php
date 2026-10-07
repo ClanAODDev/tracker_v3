@@ -66,6 +66,12 @@ class Unit extends Model
         return route('unit', [$division->slug, $this->id]);
     }
 
+    public function subtreeMembers(): HasMany
+    {
+        return $this->hasMany(Member::class, 'division_id', 'division_id')
+            ->whereIn('members.unit_id', self::query()->where('path', 'like', $this->path . '%')->select('id'));
+    }
+
     public function allMembers(): Builder
     {
         return Member::query()->whereIn('unit_id', self::query()->where('path', 'like', $this->path . '%')->select('id'));
