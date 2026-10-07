@@ -42,5 +42,14 @@ class ResetOrphanedUnitAssignments implements ShouldQueue
                             ->whereColumn('squads.platoon_id', 'members.platoon_id')));
             })
             ->update(app(UnitAssignment::class)->columnsFor(null));
+
+        Member::query()
+            ->whereNotNull('unit_id')
+            ->whereNotExists(fn (Builder $unit) => $unit
+                ->from('units')
+                ->whereColumn('units.id', 'members.unit_id')
+                ->whereColumn('units.division_id', 'members.division_id')
+                ->whereNull('units.deleted_at'))
+            ->update(app(UnitAssignment::class)->columnsFor(null));
     }
 }

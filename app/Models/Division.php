@@ -185,11 +185,6 @@ class Division extends Model
         return $this->hasMany(LeaderboardSnapshot::class);
     }
 
-    public function squads(): HasManyThrough
-    {
-        return $this->hasManyThrough(Squad::class, Platoon::class);
-    }
-
     public function routeNotificationForMembers(): ?string
     {
         return $this->settings()->get('member_channel', '')

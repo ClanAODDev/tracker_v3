@@ -167,7 +167,7 @@ class CleanupUnassignedLeadersTest extends TestCase
         $squad   = $this->createSquad($platoon);
         $other   = $this->createSquad($platoon);
         $leader  = $this->createSquadLeader($squad);
-        $leader->update(['squad_id' => $other->id]);
+        $leader->update(app(UnitAssignment::class)->columnsFor($this->unitFor($other)));
 
         (new CleanupUnassignedLeaders)->handle();
 

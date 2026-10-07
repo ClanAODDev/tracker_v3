@@ -133,11 +133,6 @@ class Member extends Model
             ->mapWithKeys(fn (MemberFieldValue $value) => [$value->field->key => $value->value]);
     }
 
-    public function squadLeaderOf(): HasOne
-    {
-        return $this->hasOne(Squad::class, 'leader_id');
-    }
-
     public function hasNoDivision(): bool
     {
         return $this->division_id === null || $this->division_id === 0;
@@ -147,12 +142,15 @@ class Member extends Model
     {
         $units = app(UnitAssignment::class);
 
-        if ($this->position === Position::SQUAD_LEADER && $this->squad && app(UnitHierarchy::class)->leads($this, $this->squad)) {
-            $units->setLeader($units->forLegacy($this->squad), null);
+        $squad   = $this->squadUnit();
+        $platoon = $this->platoonUnit();
+
+        if ($this->position === Position::SQUAD_LEADER && $squad && app(UnitHierarchy::class)->leads($this, $squad)) {
+            $units->setLeader($squad, null);
         }
 
-        if ($this->position === Position::PLATOON_LEADER && $this->platoon && app(UnitHierarchy::class)->leads($this, $this->platoon)) {
-            $units->setLeader($units->forLegacy($this->platoon), null);
+        if ($this->position === Position::PLATOON_LEADER && $platoon && app(UnitHierarchy::class)->leads($this, $platoon)) {
+            $units->setLeader($platoon, null);
         }
 
         $this->update([

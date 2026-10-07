@@ -74,7 +74,7 @@ class RankActionPolicy
         }
 
         if (
-            $user->member->platoon_id === $action->member->platoon_id &&
+            app(UnitHierarchy::class)->sharesLedUnit($user->member, $action->member, UnitLevel::Platoon) &&
             $user->isWithinPlatoonLimit($newRank, $user->division)
         ) {
             return true;
@@ -99,7 +99,7 @@ class RankActionPolicy
         }
 
         if (
-            $user->member->platoon_id === $action->member->platoon_id &&
+            app(UnitHierarchy::class)->sharesLedUnit($user->member, $action->member, UnitLevel::Platoon) &&
             $user->isWithinPlatoonLimit($newRank, $user->division)
         ) {
             return true;

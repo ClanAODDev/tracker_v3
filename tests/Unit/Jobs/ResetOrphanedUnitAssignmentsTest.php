@@ -188,4 +188,18 @@ class ResetOrphanedUnitAssignmentsTest extends TestCase
         $this->assertEquals(0, $member->platoon_id);
         $this->assertEquals(0, $member->squad_id);
     }
+
+    #[Test]
+    public function resets_members_whose_unit_was_archived()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id]);
+        $unit     = $this->unitFor($platoon);
+        $unit->delete();
+
+        (new ResetOrphanedUnitAssignments)->handle();
+
+        $this->assertSame([null, 0, 0], [$member->fresh()->unit_id, $member->fresh()->platoon_id, $member->fresh()->squad_id]);
+    }
 }

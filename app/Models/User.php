@@ -306,7 +306,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         }
 
         // Platoon Leaders may auto-approve within their own platoon, if the target rank is within their limit
-        if ($user->member->platoon_id === $member->platoon_id
+        if (app(UnitHierarchy::class)->sharesLedUnit($user->member, $member, UnitLevel::Platoon)
             && $user->isWithinPlatoonLimit($targetRank, $user->division)) {
             return $asBoolean ? true : now();
         }
