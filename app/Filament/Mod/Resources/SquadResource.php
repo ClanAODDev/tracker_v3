@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\UnitLevel;
 use App\Filament\Mod\Resources\SquadResource\Pages\EditSquad;
 use App\Filament\Mod\Resources\SquadResource\Pages\ListSquads;
 use App\Filament\Mod\Resources\SquadResource\RelationManagers\MembersRelationManager;
@@ -112,7 +113,7 @@ class SquadResource extends Resource
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('parent.name')
-                    ->label('Platoon')
+                    ->label('Parent')
                     ->sortable(),
                 TextColumn::make('division.name'),
                 TextColumn::make('leader.name')
@@ -131,8 +132,7 @@ class SquadResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])->modifyQueryUsing(function ($query) {
-                $query->where('depth', 2)
-                    ->whereHas('parent', fn ($query) => $query->where('division_id', auth()->user()->member->division_id));
+                $query->where('division_id', auth()->user()->member->division_id);
             })
             ->filters([
                 TrashedFilter::make(),
@@ -173,6 +173,6 @@ class SquadResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ])
-            ->where('depth', 2);
+            ->ofTier(UnitLevel::Squad);
     }
 }

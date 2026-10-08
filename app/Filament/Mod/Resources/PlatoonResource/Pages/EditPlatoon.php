@@ -22,7 +22,7 @@ class EditPlatoon extends EditRecord
 
     public function getTitle(): string
     {
-        return sprintf('Edit %s', $this->record->division->locality('Platoon'));
+        return sprintf('Edit %s', $this->record->levelLabel());
     }
 
     protected static string $resource = PlatoonResource::class;
@@ -84,24 +84,31 @@ class EditPlatoon extends EditRecord
         return [
 
             DeleteAction::make()
-                ->modalDescription('Assigned members will be removed from this platoon and any squads within. Are you sure?')
+                ->modalDescription(fn () => sprintf('Assigned members will be removed from this %s and every unit within it. Are you sure?', strtolower($this->record->levelLabel())))
                 ->action(function ($record) {
                     $units = app(UnitAssignment::class);
                     $unit  = $record;
 
                     $unit->allMembers()->update(['unit_id' => null]);
 
-                    $unit->children()->get()->each(fn (Unit $squad) => $units->archive($squad, recordActivity: false));
+                    Unit::query()
+                        ->where('path', 'like', $unit->path . '%')
+                        ->where('id', '<>', $unit->id)
+                        ->orderByDesc('depth')
+                        ->get()
+                        ->each(fn (Unit $descendant) => $units->archive($descendant, recordActivity: false));
 
                     $units->archive($unit);
 
                     Notification::make()
                         ->success()
-                        ->title('Platoon has been deleted')
-                        ->body('Assigned members and squads have been updated.')
+                        ->title(sprintf('%s has been deleted', $unit->levelLabel()))
+                        ->body('Assigned members and units have been updated.')
                         ->send();
 
-                    return redirect()->route('filament.mod.resources.divisions.edit', $record->division);
+                    return $record->parent
+                        ? redirect()->route('filament.mod.resources.platoons.edit', $record->parent)
+                        : redirect()->route('filament.mod.resources.divisions.edit', $record->division);
                 }),
         ];
     }

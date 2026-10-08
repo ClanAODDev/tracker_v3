@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UnitLevel;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -58,14 +59,48 @@ class Unit extends Model
         return $this->parent_id === null;
     }
 
+    public function tier(): UnitLevel
+    {
+        return UnitLevel::forDepth($this->depth, $this->division?->deepestUnitLevel() ?? 2);
+    }
+
     public function isPlatoon(): bool
     {
-        return $this->depth === 1;
+        return $this->tier() === UnitLevel::Platoon;
     }
 
     public function isSquad(): bool
     {
-        return $this->depth > 1;
+        return $this->tier() === UnitLevel::Squad;
+    }
+
+    public function level(): ?DivisionUnitLevel
+    {
+        return $this->division?->unitLevel($this->depth);
+    }
+
+    public function levelLabel(): string
+    {
+        return $this->level()?->label ?? 'Unit';
+    }
+
+    public function leaderTitle(): string
+    {
+        return $this->level()?->leader_title ?? 'Leader';
+    }
+
+    public function childLevel(): ?DivisionUnitLevel
+    {
+        return $this->division?->unitLevel($this->depth + 1);
+    }
+
+    public function scopeOfTier(Builder $query, UnitLevel $tier): Builder
+    {
+        $deepest = '(select coalesce(max(division_unit_levels.depth), 2) from division_unit_levels where division_unit_levels.division_id = units.division_id)';
+
+        return $tier === UnitLevel::Platoon
+            ? $query->whereRaw("(units.depth < {$deepest} or {$deepest} = 1)")
+            : $query->whereRaw("(units.depth = {$deepest} and {$deepest} > 1)");
     }
 
     public function url(Division $division): string

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
 
+use App\Filament\Mod\Resources\PlatoonResource;
 use App\Filament\Mod\Resources\SquadResource;
 use App\Rules\ResolvesToImage;
 use App\Services\Units\UnitAssignment;
@@ -19,9 +20,15 @@ class SquadsRelationManager extends RelationManager
 {
     protected static string $relationship = 'children';
 
-    protected static ?string $title = 'Squads';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return $ownerRecord->childLevel()?->label_plural ?? 'Units';
+    }
 
-    protected static ?string $modelLabel = 'squad';
+    public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
+    {
+        return $ownerRecord->childLevel() !== null;
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -40,7 +47,8 @@ class SquadsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('Squad')
+            ->modelLabel(strtolower($this->getOwnerRecord()->childLevel()?->label ?? 'unit'))
+            ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('leader.name')
@@ -71,8 +79,9 @@ class SquadsRelationManager extends RelationManager
                 }),
             ])
             ->recordActions([
-                EditAction::make()->url(fn (Model $record): string => SquadResource::getUrl('edit',
-                    ['record' => $record])),
+                EditAction::make()->url(fn (Model $record): string => $record->isSquad()
+                    ? SquadResource::getUrl('edit', ['record' => $record])
+                    : PlatoonResource::getUrl('edit', ['record' => $record])),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\UnitLevel;
 use App\Filament\Mod\Resources\PlatoonResource\Pages\EditPlatoon;
 use App\Filament\Mod\Resources\PlatoonResource\Pages\ListPlatoons;
 use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\MembersRelationManager;
@@ -193,6 +194,6 @@ class PlatoonResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ])
-            ->where('depth', 1);
+            ->ofTier(UnitLevel::Platoon);
     }
 }

@@ -21,7 +21,7 @@ class EditSquad extends EditRecord
 
     public function getTitle(): string
     {
-        return sprintf('Edit %s', $this->record->division->locality('Squad'));
+        return sprintf('Edit %s', $this->record->levelLabel());
     }
 
     public function mount($record): void
@@ -82,7 +82,7 @@ class EditSquad extends EditRecord
     {
         return [
             DeleteAction::make()
-                ->modalDescription('Assigned members will be removed from this squad. Are you sure?')
+                ->modalDescription(fn () => sprintf('Assigned members will move up to the parent unit of this %s. Are you sure?', strtolower($this->record->levelLabel())))
                 ->action(function ($record) {
                     $units = app(UnitAssignment::class);
                     $unit  = $record;
@@ -93,7 +93,7 @@ class EditSquad extends EditRecord
 
                     Notification::make()
                         ->success()
-                        ->title('Squad has been deleted')
+                        ->title(sprintf('%s has been deleted', $unit->levelLabel()))
                         ->body('Assigned members have been updated.')
                         ->send();
 

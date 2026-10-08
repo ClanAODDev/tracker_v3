@@ -214,6 +214,11 @@ class Division extends Model
         return (int) ($this->unitLevels->max('depth') ?? 2);
     }
 
+    public function unitLevel(int $depth): ?DivisionUnitLevel
+    {
+        return $this->unitLevels->firstWhere('depth', $depth);
+    }
+
     public function topUnits(): HasMany
     {
         return $this->units()->whereNull('parent_id')->orderBy('order')->orderBy('id');
@@ -287,8 +292,8 @@ class Division extends Model
     {
         $key   = strtolower($string);
         $level = match ($key) {
-            'platoon', 'platoon leader' => $this->unitLevels->firstWhere('depth', 1),
-            'squad', 'squad leader'     => $this->unitLevels->firstWhere('depth', 2),
+            'platoon', 'platoon leader' => $this->unitLevel(1),
+            'squad', 'squad leader'     => $this->unitLevel(max(2, $this->deepestUnitLevel())),
             default                     => null,
         };
 

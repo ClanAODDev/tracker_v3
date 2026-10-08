@@ -26,9 +26,10 @@ class PlatoonsRelationManager extends RelationManager
 {
     protected static string $relationship = 'topUnits';
 
-    protected static ?string $title = 'Platoons';
-
-    protected static ?string $modelLabel = 'platoon';
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return $ownerRecord->unitLevel(1)?->label_plural ?? 'Platoons';
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -48,6 +49,7 @@ class PlatoonsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modelLabel(strtolower($this->getOwnerRecord()->unitLevel(1)?->label ?? 'platoon'))
             ->columns([
                 TextInputColumn::make('order')
                     ->width('10px')
