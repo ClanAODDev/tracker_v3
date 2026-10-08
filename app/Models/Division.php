@@ -26,6 +26,8 @@ use Illuminate\Support\Str;
 #[RouteKey('slug')]
 class Division extends Model
 {
+    public const MAX_UNIT_LEVELS = 4;
+
     use HasFactory;
     use HasHandles;
     use Notifiable;

@@ -7,7 +7,9 @@ use App\Filament\Mod\Resources\UnitResource;
 use App\Models\Member;
 use App\Models\Unit;
 use App\Services\Units\UnitAssignment;
+use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
+use Filament\Forms\Components\Select;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
@@ -81,9 +83,47 @@ class EditUnit extends EditRecord
         }
     }
 
+    private function parentOptions(): array
+    {
+        return Unit::query()
+            ->where('division_id', $this->record->division_id)
+            ->where('depth', $this->record->depth - 1)
+            ->with('parent')
+            ->orderBy('path')
+            ->get()
+            ->mapWithKeys(fn (Unit $unit) => [$unit->id => $unit->parent ? "{$unit->parent->name} / {$unit->name}" : $unit->name])
+            ->all();
+    }
+
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('move')
+                ->label('Move')
+                ->icon('heroicon-o-arrows-right-left')
+                ->color('gray')
+                ->visible(fn () => $this->record->depth > 1 && auth()->user()->can('move', $this->record))
+                ->modalHeading(fn () => sprintf('Move %s', $this->record->name))
+                ->modalDescription(fn () => sprintf('Moves this %s and everything in it under another %s.', strtolower($this->record->levelLabel()), strtolower($this->record->division->unitLevel($this->record->depth - 1)?->label ?? 'unit')))
+                ->schema([
+                    Select::make('parent_id')
+                        ->label(fn () => $this->record->division->unitLevel($this->record->depth - 1)?->label ?? 'Parent')
+                        ->options(fn () => $this->parentOptions())
+                        ->default(fn () => $this->record->parent_id)
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    $parent = Unit::findOrFail($data['parent_id']);
+
+                    app(UnitAssignment::class)->move($this->record, $parent);
+
+                    Notification::make()
+                        ->success()
+                        ->title(sprintf('%s moved to %s', $this->record->name, $parent->name))
+                        ->send();
+
+                    return redirect(UnitResource::getUrl('edit', ['record' => $this->record]));
+                }),
 
             DeleteAction::make()
                 ->modalDescription(fn () => $this->record->isSquad()
