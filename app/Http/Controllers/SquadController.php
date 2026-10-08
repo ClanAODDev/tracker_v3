@@ -6,27 +6,24 @@ use App\Enums\ActivityType;
 use App\Http\Requests\Squad\AssignSquadMemberRequest;
 use App\Models\Member;
 use App\Models\Unit;
-use App\Services\Units\UnitAssignment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 
 #[Middleware('auth')]
 class SquadController extends Controller
 {
-    public function __construct(private UnitAssignment $units) {}
-
     public function assignMember(AssignSquadMemberRequest $request): JsonResponse
     {
         $member = Member::findOrFail($request->member_id);
 
         if ((int) $request->unit_id === 0) {
-            $platoon = $member->platoonUnit();
+            $current = $member->unit;
 
-            if (! $platoon) {
+            if (! $current) {
                 return response()->json(['success' => true]);
             }
 
-            $this->authorize('update', $platoon);
+            $this->authorize('update', $current->parent ?? $current);
 
             $member->update(['unit_id' => null]);
             $member->recordActivity(ActivityType::UNASSIGNED);
@@ -34,15 +31,20 @@ class SquadController extends Controller
             return response()->json(['success' => true]);
         }
 
-        $squad = Unit::query()->where('depth', '>', 1)->findOrFail($request->unit_id);
-        abort_if($squad->parent === null, 404);
-        $this->authorize('update', $squad->parent);
+        $unit = Unit::query()->findOrFail($request->unit_id);
+        abort_unless($unit->division_id === $member->division_id, 422);
+        $this->authorize('update', $unit->parent ?? $unit);
 
-        $member->update(['unit_id' => $squad->id]);
-        $member->recordActivity(ActivityType::ASSIGNED_SQUAD, [
-            'platoon' => $squad->parent->name,
-            'squad'   => $squad->name,
-        ]);
+        $member->update(['unit_id' => $unit->id]);
+
+        if ($unit->parent === null) {
+            $member->recordActivity(ActivityType::ASSIGNED_PLATOON, ['platoon' => $unit->name]);
+        } else {
+            $member->recordActivity(ActivityType::ASSIGNED_SQUAD, [
+                'platoon' => $unit->parent->name,
+                'squad'   => $unit->name,
+            ]);
+        }
 
         return response()->json(['success' => true]);
     }

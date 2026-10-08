@@ -63,25 +63,23 @@ class UnitController extends Controller
         return Inertia::render('platoon/manage-members', [
             'division' => [
                 'name'         => $division->name,
-                'squadLabel'   => $division->locality('Squad'),
-                'squadPlural'  => Str::plural($division->locality('squad')),
-                'platoonLabel' => $division->locality('platoon'),
+                'squadLabel'   => $this->childLabel($unit),
+                'squadPlural'  => Str::plural($this->childLabel($unit)),
+                'platoonLabel' => $unit->levelLabel(),
             ],
             'platoon'        => ['id' => $unit->id, 'name' => $unit->name],
             'squads'         => $squads,
             'unassigned'     => $unassigned,
             'assignUrl'      => url('/members/assign-squad'),
             'backUrl'        => $unit->url($division),
+            'breadcrumbs'    => $this->ancestry($division, $unit, linkSelf: true),
             'createSquadUrl' => route('filament.mod.resources.platoons.edit', $unit->id),
         ]);
     }
 
     private function showPlatoon(Division $division, Unit $platoon): Response
     {
-        $platoon->load([
-            'children.leader',
-            'children.members' => fn ($query) => $query->where('division_id', $division->id),
-        ]);
+        $platoon->load('children.leader');
 
         $members            = $this->memberQuery->loadSortedMembers($platoon->allMembers(), $division);
         $voiceActivityGraph = $this->units->getVoiceActivity($platoon);
@@ -90,33 +88,34 @@ class UnitController extends Controller
         $activityThreshold = now()->subDays($division->settings()->get('inactivity_days') ?? 30);
         $canManage         = auth()->user()->can('update', $platoon);
         $unassigned        = $this->unassigned($division, $platoon);
+        $unitPaths         = Unit::query()->where('path', 'like', $platoon->path . '%')->pluck('path', 'id');
+        $childLabel        = $this->childLabel($platoon);
 
         return Inertia::render('division/members', [
             ...MemberListProps::build($division, $members, $unitStats, assignmentKind: 'squad'),
             'scope' => [
                 'kind'            => 'platoon',
-                'name'            => $platoon->name ?: 'Untitled ' . $division->locality('platoon'),
-                'platoonLabel'    => $division->locality('platoon'),
-                'squadLabel'      => $division->locality('squad'),
+                'name'            => $platoon->name ?: 'Untitled ' . $platoon->levelLabel(),
+                'platoonLabel'    => $platoon->levelLabel(),
+                'squadLabel'      => $childLabel,
                 'logo'            => $platoon->getLogoPath(),
                 'canManage'       => $canManage,
                 'editUrl'         => $canManage ? route('filament.mod.resources.platoons.edit', $platoon->id) : null,
                 'manageUrl'       => $canManage ? route('unit.manage', [$division->slug, $platoon]) : null,
                 'unassignedCount' => $unassigned->count(),
-                'breadcrumbs'     => [
-                    ['label' => $division->name, 'href' => route('division', $division->slug)],
-                    ['label' => $platoon->name ?: 'Untitled'],
-                ],
+                'breadcrumbs'     => $this->ancestry($division, $platoon),
             ],
-            'squads' => $platoon->children->map(function (Unit $squad, $i) use ($division, $activityThreshold) {
-                $count  = $squad->members->count();
-                $active = $squad->members->filter(fn ($m) => $m->last_voice_activity >= $activityThreshold)->count();
+            'squads' => $platoon->children->map(function (Unit $child, $i) use ($division, $members, $unitPaths, $activityThreshold, $childLabel) {
+                $descendants = $members->filter(fn ($member) => isset($unitPaths[$member->unit_id])
+                    && str_starts_with($unitPaths[$member->unit_id], $child->path));
+                $count  = $descendants->count();
+                $active = $descendants->filter(fn ($m) => $m->last_voice_activity >= $activityThreshold)->count();
 
                 return [
-                    'id'        => $squad->id,
-                    'name'      => $squad->name ?: ordSuffix($i + 1) . ' Squad',
-                    'url'       => $squad->url($division),
-                    'leader'    => $squad->leader?->present()->rankName(),
+                    'id'        => $child->id,
+                    'name'      => $child->name ?: ordSuffix($i + 1) . ' ' . $childLabel,
+                    'url'       => $child->url($division),
+                    'leader'    => $child->leader?->present()->rankName(),
                     'count'     => $count,
                     'voiceRate' => $count > 0 ? round(($active / $count) * 100) : 0,
                 ];
@@ -135,8 +134,8 @@ class UnitController extends Controller
 
     private function showSquad(Division $division, Unit $squad): Response
     {
-        $platoon = $squad->parent;
-        $platoon?->load('children.leader');
+        $parent = $squad->parent;
+        $parent?->load('children.leader');
         $squad->loadMissing('leader');
 
         $members            = $this->memberQuery->loadSortedMembers($squad->members(), $division);
@@ -154,22 +153,37 @@ class UnitController extends Controller
             ),
             'scope' => [
                 'kind'        => 'squad',
-                'name'        => $squad->name ?: 'Untitled ' . $division->locality('squad'),
+                'name'        => $squad->name ?: 'Untitled ' . $squad->levelLabel(),
+                'squadLabel'  => $squad->levelLabel(),
                 'canManage'   => $canManage,
                 'editUrl'     => $canManage ? route('filament.mod.resources.squads.edit', $squad->id) : null,
-                'breadcrumbs' => array_values(array_filter([
-                    ['label' => $division->name, 'href' => route('division', $division->slug)],
-                    $platoon ? ['label' => $platoon->name ?: 'Untitled', 'href' => $platoon->url($division)] : null,
-                    ['label' => $squad->name ?: 'Untitled'],
-                ])),
+                'breadcrumbs' => $this->ancestry($division, $squad),
             ],
-            'squads' => ($platoon?->children ?? collect())->map(fn (Unit $sibling, $i) => [
-                'name'    => $sibling->name ?: ordSuffix($i + 1) . ' Squad',
+            'squads' => ($parent?->children ?? collect())->map(fn (Unit $sibling, $i) => [
+                'name'    => $sibling->name ?: ordSuffix($i + 1) . ' ' . $sibling->levelLabel(),
                 'url'     => $sibling->url($division),
                 'leader'  => $sibling->leader?->present()->rankName(),
                 'current' => $sibling->id === $squad->id,
             ])->values(),
         ]);
+    }
+
+    private function childLabel(Unit $unit): string
+    {
+        return $unit->childLevel()?->label ?? 'Unit';
+    }
+
+    private function ancestry(Division $division, Unit $unit, bool $linkSelf = false): array
+    {
+        $trail = [['label' => $unit->name ?: 'Untitled', 'href' => $linkSelf ? $unit->url($division) : null]];
+
+        for ($ancestor = $unit->parent; $ancestor !== null; $ancestor = $ancestor->parent) {
+            array_unshift($trail, ['label' => $ancestor->name ?: 'Untitled', 'href' => $ancestor->url($division)]);
+        }
+
+        array_unshift($trail, ['label' => $division->name, 'href' => route('division', $division->slug)]);
+
+        return array_map(fn (array $crumb) => array_filter($crumb, fn ($value) => $value !== null), $trail);
     }
 
     private function unassigned(Division $division, Unit $platoon)

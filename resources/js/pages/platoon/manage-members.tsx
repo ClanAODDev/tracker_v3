@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { postJson } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
+import type { Crumb } from '@/components/page-header';
 
 interface MemberCard {
     id: number;
@@ -28,6 +29,7 @@ interface Props {
     unassigned: MemberCard[];
     assignUrl: string;
     backUrl: string;
+    breadcrumbs: Crumb[];
     createSquadUrl: string;
 }
 
@@ -107,6 +109,7 @@ export default function ManageMembers({
     unassigned: initialUnassigned,
     assignUrl,
     backUrl,
+    breadcrumbs,
     createSquadUrl,
 }: Props) {
     const [squads, setSquads] = useState(initialSquads);
@@ -163,9 +166,9 @@ export default function ManageMembers({
         removeFrom(from, card.id);
         addTo(target, card);
 
-        const squadId = target === REMOVE || target === UNASSIGNED ? 0 : target;
+        const targetUnitId = target === REMOVE ? 0 : target === UNASSIGNED ? platoon.id : target;
         try {
-            await postJson(assignUrl, { member_id: card.id, unit_id: squadId });
+            await postJson(assignUrl, { member_id: card.id, unit_id: targetUnitId });
             toast.success(
                 target === REMOVE
                     ? `${card.name} removed from the ${division.platoonLabel}`
@@ -194,11 +197,7 @@ export default function ManageMembers({
             header={{
                 eyebrow: `${platoon.name} · ${division.name} Division`,
                 title: `Manage ${division.squadLabel} assignments`,
-                breadcrumbs: [
-                    { label: 'Divisions' },
-                    { label: platoon.name, href: backUrl },
-                    { label: `Manage ${division.squadLabel}s` },
-                ],
+                breadcrumbs: [...breadcrumbs, { label: `Manage ${division.squadLabel}s` }],
                 actions: (
                     <>
                         <Button variant="outline" size="sm" asChild>

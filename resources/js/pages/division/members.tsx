@@ -82,7 +82,7 @@ export default function MembersPage({
         members: organizeProps?.members ?? [],
         autoOpen: canOrganize && autoOrganize,
         assign: async (memberId, squadId) => {
-            await postJson('/members/assign-squad', { member_id: memberId, squad_id: squadId });
+            await postJson('/members/assign-squad', { member_id: memberId, unit_id: squadId });
             setSquadList((prev) =>
                 prev.map((s) => (s.id === squadId ? { ...s, count: (s.count ?? 0) + 1 } : s)),
             );
@@ -145,8 +145,8 @@ export default function MembersPage({
                     scope.kind === 'division'
                         ? 'Division'
                         : scope.kind === 'platoon'
-                          ? division.platoonLabel
-                          : division.squadLabel,
+                          ? scope.platoonLabel
+                          : scope.squadLabel,
                 title,
                 breadcrumbs,
                 actions,
