@@ -1,3 +1,4 @@
+import { pluralize } from '@/lib/format';
 import { Head } from '@inertiajs/react';
 import { Headset, History, Settings, Shield, Star, TriangleAlert, UserPlus, Users } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -372,7 +373,7 @@ export default function DivisionShow({
                             ) : undefined
                         }
                     >
-                        {d.platoonLabel}s
+                        {pluralize(d.platoonLabel)}
                     </SectionTitle>
 
                     {organizeProps.canOrganize && (
@@ -389,7 +390,7 @@ export default function DivisionShow({
 
                     {platoonList.length === 0 ? (
                         <p className="rounded-md border border-destructive/30 bg-card p-4 text-sm text-muted-foreground">
-                            No {d.platoonLabel.toLowerCase()}s found
+                            No {pluralize(d.platoonLabel).toLowerCase()} found
                         </p>
                     ) : (
                         <div className="grid gap-3 lg:grid-cols-2">

@@ -505,7 +505,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
                 .attr('font-size', FONT.LABEL)
                 .attr('letter-spacing', '0.5px')
                 .style('pointer-events', 'none')
-                .text('PLATOON LEADER');
+                .text((data.leaderTitle ?? 'Platoon Leader').toUpperCase());
             if (isCollapsible) {
                 renderIndicator(ng, isCollapsed, w / 2 - 14, -height / 2 + 16, colors, FONT.COLLAPSE_INDICATOR);
                 if (isCollapsed) renderCount(ng, countChildMembers(data), 0, height / 2 + 18, colors);
@@ -548,7 +548,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
                 .attr('font-size', FONT.LABEL_SMALL)
                 .attr('letter-spacing', '0.5px')
                 .style('pointer-events', 'none')
-                .text('SQUAD LEADER');
+                .text((data.leaderTitle ?? 'Squad Leader').toUpperCase());
             if (isCollapsible) {
                 renderIndicator(ng, isCollapsed, w / 2 - 12, -height / 2 + 14, colors, FONT.COLLAPSE_INDICATOR_SMALL);
                 if (isCollapsed) renderCount(ng, countChildMembers(data), 0, height / 2 + 16, colors);

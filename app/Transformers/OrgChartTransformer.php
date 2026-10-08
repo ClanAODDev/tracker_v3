@@ -68,6 +68,7 @@ class OrgChartTransformer
             'name'        => $unit->name,
             'description' => $unit->description,
             'type'        => 'platoon',
+            'leaderTitle' => $unit->leaderTitle(),
             'logo'        => $unit->logo ? $unit->getLogoPath() : null,
             'children'    => $childUnits->map(fn (Unit $child) => $this->transformUnit($child))->all(),
         ];
@@ -93,10 +94,11 @@ class OrgChartTransformer
         }
 
         $node = [
-            'id'       => "squad-{$squad->id}",
-            'name'     => $squad->name,
-            'type'     => 'squad',
-            'children' => $children,
+            'id'          => "squad-{$squad->id}",
+            'name'        => $squad->name,
+            'type'        => 'squad',
+            'leaderTitle' => $squad->leaderTitle(),
+            'children'    => $children,
         ];
 
         if ($squad->leader) {

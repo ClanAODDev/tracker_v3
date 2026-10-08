@@ -1,3 +1,4 @@
+import { pluralize } from '@/lib/format';
 import { router } from '@inertiajs/react';
 import { ArrowLeftRight, Bell, Megaphone, Tags, X } from 'lucide-react';
 import { type FormEvent, useEffect, useState } from 'react';
@@ -257,7 +258,7 @@ function MoveDialog({
         if (platoons.length === 0) {
             getJson<{ platoons: PlatoonOption[] }>(dataUrl)
                 .then((res) => setPlatoons(res.platoons))
-                .catch(() => toast.error('Failed to load ' + division.platoonLabel.toLowerCase() + 's'));
+                .catch(() => toast.error('Failed to load ' + pluralize(division.platoonLabel).toLowerCase()));
         }
     }, [open, dataUrl, division.platoonLabel, platoons.length]);
 

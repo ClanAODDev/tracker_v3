@@ -1,3 +1,4 @@
+import { pluralize } from '@/lib/format';
 import { Head, Link } from '@inertiajs/react';
 import { ArrowLeft, Plus, TriangleAlert, Users } from 'lucide-react';
 import { type DragEvent, useMemo, useState } from 'react';
@@ -197,7 +198,7 @@ export default function ManageMembers({
             header={{
                 eyebrow: `${platoon.name} · ${division.name} Division`,
                 title: `Manage ${division.squadLabel} assignments`,
-                breadcrumbs: [...breadcrumbs, { label: `Manage ${division.squadLabel}s` }],
+                breadcrumbs: [...breadcrumbs, { label: `Manage ${pluralize(division.squadLabel)}` }],
                 actions: (
                     <>
                         <Button variant="outline" size="sm" asChild>
@@ -214,7 +215,7 @@ export default function ManageMembers({
                 ),
             }}
         >
-            <Head title={`Manage ${division.squadLabel}s · ${platoon.name}`} />
+            <Head title={`Manage ${pluralize(division.squadLabel)} · ${platoon.name}`} />
 
             <div className="space-y-6">
                 <p className="text-sm text-muted-foreground">
