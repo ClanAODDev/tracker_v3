@@ -44,21 +44,13 @@ class UnitPolicy
     {
         $units = app(UnitHierarchy::class);
 
-        if ($unit->isPlatoon()) {
-            if ($user->can(Ability::ManageUnits) || $user->isDivisionLeader()) {
-                return $unit->division_id === $user->member->division_id;
-            }
-
-            return false;
-        }
-
         if ($user->can(Ability::ManageUnits) || $user->isDivisionLeader()) {
-            return true;
+            return $unit->division_id === $user->member->division_id || ! $unit->isTopLevel();
         }
 
         return $unit->parent !== null
             && $units->leadershipLevel($user) === UnitLevel::Platoon
-            && $units->leads($user->member, $unit->parent);
+            && $units->leadsWithin($user->member, $unit->parent);
     }
 
     public function update(User $user, Unit $unit): bool
@@ -66,28 +58,21 @@ class UnitPolicy
         $member = $user->member;
         $units  = app(UnitHierarchy::class);
 
-        if ($unit->isPlatoon()) {
+        if ($unit->isTopLevel()) {
             if ($user->can(Ability::ManageUnits) || $user->isDivisionLeader()) {
                 return $unit->division_id === $member->division_id;
             }
 
-            if ($units->leadershipLevel($user) === UnitLevel::Platoon && $units->leads($member, $unit)) {
-                return $unit->division_id === $member->division_id;
-            }
-
-            return false;
+            return $units->leadershipLevel($user) === UnitLevel::Platoon
+                && $units->leadsWithin($member, $unit)
+                && $unit->division_id === $member->division_id;
         }
 
-        if ($user->can(Ability::ManageUnits) && $member->division_id === $unit->division_id) {
+        if (($user->can(Ability::ManageUnits) || $user->isDivisionLeader()) && $member->division_id === $unit->division_id) {
             return true;
         }
 
-        if ($user->isDivisionLeader() && $member->division_id === $unit->division_id) {
-            return true;
-        }
-
-        return $unit->parent !== null
-            && $units->leadershipLevel($user) === UnitLevel::Platoon
-            && $units->leads($member, $unit->parent);
+        return $units->leadershipLevel($user) === UnitLevel::Platoon
+            && $units->leadsWithin($member, $unit);
     }
 }

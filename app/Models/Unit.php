@@ -53,6 +53,11 @@ class Unit extends Model
         return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
     }
 
+    public function isTopLevel(): bool
+    {
+        return $this->parent_id === null;
+    }
+
     public function isPlatoon(): bool
     {
         return $this->depth === 1;

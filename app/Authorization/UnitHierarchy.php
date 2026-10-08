@@ -14,6 +14,8 @@ interface UnitHierarchy
 
     public function leads(Member $leader, Unit $unit): bool;
 
+    public function leadsWithin(Member $leader, Unit $unit): bool;
+
     public function leadsUnitOf(Member $leader, Member $member): bool;
 
     public function sharesLedUnit(Member $leader, Member $member, UnitLevel $level): bool;

@@ -8,6 +8,7 @@ use App\Models\Activity;
 use App\Models\Division;
 use App\Models\Unit;
 use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 class UnitAssignment
 {
@@ -15,12 +16,18 @@ class UnitAssignment
 
     public function create(Division $division, ?Unit $parent, array $attributes): Unit
     {
-        return DB::transaction(function () use ($division, $parent, $attributes) {
+        $depth = ($parent?->depth ?? 0) + 1;
+
+        if ($depth > $division->deepestUnitLevel()) {
+            throw new InvalidArgumentException("{$division->name} has no level {$depth}.");
+        }
+
+        return DB::transaction(function () use ($division, $parent, $attributes, $depth) {
             $unit = Unit::create([
                 ...array_intersect_key($attributes, array_flip(['name', 'description', 'logo', 'order', 'gen_pop', 'leader_id'])),
                 'division_id' => $division->id,
                 'parent_id'   => $parent?->id,
-                'depth'       => ($parent?->depth ?? 0) + 1,
+                'depth'       => $depth,
             ]);
 
             $unit->update(['path' => ($parent?->path ?? '/') . $unit->id . '/']);

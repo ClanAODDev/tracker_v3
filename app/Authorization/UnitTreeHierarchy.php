@@ -66,32 +66,67 @@ class UnitTreeHierarchy implements UnitHierarchy
         return false;
     }
 
+    public function leadsWithin(Member $leader, Unit $unit): bool
+    {
+        for (; $unit !== null; $unit = $unit->parent) {
+            if ($this->leads($leader, $unit)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function sharesLedUnit(Member $leader, Member $member, UnitLevel $level): bool
     {
-        return $this->unitAt($leader, $level)?->id === $this->unitAt($member, $level)?->id;
+        $anchor = $this->anchor($leader, $level);
+
+        if ($anchor === null) {
+            return $this->ancestorAtDepth($member->unit, $this->depthFor($leader, $level)) === null;
+        }
+
+        return $member->unit !== null && str_starts_with($member->unit->path, $anchor->path);
     }
 
     public function scopeToLedUnit(Builder $members, Member $leader, UnitLevel $level): Builder
     {
-        $unit = $this->unitAt($leader, $level);
+        $anchor = $this->anchor($leader, $level);
 
-        if ($unit !== null) {
-            return $members->whereIn('unit_id', Unit::query()->where('path', 'like', $unit->path . '%')->select('id'));
+        if ($anchor !== null) {
+            return $members->whereIn('unit_id', Unit::query()->where('path', 'like', $anchor->path . '%')->select('id'));
         }
 
         return $members->where(fn (Builder $query) => $query
             ->whereNull('unit_id')
-            ->orWhereIn('unit_id', Unit::query()->where('depth', '<', $level->value)->select('id')));
+            ->orWhereIn('unit_id', Unit::query()->where('depth', '<', $this->depthFor($leader, $level))->select('id')));
     }
 
-    private function unitAt(Member $member, UnitLevel $level): ?Unit
+    private function anchor(Member $member, UnitLevel $level): ?Unit
     {
-        $unit = $member->unit;
+        $led = $this->ledUnit($member);
 
-        while ($unit !== null && $unit->depth > $level->value) {
+        if ($led !== null && $this->tierFor($led) === $level) {
+            return $led;
+        }
+
+        return $this->ancestorAtDepth($member->unit, $this->depthFor($member, $level));
+    }
+
+    private function depthFor(Member $member, UnitLevel $level): int
+    {
+        if ($level === UnitLevel::Platoon) {
+            return 1;
+        }
+
+        return max(2, $member->division?->deepestUnitLevel() ?? 2);
+    }
+
+    private function ancestorAtDepth(?Unit $unit, int $depth): ?Unit
+    {
+        while ($unit !== null && $unit->depth > $depth) {
             $unit = $unit->parent;
         }
 
-        return $unit?->depth === $level->value ? $unit : null;
+        return $unit?->depth === $depth ? $unit : null;
     }
 }
