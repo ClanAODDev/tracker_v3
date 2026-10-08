@@ -142,6 +142,12 @@ class DivisionResource extends Resource
                                             ->orderColumn('depth')
                                             ->reorderable(false)
                                             ->minItems(fn (Division $record) => (int) $record->units()->max('depth'))
+                                            ->validationMessages([
+                                                'min' => fn (Division $record) => sprintf(
+                                                    'This division still has units at level %1$d, so it needs at least %1$d levels. Archive or move those units first.',
+                                                    (int) $record->units()->max('depth'),
+                                                ),
+                                            ])
                                             ->maxItems(4)
                                             ->live()
                                             ->schema([
