@@ -1,0 +1,24 @@
+deleteAny                | (any award)                              | admin                    | deny
+deleteAny                | (any award)                              | developer                | allow
+deleteAny                | (any award)                              | admin_viewing_as_officer | deny
+deleteAny                | (any award)                              | senior_leader            | deny
+deleteAny                | (any award)                              | commanding_officer       | deny
+deleteAny                | (any award)                              | executive_officer        | deny
+deleteAny                | (any award)                              | officer                  | deny
+deleteAny                | (any award)                              | platoon_leader           | deny
+deleteAny                | (any award)                              | squad_leader             | deny
+deleteAny                | (any award)                              | member                   | deny
+deleteAny                | (any award)                              | banned                   | deny
+deleteAny                | (any award)                              | pending                  | deny
+delete                   | an_award                                 | admin                    | deny
+delete                   | an_award                                 | developer                | allow
+delete                   | an_award                                 | admin_viewing_as_officer | deny
+delete                   | an_award                                 | senior_leader            | deny
+delete                   | an_award                                 | commanding_officer       | deny
+delete                   | an_award                                 | executive_officer        | deny
+delete                   | an_award                                 | officer                  | deny
+delete                   | an_award                                 | platoon_leader           | deny
+delete                   | an_award                                 | squad_leader             | deny
+delete                   | an_award                                 | member                   | deny
+delete                   | an_award                                 | banned                   | deny
+delete                   | an_award                                 | pending                  | deny

@@ -3,6 +3,8 @@
 namespace App\Filament\Mod\Resources\SquadResource\RelationManagers;
 
 use App\Filament\Mod\Resources\MemberResource;
+use App\Models\Member;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
@@ -42,7 +44,11 @@ class MembersRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()->using(function (array $data) {
+                    $units = app(UnitAssignment::class);
+
+                    return Member::create([...$data, 'unit_id' => $this->getOwnerRecord()->id]);
+                }),
             ])
             ->recordActions([
                 EditAction::make()->url(

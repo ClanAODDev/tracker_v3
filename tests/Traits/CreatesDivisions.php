@@ -4,8 +4,7 @@ namespace Tests\Traits;
 
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Models\Unit;
 
 trait CreatesDivisions
 {
@@ -36,33 +35,31 @@ trait CreatesDivisions
         ], $attributes));
     }
 
-    protected function createPlatoon(?Division $division = null, array $attributes = []): Platoon
+    protected function createPlatoon(?Division $division = null, array $attributes = []): Unit
     {
         $division = $division ?? $this->createActiveDivision();
 
-        return Platoon::factory()->create(array_merge([
+        return Unit::factory()->create(array_merge([
             'division_id' => $division->id,
         ], $attributes));
     }
 
-    protected function createSquad(?Platoon $platoon = null, array $attributes = []): Squad
+    protected function createSquad(?Unit $platoon = null, array $attributes = []): Unit
     {
         $platoon = $platoon ?? $this->createPlatoon();
 
-        return Squad::factory()->create(array_merge([
-            'platoon_id' => $platoon->id,
-        ], $attributes));
+        return Unit::factory()->childOf($platoon)->create($attributes);
     }
 
     protected function createDivisionWithPlatoons(int $platoonCount = 2, array $divisionAttributes = []): Division
     {
         $division = $this->createActiveDivision($divisionAttributes);
 
-        Platoon::factory()->count($platoonCount)->create([
+        Unit::factory()->count($platoonCount)->create([
             'division_id' => $division->id,
         ]);
 
-        return $division->fresh(['platoons']);
+        return $division->fresh(['topUnits']);
     }
 
     protected function createDivisionWithFullStructure(
@@ -74,54 +71,46 @@ trait CreatesDivisions
         $division = $this->createActiveDivision($divisionAttributes);
 
         for ($p = 0; $p < $platoonCount; $p++) {
-            $platoon = Platoon::factory()->create([
+            $platoon = Unit::factory()->create([
                 'division_id' => $division->id,
                 'order'       => ($p + 1) * 100,
             ]);
 
             for ($s = 0; $s < $squadsPerPlatoon; $s++) {
-                $squad = Squad::factory()->create([
-                    'platoon_id' => $platoon->id,
-                ]);
+                $squad = Unit::factory()->childOf($platoon)->create();
 
                 Member::factory()->count($membersPerSquad)->create([
                     'division_id' => $division->id,
-                    'platoon_id'  => $platoon->id,
-                    'squad_id'    => $squad->id,
+                    'unit_id'     => $squad->id,
                 ]);
             }
         }
 
-        return $division->fresh(['platoons.squads.members']);
+        return $division->fresh(['topUnits.children.members']);
     }
 
-    protected function createPlatoonWithSquads(?Division $division = null, int $squadCount = 3, array $platoonAttributes = []): Platoon
+    protected function createPlatoonWithSquads(?Division $division = null, int $squadCount = 3, array $platoonAttributes = []): Unit
     {
         $division = $division ?? $this->createActiveDivision();
 
-        $platoon = Platoon::factory()->create(array_merge([
+        $platoon = Unit::factory()->create(array_merge([
             'division_id' => $division->id,
         ], $platoonAttributes));
 
-        Squad::factory()->count($squadCount)->create([
-            'platoon_id' => $platoon->id,
-        ]);
+        Unit::factory()->childOf($platoon)->count($squadCount)->create();
 
-        return $platoon->fresh(['squads']);
+        return $platoon->fresh(['children']);
     }
 
-    protected function createSquadWithMembers(?Platoon $platoon = null, int $memberCount = 5, array $squadAttributes = []): Squad
+    protected function createSquadWithMembers(?Unit $platoon = null, int $memberCount = 5, array $squadAttributes = []): Unit
     {
         $platoon = $platoon ?? $this->createPlatoon();
 
-        $squad = Squad::factory()->create(array_merge([
-            'platoon_id' => $platoon->id,
-        ], $squadAttributes));
+        $squad = Unit::factory()->childOf($platoon)->create($squadAttributes);
 
         Member::factory()->count($memberCount)->create([
             'division_id' => $platoon->division_id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => $squad->id,
+            'unit_id'     => $squad->id,
         ]);
 
         return $squad->fresh(['members']);

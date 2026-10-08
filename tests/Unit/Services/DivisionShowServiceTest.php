@@ -4,6 +4,8 @@ namespace Tests\Unit\Services;
 
 use App\Data\DivisionShowData;
 use App\Models\Census;
+use App\Models\DivisionUnitLevel;
+use App\Models\Unit;
 use App\Services\DivisionShowService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -109,11 +111,11 @@ class DivisionShowServiceTest extends TestCase
         $platoon  = $this->createPlatoon($division);
         $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
         $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
         $user = $this->createMemberWithUser(['division_id' => $division->id]);
         $this->actingAs($user);
@@ -131,11 +133,11 @@ class DivisionShowServiceTest extends TestCase
         $platoon       = $this->createPlatoon($division);
         $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
         $this->createMember([
             'division_id' => $otherDivision->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
         $user = $this->createMemberWithUser(['division_id' => $division->id]);
         $this->actingAs($user);
@@ -153,12 +155,12 @@ class DivisionShowServiceTest extends TestCase
 
         $this->createMember([
             'division_id'         => $division->id,
-            'platoon_id'          => $platoon->id,
+            'unit_id'             => $platoon->id,
             'last_voice_activity' => Carbon::now()->subDays(5),
         ]);
         $this->createMember([
             'division_id'         => $division->id,
-            'platoon_id'          => $platoon->id,
+            'unit_id'             => $platoon->id,
             'last_voice_activity' => Carbon::now()->subDays(60),
         ]);
         $user = $this->createMemberWithUser(['division_id' => $division->id]);
@@ -230,7 +232,7 @@ class DivisionShowServiceTest extends TestCase
     }
 
     #[Test]
-    public function get_show_data_platoons_load_squads()
+    public function get_show_data_platoons_load_their_squads()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
@@ -240,8 +242,8 @@ class DivisionShowServiceTest extends TestCase
 
         $result = $this->service->getShowData($division);
 
-        $this->assertTrue($result->platoons->first()->relationLoaded('squads'));
-        $this->assertCount(1, $result->platoons->first()->squads);
+        $this->assertTrue($result->platoons->first()->relationLoaded('children'));
+        $this->assertCount(1, $result->platoons->first()->children);
     }
 
     #[Test]
@@ -271,6 +273,51 @@ class DivisionShowServiceTest extends TestCase
 
         $result = $this->service->getShowData($division);
 
-        $this->assertTrue($result->platoons->first()->squads->first()->leader->relationLoaded('division'));
+        $this->assertTrue($result->platoons->first()->children->first()->leader->relationLoaded('division'));
+    }
+
+    #[Test]
+    public function platoon_counts_include_their_squads_and_squads_count_their_own_members()
+    {
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+        $squadA   = $this->createSquad($platoon);
+        $squadB   = $this->createSquad($platoon);
+        $inSquad  = fn ($squad, $voice) => $this->createMember(['division_id' => $division->id, 'unit_id' => $squad->id, 'last_voice_activity' => $voice]);
+
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $platoon->id, 'last_voice_activity' => now()]);
+        $inSquad($squadA, now());
+        $inSquad($squadA, now()->subYear());
+        $inSquad($squadB, null);
+        $this->actingAs($this->createMemberWithUser(['division_id' => $division->id]));
+
+        $card = $this->service->getShowData($division)->platoons->first();
+
+        $this->assertSame(4, $card->members_count);
+        $this->assertSame(2, $card->voice_active_count);
+        $this->assertSame([2, 1], $card->children->map->members_count->all());
+    }
+
+    #[Test]
+    public function counts_include_every_level_below_a_unit(): void
+    {
+        $division = $this->createActiveDivision();
+        DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
+        $user    = $this->createMemberWithUser(['division_id' => $division->id]);
+        $platoon = $this->createPlatoon($division);
+        $middle  = Unit::factory()->childOf($platoon)->create();
+        $team    = Unit::factory()->childOf($middle)->create();
+
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $platoon->id, 'last_voice_activity' => null]);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $middle->id, 'last_voice_activity' => null]);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $team->id, 'last_voice_activity' => now()]);
+        $this->actingAs($user);
+
+        $result = $this->service->getShowData($division);
+
+        $top = $result->platoons->firstWhere('id', $platoon->id);
+        $this->assertSame(3, $top->members_count);
+        $this->assertSame(1, $top->voice_active_count);
+        $this->assertSame(2, $top->children->firstWhere('id', $middle->id)->members_count);
     }
 }

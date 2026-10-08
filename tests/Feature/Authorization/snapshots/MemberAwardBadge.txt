@@ -1,0 +1,12 @@
+member award nav badge   | 2 division A + 1 clan-wide pending       | admin                    | 1
+member award nav badge   | 2 division A + 1 clan-wide pending       | developer                | none
+member award nav badge   | 2 division A + 1 clan-wide pending       | admin_viewing_as_officer | none
+member award nav badge   | 2 division A + 1 clan-wide pending       | senior_leader            | none
+member award nav badge   | 2 division A + 1 clan-wide pending       | commanding_officer       | 2
+member award nav badge   | 2 division A + 1 clan-wide pending       | executive_officer        | 2
+member award nav badge   | 2 division A + 1 clan-wide pending       | officer                  | none
+member award nav badge   | 2 division A + 1 clan-wide pending       | platoon_leader           | none
+member award nav badge   | 2 division A + 1 clan-wide pending       | squad_leader             | none
+member award nav badge   | 2 division A + 1 clan-wide pending       | member                   | none
+member award nav badge   | 2 division A + 1 clan-wide pending       | banned                   | none
+member award nav badge   | 2 division A + 1 clan-wide pending       | pending                  | none

@@ -1,0 +1,20 @@
+viewAny                  | (any platoon)                            | platoon_leader           | deny
+viewAny                  | (any platoon)                            | squad_leader             | deny
+create                   | (no division)                            | platoon_leader           | deny
+create                   | (no division)                            | squad_leader             | deny
+create                   | own_division                             | platoon_leader           | deny
+create                   | own_division                             | squad_leader             | deny
+create                   | other_division                           | platoon_leader           | deny
+create                   | other_division                           | squad_leader             | deny
+update                   | own_platoon                              | platoon_leader           | allow
+update                   | own_platoon                              | squad_leader             | deny
+update                   | other_platoon                            | platoon_leader           | deny
+update                   | other_platoon                            | squad_leader             | deny
+update                   | other_division_platoon                   | platoon_leader           | deny
+update                   | other_division_platoon                   | squad_leader             | deny
+delete                   | own_platoon                              | platoon_leader           | deny
+delete                   | own_platoon                              | squad_leader             | deny
+delete                   | other_platoon                            | platoon_leader           | deny
+delete                   | other_platoon                            | squad_leader             | deny
+delete                   | other_division_platoon                   | platoon_leader           | deny
+delete                   | other_division_platoon                   | squad_leader             | deny

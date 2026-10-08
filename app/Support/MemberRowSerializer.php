@@ -92,19 +92,12 @@ class MemberRowSerializer
 
     private function assignment(Member $member): ?array
     {
-        if ($this->assignmentKind === 'squad') {
-            return $member->squad && $member->platoon
-                ? [
-                    'label' => $member->squad->name ?: 'Untitled',
-                    'url'   => route('squad.show', [$this->division->slug, $member->platoon, $member->squad]),
-                ]
-                : null;
-        }
+        $unit = $this->assignmentKind === 'squad' ? $member->squadUnit() : $member->platoonUnit();
 
-        return $member->platoon
+        return $unit
             ? [
-                'label' => $member->platoon->name ?: 'Untitled',
-                'url'   => route('platoon', [$this->division->slug, $member->platoon]),
+                'label' => $unit->name ?: 'Untitled',
+                'url'   => $unit->url($this->division),
             ]
             : null;
     }

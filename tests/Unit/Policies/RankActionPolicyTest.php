@@ -93,13 +93,13 @@ class RankActionPolicyTest extends TestCase
 
         $leader = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::COMMANDING_OFFICER,
         ]);
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
 
         $action = RankAction::factory()->create([
@@ -118,13 +118,13 @@ class RankActionPolicyTest extends TestCase
 
         $leader = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::COMMANDING_OFFICER,
         ]);
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
 
         $action = RankAction::factory()->create([
@@ -143,13 +143,13 @@ class RankActionPolicyTest extends TestCase
 
         $leader = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::COMMANDING_OFFICER,
         ]);
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
 
         $action = RankAction::factory()->create([
@@ -168,14 +168,15 @@ class RankActionPolicyTest extends TestCase
 
         $leader = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::STAFF_SERGEANT,
         ]);
+        $this->makeLeader($leader, $platoon);
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
 
         $action = RankAction::factory()->create([
@@ -194,14 +195,14 @@ class RankActionPolicyTest extends TestCase
 
         $leader = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::STAFF_SERGEANT,
         ]);
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
 
         $action = RankAction::factory()->create([
@@ -221,14 +222,14 @@ class RankActionPolicyTest extends TestCase
 
         $leader = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon1->id,
+            'unit_id'     => $platoon1->id,
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::STAFF_SERGEANT,
         ]);
 
         $member = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon2->id,
+            'unit_id'     => $platoon2->id,
         ]);
 
         $action = RankAction::factory()->create([
@@ -298,13 +299,14 @@ class RankActionPolicyTest extends TestCase
 
         $leader = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::STAFF_SERGEANT,
         ]);
+        $this->makeLeader($leader, $platoon);
         $member = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
 
         // default max_platoon_leader_rank setting is Rank::PRIVATE_FIRST_CLASS
@@ -325,13 +327,13 @@ class RankActionPolicyTest extends TestCase
 
         $leader = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon1->id,
+            'unit_id'     => $platoon1->id,
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::STAFF_SERGEANT,
         ]);
         $member = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon2->id,
+            'unit_id'     => $platoon2->id,
         ]);
 
         // default max_platoon_leader_rank setting is Rank::PRIVATE_FIRST_CLASS

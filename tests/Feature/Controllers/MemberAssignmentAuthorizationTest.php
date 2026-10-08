@@ -69,14 +69,13 @@ class MemberAssignmentAuthorizationTest extends TestCase
     public function unassign_member_is_permitted_for_sr_ldr_on_another_member()
     {
         $srLdr  = $this->createSeniorLeader();
-        $target = $this->createMember(['platoon_id' => 5, 'squad_id' => 9]);
+        $target = $this->createMember(['unit_id' => $this->createSquad($this->createPlatoon($this->createActiveDivision()))->id]);
 
         $this->actingAs($srLdr)
             ->post(route('member.unassign', $target->getUrlParams()))
             ->assertRedirect();
 
-        $this->assertSame(0, $target->fresh()->platoon_id);
-        $this->assertSame(0, $target->fresh()->squad_id);
+        $this->assertNull($target->fresh()->unit_id);
     }
 
     #[Test]
@@ -84,7 +83,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoonWithSquads($division);
-        $squad    = $platoon->squads->first();
+        $squad    = $platoon->children->first();
         $officer  = $this->createMemberWithUser(
             ['division_id' => $division->id, 'position' => Position::MEMBER],
             ['role' => Role::OFFICER]
@@ -94,11 +93,11 @@ class MemberAssignmentAuthorizationTest extends TestCase
         $this->actingAs($officer)
             ->post('/members/assign-squad', [
                 'member_id' => $target->id,
-                'squad_id'  => $squad->id,
+                'unit_id'   => $squad->id,
             ])
             ->assertForbidden();
 
-        $this->assertNotEquals($squad->id, $target->fresh()->squad_id);
+        $this->assertNotEquals($squad->id, $target->fresh()->unit_id);
     }
 
     #[Test]
@@ -106,18 +105,18 @@ class MemberAssignmentAuthorizationTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoonWithSquads($division);
-        $squad    = $platoon->squads->first();
+        $squad    = $platoon->children->first();
         $srLdr    = $this->createSeniorLeader($division);
         $target   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($srLdr)
             ->post('/members/assign-squad', [
                 'member_id' => $target->id,
-                'squad_id'  => $squad->id,
+                'unit_id'   => $squad->id,
             ])
             ->assertOk();
 
-        $this->assertSame($squad->id, $target->fresh()->squad_id);
+        $this->assertSame($squad->id, $target->fresh()->unit_id);
     }
 
     #[Test]
@@ -126,14 +125,14 @@ class MemberAssignmentAuthorizationTest extends TestCase
         $division      = $this->createActiveDivision();
         $otherDivision = $this->createActiveDivision();
         $platoon       = $this->createPlatoonWithSquads($division);
-        $squad         = $platoon->squads->first();
+        $squad         = $platoon->children->first();
         $srLdr         = $this->createSeniorLeader($otherDivision);
         $target        = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($srLdr)
             ->post('/members/assign-squad', [
                 'member_id' => $target->id,
-                'squad_id'  => $squad->id,
+                'unit_id'   => $squad->id,
             ])
             ->assertForbidden();
     }
@@ -144,7 +143,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
         $srLdr    = $this->createSeniorLeader($division);
-        $target   = $this->createMember(['division_id' => $division->id, 'platoon_id' => 0]);
+        $target   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($srLdr)
             ->post(route('member.assign-platoon', $target->getUrlParams()), [
@@ -152,7 +151,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
             ])
             ->assertOk();
 
-        $this->assertSame($platoon->id, $target->fresh()->platoon_id);
+        $this->assertSame($platoon->id, $target->fresh()->unit_id);
     }
 
     #[Test]
@@ -162,7 +161,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
         $otherDivision = $this->createActiveDivision();
         $otherPlatoon  = $this->createPlatoon($otherDivision);
         $srLdr         = $this->createSeniorLeader($division);
-        $target        = $this->createMember(['division_id' => $division->id, 'platoon_id' => 0]);
+        $target        = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($srLdr)
             ->post(route('member.assign-platoon', $target->getUrlParams()), [
@@ -170,7 +169,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
             ])
             ->assertNotFound();
 
-        $this->assertSame(0, $target->fresh()->platoon_id);
+        $this->assertNull($target->fresh()->unit_id);
     }
 
     #[Test]

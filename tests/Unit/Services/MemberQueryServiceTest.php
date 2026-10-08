@@ -64,37 +64,39 @@ class MemberQueryServiceTest extends TestCase
     }
 
     #[Test]
-    public function with_standard_relations_includes_platoon()
+    public function with_standard_relations_includes_the_platoon_level_unit()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
         $member   = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
 
         $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
 
-        $this->assertTrue($result->relationLoaded('platoon'));
+        $this->assertTrue($result->relationLoaded('unit'));
+        $this->assertSame($platoon->id, $result->platoonUnit()->id);
     }
 
     #[Test]
-    public function with_standard_relations_includes_squad()
+    public function with_standard_relations_includes_the_squad_and_its_platoon()
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
         $squad    = $this->createSquad($platoon);
         $member   = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => $squad->id,
+            'unit_id'     => $squad->id,
         ]);
 
         $query  = Member::where('id', $member->id);
         $result = $this->service->withStandardRelations($query, $division)->first();
 
-        $this->assertTrue($result->relationLoaded('squad'));
+        $this->assertTrue($result->relationLoaded('unit'));
+        $this->assertTrue($result->unit->relationLoaded('parent'));
+        $this->assertSame([$squad->id, $platoon->id], [$result->squadUnit()->id, $result->platoonUnit()->id]);
     }
 
     #[Test]

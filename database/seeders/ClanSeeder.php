@@ -7,8 +7,7 @@ use App\Models\Census;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberHandle;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -59,11 +58,11 @@ class ClanSeeder extends Seeder
                 $this->command->info("Created Senior Leader (Division CO/XO) user: {$srLdrDivisionUser->name} (Member ID: {$srLdrDivisionUser->member_id}, Position: {$leadershipMember->position})");
             }
 
-            $randomPlatoon = Platoon::inRandomOrder()->first();
+            $randomPlatoon = Unit::where('depth', 1)->inRandomOrder()->first();
             if ($randomPlatoon) {
                 $platoonLeader = Member::factory()->ofTypePlatoonLeader()->create([
                     'division_id' => $randomPlatoon->division_id,
-                    'platoon_id'  => $randomPlatoon->id,
+                    'unit_id'     => $randomPlatoon->id,
                 ]);
                 $srLdrPlatoonUser = User::factory()->create([
                     'name'      => $platoonLeader->name,
@@ -73,16 +72,11 @@ class ClanSeeder extends Seeder
                 $this->command->info("Created Senior Leader (Platoon Leader) user: {$srLdrPlatoonUser->name} (Member ID: {$srLdrPlatoonUser->member_id})");
             }
 
-            $randomSquad = Squad::inRandomOrder()->first();
+            $randomSquad = Unit::where('depth', 2)->inRandomOrder()->first();
             if ($randomSquad) {
-
-                $platoon     = $randomSquad->platoon;
-                $division_id = $platoon ? $platoon->division_id : null;
-
                 $squadLeader = Member::factory()->ofTypeSquadLeader()->create([
-                    'division_id' => $division_id,
-                    'platoon_id'  => $randomSquad->platoon_id,
-                    'squad_id'    => $randomSquad->id,
+                    'division_id' => $randomSquad->division_id,
+                    'unit_id'     => $randomSquad->id,
                 ]);
                 $officerUser = User::factory()->create([
                     'name'      => $squadLeader->name,
@@ -104,11 +98,11 @@ class ClanSeeder extends Seeder
                 $this->command->info("Created Senior Leader (Division CO/XO) user: {$srLdrDivisionUser->name} (Member ID: {$srLdrDivisionUser->member_id}, Position: {$leadershipMember->position})");
             }
 
-            $randomPlatoon = Platoon::inRandomOrder()->first();
+            $randomPlatoon = Unit::where('depth', 1)->inRandomOrder()->first();
             if ($randomPlatoon) {
                 $platoonLeader = Member::factory()->ofTypePlatoonLeader()->create([
                     'division_id' => $randomPlatoon->division_id,
-                    'platoon_id'  => $randomPlatoon->id,
+                    'unit_id'     => $randomPlatoon->id,
                 ]);
                 $srLdrPlatoonUser = User::factory()->create([
                     'name'      => $platoonLeader->name,
@@ -118,16 +112,11 @@ class ClanSeeder extends Seeder
                 $this->command->info("Created Senior Leader (Platoon Leader) user: {$srLdrPlatoonUser->name} (Member ID: {$srLdrPlatoonUser->member_id})");
             }
 
-            $randomSquad = Squad::inRandomOrder()->first();
+            $randomSquad = Unit::where('depth', 2)->inRandomOrder()->first();
             if ($randomSquad) {
-
-                $platoon     = $randomSquad->platoon;
-                $division_id = $platoon ? $platoon->division_id : null;
-
                 $squadLeader = Member::factory()->ofTypeSquadLeader()->create([
-                    'division_id' => $division_id,
-                    'platoon_id'  => $randomSquad->platoon_id,
-                    'squad_id'    => $randomSquad->id,
+                    'division_id' => $randomSquad->division_id,
+                    'unit_id'     => $randomSquad->id,
                 ]);
                 $officerUser = User::factory()->create([
                     'name'      => $squadLeader->name,
@@ -163,22 +152,19 @@ class ClanSeeder extends Seeder
     protected function generateDivisionMembers($division): void
     {
 
-        $platoons = Platoon::factory()->count(rand(2, 5))->create([
+        $platoons = Unit::factory()->count(rand(2, 5))->create([
             'division_id' => $division->id,
         ]);
 
         foreach ($platoons as $platoon) {
 
-            $squads = Squad::factory()->count(rand(1, 3))->create([
-                'platoon_id' => $platoon->id,
-            ]);
+            $squads = Unit::factory()->childOf($platoon)->count(rand(1, 3))->create();
 
             foreach ($squads as $squad) {
 
                 $members = Member::factory()->ofTypeMember()->count(rand(5, 20))->create([
                     'division_id' => $division->id,
-                    'platoon_id'  => $platoon->id,
-                    'squad_id'    => $squad->id,
+                    'unit_id'     => $squad->id,
                 ]);
 
                 $members->each(function ($member) {

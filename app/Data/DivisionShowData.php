@@ -2,9 +2,10 @@
 
 namespace App\Data;
 
+use App\Enums\Ability;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Platoon;
+use App\Models\Unit;
 use App\Models\User;
 use App\Support\DivisionToolbar;
 use App\Support\MemberCard;
@@ -37,14 +38,15 @@ readonly class DivisionShowData
                 'abbr'                  => $division->abbreviation,
                 'logo'                  => $division->getLogoPath(),
                 'platoonLabel'          => $division->locality('platoon'),
+                'childLabelPlural'      => $division->unitLevel(2)?->label_plural ?? 'Squads',
                 'isShutdown'            => $division->isShutdown(),
                 'shutdownAt'            => $division->shutdown_at?->toFormattedDateString(),
                 'shutdownPending'       => (bool) $division->shutdown_at?->isFuture(),
                 'applicationRequired'   => (bool) $division->settings()->get('application_required', false),
                 'applicationsUrl'       => url('/api/divisions/' . $division->slug . '/applications'),
-                'canDeleteApplications' => $user->isRole(['sr_ldr', 'admin']),
+                'canDeleteApplications' => $user->can(Ability::DeleteApplications),
                 'canRecruit'            => $user->can('recruit', Member::class),
-                'canCreatePlatoon'      => $user->can('create', [Platoon::class, $division]),
+                'canCreatePlatoon'      => $user->can('create', [Unit::class, $division]),
                 'canManageUnassigned'   => $user->can('manageUnassigned', User::class),
                 'editUrl'               => route('filament.mod.resources.divisions.edit', $division),
                 'recruitUrl'            => route('recruiting.form', $division),
@@ -65,18 +67,18 @@ readonly class DivisionShowData
                     : null,
             ],
             'leaders'  => $this->divisionLeaders->map(fn (Member $leader) => MemberCard::from($leader))->values(),
-            'platoons' => $this->platoons->map(fn (Platoon $platoon) => [
+            'platoons' => $this->platoons->map(fn (Unit $platoon) => [
                 'id'          => $platoon->id,
                 'name'        => $platoon->name,
                 'description' => $platoon->description,
                 'logo'        => $platoon->logo,
-                'url'         => route('platoon', [$division->slug, $platoon->id]),
+                'url'         => $platoon->url($division),
                 'memberCount' => (int) $platoon->members_count,
                 'voiceRate'   => $platoon->members_count > 0
                     ? (int) round(($platoon->voice_active_count / $platoon->members_count) * 100)
                     : 0,
                 'leader' => MemberCard::from($platoon->leader),
-                'squads' => $platoon->squads->map(fn ($squad) => [
+                'squads' => $platoon->children->map(fn (Unit $squad) => [
                     'id'          => $squad->id,
                     'name'        => $squad->name,
                     'memberCount' => (int) $squad->members_count,
@@ -99,10 +101,10 @@ readonly class DivisionShowData
                 'label' => $action->label,
                 'style' => $action->style,
             ])->values(),
-            'recentActivityCount' => $user->isRole('member')
+            'recentActivityCount' => ! $user->can(Ability::ViewDivisionActivity)
                 ? 0
                 : $this->recentActivity->sum(fn ($group) => $group['events']->count()),
-            'recentActivity' => $user->isRole('member')
+            'recentActivity' => ! $user->can(Ability::ViewDivisionActivity)
                 ? []
                 : $this->recentActivity->map(function (array $group) {
                     $type  = $group['type'];
@@ -119,7 +121,7 @@ readonly class DivisionShowData
                             : ['name' => 'Unknown', 'url' => null])->values(),
                     ];
                 })->values(),
-            'canViewAllActivity' => $user->isRole(['sr_ldr', 'admin']),
+            'canViewAllActivity' => $user->can(Ability::ViewAllActivity),
             'allActivityUrl'     => route('filament.mod.resources.activities.index'),
             'organize'           => [
                 'canOrganize' => $user->can('manageUnassigned', User::class),

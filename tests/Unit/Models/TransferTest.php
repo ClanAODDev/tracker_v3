@@ -92,8 +92,7 @@ class TransferTest extends TestCase
 
         $member = $this->createMember([
             'division_id' => $sourceDivision->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => $squad->id,
+            'unit_id'     => $squad->id,
             'position'    => Position::MEMBER,
         ]);
 
@@ -106,8 +105,7 @@ class TransferTest extends TestCase
         $member->refresh();
 
         $this->assertEquals($targetDivision->id, $member->division_id);
-        $this->assertEquals(0, $member->platoon_id);
-        $this->assertEquals(0, $member->squad_id);
+        $this->assertNull($member->unit_id);
         $this->assertEquals(Position::MEMBER, $member->position);
     }
 

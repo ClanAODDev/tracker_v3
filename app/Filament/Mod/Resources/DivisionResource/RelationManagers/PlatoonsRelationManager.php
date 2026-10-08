@@ -3,8 +3,9 @@
 namespace App\Filament\Mod\Resources\DivisionResource\RelationManagers;
 
 use App\Filament\Mod\Resources\PlatoonResource;
-use App\Models\Platoon;
+use App\Models\Unit;
 use App\Rules\ResolvesToImage;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
@@ -23,7 +24,12 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PlatoonsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'platoons';
+    protected static string $relationship = 'topUnits';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return $ownerRecord->unitLevel(1)?->label_plural ?? 'Platoons';
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -43,10 +49,16 @@ class PlatoonsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->modelLabel(strtolower($this->getOwnerRecord()->unitLevel(1)?->label ?? 'platoon'))
             ->columns([
                 TextInputColumn::make('order')
                     ->width('10px')
-                    ->sortable(),
+                    ->sortable()
+                    ->updateStateUsing(function (Unit $record, $state) {
+                        app(UnitAssignment::class)->update($record, ['order' => (int) $state]);
+
+                        return $state;
+                    }),
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('leader.name')
@@ -70,12 +82,20 @@ class PlatoonsRelationManager extends RelationManager
                 TrashedFilter::make(),
             ])
             ->headerActions([
-                CreateAction::make()->visible(fn () => auth()->user()->can('create', Platoon::class)),
+                CreateAction::make()
+                    ->visible(fn () => auth()->user()->can('create', Unit::class))
+                    ->using(function (array $data) {
+                        return app(UnitAssignment::class)->create($this->getOwnerRecord(), null, $data);
+                    }),
             ])
             ->recordActions([
                 EditAction::make()->url(fn (Model $record): string => PlatoonResource::getUrl('edit',
                     ['record' => $record])),
-                RestoreAction::make(),
+                RestoreAction::make()->using(function (Unit $record) {
+                    app(UnitAssignment::class)->restore($record);
+
+                    return true;
+                }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

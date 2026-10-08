@@ -1,0 +1,108 @@
+DivisionTag::isVisibleTo | public tag                               | admin                    | allow
+DivisionTag::isVisibleTo | public tag                               | developer                | allow
+DivisionTag::isVisibleTo | public tag                               | admin_viewing_as_officer | allow
+DivisionTag::isVisibleTo | public tag                               | senior_leader            | allow
+DivisionTag::isVisibleTo | public tag                               | commanding_officer       | allow
+DivisionTag::isVisibleTo | public tag                               | executive_officer        | allow
+DivisionTag::isVisibleTo | public tag                               | officer                  | allow
+DivisionTag::isVisibleTo | public tag                               | platoon_leader           | allow
+DivisionTag::isVisibleTo | public tag                               | squad_leader             | allow
+DivisionTag::isVisibleTo | public tag                               | member                   | allow
+DivisionTag::isVisibleTo | public tag                               | banned                   | allow
+DivisionTag::isVisibleTo | public tag                               | pending                  | allow
+DivisionTag::isVisibleTo | officers tag                             | admin                    | allow
+DivisionTag::isVisibleTo | officers tag                             | developer                | deny
+DivisionTag::isVisibleTo | officers tag                             | admin_viewing_as_officer | allow
+DivisionTag::isVisibleTo | officers tag                             | senior_leader            | allow
+DivisionTag::isVisibleTo | officers tag                             | commanding_officer       | allow
+DivisionTag::isVisibleTo | officers tag                             | executive_officer        | allow
+DivisionTag::isVisibleTo | officers tag                             | officer                  | allow
+DivisionTag::isVisibleTo | officers tag                             | platoon_leader           | allow
+DivisionTag::isVisibleTo | officers tag                             | squad_leader             | allow
+DivisionTag::isVisibleTo | officers tag                             | member                   | deny
+DivisionTag::isVisibleTo | officers tag                             | banned                   | deny
+DivisionTag::isVisibleTo | officers tag                             | pending                  | deny
+DivisionTag::isVisibleTo | senior leaders tag                       | admin                    | allow
+DivisionTag::isVisibleTo | senior leaders tag                       | developer                | deny
+DivisionTag::isVisibleTo | senior leaders tag                       | admin_viewing_as_officer | deny
+DivisionTag::isVisibleTo | senior leaders tag                       | senior_leader            | allow
+DivisionTag::isVisibleTo | senior leaders tag                       | commanding_officer       | allow
+DivisionTag::isVisibleTo | senior leaders tag                       | executive_officer        | allow
+DivisionTag::isVisibleTo | senior leaders tag                       | officer                  | deny
+DivisionTag::isVisibleTo | senior leaders tag                       | platoon_leader           | deny
+DivisionTag::isVisibleTo | senior leaders tag                       | squad_leader             | deny
+DivisionTag::isVisibleTo | senior leaders tag                       | member                   | deny
+DivisionTag::isVisibleTo | senior leaders tag                       | banned                   | deny
+DivisionTag::isVisibleTo | senior leaders tag                       | pending                  | deny
+GET tickets ?view=all    | (listed tickets)                         | admin                    | 200 [others admin-only ticket, others sergeant-level ticket]
+GET tickets ?view=all    | (listed tickets)                         | developer                | 200 []
+GET tickets ?view=all    | (listed tickets)                         | admin_viewing_as_officer | 200 [others sergeant-level ticket]
+GET tickets ?view=all    | (listed tickets)                         | senior_leader            | 200 [others sergeant-level ticket]
+GET tickets ?view=all    | (listed tickets)                         | commanding_officer       | 200 [others sergeant-level ticket]
+GET tickets ?view=all    | (listed tickets)                         | executive_officer        | 200 [others sergeant-level ticket]
+GET tickets ?view=all    | (listed tickets)                         | officer                  | 200 []
+GET tickets ?view=all    | (listed tickets)                         | platoon_leader           | 200 []
+GET tickets ?view=all    | (listed tickets)                         | squad_leader             | 200 []
+GET tickets ?view=all    | (listed tickets)                         | member                   | 200 []
+GET tickets ?view=all    | (listed tickets)                         | banned                   | 403 []
+GET tickets ?view=all    | (listed tickets)                         | pending                  | 408 []
+GET ticket page          | others sergeant-level ticket             | admin                    | 200
+GET ticket page          | others sergeant-level ticket             | developer                | 403
+GET ticket page          | others sergeant-level ticket             | admin_viewing_as_officer | 200
+GET ticket page          | others sergeant-level ticket             | senior_leader            | 200
+GET ticket page          | others sergeant-level ticket             | commanding_officer       | 200
+GET ticket page          | others sergeant-level ticket             | executive_officer        | 200
+GET ticket page          | others sergeant-level ticket             | officer                  | 403
+GET ticket page          | others sergeant-level ticket             | platoon_leader           | 403
+GET ticket page          | others sergeant-level ticket             | squad_leader             | 403
+GET ticket page          | others sergeant-level ticket             | member                   | 403
+GET ticket page          | others sergeant-level ticket             | banned                   | 403
+GET ticket page          | others sergeant-level ticket             | pending                  | 408
+GET ticket page          | others admin-only ticket                 | admin                    | 200
+GET ticket page          | others admin-only ticket                 | developer                | 403
+GET ticket page          | others admin-only ticket                 | admin_viewing_as_officer | 403
+GET ticket page          | others admin-only ticket                 | senior_leader            | 403
+GET ticket page          | others admin-only ticket                 | commanding_officer       | 403
+GET ticket page          | others admin-only ticket                 | executive_officer        | 403
+GET ticket page          | others admin-only ticket                 | officer                  | 403
+GET ticket page          | others admin-only ticket                 | platoon_leader           | 403
+GET ticket page          | others admin-only ticket                 | squad_leader             | 403
+GET ticket page          | others admin-only ticket                 | member                   | 403
+GET ticket page          | others admin-only ticket                 | banned                   | 403
+GET ticket page          | others admin-only ticket                 | pending                  | 408
+GET discord pending preview | (status)                                 | admin                    | 200
+GET discord pending preview | (status)                                 | developer                | 302 -> /
+GET discord pending preview | (status)                                 | admin_viewing_as_officer | 200
+GET discord pending preview | (status)                                 | senior_leader            | 200
+GET discord pending preview | (status)                                 | commanding_officer       | 200
+GET discord pending preview | (status)                                 | executive_officer        | 200
+GET discord pending preview | (status)                                 | officer                  | 200
+GET discord pending preview | (status)                                 | platoon_leader           | 200
+GET discord pending preview | (status)                                 | squad_leader             | 200
+GET discord pending preview | (status)                                 | member                   | 302 -> /
+GET discord pending preview | (status)                                 | banned                   | 403
+GET discord pending preview | (status)                                 | pending                  | 408
+POST create tag for member | same_squad via Division A URL            | admin                    | 200 created in Division A
+POST create tag for member | same_squad via Division A URL            | developer                | 403 created in none
+POST create tag for member | same_squad via Division A URL            | admin_viewing_as_officer | 403 created in none
+POST create tag for member | same_squad via Division A URL            | senior_leader            | 200 created in Division A
+POST create tag for member | same_squad via Division A URL            | commanding_officer       | 200 created in Division A
+POST create tag for member | same_squad via Division A URL            | executive_officer        | 200 created in Division A
+POST create tag for member | same_squad via Division A URL            | officer                  | 403 created in none
+POST create tag for member | same_squad via Division A URL            | platoon_leader           | 403 created in none
+POST create tag for member | same_squad via Division A URL            | squad_leader             | 403 created in none
+POST create tag for member | same_squad via Division A URL            | member                   | 403 created in none
+POST create tag for member | same_squad via Division A URL            | banned                   | 403 created in none
+POST create tag for member | same_squad via Division A URL            | pending                  | 408 created in none
+POST create tag for member | other_division via Division B URL        | admin                    | 200 created in Division B
+POST create tag for member | other_division via Division B URL        | developer                | 403 created in none
+POST create tag for member | other_division via Division B URL        | admin_viewing_as_officer | 403 created in none
+POST create tag for member | other_division via Division B URL        | senior_leader            | 200 created in Division A
+POST create tag for member | other_division via Division B URL        | commanding_officer       | 200 created in Division A
+POST create tag for member | other_division via Division B URL        | executive_officer        | 200 created in Division A
+POST create tag for member | other_division via Division B URL        | officer                  | 403 created in none
+POST create tag for member | other_division via Division B URL        | platoon_leader           | 403 created in none
+POST create tag for member | other_division via Division B URL        | squad_leader             | 403 created in none
+POST create tag for member | other_division via Division B URL        | member                   | 403 created in none
+POST create tag for member | other_division via Division B URL        | banned                   | 403 created in none
+POST create tag for member | other_division via Division B URL        | pending                  | 408 created in none

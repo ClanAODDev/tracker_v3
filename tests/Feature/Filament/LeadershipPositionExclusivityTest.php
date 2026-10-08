@@ -30,7 +30,7 @@ class LeadershipPositionExclusivityTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $platoon  = $this->createPlatoon($division);
-        $xo       = $this->createExecutiveOfficer($division, ['platoon_id' => 0, 'squad_id' => 0]);
+        $xo       = $this->createExecutiveOfficer($division, ['unit_id' => null]);
         $platoon->update(['leader_id' => $xo->clan_id]);
 
         $this->actingAs($this->createSeniorLeader($division));
@@ -156,7 +156,7 @@ class LeadershipPositionExclusivityTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $squad    = $this->createSquad($this->createPlatoon($division));
-        $xo       = $this->createExecutiveOfficer($division, ['platoon_id' => 0, 'squad_id' => 0]);
+        $xo       = $this->createExecutiveOfficer($division, ['unit_id' => null]);
         $squad->update(['leader_id' => $xo->clan_id]);
 
         $this->actingAs($this->createSeniorLeader($division));
@@ -168,5 +168,26 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->assertEquals(Position::EXECUTIVE_OFFICER, $xo->fresh()->position);
         $this->assertNull($squad->fresh()->leader_id);
+    }
+
+    #[Test]
+    public function replacing_a_squad_leader_returns_the_old_leader_to_member(): void
+    {
+        $division = $this->createActiveDivision();
+        $squad    = $this->createSquad($this->createPlatoon($division));
+        $previous = $this->createSquadLeader($squad);
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($this->createSeniorLeader($division));
+
+        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+            ->fillForm(['leader_id' => $member->clan_id])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertEquals(Position::SQUAD_LEADER, $member->fresh()->position);
+        $this->assertSame($squad->id, $member->fresh()->unit_id);
+        $this->assertEquals(Position::MEMBER, $previous->fresh()->position);
+        $this->assertNull($previous->fresh()->unit_id);
     }
 }

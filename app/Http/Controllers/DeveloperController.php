@@ -13,7 +13,6 @@ use Inertia\Response;
 use Laravel\Sanctum\NewAccessToken;
 
 #[Middleware('auth')]
-#[Middleware('developer')]
 class DeveloperController extends Controller
 {
     #[Authorize('create', NewAccessToken::class)]

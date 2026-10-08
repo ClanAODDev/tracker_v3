@@ -6,6 +6,7 @@ use App\Enums\Role;
 use App\Filament\Admin\Resources\UserResource\Pages\CreateUser;
 use App\Filament\Admin\Resources\UserResource\Pages\EditUser;
 use App\Filament\Admin\Resources\UserResource\Pages\ListUsers;
+use App\Filament\Admin\Resources\UserResource\RelationManagers\GrantedAbilitiesRelationManager;
 use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -139,7 +140,7 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            GrantedAbilitiesRelationManager::class,
         ];
     }
 

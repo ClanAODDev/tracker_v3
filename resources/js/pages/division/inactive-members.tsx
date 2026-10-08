@@ -1,3 +1,4 @@
+import { pluralize } from '@/lib/format';
 import { Head, Link, router } from '@inertiajs/react';
 import { Bell, Flag, History, Mail, Search, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
@@ -132,7 +133,7 @@ export default function InactiveMembers({
                             )
                         }
                         options={[
-                            { value: '__all', label: `All ${division.platoonLabel.toLowerCase()}s` },
+                            { value: '__all', label: `All ${pluralize(division.platoonLabel).toLowerCase()}` },
                             ...platoons.map((p) => ({
                                 value: String(p.id),
                                 label: p.count > 0 ? `${p.name} (${p.count})` : p.name,

@@ -5,8 +5,7 @@ namespace App\Filament\Admin\Resources\DivisionResource\Pages;
 use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource;
 use App\Models\Member;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
@@ -75,16 +74,14 @@ class EditDivision extends EditRecord
                     'position' => Position::MEMBER]);
             Member::where('id', $newCoId)
                 ->update([
-                    'position'   => Position::COMMANDING_OFFICER,
-                    'platoon_id' => 0,
-                    'squad_id'   => 0,
+                    'position' => Position::COMMANDING_OFFICER,
+                    'unit_id'  => null,
                 ]);
         } elseif (! $previousCoId) {
             Member::where('id', $newCoId)
                 ->update([
-                    'position'   => Position::COMMANDING_OFFICER,
-                    'platoon_id' => 0,
-                    'squad_id'   => 0,
+                    'position' => Position::COMMANDING_OFFICER,
+                    'unit_id'  => null,
                 ]);
         }
 
@@ -111,9 +108,8 @@ class EditDivision extends EditRecord
         if ($toAdd->isNotEmpty()) {
             Member::whereIn('id', $toAdd)
                 ->update([
-                    'position'   => Position::EXECUTIVE_OFFICER,
-                    'platoon_id' => 0,
-                    'squad_id'   => 0,
+                    'position' => Position::EXECUTIVE_OFFICER,
+                    'unit_id'  => null,
                 ]);
 
             $this->clearPlatoonAndSquadLeadership($toAdd->all());
@@ -126,7 +122,6 @@ class EditDivision extends EditRecord
     {
         $clanIds = Member::whereIn('id', $memberIds)->pluck('clan_id');
 
-        Platoon::whereIn('leader_id', $clanIds)->update(['leader_id' => null]);
-        Squad::whereIn('leader_id', $clanIds)->update(['leader_id' => null]);
+        app(UnitAssignment::class)->clearLeadership($clanIds->all());
     }
 }

@@ -6,6 +6,7 @@ use App\Enums\ActivityType;
 use App\Models\Activity;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\Unit;
 use Illuminate\Support\Collection;
 
 class InactiveMembersData
@@ -18,24 +19,24 @@ class InactiveMembersData
 
     private Collection $flaggedMembers;
 
-    public function __construct(private Division $division)
+    public function __construct(private Division $division, private ?Unit $platoon = null)
     {
         $this->inactivityDays = $division->settings()->inactivity_days;
 
         $this->allInactiveMembers     = $this->getInactiveMembers($division, $this->inactivityDays);
-        $this->inactiveDiscordMembers = request()->platoon
-            ? $this->allInactiveMembers->where('platoon_id', request()->platoon->id)->values()
+        $this->inactiveDiscordMembers = $this->platoon
+            ? $this->allInactiveMembers->filter(fn ($member) => $member->platoonUnit()?->id === $this->platoon->id)->values()
             : $this->allInactiveMembers;
 
         $this->flaggedMembers = $division->members()
             ->whereFlaggedForInactivity(true)
-            ->with(['squad', 'platoon', 'leave'])
+            ->with(['unit.parent', 'leave'])
             ->get();
     }
 
-    public static function for(Division $division): self
+    public static function for(Division $division, ?Unit $platoon = null): self
     {
-        return new self($division);
+        return new self($division, $platoon);
     }
 
     public function toArray(): array
@@ -52,11 +53,11 @@ class InactiveMembersData
                 'inactivityDays' => $inactivityDays,
             ],
             'stats'         => $this->buildStats($this->allInactiveMembers, $this->flaggedMembers, $inactivityDays),
-            'activePlatoon' => request()->platoon?->id,
-            'platoons'      => $division->platoons->map(fn ($p) => [
+            'activePlatoon' => $this->platoon?->id,
+            'platoons'      => $division->topUnits->map(fn (Unit $p) => [
                 'id'    => $p->id,
                 'name'  => $p->name,
-                'count' => $this->allInactiveMembers->where('platoon_id', $p->id)->count(),
+                'count' => $this->allInactiveMembers->filter(fn ($member) => $member->platoonUnit()?->id === $p->id)->count(),
             ])->values(),
             'inactive' => $this->inactiveDiscordMembers
                 ->map(fn ($m) => $this->row($m, $division, $inactivityDays))->values(),
@@ -113,7 +114,7 @@ class InactiveMembersData
                 'human'         => $reminder ? 'Reminded ' . $reminder->diffForHumans() : 'Not reminded',
             ],
             'status'     => $member->last_voice_status?->getLabel() ?? 'Unknown',
-            'unit'       => trim(($member->platoon->name ?? 'Unassigned') . ($member->squad ? ' / ' . $member->squad->name : '')),
+            'unit'       => $member->unitTrail()->map(fn ($unit) => $unit->name ?: 'Untitled')->implode(' / ') ?: 'Unassigned',
             'severity'   => $severity,
             'forumPmUrl' => doForumFunction([$member->clan_id], 'pm'),
             'flagUrl'    => route('member.flag-inactive', $member->clan_id),
@@ -135,7 +136,7 @@ class InactiveMembersData
             })
             ->where('flagged_for_inactivity', false)
             ->whereDoesntHave('leave', fn ($q) => $q->whereDate('end_date', '>', today()))
-            ->with(['squad', 'platoon'])
+            ->with(['unit.parent'])
             ->orderBy('last_voice_activity')
             ->get();
     }
@@ -157,7 +158,7 @@ class InactiveMembersData
         return [
             'total'     => $inactive->count(),
             'flagged'   => $flagged->count(),
-            'byPlatoon' => $inactive->groupBy('platoon_id')->map->count(),
+            'byPlatoon' => $inactive->groupBy(fn ($member) => $member->platoonUnit()?->id ?? 0)->map->count(),
             'severe'    => $inactive->filter(
                 fn ($m) => $m->last_voice_activity === null || $m->last_voice_activity < $severeThreshold
             )->count(),

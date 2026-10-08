@@ -1,0 +1,36 @@
+rank action form         | override checkbox offered                | admin                    | yes
+rank action form         | action options for same_squad            | admin                    | [promotion, demotion]
+rank action form         | 30-day rule with override checked        | admin                    | not blocked
+rank action form         | override checkbox offered                | developer                | page not accessible
+rank action form         | action options for same_squad            | developer                | page not accessible
+rank action form         | 30-day rule with override checked        | developer                | page not accessible
+rank action form         | override checkbox offered                | admin_viewing_as_officer | no
+rank action form         | action options for same_squad            | admin_viewing_as_officer | [promotion]
+rank action form         | 30-day rule with override checked        | admin_viewing_as_officer | blocked by 30-day rule
+rank action form         | override checkbox offered                | senior_leader            | no
+rank action form         | action options for same_squad            | senior_leader            | [promotion]
+rank action form         | 30-day rule with override checked        | senior_leader            | blocked by 30-day rule
+rank action form         | override checkbox offered                | commanding_officer       | yes
+rank action form         | action options for same_squad            | commanding_officer       | [promotion, demotion]
+rank action form         | 30-day rule with override checked        | commanding_officer       | not blocked
+rank action form         | override checkbox offered                | executive_officer        | yes
+rank action form         | action options for same_squad            | executive_officer        | [promotion, demotion]
+rank action form         | 30-day rule with override checked        | executive_officer        | not blocked
+rank action form         | override checkbox offered                | officer                  | no
+rank action form         | action options for same_squad            | officer                  | [promotion]
+rank action form         | 30-day rule with override checked        | officer                  | blocked by 30-day rule
+rank action form         | override checkbox offered                | platoon_leader           | no
+rank action form         | action options for same_squad            | platoon_leader           | [promotion]
+rank action form         | 30-day rule with override checked        | platoon_leader           | blocked by 30-day rule
+rank action form         | override checkbox offered                | squad_leader             | no
+rank action form         | action options for same_squad            | squad_leader             | [promotion]
+rank action form         | 30-day rule with override checked        | squad_leader             | blocked by 30-day rule
+rank action form         | override checkbox offered                | member                   | page not accessible
+rank action form         | action options for same_squad            | member                   | page not accessible
+rank action form         | 30-day rule with override checked        | member                   | page not accessible
+rank action form         | override checkbox offered                | banned                   | page not accessible
+rank action form         | action options for same_squad            | banned                   | page not accessible
+rank action form         | 30-day rule with override checked        | banned                   | page not accessible
+rank action form         | override checkbox offered                | pending                  | page not accessible
+rank action form         | action options for same_squad            | pending                  | page not accessible
+rank action form         | 30-day rule with override checked        | pending                  | page not accessible

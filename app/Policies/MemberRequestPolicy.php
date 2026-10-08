@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use App\Enums\Position;
 use App\Models\MemberRequest;
 use App\Models\User;
@@ -13,7 +14,7 @@ class MemberRequestPolicy
 
     public function before()
     {
-        if (auth()->user()->isDeveloper() || auth()->user()->isRole('admin')) {
+        if (auth()->user()->isDeveloper() || auth()->user()->can(Ability::ManageAllMemberRequests)) {
             return true;
         }
     }
@@ -23,7 +24,7 @@ class MemberRequestPolicy
      */
     public function manage(User $user)
     {
-        if ($user->isRole('sr_ldr') && \in_array($user->member->position, [
+        if ($user->can(Ability::ManageMemberRequests) && \in_array($user->member->position, [
             Position::EXECUTIVE_OFFICER,
             Position::COMMANDING_OFFICER,
         ], true)) {
@@ -38,7 +39,7 @@ class MemberRequestPolicy
      */
     public function update(User $user, MemberRequest $memberRequest)
     {
-        if ($user->isRole(['sr_ldr', 'admin'])) {
+        if ($user->can(Ability::ManageMemberRequests)) {
             return true;
         }
 
@@ -54,7 +55,7 @@ class MemberRequestPolicy
      */
     public function cancel(User $user, MemberRequest $request)
     {
-        if ($user->isRole(['sr_ldr', 'admin'])) {
+        if ($user->can(Ability::ManageMemberRequests)) {
             return true;
         }
 
@@ -80,7 +81,7 @@ class MemberRequestPolicy
      */
     public function delete(User $user, MemberRequest $request)
     {
-        if ($user->isRole(['sr_ldr', 'admin'])) {
+        if ($user->can(Ability::ManageMemberRequests)) {
             return true;
         }
 

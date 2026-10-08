@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Data\UnitStatsData;
+use App\Enums\Ability;
 use App\Models\Division;
 use App\Models\DivisionTag;
 use App\Models\Member;
@@ -81,7 +82,7 @@ class MemberListProps
         $canRemind      = $user->can('remindActivity', Member::class);
         $canAssignTags  = $user->can('assign', DivisionTag::class);
         $canMoveMembers = $user->can('manageUnassigned', User::class);
-        $canUseBulkMode = $user->isRole(['officer', 'sr_ldr', 'admin']) || $user->isDeveloper();
+        $canUseBulkMode = $user->can(Ability::UseBulkMode) || $user->isDeveloper();
 
         return [
             'enabled'        => $canUseBulkMode,

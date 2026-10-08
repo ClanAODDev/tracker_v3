@@ -1,0 +1,120 @@
+Member::eligibleForRankAction | (member names)                           | admin                    | [admin_viewing_as_officer, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_division, other_platoon, part_timer, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+RankAction::forUser      | (rank actions)                           | admin                    | [other_division to private_first_class, other_division to sergeant, other_division to specialist, other_platoon to private_first_class, other_platoon to sergeant, other_platoon to specialist, requested by admin, requested by admin_viewing_as_officer, requested by banned, requested by commanding_officer, requested by developer, requested by executive_officer, requested by member, requested by officer, requested by platoon_leader, requested by senior_leader, requested by squad_leader, same_platoon_other_squad to private_first_class, same_platoon_other_squad to sergeant, same_platoon_other_squad to specialist, same_squad to private_first_class, same_squad to sergeant, same_squad to specialist]
+DivisionTag::visibleTo   | (tag names)                              | admin                    | [division_a_officers, division_a_public, division_a_senior_leaders, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | admin                    | [division_a_officers, division_a_public, division_a_senior_leaders, division_b_public, global_public]
+Note::canManageSrLdr     | -                                        | admin                    | allow
+Note::canManageMsgt      | -                                        | admin                    | allow
+Award::canBeRequestedBy  | requestable award                        | admin                    | allow
+Award::canBeRequestedBy  | non-requestable award                    | admin                    | allow
+Award::canBeRequestedBy  | inactive-division award                  | admin                    | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | admin                    | allow
+Member::eligibleForRankAction | (member names)                           | developer                | []
+RankAction::forUser      | (rank actions)                           | developer                | [requested by developer]
+DivisionTag::visibleTo   | (tag names)                              | developer                | [division_a_public, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | developer                | []
+Note::canManageSrLdr     | -                                        | developer                | deny
+Note::canManageMsgt      | -                                        | developer                | deny
+Award::canBeRequestedBy  | requestable award                        | developer                | allow
+Award::canBeRequestedBy  | non-requestable award                    | developer                | deny
+Award::canBeRequestedBy  | inactive-division award                  | developer                | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | developer                | deny
+Member::eligibleForRankAction | (member names)                           | admin_viewing_as_officer | [admin, banned, commanding_officer, developer, executive_officer, higher_rank, member, officer, other_division, other_platoon, part_timer, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+RankAction::forUser      | (rank actions)                           | admin_viewing_as_officer | [other_platoon to private_first_class, other_platoon to sergeant, other_platoon to specialist, requested by admin, requested by admin_viewing_as_officer, requested by banned, requested by commanding_officer, requested by developer, requested by executive_officer, requested by member, requested by officer, requested by platoon_leader, requested by senior_leader, requested by squad_leader, same_platoon_other_squad to private_first_class, same_platoon_other_squad to sergeant, same_platoon_other_squad to specialist, same_squad to private_first_class, same_squad to sergeant, same_squad to specialist]
+DivisionTag::visibleTo   | (tag names)                              | admin_viewing_as_officer | [division_a_officers, division_a_public, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | admin_viewing_as_officer | [division_a_officers, division_a_public, division_b_public, global_public]
+Note::canManageSrLdr     | -                                        | admin_viewing_as_officer | deny
+Note::canManageMsgt      | -                                        | admin_viewing_as_officer | allow
+Award::canBeRequestedBy  | requestable award                        | admin_viewing_as_officer | allow
+Award::canBeRequestedBy  | non-requestable award                    | admin_viewing_as_officer | allow
+Award::canBeRequestedBy  | inactive-division award                  | admin_viewing_as_officer | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | admin_viewing_as_officer | allow
+Member::eligibleForRankAction | (member names)                           | senior_leader            | [developer, unassigned]
+RankAction::forUser      | (rank actions)                           | senior_leader            | [other_platoon to private_first_class, other_platoon to specialist, requested by admin, requested by admin_viewing_as_officer, requested by banned, requested by commanding_officer, requested by developer, requested by executive_officer, requested by member, requested by officer, requested by platoon_leader, requested by senior_leader, requested by squad_leader, same_platoon_other_squad to private_first_class, same_platoon_other_squad to specialist, same_squad to private_first_class, same_squad to specialist]
+DivisionTag::visibleTo   | (tag names)                              | senior_leader            | [division_a_officers, division_a_public, division_a_senior_leaders, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | senior_leader            | [division_a_officers, division_a_public, division_a_senior_leaders, division_b_public, global_public]
+Note::canManageSrLdr     | -                                        | senior_leader            | allow
+Note::canManageMsgt      | -                                        | senior_leader            | deny
+Award::canBeRequestedBy  | requestable award                        | senior_leader            | allow
+Award::canBeRequestedBy  | non-requestable award                    | senior_leader            | allow
+Award::canBeRequestedBy  | inactive-division award                  | senior_leader            | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | senior_leader            | allow
+Member::eligibleForRankAction | (member names)                           | commanding_officer       | [banned, developer, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+RankAction::forUser      | (rank actions)                           | commanding_officer       | [other_platoon to private_first_class, other_platoon to sergeant, other_platoon to specialist, requested by admin, requested by admin_viewing_as_officer, requested by banned, requested by commanding_officer, requested by developer, requested by executive_officer, requested by member, requested by officer, requested by platoon_leader, requested by senior_leader, requested by squad_leader, same_platoon_other_squad to private_first_class, same_platoon_other_squad to sergeant, same_platoon_other_squad to specialist, same_squad to private_first_class, same_squad to sergeant, same_squad to specialist]
+DivisionTag::visibleTo   | (tag names)                              | commanding_officer       | [division_a_officers, division_a_public, division_a_senior_leaders, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | commanding_officer       | [division_a_officers, division_a_public, division_a_senior_leaders, division_b_public, global_public]
+Note::canManageSrLdr     | -                                        | commanding_officer       | allow
+Note::canManageMsgt      | -                                        | commanding_officer       | allow
+Award::canBeRequestedBy  | requestable award                        | commanding_officer       | allow
+Award::canBeRequestedBy  | non-requestable award                    | commanding_officer       | allow
+Award::canBeRequestedBy  | inactive-division award                  | commanding_officer       | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | commanding_officer       | allow
+Member::eligibleForRankAction | (member names)                           | executive_officer        | [banned, developer, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, senior_leader, squad_leader, unassigned]
+RankAction::forUser      | (rank actions)                           | executive_officer        | [other_platoon to private_first_class, other_platoon to sergeant, other_platoon to specialist, requested by admin, requested by admin_viewing_as_officer, requested by banned, requested by commanding_officer, requested by developer, requested by executive_officer, requested by member, requested by officer, requested by platoon_leader, requested by senior_leader, requested by squad_leader, same_platoon_other_squad to private_first_class, same_platoon_other_squad to sergeant, same_platoon_other_squad to specialist, same_squad to private_first_class, same_squad to sergeant, same_squad to specialist]
+DivisionTag::visibleTo   | (tag names)                              | executive_officer        | [division_a_officers, division_a_public, division_a_senior_leaders, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | executive_officer        | [division_a_officers, division_a_public, division_a_senior_leaders, division_b_public, global_public]
+Note::canManageSrLdr     | -                                        | executive_officer        | allow
+Note::canManageMsgt      | -                                        | executive_officer        | deny
+Award::canBeRequestedBy  | requestable award                        | executive_officer        | allow
+Award::canBeRequestedBy  | non-requestable award                    | executive_officer        | allow
+Award::canBeRequestedBy  | inactive-division award                  | executive_officer        | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | executive_officer        | allow
+Member::eligibleForRankAction | (member names)                           | officer                  | [other_platoon]
+RankAction::forUser      | (rank actions)                           | officer                  | [other_platoon to private_first_class, other_platoon to specialist, requested by admin, requested by admin_viewing_as_officer, requested by banned, requested by commanding_officer, requested by developer, requested by executive_officer, requested by member, requested by officer, requested by platoon_leader, requested by senior_leader, requested by squad_leader, same_platoon_other_squad to private_first_class, same_platoon_other_squad to specialist, same_squad to private_first_class, same_squad to specialist]
+DivisionTag::visibleTo   | (tag names)                              | officer                  | [division_a_officers, division_a_public, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | officer                  | [division_a_officers, division_a_public, division_b_public, global_public]
+Note::canManageSrLdr     | -                                        | officer                  | deny
+Note::canManageMsgt      | -                                        | officer                  | deny
+Award::canBeRequestedBy  | requestable award                        | officer                  | allow
+Award::canBeRequestedBy  | non-requestable award                    | officer                  | allow
+Award::canBeRequestedBy  | inactive-division award                  | officer                  | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | officer                  | allow
+Member::eligibleForRankAction | (member names)                           | platoon_leader           | [banned, member, same_platoon_other_squad, same_squad, squad_leader]
+RankAction::forUser      | (rank actions)                           | platoon_leader           | [requested by admin, requested by admin_viewing_as_officer, requested by banned, requested by commanding_officer, requested by developer, requested by executive_officer, requested by member, requested by officer, requested by platoon_leader, requested by senior_leader, requested by squad_leader, same_platoon_other_squad to private_first_class, same_platoon_other_squad to specialist, same_squad to private_first_class, same_squad to specialist]
+DivisionTag::visibleTo   | (tag names)                              | platoon_leader           | [division_a_officers, division_a_public, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | platoon_leader           | [division_a_officers, division_a_public, division_b_public, global_public]
+Note::canManageSrLdr     | -                                        | platoon_leader           | deny
+Note::canManageMsgt      | -                                        | platoon_leader           | deny
+Award::canBeRequestedBy  | requestable award                        | platoon_leader           | allow
+Award::canBeRequestedBy  | non-requestable award                    | platoon_leader           | allow
+Award::canBeRequestedBy  | inactive-division award                  | platoon_leader           | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | platoon_leader           | allow
+Member::eligibleForRankAction | (member names)                           | squad_leader             | [banned, member, same_squad]
+RankAction::forUser      | (rank actions)                           | squad_leader             | [requested by admin, requested by admin_viewing_as_officer, requested by banned, requested by commanding_officer, requested by developer, requested by executive_officer, requested by member, requested by officer, requested by platoon_leader, requested by senior_leader, requested by squad_leader, same_squad to private_first_class, same_squad to specialist]
+DivisionTag::visibleTo   | (tag names)                              | squad_leader             | [division_a_officers, division_a_public, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | squad_leader             | [division_a_officers, division_a_public, division_b_public, global_public]
+Note::canManageSrLdr     | -                                        | squad_leader             | deny
+Note::canManageMsgt      | -                                        | squad_leader             | deny
+Award::canBeRequestedBy  | requestable award                        | squad_leader             | allow
+Award::canBeRequestedBy  | non-requestable award                    | squad_leader             | allow
+Award::canBeRequestedBy  | inactive-division award                  | squad_leader             | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | squad_leader             | allow
+Member::eligibleForRankAction | (member names)                           | member                   | [banned, same_squad]
+RankAction::forUser      | (rank actions)                           | member                   | [requested by member]
+DivisionTag::visibleTo   | (tag names)                              | member                   | [division_a_public, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | member                   | []
+Note::canManageSrLdr     | -                                        | member                   | deny
+Note::canManageMsgt      | -                                        | member                   | deny
+Award::canBeRequestedBy  | requestable award                        | member                   | allow
+Award::canBeRequestedBy  | non-requestable award                    | member                   | deny
+Award::canBeRequestedBy  | inactive-division award                  | member                   | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | member                   | deny
+Member::eligibleForRankAction | (member names)                           | banned                   | []
+RankAction::forUser      | (rank actions)                           | banned                   | [requested by banned]
+DivisionTag::visibleTo   | (tag names)                              | banned                   | [division_a_public, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | banned                   | []
+Note::canManageSrLdr     | -                                        | banned                   | deny
+Note::canManageMsgt      | -                                        | banned                   | deny
+Award::canBeRequestedBy  | requestable award                        | banned                   | allow
+Award::canBeRequestedBy  | non-requestable award                    | banned                   | deny
+Award::canBeRequestedBy  | inactive-division award                  | banned                   | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | banned                   | deny
+Member::eligibleForRankAction | (member names)                           | pending                  | error:ErrorException
+RankAction::forUser      | (rank actions)                           | pending                  | error:ErrorException
+DivisionTag::visibleTo   | (tag names)                              | pending                  | [division_a_public, division_b_public, global_public]
+DivisionTag::assignableBy | (tag names)                              | pending                  | []
+Note::canManageSrLdr     | -                                        | pending                  | deny
+Note::canManageMsgt      | -                                        | pending                  | deny
+Award::canBeRequestedBy  | requestable award                        | pending                  | allow
+Award::canBeRequestedBy  | non-requestable award                    | pending                  | deny
+Award::canBeRequestedBy  | inactive-division award                  | pending                  | deny
+Award::canBeRequestedBy  | clan-wide non-requestable                | pending                  | deny

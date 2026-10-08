@@ -10,6 +10,7 @@ use App\Http\Requests\Recruiting\SubmitRecruitmentRequest;
 use App\Http\Requests\Recruiting\ValidateMemberNameRequest;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\Unit;
 use App\Models\User;
 use App\Services\AODForumService;
 use App\Services\DiscordRecruitmentService;
@@ -180,13 +181,16 @@ class RecruitingController extends Controller
         $threads  = $settings->get('recruiting_threads', []);
         $tasks    = $settings->get('recruiting_tasks', []);
 
-        $platoons = $division->platoons()
+        $platoons = $division->topUnits()
             ->withCount('members')
-            ->with([
-                'leader:clan_id,name',
-                'squads' => fn ($q) => $q->withCount('members')->with('leader:clan_id,name'),
-            ])
-            ->get();
+            ->with('leader:clan_id,name')
+            ->get()
+            ->each(function (Unit $platoon) {
+                $platoon->setAttribute('descendants', $platoon->descendantsWithTrail(
+                    fn ($query) => $query->withCount('members')->with('leader:clan_id,name')
+                ));
+                $platoon->setAttribute('members_count', $platoon->members_count + $platoon->descendants->sum('members_count'));
+            });
 
         $pendingDiscord = $this->discordRecruitmentService->getPendingDiscordUsers($division, $allPending);
 
@@ -198,9 +202,9 @@ class RecruitingController extends Controller
                 'name'          => $p->name,
                 'members_count' => $p->members_count,
                 'leader_name'   => $p->leader?->name,
-                'squads'        => $p->squads->map(fn ($s) => [
+                'squads'        => $p->descendants->map(fn ($s) => [
                     'id'            => $s->id,
-                    'name'          => $s->name,
+                    'name'          => $s->trail,
                     'members_count' => $s->members_count,
                     'leader_name'   => $s->leader?->name,
                 ]),

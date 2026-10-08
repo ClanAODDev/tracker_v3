@@ -6,6 +6,7 @@ use App\Enums\ActivityType;
 use App\Filament\Forms\Components\DivisionMemberFieldsForm;
 use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Filament\Forms\Components\PartTimeDivisionsForm;
+use App\Filament\Forms\Components\UnitPicker;
 use App\Filament\Mod\Resources\MemberResource;
 use App\Jobs\RemoveClanMember;
 use App\Models\DivisionTag;
@@ -63,6 +64,13 @@ class EditMember extends EditRecord
         DivisionMemberFieldsForm::saveValues($record, $data['custom_fields'] ?? []);
 
         unset($data['handleGroups'], $data['custom_fields']);
+
+        if (UnitPicker::present($data, 'unit_level_')) {
+            $data = [
+                ...UnitPicker::without($data, 'unit_level_'),
+                'unit_id' => UnitPicker::resolve($data, 'unit_level_'),
+            ];
+        }
 
         $record->update($data);
 
@@ -164,7 +172,7 @@ class EditMember extends EditRecord
     private function notifyDivisions(Member $member, ?string $reason = null): void
     {
         if ($member->division()->exists()) {
-            $member->division->notify(new NotifyDivisionMemberRemoved($member, auth()->user(), $reason, $member->squad)
+            $member->division->notify(new NotifyDivisionMemberRemoved($member, auth()->user(), $reason, $member->squadUnit())
             );
         }
 

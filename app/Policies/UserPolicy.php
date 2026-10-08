@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
-use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
@@ -20,7 +20,7 @@ class UserPolicy
             return null;
         }
 
-        if ($user->isDeveloper() || $user->isRole('admin')) {
+        if ($user->isDeveloper() || $user->can(Ability::ManageUsers)) {
             return true;
         }
     }
@@ -78,7 +78,7 @@ class UserPolicy
             return true;
         }
 
-        if (! $user->isRole('admin')) {
+        if (! $user->can(Ability::ImpersonateUsers)) {
             return false;
         }
 
@@ -91,11 +91,11 @@ class UserPolicy
 
     public function manageUnassigned(User $user)
     {
-        return $user->isRole('sr_ldr');
+        return $user->can(Ability::ManageUnassignedMembers);
     }
 
     public function train(User $user)
     {
-        return $user->member?->isAbove(Rank::SERGEANT) && \in_array($user->role, [Role::ADMIN, Role::SENIOR_LEADER], true);
+        return $user->member?->isAbove(Rank::SERGEANT) && $user->can(Ability::ConductTraining);
     }
 }

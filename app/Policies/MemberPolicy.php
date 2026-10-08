@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Authorization\UnitHierarchy;
+use App\Enums\Ability;
 use App\Enums\Role;
 use App\Models\Division;
 use App\Models\DivisionMemberField;
@@ -14,9 +16,13 @@ class MemberPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user)
+    public function before(User $user, ?string $ability = null, mixed ...$arguments)
     {
-        if ($user->isRole('admin') || $user->isDeveloper()) {
+        if ($ability === 'clearActivityReminders' && ($arguments[0] ?? null) instanceof Member && $arguments[0]->id === $user->member_id) {
+            return Response::deny('Cannot clear your own reminders');
+        }
+
+        if ($user->can(Ability::ManageAllMembers) || $user->isDeveloper()) {
             return true;
         }
     }
@@ -24,7 +30,7 @@ class MemberPolicy
     public function recruit(User $user): bool
     {
         // member role cannot recruit members
-        if ($user->role->value > Role::MEMBER->value) {
+        if ($user->can(Ability::Recruit)) {
             return true;
         }
 
@@ -46,7 +52,7 @@ class MemberPolicy
             return false;
         }
 
-        return auth()->user()->isRole('sr_ldr');
+        return auth()->user()->can(Ability::ManageMembers);
     }
 
     /**
@@ -58,12 +64,12 @@ class MemberPolicy
             return false;
         }
 
-        return auth()->user()->isRole('sr_ldr');
+        return auth()->user()->can(Ability::ManageMembers);
     }
 
     public function flagInactive(User $user): bool
     {
-        return $user->isRole(['officer', 'sr_ldr']);
+        return $user->can(Ability::RemindInactiveMembers);
     }
 
     public function remindActivity(User $user, ?Member $member = null): bool
@@ -72,7 +78,7 @@ class MemberPolicy
             return false;
         }
 
-        return $user->isRole(['officer', 'sr_ldr']);
+        return $user->can(Ability::RemindInactiveMembers);
     }
 
     /**
@@ -84,11 +90,7 @@ class MemberPolicy
      */
     public function clearActivityReminders(User $user, Member $member): Response
     {
-        if ($member->id === $user->member_id) {
-            return Response::deny('Cannot clear your own reminders');
-        }
-
-        return $user->isRole('sr_ldr')
+        return $user->can(Ability::ClearActivityReminders)
             ? Response::allow()
             : Response::deny();
     }
@@ -100,7 +102,7 @@ class MemberPolicy
             return false;
         }
 
-        return auth()->user()->isRole('sr_ldr');
+        return auth()->user()->can(Ability::ManageMembers);
     }
 
     public function view()
@@ -128,7 +130,7 @@ class MemberPolicy
             return false;
         }
 
-        if (! $user->isRole('sr_ldr')) {
+        if (! $user->can(Ability::SeparateMembers)) {
             return false;
         }
 
@@ -137,13 +139,13 @@ class MemberPolicy
 
     public function managePartTime(User $user, Member $member): bool
     {
-        return $user->isRole(['officer', 'sr_ldr']);
+        return $user->can(Ability::ManagePartTimers);
     }
 
     public function promote(User $userPromoting, Member $memberBeingPromoted)
     {
         // only admin, sr_ldr, officer can promote
-        if (! $userPromoting->isRole('officer')) {
+        if (! $userPromoting->can(Ability::PromoteMembers)) {
             return false;
         }
 
@@ -217,7 +219,7 @@ class MemberPolicy
      */
     private function isLeaderOf(User $user, Member $member): bool
     {
-        if ($user->isRole('sr_ldr')) {
+        if ($user->can(Ability::ManageMembers)) {
             return true;
         }
 
@@ -227,15 +229,11 @@ class MemberPolicy
             return false;
         }
 
-        if ($user->isRole('officer') && $userMember->division_id === $member->division_id) {
+        if ($user->can(Ability::ManageDivisionMembers) && $userMember->division_id === $member->division_id) {
             return true;
         }
 
-        if ($member->squad_id && $member->squad && $userMember->isSquadLeader($member->squad)) {
-            return true;
-        }
-
-        if ($member->platoon_id && $member->platoon && $userMember->isPlatoonLeader($member->platoon)) {
+        if (app(UnitHierarchy::class)->leadsUnitOf($userMember, $member)) {
             return true;
         }
 

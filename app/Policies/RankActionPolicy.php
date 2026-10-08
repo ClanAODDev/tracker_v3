@@ -2,7 +2,10 @@
 
 namespace App\Policies;
 
+use App\Authorization\UnitHierarchy;
+use App\Enums\Ability;
 use App\Enums\Rank;
+use App\Enums\UnitLevel;
 use App\Models\RankAction;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -13,7 +16,7 @@ class RankActionPolicy
 
     public static function viewAny(User $user): bool
     {
-        return $user->isRole(['officer', 'sr_ldr', 'admin']);
+        return $user->can(Ability::ViewRankActions);
     }
 
     public static function update(User $user, RankAction $record): bool
@@ -26,7 +29,7 @@ class RankActionPolicy
         }
 
         // admins can see all requests
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageAllRankActions)) {
             return true;
         }
 
@@ -46,8 +49,8 @@ class RankActionPolicy
 
         // platoon leader can see requests in their platoon below their rank
         if (
-            $user->isPlatoonLeader() &&
-            $record->member->platoon_id == $user->member->platoon_id &&
+            app(UnitHierarchy::class)->leadershipLevel($user) === UnitLevel::Platoon &&
+            app(UnitHierarchy::class)->sharesLedUnit($user->member, $record->member, UnitLevel::Platoon) &&
             $record->rank->isBelow($user->member->rank)
         ) {
             return true;
@@ -58,7 +61,7 @@ class RankActionPolicy
 
     public static function deleteAny(): bool
     {
-        return auth()->user()->isRole(['admin']);
+        return auth()->user()->can(Ability::ManageAllRankActions);
     }
 
     public static function approve(User $user, RankAction $action): bool
@@ -71,7 +74,7 @@ class RankActionPolicy
         }
 
         if (
-            $user->member->platoon_id === $action->member->platoon_id &&
+            app(UnitHierarchy::class)->sharesLedUnit($user->member, $action->member, UnitLevel::Platoon) &&
             $user->isWithinPlatoonLimit($newRank, $user->division)
         ) {
             return true;
@@ -96,7 +99,7 @@ class RankActionPolicy
         }
 
         if (
-            $user->member->platoon_id === $action->member->platoon_id &&
+            app(UnitHierarchy::class)->sharesLedUnit($user->member, $action->member, UnitLevel::Platoon) &&
             $user->isWithinPlatoonLimit($newRank, $user->division)
         ) {
             return true;
@@ -107,6 +110,6 @@ class RankActionPolicy
 
     private static function isAdminOrDivisionLeader(User $user): bool
     {
-        return $user->isDivisionLeader() || $user->isRole('admin');
+        return $user->isDivisionLeader() || $user->can(Ability::ManageAllRankActions);
     }
 }

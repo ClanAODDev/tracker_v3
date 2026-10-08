@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Ability;
 use App\Enums\TagVisibility;
 use App\Filament\Mod\Resources\DivisionTagResource\Pages\CreateDivisionTag;
 use App\Filament\Mod\Resources\DivisionTagResource\Pages\EditDivisionTag;
@@ -51,7 +52,7 @@ class DivisionTagResource extends Resource
     public static function form(Schema $schema): Schema
     {
         $user           = auth()->user();
-        $isSeniorLeader = $user?->isRole(['admin', 'sr_ldr']) ?? false;
+        $isSeniorLeader = $user?->can(Ability::UseSeniorLeaderTags) ?? false;
 
         $visibilityOptions = collect(TagVisibility::cases())
             ->when(! $isSeniorLeader, fn ($options) => $options->reject(
@@ -105,7 +106,7 @@ class DivisionTagResource extends Resource
                 EditAction::make()
                     ->visible(fn (DivisionTag $record) => ! $record->isGlobal()),
                 DeleteAction::make()
-                    ->visible(fn (DivisionTag $record) => ! $record->isGlobal() || auth()->user()->isRole('admin')),
+                    ->visible(fn (DivisionTag $record) => ! $record->isGlobal() || auth()->user()->can(Ability::ManageGlobalTags)),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

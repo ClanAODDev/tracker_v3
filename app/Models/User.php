@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Authorization\RoleSource;
+use App\Authorization\UnitHierarchy;
+use App\Enums\Ability;
 use App\Enums\Accent;
 use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Enums\Role;
+use App\Enums\UnitLevel;
 use App\Settings\UserSettings;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
@@ -117,6 +121,11 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return $this->hasMany(Note::class);
     }
 
+    public function grantedAbilities(): HasMany
+    {
+        return $this->hasMany(UserAbility::class);
+    }
+
     public function scopeAdmins($query): void
     {
         $query->whereRole(Role::ADMIN)->orderBy('name', 'ASC');
@@ -139,7 +148,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function isRole(string|array|Role $role): bool
     {
-        $userRole = $this->getEffectiveRole();
+        $userRole = app(RoleSource::class)->effectiveRole($this);
 
         if (! $userRole) {
             return false;
@@ -177,16 +186,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
     public function isMember(): bool
     {
         return $this->member?->position === Position::MEMBER;
-    }
-
-    public function isSquadLeader(): bool
-    {
-        return $this->member?->position === Position::SQUAD_LEADER;
-    }
-
-    public function isPlatoonLeader(): bool
-    {
-        return $this->member?->position === Position::PLATOON_LEADER;
     }
 
     public function isDivisionLeader(): bool
@@ -266,13 +265,13 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
         $panelId = $panel->getId();
 
-        $panelToRoleMapping = [
-            'mod'   => ['admin', 'sr_ldr', 'officer'],
-            'admin' => 'admin',
+        $panelToAbility = [
+            'mod'   => Ability::AccessModPanel,
+            'admin' => Ability::AccessAdminPanel,
         ];
 
-        if (isset($panelToRoleMapping[$panelId])) {
-            return $this->isRole($panelToRoleMapping[$panelId]);
+        if (isset($panelToAbility[$panelId])) {
+            return $this->can($panelToAbility[$panelId]);
         }
 
         return false;
@@ -302,12 +301,12 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         }
 
         // Admins can auto-approve for ranks up to Corporal
-        if ($user->isRole('admin') && $targetRank->value <= Rank::CORPORAL->value) {
+        if ($user->can(Ability::AutoApproveJuniorPromotions) && $targetRank->value <= Rank::CORPORAL->value) {
             return $asBoolean ? true : now();
         }
 
         // Platoon Leaders may auto-approve within their own platoon, if the target rank is within their limit
-        if ($user->member->platoon_id === $member->platoon_id
+        if (app(UnitHierarchy::class)->sharesLedUnit($user->member, $member, UnitLevel::Platoon)
             && $user->isWithinPlatoonLimit($targetRank, $user->division)) {
             return $asBoolean ? true : now();
         }
@@ -362,6 +361,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
     {
         $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
 
-        return $this->isPlatoonLeader() && $targetRank->value <= $maxPlRank->value;
+        return app(UnitHierarchy::class)->leadershipLevel($this) === UnitLevel::Platoon && $targetRank->value <= $maxPlRank->value;
     }
 }

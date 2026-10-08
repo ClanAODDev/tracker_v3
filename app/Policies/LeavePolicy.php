@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class LeavePolicy
@@ -10,21 +11,21 @@ class LeavePolicy
 
     public function viewAny()
     {
-        return ! auth()->user()->isRole('member');
+        return auth()->user()->can(Ability::ViewLeaves);
     }
 
     public function create()
     {
-        return ! auth()->user()->isRole('member');
+        return auth()->user()->can(Ability::CreateLeaves);
     }
 
     public function update()
     {
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
+        return auth()->user()->can(Ability::EditLeaves);
     }
 
     public function deleteAny()
     {
-        return auth()->user()->isRole(['admin', 'sr_ldr']);
+        return auth()->user()->can(Ability::EditLeaves);
     }
 }

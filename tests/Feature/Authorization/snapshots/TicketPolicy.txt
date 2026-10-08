@@ -1,0 +1,180 @@
+manage                   | (any ticket)                             | admin                    | allow
+manage                   | (any ticket)                             | developer                | deny
+manage                   | (any ticket)                             | admin_viewing_as_officer | deny
+manage                   | (any ticket)                             | senior_leader            | deny
+manage                   | (any ticket)                             | commanding_officer       | deny
+manage                   | (any ticket)                             | executive_officer        | deny
+manage                   | (any ticket)                             | officer                  | deny
+manage                   | (any ticket)                             | platoon_leader           | deny
+manage                   | (any ticket)                             | squad_leader             | deny
+manage                   | (any ticket)                             | member                   | deny
+manage                   | (any ticket)                             | banned                   | deny
+manage                   | (any ticket)                             | pending                  | deny
+viewAny                  | (any ticket)                             | admin                    | allow
+viewAny                  | (any ticket)                             | developer                | allow
+viewAny                  | (any ticket)                             | admin_viewing_as_officer | allow
+viewAny                  | (any ticket)                             | senior_leader            | allow
+viewAny                  | (any ticket)                             | commanding_officer       | allow
+viewAny                  | (any ticket)                             | executive_officer        | allow
+viewAny                  | (any ticket)                             | officer                  | allow
+viewAny                  | (any ticket)                             | platoon_leader           | allow
+viewAny                  | (any ticket)                             | squad_leader             | allow
+viewAny                  | (any ticket)                             | member                   | allow
+viewAny                  | (any ticket)                             | banned                   | allow
+viewAny                  | (any ticket)                             | pending                  | allow
+create                   | (any ticket)                             | admin                    | allow
+create                   | (any ticket)                             | developer                | allow
+create                   | (any ticket)                             | admin_viewing_as_officer | allow
+create                   | (any ticket)                             | senior_leader            | allow
+create                   | (any ticket)                             | commanding_officer       | allow
+create                   | (any ticket)                             | executive_officer        | allow
+create                   | (any ticket)                             | officer                  | allow
+create                   | (any ticket)                             | platoon_leader           | allow
+create                   | (any ticket)                             | squad_leader             | allow
+create                   | (any ticket)                             | member                   | allow
+create                   | (any ticket)                             | banned                   | allow
+create                   | (any ticket)                             | pending                  | allow
+createComment            | (any ticket)                             | admin                    | allow
+createComment            | (any ticket)                             | developer                | allow
+createComment            | (any ticket)                             | admin_viewing_as_officer | allow
+createComment            | (any ticket)                             | senior_leader            | allow
+createComment            | (any ticket)                             | commanding_officer       | allow
+createComment            | (any ticket)                             | executive_officer        | allow
+createComment            | (any ticket)                             | officer                  | allow
+createComment            | (any ticket)                             | platoon_leader           | allow
+createComment            | (any ticket)                             | squad_leader             | allow
+createComment            | (any ticket)                             | member                   | allow
+createComment            | (any ticket)                             | banned                   | allow
+createComment            | (any ticket)                             | pending                  | allow
+deleteComment            | (any ticket)                             | admin                    | allow
+deleteComment            | (any ticket)                             | developer                | allow
+deleteComment            | (any ticket)                             | admin_viewing_as_officer | allow
+deleteComment            | (any ticket)                             | senior_leader            | allow
+deleteComment            | (any ticket)                             | commanding_officer       | allow
+deleteComment            | (any ticket)                             | executive_officer        | allow
+deleteComment            | (any ticket)                             | officer                  | allow
+deleteComment            | (any ticket)                             | platoon_leader           | allow
+deleteComment            | (any ticket)                             | squad_leader             | allow
+deleteComment            | (any ticket)                             | member                   | allow
+deleteComment            | (any ticket)                             | banned                   | allow
+deleteComment            | (any ticket)                             | pending                  | allow
+view                     | own_ticket                               | admin                    | allow
+view                     | own_ticket                               | developer                | allow
+view                     | own_ticket                               | admin_viewing_as_officer | allow
+view                     | own_ticket                               | senior_leader            | allow
+view                     | own_ticket                               | commanding_officer       | allow
+view                     | own_ticket                               | executive_officer        | allow
+view                     | own_ticket                               | officer                  | allow
+view                     | own_ticket                               | platoon_leader           | allow
+view                     | own_ticket                               | squad_leader             | allow
+view                     | own_ticket                               | member                   | allow
+view                     | own_ticket                               | banned                   | allow
+view                     | own_ticket                               | pending                  | allow
+view                     | others_ticket                            | admin                    | allow
+view                     | others_ticket                            | developer                | deny
+view                     | others_ticket                            | admin_viewing_as_officer | deny
+view                     | others_ticket                            | senior_leader            | deny
+view                     | others_ticket                            | commanding_officer       | deny
+view                     | others_ticket                            | executive_officer        | deny
+view                     | others_ticket                            | officer                  | deny
+view                     | others_ticket                            | platoon_leader           | deny
+view                     | others_ticket                            | squad_leader             | deny
+view                     | others_ticket                            | member                   | deny
+view                     | others_ticket                            | banned                   | deny
+view                     | others_ticket                            | pending                  | deny
+update                   | own_ticket                               | admin                    | allow
+update                   | own_ticket                               | developer                | allow
+update                   | own_ticket                               | admin_viewing_as_officer | allow
+update                   | own_ticket                               | senior_leader            | allow
+update                   | own_ticket                               | commanding_officer       | allow
+update                   | own_ticket                               | executive_officer        | allow
+update                   | own_ticket                               | officer                  | allow
+update                   | own_ticket                               | platoon_leader           | allow
+update                   | own_ticket                               | squad_leader             | allow
+update                   | own_ticket                               | member                   | allow
+update                   | own_ticket                               | banned                   | allow
+update                   | own_ticket                               | pending                  | allow
+update                   | others_ticket                            | admin                    | allow
+update                   | others_ticket                            | developer                | allow
+update                   | others_ticket                            | admin_viewing_as_officer | allow
+update                   | others_ticket                            | senior_leader            | allow
+update                   | others_ticket                            | commanding_officer       | allow
+update                   | others_ticket                            | executive_officer        | allow
+update                   | others_ticket                            | officer                  | allow
+update                   | others_ticket                            | platoon_leader           | allow
+update                   | others_ticket                            | squad_leader             | allow
+update                   | others_ticket                            | member                   | allow
+update                   | others_ticket                            | banned                   | allow
+update                   | others_ticket                            | pending                  | allow
+delete                   | own_ticket                               | admin                    | allow
+delete                   | own_ticket                               | developer                | allow
+delete                   | own_ticket                               | admin_viewing_as_officer | allow
+delete                   | own_ticket                               | senior_leader            | allow
+delete                   | own_ticket                               | commanding_officer       | allow
+delete                   | own_ticket                               | executive_officer        | allow
+delete                   | own_ticket                               | officer                  | allow
+delete                   | own_ticket                               | platoon_leader           | allow
+delete                   | own_ticket                               | squad_leader             | allow
+delete                   | own_ticket                               | member                   | allow
+delete                   | own_ticket                               | banned                   | allow
+delete                   | own_ticket                               | pending                  | allow
+delete                   | others_ticket                            | admin                    | allow
+delete                   | others_ticket                            | developer                | allow
+delete                   | others_ticket                            | admin_viewing_as_officer | allow
+delete                   | others_ticket                            | senior_leader            | allow
+delete                   | others_ticket                            | commanding_officer       | allow
+delete                   | others_ticket                            | executive_officer        | allow
+delete                   | others_ticket                            | officer                  | allow
+delete                   | others_ticket                            | platoon_leader           | allow
+delete                   | others_ticket                            | squad_leader             | allow
+delete                   | others_ticket                            | member                   | allow
+delete                   | others_ticket                            | banned                   | allow
+delete                   | others_ticket                            | pending                  | allow
+restore                  | own_ticket                               | admin                    | allow
+restore                  | own_ticket                               | developer                | allow
+restore                  | own_ticket                               | admin_viewing_as_officer | allow
+restore                  | own_ticket                               | senior_leader            | allow
+restore                  | own_ticket                               | commanding_officer       | allow
+restore                  | own_ticket                               | executive_officer        | allow
+restore                  | own_ticket                               | officer                  | allow
+restore                  | own_ticket                               | platoon_leader           | allow
+restore                  | own_ticket                               | squad_leader             | allow
+restore                  | own_ticket                               | member                   | allow
+restore                  | own_ticket                               | banned                   | allow
+restore                  | own_ticket                               | pending                  | allow
+restore                  | others_ticket                            | admin                    | allow
+restore                  | others_ticket                            | developer                | allow
+restore                  | others_ticket                            | admin_viewing_as_officer | allow
+restore                  | others_ticket                            | senior_leader            | allow
+restore                  | others_ticket                            | commanding_officer       | allow
+restore                  | others_ticket                            | executive_officer        | allow
+restore                  | others_ticket                            | officer                  | allow
+restore                  | others_ticket                            | platoon_leader           | allow
+restore                  | others_ticket                            | squad_leader             | allow
+restore                  | others_ticket                            | member                   | allow
+restore                  | others_ticket                            | banned                   | allow
+restore                  | others_ticket                            | pending                  | allow
+forceDelete              | own_ticket                               | admin                    | allow
+forceDelete              | own_ticket                               | developer                | allow
+forceDelete              | own_ticket                               | admin_viewing_as_officer | allow
+forceDelete              | own_ticket                               | senior_leader            | allow
+forceDelete              | own_ticket                               | commanding_officer       | allow
+forceDelete              | own_ticket                               | executive_officer        | allow
+forceDelete              | own_ticket                               | officer                  | allow
+forceDelete              | own_ticket                               | platoon_leader           | allow
+forceDelete              | own_ticket                               | squad_leader             | allow
+forceDelete              | own_ticket                               | member                   | allow
+forceDelete              | own_ticket                               | banned                   | allow
+forceDelete              | own_ticket                               | pending                  | allow
+forceDelete              | others_ticket                            | admin                    | allow
+forceDelete              | others_ticket                            | developer                | allow
+forceDelete              | others_ticket                            | admin_viewing_as_officer | allow
+forceDelete              | others_ticket                            | senior_leader            | allow
+forceDelete              | others_ticket                            | commanding_officer       | allow
+forceDelete              | others_ticket                            | executive_officer        | allow
+forceDelete              | others_ticket                            | officer                  | allow
+forceDelete              | others_ticket                            | platoon_leader           | allow
+forceDelete              | others_ticket                            | squad_leader             | allow
+forceDelete              | others_ticket                            | member                   | allow
+forceDelete              | others_ticket                            | banned                   | allow
+forceDelete              | others_ticket                            | pending                  | allow

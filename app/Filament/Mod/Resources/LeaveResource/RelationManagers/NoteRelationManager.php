@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\LeaveResource\RelationManagers;
 
+use App\Models\Note;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -12,10 +13,16 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class NoteRelationManager extends RelationManager
 {
     protected static string $relationship = 'note';
+
+    public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
+    {
+        return auth()->user()->can('viewForMember', [Note::class, $ownerRecord->member]) && parent::canViewForRecord($ownerRecord, $pageClass);
+    }
 
     public function isReadOnly(): bool
     {

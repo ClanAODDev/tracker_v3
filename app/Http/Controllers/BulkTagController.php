@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Ability;
 use App\Enums\TagVisibility;
 use App\Http\Requests\DivisionTag\AddTagRequest;
 use App\Http\Requests\DivisionTag\CreateDivisionTagRequest;
@@ -61,7 +62,7 @@ class BulkTagController extends Controller
     {
         $user = auth()->user();
 
-        $userDivision = $user->isRole('admin') ? $division : $user->member?->division;
+        $userDivision = $user->can(Ability::ActAcrossDivisions) ? $division : $user->member?->division;
         if (! $userDivision) {
             return response()->json(['error' => 'No division found'], 403);
         }
@@ -102,7 +103,7 @@ class BulkTagController extends Controller
     {
         $user = auth()->user();
 
-        $userDivision = $user->isRole('admin') ? $division : $user->member?->division;
+        $userDivision = $user->can(Ability::ActAcrossDivisions) ? $division : $user->member?->division;
         if (! $userDivision) {
             return response()->json(['error' => 'No division found'], 403);
         }

@@ -6,7 +6,7 @@ use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Squad;
+use App\Models\Unit;
 use App\Models\User;
 use App\Traits\DivisionSettableNotification;
 use App\Traits\RetryableNotification;
@@ -28,7 +28,7 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
         private readonly Member $member,
         private readonly ?User $remover,
         private readonly ?string $removalReason,
-        private readonly ?Squad $squad = null
+        private readonly ?Unit $squad = null
     ) {}
 
     /**
@@ -79,7 +79,7 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
                     ),
                     'value' => sprintf(
                         '%s / %s',
-                        $this->squad?->platoon?->name ?? 'Unassigned',
+                        $this->squad?->parent?->name ?? 'Unassigned',
                         $this->squad?->name ?? 'Unassigned',
                     ),
                 ],

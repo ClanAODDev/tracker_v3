@@ -27,12 +27,12 @@ class SquadResourceLeaderScopeTest extends TestCase
     #[Test]
     public function leader_id_must_belong_to_the_squads_division(): void
     {
-        $division        = $this->createActiveDivision();
-        $otherDivision   = $this->createActiveDivision();
-        $platoon         = $this->createPlatoon($division);
-        $squad           = $this->createSquad($platoon);
-        $outsider        = $this->createMember(['division_id' => $otherDivision->id]);
-        $originalSquadId = $outsider->squad_id;
+        $division       = $this->createActiveDivision();
+        $otherDivision  = $this->createActiveDivision();
+        $platoon        = $this->createPlatoon($division);
+        $squad          = $this->createSquad($platoon);
+        $outsider       = $this->createMember(['division_id' => $otherDivision->id]);
+        $originalUnitId = $outsider->unit_id;
 
         $this->actingAs($this->createSeniorLeader($division));
 
@@ -42,7 +42,7 @@ class SquadResourceLeaderScopeTest extends TestCase
             ->assertHasFormErrors(['leader_id']);
 
         $this->assertNotEquals(Position::SQUAD_LEADER, $outsider->fresh()->position);
-        $this->assertEquals($originalSquadId, $outsider->fresh()->squad_id);
+        $this->assertEquals($originalUnitId, $outsider->fresh()->unit_id);
     }
 
     #[Test]
@@ -61,6 +61,6 @@ class SquadResourceLeaderScopeTest extends TestCase
             ->assertHasNoFormErrors();
 
         $this->assertEquals(Position::SQUAD_LEADER, $member->fresh()->position);
-        $this->assertEquals($squad->id, $member->fresh()->squad_id);
+        $this->assertEquals($squad->id, $member->fresh()->unit_id);
     }
 }

@@ -2,7 +2,10 @@
 
 namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
 
-use App\Models\Squad;
+use App\Authorization\UnitHierarchy;
+use App\Enums\Ability;
+use App\Enums\UnitLevel;
+use App\Models\Unit;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
@@ -17,7 +20,11 @@ use Illuminate\Support\Collection;
 
 class MembersRelationManager extends RelationManager
 {
-    protected static string $relationship = 'members';
+    protected static string $relationship = 'subtreeMembers';
+
+    protected static ?string $title = 'Members';
+
+    protected static ?string $modelLabel = 'member';
 
     public function form(Schema $schema): Schema
     {
@@ -27,6 +34,14 @@ class MembersRelationManager extends RelationManager
                     ->required()
                     ->maxLength(255),
             ]);
+    }
+
+    private function descendantUnits(): Collection
+    {
+        return Unit::query()
+            ->where('path', 'like', $this->ownerRecord->path . '%')
+            ->orderBy('path')
+            ->get();
     }
 
     public function table(Table $table): Table
@@ -41,7 +56,8 @@ class MembersRelationManager extends RelationManager
                     ->sortable()
                     ->badge(),
                 TextColumn::make('position'),
-                TextColumn::make('squad.name')
+                TextColumn::make('unit')
+                    ->state(fn ($record) => $record->unit?->name)
                     ->toggleable(),
             ])
             ->filters([
@@ -61,25 +77,25 @@ class MembersRelationManager extends RelationManager
                         ->label('Transfer member(s)')
                         ->modalWidth('lg')
                         ->modalDescription('Only members of the same division can be transferred.')
-                        ->visible(fn (): bool => auth()->user()->isRole(['admin', 'sr_ldr'])
-                            || (auth()->user()->isPlatoonLeader() && auth()->user()->member->clan_id ==
-                                $this->ownerRecord->leader_id)
+                        ->visible(fn (): bool => auth()->user()->can(Ability::TransferMembers)
+                            || (app(UnitHierarchy::class)->leadershipLevel(auth()->user()) === UnitLevel::Platoon
+                                && app(UnitHierarchy::class)->leadsWithin(auth()->user()->member, $this->ownerRecord))
                         )
                         ->icon('heroicon-o-adjustments-vertical')
                         ->form([
-                            Select::make('squad_id')
-                                ->label('Squad')
-                                ->options(fn () => Squad::where('platoon_id', $this->ownerRecord->id)
-                                    ->pluck('name', 'id'))
+                            Select::make('unit_id')
+                                ->label('Unit')
+                                ->options(fn () => $this->descendantUnits()
+                                    ->mapWithKeys(fn (Unit $unit) => [$unit->id => str_repeat('— ', $unit->depth - $this->ownerRecord->depth) . ($unit->name ?: 'Untitled')]))
                                 ->searchable()
                                 ->required(),
                         ])
                         ->action(function (Collection $records, array $data): void {
-                            $records->each(function ($member) use ($data) {
-                                $member->update([
-                                    'squad_id' => $data['squad_id'],
-                                ]);
-                            });
+                            $unit = $this->descendantUnits()->firstWhere('id', $data['unit_id']);
+
+                            abort_if($unit === null, 404);
+
+                            $records->each(fn ($member) => $member->update(['unit_id' => $unit->id]));
                         })
                         ->deselectRecordsAfterCompletion()
                         ->color('primary'),

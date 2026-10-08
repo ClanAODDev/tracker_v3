@@ -2,8 +2,10 @@
 
 namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
 
+use App\Filament\Mod\Resources\PlatoonResource;
 use App\Filament\Mod\Resources\SquadResource;
 use App\Rules\ResolvesToImage;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Actions\EditAction;
@@ -16,7 +18,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class SquadsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'Squads';
+    protected static string $relationship = 'children';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return $ownerRecord->childLevel()?->label_plural ?? 'Units';
+    }
+
+    public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
+    {
+        return $ownerRecord->childLevel() !== null;
+    }
 
     public function form(Schema $schema): Schema
     {
@@ -35,7 +47,8 @@ class SquadsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('Squad')
+            ->modelLabel(strtolower($this->getOwnerRecord()->childLevel()?->label ?? 'unit'))
+            ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('leader.name')
@@ -59,11 +72,16 @@ class SquadsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()->using(function (array $data) {
+                    $units = app(UnitAssignment::class);
+
+                    return $units->create($this->getOwnerRecord()->division, $this->getOwnerRecord(), $data);
+                }),
             ])
             ->recordActions([
-                EditAction::make()->url(fn (Model $record): string => SquadResource::getUrl('edit',
-                    ['record' => $record])),
+                EditAction::make()->url(fn (Model $record): string => $record->isSquad()
+                    ? SquadResource::getUrl('edit', ['record' => $record])
+                    : PlatoonResource::getUrl('edit', ['record' => $record])),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

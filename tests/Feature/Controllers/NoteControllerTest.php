@@ -399,7 +399,7 @@ class NoteControllerTest extends TestCase
         $platoon  = $this->createPlatoon($division);
         $user     = $this->createMemberWithUser([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::PLATOON_LEADER,
             'rank'        => Rank::SERGEANT,
         ], [

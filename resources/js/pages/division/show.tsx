@@ -1,3 +1,4 @@
+import { pluralize } from '@/lib/format';
 import { Head } from '@inertiajs/react';
 import { Headset, History, Settings, Shield, Star, TriangleAlert, UserPlus, Users } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -8,7 +9,7 @@ import { ApplicationsModal } from '@/components/division/applications-modal';
 import { LeaderAvatar } from '@/components/division/leader-avatar';
 import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from '@/components/division/organize';
 import { PlatoonCard, type Platoon } from '@/components/division/platoon-card';
-import { NoSquadModal } from '@/components/division/no-squad-modal';
+import { NoSquadModal, noLevelFromKey } from '@/components/division/no-squad-modal';
 import { RecentActivityModal, type RecentActivityGroup } from '@/components/division/recent-activity-modal';
 import { TileLink } from '@/components/division/tile-link';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
@@ -29,6 +30,7 @@ interface DivisionShowProps {
         slug: string;
         logo: string | null;
         platoonLabel: string;
+        childLabelPlural: string;
         isShutdown: boolean;
         shutdownAt: string | null;
         shutdownPending: boolean;
@@ -112,7 +114,13 @@ export default function DivisionShow({
     const [applicationsOpen, setApplicationsOpen] = useState(false);
     const [initialAppId, setInitialAppId] = useState<number | null>(null);
     const [activityOpen, setActivityOpen] = useState(false);
-    const [noSquadOpen, setNoSquadOpen] = useState(false);
+    const [noLevel, setNoLevel] = useState<{ level: number; label: string } | null>(null);
+    const [noLevelShown, setNoLevelShown] = useState({ level: 2, label: 'Squad' });
+    const openNoLevel = (level: number, actionLabel: string) => {
+        const next = { level, label: actionLabel.replace(/^No /, '') };
+        setNoLevelShown(next);
+        setNoLevel(next);
+    };
 
     const [platoonList, setPlatoonList] = useState(platoons);
     const [dropHoverId, setDropHoverId] = useState<number | null>(null);
@@ -201,7 +209,8 @@ export default function DivisionShow({
                             );
                             const opensOrganize =
                                 action.key === 'unassigned-members' && organizeProps.canOrganize;
-                            const opensNoSquadModal = action.key === 'unassigned-to-squad';
+                            const noLevelTarget = noLevelFromKey(action.key);
+                            const opensNoSquadModal = noLevelTarget !== null;
                             const opensApplicationsModal = action.key === 'pending-applications';
                             const onClick = opensOrganize
                                 ? () => {
@@ -212,7 +221,7 @@ export default function DivisionShow({
                                       });
                                   }
                                 : opensNoSquadModal
-                                  ? () => setNoSquadOpen(true)
+                                  ? () => openNoLevel(noLevelTarget, action.label)
                                   : opensApplicationsModal
                                     ? () => {
                                           setInitialAppId(null);
@@ -371,7 +380,7 @@ export default function DivisionShow({
                             ) : undefined
                         }
                     >
-                        {d.platoonLabel}s
+                        {pluralize(d.platoonLabel)}
                     </SectionTitle>
 
                     {organizeProps.canOrganize && (
@@ -388,7 +397,7 @@ export default function DivisionShow({
 
                     {platoonList.length === 0 ? (
                         <p className="rounded-md border border-destructive/30 bg-card p-4 text-sm text-muted-foreground">
-                            No {d.platoonLabel.toLowerCase()}s found
+                            No {pluralize(d.platoonLabel).toLowerCase()} found
                         </p>
                     ) : (
                         <div className="grid gap-3 lg:grid-cols-2">
@@ -396,6 +405,7 @@ export default function DivisionShow({
                                 <PlatoonCard
                                     key={platoon.id}
                                     index={i}
+                                    childLabelPlural={d.childLabelPlural}
                                     platoon={platoon}
                                     organizing={organize.organizing}
                                     isHover={dropHoverId === platoon.id}
@@ -431,7 +441,13 @@ export default function DivisionShow({
             />
 
             {d.canManageUnassigned && (
-                <NoSquadModal url={d.unassignedToSquadUrl} open={noSquadOpen} onOpenChange={setNoSquadOpen} />
+                <NoSquadModal
+                    url={d.unassignedToSquadUrl}
+                    level={noLevelShown.level}
+                    label={noLevelShown.label}
+                    open={noLevel !== null}
+                    onOpenChange={(open) => !open && setNoLevel(null)}
+                />
             )}
         </AppLayout>
     );

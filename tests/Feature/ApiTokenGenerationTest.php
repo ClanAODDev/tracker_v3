@@ -8,9 +8,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
+use Tests\Traits\CreatesMembers;
 
 final class ApiTokenGenerationTest extends TestCase
 {
+    use CreatesMembers;
     use RefreshDatabase;
 
     #[Test]
@@ -165,66 +167,50 @@ final class ApiTokenGenerationTest extends TestCase
     }
 
     #[Test]
-    public function an_officer_can_create_api_tokens()
+    public function an_officer_cannot_manage_api_tokens()
     {
-        $this->markTestSkipped('Temporary ACL change');
+        $user  = $this->createOfficer();
+        $token = $user->createToken('existing');
 
-        $user = User::factory()->officer()->create();
+        $this->actingAs($user);
 
-        $this->signIn($user);
-
-        $this->get(route('developer'))
-            ->assertOk();
-
-        $this->post(route('developer.token.store', ['token_name' => 'test']))
-            ->assertRedirect(route('developer'));
+        $this->get(route('developer'))->assertForbidden();
+        $this->post(route('developer.token.store'), ['token_name' => 'test'])->assertForbidden();
+        $this->delete(route('developer.token.delete'), ['token_id' => $token->accessToken->id])->assertForbidden();
 
         $this->assertCount(1, $user->refresh()->tokens);
     }
 
     #[Test]
-    public function a_non_officer_cannot_create_api_tokens()
+    public function a_member_cannot_manage_api_tokens()
     {
-        $this->markTestSkipped('Temporary ACL change');
+        $this->actingAs($this->createMemberWithUser());
 
-        $user = User::factory()->create();
-
-        $this->signIn($user);
-
-        $this->withoutExceptionHandling()
-            ->get(route('developer'))
-            ->assertForbidden();
+        $this->get(route('developer'))->assertForbidden();
     }
 
     #[Test]
     public function a_token_name_is_required_when_generating_an_api_token()
     {
-        $this->markTestSkipped('Temporary ACL change');
-
-        $user = User::factory()->officer()->create();
-
-        $this->signIn($user);
+        $this->actingAs($this->createAdmin(userAttributes: ['developer' => false]));
 
         $this->post(route('developer.token.store', []))
             ->assertSessionHasErrors('token_name');
     }
 
     #[Test]
-    public function an_officer_can_revoke_their_own_token()
+    public function an_admin_can_create_and_revoke_their_own_token()
     {
-        $this->markTestSkipped('Temporary ACL change');
+        $admin = $this->createAdmin(userAttributes: ['developer' => false]);
 
-        $user = User::factory()->officer()->create();
+        $this->actingAs($admin);
 
-        $this->signIn($user);
+        $this->get(route('developer'))->assertOk();
+        $this->post(route('developer.token.store'), ['token_name' => 'test'])->assertRedirect(route('developer'));
+        $this->assertCount(1, $admin->refresh()->tokens);
 
-        $token = $user->createToken('test');
+        $this->delete(route('developer.token.delete'), ['token_id' => $admin->tokens->first()->id]);
 
-        $this->delete(route(
-            'developer.token.delete',
-            ['token_id' => $token->accessToken->id]
-        ));
-
-        $this->assertCount(0, $user->refresh()->tokens);
+        $this->assertCount(0, $admin->refresh()->tokens);
     }
 }

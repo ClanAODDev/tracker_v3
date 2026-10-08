@@ -9,9 +9,9 @@ use App\Models\Division;
 use App\Models\Leave;
 use App\Models\Member;
 use App\Models\MemberAward;
-use App\Models\Platoon;
 use App\Models\Ticket;
 use App\Models\Transfer;
+use App\Models\Unit;
 use App\Models\User;
 
 trait CreatesPendingActionItems
@@ -82,22 +82,17 @@ trait CreatesPendingActionItems
     {
         Member::factory()->count($count)->create([
             'division_id' => $division->id,
-            'platoon_id'  => 0,
+            'unit_id'     => null,
         ]);
     }
 
     protected function createMembersWithoutSquad(Division $division, int $count = 2): void
     {
-        $platoon = $division->platoons()->first();
-
-        if (! $platoon) {
-            $platoon = Platoon::factory()->create(['division_id' => $division->id]);
-        }
+        $platoon = $division->topUnits()->first() ?? Unit::factory()->create(['division_id' => $division->id]);
 
         Member::factory()->count($count)->create([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => 0,
+            'unit_id'     => $platoon->id,
             'position'    => Position::MEMBER,
         ]);
     }

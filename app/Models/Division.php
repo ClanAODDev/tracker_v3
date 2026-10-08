@@ -118,6 +118,8 @@ class Division extends Model
         });
 
         static::created(function (Division $division) {
+            DivisionUnitLevel::createDefaultsFor($division);
+
             $division->recordActivity(ActivityType::CREATED_DIVISION);
             $division->applicationFields()->createMany(DivisionApplicationField::DEFAULTS);
         });
@@ -185,11 +187,6 @@ class Division extends Model
         return $this->hasMany(LeaderboardSnapshot::class);
     }
 
-    public function squads(): HasManyThrough
-    {
-        return $this->hasManyThrough(Squad::class, Platoon::class);
-    }
-
     public function routeNotificationForMembers(): ?string
     {
         return $this->settings()->get('member_channel', '')
@@ -202,9 +199,29 @@ class Division extends Model
             ?: ($this->abbreviation ? $this->abbreviation . '-officers' : null);
     }
 
-    public function platoons(): HasMany
+    public function units(): HasMany
     {
-        return $this->hasMany(Platoon::class)->orderBy('order');
+        return $this->hasMany(Unit::class);
+    }
+
+    public function unitLevels(): HasMany
+    {
+        return $this->hasMany(DivisionUnitLevel::class)->orderBy('depth');
+    }
+
+    public function deepestUnitLevel(): int
+    {
+        return (int) ($this->unitLevels->max('depth') ?? 2);
+    }
+
+    public function unitLevel(int $depth): ?DivisionUnitLevel
+    {
+        return $this->unitLevels->firstWhere('depth', $depth);
+    }
+
+    public function topUnits(): HasMany
+    {
+        return $this->units()->whereNull('parent_id')->orderBy('order')->orderBy('id');
     }
 
     public function activity(): HasMany
@@ -265,7 +282,7 @@ class Division extends Model
     public function unassigned(): HasMany
     {
         return $this->members()
-            ->where('platoon_id', 0)
+            ->whereNull('unit_id')
             ->whereIn('position', [Position::MEMBER])
             ->orderBy('rank', 'asc')
             ->orderBy('name', 'asc');
@@ -273,6 +290,17 @@ class Division extends Model
 
     public function locality(string $string): string
     {
+        $key   = strtolower($string);
+        $level = match ($key) {
+            'platoon', 'platoon leader' => $this->unitLevel(1),
+            'squad', 'squad leader'     => $this->unitLevel(max(2, $this->deepestUnitLevel())),
+            default                     => null,
+        };
+
+        if ($level) {
+            return ucwords(str_ends_with($key, 'leader') ? $level->leader_title : $level->label);
+        }
+
         $locality = collect($this->settings()->locality);
         if (! $locality->count()) {
             Log::error("No locality defaults were found for division {$this->name}");

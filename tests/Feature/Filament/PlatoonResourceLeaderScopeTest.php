@@ -27,11 +27,11 @@ class PlatoonResourceLeaderScopeTest extends TestCase
     #[Test]
     public function leader_id_must_belong_to_the_platoons_division(): void
     {
-        $division          = $this->createActiveDivision();
-        $otherDivision     = $this->createActiveDivision();
-        $platoon           = $this->createPlatoon($division);
-        $outsider          = $this->createMember(['division_id' => $otherDivision->id]);
-        $originalPlatoonId = $outsider->platoon_id;
+        $division       = $this->createActiveDivision();
+        $otherDivision  = $this->createActiveDivision();
+        $platoon        = $this->createPlatoon($division);
+        $outsider       = $this->createMember(['division_id' => $otherDivision->id]);
+        $originalUnitId = $outsider->unit_id;
 
         $this->actingAs($this->createSeniorLeader($division));
 
@@ -41,7 +41,7 @@ class PlatoonResourceLeaderScopeTest extends TestCase
             ->assertHasFormErrors(['leader_id']);
 
         $this->assertNotEquals(Position::PLATOON_LEADER, $outsider->fresh()->position);
-        $this->assertEquals($originalPlatoonId, $outsider->fresh()->platoon_id);
+        $this->assertEquals($originalUnitId, $outsider->fresh()->unit_id);
     }
 
     #[Test]
@@ -59,6 +59,6 @@ class PlatoonResourceLeaderScopeTest extends TestCase
             ->assertHasNoFormErrors();
 
         $this->assertEquals(Position::PLATOON_LEADER, $member->fresh()->position);
-        $this->assertEquals($platoon->id, $member->fresh()->platoon_id);
+        $this->assertEquals($platoon->id, $member->fresh()->unit_id);
     }
 }

@@ -6,7 +6,7 @@ import { CountUp } from '@/components/count-up';
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
 import { Leaderboard, type LeaderEntry } from '@/components/dashboard/leaderboard';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
-import { NoSquadModal } from '@/components/division/no-squad-modal';
+import { NoSquadModal, noLevelFromKey } from '@/components/division/no-squad-modal';
 import { TronIdPlate, TronFlash } from '@/components/tron/flourishes';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -70,7 +70,13 @@ const STYLE_CLASS: Record<string, string> = {
 
 export default function Home({ myDivision, toolbar, pendingActions, leaderboard, divisions }: HomeProps) {
     const d = myDivision;
-    const [noSquadOpen, setNoSquadOpen] = useState(false);
+    const [noLevel, setNoLevel] = useState<{ level: number; label: string } | null>(null);
+    const [noLevelShown, setNoLevelShown] = useState({ level: 2, label: 'Squad' });
+    const openNoLevel = (level: number, actionLabel: string) => {
+        const next = { level, label: actionLabel.replace(/^No /, '') };
+        setNoLevelShown(next);
+        setNoLevel(next);
+    };
 
     return (
         <AppLayout header={{ title: 'AOD Tracker', breadcrumbs: [{ label: 'Dashboard' }] }}>
@@ -134,12 +140,13 @@ export default function Home({ myDivision, toolbar, pendingActions, leaderboard,
                                     </>
                                 );
 
-                                if (action.key === 'unassigned-to-squad') {
+                                const noLevelTarget = noLevelFromKey(action.key);
+                                if (noLevelTarget !== null) {
                                     return (
                                         <button
                                             key={action.key}
                                             type="button"
-                                            onClick={() => setNoSquadOpen(true)}
+                                            onClick={() => openNoLevel(noLevelTarget, action.label)}
                                             className={className}
                                         >
                                             {inner}
@@ -207,7 +214,13 @@ export default function Home({ myDivision, toolbar, pendingActions, leaderboard,
             </div>
 
             {d.canManageUnassigned && (
-                <NoSquadModal url={d.unassignedToSquadUrl} open={noSquadOpen} onOpenChange={setNoSquadOpen} />
+                <NoSquadModal
+                    url={d.unassignedToSquadUrl}
+                    level={noLevelShown.level}
+                    label={noLevelShown.label}
+                    open={noLevel !== null}
+                    onOpenChange={(open) => !open && setNoLevel(null)}
+                />
             )}
         </AppLayout>
     );

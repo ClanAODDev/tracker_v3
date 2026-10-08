@@ -53,7 +53,7 @@ class DeleteMember extends FormRequest
 
         if ($member->division()->exists()) {
             $member->division->notify(
-                new NotifyDivisionMemberRemoved($member, auth()->user(), $this->removal_reason, $member->squad)
+                new NotifyDivisionMemberRemoved($member, auth()->user(), $this->removal_reason, $member->squadUnit())
             );
         }
 

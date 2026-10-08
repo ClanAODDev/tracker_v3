@@ -5,11 +5,12 @@ namespace App\Filament\Mod\Resources\SquadResource\Pages;
 use App\Enums\Position;
 use App\Filament\Mod\Resources\SquadResource;
 use App\Models\Member;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\DeleteAction;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class EditSquad extends EditRecord
 {
@@ -20,7 +21,7 @@ class EditSquad extends EditRecord
 
     public function getTitle(): string
     {
-        return sprintf('Edit %s', $this->record->division->locality('Squad'));
+        return sprintf('Edit %s', $this->record->levelLabel());
     }
 
     public function mount($record): void
@@ -33,9 +34,19 @@ class EditSquad extends EditRecord
         ]);
     }
 
+    protected function handleRecordUpdate(Model $record, array $data): Model
+    {
+        $units = app(UnitAssignment::class);
+        $units->update($record, Arr::only($data, ['name', 'logo', 'gen_pop', 'leader_id']));
+
+        return $record->refresh();
+    }
+
     protected function afterSave(): void
     {
         $state = $this->form->getState();
+        $units = app(UnitAssignment::class);
+        $unit  = $this->record;
 
         $originalLeaderId = $state['original_leader_id'] ?? null;
         $newLeaderId      = (int) $this->record->leader_id;
@@ -43,15 +54,11 @@ class EditSquad extends EditRecord
         if ($originalLeaderId !== $newLeaderId) {
             if ($newLeaderId) {
                 Member::where('clan_id', $newLeaderId)->update([
-                    'position'   => Position::SQUAD_LEADER,
-                    'platoon_id' => $this->record->platoon_id,
-                    'squad_id'   => $this->record->id,
+                    'unit_id'  => $unit->id,
+                    'position' => Position::SQUAD_LEADER,
                 ]);
 
-                Platoon::where('leader_id', $newLeaderId)->update(['leader_id' => null]);
-
-                Squad::where('leader_id', $newLeaderId)->where('id', '!=', $this->record->id)
-                    ->update(['leader_id' => null]);
+                $units->clearLeadership([$newLeaderId], except: $unit);
             }
 
             $originalLeaderStillSquadLeader = $originalLeaderId && Member::where('clan_id', $originalLeaderId)
@@ -60,18 +67,11 @@ class EditSquad extends EditRecord
 
             if ($originalLeaderStillSquadLeader) {
                 Member::where('clan_id', $originalLeaderId)->update([
-                    'position'   => Position::MEMBER,
-                    'platoon_id' => null,
-                    'squad_id'   => null,
+                    'unit_id'  => null,
+                    'position' => Position::MEMBER,
                 ]);
 
-                Platoon::where('leader_id', $originalLeaderId)
-                    ->where('id', '!=', $this->record->id)
-                    ->update(['leader_id' => null]);
-
-                Squad::where('leader_id', $originalLeaderId)
-                    ->where('id', '!=', $this->record->id)
-                    ->update(['leader_id' => null]);
+                $units->clearLeadership([$originalLeaderId], except: $unit);
             }
         }
     }
@@ -82,21 +82,22 @@ class EditSquad extends EditRecord
     {
         return [
             DeleteAction::make()
-                ->modalDescription('Assigned members will be removed from this squad. Are you sure?')
+                ->modalDescription(fn () => sprintf('Assigned members will move up to the parent unit of this %s. Are you sure?', strtolower($this->record->levelLabel())))
                 ->action(function ($record) {
-                    Member::where('squad_id', $record->id)->update([
-                        'squad_id' => 0,
-                    ]);
+                    $units = app(UnitAssignment::class);
+                    $unit  = $record;
 
-                    $record->delete();
+                    $unit->members()->update(['unit_id' => $unit->parent_id]);
+
+                    $units->archive($unit);
 
                     Notification::make()
                         ->success()
-                        ->title('Squad has been deleted')
+                        ->title(sprintf('%s has been deleted', $unit->levelLabel()))
                         ->body('Assigned members have been updated.')
                         ->send();
 
-                    return redirect()->route('filament.mod.resources.platoons.edit', $record->platoon);
+                    return redirect()->route('filament.mod.resources.platoons.edit', $record->parent);
                 }),
         ];
     }

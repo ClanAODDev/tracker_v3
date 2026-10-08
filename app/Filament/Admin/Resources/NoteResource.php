@@ -18,6 +18,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class NoteResource extends Resource
 {
@@ -42,7 +43,11 @@ class NoteResource extends Resource
                     ->numeric()
                     ->default(null),
                 Select::make('member')
-                    ->relationship('member', 'name')
+                    ->relationship('member', 'name', fn (Builder $query) => $query->when(
+                        auth()->user()?->member_id,
+                        fn (Builder $query, int $memberId) => $query->whereKeyNot($memberId)
+                    ))
+                    ->notIn(fn () => array_filter([auth()->user()?->member_id]))
                     ->searchable(),
                 Select::make('author')
                     ->relationship('author', 'name')
@@ -98,6 +103,14 @@ class NoteResource extends Resource
                     DeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $memberId = auth()->user()?->member_id;
+
+        return parent::getEloquentQuery()
+            ->when($memberId, fn (Builder $query) => $query->where('member_id', '!=', $memberId));
     }
 
     public static function getRelations(): array
