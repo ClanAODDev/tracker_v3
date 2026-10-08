@@ -142,7 +142,7 @@ class DivisionController extends Controller
 
         $members = $division->members()
             ->with('unit')
-            ->whereIn('unit_id', Unit::query()->whereNull('parent_id')->select('id'))
+            ->whereIn('unit_id', Unit::query()->where('depth', '<', max($division->deepestUnitLevel(), 2))->select('id'))
             ->where('position', Position::MEMBER)
             ->get(['id', 'clan_id', 'name', 'rank', 'unit_id'])
             ->map(fn ($member) => [

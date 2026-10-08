@@ -184,7 +184,7 @@ readonly class PendingActionsData
                 key: 'unassigned-members',
                 url: route('division', $division->slug) . '?organize=1',
                 icon: 'fa-user-slash',
-                label: 'No Platoon',
+                label: 'No ' . $division->locality('platoon'),
             );
         }
 
@@ -192,13 +192,13 @@ readonly class PendingActionsData
             self::pushAction(
                 $actions,
                 $division->members()
-                    ->whereIn('unit_id', Unit::query()->where('depth', 1)->select('id'))
+                    ->whereIn('unit_id', Unit::query()->where('depth', '<', max($division->deepestUnitLevel(), 2))->select('id'))
                     ->where('position', Position::MEMBER)
                     ->count(),
                 key: 'unassigned-to-squad',
                 url: '#',
                 icon: 'fa-users-slash',
-                label: 'No Squad',
+                label: 'No ' . $division->locality('squad'),
                 modalTarget: 'no-squad-modal',
             );
         }
