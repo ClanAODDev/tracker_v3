@@ -381,12 +381,8 @@ class MemberProfileData
         if ($division) {
             $crumbs[] = ['label' => $division->name, 'href' => route('division', $division->slug)];
 
-            if ($platoon = $member->platoonUnit()) {
-                $crumbs[] = ['label' => $platoon->name, 'href' => $platoon->url($division)];
-            }
-
-            if ($squad = $member->squadUnit()) {
-                $crumbs[] = ['label' => $squad->name ?: 'Untitled', 'href' => $squad->url($division)];
+            foreach ($member->unitTrail() as $unit) {
+                $crumbs[] = ['label' => $unit->name ?: 'Untitled', 'href' => $unit->url($division)];
             }
         }
 

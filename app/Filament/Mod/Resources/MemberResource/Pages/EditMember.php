@@ -6,6 +6,7 @@ use App\Enums\ActivityType;
 use App\Filament\Forms\Components\DivisionMemberFieldsForm;
 use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Filament\Forms\Components\PartTimeDivisionsForm;
+use App\Filament\Forms\Components\UnitPicker;
 use App\Filament\Mod\Resources\MemberResource;
 use App\Jobs\RemoveClanMember;
 use App\Models\DivisionTag;
@@ -22,7 +23,6 @@ use Filament\Forms\Components\Textarea;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 
 class EditMember extends EditRecord
 {
@@ -65,11 +65,10 @@ class EditMember extends EditRecord
 
         unset($data['handleGroups'], $data['custom_fields']);
 
-        if (array_key_exists('platoon_unit_id', $data) || array_key_exists('squad_unit_id', $data)) {
-            $unitId = ($data['squad_unit_id'] ?? null) ?: ($data['platoon_unit_id'] ?? null);
-            $data   = [
-                ...Arr::except($data, ['platoon_unit_id', 'squad_unit_id']),
-                'unit_id' => $unitId ?: null,
+        if (UnitPicker::present($data, 'unit_level_')) {
+            $data = [
+                ...UnitPicker::without($data, 'unit_level_'),
+                'unit_id' => UnitPicker::resolve($data, 'unit_level_'),
             ];
         }
 

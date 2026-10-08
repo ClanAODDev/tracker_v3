@@ -9,14 +9,10 @@ trait HasRecruitmentFields
     protected function buildAssignmentField(Member $member): array
     {
         return [
-            'name' => sprintf(
-                '%s / %s',
-                $member->division->locality('platoon'),
-                $member->division->locality('squad')
-            ),
-            'value' => ($squad = $member->squadUnit())
-                ? sprintf('%s / %s', $squad->parent?->name, $squad->name)
-                : 'Unassigned',
+            'name'  => $member->division->unitLevels->sortBy('depth')->pluck('label')->implode(' / ') ?: 'Assignment',
+            'value' => $member->unitTrail()->isEmpty()
+                ? 'Unassigned'
+                : $member->unitTrail()->map(fn ($unit) => $unit->name ?: 'Untitled')->implode(' / '),
         ];
     }
 }

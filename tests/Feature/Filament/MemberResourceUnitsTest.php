@@ -4,6 +4,8 @@ namespace Tests\Feature\Filament;
 
 use App\Filament\Mod\Resources\MemberResource\Pages\EditMember;
 use App\Filament\Mod\Resources\MemberResource\Pages\ListMembers;
+use App\Models\DivisionUnitLevel;
+use App\Models\Unit;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -37,8 +39,8 @@ class MemberResourceUnitsTest extends TestCase
 
         Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
             ->assertFormSet([
-                'platoon_unit_id' => $platoon->id,
-                'squad_unit_id'   => $squad->id,
+                'unit_level_1' => $platoon->id,
+                'unit_level_2' => $squad->id,
             ]);
     }
 
@@ -77,10 +79,58 @@ class MemberResourceUnitsTest extends TestCase
         $this->actingAs($leader);
 
         Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
-            ->fillForm(['platoon_unit_id' => null, 'squad_unit_id' => null])
+            ->fillForm(['unit_level_1' => null, 'unit_level_2' => null])
             ->call('save')
             ->assertHasNoFormErrors();
 
         $this->assertNull($member->fresh()->unit_id);
+    }
+
+    #[Test]
+    public function the_edit_form_assigns_a_member_to_a_unit_three_levels_deep(): void
+    {
+        $leader   = $this->createSeniorLeader();
+        $division = $leader->member->division;
+        DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
+        $company = $this->createPlatoon($division);
+        $middle  = Unit::factory()->childOf($company)->create();
+        $team    = Unit::factory()->childOf($middle)->create();
+        $member  = $this->createMember(['division_id' => $division->id, 'unit_id' => $company->id]);
+
+        $this->actingAs($leader);
+
+        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+            ->fillForm(['unit_level_1' => $company->id, 'unit_level_2' => $middle->id, 'unit_level_3' => $team->id])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame($team->id, $member->fresh()->unit_id);
+
+        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+            ->assertFormSet(['unit_level_1' => $company->id, 'unit_level_2' => $middle->id, 'unit_level_3' => $team->id]);
+    }
+
+    #[Test]
+    public function the_unit_filter_reaches_units_below_the_second_level(): void
+    {
+        $leader   = $this->createSeniorLeader();
+        $division = $leader->member->division;
+        DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
+        $company  = $this->createPlatoon($division);
+        $middle   = Unit::factory()->childOf($company)->create();
+        $team     = Unit::factory()->childOf($middle)->create();
+        $inMiddle = $this->createMember(['division_id' => $division->id, 'unit_id' => $middle->id]);
+        $inTeam   = $this->createMember(['division_id' => $division->id, 'unit_id' => $team->id]);
+
+        $this->actingAs($leader);
+
+        Livewire::test(ListMembers::class)
+            ->filterTable('unit', ['division' => $division->id, 'platoon' => [$company->id], 'squad' => [$team->id]])
+            ->assertCanSeeTableRecords([$inTeam])
+            ->assertCanNotSeeTableRecords([$inMiddle]);
+
+        Livewire::test(ListMembers::class)
+            ->filterTable('unit', ['division' => $division->id, 'platoon' => [$company->id], 'squad' => [$middle->id]])
+            ->assertCanSeeTableRecords([$inTeam, $inMiddle]);
     }
 }

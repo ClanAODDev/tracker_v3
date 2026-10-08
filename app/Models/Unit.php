@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class Unit extends Model
@@ -101,6 +103,15 @@ class Unit extends Model
         return $tier === UnitLevel::Platoon
             ? $query->whereRaw("(units.depth < {$deepest} or {$deepest} = 1)")
             : $query->whereRaw("(units.depth = {$deepest} and {$deepest} > 1)");
+    }
+
+    public static function subtreeIdsOf(iterable $ids): QueryBuilder
+    {
+        return DB::table('units as descendant')
+            ->join('units as root', fn ($join) => $join->whereRaw("descendant.path like concat(root.path, '%')"))
+            ->whereIn('root.id', $ids)
+            ->whereNull('descendant.deleted_at')
+            ->select('descendant.id');
     }
 
     public function url(Division $division): string

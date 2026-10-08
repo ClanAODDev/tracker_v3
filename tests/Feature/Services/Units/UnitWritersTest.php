@@ -121,7 +121,7 @@ class UnitWritersTest extends TestCase
         $member = $this->createMember(['division_id' => $this->division->id, 'position' => Position::MEMBER]);
 
         Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
-            ->fillForm(['platoon_unit_id' => $this->platoon->fresh()->id, 'squad_unit_id' => $this->squad->fresh()->id])
+            ->fillForm(['unit_level_1' => $this->platoon->fresh()->id, 'unit_level_2' => $this->squad->fresh()->id])
             ->call('save')
             ->assertHasNoFormErrors();
 

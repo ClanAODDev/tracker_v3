@@ -224,7 +224,18 @@ class Member extends Model
 
     public function squadUnit(): ?Unit
     {
-        return $this->unitAt(2);
+        return $this->unit?->depth >= 2 ? $this->unit : null;
+    }
+
+    public function unitTrail(): Collection
+    {
+        $trail = collect();
+
+        for ($unit = $this->unit; $unit !== null; $unit = $unit->parent) {
+            $trail->prepend($unit);
+        }
+
+        return $trail;
     }
 
     public function division(): BelongsTo

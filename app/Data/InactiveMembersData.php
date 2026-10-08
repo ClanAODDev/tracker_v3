@@ -114,7 +114,7 @@ class InactiveMembersData
                 'human'         => $reminder ? 'Reminded ' . $reminder->diffForHumans() : 'Not reminded',
             ],
             'status'     => $member->last_voice_status?->getLabel() ?? 'Unknown',
-            'unit'       => trim(($member->platoonUnit()?->name ?? 'Unassigned') . (($squad = $member->squadUnit()) ? ' / ' . $squad->name : '')),
+            'unit'       => $member->unitTrail()->map(fn ($unit) => $unit->name ?: 'Untitled')->implode(' / ') ?: 'Unassigned',
             'severity'   => $severity,
             'forumPmUrl' => doForumFunction([$member->clan_id], 'pm'),
             'flagUrl'    => route('member.flag-inactive', $member->clan_id),
