@@ -16,6 +16,8 @@ import { DivisionToolbar, type DivisionTool } from '@/components/division/divisi
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
 import { SectionTitle } from '@/components/section';
 import { StatCard } from '@/components/stat-card';
+import { MemberTable } from '@/components/members/member-table';
+import type { BulkConfig, MemberFieldDefinition, MemberListDivision, MemberRow } from '@/components/members/types';
 import { Button } from '@/components/ui/button';
 import { postJson } from '@/lib/api';
 import { toneSurface } from '@/lib/tone';
@@ -76,6 +78,14 @@ interface DivisionShowProps {
     allActivityUrl: string;
     organize: { canOrganize: boolean; members: OrganizeMember[] };
     pendingApplicationCount: number;
+    memberList?: {
+        division: MemberListDivision;
+        members: MemberRow[];
+        assignmentKind: 'platoon' | 'squad';
+        tagFilter: Array<{ id: number; name: string; count: number }>;
+        memberFields: MemberFieldDefinition[];
+        bulk: BulkConfig;
+    };
 }
 
 export default function DivisionShow({
@@ -92,6 +102,7 @@ export default function DivisionShow({
     canViewAllActivity,
     allActivityUrl,
     organize: organizeProps,
+    memberList,
 }: DivisionShowProps) {
     const populationTrend = census.population.slice(-8);
     const voiceRateTrend = census.voiceActive
@@ -422,6 +433,21 @@ export default function DivisionShow({
                         </div>
                     )}
                 </section>
+                )}
+
+                {memberList && (
+                    <section>
+                        <SectionTitle>Members</SectionTitle>
+                        <MemberTable
+                            rows={memberList.members}
+                            division={memberList.division}
+                            assignmentKind={memberList.assignmentKind}
+                            bulk={memberList.bulk}
+                            tagFilter={memberList.tagFilter}
+                            memberFields={memberList.memberFields}
+                            storageKey={`member-table:division-home:${d.slug}`}
+                        />
+                    </section>
                 )}
             </div>
 

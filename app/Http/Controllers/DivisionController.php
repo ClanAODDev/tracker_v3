@@ -34,7 +34,19 @@ class DivisionController extends Controller
 
     public function show(Division $division): Response
     {
-        return Inertia::render('division/show', $this->divisionShow->getShowData($division)->toArray());
+        $props = $this->divisionShow->getShowData($division)->toArray();
+
+        if ($division->isFlat()) {
+            $members = $this->memberQuery->loadSortedMembers($division->members(), $division);
+
+            $props['memberList'] = MemberListProps::build(
+                $division,
+                $members,
+                UnitStatsData::fromMembers($members, $division, $this->division->getDivisionVoiceActivity($division)),
+            );
+        }
+
+        return Inertia::render('division/show', $props);
     }
 
     public function partTime(Division $division): Response

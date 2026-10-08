@@ -95,6 +95,33 @@ class FlatDivisionTest extends TestCase
                 ->where('pendingActions', fn ($actions) => collect($actions)->doesntContain('key', 'unassigned-members')));
     }
 
+    #[Test]
+    public function a_flat_divisions_page_lists_every_member(): void
+    {
+        $division = $this->flatDivision();
+        $co       = $this->createMemberWithUser(['division_id' => $division->id, 'position' => Position::COMMANDING_OFFICER], ['role' => Role::SENIOR_LEADER]);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => null]);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => null]);
+
+        $this->actingAs($co)
+            ->get(route('division', $division->slug))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->has('memberList.members', 3)
+                ->where('memberList.division.hasUnits', false));
+    }
+
+    #[Test]
+    public function a_division_with_units_leaves_the_member_list_to_its_own_page(): void
+    {
+        [$division, $co] = $this->divisionWithCommander();
+
+        $this->actingAs($co)
+            ->get(route('division', $division->slug))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page->missing('memberList'));
+    }
+
     private function flatDivision(): Division
     {
         $division = $this->createActiveDivision();
