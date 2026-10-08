@@ -8,6 +8,7 @@ use App\Enums\Position;
 use App\Enums\Role;
 use App\Models\Award;
 use App\Models\Division;
+use App\Models\DivisionUnitLevel;
 use App\Models\Leave;
 use App\Models\Member;
 use App\Models\MemberAward;
@@ -269,6 +270,47 @@ final class PendingActionsDataTest extends TestCase
         $noSquadAction = $pendingActions->get('unassigned-to-squad');
         $this->assertNotNull($noSquadAction);
         $this->assertEquals('no-squad-modal', $noSquadAction->modalTarget);
+    }
+
+    #[Test]
+    public function each_level_below_the_first_gets_its_own_unassigned_action(): void
+    {
+        foreach ([3 => 'Team', 4 => 'Cell'] as $depth => $label) {
+            DivisionUnitLevel::create(['division_id' => $this->division->id, 'depth' => $depth, 'label' => $label, 'label_plural' => $label . 's', 'leader_title' => $label . ' Leader']);
+        }
+        $this->division->unsetRelation('unitLevels');
+
+        $user   = $this->createUserWithRole('sr_ldr');
+        $top    = Unit::factory()->create(['division_id' => $this->division->id]);
+        $middle = Unit::factory()->childOf($top)->create();
+        $third  = Unit::factory()->childOf($middle)->create();
+
+        foreach ([$top, $top, $middle, $third] as $unit) {
+            Member::factory()->create(['division_id' => $this->division->id, 'unit_id' => $unit->id, 'position' => Position::MEMBER]);
+        }
+
+        $actions = PendingActionsData::forDivision($this->division->fresh(), $user);
+
+        $this->assertSame(2, $actions->get('unassigned-to-squad')->count);
+        $this->assertSame(1, $actions->get('unassigned-to-level-3')->count);
+        $this->assertSame(1, $actions->get('unassigned-to-level-4')->count);
+        $this->assertSame('No Team', $actions->get('unassigned-to-level-3')->label);
+        $this->assertSame('No Cell', $actions->get('unassigned-to-level-4')->label);
+    }
+
+    #[Test]
+    public function a_one_level_division_has_no_below_first_unassigned_action(): void
+    {
+        $this->division->unitLevels()->where('depth', '>', 1)->delete();
+        $this->division->unsetRelation('unitLevels');
+
+        $user = $this->createUserWithRole('sr_ldr');
+        $top  = Unit::factory()->create(['division_id' => $this->division->id]);
+        Member::factory()->create(['division_id' => $this->division->id, 'unit_id' => $top->id, 'position' => Position::MEMBER]);
+
+        $actions = PendingActionsData::forDivision($this->division->fresh(), $user);
+
+        $this->assertNull($actions->get('unassigned-to-squad'));
     }
 
     #[Test]

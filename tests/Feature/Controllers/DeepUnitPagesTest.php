@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\Position;
 use App\Models\DivisionUnitLevel;
 use App\Models\Unit;
 use App\Models\User;
@@ -118,5 +119,25 @@ class DeepUnitPagesTest extends TestCase
         $this->actingAs($this->officer)
             ->postJson('/members/assign-squad', ['member_id' => $member->id, 'unit_id' => $other->id])
             ->assertUnprocessable();
+    }
+
+    #[Test]
+    public function the_unassigned_modal_lists_members_stuck_at_the_requested_level(): void
+    {
+        $division = $this->officer->member->division;
+        $sr       = $this->createSeniorLeader($division);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $this->company->id, 'position' => Position::MEMBER]);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $this->middle->id, 'position' => Position::MEMBER]);
+
+        $this->actingAs($sr)
+            ->getJson(route('division.unassigned-to-squad', $division->slug) . '?level=2')
+            ->assertOk()
+            ->assertJsonCount(1, 'members')
+            ->assertJsonPath('members.0.platoon_id', $this->company->id);
+
+        $this->getJson(route('division.unassigned-to-squad', $division->slug) . '?level=3')
+            ->assertOk()
+            ->assertJsonCount(1, 'members')
+            ->assertJsonPath('members.0.platoon_id', $this->middle->id);
     }
 }

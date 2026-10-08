@@ -140,9 +140,11 @@ class DivisionController extends Controller
     {
         $this->authorize('manageUnassigned', User::class);
 
+        $level = max(2, min((int) request()->query('level', 2), 4));
+
         $members = $division->members()
             ->with('unit')
-            ->whereIn('unit_id', Unit::query()->where('depth', '<', max($division->deepestUnitLevel(), 2))->select('id'))
+            ->whereIn('unit_id', Unit::query()->where('depth', $level - 1)->select('id'))
             ->where('position', Position::MEMBER)
             ->get(['id', 'clan_id', 'name', 'rank', 'unit_id'])
             ->map(fn ($member) => [

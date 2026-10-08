@@ -189,18 +189,20 @@ readonly class PendingActionsData
         }
 
         if ($user->can('manageUnassigned', User::class)) {
-            self::pushAction(
-                $actions,
-                $division->members()
-                    ->whereIn('unit_id', Unit::query()->where('depth', '<', max($division->deepestUnitLevel(), 2))->select('id'))
-                    ->where('position', Position::MEMBER)
-                    ->count(),
-                key: 'unassigned-to-squad',
-                url: '#',
-                icon: 'fa-users-slash',
-                label: 'No ' . $division->locality('squad'),
-                modalTarget: 'no-squad-modal',
-            );
+            foreach (self::levelsBelowFirst($division) as $level) {
+                self::pushAction(
+                    $actions,
+                    $division->members()
+                        ->whereIn('unit_id', Unit::query()->where('depth', $level - 1)->select('id'))
+                        ->where('position', Position::MEMBER)
+                        ->count(),
+                    key: $level === 2 ? 'unassigned-to-squad' : "unassigned-to-level-{$level}",
+                    url: '#',
+                    icon: 'fa-users-slash',
+                    label: 'No ' . ucwords($division->unitLevel($level)?->label ?? $division->locality('squad')),
+                    modalTarget: 'no-squad-modal',
+                );
+            }
         }
 
         if ($user->can(Ability::ManageAllTickets)) {
@@ -269,5 +271,12 @@ readonly class PendingActionsData
     public function divisionActions(): Collection
     {
         return $this->actions->filter(fn (PendingAction $action) => ! $action->adminOnly);
+    }
+
+    private static function levelsBelowFirst(Division $division): array
+    {
+        $deepest = $division->deepestUnitLevel();
+
+        return $deepest >= 2 ? range(2, $deepest) : [];
     }
 }

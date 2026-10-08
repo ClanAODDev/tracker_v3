@@ -12,13 +12,21 @@ interface UnassignedMember {
     manage_url: string;
 }
 
+export function noLevelFromKey(key: string): number | null {
+    if (key === 'unassigned-to-squad') return 2;
+    const match = key.match(/^unassigned-to-level-(\d+)$/);
+    return match ? Number(match[1]) : null;
+}
+
 interface Props {
     url: string;
+    level: number;
+    label: string;
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
-export function NoSquadModal({ url, open, onOpenChange }: Props) {
+export function NoSquadModal({ url, level, label, open, onOpenChange }: Props) {
     const [members, setMembers] = useState<UnassignedMember[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -31,18 +39,18 @@ export function NoSquadModal({ url, open, onOpenChange }: Props) {
         setLoading(true);
         setError(null);
 
-        getJson<{ members: UnassignedMember[] }>(url)
+        getJson<{ members: UnassignedMember[] }>(`${url}?level=${level}`)
             .then((data) => setMembers(data.members))
             .catch(() => setError('Failed to load members.'))
             .finally(() => setLoading(false));
-    }, [open, url]);
+    }, [open, url, level]);
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent aria-describedby={undefined} className="max-h-[85vh] max-w-lg gap-0 overflow-hidden p-0">
                 <DialogHeader className="border-b border-border px-6 py-4">
                     <DialogTitle className="flex items-center gap-2">
-                        <UsersRound className="size-5 text-primary" /> Members Without Squad Assignment
+                        <UsersRound className="size-5 text-primary" /> Members Without {label}
                     </DialogTitle>
                 </DialogHeader>
 
@@ -53,7 +61,7 @@ export function NoSquadModal({ url, open, onOpenChange }: Props) {
                         <p className="px-6 py-10 text-center text-sm text-destructive">{error}</p>
                     ) : members.length === 0 ? (
                         <p className="px-6 py-10 text-center text-sm text-muted-foreground">
-                            No members without a squad.
+                            No members without {label.toLowerCase()}.
                         </p>
                     ) : (
                         <ul className="divide-y divide-border">
