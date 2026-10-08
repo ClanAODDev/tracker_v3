@@ -28,6 +28,7 @@ export interface Platoon {
 export function PlatoonCard({
     platoon,
     index,
+    childLabelPlural,
     organizing,
     isHover,
     onDragOver,
@@ -36,6 +37,7 @@ export function PlatoonCard({
 }: {
     platoon: Platoon;
     index: number;
+    childLabelPlural: string;
     organizing: boolean;
     isHover: boolean;
     onDragOver?: (e: DragEvent) => void;
@@ -126,7 +128,7 @@ export function PlatoonCard({
                         </FlashOnChange>
                     </span>
                     <span className="flex items-baseline gap-1.5 border-l border-border-strong px-3">
-                        <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Squads</span>
+                        <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{childLabelPlural}</span>
                         <span className="font-semibold">
                             {ledSquads}/{platoon.squads.length}
                         </span>

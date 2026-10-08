@@ -29,6 +29,7 @@ interface DivisionShowProps {
         slug: string;
         logo: string | null;
         platoonLabel: string;
+        childLabelPlural: string;
         isShutdown: boolean;
         shutdownAt: string | null;
         shutdownPending: boolean;
@@ -396,6 +397,7 @@ export default function DivisionShow({
                                 <PlatoonCard
                                     key={platoon.id}
                                     index={i}
+                                    childLabelPlural={d.childLabelPlural}
                                     platoon={platoon}
                                     organizing={organize.organizing}
                                     isHover={dropHoverId === platoon.id}

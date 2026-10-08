@@ -4,6 +4,8 @@ namespace Tests\Unit\Services;
 
 use App\Data\DivisionShowData;
 use App\Models\Census;
+use App\Models\DivisionUnitLevel;
+use App\Models\Unit;
 use App\Services\DivisionShowService;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -294,5 +296,28 @@ class DivisionShowServiceTest extends TestCase
         $this->assertSame(4, $card->members_count);
         $this->assertSame(2, $card->voice_active_count);
         $this->assertSame([2, 1], $card->children->map->members_count->all());
+    }
+
+    #[Test]
+    public function counts_include_every_level_below_a_unit(): void
+    {
+        $division = $this->createActiveDivision();
+        DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
+        $user    = $this->createMemberWithUser(['division_id' => $division->id]);
+        $platoon = $this->createPlatoon($division);
+        $middle  = Unit::factory()->childOf($platoon)->create();
+        $team    = Unit::factory()->childOf($middle)->create();
+
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $platoon->id, 'last_voice_activity' => null]);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $middle->id, 'last_voice_activity' => null]);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $team->id, 'last_voice_activity' => now()]);
+        $this->actingAs($user);
+
+        $result = $this->service->getShowData($division);
+
+        $top = $result->platoons->firstWhere('id', $platoon->id);
+        $this->assertSame(3, $top->members_count);
+        $this->assertSame(1, $top->voice_active_count);
+        $this->assertSame(2, $top->children->firstWhere('id', $middle->id)->members_count);
     }
 }

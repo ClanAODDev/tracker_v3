@@ -49,15 +49,22 @@ class DivisionShowService
             ->get()
             ->keyBy('unit_id');
 
-        $count = fn (Unit $unit, string $column) => (int) ($counts->get($unit->id)?->{$column} ?? 0);
+        $paths = Unit::query()->where('division_id', $division->id)->pluck('path', 'id');
+
+        $subtree = function (Unit $unit, string $column) use ($counts, $paths): int {
+            return (int) $paths
+                ->filter(fn (string $path) => str_starts_with($path, $unit->path))
+                ->keys()
+                ->sum(fn (int $id) => (int) ($counts->get($id)?->{$column} ?? 0));
+        };
 
         return $division->topUnits()
             ->with(['children.leader.division', 'leader.division'])
             ->get()
-            ->each(function (Unit $platoon) use ($count) {
-                $platoon->children->each(fn (Unit $squad) => $squad->setAttribute('members_count', $count($squad, 'total')));
-                $platoon->setAttribute('members_count', $count($platoon, 'total') + $platoon->children->sum(fn (Unit $squad) => $count($squad, 'total')));
-                $platoon->setAttribute('voice_active_count', $count($platoon, 'voice_active') + $platoon->children->sum(fn (Unit $squad) => $count($squad, 'voice_active')));
+            ->each(function (Unit $platoon) use ($subtree) {
+                $platoon->children->each(fn (Unit $squad) => $squad->setAttribute('members_count', $subtree($squad, 'total')));
+                $platoon->setAttribute('members_count', $subtree($platoon, 'total'));
+                $platoon->setAttribute('voice_active_count', $subtree($platoon, 'voice_active'));
             });
     }
 
