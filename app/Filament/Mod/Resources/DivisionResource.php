@@ -142,7 +142,7 @@ class DivisionResource extends Resource
                                             ->orderColumn('depth')
                                             ->reorderable(false)
                                             ->minItems(fn (Division $record) => max(1, (int) $record->units()->max('depth')))
-                                            ->maxItems(2)
+                                            ->maxItems(4)
                                             ->live()
                                             ->schema([
                                                 TextInput::make('label')->required()->maxLength(50),
@@ -150,7 +150,7 @@ class DivisionResource extends Resource
                                                 TextInput::make('leader_title')->required()->maxLength(50),
                                             ])
                                             ->itemLabel(fn (array $state) => $state['label'] ?? null)
-                                            ->helperText('Levels can only be removed once no units use them. Up to two levels until the platoon and squad tables are retired.'),
+                                            ->helperText('Levels can only be removed once no units use them. Divisions can have up to four levels.'),
                                         Placeholder::make('leader_powers')
                                             ->label('What leaders can do')
                                             ->content(fn (Get $get, Division $record) => self::leaderPowersPreview($get, $record)),

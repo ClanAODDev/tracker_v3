@@ -78,6 +78,26 @@ class DivisionStructureTest extends TestCase
         $this->assertSame(2, DivisionUnitLevel::where('division_id', $division->id)->count());
     }
 
+    #[Test]
+    public function a_division_can_grow_to_four_levels(): void
+    {
+        [$division, $co] = $this->divisionWithCommander();
+        $this->actingAs($co);
+
+        $page  = Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()]);
+        $state = $page->get('data.unitLevels');
+
+        $state['new-1'] = ['label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader'];
+        $state['new-2'] = ['label' => 'Fireteam', 'label_plural' => 'Fireteams', 'leader_title' => 'Fireteam Leader'];
+
+        $page->set('data.unitLevels', $state)->call('save');
+
+        $this->assertSame(
+            ['Platoon', 'Squad', 'Team', 'Fireteam'],
+            DivisionUnitLevel::where('division_id', $division->id)->orderBy('depth')->pluck('label')->all()
+        );
+    }
+
     private function divisionWithCommander(): array
     {
         $division = $this->createActiveDivision();
