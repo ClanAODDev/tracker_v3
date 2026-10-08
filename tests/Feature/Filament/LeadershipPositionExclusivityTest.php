@@ -3,8 +3,7 @@
 namespace Tests\Feature\Filament;
 
 use App\Enums\Position;
-use App\Filament\Mod\Resources\PlatoonResource\Pages\EditPlatoon;
-use App\Filament\Mod\Resources\SquadResource\Pages\EditSquad;
+use App\Filament\Mod\Resources\UnitResource\Pages\EditUnit;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -35,7 +34,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $platoon->getRouteKey()])
             ->fillForm(['leader_id' => null])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -53,7 +52,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $platoon->getRouteKey()])
             ->fillForm(['leader_id' => null])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -70,7 +69,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $platoon->getRouteKey()])
             ->fillForm(['leader_id' => $xo->clan_id])
             ->call('save')
             ->assertHasFormErrors(['leader_id']);
@@ -89,7 +88,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $platoon->getRouteKey()])
             ->fillForm(['leader_id' => $leader->clan_id])
             ->call('save')
             ->assertHasFormErrors(['leader_id']);
@@ -107,7 +106,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $platoon->getRouteKey()])
             ->fillForm(['leader_id' => $leader->clan_id])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -125,7 +124,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $squad->getRouteKey()])
             ->fillForm(['leader_id' => $leader->clan_id])
             ->call('save')
             ->assertHasFormErrors(['leader_id']);
@@ -143,7 +142,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $squad->getRouteKey()])
             ->fillForm(['leader_id' => $co->clan_id])
             ->call('save')
             ->assertHasFormErrors(['leader_id']);
@@ -161,7 +160,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $squad->getRouteKey()])
             ->fillForm(['leader_id' => null])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -180,7 +179,7 @@ class LeadershipPositionExclusivityTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $squad->getRouteKey()])
             ->fillForm(['leader_id' => $member->clan_id])
             ->call('save')
             ->assertHasNoFormErrors();

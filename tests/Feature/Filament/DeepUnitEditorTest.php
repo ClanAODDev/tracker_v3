@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Filament;
 
-use App\Filament\Mod\Resources\PlatoonResource\Pages\EditPlatoon;
-use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\SquadsRelationManager;
-use App\Filament\Mod\Resources\SquadResource\Pages\EditSquad;
+use App\Filament\Mod\Resources\UnitResource\Pages\EditUnit;
+use App\Filament\Mod\Resources\UnitResource\Pages\ListUnits;
+use App\Filament\Mod\Resources\UnitResource\RelationManagers\ChildrenRelationManager;
 use App\Models\Division;
 use App\Models\DivisionUnitLevel;
 use App\Models\Unit;
@@ -51,26 +51,26 @@ class DeepUnitEditorTest extends TestCase
     #[Test]
     public function a_middle_level_unit_manages_its_own_children(): void
     {
-        Livewire::test(SquadsRelationManager::class, ['ownerRecord' => $this->platoon->fresh(), 'pageClass' => EditPlatoon::class])
+        Livewire::test(ChildrenRelationManager::class, ['ownerRecord' => $this->platoon->fresh(), 'pageClass' => EditUnit::class])
             ->assertSee($this->squad->name)
             ->assertDontSee('Platoons');
 
-        $this->assertSame('Squads', SquadsRelationManager::getTitle($this->platoon->fresh(), EditPlatoon::class));
-        $this->assertSame('Platoons', SquadsRelationManager::getTitle($this->company->fresh(), EditPlatoon::class));
+        $this->assertSame('Squads', ChildrenRelationManager::getTitle($this->platoon->fresh(), EditUnit::class));
+        $this->assertSame('Platoons', ChildrenRelationManager::getTitle($this->company->fresh(), EditUnit::class));
     }
 
     #[Test]
     public function the_lowest_level_has_no_children_to_manage(): void
     {
-        $this->assertFalse(SquadsRelationManager::canViewForRecord($this->squad->fresh(), EditSquad::class));
-        $this->assertTrue(SquadsRelationManager::canViewForRecord($this->platoon->fresh(), EditPlatoon::class));
+        $this->assertFalse(ChildrenRelationManager::canViewForRecord($this->squad->fresh(), EditUnit::class));
+        $this->assertTrue(ChildrenRelationManager::canViewForRecord($this->platoon->fresh(), EditUnit::class));
     }
 
     #[Test]
-    public function middle_levels_use_the_platoon_editor_and_the_lowest_uses_the_squad_editor(): void
+    public function every_level_uses_the_one_unit_editor(): void
     {
-        Livewire::test(EditPlatoon::class, ['record' => $this->platoon->getRouteKey()])->assertOk();
-        Livewire::test(EditSquad::class, ['record' => $this->squad->getRouteKey()])->assertOk();
+        Livewire::test(EditUnit::class, ['record' => $this->platoon->getRouteKey()])->assertOk();
+        Livewire::test(EditUnit::class, ['record' => $this->squad->getRouteKey()])->assertOk();
     }
 
     #[Test]
@@ -84,11 +84,31 @@ class DeepUnitEditorTest extends TestCase
     #[Test]
     public function deleting_a_unit_archives_everything_beneath_it(): void
     {
-        Livewire::test(EditPlatoon::class, ['record' => $this->company->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $this->company->getRouteKey()])
             ->callAction('delete');
 
         $this->assertSoftDeleted($this->company);
         $this->assertSoftDeleted($this->platoon);
         $this->assertSoftDeleted($this->squad);
+    }
+
+    #[Test]
+    public function deleting_the_lowest_level_moves_its_members_up_to_the_parent(): void
+    {
+        $member = $this->createMember(['division_id' => $this->division->id, 'unit_id' => $this->squad->id]);
+
+        Livewire::test(EditUnit::class, ['record' => $this->squad->getRouteKey()])
+            ->callAction('delete');
+
+        $this->assertSoftDeleted($this->squad);
+        $this->assertNotSoftDeleted($this->platoon);
+        $this->assertSame($this->platoon->id, $member->fresh()->unit_id);
+    }
+
+    #[Test]
+    public function the_unit_list_shows_every_level_of_the_division(): void
+    {
+        Livewire::test(ListUnits::class)
+            ->assertCanSeeTableRecords([$this->company, $this->platoon, $this->squad]);
     }
 }

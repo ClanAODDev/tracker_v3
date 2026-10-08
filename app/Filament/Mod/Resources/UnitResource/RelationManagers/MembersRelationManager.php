@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
+namespace App\Filament\Mod\Resources\UnitResource\RelationManagers;
 
 use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;

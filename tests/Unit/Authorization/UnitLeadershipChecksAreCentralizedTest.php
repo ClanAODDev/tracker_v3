@@ -12,12 +12,11 @@ class UnitLeadershipChecksAreCentralizedTest extends TestCase
     private const PATTERN = '/isPlatoonLeader\(|isSquadLeader\(|leader_id\s*(===|==|!==|!=)|(===|==|!==|!=)\s*\$[a-zA-Z_>()?-]*leader_id|Position::(PLATOON_LEADER|SQUAD_LEADER)/';
 
     private const ALLOWED = [
-        'Authorization/UnitTreeHierarchy.php'                          => 2,
-        'Filament/Mod/Resources/PlatoonResource/Pages/EditPlatoon.php' => 2,
-        'Filament/Mod/Resources/SquadResource/Pages/EditSquad.php'     => 2,
-        'Jobs/CleanupUnassignedLeaders.php'                            => 2,
-        'Models/Member.php'                                            => 4,
-        'Transformers/OrgChartTransformer.php'                         => 1,
+        'Authorization/UnitTreeHierarchy.php'                    => 2,
+        'Filament/Mod/Resources/UnitResource/Pages/EditUnit.php' => 2,
+        'Jobs/CleanupUnassignedLeaders.php'                      => 2,
+        'Models/Member.php'                                      => 4,
+        'Transformers/OrgChartTransformer.php'                   => 1,
     ];
 
     #[Test]

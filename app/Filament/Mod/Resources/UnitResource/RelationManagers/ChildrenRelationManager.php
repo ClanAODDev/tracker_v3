@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Filament\Mod\Resources\PlatoonResource\RelationManagers;
+namespace App\Filament\Mod\Resources\UnitResource\RelationManagers;
 
-use App\Filament\Mod\Resources\PlatoonResource;
-use App\Filament\Mod\Resources\SquadResource;
+use App\Filament\Mod\Resources\UnitResource;
 use App\Rules\ResolvesToImage;
 use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkActionGroup;
@@ -16,7 +15,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Model;
 
-class SquadsRelationManager extends RelationManager
+class ChildrenRelationManager extends RelationManager
 {
     protected static string $relationship = 'children';
 
@@ -79,9 +78,7 @@ class SquadsRelationManager extends RelationManager
                 }),
             ])
             ->recordActions([
-                EditAction::make()->url(fn (Model $record): string => $record->isSquad()
-                    ? SquadResource::getUrl('edit', ['record' => $record])
-                    : PlatoonResource::getUrl('edit', ['record' => $record])),
+                EditAction::make()->url(fn (Model $record): string => UnitResource::getUrl('edit', ['record' => $record])),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

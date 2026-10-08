@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Mod\Resources\PlatoonResource\Pages;
+namespace App\Filament\Mod\Resources\UnitResource\Pages;
 
 use App\Enums\Position;
-use App\Filament\Mod\Resources\PlatoonResource;
+use App\Filament\Mod\Resources\UnitResource;
 use App\Models\Member;
 use App\Models\Unit;
 use App\Services\Units\UnitAssignment;
@@ -13,7 +13,7 @@ use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 
-class EditPlatoon extends EditRecord
+class EditUnit extends EditRecord
 {
     public function getRedirectUrl(): ?string
     {
@@ -25,7 +25,7 @@ class EditPlatoon extends EditRecord
         return sprintf('Edit %s', $this->record->levelLabel());
     }
 
-    protected static string $resource = PlatoonResource::class;
+    protected static string $resource = UnitResource::class;
 
     public function mount($record): void
     {
@@ -51,6 +51,8 @@ class EditPlatoon extends EditRecord
         $units = app(UnitAssignment::class);
         $unit  = $this->record;
 
+        $position = $unit->isSquad() ? Position::SQUAD_LEADER : Position::PLATOON_LEADER;
+
         $originalLeaderId = $state['original_leader_id'] ?? null;
         $newLeaderId      = (int) $this->record->leader_id;
 
@@ -58,17 +60,17 @@ class EditPlatoon extends EditRecord
             if ($newLeaderId) {
                 Member::where('clan_id', $newLeaderId)->update([
                     'unit_id'  => $unit->id,
-                    'position' => Position::PLATOON_LEADER,
+                    'position' => $position,
                 ]);
 
                 $units->clearLeadership([$newLeaderId], except: $unit);
             }
 
-            $originalLeaderStillPlatoonLeader = $originalLeaderId && Member::where('clan_id', $originalLeaderId)
-                ->where('position', Position::PLATOON_LEADER)
+            $originalLeaderStillLeader = $originalLeaderId && Member::where('clan_id', $originalLeaderId)
+                ->where('position', $position)
                 ->exists();
 
-            if ($originalLeaderStillPlatoonLeader) {
+            if ($originalLeaderStillLeader) {
                 Member::where('clan_id', $originalLeaderId)->update([
                     'unit_id'  => null,
                     'position' => Position::MEMBER,
@@ -84,19 +86,25 @@ class EditPlatoon extends EditRecord
         return [
 
             DeleteAction::make()
-                ->modalDescription(fn () => sprintf('Assigned members will be removed from this %s and every unit within it. Are you sure?', strtolower($this->record->levelLabel())))
+                ->modalDescription(fn () => $this->record->isSquad()
+                    ? sprintf('Assigned members will be moved up to the parent %s. Are you sure?', strtolower($this->record->parent?->levelLabel() ?? 'unit'))
+                    : sprintf('Assigned members will be removed from this %s and every unit within it. Are you sure?', strtolower($this->record->levelLabel())))
                 ->action(function ($record) {
                     $units = app(UnitAssignment::class);
                     $unit  = $record;
 
-                    $unit->allMembers()->update(['unit_id' => null]);
+                    if ($unit->isSquad()) {
+                        $unit->members()->update(['unit_id' => $unit->parent_id]);
+                    } else {
+                        $unit->allMembers()->update(['unit_id' => null]);
 
-                    Unit::query()
-                        ->where('path', 'like', $unit->path . '%')
-                        ->where('id', '<>', $unit->id)
-                        ->orderByDesc('depth')
-                        ->get()
-                        ->each(fn (Unit $descendant) => $units->archive($descendant, recordActivity: false));
+                        Unit::query()
+                            ->where('path', 'like', $unit->path . '%')
+                            ->where('id', '<>', $unit->id)
+                            ->orderByDesc('depth')
+                            ->get()
+                            ->each(fn (Unit $descendant) => $units->archive($descendant, recordActivity: false));
+                    }
 
                     $units->archive($unit);
 
@@ -107,7 +115,7 @@ class EditPlatoon extends EditRecord
                         ->send();
 
                     return $record->parent
-                        ? redirect()->route('filament.mod.resources.platoons.edit', $record->parent)
+                        ? redirect()->route('filament.mod.resources.units.edit', $record->parent)
                         : redirect()->route('filament.mod.resources.divisions.edit', $record->division);
                 }),
         ];

@@ -2,7 +2,7 @@
 
 namespace App\Filament\Mod\Resources\DivisionResource\RelationManagers;
 
-use App\Filament\Mod\Resources\PlatoonResource;
+use App\Filament\Mod\Resources\UnitResource;
 use App\Models\Unit;
 use App\Rules\ResolvesToImage;
 use App\Services\Units\UnitAssignment;
@@ -89,7 +89,7 @@ class PlatoonsRelationManager extends RelationManager
                     }),
             ])
             ->recordActions([
-                EditAction::make()->url(fn (Model $record): string => PlatoonResource::getUrl('edit',
+                EditAction::make()->url(fn (Model $record): string => UnitResource::getUrl('edit',
                     ['record' => $record])),
                 RestoreAction::make()->using(function (Unit $record) {
                     app(UnitAssignment::class)->restore($record);
