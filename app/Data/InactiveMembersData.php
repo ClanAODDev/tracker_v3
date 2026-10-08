@@ -50,6 +50,7 @@ class InactiveMembersData
                 'name'           => $division->name,
                 'slug'           => $division->slug,
                 'platoonLabel'   => $division->locality('Platoon'),
+                'hasUnits'       => ! $division->isFlat(),
                 'inactivityDays' => $inactivityDays,
             ],
             'stats'         => $this->buildStats($this->allInactiveMembers, $this->flaggedMembers, $inactivityDays),

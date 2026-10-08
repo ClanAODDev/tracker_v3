@@ -43,6 +43,7 @@ class DivisionVoiceReportData
                 'name'         => $this->division->name,
                 'slug'         => $this->division->slug,
                 'platoonLabel' => $this->division->locality('platoon'),
+                'hasUnits'     => ! $this->division->isFlat(),
             ],
             'stats'   => $this->stats,
             'members' => $this->discordIssues->map(fn (Member $member) => [

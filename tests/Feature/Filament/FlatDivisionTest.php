@@ -122,6 +122,51 @@ class FlatDivisionTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page->missing('memberList'));
     }
 
+    #[Test]
+    public function the_org_chart_of_a_flat_division_lists_its_members(): void
+    {
+        $division = $this->flatDivision();
+        $co       = $this->createMemberWithUser(['division_id' => $division->id, 'position' => Position::COMMANDING_OFFICER], ['role' => Role::SENIOR_LEADER]);
+        $this->createMember(['division_id' => $division->id]);
+        $this->createMember(['division_id' => $division->id]);
+
+        $tree = $this->actingAs($co)
+            ->getJson(route('division.structure.data', $division->slug))
+            ->assertOk()
+            ->json();
+
+        $roster = collect($tree['children'])->firstWhere('id', 'roster');
+
+        $this->assertCount(2, $roster['children']);
+    }
+
+    #[Test]
+    public function the_org_chart_of_a_division_with_units_has_no_roster(): void
+    {
+        [$division, $co] = $this->divisionWithCommander();
+
+        $tree = $this->actingAs($co)
+            ->getJson(route('division.structure.data', $division->slug))
+            ->json();
+
+        $this->assertNull(collect($tree['children'])->firstWhere('id', 'roster'));
+    }
+
+    #[Test]
+    public function the_member_reports_drop_the_unit_column_for_a_flat_division(): void
+    {
+        $division = $this->flatDivision();
+        $co       = $this->createMemberWithUser(['division_id' => $division->id, 'position' => Position::COMMANDING_OFFICER], ['role' => Role::SENIOR_LEADER]);
+
+        $this->actingAs($co);
+
+        $this->get(route('division.inactive-members', $division->slug))
+            ->assertInertia(fn (AssertableInertia $page) => $page->where('division.hasUnits', false));
+
+        $this->get(route('division.voice-report', $division->slug))
+            ->assertInertia(fn (AssertableInertia $page) => $page->where('division.hasUnits', false));
+    }
+
     private function flatDivision(): Division
     {
         $division = $this->createActiveDivision();
