@@ -30,11 +30,15 @@ class DivisionOrgChartController extends Controller
     {
         $handleFilter = $this->filterHandlesToDivisionHandles($division);
 
-        $division->load([
-            'topUnits.leader.handles'           => $handleFilter,
-            'topUnits.children.leader.handles'  => $handleFilter,
-            'topUnits.children.members.handles' => $handleFilter,
-        ]);
+        $units = $division->units()
+            ->with([
+                'division.unitLevels',
+                'leader.handles'  => $handleFilter,
+                'members.handles' => $handleFilter,
+            ])
+            ->orderBy('order')
+            ->orderBy('id')
+            ->get();
 
         $leaders = $division->leaders()
             ->with(['handles' => $handleFilter])
@@ -42,7 +46,7 @@ class DivisionOrgChartController extends Controller
             ->orderByDesc('rank')
             ->get();
 
-        return (new OrgChartTransformer)->transform($division, $leaders);
+        return (new OrgChartTransformer)->transform($division, $leaders, $units);
     }
 
     private function filterHandlesToDivisionHandles(Division $division): Closure
