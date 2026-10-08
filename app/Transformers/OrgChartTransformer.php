@@ -14,7 +14,7 @@ class OrgChartTransformer
 
     private Collection $unitsByParent;
 
-    public function transform(Division $division, $leaders, Collection $units): array
+    public function transform(Division $division, $leaders, Collection $units, ?Collection $members = null): array
     {
         $this->division      = $division;
         $this->unitsByParent = $units->groupBy(fn (Unit $unit) => $unit->parent_id ?? 0);
@@ -29,12 +29,31 @@ class OrgChartTransformer
             $children[] = $this->transformUnit($unit);
         }
 
+        if ($division->isFlat() && $members?->isNotEmpty()) {
+            $children[] = $this->transformRoster($members);
+        }
+
         return [
             'id'       => "division-{$division->id}",
             'name'     => $division->name,
             'type'     => 'division',
             'logo'     => $division->getLogoPath(),
             'children' => $children,
+        ];
+    }
+
+    private function transformRoster(Collection $members): array
+    {
+        return [
+            'id'       => 'roster',
+            'name'     => 'Members',
+            'type'     => 'squad',
+            'children' => $members
+                ->sortByDesc('rank')
+                ->sortBy('name')
+                ->map(fn (Member $member) => $this->transformMember($member, 'member'))
+                ->values()
+                ->all(),
         ];
     }
 

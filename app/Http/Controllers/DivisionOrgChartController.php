@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Position;
 use App\Models\Division;
 use App\Transformers\OrgChartTransformer;
 use Closure;
@@ -46,7 +47,14 @@ class DivisionOrgChartController extends Controller
             ->orderByDesc('rank')
             ->get();
 
-        return (new OrgChartTransformer)->transform($division, $leaders, $units);
+        $roster = $division->isFlat()
+            ? $division->members()
+                ->whereNotIn('position', [Position::COMMANDING_OFFICER, Position::EXECUTIVE_OFFICER])
+                ->with(['handles' => $handleFilter])
+                ->get()
+            : null;
+
+        return (new OrgChartTransformer)->transform($division, $leaders, $units, $roster);
     }
 
     private function filterHandlesToDivisionHandles(Division $division): Closure
