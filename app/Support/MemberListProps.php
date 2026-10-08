@@ -26,6 +26,7 @@ class MemberListProps
             'division' => [
                 'name'         => $division->name,
                 'slug'         => $division->slug,
+                'hasUnits'     => ! $division->isFlat(),
                 'platoonLabel' => $division->locality('Platoon'),
                 'squadLabel'   => $division->locality('Squad'),
                 'handleTypes'  => $division->handles

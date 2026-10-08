@@ -70,6 +70,7 @@ export interface BulkConfig {
 export interface MemberListDivision {
     name: string;
     slug: string;
+    hasUnits: boolean;
     platoonLabel: string;
     squadLabel: string;
     handleTypes: HandleType[];

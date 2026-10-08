@@ -37,6 +37,7 @@ readonly class DivisionShowData
                 'slug'                  => $division->slug,
                 'abbr'                  => $division->abbreviation,
                 'logo'                  => $division->getLogoPath(),
+                'hasUnits'              => ! $division->isFlat(),
                 'platoonLabel'          => $division->locality('platoon'),
                 'childLabelPlural'      => $division->unitLevel(2)?->label_plural ?? 'Squads',
                 'isShutdown'            => $division->isShutdown(),
@@ -124,7 +125,7 @@ readonly class DivisionShowData
             'canViewAllActivity' => $user->can(Ability::ViewAllActivity),
             'allActivityUrl'     => route('filament.mod.resources.activities.index'),
             'organize'           => [
-                'canOrganize' => $user->can('manageUnassigned', User::class),
+                'canOrganize' => ! $division->isFlat() && $user->can('manageUnassigned', User::class),
                 'members'     => $user->can('manageUnassigned', User::class)
                     ? $division->unassigned()->get()
                         ->map(fn (Member $member) => [

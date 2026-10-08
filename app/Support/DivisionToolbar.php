@@ -64,7 +64,9 @@ class DivisionToolbar
         }
 
         $tools[] = ['key' => 'structure', 'label' => 'Structure', 'icon' => 'network', 'href' => route('division.structure', $slug), 'tier' => 'overflow'];
-        $tools[] = ['key' => 'leader-powers', 'label' => 'Leader Powers', 'icon' => 'shield-check', 'href' => route('division.leader-powers', $slug), 'tier' => 'overflow'];
+        if (! $division->isFlat()) {
+            $tools[] = ['key' => 'leader-powers', 'label' => 'Leader Powers', 'icon' => 'shield-check', 'href' => route('division.leader-powers', $slug), 'tier' => 'overflow'];
+        }
         $tools[] = ['key' => 'part-timers', 'label' => 'Part Timers', 'icon' => 'user-cog', 'href' => route('partTimers', $slug), 'tier' => 'overflow'];
 
         if ($user->can('create', Leave::class)) {

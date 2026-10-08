@@ -3,7 +3,7 @@
 namespace Tests\Feature\Filament;
 
 use App\Enums\Position;
-use App\Filament\Mod\Resources\SquadResource\Pages\EditSquad;
+use App\Filament\Mod\Resources\UnitResource\Pages\EditUnit;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -36,7 +36,7 @@ class SquadResourceLeaderScopeTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $squad->getRouteKey()])
             ->fillForm(['leader_id' => $outsider->clan_id])
             ->call('save')
             ->assertHasFormErrors(['leader_id']);
@@ -55,7 +55,7 @@ class SquadResourceLeaderScopeTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditSquad::class, ['record' => $squad->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $squad->getRouteKey()])
             ->fillForm(['leader_id' => $member->clan_id])
             ->call('save')
             ->assertHasNoFormErrors();

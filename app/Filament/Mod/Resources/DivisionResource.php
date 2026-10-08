@@ -141,7 +141,7 @@ class DivisionResource extends Resource
                                             ->relationship('unitLevels')
                                             ->orderColumn('depth')
                                             ->reorderable(false)
-                                            ->minItems(fn (Division $record) => max(1, (int) $record->units()->max('depth')))
+                                            ->minItems(fn (Division $record) => (int) $record->units()->max('depth'))
                                             ->maxItems(4)
                                             ->live()
                                             ->schema([
@@ -150,7 +150,7 @@ class DivisionResource extends Resource
                                                 TextInput::make('leader_title')->required()->maxLength(50),
                                             ])
                                             ->itemLabel(fn (array $state) => $state['label'] ?? null)
-                                            ->helperText('Levels can only be removed once no units use them. Divisions can have up to four levels.'),
+                                            ->helperText('Levels can only be removed once no units use them. Divisions can have up to four levels, or none at all if members are not organized into units.'),
                                         Placeholder::make('leader_powers')
                                             ->label('What leaders can do')
                                             ->content(fn (Get $get, Division $record) => self::leaderPowersPreview($get, $record)),
@@ -454,6 +454,10 @@ class DivisionResource extends Resource
     {
         $levels = collect(array_values($get('unitLevels') ?? []))
             ->map(fn (array $level, int $index) => [...$level, 'depth' => $index + 1]);
+
+        if ($levels->isEmpty()) {
+            return new HtmlString('<p style="font-size: 0.875rem; opacity: 0.7;">This division has no unit levels. Members belong directly to the division.</p>');
+        }
 
         $limit = Rank::tryFrom((int) $get('settings.max_platoon_leader_rank'))
             ?? Rank::from($division->settings()->get('max_platoon_leader_rank'));

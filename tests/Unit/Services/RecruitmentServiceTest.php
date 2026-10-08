@@ -69,6 +69,19 @@ class RecruitmentServiceTest extends TestCase
     }
 
     #[Test]
+    public function create_member_in_a_flat_division_needs_no_unit(): void
+    {
+        $division = $this->createActiveDivision();
+        DivisionUnitLevel::where('division_id', $division->id)->delete();
+        $recruiter = Member::factory()->create(['clan_id' => 99999]);
+
+        $member = $this->service->createMember(12345, 'TestMember', $division->fresh(), 1, null, null, [], $recruiter);
+
+        $this->assertSame($division->id, $member->division_id);
+        $this->assertNull($member->unit_id);
+    }
+
+    #[Test]
     public function create_member_rejects_member_already_in_a_division(): void
     {
         $division  = $this->createActiveDivision();

@@ -33,7 +33,7 @@ interface InactiveRow {
 }
 
 interface Props {
-    division: { name: string; slug: string; platoonLabel: string; inactivityDays: number };
+    division: { name: string; slug: string; platoonLabel: string; hasUnits: boolean; inactivityDays: number };
     stats: { total: number; flagged: number; severe: number };
     activePlatoon: number | null;
     platoons: Array<{ id: number; name: string; count: number }>;
@@ -70,7 +70,7 @@ export default function InactiveMembers({
     const rows = tab === 'inactive' ? inactive : flagged;
     const filtered = useMemo(() => {
         const q = query.toLowerCase();
-        return q ? rows.filter((r) => r.name.toLowerCase().includes(q) || r.unit.toLowerCase().includes(q)) : rows;
+        return q ? rows.filter((r) => r.name.toLowerCase().includes(q) || (division.hasUnits && r.unit.toLowerCase().includes(q))) : rows;
     }, [rows, query]);
 
     function toggleTab(next: 'inactive' | 'flagged') {
@@ -125,21 +125,23 @@ export default function InactiveMembers({
                 />
 
                 <div className="flex flex-wrap items-center gap-2">
-                    <SimpleSelect
-                        value={activePlatoon ? String(activePlatoon) : '__all'}
-                        onChange={(v) =>
-                            router.get(
-                                `/divisions/${division.slug}/inactive-members${v === '__all' ? '' : `/${v}`}`,
-                            )
-                        }
-                        options={[
-                            { value: '__all', label: `All ${pluralize(division.platoonLabel).toLowerCase()}` },
-                            ...platoons.map((p) => ({
-                                value: String(p.id),
-                                label: p.count > 0 ? `${p.name} (${p.count})` : p.name,
-                            })),
-                        ]}
-                    />
+                    {division.hasUnits && (
+                        <SimpleSelect
+                            value={activePlatoon ? String(activePlatoon) : '__all'}
+                            onChange={(v) =>
+                                router.get(
+                                    `/divisions/${division.slug}/inactive-members${v === '__all' ? '' : `/${v}`}`,
+                                )
+                            }
+                            options={[
+                                { value: '__all', label: `All ${pluralize(division.platoonLabel).toLowerCase()}` },
+                                ...platoons.map((p) => ({
+                                    value: String(p.id),
+                                    label: p.count > 0 ? `${p.name} (${p.count})` : p.name,
+                                })),
+                            ]}
+                        />
+                    )}
                     <div className="relative">
                         <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
@@ -174,7 +176,7 @@ export default function InactiveMembers({
                                             <TableHead>Last voice activity</TableHead>
                                             {can.remind && <TableHead>Reminded</TableHead>}
                                             {tab === 'inactive' && <TableHead>Status</TableHead>}
-                                            <TableHead>{division.platoonLabel} / Squad</TableHead>
+                                            {division.hasUnits && <TableHead>{division.platoonLabel} / Squad</TableHead>}
                                             <TableHead className="text-right">Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>
@@ -208,7 +210,7 @@ export default function InactiveMembers({
                                                 {tab === 'inactive' && (
                                                     <TableCell className="text-muted-foreground">{row.status}</TableCell>
                                                 )}
-                                                <TableCell className="text-muted-foreground">{row.unit}</TableCell>
+                                                {division.hasUnits && <TableCell className="text-muted-foreground">{row.unit}</TableCell>}
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-1.5">
                                                         {tab === 'inactive' ? (

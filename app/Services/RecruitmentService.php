@@ -28,7 +28,7 @@ class RecruitmentService
         string $name,
         Division $division,
         int $rankId,
-        int $platoonId,
+        ?int $platoonId,
         ?int $squadId,
         array $handles,
         Member $recruiter
@@ -41,16 +41,21 @@ class RecruitmentService
             );
         }
 
-        $platoon = Unit::query()->whereNull('parent_id')->where('division_id', $division->id)->find($platoonId);
+        $platoon = null;
+        $squad   = null;
 
-        if (! $platoon) {
-            throw new RecruitmentFailedException('Selected platoon does not belong to this division.');
-        }
+        if (! $division->isFlat()) {
+            $platoon = Unit::query()->whereNull('parent_id')->where('division_id', $division->id)->find($platoonId);
 
-        $squad = $squadId ? $platoon->descendantsQuery()->find($squadId) : null;
+            if (! $platoon) {
+                throw new RecruitmentFailedException('Selected platoon does not belong to this division.');
+            }
 
-        if ($squadId && ! $squad) {
-            throw new RecruitmentFailedException('Selected unit does not belong to the selected platoon.');
+            $squad = $squadId ? $platoon->descendantsQuery()->find($squadId) : null;
+
+            if ($squadId && ! $squad) {
+                throw new RecruitmentFailedException('Selected unit does not belong to the selected platoon.');
+            }
         }
 
         return DB::transaction(function () use (
@@ -75,7 +80,7 @@ class RecruitmentService
                 'division_id'            => $division->id,
                 'flagged_for_inactivity' => false,
                 'last_promoted_at'       => now(),
-                'unit_id'                => ($squad ?? $platoon)->id,
+                'unit_id'                => ($squad ?? $platoon)?->id,
             ])->save();
 
             $this->handles->setForDivision($member, $division, $handles);

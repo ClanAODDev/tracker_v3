@@ -11,10 +11,9 @@ use App\Filament\Mod\Resources\LeaveResource;
 use App\Filament\Mod\Resources\MemberAwardResource;
 use App\Filament\Mod\Resources\MemberRequestResource;
 use App\Filament\Mod\Resources\MemberResource;
-use App\Filament\Mod\Resources\PlatoonResource;
 use App\Filament\Mod\Resources\RankActionResource;
-use App\Filament\Mod\Resources\SquadResource;
 use App\Filament\Mod\Resources\TransferResource;
+use App\Filament\Mod\Resources\UnitResource;
 use App\Models\Activity;
 use App\Models\Award;
 use App\Models\DivisionTag;
@@ -33,10 +32,9 @@ class FilamentResourceMatrixTest extends PermissionMatrixTestCase
         'MemberAward'   => MemberAwardResource::class,
         'MemberRequest' => MemberRequestResource::class,
         'Member'        => MemberResource::class,
-        'Platoon'       => PlatoonResource::class,
         'RankAction'    => RankActionResource::class,
-        'Squad'         => SquadResource::class,
         'Transfer'      => TransferResource::class,
+        'Unit'          => UnitResource::class,
     ];
 
     #[Test]

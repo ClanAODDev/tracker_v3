@@ -8,11 +8,11 @@ use App\Filament\Mod\Resources\ActivityResource\Pages\ListActivities;
 use App\Filament\Mod\Resources\DivisionResource;
 use App\Filament\Mod\Resources\DivisionTagResource\Pages\ListDivisionTags;
 use App\Filament\Mod\Resources\MemberResource\Pages\ListMembers;
-use App\Filament\Mod\Resources\PlatoonResource\Pages\EditPlatoon;
-use App\Filament\Mod\Resources\PlatoonResource\RelationManagers\MembersRelationManager;
 use App\Filament\Mod\Resources\RankActionResource\Pages\EditRankAction;
 use App\Filament\Mod\Resources\RankActionResource\Pages\ListRankActions;
 use App\Filament\Mod\Resources\TransferResource\Pages\ListTransfers;
+use App\Filament\Mod\Resources\UnitResource\Pages\EditUnit;
+use App\Filament\Mod\Resources\UnitResource\RelationManagers\MembersRelationManager;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\RankAction;
@@ -58,7 +58,7 @@ class FilamentVisibilityMatrixTest extends PermissionMatrixTestCase
             'EditRankAction requeue action'            => fn () => $this->assertHeaderActionVisible($awaitingAcceptance, 'requeue'),
             'Platoon A1 members: transfer bulk action' => fn () => Livewire::test(MembersRelationManager::class, [
                 'ownerRecord' => $this->world->platoons['A1'],
-                'pageClass'   => EditPlatoon::class,
+                'pageClass'   => EditUnit::class,
             ])->assertTableBulkActionVisible('member_transfer'),
         ];
 

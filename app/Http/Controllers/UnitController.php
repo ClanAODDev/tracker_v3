@@ -73,7 +73,7 @@ class UnitController extends Controller
             'assignUrl'      => url('/members/assign-squad'),
             'backUrl'        => $unit->url($division),
             'breadcrumbs'    => $this->ancestry($division, $unit, linkSelf: true),
-            'createSquadUrl' => route('filament.mod.resources.platoons.edit', $unit->id),
+            'createSquadUrl' => route('filament.mod.resources.units.edit', $unit->id),
         ]);
     }
 
@@ -100,7 +100,7 @@ class UnitController extends Controller
                 'squadLabel'      => $childLabel,
                 'logo'            => $platoon->getLogoPath(),
                 'canManage'       => $canManage,
-                'editUrl'         => $canManage ? route('filament.mod.resources.platoons.edit', $platoon->id) : null,
+                'editUrl'         => $canManage ? route('filament.mod.resources.units.edit', $platoon->id) : null,
                 'manageUrl'       => $canManage ? route('unit.manage', [$division->slug, $platoon]) : null,
                 'unassignedCount' => $unassigned->count(),
                 'breadcrumbs'     => $this->ancestry($division, $platoon),
@@ -156,7 +156,7 @@ class UnitController extends Controller
                 'name'        => $squad->name ?: 'Untitled ' . $squad->levelLabel(),
                 'squadLabel'  => $squad->levelLabel(),
                 'canManage'   => $canManage,
-                'editUrl'     => $canManage ? route('filament.mod.resources.squads.edit', $squad->id) : null,
+                'editUrl'     => $canManage ? route('filament.mod.resources.units.edit', $squad->id) : null,
                 'breadcrumbs' => $this->ancestry($division, $squad),
             ],
             'squads' => ($parent?->children ?? collect())->map(fn (Unit $sibling, $i) => [

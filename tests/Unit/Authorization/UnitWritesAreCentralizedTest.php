@@ -12,22 +12,20 @@ class UnitWritesAreCentralizedTest extends TestCase
     private const PATTERN = "/'(platoon_id|squad_id|leader_id|unit_id)'\\s*=>|->(platoon_id|squad_id|leader_id|unit_id)\\s*=[^=>]|->(platoon|squad|leader|unit)\\(\\)->(associate|dissociate)|\\b(Platoon|Squad|Unit)::(?!class\\b)[^;]*?->(update|delete|create|restore|forceDelete|insert)\\(/";
 
     private const ALLOWED = [
-        'Filament/Admin/Resources/DivisionResource/Pages/EditDivision.php'                   => 3,
-        'Filament/Mod/Resources/MemberResource.php'                                          => 1,
-        'Filament/Mod/Resources/MemberResource/Pages/EditMember.php'                         => 1,
-        'Filament/Mod/Resources/PlatoonResource/Pages/EditPlatoon.php'                       => 3,
-        'Filament/Mod/Resources/PlatoonResource/RelationManagers/MembersRelationManager.php' => 1,
-        'Filament/Mod/Resources/SquadResource/Pages/EditSquad.php'                           => 3,
-        'Filament/Mod/Resources/SquadResource/RelationManagers/MembersRelationManager.php'   => 1,
-        'Http/Controllers/BulkMoveController.php'                                            => 3,
-        'Http/Controllers/DivisionController.php'                                            => 1,
-        'Http/Controllers/MemberController.php'                                              => 2,
-        'Http/Controllers/SquadController.php'                                               => 2,
-        'Http/Requests/Squad/AssignSquadMemberRequest.php'                                   => 1,
-        'Jobs/ResetOrphanedUnitAssignments.php'                                              => 2,
-        'Models/Member.php'                                                                  => 2,
-        'Services/RecruitmentService.php'                                                    => 1,
-        'Services/Units/UnitAssignment.php'                                                  => 2,
+        'Filament/Admin/Resources/DivisionResource/Pages/EditDivision.php'                => 3,
+        'Filament/Mod/Resources/MemberResource.php'                                       => 1,
+        'Filament/Mod/Resources/MemberResource/Pages/EditMember.php'                      => 1,
+        'Filament/Mod/Resources/UnitResource/Pages/EditUnit.php'                          => 4,
+        'Filament/Mod/Resources/UnitResource/RelationManagers/MembersRelationManager.php' => 1,
+        'Http/Controllers/BulkMoveController.php'                                         => 3,
+        'Http/Controllers/DivisionController.php'                                         => 1,
+        'Http/Controllers/MemberController.php'                                           => 2,
+        'Http/Controllers/SquadController.php'                                            => 2,
+        'Http/Requests/Squad/AssignSquadMemberRequest.php'                                => 1,
+        'Jobs/ResetOrphanedUnitAssignments.php'                                           => 2,
+        'Models/Member.php'                                                               => 2,
+        'Services/RecruitmentService.php'                                                 => 1,
+        'Services/Units/UnitAssignment.php'                                               => 2,
     ];
 
     #[Test]
