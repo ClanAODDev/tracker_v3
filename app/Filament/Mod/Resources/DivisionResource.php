@@ -278,9 +278,10 @@ class DivisionResource extends Resource
                                         Placeholder::make('channel_info')
                                             ->hiddenLabel()
                                             ->content(fn (Division $record) => sprintf(
-                                                'Officers: %s | Members: %s',
+                                                'Officers: %s | Members: %s | Division: %s',
                                                 $record->routeNotificationForOfficers() ?? 'Not configured',
-                                                $record->routeNotificationForMembers() ?? 'Not configured'
+                                                $record->routeNotificationForMembers() ?? 'Not configured',
+                                                $record->division_channel ?? 'Not configured'
                                             )),
                                     ]),
 
