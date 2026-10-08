@@ -211,7 +211,12 @@ class Division extends Model
 
     public function deepestUnitLevel(): int
     {
-        return (int) ($this->unitLevels->max('depth') ?? 2);
+        return (int) ($this->unitLevels->max('depth') ?? 0);
+    }
+
+    public function isFlat(): bool
+    {
+        return $this->deepestUnitLevel() === 0;
     }
 
     public function unitLevel(int $depth): ?DivisionUnitLevel

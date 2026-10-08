@@ -132,7 +132,7 @@ export function MemberTable({
 
     const assignmentLabel = assignmentKind === 'squad' ? division.squadLabel : division.platoonLabel;
 
-    const columns = useMemberColumns({
+    const allColumns = useMemberColumns({
         assignmentLabel,
         bulkMode,
         selectedTags,
@@ -143,6 +143,11 @@ export function MemberTable({
         selectedFieldValues,
         handleTypes: division.handleTypes,
     });
+
+    const columns = useMemo(
+        () => (division.hasUnits ? allColumns : allColumns.filter((column) => column.id !== 'assignment')),
+        [allColumns, division.hasUnits],
+    );
 
     const table = useReactTable({
         data: rows,

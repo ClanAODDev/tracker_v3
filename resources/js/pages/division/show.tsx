@@ -29,6 +29,7 @@ interface DivisionShowProps {
         name: string;
         slug: string;
         logo: string | null;
+        hasUnits: boolean;
         platoonLabel: string;
         childLabelPlural: string;
         isShutdown: boolean;
@@ -370,6 +371,7 @@ export default function DivisionShow({
                 )}
 
                 {/* Platoons */}
+                {d.hasUnits && (
                 <section ref={platoonsRef}>
                     <SectionTitle
                         action={
@@ -420,6 +422,7 @@ export default function DivisionShow({
                         </div>
                     )}
                 </section>
+                )}
             </div>
 
             {d.applicationRequired && d.canRecruit && (

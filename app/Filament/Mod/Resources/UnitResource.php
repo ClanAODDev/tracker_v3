@@ -40,6 +40,13 @@ class UnitResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Organization';
 
+    public static function shouldRegisterNavigation(): bool
+    {
+        $division = auth()->user()?->member?->division;
+
+        return $division !== null && ! $division->isFlat();
+    }
+
     public static function form(Schema $schema): Schema
     {
         $divisionId = Division::whereSlug(request('division'))->first()->id ?? auth()->user()->member->division_id;

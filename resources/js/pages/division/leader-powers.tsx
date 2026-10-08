@@ -80,6 +80,12 @@ export default function LeaderPowers({ division, levels, examples }: Props) {
                         </p>
                     </div>
 
+                    {levels.length === 0 && (
+                        <p className="rounded-md border bg-card p-4 text-sm text-muted-foreground">
+                            This division has no unit levels, so there are no unit leaders. Members belong directly to the division.
+                        </p>
+                    )}
+
                     <div className="grid gap-4">
                         {levels.map((level) => (
                             <Card key={level.depth}>
@@ -110,7 +116,7 @@ export default function LeaderPowers({ division, levels, examples }: Props) {
                     <div>
                         <h2 className="text-lg font-semibold">How powers follow depth</h2>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Divisions can have one to four levels. Only the bottom level gets squad leader powers; any
+                            Divisions can have no levels, or up to four. Only the bottom level gets squad leader powers; any
                             level above it gets platoon leader powers, and a division with one level treats its leader
                             as a platoon leader.
                         </p>

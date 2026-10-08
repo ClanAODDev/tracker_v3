@@ -177,7 +177,7 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->can('manageUnassigned', User::class)) {
+        if (! $division->isFlat() && $user->can('manageUnassigned', User::class)) {
             self::pushAction(
                 $actions,
                 count($division->unassigned),

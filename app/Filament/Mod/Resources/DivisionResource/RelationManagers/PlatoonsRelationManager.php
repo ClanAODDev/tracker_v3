@@ -26,6 +26,11 @@ class PlatoonsRelationManager extends RelationManager
 {
     protected static string $relationship = 'topUnits';
 
+    public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
+    {
+        return ! $ownerRecord->isFlat();
+    }
+
     public static function getTitle(Model $ownerRecord, string $pageClass): string
     {
         return $ownerRecord->unitLevel(1)?->label_plural ?? 'Platoons';
