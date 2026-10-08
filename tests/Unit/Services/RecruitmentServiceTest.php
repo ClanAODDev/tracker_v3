@@ -3,8 +3,10 @@
 namespace Tests\Unit\Services;
 
 use App\Exceptions\RecruitmentFailedException;
+use App\Models\DivisionUnitLevel;
 use App\Models\Handle;
 use App\Models\Member;
+use App\Models\Unit;
 use App\Services\RecruitmentService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -49,6 +51,21 @@ class RecruitmentServiceTest extends TestCase
             'division_id' => $division->id,
             'unit_id'     => $platoon->id,
         ]);
+    }
+
+    #[Test]
+    public function create_member_can_place_a_recruit_in_a_deeper_unit(): void
+    {
+        $division = $this->createActiveDivision();
+        DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
+        $platoon   = $this->createPlatoon($division);
+        $middle    = Unit::factory()->childOf($platoon)->create();
+        $team      = Unit::factory()->childOf($middle)->create();
+        $recruiter = Member::factory()->create(['clan_id' => 99999]);
+
+        $member = $this->service->createMember(12345, 'TestMember', $division, 1, $platoon->id, $team->id, [], $recruiter);
+
+        $this->assertSame($team->id, $member->unit_id);
     }
 
     #[Test]

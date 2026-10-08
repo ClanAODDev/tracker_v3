@@ -21,16 +21,15 @@ class BulkMoveController extends Controller
 
         $platoons = $division->units()
             ->whereNull('parent_id')
-            ->with('children')
             ->orderBy('order')
             ->orderBy('name')
             ->get()
             ->map(fn (Unit $platoon) => [
                 'id'     => $platoon->id,
                 'name'   => $platoon->name ?? 'Untitled',
-                'squads' => $platoon->children->map(fn (Unit $squad) => [
+                'squads' => $platoon->descendantsWithTrail()->map(fn (Unit $squad) => [
                     'id'   => $squad->id,
-                    'name' => $squad->name ?? 'Untitled',
+                    'name' => $squad->trail,
                 ]),
             ]);
 
@@ -53,7 +52,7 @@ class BulkMoveController extends Controller
 
         $squad = empty($validated['squad_id'])
             ? null
-            : $platoon->children()->find($validated['squad_id']);
+            : $platoon->descendantsQuery()->find($validated['squad_id']);
 
         $members = Member::whereIn('clan_id', $validated['member_ids'])
             ->where('division_id', $division->id)

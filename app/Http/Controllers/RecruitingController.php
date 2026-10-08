@@ -183,12 +183,14 @@ class RecruitingController extends Controller
 
         $platoons = $division->topUnits()
             ->withCount('members')
-            ->with([
-                'leader:clan_id,name',
-                'children' => fn ($q) => $q->withCount('members')->with('leader:clan_id,name'),
-            ])
+            ->with('leader:clan_id,name')
             ->get()
-            ->each(fn (Unit $platoon) => $platoon->setAttribute('members_count', $platoon->members_count + $platoon->children->sum('members_count')));
+            ->each(function (Unit $platoon) {
+                $platoon->setAttribute('descendants', $platoon->descendantsWithTrail(
+                    fn ($query) => $query->withCount('members')->with('leader:clan_id,name')
+                ));
+                $platoon->setAttribute('members_count', $platoon->members_count + $platoon->descendants->sum('members_count'));
+            });
 
         $pendingDiscord = $this->discordRecruitmentService->getPendingDiscordUsers($division, $allPending);
 
@@ -200,9 +202,9 @@ class RecruitingController extends Controller
                 'name'          => $p->name,
                 'members_count' => $p->members_count,
                 'leader_name'   => $p->leader?->name,
-                'squads'        => $p->children->map(fn ($s) => [
+                'squads'        => $p->descendants->map(fn ($s) => [
                     'id'            => $s->id,
-                    'name'          => $s->name,
+                    'name'          => $s->trail,
                     'members_count' => $s->members_count,
                     'leader_name'   => $s->leader?->name,
                 ]),

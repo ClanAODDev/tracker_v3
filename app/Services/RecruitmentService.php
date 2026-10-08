@@ -47,10 +47,10 @@ class RecruitmentService
             throw new RecruitmentFailedException('Selected platoon does not belong to this division.');
         }
 
-        $squad = $squadId ? $platoon->children()->find($squadId) : null;
+        $squad = $squadId ? $platoon->descendantsQuery()->find($squadId) : null;
 
         if ($squadId && ! $squad) {
-            throw new RecruitmentFailedException('Selected squad does not belong to the selected platoon.');
+            throw new RecruitmentFailedException('Selected unit does not belong to the selected platoon.');
         }
 
         return DB::transaction(function () use (

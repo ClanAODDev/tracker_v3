@@ -88,8 +88,8 @@ class MemberController extends Controller
             ->where('division_id', $member->division_id)
             ->findOrFail(request()->platoon_id);
 
-        $squad = $member->squadUnit();
-        $member->update(['unit_id' => ($squad?->parent_id === $platoon->id ? $squad : $platoon)->id]);
+        $current = $member->unit;
+        $member->update(['unit_id' => ($current && str_starts_with($current->path, $platoon->path) ? $current : $platoon)->id]);
         $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
             'platoon' => $platoon->name,
         ]);

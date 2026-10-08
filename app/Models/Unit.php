@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\UnitLevel;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
@@ -103,6 +105,34 @@ class Unit extends Model
         return $tier === UnitLevel::Platoon
             ? $query->whereRaw("(units.depth < {$deepest} or {$deepest} = 1)")
             : $query->whereRaw("(units.depth = {$deepest} and {$deepest} > 1)");
+    }
+
+    public function descendantsQuery(): Builder
+    {
+        return static::query()->where('path', 'like', $this->path . '%')->where('id', '!=', $this->id);
+    }
+
+    public function descendantsWithTrail(?Closure $scope = null): Collection
+    {
+        $query = $this->descendantsQuery()->orderBy('path');
+
+        if ($scope) {
+            $scope($query);
+        }
+
+        $units = $query->get()->keyBy('id');
+
+        foreach ($units as $unit) {
+            $names = [];
+
+            for ($node = $unit; $node !== null && $node->id !== $this->id; $node = $units->get($node->parent_id)) {
+                array_unshift($names, $node->name ?: 'Untitled');
+            }
+
+            $unit->setAttribute('trail', implode(' / ', $names));
+        }
+
+        return $units->values();
     }
 
     public static function subtreeIdsOf(iterable $ids): QueryBuilder
