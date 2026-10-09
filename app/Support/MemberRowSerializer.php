@@ -33,7 +33,7 @@ class MemberRowSerializer
             'rankAbbr'       => $member->rank->getAbbreviation(),
             'rankValue'      => $member->rank->value,
             'rankColor'      => $member->rank->getColorHex(),
-            'position'       => $member->position?->getLabel(),
+            'position'       => $member->positionLabel(),
             'positionAbbr'   => $member->position?->getAbbreviation() ?: null,
             'positionClass'  => $member->position?->getClass(),
             'profileUrl'     => route('member', $member->getUrlParams()),

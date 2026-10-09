@@ -15,7 +15,7 @@ class UnitLeadershipChecksAreCentralizedTest extends TestCase
         'Authorization/UnitTreeHierarchy.php'                    => 2,
         'Filament/Mod/Resources/UnitResource/Pages/EditUnit.php' => 2,
         'Jobs/CleanupUnassignedLeaders.php'                      => 2,
-        'Models/Member.php'                                      => 4,
+        'Models/Member.php'                                      => 6,
         'Transformers/OrgChartTransformer.php'                   => 1,
     ];
 

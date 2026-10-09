@@ -44,7 +44,7 @@ class HoldsNoOtherPosition implements ValidationRule
 
         if (in_array($member->position, $divisionLeadership, true)
             && ! in_array($member->position, $this->allowedPositions, true)) {
-            return "assigned as {$member->position->getLabel()}";
+            return "assigned as {$member->positionLabel()}";
         }
 
         $platoon = Unit::where('leader_id', $member->clan_id)
