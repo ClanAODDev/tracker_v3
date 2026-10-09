@@ -30,11 +30,11 @@ class DivisionLeaderPowersControllerTest extends TestCase
                 ->has('levels', 2)
                 ->where('levels.0.depth', 1)
                 ->where('levels.0.tier', 'platoon')
-                ->where('levels.0.title', $division->locality('platoon leader'))
+                ->where('levels.0.title', $division->topLeaderTitle())
                 ->has('levels.0.powers')
                 ->where('levels.1.depth', 2)
                 ->where('levels.1.tier', 'squad')
-                ->where('levels.1.title', $division->locality('squad leader')));
+                ->where('levels.1.title', $division->bottomLeaderTitle()));
     }
 
     #[Test]

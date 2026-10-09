@@ -74,8 +74,8 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
                 [
                     'name' => sprintf(
                         '%s / %s',
-                        $notifiable->locality('platoon'),
-                        $notifiable->locality('squad')
+                        $notifiable->topLevelLabel(),
+                        $notifiable->bottomLevelLabel()
                     ),
                     'value' => sprintf(
                         '%s / %s',

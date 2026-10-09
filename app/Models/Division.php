@@ -218,6 +218,41 @@ class Division extends Model
         return $this->unitLevels->firstWhere('depth', $depth);
     }
 
+    public function bottomUnitDepth(): int
+    {
+        return max(2, $this->deepestUnitLevel());
+    }
+
+    public function topLevelLabel(): string
+    {
+        return ucwords($this->unitLevel(1)?->label ?? 'Platoon');
+    }
+
+    public function bottomLevelLabel(): string
+    {
+        return ucwords($this->unitLevel($this->bottomUnitDepth())?->label ?? 'Squad');
+    }
+
+    public function topLevelPlural(): string
+    {
+        return ucwords($this->unitLevel(1)?->label_plural ?? 'Platoons');
+    }
+
+    public function bottomLevelPlural(): string
+    {
+        return ucwords($this->unitLevel($this->bottomUnitDepth())?->label_plural ?? 'Squads');
+    }
+
+    public function topLeaderTitle(): string
+    {
+        return ucwords($this->unitLevel(1)?->leader_title ?? 'Platoon Leader');
+    }
+
+    public function bottomLeaderTitle(): string
+    {
+        return ucwords($this->unitLevel($this->bottomUnitDepth())?->leader_title ?? 'Squad Leader');
+    }
+
     public function topUnits(): HasMany
     {
         return $this->units()->whereNull('parent_id')->orderBy('order')->orderBy('id');
@@ -285,22 +320,6 @@ class Division extends Model
             ->whereIn('position', [Position::MEMBER])
             ->orderBy('rank', 'asc')
             ->orderBy('name', 'asc');
-    }
-
-    public function locality(string $string): string
-    {
-        $key   = strtolower($string);
-        $level = match ($key) {
-            'platoon', 'platoon leader' => $this->unitLevel(1),
-            'squad', 'squad leader'     => $this->unitLevel(max(2, $this->deepestUnitLevel())),
-            default                     => null,
-        };
-
-        if (! $level) {
-            return ucwords($string);
-        }
-
-        return ucwords(str_ends_with($key, 'leader') ? $level->leader_title : $level->label);
     }
 
     public function settings(): DivisionSettings

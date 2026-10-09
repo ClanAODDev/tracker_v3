@@ -118,7 +118,7 @@ class UnitTreeHierarchy implements UnitHierarchy
             return 1;
         }
 
-        return max(2, $member->division?->deepestUnitLevel() ?? 2);
+        return $member->division?->bottomUnitDepth() ?? 2;
     }
 
     private function ancestorAtDepth(?Unit $unit, int $depth): ?Unit
