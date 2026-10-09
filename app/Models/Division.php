@@ -225,32 +225,32 @@ class Division extends Model
 
     public function topLevelLabel(): string
     {
-        return ucwords($this->unitLevel(1)?->label ?? 'Platoon');
+        return $this->unitLevel(1)?->label ?? 'Platoon';
     }
 
     public function bottomLevelLabel(): string
     {
-        return ucwords($this->unitLevel($this->bottomUnitDepth())?->label ?? 'Squad');
+        return $this->unitLevel($this->bottomUnitDepth())?->label ?? 'Squad';
     }
 
     public function topLevelPlural(): string
     {
-        return ucwords($this->unitLevel(1)?->label_plural ?? 'Platoons');
+        return $this->unitLevel(1)?->label_plural ?? 'Platoons';
     }
 
     public function bottomLevelPlural(): string
     {
-        return ucwords($this->unitLevel($this->bottomUnitDepth())?->label_plural ?? 'Squads');
+        return $this->unitLevel($this->bottomUnitDepth())?->label_plural ?? 'Squads';
     }
 
     public function topLeaderTitle(): string
     {
-        return ucwords($this->unitLevel(1)?->leader_title ?? 'Platoon Leader');
+        return $this->unitLevel(1)?->leader_title ?? 'Platoon Leader';
     }
 
     public function bottomLeaderTitle(): string
     {
-        return ucwords($this->unitLevel($this->bottomUnitDepth())?->leader_title ?? 'Squad Leader');
+        return $this->unitLevel($this->bottomUnitDepth())?->leader_title ?? 'Squad Leader';
     }
 
     public function topUnits(): HasMany

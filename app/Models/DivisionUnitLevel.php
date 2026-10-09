@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,29 @@ class DivisionUnitLevel extends Model
     public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);
+    }
+
+    protected function label(): Attribute
+    {
+        return $this->titleCased();
+    }
+
+    protected function labelPlural(): Attribute
+    {
+        return $this->titleCased();
+    }
+
+    protected function leaderTitle(): Attribute
+    {
+        return $this->titleCased();
+    }
+
+    private function titleCased(): Attribute
+    {
+        return Attribute::make(
+            get: fn (?string $value) => $value === null ? null : Str::title($value),
+            set: fn (?string $value) => $value === null ? null : Str::title($value),
+        );
     }
 
     public static function createDefaultsFor(Division $division): int
