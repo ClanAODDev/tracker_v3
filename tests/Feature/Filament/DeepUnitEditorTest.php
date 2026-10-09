@@ -106,6 +106,18 @@ class DeepUnitEditorTest extends TestCase
     }
 
     #[Test]
+    public function changing_a_leader_names_the_levels_own_leader_title(): void
+    {
+        DivisionUnitLevel::where('division_id', $this->division->id)->where('depth', 3)->update(['label' => 'Fireteam', 'leader_title' => 'Fireteam Lead']);
+        $member = $this->createMember(['division_id' => $this->division->id, 'unit_id' => $this->squad->id]);
+
+        Livewire::test(EditUnit::class, ['record' => $this->squad->getRouteKey()])
+            ->fillForm(['leader_id' => $member->clan_id])
+            ->assertSee('will become the Fireteam Lead of this fireteam')
+            ->assertDontSee('Squad Leader');
+    }
+
+    #[Test]
     public function the_unit_list_shows_every_level_of_the_division(): void
     {
         Livewire::test(ListUnits::class)
