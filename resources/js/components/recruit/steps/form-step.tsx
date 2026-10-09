@@ -187,9 +187,9 @@ export function FormStep({ form }: { form: RecruitForm }) {
                                 onChange={(v) =>
                                     form.patchMember({ platoon: v === '__all' ? '' : v, squad: '' })
                                 }
-                                placeholder={`Select ${props.levels.top.label.toLowerCase()}…`}
+                                placeholder={`Select ${props.levels.top.label}…`}
                                 options={[
-                                    { value: '__all', label: `Select ${props.levels.top.label.toLowerCase()}…` },
+                                    { value: '__all', label: `Select ${props.levels.top.label}…` },
                                     ...props.platoons.map((p) => ({
                                         value: String(p.id),
                                         label: `${p.name} (${p.members_count})${p.leader_name ? ` — ${p.leader_name}` : ''}`,

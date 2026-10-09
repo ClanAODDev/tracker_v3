@@ -54,7 +54,7 @@ class PlatoonsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modelLabel(strtolower($this->getOwnerRecord()->unitLevel(1)?->label ?? 'platoon'))
+            ->modelLabel($this->getOwnerRecord()->unitLevel(1)?->label ?? 'Platoon')
             ->columns([
                 TextInputColumn::make('order')
                     ->width('10px')

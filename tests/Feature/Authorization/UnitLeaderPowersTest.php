@@ -73,8 +73,8 @@ class UnitLeaderPowersTest extends TestCase
             }
         }
 
-        $this->assertSame('Request promotions for members of their squad ranked below Specialist', UnitLeaderPower::RequestPromotions->describe(UnitLevel::Squad, $levels, 2, $limit));
-        $this->assertSame('Approve promotions in their platoon and every squad under it up to Private First Class', UnitLeaderPower::ApprovePromotions->describe(UnitLevel::Platoon, $levels, 1, $limit));
+        $this->assertSame('Request promotions for members of their Squad ranked below Specialist', UnitLeaderPower::RequestPromotions->describe(UnitLevel::Squad, $levels, 2, $limit));
+        $this->assertSame('Approve promotions in their Platoon and every Squad under it up to Private First Class', UnitLeaderPower::ApprovePromotions->describe(UnitLevel::Platoon, $levels, 1, $limit));
         $this->assertCount(6, UnitLeaderPower::forDivision($division, 1));
         $this->assertCount(2, UnitLeaderPower::forDivision($division, 2));
     }

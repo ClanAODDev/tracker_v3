@@ -410,7 +410,7 @@ export default function DivisionShow({
 
                     {platoonList.length === 0 ? (
                         <p className="rounded-md border border-destructive/30 bg-card p-4 text-sm text-muted-foreground">
-                            No {pluralize(d.platoonLabel).toLowerCase()} found
+                            No {pluralize(d.platoonLabel)} found
                         </p>
                     ) : (
                         <div className="grid gap-3 lg:grid-cols-2">

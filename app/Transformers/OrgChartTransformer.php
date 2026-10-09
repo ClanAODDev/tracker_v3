@@ -30,7 +30,7 @@ class OrgChartTransformer
         }
 
         if ($division->isFlat() && $members?->isNotEmpty()) {
-            $children[] = $this->transformRoster($members);
+            $children[] = $this->transformRoster('roster', $members);
         }
 
         return [
@@ -42,13 +42,15 @@ class OrgChartTransformer
         ];
     }
 
-    private function transformRoster(Collection $members): array
+    private function transformRoster(string $id, Collection $members): array
     {
         return [
-            'id'       => 'roster',
-            'name'     => 'Members',
-            'type'     => 'squad',
-            'children' => $members
+            'id'          => $id,
+            'name'        => 'Members',
+            'type'        => 'squad',
+            'roster'      => true,
+            'leaderTitle' => '',
+            'children'    => $members
                 ->sortByDesc('rank')
                 ->sortBy('name')
                 ->map(fn (Member $member) => $this->transformMember($member, 'member'))
@@ -89,7 +91,10 @@ class OrgChartTransformer
             'type'        => 'platoon',
             'leaderTitle' => $unit->leaderTitle(),
             'logo'        => $unit->logo ? $unit->getLogoPath() : null,
-            'children'    => $childUnits->map(fn (Unit $child) => $this->transformUnit($child))->all(),
+            'children'    => [
+                ...$this->directMemberRoster($unit),
+                ...$childUnits->map(fn (Unit $child) => $this->transformUnit($child))->all(),
+            ],
         ];
 
         if ($unit->leader) {
@@ -97,6 +102,13 @@ class OrgChartTransformer
         }
 
         return $node;
+    }
+
+    private function directMemberRoster(Unit $unit): array
+    {
+        $members = $unit->members->filter(fn (Member $member) => $member->clan_id !== $unit->leader_id);
+
+        return $members->isEmpty() ? [] : [$this->transformRoster("roster-{$unit->id}", $members)];
     }
 
     private function transformSquad(Unit $squad): array

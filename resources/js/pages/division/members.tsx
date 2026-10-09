@@ -156,7 +156,7 @@ export default function MembersPage({
 
             {scope.kind === 'platoon' && !scope.canManage && (scope.unassignedCount ?? 0) > 0 && (
                 <div className="mb-6 rounded-md border border-warning/40 bg-warning/5 px-4 py-3 text-sm">
-                    This {scope.platoonLabel?.toLowerCase()} has{' '}
+                    This {scope.platoonLabel} has{' '}
                     <span className="numeric font-semibold">{scope.unassignedCount}</span> unassigned member
                     {scope.unassignedCount === 1 ? '' : 's'}.
                 </div>

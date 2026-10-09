@@ -540,7 +540,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
                 .on('click', () => isCollapsible && toggleNode(d));
             if (data.leader)
                 renderLeaderContent(ng, data.leader, colors, { fontSize: '11px', handleFontSize: FONT.HANDLE_SMALL });
-            else renderTBA(ng, colors, '11px');
+            else if (!data.roster) renderTBA(ng, colors, '11px');
             ng.append('text')
                 .attr('y', height / 2 - 8)
                 .attr('text-anchor', 'middle')
