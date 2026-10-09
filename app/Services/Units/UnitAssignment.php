@@ -8,6 +8,7 @@ use App\Models\Activity;
 use App\Models\Division;
 use App\Models\DivisionUnitLevel;
 use App\Models\Unit;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -25,14 +26,14 @@ class UnitAssignment
 
         return DB::transaction(function () use ($division, $parent, $attributes, $depth) {
             $unit = Unit::create([
-                ...array_intersect_key($attributes, array_flip(['name', 'description', 'logo', 'order', 'gen_pop', 'leader_id'])),
+                ...array_intersect_key($attributes, array_flip(self::UNIT_COLUMNS)),
                 'division_id' => $division->id,
                 'parent_id'   => $parent?->id,
                 'depth'       => $depth,
             ]);
 
             $unit->update(['path' => ($parent?->path ?? '/') . $unit->id . '/']);
-            $this->recordActivity($unit, $unit->isPlatoon() ? ActivityType::CREATED_PLATOON : ActivityType::CREATED_SQUAD);
+            $this->recordActivity($unit, ActivityType::CREATED_UNIT);
 
             return $unit;
         });
@@ -47,15 +48,7 @@ class UnitAssignment
         }
 
         return DB::transaction(function () use ($division, $level, $unitAttributes) {
-            $division->unitLevels()->reorder('depth', 'desc')->get()
-                ->each(fn (DivisionUnitLevel $existing) => $existing->update(['depth' => $existing->depth + 1]));
-
-            $division->unitLevels()->create([
-                ...array_intersect_key($level, array_flip(['label', 'label_plural', 'leader_title'])),
-                'depth' => 1,
-            ]);
-
-            Unit::withTrashed()->where('division_id', $division->id)->increment('depth');
+            $this->pushLevelsDown($division, $level);
 
             $root = Unit::create([
                 ...array_intersect_key($unitAttributes, array_flip(self::UNIT_COLUMNS)),
@@ -66,20 +59,11 @@ class UnitAssignment
 
             $root->update(['path' => '/' . $root->id . '/']);
 
-            Unit::withTrashed()
-                ->where('division_id', $division->id)
-                ->whereKeyNot($root->id)
-                ->update(['path' => DB::raw("concat('/{$root->id}', path)")]);
-
-            Unit::withTrashed()
-                ->where('division_id', $division->id)
-                ->whereKeyNot($root->id)
-                ->whereNull('parent_id')
-                ->update(['parent_id' => $root->id]);
+            $this->adoptExistingUnits($division, $root);
 
             $division->unsetRelation('unitLevels');
             $this->flushHierarchy();
-            $this->recordActivity($root, ActivityType::CREATED_PLATOON);
+            $this->recordActivity($root, ActivityType::CREATED_UNIT);
 
             return $root;
         });
@@ -99,13 +83,14 @@ class UnitAssignment
 
             $unit->update(['parent_id' => $newParent->id, 'path' => $newPath]);
 
-            Unit::withTrashed()
-                ->where('path', 'like', $oldPath . '%')
-                ->whereKeyNot($unit->id)
-                ->update(['path' => DB::raw('concat(' . DB::getPdo()->quote($newPath) . ', substr(path, ' . (strlen($oldPath) + 1) . '))')]);
+            $this->reprefixPaths(
+                Unit::withTrashed()->where('path', 'like', $oldPath . '%')->whereKeyNot($unit->id),
+                oldPrefix: $oldPath,
+                newPrefix: $newPath,
+            );
 
             $this->flushHierarchy();
-            $this->recordActivity($unit, $unit->isPlatoon() ? ActivityType::UPDATED_PLATOON : ActivityType::UPDATED_SQUAD);
+            $this->recordActivity($unit, ActivityType::UPDATED_UNIT);
         });
     }
 
@@ -118,7 +103,7 @@ class UnitAssignment
         DB::transaction(function () use ($unit, $attributes) {
             $unit->update(array_intersect_key($attributes, array_flip(self::UNIT_COLUMNS)));
             $this->flushHierarchy();
-            $this->recordActivity($unit, $unit->isPlatoon() ? ActivityType::UPDATED_PLATOON : ActivityType::UPDATED_SQUAD);
+            $this->recordActivity($unit, ActivityType::UPDATED_UNIT);
         });
 
         return $unit;
@@ -131,7 +116,7 @@ class UnitAssignment
             $this->flushHierarchy();
 
             if ($recordActivity) {
-                $this->recordActivity($unit, $unit->isPlatoon() ? ActivityType::DELETED_PLATOON : ActivityType::DELETED_SQUAD);
+                $this->recordActivity($unit, ActivityType::DELETED_UNIT);
             }
         });
     }
@@ -151,7 +136,7 @@ class UnitAssignment
             $this->flushHierarchy();
 
             if ($recordActivity) {
-                $this->recordActivity($unit, $unit->isPlatoon() ? ActivityType::UPDATED_PLATOON : ActivityType::UPDATED_SQUAD);
+                $this->recordActivity($unit, ActivityType::UPDATED_UNIT);
             }
         });
     }
@@ -196,6 +181,33 @@ class UnitAssignment
             'division_id'  => $unit->division_id ?? $actor->member?->division_id,
             'properties'   => null,
         ]);
+    }
+
+    private function pushLevelsDown(Division $division, array $topLevel): void
+    {
+        $division->unitLevels()->reorder('depth', 'desc')->get()
+            ->each(fn (DivisionUnitLevel $existing) => $existing->update(['depth' => $existing->depth + 1]));
+
+        $division->unitLevels()->create([
+            ...array_intersect_key($topLevel, array_flip(['label', 'label_plural', 'leader_title'])),
+            'depth' => 1,
+        ]);
+
+        Unit::withTrashed()->where('division_id', $division->id)->increment('depth');
+    }
+
+    private function adoptExistingUnits(Division $division, Unit $root): void
+    {
+        $existing = fn () => Unit::withTrashed()->where('division_id', $division->id)->whereKeyNot($root->id);
+
+        $this->reprefixPaths($existing(), oldPrefix: '/', newPrefix: $root->path);
+
+        $existing()->whereNull('parent_id')->update(['parent_id' => $root->id]);
+    }
+
+    private function reprefixPaths(Builder $units, string $oldPrefix, string $newPrefix): void
+    {
+        $units->update(['path' => DB::raw('concat(' . DB::getPdo()->quote($newPrefix) . ', substr(path, ' . (strlen($oldPrefix) + 1) . '))')]);
     }
 
     private function flushHierarchy(): void

@@ -148,7 +148,7 @@ class ActivityLoggingTest extends TestCase
 
         $squad = app(UnitAssignment::class)->create($division, $platoon, ['name' => 'Alpha Squad']);
 
-        $activity = Activity::where('name', ActivityType::CREATED_SQUAD)->first();
+        $activity = Activity::where('name', ActivityType::CREATED_UNIT)->first();
 
         $this->assertNotNull($activity);
         $this->assertEquals($squad->id, $activity->subject_id);
@@ -165,7 +165,7 @@ class ActivityLoggingTest extends TestCase
 
         $platoon = app(UnitAssignment::class)->create($division, null, ['name' => 'Bravo Platoon']);
 
-        $activity = Activity::where('name', ActivityType::CREATED_PLATOON)->first();
+        $activity = Activity::where('name', ActivityType::CREATED_UNIT)->first();
 
         $this->assertNotNull($activity);
         $this->assertEquals($platoon->id, $activity->subject_id);
