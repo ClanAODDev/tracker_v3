@@ -134,7 +134,7 @@ export default function InactiveMembers({
                                 )
                             }
                             options={[
-                                { value: '__all', label: `All ${pluralize(division.platoonLabel).toLowerCase()}` },
+                                { value: '__all', label: `All ${pluralize(division.platoonLabel)}` },
                                 ...platoons.map((p) => ({
                                     value: String(p.id),
                                     label: p.count > 0 ? `${p.name} (${p.count})` : p.name,

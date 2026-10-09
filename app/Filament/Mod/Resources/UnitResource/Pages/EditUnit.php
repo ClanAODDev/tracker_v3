@@ -104,7 +104,7 @@ class EditUnit extends EditRecord
                 ->color('gray')
                 ->visible(fn () => $this->record->depth > 1 && auth()->user()->can('move', $this->record))
                 ->modalHeading(fn () => sprintf('Move %s', $this->record->name))
-                ->modalDescription(fn () => sprintf('Moves this %s and everything in it under another %s.', strtolower($this->record->levelLabel()), strtolower($this->record->division->unitLevel($this->record->depth - 1)?->label ?? 'unit')))
+                ->modalDescription(fn () => sprintf('Moves this %s and everything in it under another %s.', $this->record->levelLabel(), $this->record->division->unitLevel($this->record->depth - 1)?->label ?? 'Unit'))
                 ->schema([
                     Select::make('parent_id')
                         ->label(fn () => $this->record->division->unitLevel($this->record->depth - 1)?->label ?? 'Parent')
@@ -127,8 +127,8 @@ class EditUnit extends EditRecord
 
             DeleteAction::make()
                 ->modalDescription(fn () => $this->record->isSquad()
-                    ? sprintf('Assigned members will be moved up to the parent %s. Are you sure?', strtolower($this->record->parent?->levelLabel() ?? 'unit'))
-                    : sprintf('Assigned members will be removed from this %s and every unit within it. Are you sure?', strtolower($this->record->levelLabel())))
+                    ? sprintf('Assigned members will be moved up to the parent %s. Are you sure?', $this->record->parent?->levelLabel() ?? 'Unit')
+                    : sprintf('Assigned members will be removed from this %s and every unit within it. Are you sure?', $this->record->levelLabel()))
                 ->action(function ($record) {
                     $units = app(UnitAssignment::class);
                     $unit  = $record;

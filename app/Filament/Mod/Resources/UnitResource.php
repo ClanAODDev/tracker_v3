@@ -122,7 +122,7 @@ class UnitResource extends Resource
                             ->content(fn (?Unit $record) => sprintf(
                                 'The new leader will become the %1$s of this %2$s and the previous leader will become a Member. The new leader will also be reassigned to this %2$s.',
                                 $record?->leaderTitle() ?? 'leader',
-                                strtolower($record?->levelLabel() ?? 'unit'),
+                                $record?->levelLabel() ?? 'Unit',
                             ))
                             ->visible(fn (callable $get) => $get('leader_id') && $get('leader_id') !== $get('original_leader_id')),
                     ]),

@@ -46,7 +46,7 @@ class ChildrenRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->modelLabel(strtolower($this->getOwnerRecord()->childLevel()?->label ?? 'unit'))
+            ->modelLabel($this->getOwnerRecord()->childLevel()?->label ?? 'Unit')
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name'),

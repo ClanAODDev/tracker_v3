@@ -35,8 +35,8 @@ class DivisionStructureTest extends TestCase
 
         Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
             ->assertSee('What leaders can do')
-            ->assertSee('Approve promotions in their platoon and every squad under it up to Private First Class')
-            ->assertSee('Request promotions for members of their squad ranked below Specialist');
+            ->assertSee('Approve promotions in their Platoon and every Squad under it up to Private First Class')
+            ->assertSee('Request promotions for members of their Squad ranked below Specialist');
     }
 
     #[Test]
@@ -51,7 +51,7 @@ class DivisionStructureTest extends TestCase
         $state[$keys[0]] = ['label' => 'Company', 'label_plural' => 'Companies', 'leader_title' => 'Company Commander'];
 
         $page->set('data.unitLevels', $state)
-            ->assertSee('Approve promotions in their company and every squad under it')
+            ->assertSee('Approve promotions in their Company and every Squad under it')
             ->call('save');
 
         $this->assertSame('Company', DivisionUnitLevel::where('division_id', $division->id)->where('depth', 1)->value('label'));

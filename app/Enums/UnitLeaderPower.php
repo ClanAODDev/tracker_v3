@@ -5,6 +5,7 @@ namespace App\Enums;
 use App\Models\Division;
 use App\Models\DivisionUnitLevel;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 enum UnitLeaderPower: string
 {
@@ -55,10 +56,10 @@ enum UnitLeaderPower: string
         }
 
         $levels   = $levels->map(fn ($level) => (array) $level)->keyBy('depth');
-        $unit     = strtolower($levels->get($depth)['label'] ?? 'unit');
+        $unit     = Str::title($levels->get($depth)['label'] ?? 'unit');
         $below    = $levels->filter(fn (array $level) => $level['depth'] > $depth)->sortBy('depth');
-        $children = $below->isEmpty() ? null : strtolower($below->first()['label_plural']);
-        $subtree  = $children ? "their {$unit} and every " . strtolower($below->first()['label']) . ' under it' : "their {$unit}";
+        $children = $below->isEmpty() ? null : Str::title($below->first()['label_plural']);
+        $subtree  = $children ? "their {$unit} and every " . Str::title($below->first()['label']) . ' under it' : "their {$unit}";
         $approve  = $approveLimit->getLabel();
         $request  = config($tier === UnitLevel::Platoon ? 'aod.rank.max_platoon_leader' : 'aod.rank.max_squad_leader')->getLabel();
 

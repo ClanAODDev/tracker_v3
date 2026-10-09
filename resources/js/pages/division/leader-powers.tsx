@@ -94,7 +94,7 @@ export default function LeaderPowers({ division, levels, examples }: Props) {
                                         <CardTitle className="text-base">{level.title}</CardTitle>
                                         <Badge variant="outline">{TIER_NAME[level.tier]}</Badge>
                                     </div>
-                                    <CardDescription>Leads a {level.label.toLowerCase()}</CardDescription>
+                                    <CardDescription>Leads a {level.label}</CardDescription>
                                 </CardHeader>
                                 <CardContent className="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
                                     <HierarchyDiagram levels={diagramLevels} highlightDepth={level.depth} />

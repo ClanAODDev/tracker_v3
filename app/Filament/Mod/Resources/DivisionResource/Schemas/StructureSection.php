@@ -17,6 +17,7 @@ use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 
 class StructureSection
 {
@@ -62,7 +63,7 @@ class StructureSection
                         ->modalHeading('Add a level above the existing units')
                         ->modalDescription(fn (Division $record) => sprintf(
                             'Creates a new top level and one unit in it. Every existing top-level %s moves under that unit and each level shifts down by one. Unsaved changes on this page are discarded.',
-                            strtolower($record->unitLevel(1)?->label ?? 'unit'),
+                            $record->unitLevel(1)?->label ?? 'Unit',
                         ))
                         ->schema([
                             TextInput::make('label')->label('Level name')->placeholder('Company')->required()->maxLength(50),
@@ -99,7 +100,7 @@ class StructureSection
 
         $preview = $levels->map(fn (array $level) => [
             ...$level,
-            'covers' => strtolower($levels->firstWhere('depth', $level['depth'] + 1)['label'] ?? ''),
+            'covers' => Str::title($levels->firstWhere('depth', $level['depth'] + 1)['label'] ?? ''),
             'powers' => UnitLeaderPower::forLevel($levels, $level['depth'], $limit),
         ]);
 
