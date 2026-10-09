@@ -19,13 +19,14 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 #[RouteKey('slug')]
 class Division extends Model
 {
+    public const MAX_UNIT_LEVELS = 4;
+
     use HasFactory;
     use HasHandles;
     use Notifiable;
@@ -82,13 +83,6 @@ class Division extends Model
             ['task_description' => 'Change name on Teamspeak (add AOD_ and rank)'],
             ['task_description' => 'Reminder that forum login name will change in 24/48 hours'],
             ['task_description' => 'Introduce new member to the other members of the division'],
-        ],
-
-        'locality' => [
-            ['old-string' => 'squad', 'new-string' => 'squad'],
-            ['old-string' => 'platoon', 'new-string' => 'platoon'],
-            ['old-string' => 'squad leader', 'new-string' => 'squad leader'],
-            ['old-string' => 'platoon leader', 'new-string' => 'platoon leader'],
         ],
 
         'always_visible_in_discord' => false,
@@ -302,28 +296,11 @@ class Division extends Model
             default                     => null,
         };
 
-        if ($level) {
-            return ucwords(str_ends_with($key, 'leader') ? $level->leader_title : $level->label);
-        }
-
-        $locality = collect($this->settings()->locality);
-        if (! $locality->count()) {
-            Log::error("No locality defaults were found for division {$this->name}");
-
-            return ucwords($string);
-        }
-        $results = $locality->first(function ($translation) use ($string) {
-            if (\array_key_exists('old-string', $translation)) {
-                return $translation['old-string'] === strtolower($string);
-            }
-        });
-        if (! $results) {
-            Log::error("The {$string} locality does not exist");
-
+        if (! $level) {
             return ucwords($string);
         }
 
-        return ucwords($results['new-string']);
+        return ucwords(str_ends_with($key, 'leader') ? $level->leader_title : $level->label);
     }
 
     public function settings(): DivisionSettings

@@ -25,7 +25,7 @@ class UnitWritesAreCentralizedTest extends TestCase
         'Jobs/ResetOrphanedUnitAssignments.php'                                           => 2,
         'Models/Member.php'                                                               => 2,
         'Services/RecruitmentService.php'                                                 => 1,
-        'Services/Units/UnitAssignment.php'                                               => 2,
+        'Services/Units/UnitAssignment.php'                                               => 5,
     ];
 
     #[Test]
@@ -53,7 +53,7 @@ class UnitWritesAreCentralizedTest extends TestCase
         $this->assertSame(
             $allowed,
             $found,
-            'Unit data changed outside App\Services\Units. Use UnitAssignment (create, update, setLeader, clearLeadership, archive, restore). BulkMoveController and AssignSquadMemberRequest only validate these keys, and DivisionController only returns one.',
+            'Unit data changed outside App\Services\Units. Use UnitAssignment (create, insertTopLevel, move, update, setLeader, clearLeadership, archive, restore). BulkMoveController and AssignSquadMemberRequest only validate these keys, and DivisionController only returns one.',
         );
     }
 }

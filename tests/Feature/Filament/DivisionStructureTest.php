@@ -73,7 +73,7 @@ class DivisionStructureTest extends TestCase
 
         $page->set('data.unitLevels', $state)
             ->call('save')
-            ->assertHasFormErrors(['unitLevels']);
+            ->assertHasFormErrors(['unitLevels' => 'This division still has units at level 2, so it needs at least 2 levels. Archive or move those units first.']);
 
         $this->assertSame(2, DivisionUnitLevel::where('division_id', $division->id)->count());
     }

@@ -10,6 +10,8 @@ use App\Filament\Mod\Resources\DivisionResource\Pages\ListDivisions;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\MemberFieldsRelationManager;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Models\Division;
+use App\Models\Unit;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
@@ -21,6 +23,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
@@ -142,7 +145,13 @@ class DivisionResource extends Resource
                                             ->orderColumn('depth')
                                             ->reorderable(false)
                                             ->minItems(fn (Division $record) => (int) $record->units()->max('depth'))
-                                            ->maxItems(4)
+                                            ->validationMessages([
+                                                'min' => fn (Division $record) => sprintf(
+                                                    'This division still has units at level %1$d, so it needs at least %1$d levels. Archive or move those units first.',
+                                                    (int) $record->units()->max('depth'),
+                                                ),
+                                            ])
+                                            ->maxItems(Division::MAX_UNIT_LEVELS)
                                             ->live()
                                             ->schema([
                                                 TextInput::make('label')->required()->maxLength(50),
@@ -154,6 +163,37 @@ class DivisionResource extends Resource
                                         Placeholder::make('leader_powers')
                                             ->label('What leaders can do')
                                             ->content(fn (Get $get, Division $record) => self::leaderPowersPreview($get, $record)),
+                                        Actions::make([
+                                            Action::make('add_top_level')
+                                                ->label('Add a level above')
+                                                ->icon('heroicon-o-arrow-up-circle')
+                                                ->color('gray')
+                                                ->visible(fn (Division $record) => $record->unitLevels()->count() >= 1
+                                                    && $record->unitLevels()->count() < Division::MAX_UNIT_LEVELS
+                                                    && auth()->user()->can('create', [Unit::class, $record]))
+                                                ->modalHeading('Add a level above the existing units')
+                                                ->modalDescription(fn (Division $record) => sprintf(
+                                                    'Creates a new top level and one unit in it. Every existing top-level %s moves under that unit and each level shifts down by one. Unsaved changes on this page are discarded.',
+                                                    strtolower($record->unitLevel(1)?->label ?? 'unit'),
+                                                ))
+                                                ->schema([
+                                                    TextInput::make('label')->label('Level name')->placeholder('Company')->required()->maxLength(50),
+                                                    TextInput::make('label_plural')->label('Plural')->placeholder('Companies')->required()->maxLength(50),
+                                                    TextInput::make('leader_title')->placeholder('Company Commander')->required()->maxLength(50),
+                                                    TextInput::make('unit_name')->label('Name of the first unit')->required()->maxLength(255),
+                                                ])
+                                                ->action(function (array $data, Division $record) {
+                                                    app(UnitAssignment::class)->insertTopLevel(
+                                                        $record,
+                                                        ['label' => $data['label'], 'label_plural' => $data['label_plural'], 'leader_title' => $data['leader_title']],
+                                                        ['name'  => $data['unit_name']],
+                                                    );
+
+                                                    Notification::make()->success()->title("{$data['label']} level added")->send();
+
+                                                    return redirect(self::getUrl('edit', ['record' => $record]));
+                                                }),
+                                        ])->key('structure_actions')->columnSpanFull(),
                                     ]),
                             ]),
 

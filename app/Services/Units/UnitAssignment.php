@@ -6,6 +6,7 @@ use App\Authorization\UnitHierarchy;
 use App\Enums\ActivityType;
 use App\Models\Activity;
 use App\Models\Division;
+use App\Models\DivisionUnitLevel;
 use App\Models\Unit;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
@@ -34,6 +35,77 @@ class UnitAssignment
             $this->recordActivity($unit, $unit->isPlatoon() ? ActivityType::CREATED_PLATOON : ActivityType::CREATED_SQUAD);
 
             return $unit;
+        });
+    }
+
+    public function insertTopLevel(Division $division, array $level, array $unitAttributes): Unit
+    {
+        $levels = $division->unitLevels()->count();
+
+        if ($levels < 1 || $levels >= Division::MAX_UNIT_LEVELS) {
+            throw new InvalidArgumentException("{$division->name} cannot add a level above its existing levels.");
+        }
+
+        return DB::transaction(function () use ($division, $level, $unitAttributes) {
+            $division->unitLevels()->reorder('depth', 'desc')->get()
+                ->each(fn (DivisionUnitLevel $existing) => $existing->update(['depth' => $existing->depth + 1]));
+
+            $division->unitLevels()->create([
+                ...array_intersect_key($level, array_flip(['label', 'label_plural', 'leader_title'])),
+                'depth' => 1,
+            ]);
+
+            Unit::withTrashed()->where('division_id', $division->id)->increment('depth');
+
+            $root = Unit::create([
+                ...array_intersect_key($unitAttributes, array_flip(self::UNIT_COLUMNS)),
+                'division_id' => $division->id,
+                'parent_id'   => null,
+                'depth'       => 1,
+            ]);
+
+            $root->update(['path' => '/' . $root->id . '/']);
+
+            Unit::withTrashed()
+                ->where('division_id', $division->id)
+                ->whereKeyNot($root->id)
+                ->update(['path' => DB::raw("concat('/{$root->id}', path)")]);
+
+            Unit::withTrashed()
+                ->where('division_id', $division->id)
+                ->whereKeyNot($root->id)
+                ->whereNull('parent_id')
+                ->update(['parent_id' => $root->id]);
+
+            $division->unsetRelation('unitLevels');
+            $this->flushHierarchy();
+            $this->recordActivity($root, ActivityType::CREATED_PLATOON);
+
+            return $root;
+        });
+    }
+
+    public function move(Unit $unit, ?Unit $newParent): void
+    {
+        $expectedParentDepth = $unit->depth - 1;
+
+        if ($expectedParentDepth < 1 || $newParent === null || $newParent->division_id !== $unit->division_id || $newParent->depth !== $expectedParentDepth || $newParent->trashed()) {
+            throw new InvalidArgumentException('That unit cannot be moved there.');
+        }
+
+        DB::transaction(function () use ($unit, $newParent) {
+            $oldPath = $unit->path;
+            $newPath = $newParent->path . $unit->id . '/';
+
+            $unit->update(['parent_id' => $newParent->id, 'path' => $newPath]);
+
+            Unit::withTrashed()
+                ->where('path', 'like', $oldPath . '%')
+                ->whereKeyNot($unit->id)
+                ->update(['path' => DB::raw('concat(' . DB::getPdo()->quote($newPath) . ', substr(path, ' . (strlen($oldPath) + 1) . '))')]);
+
+            $this->flushHierarchy();
+            $this->recordActivity($unit, $unit->isPlatoon() ? ActivityType::UPDATED_PLATOON : ActivityType::UPDATED_SQUAD);
         });
     }
 

@@ -53,6 +53,12 @@ class UnitPolicy
             && $units->leadsWithin($user->member, $unit->parent);
     }
 
+    public function move(User $user, Unit $unit): bool
+    {
+        return ($user->can(Ability::ManageUnits) || $user->isDivisionLeader())
+            && $unit->division_id === $user->member->division_id;
+    }
+
     public function update(User $user, Unit $unit): bool
     {
         $member = $user->member;
