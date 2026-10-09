@@ -120,8 +120,8 @@ class UnitResource extends Resource
 
                         Placeholder::make('Note: Changing Leadership')
                             ->content(fn (?Unit $record) => sprintf(
-                                "This change will update the new leader's position to %s and the previous leader's position to Member. Will also reassign the new leader to this %s.",
-                                $record?->isSquad() ? 'Squad Leader' : 'Platoon Leader',
+                                'The new leader will become the %1$s of this %2$s and the previous leader will become a Member. The new leader will also be reassigned to this %2$s.',
+                                $record?->leaderTitle() ?? 'leader',
                                 strtolower($record?->levelLabel() ?? 'unit'),
                             ))
                             ->visible(fn (callable $get) => $get('leader_id') && $get('leader_id') !== $get('original_leader_id')),

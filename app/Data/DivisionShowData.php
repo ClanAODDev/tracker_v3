@@ -38,7 +38,7 @@ readonly class DivisionShowData
                 'abbr'                  => $division->abbreviation,
                 'logo'                  => $division->getLogoPath(),
                 'hasUnits'              => ! $division->isFlat(),
-                'platoonLabel'          => $division->locality('platoon'),
+                'platoonLabel'          => $division->topLevelLabel(),
                 'childLabelPlural'      => $division->unitLevel(2)?->label_plural ?? 'Squads',
                 'isShutdown'            => $division->isShutdown(),
                 'shutdownAt'            => $division->shutdown_at?->toFormattedDateString(),

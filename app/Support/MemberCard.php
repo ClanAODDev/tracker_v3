@@ -25,7 +25,7 @@ class MemberCard
             'rankName'   => $member->present()->rankName(),
             'rankAbbr'   => $member->rank->getAbbreviation(),
             'rankColor'  => $member->rank->getColorHex(),
-            'position'   => $member->position?->getLabel(),
+            'position'   => $member->positionLabel(),
             'avatarUrl'  => $member->getDiscordAvatarUrl(),
             'profileUrl' => route('member', $member->getUrlParams()),
             'division'   => $member->division?->name,

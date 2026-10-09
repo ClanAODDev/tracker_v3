@@ -55,9 +55,9 @@ class DivisionStructureTest extends TestCase
             ->call('save');
 
         $this->assertSame('Company', DivisionUnitLevel::where('division_id', $division->id)->where('depth', 1)->value('label'));
-        $this->assertSame('Company', $division->fresh()->locality('platoon'));
-        $this->assertSame('Company Commander', $division->fresh()->locality('platoon leader'));
-        $this->assertSame('Squad', $division->fresh()->locality('Squad'));
+        $this->assertSame('Company', $division->fresh()->topLevelLabel());
+        $this->assertSame('Company Commander', $division->fresh()->topLeaderTitle());
+        $this->assertSame('Squad', $division->fresh()->bottomLevelLabel());
     }
 
     #[Test]

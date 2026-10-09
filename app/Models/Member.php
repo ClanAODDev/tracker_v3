@@ -133,6 +133,15 @@ class Member extends Model
             ->mapWithKeys(fn (MemberFieldValue $value) => [$value->field->key => $value->value]);
     }
 
+    public function positionLabel(): ?string
+    {
+        if (! in_array($this->position, [Position::SQUAD_LEADER, Position::PLATOON_LEADER], true) || ! $this->unit_id) {
+            return $this->position?->getLabel();
+        }
+
+        return $this->division?->unitLevel($this->unit?->depth ?? 0)?->leader_title ?? $this->position->getLabel();
+    }
+
     public function hasNoDivision(): bool
     {
         return $this->division_id === null || $this->division_id === 0;

@@ -181,15 +181,15 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 >
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="grid gap-1.5">
-                            <Label>{props.locality.platoon} *</Label>
+                            <Label>{props.levels.top.label} *</Label>
                             <SimpleSelect
                                 value={form.member.platoon || '__all'}
                                 onChange={(v) =>
                                     form.patchMember({ platoon: v === '__all' ? '' : v, squad: '' })
                                 }
-                                placeholder={`Select ${props.locality.platoon.toLowerCase()}…`}
+                                placeholder={`Select ${props.levels.top.label.toLowerCase()}…`}
                                 options={[
-                                    { value: '__all', label: `Select ${props.locality.platoon.toLowerCase()}…` },
+                                    { value: '__all', label: `Select ${props.levels.top.label.toLowerCase()}…` },
                                     ...props.platoons.map((p) => ({
                                         value: String(p.id),
                                         label: `${p.name} (${p.members_count})${p.leader_name ? ` — ${p.leader_name}` : ''}`,
@@ -199,24 +199,24 @@ export function FormStep({ form }: { form: RecruitForm }) {
                         </div>
                         <div className="grid gap-1.5">
                             <Label>
-                                {props.locality.squad}
+                                {props.levels.bottom.label}
                                 {form.selectedPlatoonSquads.length > 0 && ' *'}
                             </Label>
                             <SimpleSelect
                                 value={form.member.squad || '__all'}
                                 onChange={(v) => form.patchMember({ squad: v === '__all' ? '' : v })}
-                                placeholder={`No ${props.locality.squad.toLowerCase()}s available`}
+                                placeholder={`No ${props.levels.bottom.plural.toLowerCase()} available`}
                                 options={[
                                     {
                                         value: '__all',
                                         label:
                                             form.selectedPlatoonSquads.length > 0
-                                                ? `Select ${props.locality.squad.toLowerCase()}…`
-                                                : `No ${props.locality.squad.toLowerCase()}s available`,
+                                                ? `Select ${props.levels.bottom.label.toLowerCase()}…`
+                                                : `No ${props.levels.bottom.plural.toLowerCase()} available`,
                                     },
                                     ...form.selectedPlatoonSquads.map((s) => ({
                                         value: String(s.id),
-                                        label: `${s.name || `Squad #${s.id}`} (${s.members_count})${s.leader_name ? ` — ${s.leader_name}` : ''}`,
+                                        label: `${s.name || `${props.levels.bottom.label} #${s.id}`} (${s.members_count})${s.leader_name ? ` — ${s.leader_name}` : ''}`,
                                     })),
                                 ]}
                             />

@@ -42,7 +42,7 @@ class DivisionVoiceReportData
             'division' => [
                 'name'         => $this->division->name,
                 'slug'         => $this->division->slug,
-                'platoonLabel' => $this->division->locality('platoon'),
+                'platoonLabel' => $this->division->topLevelLabel(),
                 'hasUnits'     => ! $this->division->isFlat(),
             ],
             'stats'   => $this->stats,

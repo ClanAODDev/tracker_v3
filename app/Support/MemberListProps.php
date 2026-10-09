@@ -27,8 +27,8 @@ class MemberListProps
                 'name'         => $division->name,
                 'slug'         => $division->slug,
                 'hasUnits'     => ! $division->isFlat(),
-                'platoonLabel' => $division->locality('Platoon'),
-                'squadLabel'   => $division->locality('Squad'),
+                'platoonLabel' => $division->topLevelLabel(),
+                'squadLabel'   => $division->bottomLevelLabel(),
                 'handleTypes'  => $division->handles
                     ->map(fn ($handle) => ['id' => $handle->id, 'label' => $handle->label])
                     ->values()

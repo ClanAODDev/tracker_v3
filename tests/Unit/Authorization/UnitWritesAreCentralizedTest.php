@@ -25,7 +25,7 @@ class UnitWritesAreCentralizedTest extends TestCase
         'Jobs/ResetOrphanedUnitAssignments.php'                                           => 2,
         'Models/Member.php'                                                               => 2,
         'Services/RecruitmentService.php'                                                 => 1,
-        'Services/Units/UnitAssignment.php'                                               => 5,
+        'Services/Units/UnitAssignment.php'                                               => 2,
     ];
 
     #[Test]

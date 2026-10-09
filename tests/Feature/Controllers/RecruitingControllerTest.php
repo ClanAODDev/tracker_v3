@@ -177,7 +177,7 @@ class RecruitingControllerTest extends TestCase
             'welcome_area',
             'welcome_pm',
             'use_welcome_thread',
-            'locality',
+            'levels',
         ]);
     }
 

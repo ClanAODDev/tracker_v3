@@ -32,6 +32,9 @@ enum ActivityType: int
     case ROLE_GRANTED      = 26;
     case CREATED_DIVISION  = 27;
     case DELETED_DIVISION  = 28;
+    case CREATED_UNIT      = 29;
+    case UPDATED_UNIT      = 30;
+    case DELETED_UNIT      = 31;
 
     public function label(): string
     {
@@ -64,6 +67,9 @@ enum ActivityType: int
             self::ROLE_GRANTED      => 'Role granted',
             self::CREATED_DIVISION  => 'Created division',
             self::DELETED_DIVISION  => 'Deleted division',
+            self::CREATED_UNIT      => 'Created unit',
+            self::UPDATED_UNIT      => 'Updated unit',
+            self::DELETED_UNIT      => 'Deleted unit',
         };
     }
 
@@ -207,6 +213,9 @@ enum ActivityType: int
             'role_granted_to_member'                                   => self::ROLE_GRANTED,
             'created_division'                                         => self::CREATED_DIVISION,
             'deleted_division'                                         => self::DELETED_DIVISION,
+            'created_unit'                                             => self::CREATED_UNIT,
+            'updated_unit'                                             => self::UPDATED_UNIT,
+            'deleted_unit'                                             => self::DELETED_UNIT,
             default                                                    => null,
         };
     }

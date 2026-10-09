@@ -184,7 +184,7 @@ readonly class PendingActionsData
                 key: 'unassigned-members',
                 url: route('division', $division->slug) . '?organize=1',
                 icon: 'fa-user-slash',
-                label: 'No ' . $division->locality('platoon'),
+                label: 'No ' . $division->topLevelLabel(),
             );
         }
 
@@ -199,7 +199,7 @@ readonly class PendingActionsData
                     key: $level === 2 ? 'unassigned-to-squad' : "unassigned-to-level-{$level}",
                     url: '#',
                     icon: 'fa-users-slash',
-                    label: 'No ' . ucwords($division->unitLevel($level)?->label ?? $division->locality('squad')),
+                    label: 'No ' . ucwords($division->unitLevel($level)?->label ?? $division->bottomLevelLabel()),
                     modalTarget: 'no-squad-modal',
                 );
             }
