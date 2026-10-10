@@ -11,6 +11,8 @@ import { postJson } from '@/lib/api';
 import AppLayout from '@/layouts/AppLayout';
 import { cn } from '@/lib/utils';
 
+const NO_ORGANIZE_MEMBERS: OrganizeMember[] = [];
+
 interface Crumb {
     label: string;
     href?: string;
@@ -79,7 +81,7 @@ export default function MembersPage({
         typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('organize') === '1';
 
     const organize = useOrganize({
-        members: organizeProps?.members ?? [],
+        members: organizeProps?.members ?? NO_ORGANIZE_MEMBERS,
         autoOpen: canOrganize && autoOrganize,
         assign: async (memberId, squadId) => {
             await postJson('/members/assign-squad', { member_id: memberId, unit_id: squadId });
