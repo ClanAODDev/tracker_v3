@@ -27,7 +27,8 @@ class MemberFieldsRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->defaultSort('label')
+            ->defaultSort('display_order')
+            ->reorderable('display_order')
             ->columns(DivisionMemberFieldForm::tableColumns())
             ->headerActions([
                 CreateAction::make()

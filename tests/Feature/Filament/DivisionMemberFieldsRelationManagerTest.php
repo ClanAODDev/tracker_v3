@@ -236,4 +236,65 @@ class DivisionMemberFieldsRelationManagerTest extends TestCase
 
         $this->assertFalse($member->can('create', [DivisionMemberField::class, $division]));
     }
+
+    #[Test]
+    public function new_fields_are_appended_in_creation_order(): void
+    {
+        $division = $this->createActiveDivision();
+
+        $zone  = $this->makeField($division->id, 'Zone');
+        $class = $this->makeField($division->id, 'Class');
+
+        $this->assertSame([$zone->id, $class->id], $division->memberFields()->pluck('id')->all());
+        $this->assertSame(1, $zone->display_order);
+        $this->assertSame(2, $class->display_order);
+    }
+
+    #[Test]
+    public function field_order_is_scoped_to_each_division(): void
+    {
+        $first  = $this->createActiveDivision();
+        $second = $this->createActiveDivision();
+
+        $this->makeField($first->id, 'Zone');
+        $this->makeField($first->id, 'Class');
+        $other = $this->makeField($second->id, 'Role');
+
+        $this->assertSame(1, $other->display_order);
+    }
+
+    #[Test]
+    public function fields_can_be_reordered_from_the_division_page(): void
+    {
+        $division = $this->createActiveDivision();
+        $co       = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'rank'        => Rank::CORPORAL,
+        ], [
+            'role' => Role::OFFICER,
+        ]);
+        $zone  = $this->makeField($division->id, 'Zone');
+        $class = $this->makeField($division->id, 'Class');
+        $role  = $this->makeField($division->id, 'Role');
+
+        $this->actingAs($co);
+
+        Livewire::test(MemberFieldsRelationManager::class, [
+            'ownerRecord' => $division,
+            'pageClass'   => EditDivision::class,
+        ])->call('reorderTable', [$role->id, $zone->id, $class->id]);
+
+        $this->assertSame([$role->id, $zone->id, $class->id], $division->memberFields()->pluck('id')->all());
+    }
+
+    private function makeField(int $divisionId, string $label): DivisionMemberField
+    {
+        return DivisionMemberField::create([
+            'division_id' => $divisionId,
+            'key'         => DivisionMemberField::keyFor($label),
+            'label'       => $label,
+            'type'        => DivisionMemberFieldType::TEXT,
+        ]);
+    }
 }
