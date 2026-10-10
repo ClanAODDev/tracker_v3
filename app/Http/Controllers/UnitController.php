@@ -10,7 +10,7 @@ use App\Repositories\UnitRepository;
 use App\Services\MemberQueryService;
 use App\Support\MemberListProps;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
-use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,52 +29,56 @@ class UnitController extends Controller
 
     public function manage(Division $division, Unit $unit): Response
     {
-        abort_unless($unit->isPlatoon(), 404);
+        abort_unless($unit->childLevel() !== null, 404);
         $this->authorize('update', $unit);
 
-        $unit->load([
-            'children.members' => fn ($query) => $query->where('division_id', $division->id),
-            'children.leader',
+        $withMembers = fn ($query) => $query->with([
+            'leader',
+            'members' => fn ($members) => $members->where('division_id', $division->id)->where('position', Position::MEMBER),
         ]);
 
-        $squads = $unit->children->map(function (Unit $squad) {
-            $members = $squad->members
-                ->filter(fn ($member) => $member->position === Position::MEMBER)
-                ->sortByDesc(fn ($member) => $squad->leader && $squad->leader->clan_id === $member->recruiter_id)
-                ->map(fn ($member) => [
-                    'id'              => $member->id,
-                    'name'            => $member->present()->rankName(),
-                    'isDirectRecruit' => $squad->leader && $squad->leader->clan_id === $member->recruiter_id,
-                ])
-                ->values();
+        $unit->load([
+            'leader',
+            'members' => fn ($members) => $members->where('division_id', $division->id)->where('position', Position::MEMBER),
+        ]);
 
-            return [
-                'id'      => $squad->id,
-                'name'    => $squad->name ?: 'Untitled',
-                'leader'  => $squad->leader?->present()->rankName(),
-                'members' => $members,
-            ];
-        })->values();
+        $descendants = $unit->descendantsWithTrail($withMembers);
 
-        $unassigned = $this->unassigned($division, $unit)
-            ->map(fn ($member) => ['id' => $member->id, 'name' => $member->present()->rankName()])
-            ->values();
+        $units = $descendants->map(fn (Unit $descendant) => [
+            'id'         => $descendant->id,
+            'name'       => $descendant->name ?: 'Untitled',
+            'trail'      => $descendant->trail,
+            'levelLabel' => $division->unitLevel($descendant->depth)?->label ?? 'Unit',
+            'leader'     => $descendant->leader?->present()->rankName(),
+            'members'    => $this->manageableMembers($descendant),
+        ])->values();
 
         return Inertia::render('platoon/manage-members', [
-            'division' => [
-                'name'         => $division->name,
-                'squadLabel'   => $this->childLabel($unit),
-                'squadPlural'  => Str::plural($this->childLabel($unit)),
-                'platoonLabel' => $unit->levelLabel(),
+            'division' => ['name' => $division->name],
+            'root'     => [
+                'id'         => $unit->id,
+                'name'       => $unit->name ?: 'Untitled',
+                'levelLabel' => $unit->levelLabel(),
+                'members'    => $this->manageableMembers($unit),
             ],
-            'platoon'        => ['id' => $unit->id, 'name' => $unit->name],
-            'squads'         => $squads,
-            'unassigned'     => $unassigned,
-            'assignUrl'      => url('/members/assign-squad'),
-            'backUrl'        => $unit->url($division),
-            'breadcrumbs'    => $this->ancestry($division, $unit, linkSelf: true),
-            'createSquadUrl' => route('filament.mod.resources.units.edit', $unit->id),
+            'units'       => $units,
+            'assignUrl'   => url('/members/assign-squad'),
+            'backUrl'     => $unit->url($division),
+            'breadcrumbs' => $this->ancestry($division, $unit, linkSelf: true),
+            'createUrl'   => route('filament.mod.resources.units.edit', $unit->id),
         ]);
+    }
+
+    private function manageableMembers(Unit $unit): Collection
+    {
+        return $unit->members
+            ->sortByDesc(fn ($member) => $unit->leader && $unit->leader->clan_id === $member->recruiter_id)
+            ->map(fn ($member) => [
+                'id'              => $member->id,
+                'name'            => $member->present()->rankName(),
+                'isDirectRecruit' => $unit->leader && $unit->leader->clan_id === $member->recruiter_id,
+            ])
+            ->values();
     }
 
     private function showPlatoon(Division $division, Unit $platoon): Response

@@ -85,11 +85,42 @@ class DeepUnitPagesTest extends TestCase
             ->get(route('unit.manage', [$division->slug, $this->middle]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('division.squadLabel', 'Team')
-                ->where('platoon.id', $this->middle->id)
-                ->has('squads', 1)
-                ->has('squads.0.members', 1)
+                ->where('root.id', $this->middle->id)
+                ->has('units', 1)
+                ->has('units.0.members', 1)
                 ->has('breadcrumbs', 3));
+    }
+
+    #[Test]
+    public function the_top_unit_manage_page_lists_members_at_every_level_beneath_it(): void
+    {
+        $division = $this->officer->member->division;
+        $direct   = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->company->id]);
+        $inMiddle = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->middle->id]);
+        $inLeaf   = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->leaf->id]);
+
+        $this->actingAs($this->officer)
+            ->get(route('unit.manage', [$division->slug, $this->company]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('root.id', $this->company->id)
+                ->where('root.members.0.id', $direct->id)
+                ->has('units', 2)
+                ->where('units.0.id', $this->middle->id)
+                ->where('units.0.members.0.id', $inMiddle->id)
+                ->where('units.1.id', $this->leaf->id)
+                ->where('units.1.members.0.id', $inLeaf->id)
+                ->where('units.1.trail', $this->middle->name . ' / ' . $this->leaf->name));
+    }
+
+    #[Test]
+    public function a_unit_without_a_level_beneath_it_has_no_manage_page(): void
+    {
+        $division = $this->officer->member->division;
+
+        $this->actingAs($this->officer)
+            ->get(route('unit.manage', [$division->slug, $this->leaf]))
+            ->assertNotFound();
     }
 
     #[Test]

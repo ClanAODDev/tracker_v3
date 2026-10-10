@@ -33,7 +33,7 @@ class SquadController extends Controller
 
         $unit = Unit::query()->findOrFail($request->unit_id);
         abort_unless($unit->division_id === $member->division_id, 422);
-        $this->authorize('update', $unit->parent ?? $unit);
+        $this->authorize('update', $unit);
 
         $member->update(['unit_id' => $unit->id]);
 

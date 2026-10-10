@@ -1,4 +1,3 @@
-import { pluralize } from '@/lib/format';
 import { Head, Link } from '@inertiajs/react';
 import { ArrowLeft, Plus, TriangleAlert, Users } from 'lucide-react';
 import { type DragEvent, useMemo, useState } from 'react';
@@ -16,27 +15,27 @@ interface MemberCard {
     isDirectRecruit?: boolean;
 }
 
-interface Squad {
+interface Column {
     id: number;
     name: string;
-    leader: string | null;
+    trail?: string;
+    levelLabel: string;
+    leader?: string | null;
     members: MemberCard[];
 }
 
 interface Props {
-    division: { name: string; squadLabel: string; squadPlural: string; platoonLabel: string };
-    platoon: { id: number; name: string };
-    squads: Squad[];
-    unassigned: MemberCard[];
+    division: { name: string };
+    root: { id: number; name: string; levelLabel: string; members: MemberCard[] };
+    units: Column[];
     assignUrl: string;
     backUrl: string;
     breadcrumbs: Crumb[];
-    createSquadUrl: string;
+    createUrl: string;
 }
 
-const UNASSIGNED = 'unassigned';
 const REMOVE = 'remove';
-type Bucket = number | typeof UNASSIGNED | typeof REMOVE;
+type Bucket = number | typeof REMOVE;
 
 function DropList({
     bucket,
@@ -103,54 +102,38 @@ function DropList({
     );
 }
 
-export default function ManageMembers({
-    division,
-    platoon,
-    squads: initialSquads,
-    unassigned: initialUnassigned,
-    assignUrl,
-    backUrl,
-    breadcrumbs,
-    createSquadUrl,
-}: Props) {
-    const [squads, setSquads] = useState(initialSquads);
-    const [unassigned, setUnassigned] = useState(initialUnassigned);
+export default function ManageMembers({ division, root, units, assignUrl, backUrl, breadcrumbs, createUrl }: Props) {
+    const [columns, setColumns] = useState<Column[]>(() => [
+        { id: root.id, name: root.name, levelLabel: root.levelLabel, members: root.members },
+        ...units,
+    ]);
     const [dragging, setDragging] = useState<{ id: number; from: Bucket } | null>(null);
     const [hover, setHover] = useState<Bucket | null>(null);
 
     const memberIndex = useMemo(() => {
         const map = new Map<number, MemberCard>();
-        initialSquads.forEach((squad) => squad.members.forEach((member) => map.set(member.id, member)));
-        initialUnassigned.forEach((member) => map.set(member.id, member));
+        columns.forEach((column) => column.members.forEach((member) => map.set(member.id, member)));
         return map;
-    }, [initialSquads, initialUnassigned]);
+    }, [columns]);
 
     function removeFrom(bucket: Bucket, id: number) {
-        if (bucket === UNASSIGNED) {
-            setUnassigned((prev) => prev.filter((member) => member.id !== id));
-        } else if (typeof bucket === 'number') {
-            setSquads((prev) =>
-                prev.map((squad) =>
-                    squad.id === bucket
-                        ? { ...squad, members: squad.members.filter((member) => member.id !== id) }
-                        : squad,
-                ),
-            );
-        }
+        if (bucket === REMOVE) return;
+        setColumns((prev) =>
+            prev.map((column) =>
+                column.id === bucket ? { ...column, members: column.members.filter((member) => member.id !== id) } : column,
+            ),
+        );
     }
 
     function addTo(bucket: Bucket, card: MemberCard) {
-        if (bucket === UNASSIGNED) {
-            setUnassigned((prev) => [...prev, { id: card.id, name: card.name }]);
-        } else if (typeof bucket === 'number') {
-            setSquads((prev) =>
-                prev.map((squad) =>
-                    squad.id === bucket
-                        ? { ...squad, members: [...squad.members, { id: card.id, name: card.name }] }
-                        : squad,
-                ),
-            );
-        }
+        if (bucket === REMOVE) return;
+        setColumns((prev) =>
+            prev.map((column) =>
+                column.id === bucket
+                    ? { ...column, members: [...column.members, { id: card.id, name: card.name }] }
+                    : column,
+            ),
+        );
     }
 
     async function drop(target: Bucket) {
@@ -163,17 +146,15 @@ export default function ManageMembers({
         if (!card) return;
 
         const from = dragging.from;
+        const targetName = target === REMOVE ? null : columns.find((column) => column.id === target)?.name;
         setDragging(null);
         removeFrom(from, card.id);
         addTo(target, card);
 
-        const targetUnitId = target === REMOVE ? 0 : target === UNASSIGNED ? platoon.id : target;
         try {
-            await postJson(assignUrl, { member_id: card.id, unit_id: targetUnitId });
+            await postJson(assignUrl, { member_id: card.id, unit_id: target === REMOVE ? 0 : target });
             toast.success(
-                target === REMOVE
-                    ? `${card.name} removed from the ${division.platoonLabel}`
-                    : `${card.name} reassigned`,
+                target === REMOVE ? `${card.name} removed from ${root.name}` : `${card.name} moved to ${targetName}`,
             );
         } catch (e) {
             removeFrom(target, card.id);
@@ -193,85 +174,91 @@ export default function ManageMembers({
         setHover(null);
     }
 
+    const rootColumn = columns[0];
+    const rest = columns.slice(1);
+
+    function listFor(column: Column, empty: string, scroll?: boolean) {
+        return (
+            <DropList
+                bucket={column.id}
+                members={column.members}
+                empty={empty}
+                scroll={scroll}
+                hover={hover === column.id}
+                draggingId={dragging?.id ?? null}
+                onDragOver={() => setHover(column.id)}
+                onDragLeave={() => setHover((h) => (h === column.id ? null : h))}
+                onDrop={() => drop(column.id)}
+                onDragStart={onDragStart}
+                onDragEnd={onDragEnd}
+            />
+        );
+    }
+
     return (
         <AppLayout
             header={{
-                eyebrow: `${platoon.name} · ${division.name} Division`,
-                title: `Manage ${division.squadLabel} assignments`,
-                breadcrumbs: [...breadcrumbs, { label: `Manage ${pluralize(division.squadLabel)}` }],
+                eyebrow: `${root.name} · ${division.name} Division`,
+                title: `Manage ${root.levelLabel} assignments`,
+                breadcrumbs: [...breadcrumbs, { label: 'Manage assignments' }],
                 actions: (
                     <>
                         <Button variant="outline" size="sm" asChild>
                             <Link href={backUrl}>
-                                <ArrowLeft /> Back to {division.platoonLabel}
+                                <ArrowLeft /> Back to {root.levelLabel}
                             </Link>
                         </Button>
                         <Button variant="outline" size="sm" asChild>
-                            <a href={createSquadUrl} target="_blank" rel="noreferrer">
-                                <Plus /> Create {division.squadLabel}
+                            <a href={createUrl} target="_blank" rel="noreferrer">
+                                <Plus /> Edit {root.levelLabel}
                             </a>
                         </Button>
                     </>
                 ),
             }}
         >
-            <Head title={`Manage ${pluralize(division.squadLabel)} · ${platoon.name}`} />
+            <Head title={`Manage assignments · ${root.name}`} />
 
             <div className="space-y-6">
                 <p className="text-sm text-muted-foreground">
-                    Drag members between {division.squadPlural} to reassign them. {division.squadLabel} leaders are not
-                    listed here and cannot be moved.
+                    Drag members into any unit under {root.name} to reassign them. Members dropped on {root.name} belong
+                    to it directly. Unit leaders are not listed here and cannot be moved.
                 </p>
 
-                {unassigned.length > 0 && (
-                    <section className="rounded-md border border-warning/40 bg-warning/5 p-3">
-                        <h2 className="mb-2 flex items-center gap-2 text-sm font-medium">
-                            <TriangleAlert className="size-4 text-warning" />
-                            {unassigned.length} not assigned to a {division.squadLabel}
-                        </h2>
-                        <DropList
-                            bucket={UNASSIGNED}
-                            members={unassigned}
-                            empty="All assigned"
-                            hover={hover === UNASSIGNED}
-                            draggingId={dragging?.id ?? null}
-                            onDragOver={() => setHover(UNASSIGNED)}
-                            onDragLeave={() => setHover((h) => (h === UNASSIGNED ? null : h))}
-                            onDrop={() => drop(UNASSIGNED)}
-                            onDragStart={onDragStart}
-                            onDragEnd={onDragEnd}
-                        />
-                    </section>
-                )}
+                <section className="rounded-md border border-border bg-card">
+                    <div className="flex items-center justify-between border-b border-border px-3 py-2">
+                        <div>
+                            <span className="text-sm font-semibold">Directly in {rootColumn.name}</span>
+                            <span className="ml-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                                <Users className="size-3" />
+                                {rootColumn.members.length}
+                            </span>
+                        </div>
+                        <span className="text-xs text-muted-foreground">{rootColumn.levelLabel}</span>
+                    </div>
+                    <div className="p-2">{listFor(rootColumn, `No members placed directly in ${rootColumn.name}`, true)}</div>
+                </section>
 
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {squads.map((squad) => (
-                        <section key={squad.id} className="rounded-md border border-border bg-card">
-                            <div className="flex items-center justify-between border-b border-border px-3 py-2">
-                                <div>
-                                    <span className="text-sm font-semibold">{squad.name}</span>
-                                    <span className="ml-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
-                                        <Users className="size-3" />
-                                        {squad.members.length}
-                                    </span>
+                    {rest.map((column) => (
+                        <section key={column.id} className="rounded-md border border-border bg-card">
+                            <div className="flex items-center justify-between gap-2 border-b border-border px-3 py-2">
+                                <div className="min-w-0">
+                                    <div className="truncate text-sm font-semibold">{column.name}</div>
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                        <span>{column.levelLabel}</span>
+                                        <span className="inline-flex items-center gap-1">
+                                            <Users className="size-3" />
+                                            {column.members.length}
+                                        </span>
+                                    </div>
+                                    {column.trail && column.trail !== column.name && (
+                                        <div className="truncate text-xs text-muted-foreground">{column.trail}</div>
+                                    )}
                                 </div>
-                                <span className="text-xs text-muted-foreground">{squad.leader ?? 'TBA'}</span>
+                                <span className="shrink-0 text-xs text-muted-foreground">{column.leader ?? 'TBA'}</span>
                             </div>
-                            <div className="p-2">
-                                <DropList
-                                    bucket={squad.id}
-                                    members={squad.members}
-                                    empty="Drop members here"
-                                    scroll
-                                    hover={hover === squad.id}
-                                    draggingId={dragging?.id ?? null}
-                                    onDragOver={() => setHover(squad.id)}
-                                    onDragLeave={() => setHover((h) => (h === squad.id ? null : h))}
-                                    onDrop={() => drop(squad.id)}
-                                    onDragStart={onDragStart}
-                                    onDragEnd={onDragEnd}
-                                />
-                            </div>
+                            <div className="p-2">{listFor(column, 'Drop members here', true)}</div>
                         </section>
                     ))}
                 </div>
@@ -279,12 +266,12 @@ export default function ManageMembers({
                 <section className="rounded-md border border-destructive/40 bg-destructive/5 p-3">
                     <h2 className="mb-2 flex items-center gap-2 text-sm font-medium text-destructive">
                         <TriangleAlert className="size-4" />
-                        Unassign from {division.platoonLabel}
+                        Unassign from {root.name}
                     </h2>
                     <DropList
                         bucket={REMOVE}
                         members={[]}
-                        empty={`Drag members here to remove them from this ${division.platoonLabel}`}
+                        empty={`Drag members here to remove them from ${root.name}`}
                         hover={hover === REMOVE}
                         draggingId={dragging?.id ?? null}
                         onDragOver={() => setHover(REMOVE)}
