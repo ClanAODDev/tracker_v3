@@ -17,7 +17,7 @@ export interface MemberRow {
     canRemind: boolean;
     tags: Array<{ id: number; name: string; visibility: string }>;
     tagIds: number[];
-    handles: Record<number, { value: string; url: string | null }>;
+    handles: Record<number, { value: string; url: string | null; error: string | null }>;
     posts: number;
     leave: { until: string | null; reason: string | null; pending: boolean } | null;
     isParttimer: boolean;

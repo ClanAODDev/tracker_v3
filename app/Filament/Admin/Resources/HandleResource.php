@@ -144,8 +144,8 @@ class HandleResource extends Resource
             ],
             'battlenet' => [
                 'label' => 'Battle.net BattleTag',
-                'regex' => '/^[A-Za-z0-9]{3,12}#[0-9]{4,6}$/',
-                'hint'  => 'BattleTag must be in the form Name#12345.',
+                'regex' => '/^\p{L}[\p{L}\p{N}]{2,11}#[0-9]{4,8}$/u',
+                'hint'  => 'BattleTag must be in the form Name#1234.',
             ],
             'numeric' => [
                 'label' => 'Numeric only',

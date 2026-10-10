@@ -63,6 +63,9 @@ class MemberRowSerializer
                 ->mapWithKeys(fn (Handle $handle) => [$handle->id => [
                     'value' => $handle->pivot->value,
                     'url'   => $handle->full_url,
+                    'error' => $handle->matches($handle->pivot->value)
+                        ? null
+                        : ($handle->regex_hint ?: "Does not match the {$handle->label} format"),
                 ]])
                 ->all(),
             'posts' => $member->posts,
