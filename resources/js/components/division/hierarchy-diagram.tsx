@@ -13,12 +13,12 @@ interface HierarchyDiagramProps {
     className?: string;
 }
 
-const LABEL_WIDTH = 96;
-const CELL = 30;
-const NODE_W = 22;
-const NODE_H = 14;
-const ROW = 46;
-const TOP = 16;
+const LABEL_WIDTH = 132;
+const CELL = 48;
+const NODE_W = 36;
+const NODE_H = 24;
+const ROW = 68;
+const TOP = 20;
 
 const TIER_FILL: Record<Tier, string> = {
     platoon: 'fill-primary',
@@ -81,7 +81,7 @@ export function HierarchyDiagram({ levels, highlightDepth, className }: Hierarch
                             y={y(d)}
                             width={d === 0 ? NODE_W * 2 : NODE_W}
                             height={NODE_H}
-                            rx={3}
+                            rx={4}
                             className={cn(
                                 s === 'tier' && (tier ? TIER_FILL[tier] : 'fill-muted-foreground'),
                                 s === 'selected' && 'fill-primary stroke-primary',
@@ -95,16 +95,16 @@ export function HierarchyDiagram({ levels, highlightDepth, className }: Hierarch
                 }),
             )}
 
-            <text x={4} y={y(0) + NODE_H - 3} className="fill-muted-foreground text-[10px]">
+            <text x={6} y={y(0) + NODE_H - 6} className="fill-muted-foreground text-[14px]">
                 Division
             </text>
             {levels.map((level, i) => (
                 <text
                     key={`l-${i}`}
-                    x={4}
-                    y={y(i + 1) + NODE_H - 3}
+                    x={6}
+                    y={y(i + 1) + NODE_H - 6}
                     className={cn(
-                        'text-[10px]',
+                        'text-[14px]',
                         highlightDepth === i + 1 ? 'fill-foreground font-semibold' : 'fill-muted-foreground',
                     )}
                 >

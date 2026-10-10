@@ -38,6 +38,22 @@ class DivisionLeaderPowersControllerTest extends TestCase
     }
 
     #[Test]
+    public function it_uses_the_divisions_leader_titles_and_abbreviations(): void
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+        $division->unitLevels()->where('depth', 1)->first()->update(['leader_title' => 'Company Commander']);
+
+        $this->actingAs($officer)
+            ->get(route('division.leader-powers', $division->slug))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('levels.0.abbr', 'CC')
+                ->where('tiers.platoon.title', 'Company Commander')
+                ->where('tiers.platoon.abbr', 'CC')
+                ->where('tiers.squad.abbr', 'SL'));
+    }
+
+    #[Test]
     public function it_includes_one_two_and_four_level_examples(): void
     {
         $officer  = $this->createOfficer();
