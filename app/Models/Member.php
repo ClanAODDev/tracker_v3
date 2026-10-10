@@ -163,16 +163,8 @@ class Member extends Model
     {
         $units = app(UnitAssignment::class);
 
-        $squad   = $this->squadUnit();
-        $platoon = $this->platoonUnit();
-
-        if ($this->position === Position::SQUAD_LEADER && $squad && app(UnitHierarchy::class)->leads($this, $squad)) {
-            $units->setLeader($squad, null);
-        }
-
-        if ($this->position === Position::PLATOON_LEADER && $platoon && app(UnitHierarchy::class)->leads($this, $platoon)) {
-            $units->setLeader($platoon, null);
-        }
+        Unit::query()->where('leader_id', $this->clan_id)->get()
+            ->each(fn (Unit $unit) => $units->setLeader($unit, null));
 
         $this->update([
             'unit_id'     => null,

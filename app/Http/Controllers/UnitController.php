@@ -108,12 +108,12 @@ class UnitController extends Controller
         $childLabel        = $this->childLabel($platoon);
 
         return Inertia::render('division/members', [
-            ...MemberListProps::build($division, $members, $unitStats, assignmentKind: 'squad'),
+            ...MemberListProps::build($division, $members, $unitStats, assignmentDepth: $platoon->depth + 1),
             'scope' => [
                 'kind'            => 'platoon',
                 'name'            => $platoon->name ?: 'Untitled ' . $platoon->levelLabel(),
-                'platoonLabel'    => $platoon->levelLabel(),
-                'squadLabel'      => $childLabel,
+                'unitLabel'       => $platoon->levelLabel(),
+                'childLabel'      => $childLabel,
                 'logo'            => $platoon->getLogoPath(),
                 'canManage'       => $canManage,
                 'editUrl'         => $canManage ? route('filament.mod.resources.units.edit', $platoon->id) : null,
@@ -165,13 +165,13 @@ class UnitController extends Controller
                 $division,
                 $members,
                 $unitStats,
-                assignmentKind: 'squad',
+                assignmentDepth: $squad->depth,
                 directRecruitOfClanId: $squad->leader?->clan_id,
             ),
             'scope' => [
                 'kind'        => 'squad',
                 'name'        => $squad->name ?: 'Untitled ' . $squad->levelLabel(),
-                'squadLabel'  => $squad->levelLabel(),
+                'unitLabel'   => $squad->levelLabel(),
                 'canManage'   => $canManage,
                 'editUrl'     => $canManage ? route('filament.mod.resources.units.edit', $squad->id) : null,
                 'breadcrumbs' => $this->ancestry($division, $squad),

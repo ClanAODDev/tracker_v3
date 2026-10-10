@@ -28,7 +28,7 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
         private readonly Member $member,
         private readonly ?User $remover,
         private readonly ?string $removalReason,
-        private readonly ?Unit $squad = null
+        private readonly ?Unit $unit = null
     ) {}
 
     /**
@@ -72,16 +72,8 @@ class NotifyDivisionMemberRemoved extends Notification implements ShouldQueue
                 ],
                 $reason,
                 [
-                    'name' => sprintf(
-                        '%s / %s',
-                        $notifiable->topLevelLabel(),
-                        $notifiable->bottomLevelLabel()
-                    ),
-                    'value' => sprintf(
-                        '%s / %s',
-                        $this->squad?->parent?->name ?? 'Unassigned',
-                        $this->squad?->name ?? 'Unassigned',
-                    ),
+                    'name'  => 'Unit',
+                    'value' => $this->unit?->trailLabel() ?? 'Unassigned',
                 ],
                 $notifiable->handleFieldFor($this->member),
             ], fn ($field) => $field !== null)))->error()

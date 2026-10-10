@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { cn } from '@/lib/utils';
 
 interface VoiceProps {
-    division: { name: string; slug: string; platoonLabel: string; hasUnits: boolean };
+    division: { name: string; slug: string; topLevelLabel: string; hasUnits: boolean };
     stats: { total: number; disconnected: number; neverConnected: number; neverConfigured: number };
     members: Array<{
         rankName: string;
@@ -52,7 +52,7 @@ export default function VoiceReport({ division, stats, members }: VoiceProps) {
                             <TableRow>
                                 <TableHead>Member</TableHead>
                                 <TableHead>Status</TableHead>
-                                {division.hasUnits && <TableHead>{division.platoonLabel}</TableHead>}
+                                {division.hasUnits && <TableHead>{division.topLevelLabel}</TableHead>}
                                 <TableHead>Discord</TableHead>
                                 <TableHead>Last activity</TableHead>
                                 <TableHead className="text-right">Forum</TableHead>

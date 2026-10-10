@@ -32,7 +32,7 @@ interface DivisionShowProps {
         slug: string;
         logo: string | null;
         hasUnits: boolean;
-        platoonLabel: string;
+        topLevelLabel: string;
         childLabelPlural: string;
         isShutdown: boolean;
         shutdownAt: string | null;
@@ -81,7 +81,7 @@ interface DivisionShowProps {
     memberList?: {
         division: MemberListDivision;
         members: MemberRow[];
-        assignmentKind: 'platoon' | 'squad';
+        assignmentDepth: number;
         tagFilter: Array<{ id: number; name: string; count: number }>;
         memberFields: MemberFieldDefinition[];
         bulk: BulkConfig;
@@ -388,18 +388,18 @@ export default function DivisionShow({
                         action={
                             d.canCreatePlatoon ? (
                                 <Button variant="ghost" size="sm" asChild>
-                                    <a href={d.editUrl}>Create {d.platoonLabel}</a>
+                                    <a href={d.editUrl}>Create {d.topLevelLabel}</a>
                                 </Button>
                             ) : undefined
                         }
                     >
-                        {pluralize(d.platoonLabel)}
+                        {pluralize(d.topLevelLabel)}
                     </SectionTitle>
 
                     {organizeProps.canOrganize && (
                         <OrganizeBanner
                             members={organize.members}
-                            unitLabel={d.platoonLabel}
+                            unitLabel={d.topLevelLabel}
                             organizing={organize.organizing}
                             onToggle={() => organize.setOrganizing((v) => !v)}
                             onDragStart={organize.onDragStart}
@@ -410,7 +410,7 @@ export default function DivisionShow({
 
                     {platoonList.length === 0 ? (
                         <p className="rounded-md border border-destructive/30 bg-card p-4 text-sm text-muted-foreground">
-                            No {pluralize(d.platoonLabel)} found
+                            No {pluralize(d.topLevelLabel)} found
                         </p>
                     ) : (
                         <div className="grid gap-3 lg:grid-cols-2">
@@ -441,7 +441,7 @@ export default function DivisionShow({
                         <MemberTable
                             rows={memberList.members}
                             division={memberList.division}
-                            assignmentKind={memberList.assignmentKind}
+                            assignmentDepth={memberList.assignmentDepth}
                             bulk={memberList.bulk}
                             tagFilter={memberList.tagFilter}
                             memberFields={memberList.memberFields}

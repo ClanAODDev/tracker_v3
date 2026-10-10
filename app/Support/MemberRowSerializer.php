@@ -13,7 +13,7 @@ class MemberRowSerializer
 {
     public function __construct(
         private Division $division,
-        private string $assignmentKind = 'platoon',
+        private int $assignmentDepth = 1,
         private ?int $directRecruitOfClanId = null,
     ) {}
 
@@ -98,7 +98,7 @@ class MemberRowSerializer
 
     private function assignment(Member $member): ?array
     {
-        $unit = $this->assignmentKind === 'squad' ? $member->squadUnit() : $member->platoonUnit();
+        $unit = $member->unitAt($this->assignmentDepth);
 
         return $unit
             ? [

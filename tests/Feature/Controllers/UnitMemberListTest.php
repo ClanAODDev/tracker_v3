@@ -31,7 +31,7 @@ class UnitMemberListTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('division/members')
                 ->where('scope.kind', 'platoon')
-                ->where('assignmentKind', 'squad')
+                ->where('assignmentDepth', 2)
                 ->where('members', fn ($members) => collect($members)->contains('id', $member->clan_id))
                 ->has('squads'));
     }

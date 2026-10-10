@@ -199,11 +199,7 @@ class RecruitingController extends Controller
             'welcome_area'       => $settings->get('welcome_area', ''),
             'welcome_pm'         => $settings->get('welcome_pm', ''),
             'use_welcome_thread' => $settings->get('use_welcome_thread', false),
-            'levels'             => [
-                'top'    => ['label' => $division->topLevelLabel(), 'plural' => $division->topLevelPlural()],
-                'bottom' => ['label' => $division->bottomLevelLabel(), 'plural' => $division->bottomLevelPlural()],
-            ],
-            'pending_discord' => $pendingDiscord,
+            'pending_discord'    => $pendingDiscord,
         ];
     }
 

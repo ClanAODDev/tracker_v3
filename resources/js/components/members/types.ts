@@ -71,7 +71,7 @@ export interface MemberListDivision {
     name: string;
     slug: string;
     hasUnits: boolean;
-    platoonLabel: string;
-    squadLabel: string;
+    topLevelLabel: string;
+    levels: Array<{ depth: number; label: string }>;
     handleTypes: HandleType[];
 }

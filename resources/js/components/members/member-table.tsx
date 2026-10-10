@@ -43,7 +43,7 @@ import { cn } from '@/lib/utils';
 interface Props {
     rows: MemberRow[];
     division: MemberListDivision;
-    assignmentKind: 'platoon' | 'squad';
+    assignmentDepth: number;
     bulk: BulkConfig;
     tagFilter: Array<{ id: number; name: string; count: number }>;
     memberFields: MemberFieldDefinition[];
@@ -91,7 +91,7 @@ function loadState(key: string): Partial<PersistedState> {
 export function MemberTable({
     rows,
     division,
-    assignmentKind,
+    assignmentDepth,
     bulk,
     tagFilter,
     memberFields,
@@ -130,7 +130,7 @@ export function MemberTable({
         }
     }, [storageKey, sorting, columnVisibility, activityStyle]);
 
-    const assignmentLabel = assignmentKind === 'squad' ? division.squadLabel : division.platoonLabel;
+    const assignmentLabel = division.levels.find((level) => level.depth === assignmentDepth)?.label ?? 'Unit';
 
     const allColumns = useMemberColumns({
         assignmentLabel,

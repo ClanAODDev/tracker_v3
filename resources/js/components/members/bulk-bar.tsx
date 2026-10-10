@@ -249,9 +249,9 @@ function MoveDialog({
         if (units.length === 0) {
             getJson<{ units: UnitOption[] }>(dataUrl)
                 .then((res) => setUnits(res.units))
-                .catch(() => toast.error('Failed to load ' + pluralize(division.platoonLabel)));
+                .catch(() => toast.error('Failed to load ' + pluralize(division.topLevelLabel)));
         }
-    }, [open, dataUrl, division.platoonLabel, units.length]);
+    }, [open, dataUrl, division.topLevelLabel, units.length]);
 
     const destinationId = path.filter(Boolean).at(-1);
 

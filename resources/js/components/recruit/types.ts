@@ -24,11 +24,6 @@ export interface PendingDiscordUser {
     application: Array<{ label: string; value: string }> | null;
 }
 
-export interface LevelNames {
-    label: string;
-    plural: string;
-}
-
 export interface DivisionRecruitData {
     name: string;
     handleTypes: HandleType[];
@@ -38,7 +33,6 @@ export interface DivisionRecruitData {
     welcome_area: string;
     welcome_pm: string;
     use_welcome_thread: boolean;
-    levels: { top: LevelNames; bottom: LevelNames };
     pending_discord: PendingDiscordUser[];
 }
 

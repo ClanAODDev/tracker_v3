@@ -38,14 +38,14 @@ interface Scope {
     manageUrl?: string | null;
     createChildUrl?: string | null;
     unassignedCount?: number;
-    platoonLabel?: string;
-    squadLabel?: string;
+    unitLabel?: string;
+    childLabel?: string;
 }
 
 interface Props {
     division: MemberListDivision;
     members: MemberRow[];
-    assignmentKind: 'platoon' | 'squad';
+    assignmentDepth: number;
     unitStats: UnitStats;
     tagFilter: Array<{ id: number; name: string; count: number }>;
     memberFields: MemberFieldDefinition[];
@@ -59,7 +59,7 @@ interface Props {
 export default function MembersPage({
     division,
     members,
-    assignmentKind,
+    assignmentDepth,
     unitStats,
     tagFilter,
     memberFields,
@@ -145,12 +145,7 @@ export default function MembersPage({
         <AppLayout
             width="wide"
             header={{
-                eyebrow:
-                    scope.kind === 'division'
-                        ? 'Division'
-                        : scope.kind === 'platoon'
-                          ? scope.platoonLabel
-                          : scope.squadLabel,
+                eyebrow: scope.kind === 'division' ? 'Division' : scope.unitLabel,
                 title,
                 breadcrumbs,
                 actions,
@@ -160,7 +155,7 @@ export default function MembersPage({
 
             {scope.kind === 'platoon' && !scope.canManage && (scope.unassignedCount ?? 0) > 0 && (
                 <div className="mb-6 rounded-md border border-warning/40 bg-warning/5 px-4 py-3 text-sm">
-                    This {scope.platoonLabel} has{' '}
+                    This {scope.unitLabel} has{' '}
                     <span className="numeric font-semibold">{scope.unassignedCount}</span> unassigned member
                     {scope.unassignedCount === 1 ? '' : 's'}.
                 </div>
@@ -169,7 +164,7 @@ export default function MembersPage({
             {canOrganize && (
                 <OrganizeBanner
                     members={organize.members}
-                    unitLabel={scope.squadLabel ?? 'Squad'}
+                    unitLabel={scope.childLabel ?? 'Unit'}
                     organizing={organize.organizing}
                     onToggle={() => organize.setOrganizing((v) => !v)}
                     onDragStart={organize.onDragStart}
@@ -182,7 +177,7 @@ export default function MembersPage({
                 <MemberTable
                     rows={members}
                     division={division}
-                    assignmentKind={assignmentKind}
+                    assignmentDepth={assignmentDepth}
                     bulk={bulk}
                     tagFilter={tagFilter}
                     memberFields={memberFields}
@@ -192,7 +187,7 @@ export default function MembersPage({
                     {scope.createChildUrl && (
                         <CreateChildUnit
                             url={scope.createChildUrl}
-                            label={scope.squadLabel ?? 'Unit'}
+                            label={scope.childLabel ?? 'Unit'}
                             className="w-full"
                         />
                     )}

@@ -40,10 +40,10 @@ class DivisionVoiceReportData
     {
         return [
             'division' => [
-                'name'         => $this->division->name,
-                'slug'         => $this->division->slug,
-                'platoonLabel' => $this->division->topLevelLabel(),
-                'hasUnits'     => ! $this->division->isFlat(),
+                'name'          => $this->division->name,
+                'slug'          => $this->division->slug,
+                'topLevelLabel' => $this->division->topLevelLabel(),
+                'hasUnits'      => ! $this->division->isFlat(),
             ],
             'stats'   => $this->stats,
             'members' => $this->discordIssues->map(fn (Member $member) => [
