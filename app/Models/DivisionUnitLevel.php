@@ -32,6 +32,17 @@ class DivisionUnitLevel extends Model
         return $this->titleCased();
     }
 
+    public function leaderAbbreviation(): string
+    {
+        $words = preg_split('/\s+/', trim((string) $this->leader_title), -1, PREG_SPLIT_NO_EMPTY);
+
+        if (count($words) > 1) {
+            return Str::upper(collect($words)->map(fn (string $word) => Str::substr($word, 0, 1))->implode(''));
+        }
+
+        return Str::upper(Str::substr($words[0] ?? '', 0, 3));
+    }
+
     private function titleCased(): Attribute
     {
         return Attribute::make(

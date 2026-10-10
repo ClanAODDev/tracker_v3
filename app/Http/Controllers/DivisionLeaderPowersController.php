@@ -25,9 +25,14 @@ class DivisionLeaderPowersController extends Controller
                 'depth'  => $level->depth,
                 'label'  => $level->label,
                 'title'  => $level->leader_title,
+                'abbr'   => $level->leaderAbbreviation(),
                 'tier'   => $this->tier($level->depth, $deepest),
                 'powers' => UnitLeaderPower::forDivision($division, $level->depth),
             ])->values(),
+            'tiers' => [
+                'platoon' => $this->tierTerms($division->topLeaderTitle()),
+                'squad'   => $this->tierTerms($division->bottomLeaderTitle()),
+            ],
             'examples' => collect(self::EXAMPLE_DEPTHS)->map(fn (int $levels) => [
                 'levels' => collect(range(1, $levels))->map(fn (int $depth) => [
                     'depth' => $depth,
@@ -36,6 +41,14 @@ class DivisionLeaderPowersController extends Controller
                 ])->all(),
             ])->all(),
         ]);
+    }
+
+    private function tierTerms(string $title): array
+    {
+        return [
+            'title' => $title,
+            'abbr'  => (new DivisionUnitLevel(['leader_title' => $title]))->leaderAbbreviation(),
+        ];
     }
 
     private function tier(int $depth, int $deepest): string

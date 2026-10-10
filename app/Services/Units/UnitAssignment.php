@@ -7,6 +7,7 @@ use App\Enums\ActivityType;
 use App\Models\Activity;
 use App\Models\Division;
 use App\Models\DivisionUnitLevel;
+use App\Models\Member;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +34,7 @@ class UnitAssignment
             ]);
 
             $unit->update(['path' => ($parent?->path ?? '/') . $unit->id . '/']);
+            $this->claimLeader($unit);
             $this->recordActivity($unit, ActivityType::CREATED_UNIT);
 
             return $unit;
@@ -102,6 +104,7 @@ class UnitAssignment
 
         DB::transaction(function () use ($unit, $attributes) {
             $unit->update(array_intersect_key($attributes, array_flip(self::UNIT_COLUMNS)));
+            $this->claimLeader($unit);
             $this->flushHierarchy();
             $this->recordActivity($unit, ActivityType::UPDATED_UNIT);
         });
@@ -133,6 +136,7 @@ class UnitAssignment
     {
         DB::transaction(function () use ($unit, $clanId, $recordActivity) {
             $unit->update(['leader_id' => $clanId ?: null]);
+            $this->claimLeader($unit);
             $this->flushHierarchy();
 
             if ($recordActivity) {
@@ -163,6 +167,41 @@ class UnitAssignment
 
             return $units->count();
         });
+    }
+
+    public function assignMember(Member $member, ?Unit $unit): void
+    {
+        DB::transaction(function () use ($member, $unit) {
+            $member->update(['unit_id' => $unit?->id]);
+            $this->recordAssignment($member, $unit);
+        });
+    }
+
+    private function claimLeader(Unit $unit): void
+    {
+        if ($unit->leader_id) {
+            $this->clearLeadership([$unit->leader_id], except: $unit);
+        }
+    }
+
+    private function recordAssignment(Member $member, ?Unit $unit): void
+    {
+        if ($unit === null) {
+            $member->recordActivity(ActivityType::UNASSIGNED);
+
+            return;
+        }
+
+        if ($unit->parent_id === null) {
+            $member->recordActivity(ActivityType::ASSIGNED_PLATOON, ['platoon' => $unit->name]);
+
+            return;
+        }
+
+        $member->recordActivity(ActivityType::ASSIGNED_SQUAD, [
+            'platoon' => $unit->parent->name,
+            'squad'   => $unit->name,
+        ]);
     }
 
     private function recordActivity(Unit $unit, ActivityType $type): void

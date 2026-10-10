@@ -78,7 +78,7 @@ class UnitWritersTest extends TestCase
     {
         $recruiter = $this->createMember(['division_id' => $this->division->id]);
 
-        $member = app(RecruitmentService::class)->createMember(999123, 'Recruit', $this->division, Rank::RECRUIT->value, $this->platoon->id, $this->squad->id, [], $recruiter);
+        $member = app(RecruitmentService::class)->createMember(999123, 'Recruit', $this->division, Rank::RECRUIT->value, $this->squad->id, [], $recruiter);
 
         $this->assertSame($this->squad->fresh()->id, $member->fresh()->unit_id);
     }

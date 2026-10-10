@@ -3,12 +3,11 @@ import { ArrowLeft, CircleCheck } from 'lucide-react';
 
 import type { RecruitForm } from '@/components/recruit/use-recruit-form';
 import { Button } from '@/components/ui/button';
+import { unitPathLabel } from '@/components/units/unit-cascade-select';
 
 export function ConfirmationStep({ form }: { form: RecruitForm }) {
     const { props, member } = form;
-    const platoon = props.platoons.find((p) => p.id === Number(member.platoon));
-    const squad = platoon?.squads.find((s) => s.id === Number(member.squad));
-    const assignment = [platoon?.name, squad?.name].filter(Boolean).join(' › ');
+    const assignment = unitPathLabel(props.units, member.unitPath);
 
     return (
         <div className="space-y-6">

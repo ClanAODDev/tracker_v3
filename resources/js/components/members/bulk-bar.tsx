@@ -1,7 +1,7 @@
 import { pluralize } from '@/lib/format';
 import { router } from '@inertiajs/react';
 import { ArrowLeftRight, Bell, Megaphone, Tags, X } from 'lucide-react';
-import { type FormEvent, useEffect, useMemo, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
@@ -13,8 +13,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { SimpleSelect } from '@/components/ui/simple-select';
+import { type UnitOption, UnitCascadeSelect } from '@/components/units/unit-cascade-select';
 import { getJson, postJson } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -27,13 +26,6 @@ interface Props {
     division: MemberListDivision;
     onClear: () => void;
     onReminded: (ids: number[], date: string) => void;
-}
-
-interface UnitOption {
-    id: number;
-    name: string;
-    levelLabel: string;
-    children: UnitOption[];
 }
 
 export function BulkBar({ selectedIds, parttimersSelected, bulk, division, onClear, onReminded }: Props) {
@@ -261,24 +253,7 @@ function MoveDialog({
         }
     }, [open, dataUrl, division.platoonLabel, units.length]);
 
-    const levels = useMemo(() => {
-        const result: Array<{ options: UnitOption[]; selected: string }> = [];
-        let options = units;
-
-        for (let depth = 0; options.length > 0; depth++) {
-            const selected = path[depth] ?? '';
-            result.push({ options, selected });
-            options = options.find((unit) => String(unit.id) === selected)?.children ?? [];
-        }
-
-        return result;
-    }, [units, path]);
-
     const destinationId = path.filter(Boolean).at(-1);
-
-    function choose(depth: number, value: string) {
-        setPath((prev) => [...prev.slice(0, depth), ...(value === '__none' ? [] : [value])]);
-    }
 
     async function submit(e: FormEvent) {
         e.preventDefault();
@@ -309,29 +284,7 @@ function MoveDialog({
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={submit} className="space-y-4">
-                    {levels.map((level, depth) => {
-                        const label = level.options[0].levelLabel;
-                        return (
-                            <div key={depth} className="grid gap-1.5">
-                                <Label>
-                                    {label}
-                                    {depth > 0 && <span className="text-muted-foreground"> (optional)</span>}
-                                </Label>
-                                <SimpleSelect
-                                    value={level.selected || '__none'}
-                                    onChange={(v) => choose(depth, v)}
-                                    placeholder={`Select ${label}…`}
-                                    options={[
-                                        {
-                                            value: '__none',
-                                            label: depth === 0 ? `Select ${label}…` : `No ${label} assignment`,
-                                        },
-                                        ...level.options.map((unit) => ({ value: String(unit.id), label: unit.name })),
-                                    ]}
-                                />
-                            </div>
-                        );
-                    })}
+                    <UnitCascadeSelect units={units} path={path} onChange={setPath} showDetails />
                     <DialogFooter>
                         <Button type="submit" size="sm" disabled={busy || !destinationId}>
                             Move

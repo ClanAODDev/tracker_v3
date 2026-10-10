@@ -6,6 +6,7 @@ use App\Models\Division;
 use App\Models\Handle;
 use App\Models\Leave;
 use App\Models\Member;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 
 class MemberRowSerializer
@@ -18,6 +19,8 @@ class MemberRowSerializer
 
     public function collection(Collection $members): array
     {
+        (new EloquentCollection($members->all()))->load('ledUnit');
+
         return $members->map(fn (Member $member) => $this->row($member))->values()->all();
     }
 
@@ -34,7 +37,7 @@ class MemberRowSerializer
             'rankValue'      => $member->rank->value,
             'rankColor'      => $member->rank->getColorHex(),
             'position'       => $member->positionLabel(),
-            'positionAbbr'   => $member->position?->getAbbreviation() ?: null,
+            'positionAbbr'   => $member->positionAbbreviation(),
             'positionClass'  => $member->position?->getClass(),
             'profileUrl'     => route('member', $member->getUrlParams()),
             'assignment'     => $this->assignment($member),

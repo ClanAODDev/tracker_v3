@@ -135,11 +135,23 @@ class Member extends Model
 
     public function positionLabel(): ?string
     {
-        if (! in_array($this->position, [Position::SQUAD_LEADER, Position::PLATOON_LEADER], true) || ! $this->unit_id) {
-            return $this->position?->getLabel();
+        return $this->leaderLevel()?->leader_title ?? $this->position?->getLabel();
+    }
+
+    public function positionAbbreviation(): ?string
+    {
+        return $this->leaderLevel()?->leaderAbbreviation() ?: ($this->position?->getAbbreviation() ?: null);
+    }
+
+    public function leaderLevel(): ?DivisionUnitLevel
+    {
+        if (! in_array($this->position, [Position::SQUAD_LEADER, Position::PLATOON_LEADER], true)) {
+            return null;
         }
 
-        return $this->division?->unitLevel($this->unit?->depth ?? 0)?->leader_title ?? $this->position->getLabel();
+        $depth = $this->ledUnit?->depth ?? $this->unit?->depth;
+
+        return $depth ? $this->division?->unitLevel($depth) : null;
     }
 
     public function hasNoDivision(): bool
@@ -208,6 +220,11 @@ class Member extends Model
     public function partTimeDivisions(): BelongsToMany
     {
         return $this->belongsToMany(Division::class, 'division_parttimer')->withTimestamps();
+    }
+
+    public function ledUnit(): HasOne
+    {
+        return $this->hasOne(Unit::class, 'leader_id', 'clan_id');
     }
 
     public function unit(): BelongsTo

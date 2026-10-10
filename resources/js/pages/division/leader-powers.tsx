@@ -9,6 +9,7 @@ interface Level {
     depth: number;
     label: string;
     title: string;
+    abbr: string;
     tier: Tier;
     powers: string[];
 }
@@ -17,47 +18,57 @@ interface Example {
     levels: Array<{ depth: number; label: string; tier: Tier }>;
 }
 
+interface TierTerms {
+    title: string;
+    abbr: string;
+}
+
 interface Props {
     division: { name: string; slug: string };
     levels: Level[];
+    tiers: Record<Tier, TierTerms>;
     examples: Example[];
 }
-
-const TIER_NAME: Record<Tier, string> = {
-    platoon: 'Platoon leader powers',
-    squad: 'Squad leader powers',
-};
 
 const TIER_SWATCH: Record<Tier, string> = {
     platoon: 'bg-primary',
     squad: 'bg-[var(--chart-3)]',
 };
 
-const EXAMPLE_NOTES: Record<number, string> = {
-    1: 'A single level: its leader gets platoon leader powers.',
-    2: 'Two levels: the top level gets platoon leader powers and the bottom level gets squad leader powers.',
-    4: 'Four levels: every level above the bottom gets platoon leader powers, and only the bottom level gets squad leader powers.',
-};
+function exampleNote(levels: number, tiers: Record<Tier, TierTerms>) {
+    const top = tiers.platoon.title;
+    const bottom = tiers.squad.title;
 
-function TierLegend() {
+    if (levels === 1) {
+        return `A single level: its leader gets ${top} powers.`;
+    }
+
+    if (levels === 2) {
+        return `Two levels: the top level gets ${top} powers and the bottom level gets ${bottom} powers.`;
+    }
+
+    return `${levels} levels: every level above the bottom gets ${top} powers, and only the bottom level gets ${bottom} powers.`;
+}
+
+function TierLegend({ tiers }: { tiers: Record<Tier, TierTerms> }) {
     return (
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-            {(Object.keys(TIER_NAME) as Tier[]).map((tier) => (
+            {(Object.keys(tiers) as Tier[]).map((tier) => (
                 <span key={tier} className="flex items-center gap-2">
                     <span className={`size-3 rounded-sm ${TIER_SWATCH[tier]}`} />
-                    {TIER_NAME[tier]}
+                    {tiers[tier].title} ({tiers[tier].abbr}) powers
                 </span>
             ))}
         </div>
     );
 }
 
-export default function LeaderPowers({ division, levels, examples }: Props) {
+export default function LeaderPowers({ division, levels, tiers, examples }: Props) {
     const diagramLevels: DiagramLevel[] = levels.map((l) => ({ label: l.label, tier: l.tier }));
 
     return (
         <AppLayout
-            width="full"
+            width="wide"
             header={{
                 title: 'Leader powers',
                 eyebrow: `${division.name} Division`,
@@ -70,7 +81,7 @@ export default function LeaderPowers({ division, levels, examples }: Props) {
         >
             <Head title={`Leader powers · ${division.name}`} />
 
-            <div className="mx-auto w-full max-w-5xl space-y-10 px-6 py-8">
+            <div className="space-y-10">
                 <section className="space-y-4">
                     <div>
                         <h2 className="text-lg font-semibold">What each leader can do</h2>
@@ -92,11 +103,11 @@ export default function LeaderPowers({ division, levels, examples }: Props) {
                                 <CardHeader>
                                     <div className="flex flex-wrap items-center gap-2">
                                         <CardTitle className="text-base">{level.title}</CardTitle>
-                                        <Badge variant="outline">{TIER_NAME[level.tier]}</Badge>
+                                        <Badge variant="outline">{level.abbr}</Badge>
                                     </div>
                                     <CardDescription>Leads a {level.label}</CardDescription>
                                 </CardHeader>
-                                <CardContent className="grid gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+                                <CardContent className="grid gap-6 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
                                     <HierarchyDiagram levels={diagramLevels} highlightDepth={level.depth} />
                                     <ul className="space-y-2 text-sm">
                                         {level.powers.map((power) => (
@@ -116,13 +127,13 @@ export default function LeaderPowers({ division, levels, examples }: Props) {
                     <div>
                         <h2 className="text-lg font-semibold">How powers follow depth</h2>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Divisions can have no levels, or up to four. Only the bottom level gets squad leader powers; any
-                            level above it gets platoon leader powers, and a division with one level treats its leader
-                            as a platoon leader.
+                            Divisions can have no levels, or up to four. Only the bottom level gets {tiers.squad.title}{' '}
+                            powers; any level above it gets {tiers.platoon.title} powers, and a division with one level
+                            treats its leader as a {tiers.platoon.title}.
                         </p>
                     </div>
 
-                    <TierLegend />
+                    <TierLegend tiers={tiers} />
 
                     <div className="grid gap-4 md:grid-cols-2">
                         {examples.map((example) => (
@@ -131,7 +142,7 @@ export default function LeaderPowers({ division, levels, examples }: Props) {
                                     <CardTitle className="text-base">
                                         {example.levels.length} {example.levels.length === 1 ? 'level' : 'levels'}
                                     </CardTitle>
-                                    <CardDescription>{EXAMPLE_NOTES[example.levels.length]}</CardDescription>
+                                    <CardDescription>{exampleNote(example.levels.length, tiers)}</CardDescription>
                                 </CardHeader>
                                 <CardContent>
                                     <HierarchyDiagram levels={example.levels} />
