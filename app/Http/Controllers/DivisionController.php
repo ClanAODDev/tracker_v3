@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Data\UnitStatsData;
 use App\Enums\ActivityType;
 use App\Enums\Position;
+use App\Http\Requests\Division\AddPartTimerRequest;
+use App\Http\Requests\Division\UnassignedMembersRequest;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Unit;
-use App\Models\User;
 use App\Repositories\DivisionRepository;
 use App\Services\DivisionShowService;
 use App\Services\MemberHandleService;
 use App\Services\MemberQueryService;
-use App\Support\HandleRules;
 use App\Support\MemberCard;
 use App\Support\MemberListProps;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -148,15 +147,11 @@ class DivisionController extends Controller
         ]);
     }
 
-    public function unassignedToSquad(Division $division): JsonResponse
+    public function unassignedToSquad(UnassignedMembersRequest $request, Division $division): JsonResponse
     {
-        $this->authorize('manageUnassigned', User::class);
-
-        $level = max(2, min((int) request()->query('level', 2), 4));
-
         $members = $division->members()
             ->with('unit')
-            ->whereIn('unit_id', Unit::query()->where('depth', $level - 1)->select('id'))
+            ->whereIn('unit_id', $division->units()->where('depth', $request->level() - 1)->select('id'))
             ->where('position', Position::MEMBER)
             ->get(['id', 'clan_id', 'name', 'rank', 'unit_id'])
             ->map(fn ($member) => [
@@ -170,17 +165,10 @@ class DivisionController extends Controller
         return response()->json(['members' => $members]);
     }
 
-    public function addPartTimer(Division $division, MemberHandleService $handles): JsonResponse|RedirectResponse
+    public function addPartTimer(AddPartTimerRequest $request, Division $division, MemberHandleService $handles): JsonResponse|RedirectResponse
     {
-        $validated = request()->validate([
-            'member_id' => 'required|exists:members,clan_id',
-            'handles'   => ['nullable', 'array'],
-            ...HandleRules::forDivision($division),
-        ]);
-
-        $member = Member::where('clan_id', $validated['member_id'])->firstOrFail();
-
-        $this->authorize('managePartTime', $member);
+        $validated = $request->validated();
+        $member    = $request->member();
 
         if ($division->partTimeMembers()->where('member_id', $member->id)->exists()) {
             if (request()->expectsJson()) {
