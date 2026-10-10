@@ -8,7 +8,7 @@ use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
 
-class AssignSquadAuthorizationTest extends TestCase
+class AssignUnitAuthorizationTest extends TestCase
 {
     use CreatesDivisions;
     use CreatesMembers;
@@ -21,7 +21,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $member   = $this->createMember(['division_id' => $division->id]);
         $squad    = $this->createSquad($this->createPlatoon($division));
 
-        $this->postJson('/members/assign-squad', [
+        $this->postJson('/members/assign-unit', [
             'member_id' => $member->id,
             'unit_id'   => $squad->id,
         ])->assertUnauthorized();
@@ -36,7 +36,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $squad    = $this->createSquad($this->createPlatoon($division));
 
         $this->actingAs($user)
-            ->postJson('/members/assign-squad', [
+            ->postJson('/members/assign-unit', [
                 'member_id' => $target->id,
                 'unit_id'   => $squad->id,
             ])->assertForbidden();
@@ -51,7 +51,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $squad   = $this->createSquad($platoon);
 
         $this->actingAs($officer)
-            ->postJson('/members/assign-squad', [
+            ->postJson('/members/assign-unit', [
                 'member_id' => $target->id,
                 'unit_id'   => $squad->id,
             ])->assertOk();
@@ -73,7 +73,7 @@ class AssignSquadAuthorizationTest extends TestCase
         ]);
 
         $this->actingAs($officer)
-            ->postJson('/members/assign-squad', [
+            ->postJson('/members/assign-unit', [
                 'member_id' => $target->id,
                 'unit_id'   => 0,
             ])->assertOk();
@@ -96,7 +96,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $officer = $this->createOfficer($otherDivision);
 
         $this->actingAs($officer)
-            ->postJson('/members/assign-squad', [
+            ->postJson('/members/assign-unit', [
                 'member_id' => $target->id,
                 'unit_id'   => 0,
             ])->assertForbidden();
@@ -113,7 +113,7 @@ class AssignSquadAuthorizationTest extends TestCase
         $target   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($user)
-            ->postJson('/members/assign-squad', [
+            ->postJson('/members/assign-unit', [
                 'member_id' => $target->id,
                 'unit_id'   => 0,
             ])->assertOk();

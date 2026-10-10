@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Squad\AssignSquadMemberRequest;
+use App\Http\Requests\Unit\AssignMemberToUnitRequest;
 use App\Models\Member;
 use App\Models\Unit;
 use App\Services\Units\UnitAssignment;
@@ -10,9 +10,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 
 #[Middleware('auth')]
-class SquadController extends Controller
+class MemberUnitController extends Controller
 {
-    public function assignMember(AssignSquadMemberRequest $request, UnitAssignment $units): JsonResponse
+    public function assign(AssignMemberToUnitRequest $request, UnitAssignment $units): JsonResponse
     {
         $member = Member::findOrFail($request->member_id);
 

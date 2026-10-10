@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Squad;
+namespace App\Http\Requests\Unit;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AssignSquadMemberRequest extends FormRequest
+class AssignMemberToUnitRequest extends FormRequest
 {
     public function authorize(): bool
     {

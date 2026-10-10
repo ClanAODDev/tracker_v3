@@ -86,7 +86,7 @@ export default function MembersPage({
         members: organizeProps?.members ?? NO_ORGANIZE_MEMBERS,
         autoOpen: canOrganize && autoOrganize,
         assign: async (memberId, squadId) => {
-            await postJson('/members/assign-squad', { member_id: memberId, unit_id: squadId });
+            await postJson('/members/assign-unit', { member_id: memberId, unit_id: squadId });
             setSquadList((prev) =>
                 prev.map((s) => (s.id === squadId ? { ...s, count: (s.count ?? 0) + 1 } : s)),
             );

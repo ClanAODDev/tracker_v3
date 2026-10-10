@@ -74,7 +74,7 @@ class UnitController extends Controller
                 'members'    => $this->manageableMembers($unit),
             ],
             'units'       => $units,
-            'assignUrl'   => url('/members/assign-squad'),
+            'assignUrl'   => url('/members/assign-unit'),
             'backUrl'     => $unit->url($division),
             'breadcrumbs' => $this->ancestry($division, $unit, linkSelf: true),
             'createUrl'   => route('filament.mod.resources.units.edit', $unit->id),

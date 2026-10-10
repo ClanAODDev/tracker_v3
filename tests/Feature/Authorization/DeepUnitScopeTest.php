@@ -124,7 +124,7 @@ class DeepUnitScopeTest extends TestCase
     public function a_middle_leader_can_place_a_member_directly_in_their_own_unit(): void
     {
         $this->actingAs($this->middleLeader)
-            ->postJson('/members/assign-squad', ['member_id' => $this->inLeaf->id, 'unit_id' => $this->middle->id])
+            ->postJson('/members/assign-unit', ['member_id' => $this->inLeaf->id, 'unit_id' => $this->middle->id])
             ->assertOk();
 
         $this->assertSame($this->middle->id, $this->inLeaf->fresh()->unit_id);
@@ -134,7 +134,7 @@ class DeepUnitScopeTest extends TestCase
     public function a_middle_leader_cannot_place_a_member_in_a_sibling_unit(): void
     {
         $this->actingAs($this->middleLeader)
-            ->postJson('/members/assign-squad', ['member_id' => $this->inLeaf->id, 'unit_id' => $this->siblingMiddle->id])
+            ->postJson('/members/assign-unit', ['member_id' => $this->inLeaf->id, 'unit_id' => $this->siblingMiddle->id])
             ->assertForbidden();
     }
 
