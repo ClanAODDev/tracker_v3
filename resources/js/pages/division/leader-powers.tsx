@@ -1,8 +1,10 @@
 import { Head } from '@inertiajs/react';
+import { ChevronDown } from 'lucide-react';
 
 import { type DiagramLevel, HierarchyDiagram, type Tier } from '@/components/division/hierarchy-diagram';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import AppLayout from '@/layouts/AppLayout';
 
 interface Level {
@@ -50,6 +52,24 @@ function exampleNote(levels: number, tiers: Record<Tier, TierTerms>) {
     return `${levels} levels: every level above the bottom gets ${top} powers, and only the bottom level gets ${bottom} powers.`;
 }
 
+function ExampleCard({ example, tiers }: { example: Example; tiers: Record<Tier, TierTerms> }) {
+    const count = example.levels.length;
+
+    return (
+        <Card>
+            <CardHeader>
+                <CardTitle className="text-base">
+                    {count} {count === 1 ? 'level' : 'levels'}
+                </CardTitle>
+                <CardDescription>{exampleNote(count, tiers)}</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <HierarchyDiagram levels={example.levels} />
+            </CardContent>
+        </Card>
+    );
+}
+
 function TierLegend({ tiers }: { tiers: Record<Tier, TierTerms> }) {
     return (
         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
@@ -65,6 +85,8 @@ function TierLegend({ tiers }: { tiers: Record<Tier, TierTerms> }) {
 
 export default function LeaderPowers({ division, levels, tiers, examples }: Props) {
     const diagramLevels: DiagramLevel[] = levels.map((l) => ({ label: l.label, tier: l.tier }));
+    const current = examples.find((e) => e.levels.length === levels.length);
+    const others = examples.filter((e) => e !== current);
 
     return (
         <AppLayout
@@ -135,21 +157,23 @@ export default function LeaderPowers({ division, levels, tiers, examples }: Prop
 
                     <TierLegend tiers={tiers} />
 
-                    <div className="grid gap-4 md:grid-cols-2">
-                        {examples.map((example) => (
-                            <Card key={example.levels.length} className={example.levels.length > 2 ? 'md:col-span-2' : undefined}>
-                                <CardHeader>
-                                    <CardTitle className="text-base">
-                                        {example.levels.length} {example.levels.length === 1 ? 'level' : 'levels'}
-                                    </CardTitle>
-                                    <CardDescription>{exampleNote(example.levels.length, tiers)}</CardDescription>
-                                </CardHeader>
-                                <CardContent>
-                                    <HierarchyDiagram levels={example.levels} />
-                                </CardContent>
-                            </Card>
-                        ))}
-                    </div>
+                    {current && <ExampleCard example={current} tiers={tiers} />}
+
+                    {others.length > 0 && (
+                        <Collapsible className="space-y-4">
+                            <CollapsibleTrigger className="group flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
+                                <ChevronDown className="size-4 transition-transform group-data-[state=open]:rotate-180" />
+                                {current ? 'See how other level counts work' : 'See how each level count works'}
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="grid gap-4 md:grid-cols-2">
+                                {others.map((example) => (
+                                    <div key={example.levels.length} className={example.levels.length > 2 ? 'md:col-span-2' : undefined}>
+                                        <ExampleCard example={example} tiers={tiers} />
+                                    </div>
+                                ))}
+                            </CollapsibleContent>
+                        </Collapsible>
+                    )}
                 </section>
             </div>
         </AppLayout>

@@ -1,6 +1,6 @@
 <div style="display: flex; flex-direction: column; gap: 0.75rem;">
     @foreach ($levels as $level)
-        <div style="margin-left: {{ ($level['depth'] - 1) * 1.5 }}rem; border-left: 3px solid rgb(var(--primary-500)); padding-left: 0.75rem;">
+        <div style="margin-left: {{ ($level['depth'] - 1) * 1.5 }}rem; border-left: 3px solid var(--primary-500); padding-left: 0.75rem;">
             <div style="font-weight: 600;">
                 {{ $level['label'] ?: 'Level ' . $level['depth'] }}
                 <span style="font-weight: 400; opacity: 0.7;">· led by a {{ $level['leader_title'] ?: 'leader' }}</span>

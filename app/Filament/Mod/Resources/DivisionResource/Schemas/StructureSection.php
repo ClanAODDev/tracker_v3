@@ -4,8 +4,10 @@ namespace App\Filament\Mod\Resources\DivisionResource\Schemas;
 
 use App\Enums\Rank;
 use App\Enums\UnitLeaderPower;
+use App\Enums\UnitLevel;
 use App\Filament\Mod\Resources\DivisionResource;
 use App\Models\Division;
+use App\Models\DivisionUnitLevel;
 use App\Models\Unit;
 use App\Services\Units\UnitAssignment;
 use Filament\Actions\Action;
@@ -16,6 +18,7 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
+use Illuminate\Support\Collection;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -53,6 +56,18 @@ class StructureSection
                     ->label('What leaders can do')
                     ->content(fn (Get $get, Division $record) => self::leaderPowersPreview($get, $record)),
                 Actions::make([
+                    Action::make('preview_structure')
+                        ->label('Preview structure')
+                        ->icon('heroicon-o-share')
+                        ->color('gray')
+                        ->visible(fn (Get $get) => count($get('unitLevels') ?? []) > 0)
+                        ->modalHeading('Leader powers by level')
+                        ->modalWidth('5xl')
+                        ->modalSubmitAction(false)
+                        ->modalCancelActionLabel('Close')
+                        ->modalContent(fn (Get $get, Division $record) => view('filament.components.unit-structure-preview', [
+                            'levels' => self::previewLevels($get, $record),
+                        ])),
                     Action::make('add_top_level')
                         ->label('Add a level above')
                         ->icon('heroicon-o-arrow-up-circle')
@@ -86,23 +101,30 @@ class StructureSection
             ]);
     }
 
-    private static function leaderPowersPreview(Get $get, Division $division): HtmlString
+    private static function previewLevels(Get $get, Division $division): Collection
     {
         $levels = collect(array_values($get('unitLevels') ?? []))
             ->map(fn (array $level, int $index) => [...$level, 'depth' => $index + 1]);
 
-        if ($levels->isEmpty()) {
-            return new HtmlString('<p style="font-size: 0.875rem; opacity: 0.7;">This division has no unit levels. Members belong directly to the division.</p>');
-        }
-
         $limit = Rank::tryFrom((int) $get('settings.max_platoon_leader_rank'))
             ?? Rank::from($division->settings()->get('max_platoon_leader_rank'));
 
-        $preview = $levels->map(fn (array $level) => [
+        return $levels->map(fn (array $level) => [
             ...$level,
             'covers' => Str::title($levels->firstWhere('depth', $level['depth'] + 1)['label'] ?? ''),
+            'tier'   => strtolower(UnitLevel::forDepth($level['depth'], $levels->count())->name),
+            'abbr'   => DivisionUnitLevel::abbreviate((string) ($level['leader_title'] ?? '')),
             'powers' => UnitLeaderPower::forLevel($levels, $level['depth'], $limit),
         ]);
+    }
+
+    private static function leaderPowersPreview(Get $get, Division $division): HtmlString
+    {
+        $preview = self::previewLevels($get, $division);
+
+        if ($preview->isEmpty()) {
+            return new HtmlString('<p style="font-size: 0.875rem; opacity: 0.7;">This division has no unit levels. Members belong directly to the division.</p>');
+        }
 
         return new HtmlString(view('filament.forms.components.unit-levels-preview', ['levels' => $preview])->render());
     }
