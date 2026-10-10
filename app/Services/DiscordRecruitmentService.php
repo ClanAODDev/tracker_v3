@@ -48,8 +48,7 @@ class DiscordRecruitmentService
             $request->forum_name,
             $division,
             (int) $request->rank,
-            $request->platoon ? (int) $request->platoon : null,
-            $request->squad ? (int) $request->squad : null,
+            $request->unit_id ? (int) $request->unit_id : null,
             $request->input('handles', []),
             $recruiter
         );

@@ -1,19 +1,5 @@
 import type { HandleType } from '@/components/members/types';
-
-export interface RecruitSquad {
-    id: number;
-    name: string | null;
-    members_count: number;
-    leader_name: string | null;
-}
-
-export interface RecruitPlatoon {
-    id: number;
-    name: string;
-    members_count: number;
-    leader_name: string | null;
-    squads: RecruitSquad[];
-}
+import type { UnitOption } from '@/components/units/unit-cascade-select';
 
 export interface RecruitThread {
     name: string;
@@ -46,7 +32,7 @@ export interface LevelNames {
 export interface DivisionRecruitData {
     name: string;
     handleTypes: HandleType[];
-    platoons: RecruitPlatoon[];
+    units: UnitOption[];
     threads: RecruitThread[];
     tasks: RecruitTask[];
     welcome_area: string;

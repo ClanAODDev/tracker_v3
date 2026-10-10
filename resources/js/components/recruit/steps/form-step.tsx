@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { SimpleSelect } from '@/components/ui/simple-select';
 import { Switch } from '@/components/ui/switch';
+import { UnitCascadeSelect } from '@/components/units/unit-cascade-select';
 import { linkifyHtml } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
@@ -39,7 +40,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
     const revealed = [
         form.memberVerificationComplete,
         form.detailsComplete,
-        props.platoons.length === 0 || form.assignmentComplete,
+        props.units.length === 0 || form.assignmentComplete,
         form.threads.length === 0 || form.agreementsComplete,
         form.tasks.length === 0 || form.tasksComplete,
     ].reduce<boolean[]>((acc, gate) => [...acc, acc[acc.length - 1] && gate], [true]);
@@ -172,56 +173,21 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 </Section>
             )}
 
-            {props.platoons.length > 0 && (!guided || revealed[2]) && (
+            {props.units.length > 0 && (!guided || revealed[2]) && (
                 <Section
                     icon={<Users className="size-4" />}
                     title="Assignment"
                     step={3}
                     complete={form.assignmentComplete}
                 >
-                    <div className="grid gap-4 sm:grid-cols-2">
-                        <div className="grid gap-1.5">
-                            <Label>{props.levels.top.label} *</Label>
-                            <SimpleSelect
-                                value={form.member.platoon || '__all'}
-                                onChange={(v) =>
-                                    form.patchMember({ platoon: v === '__all' ? '' : v, squad: '' })
-                                }
-                                placeholder={`Select ${props.levels.top.label}…`}
-                                options={[
-                                    { value: '__all', label: `Select ${props.levels.top.label}…` },
-                                    ...props.platoons.map((p) => ({
-                                        value: String(p.id),
-                                        label: `${p.name} (${p.members_count})${p.leader_name ? ` — ${p.leader_name}` : ''}`,
-                                    })),
-                                ]}
-                            />
-                        </div>
-                        <div className="grid gap-1.5">
-                            <Label>
-                                {props.levels.bottom.label}
-                                {form.selectedPlatoonSquads.length > 0 && ' *'}
-                            </Label>
-                            <SimpleSelect
-                                value={form.member.squad || '__all'}
-                                onChange={(v) => form.patchMember({ squad: v === '__all' ? '' : v })}
-                                placeholder={`No ${props.levels.bottom.plural.toLowerCase()} available`}
-                                options={[
-                                    {
-                                        value: '__all',
-                                        label:
-                                            form.selectedPlatoonSquads.length > 0
-                                                ? `Select ${props.levels.bottom.label.toLowerCase()}…`
-                                                : `No ${props.levels.bottom.plural.toLowerCase()} available`,
-                                    },
-                                    ...form.selectedPlatoonSquads.map((s) => ({
-                                        value: String(s.id),
-                                        label: `${s.name || `${props.levels.bottom.label} #${s.id}`} (${s.members_count})${s.leader_name ? ` — ${s.leader_name}` : ''}`,
-                                    })),
-                                ]}
-                            />
-                        </div>
-                    </div>
+                    <UnitCascadeSelect
+                        units={props.units}
+                        path={form.member.unitPath}
+                        onChange={(unitPath) => form.patchMember({ unitPath })}
+                        requireLeaf
+                        showDetails
+                        className="sm:grid-cols-2"
+                    />
                 </Section>
             )}
 

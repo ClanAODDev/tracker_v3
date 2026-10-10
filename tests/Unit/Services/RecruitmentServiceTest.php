@@ -40,7 +40,6 @@ class RecruitmentServiceTest extends TestCase
             $division,
             1,
             $platoon->id,
-            null,
             [],
             $recruiter
         );
@@ -63,7 +62,7 @@ class RecruitmentServiceTest extends TestCase
         $team      = Unit::factory()->childOf($middle)->create();
         $recruiter = Member::factory()->create(['clan_id' => 99999]);
 
-        $member = $this->service->createMember(12345, 'TestMember', $division, 1, $platoon->id, $team->id, [], $recruiter);
+        $member = $this->service->createMember(12345, 'TestMember', $division, 1, $team->id, [], $recruiter);
 
         $this->assertSame($team->id, $member->unit_id);
     }
@@ -75,7 +74,7 @@ class RecruitmentServiceTest extends TestCase
         DivisionUnitLevel::where('division_id', $division->id)->delete();
         $recruiter = Member::factory()->create(['clan_id' => 99999]);
 
-        $member = $this->service->createMember(12345, 'TestMember', $division->fresh(), 1, null, null, [], $recruiter);
+        $member = $this->service->createMember(12345, 'TestMember', $division->fresh(), 1, null, [], $recruiter);
 
         $this->assertSame($division->id, $member->division_id);
         $this->assertNull($member->unit_id);
@@ -102,7 +101,6 @@ class RecruitmentServiceTest extends TestCase
             $division,
             1,
             $platoon->id,
-            null,
             [],
             $recruiter
         );
@@ -129,7 +127,6 @@ class RecruitmentServiceTest extends TestCase
             $division,
             1,
             $platoon->id,
-            null,
             [],
             $recruiter
         );
@@ -140,7 +137,7 @@ class RecruitmentServiceTest extends TestCase
     }
 
     #[Test]
-    public function create_member_rejects_platoon_from_another_division(): void
+    public function create_member_rejects_unit_from_another_division(): void
     {
         $division      = $this->createActiveDivision();
         $otherDivision = $this->createActiveDivision();
@@ -155,30 +152,6 @@ class RecruitmentServiceTest extends TestCase
             $division,
             1,
             $otherPlatoon->id,
-            null,
-            [],
-            $recruiter
-        );
-    }
-
-    #[Test]
-    public function create_member_rejects_squad_from_another_platoon(): void
-    {
-        $division     = $this->createActiveDivision();
-        $platoon      = $this->createPlatoon($division);
-        $otherPlatoon = $this->createPlatoon($division);
-        $otherSquad   = $this->createSquad($otherPlatoon);
-        $recruiter    = Member::factory()->create(['clan_id' => 99999]);
-
-        $this->expectException(RecruitmentFailedException::class);
-
-        $this->service->createMember(
-            54321,
-            'NewName',
-            $division,
-            1,
-            $platoon->id,
-            $otherSquad->id,
             [],
             $recruiter
         );
@@ -199,7 +172,6 @@ class RecruitmentServiceTest extends TestCase
             $division,
             1,
             $platoon->id,
-            null,
             [$handle->id => 'MyGameHandle'],
             $recruiter
         );

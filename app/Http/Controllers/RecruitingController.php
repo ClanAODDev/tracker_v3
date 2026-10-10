@@ -10,12 +10,12 @@ use App\Http\Requests\Recruiting\SubmitRecruitmentRequest;
 use App\Http\Requests\Recruiting\ValidateMemberNameRequest;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Unit;
 use App\Models\User;
 use App\Services\AODForumService;
 use App\Services\DiscordRecruitmentService;
 use App\Services\ForumProcedureService;
 use App\Services\RecruitmentService;
+use App\Support\UnitTree;
 use App\Transformers\PendingDiscordUserTransformer;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
@@ -75,8 +75,7 @@ class RecruitingController extends Controller
                         $request->forum_name,
                         $division,
                         (int) $request->rank,
-                        $request->platoon ? (int) $request->platoon : null,
-                        $request->squad ? (int) $request->squad : null,
+                        $request->unit_id ? (int) $request->unit_id : null,
                         $request->input('handles', []),
                         $recruiter
                     );
@@ -181,35 +180,13 @@ class RecruitingController extends Controller
         $threads  = $settings->get('recruiting_threads', []);
         $tasks    = $settings->get('recruiting_tasks', []);
 
-        $platoons = $division->topUnits()
-            ->withCount('members')
-            ->with('leader:clan_id,name')
-            ->get()
-            ->each(function (Unit $platoon) {
-                $platoon->setAttribute('descendants', $platoon->descendantsWithTrail(
-                    fn ($query) => $query->withCount('members')->with('leader:clan_id,name')
-                ));
-                $platoon->setAttribute('members_count', $platoon->members_count + $platoon->descendants->sum('members_count'));
-            });
-
         $pendingDiscord = $this->discordRecruitmentService->getPendingDiscordUsers($division, $allPending);
 
         return [
             'name'        => $division->name,
             'handleTypes' => $division->handleTypes(),
-            'platoons'    => $platoons->map(fn ($p) => [
-                'id'            => $p->id,
-                'name'          => $p->name,
-                'members_count' => $p->members_count,
-                'leader_name'   => $p->leader?->name,
-                'squads'        => $p->descendants->map(fn ($s) => [
-                    'id'            => $s->id,
-                    'name'          => $s->trail,
-                    'members_count' => $s->members_count,
-                    'leader_name'   => $s->leader?->name,
-                ]),
-            ]),
-            'threads' => collect($threads)->map(fn ($t) => [
+            'units'       => UnitTree::for($division),
+            'threads'     => collect($threads)->map(fn ($t) => [
                 'name'     => $t['thread_name'] ?? '',
                 'url'      => $t['thread_url'] ?? '',
                 'comments' => $t['comments'] ?? '',

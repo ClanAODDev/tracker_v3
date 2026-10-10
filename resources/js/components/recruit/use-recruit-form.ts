@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
+import { unitPathIsComplete } from '@/components/units/unit-cascade-select';
 import { postJson } from '@/lib/api';
 
 import {
@@ -20,8 +21,7 @@ interface MemberFields {
     ingame_name: string;
     handles: Record<number, string>;
     rank: string;
-    platoon: string;
-    squad: string;
+    unitPath: string[];
 }
 
 const BLANK_MEMBER: MemberFields = {
@@ -30,8 +30,7 @@ const BLANK_MEMBER: MemberFields = {
     ingame_name: '',
     handles: {},
     rank: '',
-    platoon: '',
-    squad: '',
+    unitPath: [],
 };
 
 function formatName(raw: string): string {
@@ -260,11 +259,6 @@ export function useRecruitForm(props: RecruitFormProps) {
         [props.divisionSlug],
     );
 
-    const selectedPlatoonSquads = useMemo(
-        () => props.platoons.find((p) => p.id === Number(member.platoon))?.squads ?? [],
-        [props.platoons, member.platoon],
-    );
-
     const memberVerificationComplete = useMemo(() => {
         if (path === 'discord' && selectedPending) {
             if (emailCheck.found && !emailCheck.eligible) return false;
@@ -277,9 +271,7 @@ export function useRecruitForm(props: RecruitFormProps) {
     const detailsComplete = Boolean(
         member.forum_name && forumNameValidation.valid && hasHandle && member.rank,
     );
-    const assignmentComplete =
-        props.platoons.length === 0 ||
-        Boolean(member.platoon && (selectedPlatoonSquads.length === 0 || member.squad));
+    const assignmentComplete = props.units.length === 0 || unitPathIsComplete(props.units, member.unitPath);
     const agreementsComplete = threads.length === 0 || threads.every((t) => t.read);
     const tasksComplete = tasks.length === 0 || tasks.every((t) => t.complete);
 
@@ -291,11 +283,11 @@ export function useRecruitForm(props: RecruitFormProps) {
         return (
             idValid &&
             hasHandle &&
-            Boolean(member.forum_name && member.rank && member.platoon) &&
-            (selectedPlatoonSquads.length === 0 || Boolean(member.squad)) &&
+            Boolean(member.forum_name && member.rank) &&
+            assignmentComplete &&
             forumNameValidation.valid
         );
-    }, [selectedPending, emailCheck, member, memberIdValidation, forumNameValidation, selectedPlatoonSquads, hasHandle]);
+    }, [selectedPending, emailCheck, member, memberIdValidation, forumNameValidation, assignmentComplete, hasHandle]);
 
     const submit = useCallback(async () => {
         if (!formValid || submitting) return;
@@ -307,9 +299,8 @@ export function useRecruitForm(props: RecruitFormProps) {
                 member_id: member.id,
                 forum_name: member.forum_name,
                 ...(props.handleTypes.length > 0 ? { handles: member.handles } : { ingame_name: member.ingame_name }),
-                platoon: member.platoon,
                 rank: member.rank,
-                squad: member.squad,
+                unit_id: member.unitPath.at(-1) ?? null,
                 pending_user_id: selectedPending?.id ?? null,
             });
             setSubmitted(true);
@@ -379,7 +370,6 @@ export function useRecruitForm(props: RecruitFormProps) {
         submitting,
         submitError,
         submitted,
-        selectedPlatoonSquads,
         memberVerificationComplete,
         detailsComplete,
         assignmentComplete,
