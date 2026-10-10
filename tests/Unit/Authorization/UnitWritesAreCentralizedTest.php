@@ -17,15 +17,14 @@ class UnitWritesAreCentralizedTest extends TestCase
         'Filament/Mod/Resources/MemberResource/Pages/EditMember.php'                      => 1,
         'Filament/Mod/Resources/UnitResource/Pages/EditUnit.php'                          => 4,
         'Filament/Mod/Resources/UnitResource/RelationManagers/MembersRelationManager.php' => 1,
-        'Http/Controllers/BulkMoveController.php'                                         => 2,
+        'Http/Controllers/BulkMoveController.php'                                         => 1,
         'Http/Controllers/DivisionController.php'                                         => 1,
         'Http/Controllers/MemberController.php'                                           => 2,
-        'Http/Controllers/SquadController.php'                                            => 2,
         'Http/Requests/Squad/AssignSquadMemberRequest.php'                                => 1,
         'Jobs/ResetOrphanedUnitAssignments.php'                                           => 2,
         'Models/Member.php'                                                               => 2,
         'Services/RecruitmentService.php'                                                 => 1,
-        'Services/Units/UnitAssignment.php'                                               => 2,
+        'Services/Units/UnitAssignment.php'                                               => 3,
     ];
 
     #[Test]

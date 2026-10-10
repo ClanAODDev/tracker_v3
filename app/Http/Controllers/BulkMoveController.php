@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\ActivityType;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Unit;
 use App\Models\User;
+use App\Services\Units\UnitAssignment;
+use App\Support\UnitTree;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
@@ -17,25 +18,10 @@ class BulkMoveController extends Controller
 {
     public function getPlatoons(Division $division): JsonResponse
     {
-        $byParent = $division->units()
-            ->orderBy('order')
-            ->orderBy('id')
-            ->get()
-            ->groupBy('parent_id');
-
-        $build = function (?int $parentId) use (&$build, $byParent, $division) {
-            return ($byParent->get($parentId) ?? collect())->map(fn (Unit $unit) => [
-                'id'         => $unit->id,
-                'name'       => $unit->name ?: 'Untitled',
-                'levelLabel' => $division->unitLevel($unit->depth)?->label ?? 'Unit',
-                'children'   => $build($unit->id),
-            ])->values();
-        };
-
-        return response()->json(['units' => $build(null)]);
+        return response()->json(['units' => UnitTree::for($division)]);
     }
 
-    public function store(Request $request, Division $division): JsonResponse
+    public function store(Request $request, Division $division, UnitAssignment $units): JsonResponse
     {
         $validated = $request->validate([
             'member_ids'   => 'required|array',
@@ -49,18 +35,7 @@ class BulkMoveController extends Controller
             ->where('division_id', $division->id)
             ->get();
 
-        foreach ($members as $member) {
-            $member->update(['unit_id' => $unit->id]);
-
-            if ($unit->parent === null) {
-                $member->recordActivity(ActivityType::ASSIGNED_PLATOON, ['platoon' => $unit->name]);
-            } else {
-                $member->recordActivity(ActivityType::ASSIGNED_SQUAD, [
-                    'platoon' => $unit->parent->name,
-                    'squad'   => $unit->name,
-                ]);
-            }
-        }
+        $members->each(fn (Member $member) => $units->assignMember($member, $unit));
 
         $count = $members->count();
 

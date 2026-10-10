@@ -64,8 +64,6 @@ class EditUnit extends EditRecord
                     'unit_id'  => $unit->id,
                     'position' => $position,
                 ]);
-
-                $units->clearLeadership([$newLeaderId], except: $unit);
             }
 
             $originalLeaderStillLeader = $originalLeaderId && Member::where('clan_id', $originalLeaderId)
