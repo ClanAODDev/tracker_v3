@@ -7,7 +7,6 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\Unit;
 use App\Models\User;
-use App\Services\Units\UnitAssignment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
@@ -18,72 +17,56 @@ class BulkMoveController extends Controller
 {
     public function getPlatoons(Division $division): JsonResponse
     {
-
-        $platoons = $division->units()
-            ->whereNull('parent_id')
+        $byParent = $division->units()
             ->orderBy('order')
-            ->orderBy('name')
+            ->orderBy('id')
             ->get()
-            ->map(fn (Unit $platoon) => [
-                'id'     => $platoon->id,
-                'name'   => $platoon->name ?? 'Untitled',
-                'squads' => $platoon->descendantsWithTrail()->map(fn (Unit $squad) => [
-                    'id'   => $squad->id,
-                    'name' => $squad->trail,
-                ]),
-            ]);
+            ->groupBy('parent_id');
 
-        return response()->json(['platoons' => $platoons]);
+        $build = function (?int $parentId) use (&$build, $byParent, $division) {
+            return ($byParent->get($parentId) ?? collect())->map(fn (Unit $unit) => [
+                'id'         => $unit->id,
+                'name'       => $unit->name ?: 'Untitled',
+                'levelLabel' => $division->unitLevel($unit->depth)?->label ?? 'Unit',
+                'children'   => $build($unit->id),
+            ])->values();
+        };
+
+        return response()->json(['units' => $build(null)]);
     }
 
     public function store(Request $request, Division $division): JsonResponse
     {
-
         $validated = $request->validate([
             'member_ids'   => 'required|array',
             'member_ids.*' => 'integer',
-            'platoon_id'   => ['required', 'integer', Rule::exists('units', 'id')->whereNull('parent_id')->whereNull('deleted_at')],
-            'squad_id'     => 'nullable|integer',
+            'unit_id'      => ['required', 'integer', Rule::exists('units', 'id')->where('division_id', $division->id)->whereNull('deleted_at')],
         ]);
 
-        $platoon = $division->units()
-            ->whereNull('parent_id')
-            ->findOrFail($validated['platoon_id']);
-
-        $squad = empty($validated['squad_id'])
-            ? null
-            : $platoon->descendantsQuery()->find($validated['squad_id']);
+        $unit = Unit::query()->findOrFail($validated['unit_id']);
 
         $members = Member::whereIn('clan_id', $validated['member_ids'])
             ->where('division_id', $division->id)
             ->get();
 
-        $units            = app(UnitAssignment::class);
-        $transferredCount = 0;
         foreach ($members as $member) {
-            $member->update(['unit_id' => ($squad ?? $platoon)->id]);
+            $member->update(['unit_id' => $unit->id]);
 
-            $member->recordActivity(ActivityType::ASSIGNED_PLATOON, [
-                'platoon' => $platoon->name,
-            ]);
-
-            if ($squad) {
+            if ($unit->parent === null) {
+                $member->recordActivity(ActivityType::ASSIGNED_PLATOON, ['platoon' => $unit->name]);
+            } else {
                 $member->recordActivity(ActivityType::ASSIGNED_SQUAD, [
-                    'squad' => $squad->name,
+                    'platoon' => $unit->parent->name,
+                    'squad'   => $unit->name,
                 ]);
             }
-
-            $transferredCount++;
         }
 
-        $destination = $platoon->name ?? 'Untitled';
-        if ($squad) {
-            $destination .= ' / ' . ($squad->name ?? 'Untitled');
-        }
+        $count = $members->count();
 
         return response()->json([
             'success' => true,
-            'message' => $transferredCount . ' ' . ($transferredCount === 1 ? 'member' : 'members') . ' transferred to ' . $destination,
+            'message' => $count . ' ' . ($count === 1 ? 'member' : 'members') . ' transferred to ' . ($unit->name ?: 'Untitled'),
         ]);
     }
 }
