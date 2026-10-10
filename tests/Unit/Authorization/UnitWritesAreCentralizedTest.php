@@ -17,7 +17,7 @@ class UnitWritesAreCentralizedTest extends TestCase
         'Filament/Mod/Resources/MemberResource/Pages/EditMember.php'                      => 1,
         'Filament/Mod/Resources/UnitResource/Pages/EditUnit.php'                          => 4,
         'Filament/Mod/Resources/UnitResource/RelationManagers/MembersRelationManager.php' => 1,
-        'Http/Controllers/BulkMoveController.php'                                         => 3,
+        'Http/Controllers/BulkMoveController.php'                                         => 2,
         'Http/Controllers/DivisionController.php'                                         => 1,
         'Http/Controllers/MemberController.php'                                           => 2,
         'Http/Controllers/SquadController.php'                                            => 2,
