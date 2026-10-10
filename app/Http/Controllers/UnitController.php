@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Data\UnitStatsData;
 use App\Enums\Position;
+use App\Http\Requests\Unit\StoreChildUnitRequest;
 use App\Models\Division;
 use App\Models\Unit;
 use App\Repositories\UnitRepository;
 use App\Services\MemberQueryService;
+use App\Services\Units\UnitAssignment;
 use App\Support\MemberListProps;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Support\Collection;
 use Inertia\Inertia;
@@ -25,6 +28,15 @@ class UnitController extends Controller
     public function show(Division $division, Unit $unit): Response
     {
         return $unit->isSquad() ? $this->showSquad($division, $unit) : $this->showPlatoon($division, $unit);
+    }
+
+    public function storeChild(StoreChildUnitRequest $request, Division $division, Unit $unit, UnitAssignment $assignment): RedirectResponse
+    {
+        $child = $assignment->create($division, $unit, ['name' => $request->validated('name')]);
+
+        $this->showSuccessToast("{$child->name} created");
+
+        return back();
     }
 
     public function manage(Division $division, Unit $unit): Response
@@ -106,6 +118,7 @@ class UnitController extends Controller
                 'canManage'       => $canManage,
                 'editUrl'         => $canManage ? route('filament.mod.resources.units.edit', $platoon->id) : null,
                 'manageUrl'       => $canManage ? route('unit.manage', [$division->slug, $platoon]) : null,
+                'createChildUrl'  => $canManage && $platoon->childLevel() ? route('unit.children.store', [$division->slug, $platoon]) : null,
                 'unassignedCount' => $unassigned->count(),
                 'breadcrumbs'     => $this->ancestry($division, $platoon),
             ],

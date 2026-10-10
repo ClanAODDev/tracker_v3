@@ -2,6 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Pencil, Settings2, Users } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
+import { CreateChildUnit } from '@/components/division/create-child-unit';
 import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from '@/components/division/organize';
 import { MemberTable } from '@/components/members/member-table';
 import type { BulkConfig, MemberFieldDefinition, MemberListDivision, MemberRow, UnitStats } from '@/components/members/types';
@@ -35,6 +36,7 @@ interface Scope {
     canManage?: boolean;
     editUrl?: string | null;
     manageUrl?: string | null;
+    createChildUrl?: string | null;
     unassignedCount?: number;
     platoonLabel?: string;
     squadLabel?: string;
@@ -187,6 +189,13 @@ export default function MembersPage({
                     storageKey={`member-table:${scope.kind}:${division.slug}`}
                 />
                 <div className="order-first space-y-6 xl:order-last">
+                    {scope.createChildUrl && (
+                        <CreateChildUnit
+                            url={scope.createChildUrl}
+                            label={scope.squadLabel ?? 'Unit'}
+                            className="w-full"
+                        />
+                    )}
                     {squadList.length > 0 && (
                         <div ref={squadsRef}>
                             <SquadsList
