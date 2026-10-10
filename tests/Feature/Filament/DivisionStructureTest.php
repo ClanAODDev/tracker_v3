@@ -6,6 +6,7 @@ use App\Enums\Position;
 use App\Enums\Role;
 use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
 use App\Models\DivisionUnitLevel;
+use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -37,6 +38,38 @@ class DivisionStructureTest extends TestCase
             ->assertSee('What leaders can do')
             ->assertSee('Approve promotions in their Platoon and every Squad under it up to Private First Class')
             ->assertSee('Request promotions for members of their Squad ranked below Specialist');
+    }
+
+    #[Test]
+    public function the_structure_preview_reflects_unsaved_level_changes(): void
+    {
+        [$division, $co] = $this->divisionWithCommander();
+        $this->actingAs($co);
+
+        $page            = Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()]);
+        $state           = $page->get('data.unitLevels');
+        $keys            = array_keys($state);
+        $state[$keys[0]] = ['label' => 'Company', 'label_plural' => 'Companies', 'leader_title' => 'Company Commander'];
+
+        $page->set('data.unitLevels', $state)
+            ->mountAction(TestAction::make('preview_structure')->schemaComponent('structure_actions'))
+            ->assertActionMounted(TestAction::make('preview_structure')->schemaComponent('structure_actions'));
+    }
+
+    #[Test]
+    public function the_structure_preview_view_draws_a_diagram_per_level(): void
+    {
+        $levels = collect([
+            ['depth' => 1, 'label' => 'Company', 'leader_title' => 'Company Commander', 'tier' => 'platoon', 'abbr' => 'CC', 'powers' => ['Edit their Company']],
+            ['depth' => 2, 'label' => 'Squad', 'leader_title' => 'Squad Leader', 'tier' => 'squad', 'abbr' => 'SL', 'powers' => ['Edit their Squad']],
+        ]);
+
+        $html = view('filament.components.unit-structure-preview', ['levels' => $levels])->render();
+
+        $this->assertSame(2, substr_count($html, '<svg'));
+        $this->assertStringContainsString('Company Commander', $html);
+        $this->assertStringContainsString('(CC)', $html);
+        $this->assertStringContainsString('Edit their Squad', $html);
     }
 
     #[Test]

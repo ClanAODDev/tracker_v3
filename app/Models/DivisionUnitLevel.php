@@ -34,7 +34,12 @@ class DivisionUnitLevel extends Model
 
     public function leaderAbbreviation(): string
     {
-        $words = preg_split('/\s+/', trim((string) $this->leader_title), -1, PREG_SPLIT_NO_EMPTY);
+        return self::abbreviate((string) $this->leader_title);
+    }
+
+    public static function abbreviate(string $title): string
+    {
+        $words = preg_split('/\s+/', trim($title), -1, PREG_SPLIT_NO_EMPTY);
 
         if (count($words) > 1) {
             return Str::upper(collect($words)->map(fn (string $word) => Str::substr($word, 0, 1))->implode(''));
