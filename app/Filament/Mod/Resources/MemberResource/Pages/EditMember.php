@@ -12,11 +12,13 @@ use App\Jobs\RemoveClanMember;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Note;
+use App\Models\Unit;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionPartTimeMemberRemoved;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use App\Services\MemberHandleService;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -65,14 +67,18 @@ class EditMember extends EditRecord
 
         unset($data['handleGroups'], $data['custom_fields']);
 
-        if (UnitPicker::present($data, 'unit_level_')) {
-            $data = [
-                ...UnitPicker::without($data, 'unit_level_'),
-                'unit_id' => UnitPicker::resolve($data, 'unit_level_'),
-            ];
+        $assignUnit = UnitPicker::present($data, 'unit_level_');
+        $unitId     = $assignUnit ? UnitPicker::resolve($data, 'unit_level_') : null;
+
+        if ($assignUnit) {
+            $data = UnitPicker::without($data, 'unit_level_');
         }
 
         $record->update($data);
+
+        if ($assignUnit) {
+            app(UnitAssignment::class)->assignMember($record, $unitId ? Unit::find($unitId) : null, recordActivity: false);
+        }
 
         return $record;
     }

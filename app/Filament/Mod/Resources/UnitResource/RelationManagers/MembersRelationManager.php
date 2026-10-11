@@ -6,6 +6,7 @@ use App\Authorization\UnitHierarchy;
 use App\Enums\Ability;
 use App\Enums\UnitLevel;
 use App\Models\Unit;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\EditAction;
@@ -95,7 +96,7 @@ class MembersRelationManager extends RelationManager
 
                             abort_if($unit === null, 404);
 
-                            $records->each(fn ($member) => $member->update(['unit_id' => $unit->id]));
+                            app(UnitAssignment::class)->assignMembers($records, $unit, recordActivity: false);
                         })
                         ->deselectRecordsAfterCompletion()
                         ->color('primary'),

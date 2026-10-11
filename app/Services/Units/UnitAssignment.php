@@ -169,11 +169,36 @@ class UnitAssignment
         });
     }
 
-    public function assignMember(Member $member, ?Unit $unit): void
+    public function assignMember(Member $member, ?Unit $unit, bool $recordActivity = true): void
     {
-        DB::transaction(function () use ($member, $unit) {
+        DB::transaction(function () use ($member, $unit, $recordActivity) {
             $member->update(['unit_id' => $unit?->id]);
-            $this->recordAssignment($member, $unit);
+
+            if ($recordActivity) {
+                $this->recordAssignment($member, $unit);
+            }
+        });
+    }
+
+    public function assignMembers(iterable $members, ?Unit $unit, bool $recordActivity = true): void
+    {
+        DB::transaction(function () use ($members, $unit, $recordActivity) {
+            foreach ($members as $member) {
+                $this->assignMember($member, $unit, $recordActivity);
+            }
+        });
+    }
+
+    public function releaseMembers(Unit $unit): void
+    {
+        DB::transaction(function () use ($unit) {
+            if ($unit->isSquad()) {
+                $unit->members()->update(['unit_id' => $unit->parent_id]);
+
+                return;
+            }
+
+            $unit->allMembers()->update(['unit_id' => null]);
         });
     }
 

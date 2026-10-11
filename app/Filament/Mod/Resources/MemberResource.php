@@ -20,6 +20,7 @@ use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Unit;
 use App\Services\MemberHandleService;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -465,7 +466,9 @@ class MemberResource extends Resource
                             }
                         })
                         ->action(function (Collection $records, array $data): void {
-                            $records->each->update(['unit_id' => UnitPicker::resolve($data, 'unit_level_')]);
+                            $unitId = UnitPicker::resolve($data, 'unit_level_');
+
+                            app(UnitAssignment::class)->assignMembers($records, $unitId ? Unit::find($unitId) : null, recordActivity: false);
                         })
                         ->color('primary'),
 

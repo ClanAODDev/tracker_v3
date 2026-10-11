@@ -60,10 +60,9 @@ class EditUnit extends EditRecord
 
         if ($originalLeaderId !== $newLeaderId) {
             if ($newLeaderId) {
-                Member::where('clan_id', $newLeaderId)->update([
-                    'unit_id'  => $unit->id,
-                    'position' => $position,
-                ]);
+                $newLeaders = Member::where('clan_id', $newLeaderId)->get();
+                $units->assignMembers($newLeaders, $unit, recordActivity: false);
+                Member::where('clan_id', $newLeaderId)->update(['position' => $position]);
             }
 
             $originalLeaderStillLeader = $originalLeaderId && Member::where('clan_id', $originalLeaderId)
@@ -71,10 +70,8 @@ class EditUnit extends EditRecord
                 ->exists();
 
             if ($originalLeaderStillLeader) {
-                Member::where('clan_id', $originalLeaderId)->update([
-                    'unit_id'  => null,
-                    'position' => Position::MEMBER,
-                ]);
+                $units->assignMembers(Member::where('clan_id', $originalLeaderId)->get(), null, recordActivity: false);
+                Member::where('clan_id', $originalLeaderId)->update(['position' => Position::MEMBER]);
 
                 $units->clearLeadership([$originalLeaderId], except: $unit);
             }
@@ -131,11 +128,9 @@ class EditUnit extends EditRecord
                     $units = app(UnitAssignment::class);
                     $unit  = $record;
 
-                    if ($unit->isSquad()) {
-                        $unit->members()->update(['unit_id' => $unit->parent_id]);
-                    } else {
-                        $unit->allMembers()->update(['unit_id' => null]);
+                    $units->releaseMembers($unit);
 
+                    if (! $unit->isSquad()) {
                         Unit::query()
                             ->where('path', 'like', $unit->path . '%')
                             ->where('id', '<>', $unit->id)
