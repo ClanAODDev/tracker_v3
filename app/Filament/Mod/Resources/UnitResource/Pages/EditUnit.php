@@ -2,7 +2,6 @@
 
 namespace App\Filament\Mod\Resources\UnitResource\Pages;
 
-use App\Enums\Position;
 use App\Filament\Mod\Resources\UnitResource;
 use App\Models\Member;
 use App\Models\Unit;
@@ -53,8 +52,6 @@ class EditUnit extends EditRecord
         $units = app(UnitAssignment::class);
         $unit  = $this->record;
 
-        $position = $unit->isSquad() ? Position::SQUAD_LEADER : Position::PLATOON_LEADER;
-
         $originalLeaderId = $state['original_leader_id'] ?? null;
         $newLeaderId      = (int) $this->record->leader_id;
 
@@ -62,18 +59,10 @@ class EditUnit extends EditRecord
             if ($newLeaderId) {
                 $newLeaders = Member::where('clan_id', $newLeaderId)->get();
                 $units->assignMembers($newLeaders, $unit, recordActivity: false);
-                Member::where('clan_id', $newLeaderId)->update(['position' => $position]);
             }
 
-            $originalLeaderStillLeader = $originalLeaderId && Member::where('clan_id', $originalLeaderId)
-                ->where('position', $position)
-                ->exists();
-
-            if ($originalLeaderStillLeader) {
+            if ($originalLeaderId) {
                 $units->assignMembers(Member::where('clan_id', $originalLeaderId)->get(), null, recordActivity: false);
-                Member::where('clan_id', $originalLeaderId)->update(['position' => Position::MEMBER]);
-
-                $units->clearLeadership([$originalLeaderId], except: $unit);
             }
         }
     }

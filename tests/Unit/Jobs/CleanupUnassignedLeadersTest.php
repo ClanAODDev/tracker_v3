@@ -267,7 +267,7 @@ class CleanupUnassignedLeadersTest extends TestCase
     }
 
     #[Test]
-    public function a_leader_holding_the_wrong_position_for_a_deep_unit_is_cleared()
+    public function a_leader_holding_the_wrong_position_for_a_deep_unit_is_corrected()
     {
         $division = $this->createActiveDivision();
         DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
@@ -276,10 +276,11 @@ class CleanupUnassignedLeadersTest extends TestCase
 
         $leader = $this->createMember(['division_id' => $division->id, 'unit_id' => $middle->id, 'position' => Position::SQUAD_LEADER]);
         app(UnitAssignment::class)->setLeader($middle, $leader->clan_id);
+        $leader->update(['position' => Position::SQUAD_LEADER]);
 
         (new CleanupUnassignedLeaders)->handle();
 
-        $this->assertNull($middle->fresh()->leader_id);
-        $this->assertEquals(Position::MEMBER, $leader->fresh()->position);
+        $this->assertSame($leader->clan_id, $middle->fresh()->leader_id);
+        $this->assertEquals(Position::PLATOON_LEADER, $leader->fresh()->position);
     }
 }
