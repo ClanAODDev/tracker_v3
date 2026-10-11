@@ -48,11 +48,11 @@ class MemberPolicy
      */
     public function update(User $user, Member $member): bool
     {
-        if ($member->id === auth()->user()->member_id) {
+        if ($member->id === $user->member_id) {
             return false;
         }
 
-        return auth()->user()->can(Ability::ManageMembers);
+        return $user->can(Ability::ManageMembers);
     }
 
     /**
@@ -60,11 +60,11 @@ class MemberPolicy
      */
     public function reset(User $user, Member $member): bool
     {
-        if ($member->id === auth()->user()->member_id) {
+        if ($member->id === $user->member_id) {
             return false;
         }
 
-        return auth()->user()->can(Ability::ManageMembers);
+        return $user->can(Ability::ManageMembers);
     }
 
     public function flagInactive(User $user): bool
@@ -98,11 +98,11 @@ class MemberPolicy
     public function updateLeave(User $user, Member $member)
     {
         // can't edit yourself
-        if ($member->id === auth()->user()->member_id) {
+        if ($member->id === $user->member_id) {
             return false;
         }
 
-        return auth()->user()->can(Ability::ManageMembers);
+        return $user->can(Ability::ManageMembers);
     }
 
     public function view()
@@ -126,7 +126,7 @@ class MemberPolicy
      */
     public function separate(User $user, Member $member): bool
     {
-        if ($member->id === $user->member->id) {
+        if ($user->member === null || $member->id === $user->member->id) {
             return false;
         }
 

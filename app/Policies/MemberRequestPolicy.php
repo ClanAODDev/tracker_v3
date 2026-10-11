@@ -12,9 +12,9 @@ class MemberRequestPolicy
 {
     use HandlesAuthorization;
 
-    public function before()
+    public function before(User $user)
     {
-        if (auth()->user()->isDeveloper() || auth()->user()->can(Ability::ManageAllMemberRequests)) {
+        if ($user->isDeveloper() || $user->can(Ability::ManageAllMemberRequests)) {
             return true;
         }
     }

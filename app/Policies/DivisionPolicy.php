@@ -62,7 +62,7 @@ class DivisionPolicy
             return true;
         }
 
-        if (auth()->user()->isDivisionLeader()) {
+        if ($user->isDivisionLeader()) {
             return $user->member->division_id === $division->id;
         }
 

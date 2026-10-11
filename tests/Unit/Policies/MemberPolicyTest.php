@@ -29,6 +29,27 @@ class MemberPolicyTest extends TestCase
     }
 
     #[Test]
+    public function policy_checks_use_the_given_user_not_the_authenticated_one()
+    {
+        $srLdr  = $this->createSeniorLeader();
+        $target = $this->createMember(['division_id' => $srLdr->member->division_id]);
+
+        $this->actingAs($this->createOfficer());
+
+        $this->assertTrue($this->policy->update($srLdr, $target));
+        $this->assertFalse($this->policy->update($srLdr, $srLdr->member));
+    }
+
+    #[Test]
+    public function separate_is_denied_for_a_user_without_a_member()
+    {
+        $user   = User::factory()->create(['member_id' => null, 'role' => Role::ADMIN]);
+        $target = $this->createMember();
+
+        $this->assertFalse($this->policy->separate($user, $target));
+    }
+
+    #[Test]
     public function admin_bypasses_all_checks()
     {
         $admin  = $this->createAdmin();

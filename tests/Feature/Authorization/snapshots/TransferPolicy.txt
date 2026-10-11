@@ -122,14 +122,14 @@ approve                  | incoming_approved                        | admin     
 approve                  | incoming_approved                        | developer                | allow
 approve                  | incoming_approved                        | admin_viewing_as_officer | deny
 approve                  | incoming_approved                        | senior_leader            | deny
-approve                  | incoming_approved                        | commanding_officer       | allow
-approve                  | incoming_approved                        | executive_officer        | allow
+approve                  | incoming_approved                        | commanding_officer       | deny
+approve                  | incoming_approved                        | executive_officer        | deny
 approve                  | incoming_approved                        | officer                  | deny
 approve                  | incoming_approved                        | platoon_leader           | deny
 approve                  | incoming_approved                        | squad_leader             | deny
 approve                  | incoming_approved                        | member                   | deny
 approve                  | incoming_approved                        | banned                   | deny
-approve                  | incoming_approved                        | pending                  | error:ErrorException
+approve                  | incoming_approved                        | pending                  | deny
 hold                     | incoming_approved                        | admin                    | allow
 hold                     | incoming_approved                        | developer                | allow
 hold                     | incoming_approved                        | admin_viewing_as_officer | deny
@@ -177,7 +177,7 @@ approve                  | outgoing_approved                        | platoon_le
 approve                  | outgoing_approved                        | squad_leader             | deny
 approve                  | outgoing_approved                        | member                   | deny
 approve                  | outgoing_approved                        | banned                   | deny
-approve                  | outgoing_approved                        | pending                  | error:ErrorException
+approve                  | outgoing_approved                        | pending                  | deny
 hold                     | outgoing_approved                        | admin                    | allow
 hold                     | outgoing_approved                        | developer                | allow
 hold                     | outgoing_approved                        | admin_viewing_as_officer | deny

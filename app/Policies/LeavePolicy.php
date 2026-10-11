@@ -3,29 +3,30 @@
 namespace App\Policies;
 
 use App\Enums\Ability;
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class LeavePolicy
 {
     use HandlesAuthorization;
 
-    public function viewAny()
+    public function viewAny(User $user)
     {
-        return auth()->user()->can(Ability::ViewLeaves);
+        return $user->can(Ability::ViewLeaves);
     }
 
-    public function create()
+    public function create(User $user)
     {
-        return auth()->user()->can(Ability::CreateLeaves);
+        return $user->can(Ability::CreateLeaves);
     }
 
-    public function update()
+    public function update(User $user)
     {
-        return auth()->user()->can(Ability::EditLeaves);
+        return $user->can(Ability::EditLeaves);
     }
 
-    public function deleteAny()
+    public function deleteAny(User $user)
     {
-        return auth()->user()->can(Ability::EditLeaves);
+        return $user->can(Ability::EditLeaves);
     }
 }

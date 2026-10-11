@@ -43,6 +43,10 @@ class TransferPolicy
 
     public function approve(User $user, Transfer $transfer): bool
     {
+        if ($transfer->approved_at) {
+            return false;
+        }
+
         return $this->isGainingDivisionLeader($user, $transfer);
     }
 
