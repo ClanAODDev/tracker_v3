@@ -121,9 +121,9 @@ delete                   | other_platoon_squad                      | pending   
 delete                   | other_division_squad                     | admin                    | allow
 delete                   | other_division_squad                     | developer                | allow
 delete                   | other_division_squad                     | admin_viewing_as_officer | deny
-delete                   | other_division_squad                     | senior_leader            | allow
-delete                   | other_division_squad                     | commanding_officer       | allow
-delete                   | other_division_squad                     | executive_officer        | allow
+delete                   | other_division_squad                     | senior_leader            | deny
+delete                   | other_division_squad                     | commanding_officer       | deny
+delete                   | other_division_squad                     | executive_officer        | deny
 delete                   | other_division_squad                     | officer                  | deny
 delete                   | other_division_squad                     | platoon_leader           | deny
 delete                   | other_division_squad                     | squad_leader             | deny

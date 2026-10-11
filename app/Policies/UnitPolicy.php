@@ -45,7 +45,7 @@ class UnitPolicy
         $units = app(UnitHierarchy::class);
 
         if ($user->can(Ability::ManageUnits) || $user->isDivisionLeader()) {
-            return $unit->division_id === $user->member->division_id || ! $unit->isTopLevel();
+            return $unit->division_id === $user->member->division_id;
         }
 
         return $unit->parent !== null
