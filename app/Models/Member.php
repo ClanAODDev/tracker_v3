@@ -177,6 +177,8 @@ class Member extends Model
 
     public function reset(): void
     {
+        app(UnitAssignment::class)->clearLeadership([$this->clan_id]);
+
         $this->update([
             'unit_id'                => null,
             'division_id'            => 0,

@@ -8,7 +8,6 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
-use App\Services\Units\UnitAssignment;
 use Closure;
 use Exception;
 use Illuminate\Support\Collection;
@@ -162,18 +161,11 @@ class MemberSyncService
 
         $member->reset();
 
-        $this->clearLeadershipAssignments($member);
-
         if ($user = $member->user) {
             $user->update(['role' => Role::MEMBER]);
         }
 
         $this->stats['removed']++;
-    }
-
-    protected function clearLeadershipAssignments(Member $member): void
-    {
-        app(UnitAssignment::class)->clearLeadership([$member->clan_id]);
     }
 
     protected function updateMemberIfChanged(Member $member, object $forumData): void

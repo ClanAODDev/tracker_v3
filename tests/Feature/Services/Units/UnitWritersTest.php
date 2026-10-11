@@ -63,6 +63,18 @@ class UnitWritersTest extends TestCase
     }
 
     #[Test]
+    public function resetting_a_member_vacates_the_units_they_lead(): void
+    {
+        $leader = $this->createSquadLeader($this->squad, ['division_id' => $this->division->id]);
+
+        $leader->reset();
+
+        $this->assertNull($this->squad->fresh()->leader_id);
+        $this->assertNull($leader->fresh()->unit_id);
+        $this->assertSame(0, $leader->fresh()->division_id);
+    }
+
+    #[Test]
     public function the_weekly_reset_clears_the_unit_too(): void
     {
         $member = $this->assigned();
