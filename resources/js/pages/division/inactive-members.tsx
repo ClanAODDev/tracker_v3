@@ -33,7 +33,7 @@ interface InactiveRow {
 }
 
 interface Props {
-    division: { name: string; slug: string; platoonLabel: string; hasUnits: boolean; inactivityDays: number };
+    division: { name: string; slug: string; topLevelLabel: string; hasUnits: boolean; inactivityDays: number };
     stats: { total: number; flagged: number; severe: number };
     activePlatoon: number | null;
     platoons: Array<{ id: number; name: string; count: number }>;
@@ -134,7 +134,7 @@ export default function InactiveMembers({
                                 )
                             }
                             options={[
-                                { value: '__all', label: `All ${pluralize(division.platoonLabel)}` },
+                                { value: '__all', label: `All ${pluralize(division.topLevelLabel)}` },
                                 ...platoons.map((p) => ({
                                     value: String(p.id),
                                     label: p.count > 0 ? `${p.name} (${p.count})` : p.name,
@@ -176,7 +176,7 @@ export default function InactiveMembers({
                                             <TableHead>Last voice activity</TableHead>
                                             {can.remind && <TableHead>Reminded</TableHead>}
                                             {tab === 'inactive' && <TableHead>Status</TableHead>}
-                                            {division.hasUnits && <TableHead>{division.platoonLabel} / Squad</TableHead>}
+                                            {division.hasUnits && <TableHead>Unit</TableHead>}
                                             <TableHead className="text-right">Actions</TableHead>
                                         </TableRow>
                                     </TableHeader>

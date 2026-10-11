@@ -91,7 +91,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
         $target = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($officer)
-            ->post('/members/assign-squad', [
+            ->post('/members/assign-unit', [
                 'member_id' => $target->id,
                 'unit_id'   => $squad->id,
             ])
@@ -110,7 +110,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
         $target   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($srLdr)
-            ->post('/members/assign-squad', [
+            ->post('/members/assign-unit', [
                 'member_id' => $target->id,
                 'unit_id'   => $squad->id,
             ])
@@ -130,7 +130,7 @@ class MemberAssignmentAuthorizationTest extends TestCase
         $target        = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($srLdr)
-            ->post('/members/assign-squad', [
+            ->post('/members/assign-unit', [
                 'member_id' => $target->id,
                 'unit_id'   => $squad->id,
             ])

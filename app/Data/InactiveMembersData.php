@@ -49,7 +49,7 @@ class InactiveMembersData
             'division' => [
                 'name'           => $division->name,
                 'slug'           => $division->slug,
-                'platoonLabel'   => $division->topLevelLabel(),
+                'topLevelLabel'  => $division->topLevelLabel(),
                 'hasUnits'       => ! $division->isFlat(),
                 'inactivityDays' => $inactivityDays,
             ],

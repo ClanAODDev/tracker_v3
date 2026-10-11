@@ -16,27 +16,30 @@ class MemberListProps
         Division $division,
         Collection $members,
         UnitStatsData $unitStats,
-        string $assignmentKind = 'platoon',
+        int $assignmentDepth = 1,
         ?int $directRecruitOfClanId = null,
     ): array {
         $user       = auth()->user();
-        $serializer = new MemberRowSerializer($division, $assignmentKind, $directRecruitOfClanId);
+        $serializer = new MemberRowSerializer($division, $assignmentDepth, $directRecruitOfClanId);
 
         return [
             'division' => [
-                'name'         => $division->name,
-                'slug'         => $division->slug,
-                'hasUnits'     => ! $division->isFlat(),
-                'platoonLabel' => $division->topLevelLabel(),
-                'squadLabel'   => $division->bottomLevelLabel(),
-                'handleTypes'  => $division->handles
+                'name'          => $division->name,
+                'slug'          => $division->slug,
+                'hasUnits'      => ! $division->isFlat(),
+                'topLevelLabel' => $division->topLevelLabel(),
+                'levels'        => $division->unitLevels
+                    ->map(fn ($level) => ['depth' => $level->depth, 'label' => $level->label])
+                    ->values()
+                    ->all(),
+                'handleTypes' => $division->handles
                     ->map(fn ($handle) => ['id' => $handle->id, 'label' => $handle->label])
                     ->values()
                     ->all(),
             ],
-            'members'        => $serializer->collection($members),
-            'assignmentKind' => $assignmentKind,
-            'unitStats'      => [
+            'members'         => $serializer->collection($members),
+            'assignmentDepth' => $assignmentDepth,
+            'unitStats'       => [
                 'totalCount'     => $unitStats->totalCount,
                 'onLeaveCount'   => $unitStats->onLeaveCount,
                 'inactiveCount'  => $unitStats->inactiveCount,

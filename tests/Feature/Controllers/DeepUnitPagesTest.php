@@ -52,8 +52,11 @@ class DeepUnitPagesTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('scope.kind', 'platoon')
-                ->where('scope.platoonLabel', 'Platoon')
-                ->where('scope.squadLabel', 'Squad')
+                ->where('scope.unitLabel', 'Platoon')
+                ->where('scope.childLabel', 'Squad')
+                ->where('assignmentDepth', 2)
+                ->where('division.levels.1.label', 'Squad')
+                ->where('members', fn ($members) => collect($members)->pluck('assignment.label')->unique()->all() === [$this->middle->name])
                 ->has('squads', 1)
                 ->where('squads.0.id', $this->middle->id)
                 ->where('squads.0.count', 2));
@@ -69,7 +72,8 @@ class DeepUnitPagesTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('scope.kind', 'squad')
-                ->where('scope.squadLabel', 'Team')
+                ->where('scope.unitLabel', 'Team')
+                ->where('assignmentDepth', 3)
                 ->has('scope.breadcrumbs', 4)
                 ->where('scope.breadcrumbs.1.href', $this->company->url($division))
                 ->where('scope.breadcrumbs.2.href', $this->middle->url($division)));
@@ -130,12 +134,12 @@ class DeepUnitPagesTest extends TestCase
         $member   = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->middle->id]);
 
         $this->actingAs($this->officer)
-            ->postJson('/members/assign-squad', ['member_id' => $member->id, 'unit_id' => $this->leaf->id])
+            ->postJson('/members/assign-unit', ['member_id' => $member->id, 'unit_id' => $this->leaf->id])
             ->assertOk();
 
         $this->assertSame($this->leaf->id, $member->fresh()->unit_id);
 
-        $this->postJson('/members/assign-squad', ['member_id' => $member->id, 'unit_id' => $this->middle->id])
+        $this->postJson('/members/assign-unit', ['member_id' => $member->id, 'unit_id' => $this->middle->id])
             ->assertOk();
 
         $this->assertSame($this->middle->id, $member->fresh()->unit_id);
@@ -148,7 +152,7 @@ class DeepUnitPagesTest extends TestCase
         $member = $this->createMember(['division_id' => $this->officer->member->division_id]);
 
         $this->actingAs($this->officer)
-            ->postJson('/members/assign-squad', ['member_id' => $member->id, 'unit_id' => $other->id])
+            ->postJson('/members/assign-unit', ['member_id' => $member->id, 'unit_id' => $other->id])
             ->assertUnprocessable();
     }
 

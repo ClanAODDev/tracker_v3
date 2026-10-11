@@ -88,6 +88,17 @@ class Unit extends Model
         return $this->level()?->label ?? 'Unit';
     }
 
+    public function trailLabel(): string
+    {
+        $names = [];
+
+        for ($unit = $this; $unit !== null; $unit = $unit->parent) {
+            array_unshift($names, $unit->name ?: 'Untitled');
+        }
+
+        return implode(' / ', $names);
+    }
+
     public function leaderTitle(): string
     {
         return $this->level()?->leader_title ?? 'Leader';

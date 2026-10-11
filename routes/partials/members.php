@@ -5,9 +5,9 @@ use App\Http\Controllers\ActivityReminderController;
 use App\Http\Controllers\InactiveMemberController;
 use App\Http\Controllers\LeaveController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\MemberUnitController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\PromotionController;
-use App\Http\Controllers\SquadController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('members')->group(function () {
@@ -30,7 +30,7 @@ Route::prefix('members')->group(function () {
         Route::delete('{member}/activity-reminders', 'destroy')->name('member.clear-activity-reminders');
     });
 
-    Route::post('assign-squad', [SquadController::class, 'assignMember']);
+    Route::post('assign-unit', [MemberUnitController::class, 'assign']);
 
     Route::controller(LeaveController::class)->group(function () {
         Route::match(['put', 'patch'], '{member}/leave', 'update')->name('leave.update');
