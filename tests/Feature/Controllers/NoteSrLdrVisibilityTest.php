@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\Rank;
 use App\Models\Note;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
@@ -20,7 +21,7 @@ class NoteSrLdrVisibilityTest extends TestCase
     public function sr_ldr_role_user_can_create_sr_ldr_note(): void
     {
         $srLdr  = $this->createSeniorLeader();
-        $member = $this->createMember(['division_id' => $srLdr->member->division_id]);
+        $member = $this->createMember(['division_id' => $srLdr->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $this->actingAs($srLdr)
             ->post(route('storeNote', $member->clan_id), [
@@ -39,7 +40,7 @@ class NoteSrLdrVisibilityTest extends TestCase
     public function non_sr_ldr_user_cannot_create_sr_ldr_note(): void
     {
         $officer = $this->createOfficer();
-        $member  = $this->createMember(['division_id' => $officer->member->division_id]);
+        $member  = $this->createMember(['division_id' => $officer->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $this->actingAs($officer)
             ->post(route('storeNote', $member->clan_id), [
@@ -55,7 +56,7 @@ class NoteSrLdrVisibilityTest extends TestCase
     public function sr_ldr_note_is_visible_on_profile_to_sr_ldr_viewer(): void
     {
         $srLdr  = $this->createSeniorLeader();
-        $member = $this->createMember(['division_id' => $srLdr->member->division_id]);
+        $member = $this->createMember(['division_id' => $srLdr->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -75,7 +76,7 @@ class NoteSrLdrVisibilityTest extends TestCase
     {
         $srLdr  = $this->createSeniorLeader();
         $viewer = $this->createOfficer($srLdr->member->division);
-        $member = $this->createMember(['division_id' => $srLdr->member->division_id]);
+        $member = $this->createMember(['division_id' => $srLdr->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -95,7 +96,7 @@ class NoteSrLdrVisibilityTest extends TestCase
     {
         $srLdr  = $this->createSeniorLeader();
         $admin  = $this->createAdmin();
-        $member = $this->createMember(['division_id' => $srLdr->member->division_id]);
+        $member = $this->createMember(['division_id' => $srLdr->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -116,7 +117,7 @@ class NoteSrLdrVisibilityTest extends TestCase
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
         $viewer   = $this->createOfficer($division);
-        $member   = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -136,7 +137,7 @@ class NoteSrLdrVisibilityTest extends TestCase
     {
         $srLdr  = $this->createSeniorLeader();
         $viewer = $this->createOfficer($srLdr->member->division);
-        $member = $this->createMember(['division_id' => $viewer->member->division_id]);
+        $member = $this->createMember(['division_id' => $viewer->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -155,7 +156,7 @@ class NoteSrLdrVisibilityTest extends TestCase
     public function sr_ldr_user_can_delete_an_sr_ldr_note(): void
     {
         $srLdr  = $this->createSeniorLeader();
-        $member = $this->createMember(['division_id' => $srLdr->member->division_id]);
+        $member = $this->createMember(['division_id' => $srLdr->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,

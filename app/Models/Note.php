@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Ability;
 use App\Enums\ActivityType;
 use App\Enums\Rank;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -76,13 +77,37 @@ class Note extends Model
         return $user?->can(Ability::UseMasterSergeantNotes) || ($user?->member?->isAtLeast(Rank::MASTER_SERGEANT) ?? false);
     }
 
-    public static function isTypeVisibleTo(string $type, ?User $user): bool
+    public static function bypassesNoteRestrictions(?User $user): bool
     {
-        return match ($type) {
-            'sr_ldr' => static::canManageSrLdr($user),
-            'msgt'   => static::canManageMsgt($user),
-            default  => true,
-        };
+        return $user !== null && ($user->can(Ability::ManageAllNotes) || $user->isDeveloper());
+    }
+
+    public function scopeVisibleTo(Builder $query, ?User $user): Builder
+    {
+        if ($user === null) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        $hiddenTypes = array_keys(array_filter([
+            'sr_ldr' => ! static::canManageSrLdr($user),
+            'msgt'   => ! static::canManageMsgt($user),
+        ]));
+
+        $query->when($hiddenTypes !== [], fn (Builder $query) => $query->whereNotIn($query->qualifyColumn('type'), $hiddenTypes));
+
+        if (static::bypassesNoteRestrictions($user)) {
+            return $query;
+        }
+
+        $viewerRank = $user->member?->rank?->value;
+
+        return $query->where(fn (Builder $query) => $query
+            ->where($query->qualifyColumn('author_id'), $user->id)
+            ->when($viewerRank !== null, fn (Builder $query) => $query->orWhereIn(
+                $query->qualifyColumn('member_id'),
+                Member::withTrashed()->where('rank', '<', $viewerRank)->select('id'),
+            ))
+        );
     }
 
     public function author(): BelongsTo

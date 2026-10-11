@@ -26,6 +26,7 @@ class DivisionNoteController extends Controller
             : $division->notes();
 
         $notes = $notes
+            ->visibleTo(auth()->user())
             ->where('member_id', '!=', auth()->user()->member_id)
             ->with(['member:id,name,clan_id,rank', 'author:id,name']);
 
@@ -42,8 +43,7 @@ class DivisionNoteController extends Controller
 
         $notes = $notes
             ->orderByDesc('created_at')
-            ->get()
-            ->filter(fn ($note) => Note::isTypeVisibleTo($note->type, auth()->user()));
+            ->get();
 
         $tags = DivisionTag::forDivision($division->id)
             ->visibleTo()

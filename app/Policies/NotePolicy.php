@@ -30,12 +30,12 @@ class NotePolicy
 
     public function viewForMember(User $user, Member $member): bool
     {
-        return $this->show($user);
+        return $this->show($user) && ($this->outranksSubject($user, $member) || $this->hasAuthoredNoteAbout($user, $member));
     }
 
     public function createForMember(User $user, Member $member): bool
     {
-        return $this->create($user);
+        return $this->create($user) && $this->outranksSubject($user, $member);
     }
 
     public function show(User $user): bool
@@ -49,7 +49,7 @@ class NotePolicy
 
     public function edit(User $user, Note $note): bool
     {
-        if ($this->restrictedByType($user, $note)) {
+        if ($this->restrictedByType($user, $note) || ! $this->outranksSubject($user, $note->member)) {
             return false;
         }
 
@@ -67,7 +67,7 @@ class NotePolicy
 
     public function delete(User $user, Note $note): bool
     {
-        if ($this->restrictedByType($user, $note)) {
+        if ($this->restrictedByType($user, $note) || ! $this->outranksSubject($user, $note->member)) {
             return false;
         }
 
@@ -81,7 +81,7 @@ class NotePolicy
 
     public function restore(User $user, Note $note): bool
     {
-        if ($this->restrictedByType($user, $note)) {
+        if ($this->restrictedByType($user, $note) || ! $this->outranksSubject($user, $note->member)) {
             return false;
         }
 
@@ -90,7 +90,7 @@ class NotePolicy
 
     public function forceDelete(User $user, Note $note): bool
     {
-        if ($this->restrictedByType($user, $note)) {
+        if ($this->restrictedByType($user, $note) || ! $this->outranksSubject($user, $note->member)) {
             return false;
         }
 
@@ -106,6 +106,16 @@ class NotePolicy
         };
 
         return $memberId !== null && $memberId === $user->member_id;
+    }
+
+    private function outranksSubject(User $user, Member $subject): bool
+    {
+        return $user->member?->outranks($subject) ?? false;
+    }
+
+    private function hasAuthoredNoteAbout(User $user, Member $subject): bool
+    {
+        return Note::withTrashed()->where('member_id', $subject->id)->where('author_id', $user->id)->exists();
     }
 
     private function restrictedByType(User $user, Note $note): bool

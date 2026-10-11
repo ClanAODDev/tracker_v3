@@ -254,8 +254,8 @@ restore                  | self misc                                | admin     
 restore                  | self misc                                | developer                | allow
 restore                  | self misc                                | admin_viewing_as_officer | deny
 restore                  | self misc                                | senior_leader            | deny
-restore                  | self misc                                | commanding_officer       | allow
-restore                  | self misc                                | executive_officer        | allow
+restore                  | self misc                                | commanding_officer       | deny
+restore                  | self misc                                | executive_officer        | deny
 restore                  | self misc                                | officer                  | deny
 restore                  | self misc                                | platoon_leader           | deny
 restore                  | self misc                                | squad_leader             | deny

@@ -37,7 +37,7 @@ class NoteMsgtVisibilityTest extends TestCase
     public function msgt_rank_user_can_create_an_msgt_note(): void
     {
         $leader = $this->createLeaderWithRank(Rank::MASTER_SERGEANT);
-        $member = $this->createMember(['division_id' => $leader->member->division_id]);
+        $member = $this->createMember(['division_id' => $leader->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $this->actingAs($leader)
             ->post(route('storeNote', $member->clan_id), [
@@ -56,7 +56,7 @@ class NoteMsgtVisibilityTest extends TestCase
     public function below_msgt_rank_user_cannot_create_an_msgt_note(): void
     {
         $leader = $this->createLeaderWithRank(Rank::STAFF_SERGEANT);
-        $member = $this->createMember(['division_id' => $leader->member->division_id]);
+        $member = $this->createMember(['division_id' => $leader->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $this->actingAs($leader)
             ->post(route('storeNote', $member->clan_id), [
@@ -72,7 +72,7 @@ class NoteMsgtVisibilityTest extends TestCase
     public function msgt_note_is_visible_on_profile_to_msgt_rank_viewer(): void
     {
         $author = $this->createLeaderWithRank(Rank::MASTER_SERGEANT);
-        $member = $this->createMember(['division_id' => $author->member->division_id]);
+        $member = $this->createMember(['division_id' => $author->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -92,7 +92,7 @@ class NoteMsgtVisibilityTest extends TestCase
     {
         $author = $this->createLeaderWithRank(Rank::MASTER_SERGEANT);
         $viewer = $this->createLeaderWithRank(Rank::STAFF_SERGEANT);
-        $member = $this->createMember(['division_id' => $author->member->division_id]);
+        $member = $this->createMember(['division_id' => $author->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -112,7 +112,7 @@ class NoteMsgtVisibilityTest extends TestCase
     {
         $author = $this->createLeaderWithRank(Rank::MASTER_SERGEANT);
         $admin  = $this->createAdmin();
-        $member = $this->createMember(['division_id' => $author->member->division_id]);
+        $member = $this->createMember(['division_id' => $author->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -132,7 +132,7 @@ class NoteMsgtVisibilityTest extends TestCase
     {
         $author = $this->createLeaderWithRank(Rank::MASTER_SERGEANT);
         $viewer = $this->createLeaderWithRank(Rank::STAFF_SERGEANT);
-        $member = $this->createMember(['division_id' => $viewer->member->division_id]);
+        $member = $this->createMember(['division_id' => $viewer->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -151,7 +151,7 @@ class NoteMsgtVisibilityTest extends TestCase
     public function msgt_rank_division_leader_can_delete_an_msgt_note(): void
     {
         $author = $this->createLeaderWithRank(Rank::MASTER_SERGEANT);
-        $member = $this->createMember(['division_id' => $author->member->division_id]);
+        $member = $this->createMember(['division_id' => $author->member->division_id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,

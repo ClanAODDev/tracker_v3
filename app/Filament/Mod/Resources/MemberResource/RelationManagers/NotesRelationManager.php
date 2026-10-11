@@ -46,6 +46,7 @@ class NotesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('body')
+            ->modifyQueryUsing(fn ($query) => $query->visibleTo(auth()->user()))
             ->columns([
                 TextColumn::make('body')
                     ->limit(60),
