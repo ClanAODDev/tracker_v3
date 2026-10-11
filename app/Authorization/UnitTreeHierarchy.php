@@ -82,7 +82,8 @@ class UnitTreeHierarchy implements UnitHierarchy
         $anchor = $this->anchor($leader, $level);
 
         if ($anchor === null) {
-            return $this->ancestorAtDepth($member->unit, $this->depthFor($leader, $level)) === null;
+            return (int) $leader->division_id === (int) $member->division_id
+                && $this->ancestorAtDepth($member->unit, $this->depthFor($leader, $level)) === null;
         }
 
         return $member->unit !== null && str_starts_with($member->unit->path, $anchor->path);
@@ -96,7 +97,7 @@ class UnitTreeHierarchy implements UnitHierarchy
             return $members->whereIn('unit_id', Unit::query()->where('path', 'like', $anchor->path . '%')->select('id'));
         }
 
-        return $members->where(fn (Builder $query) => $query
+        return $members->where('division_id', $leader->division_id)->where(fn (Builder $query) => $query
             ->whereNull('unit_id')
             ->orWhereIn('unit_id', Unit::query()->where('depth', '<', $this->depthFor($leader, $level))->select('id')));
     }
