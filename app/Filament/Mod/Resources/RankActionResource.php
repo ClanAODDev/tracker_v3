@@ -36,6 +36,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Flashadvocate\FilamentReactions\Livewire\Reactions;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Kirschbaum\Commentions\Filament\Actions\CommentsTableAction;
 
 class RankActionResource extends Resource
@@ -283,11 +284,12 @@ class RankActionResource extends Resource
                     $append = 'You cannot select yourself or others of greater rank.';
 
                     $level = app(UnitHierarchy::class)->leadershipLevel($user);
+                    $unit  = Str::lower($user->member?->leaderLevel()?->label ?? 'unit');
 
                     return match (true) {
-                        $level === UnitLevel::Squad   => "Only squad members up to PFC can be selected. {$append}",
-                        $level === UnitLevel::Platoon => "Only platoon members up to LCpl can be selected. {$append}",
-                        $user->isDivisionLeader()     => "Only division members up to SGT can be selected. {$append}",
+                        $level === UnitLevel::Squad   => sprintf('Only %s members up to %s can be selected. %s', $unit, self::rankCeiling('max_squad_leader'), $append),
+                        $level === UnitLevel::Platoon => sprintf('Only %s members up to %s can be selected. %s', $unit, self::rankCeiling('max_platoon_leader'), $append),
+                        $user->isDivisionLeader()     => sprintf('Only division members up to %s can be selected. %s', self::rankCeiling('max_division_leader'), $append),
                         default                       => $append,
                     };
                 })
@@ -439,5 +441,12 @@ class RankActionResource extends Resource
                 ->required(fn (callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader()),
 
         ];
+    }
+
+    private static function rankCeiling(string $limit): string
+    {
+        $exclusiveMax = config("aod.rank.{$limit}");
+
+        return Rank::tryFrom($exclusiveMax->value - 1)?->getAbbreviation() ?? $exclusiveMax->getAbbreviation();
     }
 }
