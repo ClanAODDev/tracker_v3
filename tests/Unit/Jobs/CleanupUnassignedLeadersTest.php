@@ -4,6 +4,8 @@ namespace Tests\Unit\Jobs;
 
 use App\Enums\Position;
 use App\Jobs\CleanupUnassignedLeaders;
+use App\Models\DivisionUnitLevel;
+use App\Models\Unit;
 use App\Services\Units\UnitAssignment;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -218,5 +220,66 @@ class CleanupUnassignedLeadersTest extends TestCase
 
         $this->assertEquals(Position::MEMBER, $pl->fresh()->position);
         $this->assertEquals(Position::MEMBER, $sl->fresh()->position);
+    }
+
+    #[Test]
+    public function valid_leaders_at_every_level_of_a_three_level_division_are_kept()
+    {
+        $division = $this->createActiveDivision();
+        DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
+        $top    = $this->createPlatoon($division);
+        $middle = Unit::factory()->childOf($top)->create();
+        $leaf   = Unit::factory()->childOf($middle)->create();
+
+        $topLeader    = $this->createMember(['division_id' => $division->id, 'unit_id' => $top->id, 'position' => Position::PLATOON_LEADER]);
+        $middleLeader = $this->createMember(['division_id' => $division->id, 'unit_id' => $middle->id, 'position' => Position::PLATOON_LEADER]);
+        $leafLeader   = $this->createMember(['division_id' => $division->id, 'unit_id' => $leaf->id, 'position' => Position::SQUAD_LEADER]);
+        $units        = app(UnitAssignment::class);
+        $units->setLeader($top, $topLeader->clan_id);
+        $units->setLeader($middle, $middleLeader->clan_id);
+        $units->setLeader($leaf, $leafLeader->clan_id);
+
+        (new CleanupUnassignedLeaders)->handle();
+
+        $this->assertSame($topLeader->clan_id, $top->fresh()->leader_id);
+        $this->assertSame($middleLeader->clan_id, $middle->fresh()->leader_id);
+        $this->assertSame($leafLeader->clan_id, $leaf->fresh()->leader_id);
+        $this->assertEquals(Position::PLATOON_LEADER, $middleLeader->fresh()->position);
+        $this->assertEquals(Position::SQUAD_LEADER, $leafLeader->fresh()->position);
+    }
+
+    #[Test]
+    public function stale_leaders_below_the_second_level_are_cleared()
+    {
+        $division = $this->createActiveDivision();
+        DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
+        $top    = $this->createPlatoon($division);
+        $middle = Unit::factory()->childOf($top)->create();
+        $leaf   = Unit::factory()->childOf($middle)->create();
+
+        $leafLeader = $this->createMember(['division_id' => $division->id, 'unit_id' => $leaf->id, 'position' => Position::SQUAD_LEADER]);
+        app(UnitAssignment::class)->setLeader($leaf, $leafLeader->clan_id);
+        $leafLeader->update(['unit_id' => null, 'position' => Position::MEMBER]);
+
+        (new CleanupUnassignedLeaders)->handle();
+
+        $this->assertNull($leaf->fresh()->leader_id);
+    }
+
+    #[Test]
+    public function a_leader_holding_the_wrong_position_for_a_deep_unit_is_cleared()
+    {
+        $division = $this->createActiveDivision();
+        DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
+        $top    = $this->createPlatoon($division);
+        $middle = Unit::factory()->childOf($top)->create();
+
+        $leader = $this->createMember(['division_id' => $division->id, 'unit_id' => $middle->id, 'position' => Position::SQUAD_LEADER]);
+        app(UnitAssignment::class)->setLeader($middle, $leader->clan_id);
+
+        (new CleanupUnassignedLeaders)->handle();
+
+        $this->assertNull($middle->fresh()->leader_id);
+        $this->assertEquals(Position::MEMBER, $leader->fresh()->position);
     }
 }

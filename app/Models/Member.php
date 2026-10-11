@@ -197,18 +197,14 @@ class Member extends Model
     {
         $query
             ->where('position', Position::SQUAD_LEADER)
-            ->whereNotIn('clan_id', function ($q) {
-                $q->select('leader_id')->from('units')->where('depth', '>', 1)->whereNotNull('leader_id')->whereNull('deleted_at');
-            });
+            ->whereNotIn('clan_id', Unit::query()->ofTier(UnitLevel::Squad)->whereNotNull('leader_id')->select('leader_id'));
     }
 
     public function scopeUnassignedPlatoonLeaders(Builder $query): void
     {
         $query
             ->where('position', Position::PLATOON_LEADER)
-            ->whereNotIn('clan_id', function ($q) {
-                $q->select('leader_id')->from('units')->where('depth', 1)->whereNotNull('leader_id')->whereNull('deleted_at');
-            });
+            ->whereNotIn('clan_id', Unit::query()->ofTier(UnitLevel::Platoon)->whereNotNull('leader_id')->select('leader_id'));
     }
 
     public function partTimeDivisions(): BelongsToMany

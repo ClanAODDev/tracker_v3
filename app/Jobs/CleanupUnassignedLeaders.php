@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\Position;
+use App\Enums\UnitLevel;
 use App\Models\Member;
 use App\Models\Unit;
 use App\Services\Units\UnitAssignment;
@@ -20,9 +21,9 @@ class CleanupUnassignedLeaders implements ShouldQueue
         DB::transaction(function () {
             $units = app(UnitAssignment::class);
 
-            foreach ([1 => Position::PLATOON_LEADER, 2 => Position::SQUAD_LEADER] as $depth => $position) {
+            foreach ([UnitLevel::Platoon->value => Position::PLATOON_LEADER, UnitLevel::Squad->value => Position::SQUAD_LEADER] as $tier => $position) {
                 Unit::query()
-                    ->where('depth', $depth)
+                    ->ofTier(UnitLevel::from($tier))
                     ->where('leader_id', '>', 0)
                     ->whereNotExists(fn (Builder $query) => $query
                         ->from('members')
