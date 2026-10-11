@@ -10,7 +10,6 @@ use App\Http\Controllers\DivisionNoteController;
 use App\Http\Controllers\DivisionOrgChartController;
 use App\Http\Controllers\InactiveMemberController;
 use App\Http\Controllers\LeaveController;
-use App\Http\Controllers\LegacyUnitRedirectController;
 use App\Http\Controllers\PmController;
 use App\Http\Controllers\RecruitingController;
 use App\Http\Controllers\UnitController;
@@ -60,12 +59,6 @@ Route::prefix('divisions/{division}')->group(function () {
         Route::get('{unit}', [UnitController::class, 'show'])->name('unit');
         Route::get('{unit}/manage-assignments', [UnitController::class, 'manage'])->name('unit.manage');
         Route::post('{unit}/children', [UnitController::class, 'storeChild'])->name('unit.children.store');
-    });
-
-    Route::prefix('platoons')->group(function () {
-        Route::get('{platoon}', [LegacyUnitRedirectController::class, 'platoon'])->name('platoon');
-        Route::get('{platoon}/manage-assignments', [LegacyUnitRedirectController::class, 'manage'])->name('platoon.manage-squads');
-        Route::get('{platoon}/squads/{squad}', [LegacyUnitRedirectController::class, 'squad'])->name('squad.show');
     });
 
     Route::post('private-message', [PmController::class, 'create'])->name('private-message.create');

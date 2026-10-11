@@ -20,10 +20,6 @@ class Unit extends Model
     use HasFactory;
     use SoftDeletes;
 
-    public const LEGACY_PLATOON = 'platoon';
-
-    public const LEGACY_SQUAD = 'squad';
-
     protected $guarded = ['id'];
 
     protected function casts(): array
