@@ -465,7 +465,7 @@ separate                 | same_squad                               | platoon_le
 separate                 | same_squad                               | squad_leader             | deny
 separate                 | same_squad                               | member                   | deny
 separate                 | same_squad                               | banned                   | deny
-separate                 | same_squad                               | pending                  | error:ErrorException
+separate                 | same_squad                               | pending                  | deny
 separate                 | same_platoon_other_squad                 | admin                    | allow
 separate                 | same_platoon_other_squad                 | developer                | allow
 separate                 | same_platoon_other_squad                 | admin_viewing_as_officer | deny
@@ -477,7 +477,7 @@ separate                 | same_platoon_other_squad                 | platoon_le
 separate                 | same_platoon_other_squad                 | squad_leader             | deny
 separate                 | same_platoon_other_squad                 | member                   | deny
 separate                 | same_platoon_other_squad                 | banned                   | deny
-separate                 | same_platoon_other_squad                 | pending                  | error:ErrorException
+separate                 | same_platoon_other_squad                 | pending                  | deny
 separate                 | other_platoon                            | admin                    | allow
 separate                 | other_platoon                            | developer                | allow
 separate                 | other_platoon                            | admin_viewing_as_officer | deny
@@ -489,7 +489,7 @@ separate                 | other_platoon                            | platoon_le
 separate                 | other_platoon                            | squad_leader             | deny
 separate                 | other_platoon                            | member                   | deny
 separate                 | other_platoon                            | banned                   | deny
-separate                 | other_platoon                            | pending                  | error:ErrorException
+separate                 | other_platoon                            | pending                  | deny
 separate                 | unassigned                               | admin                    | allow
 separate                 | unassigned                               | developer                | allow
 separate                 | unassigned                               | admin_viewing_as_officer | deny
@@ -501,7 +501,7 @@ separate                 | unassigned                               | platoon_le
 separate                 | unassigned                               | squad_leader             | deny
 separate                 | unassigned                               | member                   | deny
 separate                 | unassigned                               | banned                   | deny
-separate                 | unassigned                               | pending                  | error:ErrorException
+separate                 | unassigned                               | pending                  | deny
 separate                 | other_division                           | admin                    | allow
 separate                 | other_division                           | developer                | allow
 separate                 | other_division                           | admin_viewing_as_officer | deny
@@ -513,7 +513,7 @@ separate                 | other_division                           | platoon_le
 separate                 | other_division                           | squad_leader             | deny
 separate                 | other_division                           | member                   | deny
 separate                 | other_division                           | banned                   | deny
-separate                 | other_division                           | pending                  | error:ErrorException
+separate                 | other_division                           | pending                  | deny
 separate                 | higher_rank                              | admin                    | allow
 separate                 | higher_rank                              | developer                | allow
 separate                 | higher_rank                              | admin_viewing_as_officer | deny
@@ -525,7 +525,7 @@ separate                 | higher_rank                              | platoon_le
 separate                 | higher_rank                              | squad_leader             | deny
 separate                 | higher_rank                              | member                   | deny
 separate                 | higher_rank                              | banned                   | deny
-separate                 | higher_rank                              | pending                  | error:ErrorException
+separate                 | higher_rank                              | pending                  | deny
 separate                 | part_timer                               | admin                    | allow
 separate                 | part_timer                               | developer                | allow
 separate                 | part_timer                               | admin_viewing_as_officer | deny
@@ -537,7 +537,7 @@ separate                 | part_timer                               | platoon_le
 separate                 | part_timer                               | squad_leader             | deny
 separate                 | part_timer                               | member                   | deny
 separate                 | part_timer                               | banned                   | deny
-separate                 | part_timer                               | pending                  | error:ErrorException
+separate                 | part_timer                               | pending                  | deny
 promote                  | self                                     | admin                    | allow
 promote                  | self                                     | developer                | allow
 promote                  | self                                     | admin_viewing_as_officer | deny
