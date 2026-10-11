@@ -23,8 +23,6 @@ class MemberUnitController extends Controller
                 return response()->json(['success' => true]);
             }
 
-            $this->authorize('update', $current->parent ?? $current);
-
             $units->assignMember($member, null);
 
             return response()->json(['success' => true]);
@@ -32,7 +30,6 @@ class MemberUnitController extends Controller
 
         $unit = Unit::query()->findOrFail($request->unit_id);
         abort_unless($unit->division_id === $member->division_id, 422);
-        $this->authorize('update', $unit);
 
         $units->assignMember($member, $unit);
 
