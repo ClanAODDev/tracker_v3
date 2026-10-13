@@ -49,7 +49,8 @@ class CodeAbilityMap implements AbilityMap
             Ability::ManageAllTickets,
             Ability::ManagePermissions => [$admin],
 
-            Ability::SeeDivisionHealthAlerts => [$senior],
+            Ability::SeeDivisionHealthAlerts,
+            Ability::ApproveDivisionRankActions => [$senior],
 
             Ability::PromoteMembers => [$admin, $officer],
 

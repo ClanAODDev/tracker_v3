@@ -25,7 +25,7 @@ deleteAny                | (any rank action)                        | pending   
 update                   | same_squad to private_first_class        | admin                    | allow
 update                   | same_squad to private_first_class        | developer                | deny
 update                   | same_squad to private_first_class        | admin_viewing_as_officer | deny
-update                   | same_squad to private_first_class        | senior_leader            | deny
+update                   | same_squad to private_first_class        | senior_leader            | allow
 update                   | same_squad to private_first_class        | commanding_officer       | allow
 update                   | same_squad to private_first_class        | executive_officer        | allow
 update                   | same_squad to private_first_class        | officer                  | deny
@@ -61,7 +61,7 @@ update                   | same_squad to sergeant                   | pending   
 update                   | same_platoon_other_squad to private_first_class | admin                    | allow
 update                   | same_platoon_other_squad to private_first_class | developer                | deny
 update                   | same_platoon_other_squad to private_first_class | admin_viewing_as_officer | deny
-update                   | same_platoon_other_squad to private_first_class | senior_leader            | deny
+update                   | same_platoon_other_squad to private_first_class | senior_leader            | allow
 update                   | same_platoon_other_squad to private_first_class | commanding_officer       | allow
 update                   | same_platoon_other_squad to private_first_class | executive_officer        | allow
 update                   | same_platoon_other_squad to private_first_class | officer                  | deny
@@ -97,7 +97,7 @@ update                   | same_platoon_other_squad to sergeant     | pending   
 update                   | other_platoon to private_first_class     | admin                    | allow
 update                   | other_platoon to private_first_class     | developer                | deny
 update                   | other_platoon to private_first_class     | admin_viewing_as_officer | deny
-update                   | other_platoon to private_first_class     | senior_leader            | deny
+update                   | other_platoon to private_first_class     | senior_leader            | allow
 update                   | other_platoon to private_first_class     | commanding_officer       | allow
 update                   | other_platoon to private_first_class     | executive_officer        | allow
 update                   | other_platoon to private_first_class     | officer                  | deny
@@ -193,7 +193,7 @@ update                   | same_squad to specialist, requested by actor | pendin
 approve                  | same_squad to private_first_class        | admin                    | allow
 approve                  | same_squad to private_first_class        | developer                | deny
 approve                  | same_squad to private_first_class        | admin_viewing_as_officer | deny
-approve                  | same_squad to private_first_class        | senior_leader            | deny
+approve                  | same_squad to private_first_class        | senior_leader            | allow
 approve                  | same_squad to private_first_class        | commanding_officer       | allow
 approve                  | same_squad to private_first_class        | executive_officer        | allow
 approve                  | same_squad to private_first_class        | officer                  | deny
@@ -229,7 +229,7 @@ approve                  | same_squad to sergeant                   | pending   
 approve                  | same_platoon_other_squad to private_first_class | admin                    | allow
 approve                  | same_platoon_other_squad to private_first_class | developer                | deny
 approve                  | same_platoon_other_squad to private_first_class | admin_viewing_as_officer | deny
-approve                  | same_platoon_other_squad to private_first_class | senior_leader            | deny
+approve                  | same_platoon_other_squad to private_first_class | senior_leader            | allow
 approve                  | same_platoon_other_squad to private_first_class | commanding_officer       | allow
 approve                  | same_platoon_other_squad to private_first_class | executive_officer        | allow
 approve                  | same_platoon_other_squad to private_first_class | officer                  | deny
@@ -265,7 +265,7 @@ approve                  | same_platoon_other_squad to sergeant     | pending   
 approve                  | other_platoon to private_first_class     | admin                    | allow
 approve                  | other_platoon to private_first_class     | developer                | deny
 approve                  | other_platoon to private_first_class     | admin_viewing_as_officer | deny
-approve                  | other_platoon to private_first_class     | senior_leader            | deny
+approve                  | other_platoon to private_first_class     | senior_leader            | allow
 approve                  | other_platoon to private_first_class     | commanding_officer       | allow
 approve                  | other_platoon to private_first_class     | executive_officer        | allow
 approve                  | other_platoon to private_first_class     | officer                  | deny

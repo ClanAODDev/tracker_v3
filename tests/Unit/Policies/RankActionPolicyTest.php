@@ -439,4 +439,103 @@ class RankActionPolicyTest extends TestCase
 
         $this->assertTrue(RankActionPolicy::manageComments($leader, $action));
     }
+
+    #[Test]
+    public function senior_leader_can_approve_action_within_platoon_limit_in_own_division()
+    {
+        $division = $this->createActiveDivision();
+        $leader   = $this->createSeniorLeader($division, ['rank' => Rank::MASTER_SERGEANT, 'position' => Position::MEMBER]);
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $action = RankAction::factory()->create([
+            'member_id' => $member->id,
+            'rank'      => Rank::PRIVATE_FIRST_CLASS,
+        ]);
+
+        $this->assertTrue(RankActionPolicy::approve($leader, $action));
+        $this->assertTrue(RankActionPolicy::update($leader, $action));
+    }
+
+    #[Test]
+    public function senior_leader_cannot_approve_lance_corporal_or_corporal_actions()
+    {
+        $division = $this->createActiveDivision();
+        $leader   = $this->createSeniorLeader($division, ['rank' => Rank::MASTER_SERGEANT, 'position' => Position::MEMBER]);
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        foreach ([Rank::LANCE_CORPORAL, Rank::CORPORAL] as $rank) {
+            $action = RankAction::factory()->create(['member_id' => $member->id, 'rank' => $rank]);
+
+            $this->assertFalse(RankActionPolicy::approve($leader, $action), $rank->name);
+            $this->assertFalse(RankActionPolicy::update($leader, $action), $rank->name);
+        }
+    }
+
+    #[Test]
+    public function senior_leader_cannot_approve_sergeant_action_below_command_sergeant()
+    {
+        $division = $this->createActiveDivision();
+        $leader   = $this->createSeniorLeader($division, ['rank' => Rank::FIRST_SERGEANT, 'position' => Position::MEMBER]);
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $action = RankAction::factory()->create(['member_id' => $member->id, 'rank' => Rank::SERGEANT]);
+
+        $this->assertFalse(RankActionPolicy::approve($leader, $action));
+    }
+
+    #[Test]
+    public function senior_leader_cannot_approve_action_in_another_division()
+    {
+        $division = $this->createActiveDivision();
+        $other    = $this->createActiveDivision();
+        $leader   = $this->createSeniorLeader($division, ['rank' => Rank::MASTER_SERGEANT, 'position' => Position::MEMBER]);
+        $member   = $this->createMember(['division_id' => $other->id]);
+
+        $action = RankAction::factory()->create(['member_id' => $member->id, 'rank' => Rank::PRIVATE_FIRST_CLASS]);
+
+        $this->assertFalse(RankActionPolicy::approve($leader, $action));
+        $this->assertFalse(RankActionPolicy::update($leader, $action));
+    }
+
+    #[Test]
+    public function senior_leader_cannot_approve_action_about_themselves()
+    {
+        $division = $this->createActiveDivision();
+        $leader   = $this->createSeniorLeader($division, ['rank' => Rank::MASTER_SERGEANT, 'position' => Position::MEMBER]);
+
+        $action = RankAction::factory()->create([
+            'member_id' => $leader->member_id,
+            'rank'      => Rank::PRIVATE_FIRST_CLASS,
+        ]);
+
+        $this->assertFalse(RankActionPolicy::approve($leader, $action));
+        $this->assertFalse(RankActionPolicy::update($leader, $action));
+    }
+
+    #[Test]
+    public function senior_leader_follows_the_divisions_platoon_leader_limit_setting()
+    {
+        $division = $this->createActiveDivision();
+        $division->settings()->set('max_platoon_leader_rank', Rank::SPECIALIST->value);
+        $leader = $this->createSeniorLeader($division, ['rank' => Rank::MASTER_SERGEANT, 'position' => Position::MEMBER]);
+        $member = $this->createMember(['division_id' => $division->id]);
+
+        $within  = RankAction::factory()->create(['member_id' => $member->id, 'rank' => Rank::SPECIALIST]);
+        $outside = RankAction::factory()->create(['member_id' => $member->id, 'rank' => Rank::LANCE_CORPORAL]);
+
+        $this->assertTrue(RankActionPolicy::approve($leader, $within));
+        $this->assertFalse(RankActionPolicy::approve($leader, $outside));
+    }
+
+    #[Test]
+    public function officer_cannot_approve_action_through_the_senior_leader_path()
+    {
+        $division = $this->createActiveDivision();
+        $officer  = $this->createOfficer($division, ['rank' => Rank::MASTER_SERGEANT, 'position' => Position::MEMBER]);
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $action = RankAction::factory()->create(['member_id' => $member->id, 'rank' => Rank::PRIVATE_FIRST_CLASS]);
+
+        $this->assertFalse(RankActionPolicy::approve($officer, $action));
+    }
 }

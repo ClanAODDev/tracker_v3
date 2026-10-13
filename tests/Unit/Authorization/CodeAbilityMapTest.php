@@ -175,6 +175,7 @@ class CodeAbilityMapTest extends TestCase
             Ability::ViewRankActions->value             => [$is(['officer', 'sr_ldr', 'admin']), null],
             Ability::ManageAllRankActions->value        => [$is('admin'), null],
             Ability::OverrideRankActionRules->value     => [$is('admin'), null],
+            Ability::ApproveDivisionRankActions->value  => [$is('sr_ldr'), null],
             Ability::DemoteMembers->value               => [$is('admin'), null],
             Ability::AutoApproveJuniorPromotions->value => [$is('admin'), null],
             Ability::ManageMemberAwards->value          => [$is(['admin', 'sr_ldr']), null],

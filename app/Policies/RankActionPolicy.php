@@ -47,6 +47,10 @@ class RankActionPolicy
             return true;
         }
 
+        if (self::canApproveInOwnDivision($user, $record)) {
+            return true;
+        }
+
         // platoon leader can see requests in their platoon below their rank
         if (
             app(UnitHierarchy::class)->leadershipLevel($user) === UnitLevel::Platoon &&
@@ -80,6 +84,10 @@ class RankActionPolicy
             return true;
         }
 
+        if (self::canApproveInOwnDivision($user, $action)) {
+            return true;
+        }
+
         // For Sergeant and above, require that the user is at least Command Sergeant
         if ($newRank->value >= Rank::SERGEANT->value) {
             return $userRank->value >= Rank::COMMAND_SERGEANT->value;
@@ -106,6 +114,17 @@ class RankActionPolicy
         }
 
         return self::isAdminOrDivisionLeader($user);
+    }
+
+    private static function canApproveInOwnDivision(User $user, RankAction $action): bool
+    {
+        $division = $user->member?->division;
+
+        return $division !== null
+            && $user->can(Ability::ApproveDivisionRankActions)
+            && $action->member_id !== $user->member_id
+            && $action->member->division_id === $division->id
+            && $action->rank->isAtMost($division->maxPlatoonLeaderRank());
     }
 
     private static function isAdminOrDivisionLeader(User $user): bool

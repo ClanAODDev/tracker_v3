@@ -271,6 +271,11 @@ class Division extends Model
         return new DivisionSettings($mergedSettings, $this);
     }
 
+    public function maxPlatoonLeaderRank(): Rank
+    {
+        return Rank::from($this->settings()->get('max_platoon_leader_rank'));
+    }
+
     public function inactivityThresholdDays(int $default = 30): int
     {
         return $this->settings()->get('inactivity_days') ?? $default;

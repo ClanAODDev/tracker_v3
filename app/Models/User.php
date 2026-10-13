@@ -359,8 +359,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function isWithinPlatoonLimit(Rank $targetRank, $division): bool
     {
-        $maxPlRank = Rank::from($division->settings()->get('max_platoon_leader_rank'));
-
-        return app(UnitHierarchy::class)->leadershipLevel($this) === UnitLevel::Platoon && $targetRank->value <= $maxPlRank->value;
+        return app(UnitHierarchy::class)->leadershipLevel($this) === UnitLevel::Platoon
+            && $targetRank->value <= $division->maxPlatoonLeaderRank()->value;
     }
 }
