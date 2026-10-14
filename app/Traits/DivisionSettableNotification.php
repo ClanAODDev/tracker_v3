@@ -13,6 +13,6 @@ trait DivisionSettableNotification
             throw new Exception('The $alertSetting property must be defined in ' . static::class);
         }
 
-        return $notifiable->settings()->get($this->alertSetting);
+        return (bool) $notifiable->settings()->get($this->alertSetting);
     }
 }
