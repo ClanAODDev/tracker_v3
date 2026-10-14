@@ -22,11 +22,11 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $name = $this->faker->userName;
+        $name = $this->faker->unique()->userName;
 
         return [
             'name'      => $name,
-            'email'     => $this->faker->email,
+            'email'     => $this->faker->unique()->email,
             'role'      => Role::MEMBER,
             'member_id' => Member::factory([
                 'name' => $name,
