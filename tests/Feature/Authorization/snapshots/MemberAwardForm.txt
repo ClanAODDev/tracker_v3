@@ -14,12 +14,12 @@ award form division_filter | (options / default)                      | senior_l
 award form award_id rule | clan-wide award                          | senior_leader            | accepted
 award form award_id rule | division A award                         | senior_leader            | accepted
 award form award_id rule | division B award                         | senior_leader            | accepted
-award form division_filter | (options / default)                      | commanding_officer       | [Division A] default=Division A
-award form award_id rule | clan-wide award                          | commanding_officer       | rejected: The selected award is invalid. | You can only grant awards for your own division.
+award form division_filter | (options / default)                      | commanding_officer       | [Division A, Clan-Wide] default=Division A
+award form award_id rule | clan-wide award                          | commanding_officer       | rejected: The selected award is invalid.
 award form award_id rule | division A award                         | commanding_officer       | accepted
 award form award_id rule | division B award                         | commanding_officer       | rejected: The selected award is invalid. | You can only grant awards for your own division.
-award form division_filter | (options / default)                      | executive_officer        | [Division A] default=Division A
-award form award_id rule | clan-wide award                          | executive_officer        | rejected: The selected award is invalid. | You can only grant awards for your own division.
+award form division_filter | (options / default)                      | executive_officer        | [Division A, Clan-Wide] default=Division A
+award form award_id rule | clan-wide award                          | executive_officer        | rejected: The selected award is invalid.
 award form award_id rule | division A award                         | executive_officer        | accepted
 award form award_id rule | division B award                         | executive_officer        | rejected: The selected award is invalid. | You can only grant awards for your own division.
 award form division_filter | (options / default)                      | officer                  | [Clan-Wide, Division A, Division B] default=none

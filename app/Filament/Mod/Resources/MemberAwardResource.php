@@ -11,6 +11,7 @@ use App\Filament\Mod\Resources\RankActionResource\RelationManagers\RequesterRela
 use App\Models\Award;
 use App\Models\Division;
 use App\Models\MemberAward;
+use App\Models\User;
 use App\Services\AwardNotificationService;
 use Closure;
 use Filament\Actions\BulkAction;
@@ -63,7 +64,7 @@ class MemberAwardResource extends Resource
                 'nav_badge_member_awards_' . $user->id,
                 now()->addMinutes(2),
                 fn () => MemberAward::needsApproval()
-                    ->whereHas('award', fn ($query) => $query->where('division_id', $user->member->division_id))
+                    ->whereHas('award', fn ($query) => self::scopeToDivisionLeaderAwards($query, $user))
                     ->count()
             );
 
@@ -83,10 +84,26 @@ class MemberAwardResource extends Resource
         }
 
         if ($user->isDivisionLeader()) {
-            return $query->whereHas('award', fn ($q) => $q->where('division_id', $user->member->division_id));
+            return $query->whereHas('award', fn ($q) => self::scopeToDivisionLeaderAwards($q, $user));
         }
 
         return $query;
+    }
+
+    private static function canGrantClanWideAwards(User $user): bool
+    {
+        return $user->isDivisionLeader() && $user->can(Ability::ManageMemberAwards);
+    }
+
+    private static function scopeToDivisionLeaderAwards(Builder $query, User $user): Builder
+    {
+        return $query->where(function (Builder $q) use ($user) {
+            $q->where('division_id', $user->member->division_id);
+
+            if (self::canGrantClanWideAwards($user)) {
+                $q->orWhereNull('division_id');
+            }
+        });
     }
 
     public static function canDeleteAny(): bool
@@ -118,7 +135,11 @@ class MemberAwardResource extends Resource
                                 }
 
                                 if ($user->isDivisionLeader() && $user->member?->division) {
-                                    return [$user->member->division_id => $user->member->division->name];
+                                    $options = [$user->member->division_id => $user->member->division->name];
+
+                                    return self::canGrantClanWideAwards($user)
+                                        ? $options + ['clan-wide' => 'Clan-Wide']
+                                        : $options;
                                 }
 
                                 return Division::where('active', true)
@@ -139,7 +160,7 @@ class MemberAwardResource extends Resource
 
                                 return null;
                             })
-                            ->disabled(fn () => auth()->user()->isRole('admin') || auth()->user()->isDivisionLeader())
+                            ->disabled(fn () => auth()->user()->isRole('admin') || (auth()->user()->isDivisionLeader() && ! self::canGrantClanWideAwards(auth()->user())))
                             ->placeholder('All divisions')
                             ->live()
                             ->dehydrated(false),
@@ -169,7 +190,7 @@ class MemberAwardResource extends Resource
 
                                     if ($user->isRole('admin') && $award->division_id !== null) {
                                         $fail('Admins can only grant clan-wide awards here.');
-                                    } elseif ($user->isDivisionLeader() && $award->division_id !== $user->member?->division_id) {
+                                    } elseif ($user->isDivisionLeader() && $award->division_id !== $user->member?->division_id && ! ($award->division_id === null && self::canGrantClanWideAwards($user))) {
                                         $fail('You can only grant awards for your own division.');
                                     }
                                 },

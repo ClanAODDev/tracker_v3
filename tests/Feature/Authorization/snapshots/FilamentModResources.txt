@@ -362,8 +362,8 @@ MemberAwardResource query | (visible records)                        | admin    
 MemberAwardResource query | (visible records)                        | developer                | [clan-wide award, division A award, division B award]
 MemberAwardResource query | (visible records)                        | admin_viewing_as_officer | [clan-wide award, division A award, division B award]
 MemberAwardResource query | (visible records)                        | senior_leader            | [clan-wide award, division A award, division B award]
-MemberAwardResource query | (visible records)                        | commanding_officer       | [division A award]
-MemberAwardResource query | (visible records)                        | executive_officer        | [division A award]
+MemberAwardResource query | (visible records)                        | commanding_officer       | [clan-wide award, division A award]
+MemberAwardResource query | (visible records)                        | executive_officer        | [clan-wide award, division A award]
 MemberAwardResource query | (visible records)                        | officer                  | [clan-wide award, division A award, division B award]
 MemberAwardResource query | (visible records)                        | platoon_leader           | [clan-wide award, division A award, division B award]
 MemberAwardResource query | (visible records)                        | squad_leader             | [clan-wide award, division A award, division B award]
@@ -458,8 +458,8 @@ GET member award edit    | (status)                                 | admin     
 GET member award edit    | (status)                                 | developer                | 403
 GET member award edit    | (status)                                 | admin_viewing_as_officer | 403
 GET member award edit    | (status)                                 | senior_leader            | 200
-GET member award edit    | (status)                                 | commanding_officer       | 404
-GET member award edit    | (status)                                 | executive_officer        | 404
+GET member award edit    | (status)                                 | commanding_officer       | 200
+GET member award edit    | (status)                                 | executive_officer        | 200
 GET member award edit    | (status)                                 | officer                  | 403
 GET member award edit    | (status)                                 | platoon_leader           | 403
 GET member award edit    | (status)                                 | squad_leader             | 403
