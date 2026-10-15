@@ -11,6 +11,8 @@ use Illuminate\Support\Collection;
 class TenureAwardService
 {
     public const AWARD_IDS = [
+        30 => 344,
+        25 => 343,
         20 => 140,
         15 => 139,
         10 => 19,

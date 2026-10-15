@@ -199,6 +199,45 @@ class TenureAwardServiceTest extends TestCase
     }
 
     #[Test]
+    public function the_job_grants_without_notifying_in_silent_mode(): void
+    {
+        Notification::fake();
+
+        $member = $this->memberJoined('2015-01-01');
+        $member->division->settings()->set('chat_alerts.member_awarded', 'officers');
+
+        (new CleanupTenureAwards(silent: true))->handle(app(TenureAwardService::class));
+
+        $this->assertSame([18, 19], $this->awardIdsFor($member));
+        Notification::assertNothingSent();
+    }
+
+    #[Test]
+    public function the_command_supports_silent_and_dry_run(): void
+    {
+        Notification::fake();
+
+        $member = $this->memberJoined('2015-01-01');
+
+        $this->artisan('tracker:cleanup-tenure-awards', ['--dry-run' => true])->assertSuccessful();
+        $this->assertSame([], $this->awardIdsFor($member));
+
+        $this->artisan('tracker:cleanup-tenure-awards', ['--silent' => true])->assertSuccessful();
+        $this->assertSame([18, 19], $this->awardIdsFor($member));
+        Notification::assertNothingSent();
+    }
+
+    #[Test]
+    public function it_grants_the_twenty_five_and_thirty_year_tiers(): void
+    {
+        $member = $this->memberJoined('1995-01-01');
+
+        $this->reconcile($member);
+
+        $this->assertSame([18, 19, 139, 140, 343, 344], $this->awardIdsFor($member));
+    }
+
+    #[Test]
     public function the_job_sends_nothing_when_there_is_nothing_to_grant(): void
     {
         Notification::fake();
@@ -221,5 +260,14 @@ class TenureAwardServiceTest extends TestCase
 
         Notification::assertSentTo($member, NotifyMemberAwardReceived::class);
         Notification::assertNotSentTo($member->division, NotifyDivisionMemberAwarded::class);
+    }
+
+    #[Test]
+    public function the_scheduled_task_is_registered_disabled_until_an_admin_enables_it(): void
+    {
+        $this->assertDatabaseHas('monitored_scheduled_tasks', [
+            'name'       => 'cleanup-tenure-awards',
+            'is_enabled' => false,
+        ]);
     }
 }

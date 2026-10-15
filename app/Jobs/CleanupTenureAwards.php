@@ -9,11 +9,14 @@ use App\Notifications\DM\NotifyMemberAwardReceived;
 use App\Services\TenureAwardService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class CleanupTenureAwards implements ShouldQueue
 {
     use Queueable;
+
+    public function __construct(public readonly bool $silent = false) {}
 
     public function handle(TenureAwardService $tenureAwards): void
     {
@@ -23,15 +26,24 @@ class CleanupTenureAwards implements ShouldQueue
             removeInvalid: false,
         );
 
-        $stats['granted']
-            ->groupBy('member_id')
-            ->map(fn ($awards) => $awards->sortByDesc(fn (MemberAward $award) => array_search($award->award_id, TenureAwardService::AWARD_IDS, strict: true))->first())
-            ->each(fn (MemberAward $memberAward) => $this->notify($memberAward));
+        if (! $this->silent) {
+            $this->notifyHighestTiers($stats['granted']);
+        }
 
         Log::info('Tenure awards reconciled', [
             'granted'             => $stats['missing'],
             'flagged_for_removal' => $stats['invalid'],
         ]);
+    }
+
+    private function notifyHighestTiers(Collection $granted): void
+    {
+        $granted
+            ->groupBy('member_id')
+            ->map(fn (Collection $awards) => $awards->sortByDesc(
+                fn (MemberAward $award) => array_search($award->award_id, TenureAwardService::AWARD_IDS, strict: true),
+            )->first())
+            ->each(fn (MemberAward $memberAward) => $this->notify($memberAward));
     }
 
     private function notify(MemberAward $memberAward): void
