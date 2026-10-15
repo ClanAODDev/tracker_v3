@@ -140,6 +140,63 @@ class MemberSyncServiceTest extends TestCase
     }
 
     #[Test]
+    public function sync_takes_the_join_date_from_the_forum(): void
+    {
+        $division = Division::factory()->create();
+        $member   = Member::factory()->create([
+            'clan_id'     => 55556,
+            'division_id' => $division->id,
+            'join_date'   => '2026-03-01',
+        ]);
+
+        $service = new MemberSyncService($this->forumInfoFor($member, $division, '2016-05-12'));
+        $service->sync();
+
+        $this->assertSame('2016-05-12', $member->fresh()->join_date->toDateString());
+    }
+
+    #[Test]
+    public function sync_keeps_the_join_date_when_the_forum_has_none(): void
+    {
+        $division = Division::factory()->create();
+        $member   = Member::factory()->create([
+            'clan_id'     => 55557,
+            'division_id' => $division->id,
+            'join_date'   => '2019-03-01',
+        ]);
+
+        $service = new MemberSyncService($this->forumInfoFor($member, $division, '1970-01-01'));
+        $service->sync();
+
+        $this->assertSame('2019-03-01', $member->fresh()->join_date->toDateString());
+    }
+
+    private function forumInfoFor(Member $member, Division $division, string $joinDate): GetDivisionInfo
+    {
+        $info       = Mockery::mock(GetDivisionInfo::class);
+        $info->data = [
+            [
+                'userid'              => $member->clan_id,
+                'username'            => 'AOD_' . $member->name,
+                'joindate'            => $joinDate,
+                'aoddivision'         => $division->name,
+                'aodrankval'          => $member->rank->value + 2,
+                'discordtag'          => $member->discord,
+                'discordid'           => (string) $member->discord_id,
+                'postcount'           => $member->posts,
+                'allow_pm'            => $member->allow_pm,
+                'allow_export'        => 'yes',
+                'tsid'                => 'abc123',
+                'lastdiscord_status'  => 'connected',
+                'lastactivity'        => time(),
+                'lastdiscord_connect' => time(),
+            ],
+        ];
+
+        return $info;
+    }
+
+    #[Test]
     public function callbacks_are_invoked(): void
     {
         $division = Division::factory()->create();

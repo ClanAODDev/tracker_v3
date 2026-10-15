@@ -8,6 +8,7 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
+use Carbon\Carbon;
 use Closure;
 use Exception;
 use Illuminate\Support\Collection;
@@ -21,6 +22,7 @@ class MemberSyncService
         'discord',
         'discord_id',
         'division_id',
+        'join_date',
         'name',
         'posts',
         'privacy_flag',
@@ -204,6 +206,7 @@ class MemberSyncService
             'discord'             => $member->discord,
             'discord_id'          => (int) $member->discord_id,
             'division_id'         => $member->division_id,
+            'join_date'           => $member->join_date?->toDateString(),
             'name'                => $member->name,
             'posts'               => $member->posts,
             'privacy_flag'        => $member->privacy_flag,
@@ -231,12 +234,14 @@ class MemberSyncService
 
     protected function transformForumData(object $forumData): array
     {
+        $joinDate = $this->normalizeJoinDate($forumData->joindate ?? null);
+
         return [
-            'allow_pm'            => $forumData->allow_pm,
-            'discord'             => $forumData->discordtag,
-            'discord_id'          => $this->normalizeDiscordId($forumData->discordid),
-            'division_id'         => $this->divisionIds[$forumData->aoddivision],
-            'join_date'           => $forumData->joindate,
+            'allow_pm'    => $forumData->allow_pm,
+            'discord'     => $forumData->discordtag,
+            'discord_id'  => $this->normalizeDiscordId($forumData->discordid),
+            'division_id' => $this->divisionIds[$forumData->aoddivision],
+            ...($joinDate ? ['join_date' => $joinDate] : []),
             'name'                => str_replace('AOD_', '', $forumData->username),
             'posts'               => $forumData->postcount,
             'privacy_flag'        => $forumData->allow_export === 'yes' ? 1 : 0,
@@ -245,6 +250,15 @@ class MemberSyncService
             'last_voice_activity' => $this->normalizeTimestamp($forumData->lastdiscord_connect),
             'rank'                => $this->calculateRank($forumData->aodrankval),
         ];
+    }
+
+    protected function normalizeJoinDate(?string $joinDate): ?string
+    {
+        if (empty($joinDate) || str_starts_with($joinDate, '1970') || str_starts_with($joinDate, '0000')) {
+            return null;
+        }
+
+        return Carbon::parse($joinDate)->toDateString();
     }
 
     protected function calculateRank(int $forumRank): int
