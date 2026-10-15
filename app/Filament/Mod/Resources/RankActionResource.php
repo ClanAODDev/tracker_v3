@@ -2,7 +2,10 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Authorization\UnitHierarchy;
+use App\Enums\Ability;
 use App\Enums\Rank;
+use App\Enums\UnitLevel;
 use App\Filament\Mod\Resources\RankActionResource\Pages\CreateRankAction;
 use App\Filament\Mod\Resources\RankActionResource\Pages\EditRankAction;
 use App\Filament\Mod\Resources\RankActionResource\Pages\ImportRankHistory;
@@ -33,6 +36,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Flashadvocate\FilamentReactions\Livewire\Reactions;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use Kirschbaum\Commentions\Filament\Actions\CommentsTableAction;
 
 class RankActionResource extends Resource
@@ -123,7 +127,7 @@ class RankActionResource extends Resource
                 TextColumn::make('member.name'),
                 TextColumn::make('member.division.name')
                     ->sortable()
-                    ->visible(fn () => auth()->user()->isRole('admin')),
+                    ->visible(fn () => auth()->user()->can(Ability::ActAcrossDivisions)),
                 TextColumn::make('rank')
                     ->sortable()
                     ->badge(),
@@ -279,21 +283,29 @@ class RankActionResource extends Resource
                     $user   = auth()->user();
                     $append = 'You cannot select yourself or others of greater rank.';
 
+                    $level = app(UnitHierarchy::class)->leadershipLevel($user);
+                    $unit  = Str::lower($user->member?->leaderLevel()?->label ?? 'unit');
+
                     return match (true) {
-                        $user->isSquadLeader()    => "Only squad members up to PFC can be selected. {$append}",
-                        $user->isPlatoonLeader()  => "Only platoon members up to LCpl can be selected. {$append}",
-                        $user->isDivisionLeader() => "Only division members up to SGT can be selected. {$append}",
-                        default                   => $append,
+                        $level === UnitLevel::Squad   => sprintf('Only %s members up to %s can be selected. %s', $unit, self::rankCeiling('max_squad_leader'), $append),
+                        $level === UnitLevel::Platoon => sprintf('Only %s members up to %s can be selected. %s', $unit, self::rankCeiling('max_platoon_leader'), $append),
+                        $user->isDivisionLeader()     => sprintf('Only division members up to %s can be selected. %s', self::rankCeiling('max_division_leader'), $append),
+                        default                       => $append,
                     };
                 })
                 ->rules([
                     'required',
+                    fn (): Closure => function (string $attribute, $value, Closure $fail) {
+                        if (! Member::query()->eligibleForRankAction(auth()->user())->whereKey($value)->exists()) {
+                            $fail('You cannot request a rank action for this member.');
+                        }
+                    },
                     fn (callable $get): Closure => function (string $attribute, $value, Closure $fail) use (
                         $get,
                         $min_days_rank_action
                     ) {
                         $user     = auth()->user();
-                        $skipRule = ($user->isDivisionLeader() || $user->isRole('admin')) && $get('override_existing');
+                        $skipRule = ($user->isDivisionLeader() || $user->can(Ability::OverrideRankActionRules)) && $get('override_existing');
 
                         if (! $skipRule) {
                             $exists = RankAction::where('member_id', $value)
@@ -311,7 +323,7 @@ class RankActionResource extends Resource
                 ]),
         ];
 
-        if (auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin')) {
+        if (auth()->user()->isDivisionLeader() || auth()->user()->can(Ability::OverrideRankActionRules)) {
             $fields[] = Checkbox::make('override_existing')
                 ->label("Override {$min_days_rank_action} Day Rule")
                 ->helperText(sprintf(
@@ -369,7 +381,7 @@ class RankActionResource extends Resource
 
                     // Only permit demotions for admin or division leaders.
                     if (
-                        ($user->isDivisionLeader() || $user->isRole('admin'))
+                        ($user->isDivisionLeader() || $user->can(Ability::DemoteMembers))
                         && isset($member)
                         && $member->isAtLeast(Rank::CADET)
                     ) {
@@ -429,5 +441,12 @@ class RankActionResource extends Resource
                 ->required(fn (callable $get) => $get('action') === 'promotion' && auth()->user()->isDivisionLeader()),
 
         ];
+    }
+
+    private static function rankCeiling(string $limit): string
+    {
+        $exclusiveMax = config("aod.rank.{$limit}");
+
+        return Rank::tryFrom($exclusiveMax->value - 1)?->getAbbreviation() ?? $exclusiveMax->getAbbreviation();
     }
 }

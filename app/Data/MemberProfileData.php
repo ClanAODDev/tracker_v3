@@ -2,6 +2,7 @@
 
 namespace App\Data;
 
+use App\Enums\Ability;
 use App\Enums\DivisionMemberFieldType;
 use App\Enums\Rank;
 use App\Enums\TagVisibility;
@@ -25,6 +26,8 @@ class MemberProfileData
     private bool $canViewNotes;
 
     private bool $canViewTrashed;
+
+    private bool $canAddNote;
 
     private ?Division $division;
 
@@ -50,14 +53,15 @@ class MemberProfileData
         RankTimelineService $rankTimelineService,
     ) {
         $this->user           = auth()->user();
-        $this->canViewNotes   = $this->user->can('create', Note::class);
-        $this->canViewTrashed = $this->user->can('viewTrashed', Note::class);
+        $this->canViewNotes   = $this->user->can('create', Note::class) && $this->user->can('viewForMember', [Note::class, $member]);
+        $this->canViewTrashed = $this->user->can('viewTrashed', Note::class) && $this->user->can('viewForMember', [Note::class, $member]);
+        $this->canAddNote     = $this->user->can('createForMember', [Note::class, $member]);
 
         $repository->loadProfileRelations($member);
         $this->division = $member->division;
 
         $this->notes             = $this->canViewNotes ? $repository->getNotesForMember($member, $this->user) : collect();
-        $this->trashedNotes      = $this->canViewTrashed ? $repository->getTrashedNotesForMember($member) : collect();
+        $this->trashedNotes      = $this->canViewTrashed ? $repository->getTrashedNotesForMember($member, $this->user) : collect();
         $this->transfers         = $repository->getTransfers($member);
         $this->partTimeDivisions = $member->partTimeDivisions()->whereActive(true)->get();
 
@@ -66,7 +70,7 @@ class MemberProfileData
         $this->rankTimeline = $rankTimelineService->buildTimeline($member, $repository->getRankHistory($member));
 
         $isOwnProfile         = $this->user->member?->id === $member->id;
-        $this->canFullHistory = ! $this->user->isRole('member') || $isOwnProfile;
+        $this->canFullHistory = $this->user->can(Ability::ViewMemberHistory) || $isOwnProfile;
     }
 
     public static function for(Member $member, MemberRepository $repository, RankTimelineService $rankTimelineService): self
@@ -116,6 +120,7 @@ class MemberProfileData
             'notices'        => $this->notices(),
             'canCreateNote'  => $this->canViewNotes,
             'canViewTrashed' => $this->canViewTrashed,
+            'canAddNote'     => $this->canAddNote,
             'noteTypes'      => Note::allNoteTypes(),
             'stats'          => [
                 'tenure' => [
@@ -131,7 +136,7 @@ class MemberProfileData
                     'health'         => $this->stats->activity->health,
                     'healthPct'      => $this->stats->activity->healthPct,
                     'divisionMax'    => $this->stats->activity->divisionMax,
-                    'reminders'      => ! $user->isRole('member')
+                    'reminders'      => $user->can(Ability::ViewMemberHistory)
                         ? $member->activityReminders->map(fn ($r) => [
                             'date' => $r->created_at->format('M j, Y'),
                             'by'   => $r->remindedBy?->name ?? 'Unknown',
@@ -140,7 +145,7 @@ class MemberProfileData
                     'remindedToday'     => $member->activityReminders->contains(fn ($r) => $r->created_at->isToday()),
                     'canRemind'         => $user->can('remindActivity', $member),
                     'remindUrl'         => route('member.set-activity-reminder', $member->clan_id),
-                    'canClearReminders' => $user->isRole(['sr_ldr', 'admin']) && $user->member?->clan_id !== $member->clan_id,
+                    'canClearReminders' => $user->can('clearActivityReminders', $member),
                     'clearRemindersUrl' => route('member.clear-activity-reminders', $member->clan_id),
                 ],
                 'recruiting' => [
@@ -380,15 +385,8 @@ class MemberProfileData
         if ($division) {
             $crumbs[] = ['label' => $division->name, 'href' => route('division', $division->slug)];
 
-            if ($member->platoon_id !== 0 && $member->platoon) {
-                $crumbs[] = ['label' => $member->platoon->name, 'href' => route('platoon', [$division->slug, $member->platoon->id])];
-            }
-
-            if ($member->squad_id !== 0 && $member->squad) {
-                $crumbs[] = [
-                    'label' => $member->squad->name ?: 'Untitled',
-                    'href'  => route('squad.show', [$division->slug, $member->platoon->id, $member->squad]),
-                ];
+            foreach ($member->unitTrail() as $unit) {
+                $crumbs[] = ['label' => $unit->name ?: 'Untitled', 'href' => $unit->url($division)];
             }
         }
 
@@ -419,7 +417,7 @@ class MemberProfileData
             'createUrl'         => route('member-tags.create', [$division, $member->clan_id]),
             'canCreate'         => $user->can('create', DivisionTag::class),
             'visibilityOptions' => collect(TagVisibility::cases())
-                ->filter(fn (TagVisibility $v) => $v !== TagVisibility::SENIOR_LEADERS || $user->isRole(['sr_ldr', 'admin']))
+                ->filter(fn (TagVisibility $v) => $v !== TagVisibility::SENIOR_LEADERS || $user->can(Ability::UseSeniorLeaderTags))
                 ->map(fn (TagVisibility $v) => ['value' => $v->value, 'label' => $v->label()])
                 ->values()
                 ->all(),

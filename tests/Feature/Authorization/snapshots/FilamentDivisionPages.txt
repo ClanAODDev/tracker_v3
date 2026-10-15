@@ -1,0 +1,36 @@
+GET divisions index      | (status)                                 | admin                    | 200
+GET divisions index      | (status)                                 | developer                | 302 -> /operations/divisions/division-a/edit
+GET divisions index      | (status)                                 | admin_viewing_as_officer | 403
+GET divisions index      | (status)                                 | senior_leader            | 403
+GET divisions index      | (status)                                 | commanding_officer       | 302 -> /operations/divisions/division-a/edit
+GET divisions index      | (status)                                 | executive_officer        | 302 -> /operations/divisions/division-a/edit
+GET divisions index      | (status)                                 | officer                  | 403
+GET divisions index      | (status)                                 | platoon_leader           | 403
+GET divisions index      | (status)                                 | squad_leader             | 403
+GET divisions index      | (status)                                 | member                   | 403
+GET divisions index      | (status)                                 | banned                   | 403
+GET divisions index      | (status)                                 | pending                  | 403
+GET edit own division    | (status)                                 | admin                    | 200
+GET edit own division    | (status)                                 | developer                | 200
+GET edit own division    | (status)                                 | admin_viewing_as_officer | 403
+GET edit own division    | (status)                                 | senior_leader            | 403
+GET edit own division    | (status)                                 | commanding_officer       | 200
+GET edit own division    | (status)                                 | executive_officer        | 200
+GET edit own division    | (status)                                 | officer                  | 403
+GET edit own division    | (status)                                 | platoon_leader           | 403
+GET edit own division    | (status)                                 | squad_leader             | 403
+GET edit own division    | (status)                                 | member                   | 403
+GET edit own division    | (status)                                 | banned                   | 403
+GET edit own division    | (status)                                 | pending                  | 403
+GET edit other division  | (status)                                 | admin                    | 200
+GET edit other division  | (status)                                 | developer                | 403
+GET edit other division  | (status)                                 | admin_viewing_as_officer | 403
+GET edit other division  | (status)                                 | senior_leader            | 403
+GET edit other division  | (status)                                 | commanding_officer       | 403
+GET edit other division  | (status)                                 | executive_officer        | 403
+GET edit other division  | (status)                                 | officer                  | 403
+GET edit other division  | (status)                                 | platoon_leader           | 403
+GET edit other division  | (status)                                 | squad_leader             | 403
+GET edit other division  | (status)                                 | member                   | 403
+GET edit other division  | (status)                                 | banned                   | 403
+GET edit other division  | (status)                                 | pending                  | 403

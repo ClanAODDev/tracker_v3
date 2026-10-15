@@ -1,0 +1,178 @@
+<?php
+
+namespace Tests\Feature\Controllers;
+
+use App\Enums\Position;
+use App\Models\DivisionUnitLevel;
+use App\Models\Unit;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
+use Tests\Traits\CreatesDivisions;
+use Tests\Traits\CreatesMembers;
+
+class DeepUnitPagesTest extends TestCase
+{
+    use CreatesDivisions;
+    use CreatesMembers;
+    use RefreshDatabase;
+
+    private User $officer;
+
+    private Unit $company;
+
+    private Unit $middle;
+
+    private Unit $leaf;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->officer = $this->createOfficer();
+        $division      = $this->officer->member->division;
+        DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
+
+        $this->company = $this->createPlatoon($division);
+        $this->middle  = Unit::factory()->childOf($this->company)->create();
+        $this->leaf    = Unit::factory()->childOf($this->middle)->create();
+    }
+
+    #[Test]
+    public function a_middle_unit_lists_its_children_and_counts_their_subtrees(): void
+    {
+        $division = $this->officer->member->division;
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $this->leaf->id]);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $this->middle->id]);
+
+        $this->actingAs($this->officer)
+            ->get(route('unit', [$division->slug, $this->company]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('scope.kind', 'platoon')
+                ->where('scope.unitLabel', 'Platoon')
+                ->where('scope.childLabel', 'Squad')
+                ->where('assignmentDepth', 2)
+                ->where('division.levels.1.label', 'Squad')
+                ->where('members', fn ($members) => collect($members)->pluck('assignment.label')->unique()->all() === [$this->middle->name])
+                ->has('squads', 1)
+                ->where('squads.0.id', $this->middle->id)
+                ->where('squads.0.count', 2));
+    }
+
+    #[Test]
+    public function a_leaf_unit_shows_the_full_ancestry_in_its_breadcrumbs(): void
+    {
+        $division = $this->officer->member->division;
+
+        $this->actingAs($this->officer)
+            ->get(route('unit', [$division->slug, $this->leaf]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('scope.kind', 'squad')
+                ->where('scope.unitLabel', 'Team')
+                ->where('assignmentDepth', 3)
+                ->has('scope.breadcrumbs', 4)
+                ->where('scope.breadcrumbs.1.href', $this->company->url($division))
+                ->where('scope.breadcrumbs.2.href', $this->middle->url($division)));
+    }
+
+    #[Test]
+    public function a_middle_unit_has_a_manage_page_for_its_children(): void
+    {
+        $division = $this->officer->member->division;
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $this->leaf->id]);
+
+        $this->actingAs($this->officer)
+            ->get(route('unit.manage', [$division->slug, $this->middle]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('root.id', $this->middle->id)
+                ->has('units', 1)
+                ->has('units.0.members', 1)
+                ->has('breadcrumbs', 3));
+    }
+
+    #[Test]
+    public function the_top_unit_manage_page_lists_members_at_every_level_beneath_it(): void
+    {
+        $division = $this->officer->member->division;
+        $direct   = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->company->id]);
+        $inMiddle = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->middle->id]);
+        $inLeaf   = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->leaf->id]);
+
+        $this->actingAs($this->officer)
+            ->get(route('unit.manage', [$division->slug, $this->company]))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('root.id', $this->company->id)
+                ->where('root.members.0.id', $direct->id)
+                ->has('units', 2)
+                ->where('units.0.id', $this->middle->id)
+                ->where('units.0.members.0.id', $inMiddle->id)
+                ->where('units.1.id', $this->leaf->id)
+                ->where('units.1.members.0.id', $inLeaf->id)
+                ->where('units.1.trail', $this->middle->name . ' / ' . $this->leaf->name));
+    }
+
+    #[Test]
+    public function a_unit_without_a_level_beneath_it_has_no_manage_page(): void
+    {
+        $division = $this->officer->member->division;
+
+        $this->actingAs($this->officer)
+            ->get(route('unit.manage', [$division->slug, $this->leaf]))
+            ->assertNotFound();
+    }
+
+    #[Test]
+    public function members_can_be_assigned_to_a_unit_at_any_depth(): void
+    {
+        $division = $this->officer->member->division;
+        $member   = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->middle->id]);
+
+        $this->actingAs($this->officer)
+            ->postJson('/members/assign-unit', ['member_id' => $member->id, 'unit_id' => $this->leaf->id])
+            ->assertOk();
+
+        $this->assertSame($this->leaf->id, $member->fresh()->unit_id);
+
+        $this->postJson('/members/assign-unit', ['member_id' => $member->id, 'unit_id' => $this->middle->id])
+            ->assertOk();
+
+        $this->assertSame($this->middle->id, $member->fresh()->unit_id);
+    }
+
+    #[Test]
+    public function members_cannot_be_assigned_to_a_unit_in_another_division(): void
+    {
+        $other  = $this->createPlatoon($this->createActiveDivision());
+        $member = $this->createMember(['division_id' => $this->officer->member->division_id]);
+
+        $this->actingAs($this->officer)
+            ->postJson('/members/assign-unit', ['member_id' => $member->id, 'unit_id' => $other->id])
+            ->assertUnprocessable();
+    }
+
+    #[Test]
+    public function the_unassigned_modal_lists_members_stuck_at_the_requested_level(): void
+    {
+        $division = $this->officer->member->division;
+        $sr       = $this->createSeniorLeader($division);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $this->company->id, 'position' => Position::MEMBER]);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $this->middle->id, 'position' => Position::MEMBER]);
+
+        $this->actingAs($sr)
+            ->getJson(route('division.unassigned-to-squad', $division->slug) . '?level=2')
+            ->assertOk()
+            ->assertJsonCount(1, 'members')
+            ->assertJsonPath('members.0.platoon_id', $this->company->id);
+
+        $this->getJson(route('division.unassigned-to-squad', $division->slug) . '?level=3')
+            ->assertOk()
+            ->assertJsonCount(1, 'members')
+            ->assertJsonPath('members.0.platoon_id', $this->middle->id);
+    }
+}

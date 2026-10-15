@@ -15,6 +15,7 @@ use App\Services\AODForumService;
 use App\Services\DiscordRecruitmentService;
 use App\Services\ForumProcedureService;
 use App\Services\RecruitmentService;
+use App\Support\UnitTree;
 use App\Transformers\PendingDiscordUserTransformer;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
@@ -74,8 +75,7 @@ class RecruitingController extends Controller
                         $request->forum_name,
                         $division,
                         (int) $request->rank,
-                        (int) $request->platoon,
-                        $request->squad ? (int) $request->squad : null,
+                        $request->unit_id ? (int) $request->unit_id : null,
                         $request->input('handles', []),
                         $recruiter
                     );
@@ -180,32 +180,13 @@ class RecruitingController extends Controller
         $threads  = $settings->get('recruiting_threads', []);
         $tasks    = $settings->get('recruiting_tasks', []);
 
-        $platoons = $division->platoons()
-            ->withCount('members')
-            ->with([
-                'leader:clan_id,name',
-                'squads' => fn ($q) => $q->withCount('members')->with('leader:clan_id,name'),
-            ])
-            ->get();
-
         $pendingDiscord = $this->discordRecruitmentService->getPendingDiscordUsers($division, $allPending);
 
         return [
             'name'        => $division->name,
             'handleTypes' => $division->handleTypes(),
-            'platoons'    => $platoons->map(fn ($p) => [
-                'id'            => $p->id,
-                'name'          => $p->name,
-                'members_count' => $p->members_count,
-                'leader_name'   => $p->leader?->name,
-                'squads'        => $p->squads->map(fn ($s) => [
-                    'id'            => $s->id,
-                    'name'          => $s->name,
-                    'members_count' => $s->members_count,
-                    'leader_name'   => $s->leader?->name,
-                ]),
-            ]),
-            'threads' => collect($threads)->map(fn ($t) => [
+            'units'       => UnitTree::for($division),
+            'threads'     => collect($threads)->map(fn ($t) => [
                 'name'     => $t['thread_name'] ?? '',
                 'url'      => $t['thread_url'] ?? '',
                 'comments' => $t['comments'] ?? '',
@@ -218,11 +199,7 @@ class RecruitingController extends Controller
             'welcome_area'       => $settings->get('welcome_area', ''),
             'welcome_pm'         => $settings->get('welcome_pm', ''),
             'use_welcome_thread' => $settings->get('use_welcome_thread', false),
-            'locality'           => [
-                'platoon' => $division->locality('platoon'),
-                'squad'   => $division->locality('squad'),
-            ],
-            'pending_discord' => $pendingDiscord,
+            'pending_discord'    => $pendingDiscord,
         ];
     }
 

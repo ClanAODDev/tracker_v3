@@ -1,0 +1,3 @@
+ticket comment author badge | comment by admin                         | admin                    | danger
+ticket comment author badge | comment by officer                       | admin                    | gray
+ticket comment author badge | comment by admin_viewing_as_officer      | admin                    | danger

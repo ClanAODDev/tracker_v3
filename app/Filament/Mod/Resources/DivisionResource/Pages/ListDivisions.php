@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\DivisionResource\Pages;
 
+use App\Enums\Ability;
 use App\Filament\Mod\Resources\DivisionResource;
 use Filament\Resources\Pages\ListRecords;
 
@@ -13,7 +14,7 @@ class ListDivisions extends ListRecords
     {
         $user = auth()->user();
 
-        if ($user?->isRole('admin')) {
+        if ($user?->can(Ability::ManageDivisions)) {
             parent::mount();
 
             return;

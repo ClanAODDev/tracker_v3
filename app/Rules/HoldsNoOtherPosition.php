@@ -4,8 +4,7 @@ namespace App\Rules;
 
 use App\Enums\Position;
 use App\Models\Member;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Models\Unit;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -16,8 +15,7 @@ class HoldsNoOtherPosition implements ValidationRule
      */
     public function __construct(
         private string $column = 'clan_id',
-        private ?Platoon $exceptPlatoon = null,
-        private ?Squad $exceptSquad = null,
+        private ?Unit $exceptUnit = null,
         private array $allowedPositions = [],
     ) {}
 
@@ -46,19 +44,21 @@ class HoldsNoOtherPosition implements ValidationRule
 
         if (in_array($member->position, $divisionLeadership, true)
             && ! in_array($member->position, $this->allowedPositions, true)) {
-            return "assigned as {$member->position->getLabel()}";
+            return "assigned as {$member->positionLabel()}";
         }
 
-        $platoon = Platoon::where('leader_id', $member->clan_id)
-            ->when($this->exceptPlatoon, fn ($query, $except) => $query->whereKeyNot($except->getKey()))
+        $platoon = Unit::where('leader_id', $member->clan_id)
+            ->where('depth', 1)
+            ->when($this->exceptUnit, fn ($query, $except) => $query->whereKeyNot($except->getKey()))
             ->first();
 
         if ($platoon) {
             return "leading {$platoon->name}";
         }
 
-        $squad = Squad::where('leader_id', $member->clan_id)
-            ->when($this->exceptSquad, fn ($query, $except) => $query->whereKeyNot($except->getKey()))
+        $squad = Unit::where('leader_id', $member->clan_id)
+            ->where('depth', '>', 1)
+            ->when($this->exceptUnit, fn ($query, $except) => $query->whereKeyNot($except->getKey()))
             ->first();
 
         if ($squad) {

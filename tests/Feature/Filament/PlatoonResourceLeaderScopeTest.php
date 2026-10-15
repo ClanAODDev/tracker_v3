@@ -3,7 +3,7 @@
 namespace Tests\Feature\Filament;
 
 use App\Enums\Position;
-use App\Filament\Mod\Resources\PlatoonResource\Pages\EditPlatoon;
+use App\Filament\Mod\Resources\UnitResource\Pages\EditUnit;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -27,21 +27,21 @@ class PlatoonResourceLeaderScopeTest extends TestCase
     #[Test]
     public function leader_id_must_belong_to_the_platoons_division(): void
     {
-        $division          = $this->createActiveDivision();
-        $otherDivision     = $this->createActiveDivision();
-        $platoon           = $this->createPlatoon($division);
-        $outsider          = $this->createMember(['division_id' => $otherDivision->id]);
-        $originalPlatoonId = $outsider->platoon_id;
+        $division       = $this->createActiveDivision();
+        $otherDivision  = $this->createActiveDivision();
+        $platoon        = $this->createPlatoon($division);
+        $outsider       = $this->createMember(['division_id' => $otherDivision->id]);
+        $originalUnitId = $outsider->unit_id;
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $platoon->getRouteKey()])
             ->fillForm(['leader_id' => $outsider->clan_id])
             ->call('save')
             ->assertHasFormErrors(['leader_id']);
 
         $this->assertNotEquals(Position::PLATOON_LEADER, $outsider->fresh()->position);
-        $this->assertEquals($originalPlatoonId, $outsider->fresh()->platoon_id);
+        $this->assertEquals($originalUnitId, $outsider->fresh()->unit_id);
     }
 
     #[Test]
@@ -53,12 +53,12 @@ class PlatoonResourceLeaderScopeTest extends TestCase
 
         $this->actingAs($this->createSeniorLeader($division));
 
-        Livewire::test(EditPlatoon::class, ['record' => $platoon->getRouteKey()])
+        Livewire::test(EditUnit::class, ['record' => $platoon->getRouteKey()])
             ->fillForm(['leader_id' => $member->clan_id])
             ->call('save')
             ->assertHasNoFormErrors();
 
         $this->assertEquals(Position::PLATOON_LEADER, $member->fresh()->position);
-        $this->assertEquals($platoon->id, $member->fresh()->platoon_id);
+        $this->assertEquals($platoon->id, $member->fresh()->unit_id);
     }
 }

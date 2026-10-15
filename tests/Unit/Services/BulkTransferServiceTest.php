@@ -90,16 +90,14 @@ class BulkTransferServiceTest extends TestCase
         $target = $this->createActiveDivision();
         $member = $this->createMember([
             'division_id' => $source->id,
-            'platoon_id'  => 5,
-            'squad_id'    => 9,
+            'unit_id'     => 9,
             'position'    => Position::MEMBER,
         ]);
 
         $this->service->transfer(collect([$member]), $target);
 
         $member->refresh();
-        $this->assertSame(0, $member->platoon_id);
-        $this->assertSame(0, $member->squad_id);
+        $this->assertNull($member->unit_id);
     }
 
     #[Test]

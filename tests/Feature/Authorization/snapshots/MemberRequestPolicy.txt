@@ -1,0 +1,120 @@
+manage                   | (any request)                            | admin                    | allow
+manage                   | (any request)                            | developer                | allow
+manage                   | (any request)                            | admin_viewing_as_officer | deny
+manage                   | (any request)                            | senior_leader            | deny
+manage                   | (any request)                            | commanding_officer       | allow
+manage                   | (any request)                            | executive_officer        | allow
+manage                   | (any request)                            | officer                  | deny
+manage                   | (any request)                            | platoon_leader           | deny
+manage                   | (any request)                            | squad_leader             | deny
+manage                   | (any request)                            | member                   | deny
+manage                   | (any request)                            | banned                   | deny
+manage                   | (any request)                            | pending                  | deny
+create                   | (any request)                            | admin                    | allow
+create                   | (any request)                            | developer                | allow
+create                   | (any request)                            | admin_viewing_as_officer | allow
+create                   | (any request)                            | senior_leader            | allow
+create                   | (any request)                            | commanding_officer       | allow
+create                   | (any request)                            | executive_officer        | allow
+create                   | (any request)                            | officer                  | allow
+create                   | (any request)                            | platoon_leader           | allow
+create                   | (any request)                            | squad_leader             | allow
+create                   | (any request)                            | member                   | allow
+create                   | (any request)                            | banned                   | allow
+create                   | (any request)                            | pending                  | allow
+view                     | requested_by_other                       | admin                    | allow
+view                     | requested_by_other                       | developer                | allow
+view                     | requested_by_other                       | admin_viewing_as_officer | allow
+view                     | requested_by_other                       | senior_leader            | allow
+view                     | requested_by_other                       | commanding_officer       | allow
+view                     | requested_by_other                       | executive_officer        | allow
+view                     | requested_by_other                       | officer                  | allow
+view                     | requested_by_other                       | platoon_leader           | allow
+view                     | requested_by_other                       | squad_leader             | allow
+view                     | requested_by_other                       | member                   | allow
+view                     | requested_by_other                       | banned                   | allow
+view                     | requested_by_other                       | pending                  | allow
+view                     | requested_by_actor                       | admin                    | allow
+view                     | requested_by_actor                       | developer                | allow
+view                     | requested_by_actor                       | admin_viewing_as_officer | allow
+view                     | requested_by_actor                       | senior_leader            | allow
+view                     | requested_by_actor                       | commanding_officer       | allow
+view                     | requested_by_actor                       | executive_officer        | allow
+view                     | requested_by_actor                       | officer                  | allow
+view                     | requested_by_actor                       | platoon_leader           | allow
+view                     | requested_by_actor                       | squad_leader             | allow
+view                     | requested_by_actor                       | member                   | allow
+view                     | requested_by_actor                       | banned                   | allow
+view                     | requested_by_actor                       | pending                  | n/a
+update                   | requested_by_other                       | admin                    | allow
+update                   | requested_by_other                       | developer                | allow
+update                   | requested_by_other                       | admin_viewing_as_officer | deny
+update                   | requested_by_other                       | senior_leader            | allow
+update                   | requested_by_other                       | commanding_officer       | allow
+update                   | requested_by_other                       | executive_officer        | allow
+update                   | requested_by_other                       | officer                  | deny
+update                   | requested_by_other                       | platoon_leader           | deny
+update                   | requested_by_other                       | squad_leader             | deny
+update                   | requested_by_other                       | member                   | deny
+update                   | requested_by_other                       | banned                   | deny
+update                   | requested_by_other                       | pending                  | error:ErrorException
+update                   | requested_by_actor                       | admin                    | allow
+update                   | requested_by_actor                       | developer                | allow
+update                   | requested_by_actor                       | admin_viewing_as_officer | allow
+update                   | requested_by_actor                       | senior_leader            | allow
+update                   | requested_by_actor                       | commanding_officer       | allow
+update                   | requested_by_actor                       | executive_officer        | allow
+update                   | requested_by_actor                       | officer                  | allow
+update                   | requested_by_actor                       | platoon_leader           | allow
+update                   | requested_by_actor                       | squad_leader             | allow
+update                   | requested_by_actor                       | member                   | allow
+update                   | requested_by_actor                       | banned                   | allow
+update                   | requested_by_actor                       | pending                  | n/a
+cancel                   | requested_by_other                       | admin                    | allow
+cancel                   | requested_by_other                       | developer                | allow
+cancel                   | requested_by_other                       | admin_viewing_as_officer | deny
+cancel                   | requested_by_other                       | senior_leader            | allow
+cancel                   | requested_by_other                       | commanding_officer       | allow
+cancel                   | requested_by_other                       | executive_officer        | allow
+cancel                   | requested_by_other                       | officer                  | deny
+cancel                   | requested_by_other                       | platoon_leader           | deny
+cancel                   | requested_by_other                       | squad_leader             | deny
+cancel                   | requested_by_other                       | member                   | deny
+cancel                   | requested_by_other                       | banned                   | deny
+cancel                   | requested_by_other                       | pending                  | error:ErrorException
+cancel                   | requested_by_actor                       | admin                    | allow
+cancel                   | requested_by_actor                       | developer                | allow
+cancel                   | requested_by_actor                       | admin_viewing_as_officer | allow
+cancel                   | requested_by_actor                       | senior_leader            | allow
+cancel                   | requested_by_actor                       | commanding_officer       | allow
+cancel                   | requested_by_actor                       | executive_officer        | allow
+cancel                   | requested_by_actor                       | officer                  | allow
+cancel                   | requested_by_actor                       | platoon_leader           | allow
+cancel                   | requested_by_actor                       | squad_leader             | allow
+cancel                   | requested_by_actor                       | member                   | allow
+cancel                   | requested_by_actor                       | banned                   | allow
+cancel                   | requested_by_actor                       | pending                  | n/a
+delete                   | requested_by_other                       | admin                    | allow
+delete                   | requested_by_other                       | developer                | allow
+delete                   | requested_by_other                       | admin_viewing_as_officer | deny
+delete                   | requested_by_other                       | senior_leader            | allow
+delete                   | requested_by_other                       | commanding_officer       | allow
+delete                   | requested_by_other                       | executive_officer        | allow
+delete                   | requested_by_other                       | officer                  | deny
+delete                   | requested_by_other                       | platoon_leader           | deny
+delete                   | requested_by_other                       | squad_leader             | deny
+delete                   | requested_by_other                       | member                   | deny
+delete                   | requested_by_other                       | banned                   | deny
+delete                   | requested_by_other                       | pending                  | error:ErrorException
+delete                   | requested_by_actor                       | admin                    | allow
+delete                   | requested_by_actor                       | developer                | allow
+delete                   | requested_by_actor                       | admin_viewing_as_officer | allow
+delete                   | requested_by_actor                       | senior_leader            | allow
+delete                   | requested_by_actor                       | commanding_officer       | allow
+delete                   | requested_by_actor                       | executive_officer        | allow
+delete                   | requested_by_actor                       | officer                  | allow
+delete                   | requested_by_actor                       | platoon_leader           | allow
+delete                   | requested_by_actor                       | squad_leader             | allow
+delete                   | requested_by_actor                       | member                   | allow
+delete                   | requested_by_actor                       | banned                   | allow
+delete                   | requested_by_actor                       | pending                  | n/a

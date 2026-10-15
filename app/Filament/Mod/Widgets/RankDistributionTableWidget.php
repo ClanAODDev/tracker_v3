@@ -53,7 +53,7 @@ class RankDistributionTableWidget extends BaseWidget
                     ->modalContent(function ($record) use ($divisionId) {
                         $members = Member::where('division_id', $divisionId)
                             ->where('rank', $record->rank->value)
-                            ->with(['platoon', 'squad'])
+                            ->with('unit.parent')
                             ->orderBy('name')
                             ->get();
 

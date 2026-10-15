@@ -2,6 +2,7 @@
 
 namespace App\Data;
 
+use App\Enums\Ability;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Models\Division;
@@ -71,7 +72,7 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->isRole('sr_ldr')) {
+        if ($user->can(Ability::SeeDivisionHealthAlerts)) {
             self::pushAction(
                 $actions,
                 $division->members()
@@ -125,7 +126,7 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->isDivisionLeader() || $user->isRole(['admin', 'sr_ldr'])) {
+        if ($user->isDivisionLeader() || $user->can(Ability::EditLeaves)) {
             self::pushAction(
                 $actions,
                 Leave::whereNull('approver_id')
@@ -164,7 +165,7 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->isRole('sr_ldr')) {
+        if ($user->can(Ability::SeeDivisionHealthAlerts)) {
             self::pushAction(
                 $actions,
                 $division->members()->misconfiguredDiscord()->count(),
@@ -175,34 +176,35 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->can('manageUnassigned', User::class)) {
+        if (! $division->isFlat() && $user->can('manageUnassigned', User::class)) {
             self::pushAction(
                 $actions,
                 count($division->unassigned),
                 key: 'unassigned-members',
                 url: route('division', $division->slug) . '?organize=1',
                 icon: 'fa-user-slash',
-                label: 'No Platoon',
+                label: 'No ' . $division->topLevelLabel(),
             );
         }
 
         if ($user->can('manageUnassigned', User::class)) {
-            self::pushAction(
-                $actions,
-                $division->members()
-                    ->where('platoon_id', '>', 0)
-                    ->where('squad_id', 0)
-                    ->where('position', Position::MEMBER)
-                    ->count(),
-                key: 'unassigned-to-squad',
-                url: '#',
-                icon: 'fa-users-slash',
-                label: 'No Squad',
-                modalTarget: 'no-squad-modal',
-            );
+            foreach (self::levelsBelowFirst($division) as $level) {
+                self::pushAction(
+                    $actions,
+                    $division->members()
+                        ->whereIn('unit_id', $division->units()->where('depth', $level - 1)->select('id'))
+                        ->where('position', Position::MEMBER)
+                        ->count(),
+                    key: $level === 2 ? 'unassigned-to-squad' : "unassigned-to-level-{$level}",
+                    url: '#',
+                    icon: 'fa-users-slash',
+                    label: 'No ' . ucwords($division->unitLevel($level)?->label ?? $division->bottomLevelLabel()),
+                    modalTarget: 'no-squad-modal',
+                );
+            }
         }
 
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageAllTickets)) {
             self::pushAction(
                 $actions,
                 Ticket::whereIn('state', ['new', 'assigned'])->count(),
@@ -268,5 +270,12 @@ readonly class PendingActionsData
     public function divisionActions(): Collection
     {
         return $this->actions->filter(fn (PendingAction $action) => ! $action->adminOnly);
+    }
+
+    private static function levelsBelowFirst(Division $division): array
+    {
+        $deepest = $division->deepestUnitLevel();
+
+        return $deepest >= 2 ? range(2, $deepest) : [];
     }
 }

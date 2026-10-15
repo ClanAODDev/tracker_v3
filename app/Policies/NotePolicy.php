@@ -2,10 +2,12 @@
 
 namespace App\Policies;
 
-use App\Enums\Role;
+use App\Enums\Ability;
+use App\Models\Member;
 use App\Models\Note;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Auth\Access\Response;
 
 class NotePolicy
 {
@@ -13,16 +15,32 @@ class NotePolicy
 
     public function __construct() {}
 
-    public function before(User $user)
+    public function before(User $user, ?string $ability = null, mixed ...$arguments)
     {
-        if ($user->isRole('admin') || $user->isDeveloper()) {
+        $subject = is_string($arguments[0] ?? null) ? ($arguments[1] ?? null) : ($arguments[0] ?? null);
+
+        if ($this->concernsOwnProfile($user, $ability, $subject)) {
+            return Response::deny('Notes on your own profile are not available to you');
+        }
+
+        if ($user->can(Ability::ManageAllNotes) || $user->isDeveloper()) {
             return true;
         }
     }
 
+    public function viewForMember(User $user, Member $member): bool
+    {
+        return $this->show($user) && ($this->outranksSubject($user, $member) || $this->hasAuthoredNoteAbout($user, $member));
+    }
+
+    public function createForMember(User $user, Member $member): bool
+    {
+        return $this->create($user) && $this->outranksSubject($user, $member);
+    }
+
     public function show(User $user): bool
     {
-        if ($user->isRole('member')) {
+        if (! $user->can(Ability::ViewNotes)) {
             return false;
         }
 
@@ -31,16 +49,16 @@ class NotePolicy
 
     public function edit(User $user, Note $note): bool
     {
-        if ($this->restrictedByType($user, $note)) {
+        if ($this->restrictedByType($user, $note) || ! $this->outranksSubject($user, $note->member)) {
             return false;
         }
 
-        return $user->isDivisionLeader() || $user->isRole(Role::SENIOR_LEADER);
+        return $user->isDivisionLeader() || $user->can(Ability::EditAnyNote);
     }
 
     public function create(User $user): bool
     {
-        if ($user->isRole('member')) {
+        if (! $user->can(Ability::CreateNotes)) {
             return false;
         }
 
@@ -49,7 +67,7 @@ class NotePolicy
 
     public function delete(User $user, Note $note): bool
     {
-        if ($this->restrictedByType($user, $note)) {
+        if ($this->restrictedByType($user, $note) || ! $this->outranksSubject($user, $note->member)) {
             return false;
         }
 
@@ -63,7 +81,7 @@ class NotePolicy
 
     public function restore(User $user, Note $note): bool
     {
-        if ($this->restrictedByType($user, $note)) {
+        if ($this->restrictedByType($user, $note) || ! $this->outranksSubject($user, $note->member)) {
             return false;
         }
 
@@ -72,11 +90,32 @@ class NotePolicy
 
     public function forceDelete(User $user, Note $note): bool
     {
-        if ($this->restrictedByType($user, $note)) {
+        if ($this->restrictedByType($user, $note) || ! $this->outranksSubject($user, $note->member)) {
             return false;
         }
 
         return $user->isDivisionLeader();
+    }
+
+    private function concernsOwnProfile(User $user, ?string $ability, mixed $subject): bool
+    {
+        $memberId = match (true) {
+            $subject instanceof Note && in_array($ability, ['edit', 'delete', 'forceDelete'], true)      => $subject->member_id,
+            $subject instanceof Member && in_array($ability, ['viewForMember', 'createForMember'], true) => $subject->id,
+            default                                                                                      => null,
+        };
+
+        return $memberId !== null && $memberId === $user->member_id;
+    }
+
+    private function outranksSubject(User $user, Member $subject): bool
+    {
+        return $user->member?->outranks($subject) ?? false;
+    }
+
+    private function hasAuthoredNoteAbout(User $user, Member $subject): bool
+    {
+        return Note::withTrashed()->where('member_id', $subject->id)->where('author_id', $user->id)->exists();
     }
 
     private function restrictedByType(User $user, Note $note): bool

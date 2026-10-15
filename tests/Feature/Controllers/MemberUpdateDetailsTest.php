@@ -22,10 +22,10 @@ class MemberUpdateDetailsTest extends TestCase
     public function squad_leader_can_update_a_squad_members_handle_and_field(): void
     {
         $squad    = $this->createSquad();
-        $division = $squad->platoon->division;
+        $division = $squad->division;
         $leader   = $this->createSquadLeader($squad);
         $user     = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member   = $this->createMember(['division_id' => $division->id, 'squad_id' => $squad->id]);
+        $member   = $this->createMember(['division_id' => $division->id, 'unit_id' => $squad->id]);
         $handle   = Handle::factory()->create(['enabled' => true, 'regex' => null]);
         $field    = DivisionMemberField::create([
             'division_id' => $division->id,

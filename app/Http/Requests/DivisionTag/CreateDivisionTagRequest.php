@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\DivisionTag;
 
+use App\Enums\Ability;
 use App\Enums\TagVisibility;
 use App\Models\DivisionTag;
 use Illuminate\Foundation\Http\FormRequest;
@@ -17,7 +18,7 @@ class CreateDivisionTagRequest extends FormRequest
     {
         $validVisibilities = [TagVisibility::PUBLIC->value, TagVisibility::OFFICERS->value];
 
-        if ($this->user()->isRole(['admin', 'sr_ldr'])) {
+        if ($this->user()->can(Ability::UseSeniorLeaderTags)) {
             $validVisibilities[] = TagVisibility::SENIOR_LEADERS->value;
         }
 

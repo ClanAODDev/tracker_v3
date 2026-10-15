@@ -23,15 +23,15 @@ class UnitMemberListTest extends TestCase
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
         $platoon  = $this->createPlatoon($division);
-        $member   = $this->createMember(['division_id' => $division->id, 'platoon_id' => $platoon->id]);
+        $member   = $this->createMember(['division_id' => $division->id, 'unit_id' => $platoon->id]);
 
         $this->actingAs($officer)
-            ->get(route('platoon', [$division->slug, $platoon->id]))
+            ->get(route('unit', [$division->slug, $platoon]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('division/members')
                 ->where('scope.kind', 'platoon')
-                ->where('assignmentKind', 'squad')
+                ->where('assignmentDepth', 2)
                 ->where('members', fn ($members) => collect($members)->contains('id', $member->clan_id))
                 ->has('squads'));
     }
@@ -42,26 +42,24 @@ class UnitMemberListTest extends TestCase
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
         $platoon  = $this->createPlatoonWithSquads($division);
-        $squad    = $platoon->squads->first();
+        $squad    = $platoon->children->first();
         $assigned = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => $squad->id,
+            'unit_id'     => $squad->id,
         ]);
         $floating = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => 0,
+            'unit_id'     => $platoon->id,
         ]);
 
         $this->actingAs($srLdr)
-            ->get(route('platoon.manage-squads', [$division->slug, $platoon->id]))
+            ->get(route('unit.manage', [$division->slug, $platoon]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('platoon/manage-members')
-                ->where('squads', fn ($squads) => collect($squads)
+                ->where('units', fn ($units) => collect($units)
                     ->firstWhere('id', $squad->id)['members'][0]['id'] === $assigned->id)
-                ->where('unassigned', fn ($unassigned) => collect($unassigned)->contains('id', $floating->id))
+                ->where('root.members', fn ($members) => collect($members)->contains('id', $floating->id))
                 ->has('assignUrl'));
     }
 
@@ -76,7 +74,7 @@ class UnitMemberListTest extends TestCase
         );
 
         $this->actingAs($user)
-            ->get(route('platoon.manage-squads', [$division->slug, $platoon->id]))
+            ->get(route('unit.manage', [$division->slug, $platoon]))
             ->assertForbidden();
     }
 
@@ -89,12 +87,11 @@ class UnitMemberListTest extends TestCase
         $squad    = $this->createSquad($platoon);
         $member   = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => $squad->id,
+            'unit_id'     => $squad->id,
         ]);
 
         $this->actingAs($officer)
-            ->get(route('squad.show', [$division->slug, $platoon->id, $squad->id]))
+            ->get(route('unit', [$division->slug, $squad]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('division/members')

@@ -6,18 +6,21 @@ use App\Models\Division;
 use App\Models\Handle;
 use App\Models\Leave;
 use App\Models\Member;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 
 class MemberRowSerializer
 {
     public function __construct(
         private Division $division,
-        private string $assignmentKind = 'platoon',
+        private int $assignmentDepth = 1,
         private ?int $directRecruitOfClanId = null,
     ) {}
 
     public function collection(Collection $members): array
     {
+        (new EloquentCollection($members->all()))->load('ledUnit');
+
         return $members->map(fn (Member $member) => $this->row($member))->values()->all();
     }
 
@@ -33,8 +36,8 @@ class MemberRowSerializer
             'rankAbbr'       => $member->rank->getAbbreviation(),
             'rankValue'      => $member->rank->value,
             'rankColor'      => $member->rank->getColorHex(),
-            'position'       => $member->position?->getLabel(),
-            'positionAbbr'   => $member->position?->getAbbreviation() ?: null,
+            'position'       => $member->positionLabel(),
+            'positionAbbr'   => $member->positionAbbreviation(),
             'positionClass'  => $member->position?->getClass(),
             'profileUrl'     => route('member', $member->getUrlParams()),
             'assignment'     => $this->assignment($member),
@@ -60,6 +63,9 @@ class MemberRowSerializer
                 ->mapWithKeys(fn (Handle $handle) => [$handle->id => [
                     'value' => $handle->pivot->value,
                     'url'   => $handle->full_url,
+                    'error' => $handle->matches($handle->pivot->value)
+                        ? null
+                        : ($handle->regex_hint ?: "Does not match the {$handle->label} format"),
                 ]])
                 ->all(),
             'posts' => $member->posts,
@@ -92,19 +98,12 @@ class MemberRowSerializer
 
     private function assignment(Member $member): ?array
     {
-        if ($this->assignmentKind === 'squad') {
-            return $member->squad && $member->platoon
-                ? [
-                    'label' => $member->squad->name ?: 'Untitled',
-                    'url'   => route('squad.show', [$this->division->slug, $member->platoon, $member->squad]),
-                ]
-                : null;
-        }
+        $unit = $member->unitAt($this->assignmentDepth);
 
-        return $member->platoon
+        return $unit
             ? [
-                'label' => $member->platoon->name ?: 'Untitled',
-                'url'   => route('platoon', [$this->division->slug, $member->platoon]),
+                'label' => $unit->name ?: 'Untitled',
+                'url'   => $unit->url($this->division),
             ]
             : null;
     }

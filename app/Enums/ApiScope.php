@@ -38,7 +38,7 @@ enum ApiScope: string
     {
         $scopes = [self::ClanRead, self::DivisionRead];
 
-        if (in_array($user->role, [Role::SENIOR_LEADER, Role::ADMIN], true)) {
+        if ($user->can(Ability::UseAdvancedApiScopes)) {
             array_push($scopes, self::DivisionReadAdvanced, self::DivisionWrite);
         }
 

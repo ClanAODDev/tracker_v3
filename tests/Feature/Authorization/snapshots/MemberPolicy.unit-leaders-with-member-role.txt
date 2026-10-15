@@ -1,0 +1,234 @@
+recruit                  | (any member)                             | platoon_leader           | deny
+recruit                  | (any member)                             | squad_leader             | deny
+create                   | (any member)                             | platoon_leader           | deny
+create                   | (any member)                             | squad_leader             | deny
+flagInactive             | (any member)                             | platoon_leader           | deny
+flagInactive             | (any member)                             | squad_leader             | deny
+viewAny                  | (any member)                             | platoon_leader           | allow
+viewAny                  | (any member)                             | squad_leader             | allow
+remindActivity           | (any member)                             | platoon_leader           | deny
+remindActivity           | (any member)                             | squad_leader             | deny
+view                     | self                                     | platoon_leader           | allow
+view                     | self                                     | squad_leader             | allow
+view                     | same_squad                               | platoon_leader           | allow
+view                     | same_squad                               | squad_leader             | allow
+view                     | same_platoon_other_squad                 | platoon_leader           | allow
+view                     | same_platoon_other_squad                 | squad_leader             | allow
+view                     | other_platoon                            | platoon_leader           | allow
+view                     | other_platoon                            | squad_leader             | allow
+view                     | unassigned                               | platoon_leader           | allow
+view                     | unassigned                               | squad_leader             | allow
+view                     | other_division                           | platoon_leader           | allow
+view                     | other_division                           | squad_leader             | allow
+view                     | higher_rank                              | platoon_leader           | allow
+view                     | higher_rank                              | squad_leader             | allow
+view                     | part_timer                               | platoon_leader           | allow
+view                     | part_timer                               | squad_leader             | allow
+update                   | self                                     | platoon_leader           | deny
+update                   | self                                     | squad_leader             | deny
+update                   | same_squad                               | platoon_leader           | deny
+update                   | same_squad                               | squad_leader             | deny
+update                   | same_platoon_other_squad                 | platoon_leader           | deny
+update                   | same_platoon_other_squad                 | squad_leader             | deny
+update                   | other_platoon                            | platoon_leader           | deny
+update                   | other_platoon                            | squad_leader             | deny
+update                   | unassigned                               | platoon_leader           | deny
+update                   | unassigned                               | squad_leader             | deny
+update                   | other_division                           | platoon_leader           | deny
+update                   | other_division                           | squad_leader             | deny
+update                   | higher_rank                              | platoon_leader           | deny
+update                   | higher_rank                              | squad_leader             | deny
+update                   | part_timer                               | platoon_leader           | deny
+update                   | part_timer                               | squad_leader             | deny
+reset                    | self                                     | platoon_leader           | deny
+reset                    | self                                     | squad_leader             | deny
+reset                    | same_squad                               | platoon_leader           | deny
+reset                    | same_squad                               | squad_leader             | deny
+reset                    | same_platoon_other_squad                 | platoon_leader           | deny
+reset                    | same_platoon_other_squad                 | squad_leader             | deny
+reset                    | other_platoon                            | platoon_leader           | deny
+reset                    | other_platoon                            | squad_leader             | deny
+reset                    | unassigned                               | platoon_leader           | deny
+reset                    | unassigned                               | squad_leader             | deny
+reset                    | other_division                           | platoon_leader           | deny
+reset                    | other_division                           | squad_leader             | deny
+reset                    | higher_rank                              | platoon_leader           | deny
+reset                    | higher_rank                              | squad_leader             | deny
+reset                    | part_timer                               | platoon_leader           | deny
+reset                    | part_timer                               | squad_leader             | deny
+delete                   | self                                     | platoon_leader           | deny
+delete                   | self                                     | squad_leader             | deny
+delete                   | same_squad                               | platoon_leader           | deny
+delete                   | same_squad                               | squad_leader             | deny
+delete                   | same_platoon_other_squad                 | platoon_leader           | deny
+delete                   | same_platoon_other_squad                 | squad_leader             | deny
+delete                   | other_platoon                            | platoon_leader           | deny
+delete                   | other_platoon                            | squad_leader             | deny
+delete                   | unassigned                               | platoon_leader           | deny
+delete                   | unassigned                               | squad_leader             | deny
+delete                   | other_division                           | platoon_leader           | deny
+delete                   | other_division                           | squad_leader             | deny
+delete                   | higher_rank                              | platoon_leader           | deny
+delete                   | higher_rank                              | squad_leader             | deny
+delete                   | part_timer                               | platoon_leader           | deny
+delete                   | part_timer                               | squad_leader             | deny
+separate                 | self                                     | platoon_leader           | deny
+separate                 | self                                     | squad_leader             | deny
+separate                 | same_squad                               | platoon_leader           | deny
+separate                 | same_squad                               | squad_leader             | deny
+separate                 | same_platoon_other_squad                 | platoon_leader           | deny
+separate                 | same_platoon_other_squad                 | squad_leader             | deny
+separate                 | other_platoon                            | platoon_leader           | deny
+separate                 | other_platoon                            | squad_leader             | deny
+separate                 | unassigned                               | platoon_leader           | deny
+separate                 | unassigned                               | squad_leader             | deny
+separate                 | other_division                           | platoon_leader           | deny
+separate                 | other_division                           | squad_leader             | deny
+separate                 | higher_rank                              | platoon_leader           | deny
+separate                 | higher_rank                              | squad_leader             | deny
+separate                 | part_timer                               | platoon_leader           | deny
+separate                 | part_timer                               | squad_leader             | deny
+promote                  | self                                     | platoon_leader           | deny
+promote                  | self                                     | squad_leader             | deny
+promote                  | same_squad                               | platoon_leader           | deny
+promote                  | same_squad                               | squad_leader             | deny
+promote                  | same_platoon_other_squad                 | platoon_leader           | deny
+promote                  | same_platoon_other_squad                 | squad_leader             | deny
+promote                  | other_platoon                            | platoon_leader           | deny
+promote                  | other_platoon                            | squad_leader             | deny
+promote                  | unassigned                               | platoon_leader           | deny
+promote                  | unassigned                               | squad_leader             | deny
+promote                  | other_division                           | platoon_leader           | deny
+promote                  | other_division                           | squad_leader             | deny
+promote                  | higher_rank                              | platoon_leader           | deny
+promote                  | higher_rank                              | squad_leader             | deny
+promote                  | part_timer                               | platoon_leader           | deny
+promote                  | part_timer                               | squad_leader             | deny
+updateLeave              | self                                     | platoon_leader           | deny
+updateLeave              | self                                     | squad_leader             | deny
+updateLeave              | same_squad                               | platoon_leader           | deny
+updateLeave              | same_squad                               | squad_leader             | deny
+updateLeave              | same_platoon_other_squad                 | platoon_leader           | deny
+updateLeave              | same_platoon_other_squad                 | squad_leader             | deny
+updateLeave              | other_platoon                            | platoon_leader           | deny
+updateLeave              | other_platoon                            | squad_leader             | deny
+updateLeave              | unassigned                               | platoon_leader           | deny
+updateLeave              | unassigned                               | squad_leader             | deny
+updateLeave              | other_division                           | platoon_leader           | deny
+updateLeave              | other_division                           | squad_leader             | deny
+updateLeave              | higher_rank                              | platoon_leader           | deny
+updateLeave              | higher_rank                              | squad_leader             | deny
+updateLeave              | part_timer                               | platoon_leader           | deny
+updateLeave              | part_timer                               | squad_leader             | deny
+remindActivity           | self                                     | platoon_leader           | deny
+remindActivity           | self                                     | squad_leader             | deny
+remindActivity           | same_squad                               | platoon_leader           | deny
+remindActivity           | same_squad                               | squad_leader             | deny
+remindActivity           | same_platoon_other_squad                 | platoon_leader           | deny
+remindActivity           | same_platoon_other_squad                 | squad_leader             | deny
+remindActivity           | other_platoon                            | platoon_leader           | deny
+remindActivity           | other_platoon                            | squad_leader             | deny
+remindActivity           | unassigned                               | platoon_leader           | deny
+remindActivity           | unassigned                               | squad_leader             | deny
+remindActivity           | other_division                           | platoon_leader           | deny
+remindActivity           | other_division                           | squad_leader             | deny
+remindActivity           | higher_rank                              | platoon_leader           | deny
+remindActivity           | higher_rank                              | squad_leader             | deny
+remindActivity           | part_timer                               | platoon_leader           | deny
+remindActivity           | part_timer                               | squad_leader             | deny
+clearActivityReminders   | self                                     | platoon_leader           | deny
+clearActivityReminders   | self                                     | squad_leader             | deny
+clearActivityReminders   | same_squad                               | platoon_leader           | deny
+clearActivityReminders   | same_squad                               | squad_leader             | deny
+clearActivityReminders   | same_platoon_other_squad                 | platoon_leader           | deny
+clearActivityReminders   | same_platoon_other_squad                 | squad_leader             | deny
+clearActivityReminders   | other_platoon                            | platoon_leader           | deny
+clearActivityReminders   | other_platoon                            | squad_leader             | deny
+clearActivityReminders   | unassigned                               | platoon_leader           | deny
+clearActivityReminders   | unassigned                               | squad_leader             | deny
+clearActivityReminders   | other_division                           | platoon_leader           | deny
+clearActivityReminders   | other_division                           | squad_leader             | deny
+clearActivityReminders   | higher_rank                              | platoon_leader           | deny
+clearActivityReminders   | higher_rank                              | squad_leader             | deny
+clearActivityReminders   | part_timer                               | platoon_leader           | deny
+clearActivityReminders   | part_timer                               | squad_leader             | deny
+managePartTime           | self                                     | platoon_leader           | deny
+managePartTime           | self                                     | squad_leader             | deny
+managePartTime           | same_squad                               | platoon_leader           | deny
+managePartTime           | same_squad                               | squad_leader             | deny
+managePartTime           | same_platoon_other_squad                 | platoon_leader           | deny
+managePartTime           | same_platoon_other_squad                 | squad_leader             | deny
+managePartTime           | other_platoon                            | platoon_leader           | deny
+managePartTime           | other_platoon                            | squad_leader             | deny
+managePartTime           | unassigned                               | platoon_leader           | deny
+managePartTime           | unassigned                               | squad_leader             | deny
+managePartTime           | other_division                           | platoon_leader           | deny
+managePartTime           | other_division                           | squad_leader             | deny
+managePartTime           | higher_rank                              | platoon_leader           | deny
+managePartTime           | higher_rank                              | squad_leader             | deny
+managePartTime           | part_timer                               | platoon_leader           | deny
+managePartTime           | part_timer                               | squad_leader             | deny
+manageHandles            | self                                     | platoon_leader           | allow
+manageHandles            | self                                     | squad_leader             | allow
+manageHandles            | same_squad                               | platoon_leader           | allow
+manageHandles            | same_squad                               | squad_leader             | allow
+manageHandles            | same_platoon_other_squad                 | platoon_leader           | allow
+manageHandles            | same_platoon_other_squad                 | squad_leader             | deny
+manageHandles            | other_platoon                            | platoon_leader           | deny
+manageHandles            | other_platoon                            | squad_leader             | deny
+manageHandles            | unassigned                               | platoon_leader           | deny
+manageHandles            | unassigned                               | squad_leader             | deny
+manageHandles            | other_division                           | platoon_leader           | deny
+manageHandles            | other_division                           | squad_leader             | deny
+manageHandles            | higher_rank                              | platoon_leader           | allow
+manageHandles            | higher_rank                              | squad_leader             | allow
+manageHandles            | part_timer                               | platoon_leader           | deny
+manageHandles            | part_timer                               | squad_leader             | deny
+manageFields             | self                                     | platoon_leader           | allow
+manageFields             | self                                     | squad_leader             | allow
+manageFields             | same_squad                               | platoon_leader           | allow
+manageFields             | same_squad                               | squad_leader             | allow
+manageFields             | same_platoon_other_squad                 | platoon_leader           | allow
+manageFields             | same_platoon_other_squad                 | squad_leader             | deny
+manageFields             | other_platoon                            | platoon_leader           | deny
+manageFields             | other_platoon                            | squad_leader             | deny
+manageFields             | unassigned                               | platoon_leader           | deny
+manageFields             | unassigned                               | squad_leader             | deny
+manageFields             | other_division                           | platoon_leader           | deny
+manageFields             | other_division                           | squad_leader             | deny
+manageFields             | higher_rank                              | platoon_leader           | allow
+manageFields             | higher_rank                              | squad_leader             | allow
+manageFields             | part_timer                               | platoon_leader           | deny
+manageFields             | part_timer                               | squad_leader             | deny
+manageField              | self / self_editable_field               | platoon_leader           | allow
+manageField              | self / self_editable_field               | squad_leader             | allow
+manageField              | same_squad / self_editable_field         | platoon_leader           | allow
+manageField              | same_squad / self_editable_field         | squad_leader             | allow
+manageField              | same_platoon_other_squad / self_editable_field | platoon_leader           | allow
+manageField              | same_platoon_other_squad / self_editable_field | squad_leader             | deny
+manageField              | other_platoon / self_editable_field      | platoon_leader           | deny
+manageField              | other_platoon / self_editable_field      | squad_leader             | deny
+manageField              | unassigned / self_editable_field         | platoon_leader           | deny
+manageField              | unassigned / self_editable_field         | squad_leader             | deny
+manageField              | other_division / self_editable_field     | platoon_leader           | deny
+manageField              | other_division / self_editable_field     | squad_leader             | deny
+manageField              | higher_rank / self_editable_field        | platoon_leader           | allow
+manageField              | higher_rank / self_editable_field        | squad_leader             | allow
+manageField              | part_timer / self_editable_field         | platoon_leader           | deny
+manageField              | part_timer / self_editable_field         | squad_leader             | deny
+manageField              | self / leader_only_field                 | platoon_leader           | allow
+manageField              | self / leader_only_field                 | squad_leader             | allow
+manageField              | same_squad / leader_only_field           | platoon_leader           | allow
+manageField              | same_squad / leader_only_field           | squad_leader             | allow
+manageField              | same_platoon_other_squad / leader_only_field | platoon_leader           | allow
+manageField              | same_platoon_other_squad / leader_only_field | squad_leader             | deny
+manageField              | other_platoon / leader_only_field        | platoon_leader           | deny
+manageField              | other_platoon / leader_only_field        | squad_leader             | deny
+manageField              | unassigned / leader_only_field           | platoon_leader           | deny
+manageField              | unassigned / leader_only_field           | squad_leader             | deny
+manageField              | other_division / leader_only_field       | platoon_leader           | deny
+manageField              | other_division / leader_only_field       | squad_leader             | deny
+manageField              | higher_rank / leader_only_field          | platoon_leader           | allow
+manageField              | higher_rank / leader_only_field          | squad_leader             | allow
+manageField              | part_timer / leader_only_field           | platoon_leader           | deny
+manageField              | part_timer / leader_only_field           | squad_leader             | deny

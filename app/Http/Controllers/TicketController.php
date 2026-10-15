@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\Ability;
 use App\Models\Ticket;
 use App\Models\TicketType;
 use App\Support\TicketSerializer;
@@ -34,7 +35,7 @@ class TicketController extends Controller
             $tickets = Ticket::with(['type', 'owner.member', 'division', 'caller.member'])
                 ->orderByDesc('created_at')
                 ->get()
-                ->filter(fn ($ticket) => $ticket->type?->userCanWork($user) ?? $user->isRole('admin'))
+                ->filter(fn ($ticket) => $ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))
                 ->map(fn ($ticket) => TicketSerializer::ticket($ticket, includeCaller: true))
                 ->values();
         }
@@ -58,7 +59,7 @@ class TicketController extends Controller
     public function show(Request $request, Ticket $ticket): Response
     {
         $user    = $request->user();
-        $canWork = $ticket->type?->userCanWork($user) ?? $user->isRole('admin');
+        $canWork = $ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets);
 
         abort_if($ticket->caller_id !== $user->id && ! $canWork, 403);
 

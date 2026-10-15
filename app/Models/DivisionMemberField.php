@@ -21,6 +21,7 @@ class DivisionMemberField extends Model
         'options',
         'filterable',
         'self_editable',
+        'display_order',
     ];
 
     protected $casts = [
@@ -29,6 +30,13 @@ class DivisionMemberField extends Model
         'filterable'    => 'boolean',
         'self_editable' => 'boolean',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $field) {
+            $field->display_order ??= (int) static::where('division_id', $field->division_id)->max('display_order') + 1;
+        });
+    }
 
     public static function keyFor(string $label): string
     {

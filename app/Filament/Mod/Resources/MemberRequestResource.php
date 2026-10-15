@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Ability;
 use App\Enums\Position;
 use App\Filament\Mod\Resources\MemberRequestResource\Pages\EditMemberRequest;
 use App\Filament\Mod\Resources\MemberRequestResource\Pages\ListMemberRequests;
@@ -43,7 +44,7 @@ class MemberRequestResource extends Resource
 
         $query = MemberRequest::query()->pending();
 
-        if (self::isDivisionLeadership() && ! $user->isRole('admin')) {
+        if (self::isDivisionLeadership() && ! $user->can(Ability::ActAcrossDivisions)) {
             $divisionId = $user->member?->division_id;
             if ($divisionId) {
                 $query->where('division_id', $divisionId);
@@ -63,7 +64,7 @@ class MemberRequestResource extends Resource
     public static function getNavigationBadgeTooltip(): ?string
     {
         $user  = auth()->user();
-        $scope = (self::isDivisionLeadership() && ! $user?->isRole('admin')) ? 'your division' : 'all divisions';
+        $scope = (self::isDivisionLeadership() && ! $user?->can(Ability::ActAcrossDivisions)) ? 'your division' : 'all divisions';
 
         return "Pending requests in {$scope}";
     }
@@ -281,7 +282,7 @@ class MemberRequestResource extends Resource
 
         $user = auth()->user();
 
-        if (self::isDivisionLeadership() && ! $user->isRole('admin')) {
+        if (self::isDivisionLeadership() && ! $user->can(Ability::ActAcrossDivisions)) {
             $divisionId = $user->member?->division_id;
             if ($divisionId) {
                 $query->where('division_id', $divisionId);

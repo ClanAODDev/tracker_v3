@@ -52,6 +52,6 @@ class AssignPlatoonAuthorizationTest extends TestCase
                 'platoon_id' => $platoon->id,
             ])->assertOk();
 
-        $this->assertEquals($platoon->id, $target->fresh()->platoon_id);
+        $this->assertEquals($platoon->id, $target->fresh()->unit_id);
     }
 }

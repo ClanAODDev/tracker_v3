@@ -1,0 +1,600 @@
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | admin                    | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | admin                    | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | admin                    | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | admin                    | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | admin                    | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | admin                    | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | admin                    | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | admin                    | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | admin                    | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | admin                    | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | admin                    | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | admin                    | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | admin                    | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | admin                    | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | admin                    | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | admin                    | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | admin                    | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | admin                    | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | admin                    | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | admin                    | auto-approved
+auto-approve (default limit (PFC)) | other_division to Specialist             | admin                    | auto-approved
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | admin                    | auto-approved
+auto-approve (default limit (PFC)) | other_division to Corporal               | admin                    | auto-approved
+auto-approve (default limit (PFC)) | other_division to Sergeant               | admin                    | auto-approved
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | admin                    | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | developer                | needs approval
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | developer                | needs approval
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | developer                | needs approval
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | developer                | needs approval
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | developer                | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | developer                | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | developer                | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | developer                | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | developer                | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | developer                | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | developer                | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | developer                | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | developer                | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | developer                | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | developer                | needs approval
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | developer                | needs approval
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | developer                | needs approval
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | developer                | needs approval
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | developer                | needs approval
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | developer                | needs approval
+auto-approve (default limit (PFC)) | other_division to Specialist             | developer                | needs approval
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | developer                | needs approval
+auto-approve (default limit (PFC)) | other_division to Corporal               | developer                | needs approval
+auto-approve (default limit (PFC)) | other_division to Sergeant               | developer                | needs approval
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | developer                | needs approval
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | admin_viewing_as_officer | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | admin_viewing_as_officer | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | admin_viewing_as_officer | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | admin_viewing_as_officer | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | admin_viewing_as_officer | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | admin_viewing_as_officer | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | admin_viewing_as_officer | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | admin_viewing_as_officer | auto-approved
+auto-approve (default limit (PFC)) | other_division to Specialist             | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | other_division to Corporal               | admin_viewing_as_officer | needs approval
+auto-approve (default limit (PFC)) | other_division to Sergeant               | admin_viewing_as_officer | auto-approved
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | admin_viewing_as_officer | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | other_division to Specialist             | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | other_division to Corporal               | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | other_division to Sergeant               | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | senior_leader            | needs approval
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | commanding_officer       | needs approval
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | commanding_officer       | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | commanding_officer       | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | commanding_officer       | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | commanding_officer       | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | commanding_officer       | needs approval
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | commanding_officer       | needs approval
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | commanding_officer       | needs approval
+auto-approve (default limit (PFC)) | other_division to Specialist             | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | other_division to Corporal               | commanding_officer       | auto-approved
+auto-approve (default limit (PFC)) | other_division to Sergeant               | commanding_officer       | needs approval
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | commanding_officer       | needs approval
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | executive_officer        | needs approval
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | executive_officer        | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | executive_officer        | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | executive_officer        | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | executive_officer        | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | executive_officer        | needs approval
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | executive_officer        | needs approval
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | executive_officer        | needs approval
+auto-approve (default limit (PFC)) | other_division to Specialist             | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | other_division to Corporal               | executive_officer        | auto-approved
+auto-approve (default limit (PFC)) | other_division to Sergeant               | executive_officer        | needs approval
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | executive_officer        | needs approval
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | officer                  | needs approval
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | officer                  | needs approval
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | officer                  | needs approval
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | officer                  | needs approval
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | officer                  | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | officer                  | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | officer                  | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | officer                  | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | officer                  | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | officer                  | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | officer                  | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | officer                  | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | officer                  | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | officer                  | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | officer                  | needs approval
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | officer                  | needs approval
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | officer                  | needs approval
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | officer                  | needs approval
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | officer                  | needs approval
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | officer                  | needs approval
+auto-approve (default limit (PFC)) | other_division to Specialist             | officer                  | needs approval
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | officer                  | needs approval
+auto-approve (default limit (PFC)) | other_division to Corporal               | officer                  | needs approval
+auto-approve (default limit (PFC)) | other_division to Sergeant               | officer                  | needs approval
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | officer                  | needs approval
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | other_division to Specialist             | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | other_division to Corporal               | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | other_division to Sergeant               | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | platoon_leader           | needs approval
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | other_division to Specialist             | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | other_division to Corporal               | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | other_division to Sergeant               | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | squad_leader             | needs approval
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | member                   | needs approval
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | member                   | needs approval
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | member                   | needs approval
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | member                   | needs approval
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | member                   | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | member                   | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | member                   | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | member                   | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | member                   | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | member                   | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | member                   | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | member                   | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | member                   | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | member                   | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | member                   | needs approval
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | member                   | needs approval
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | member                   | needs approval
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | member                   | needs approval
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | member                   | needs approval
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | member                   | needs approval
+auto-approve (default limit (PFC)) | other_division to Specialist             | member                   | needs approval
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | member                   | needs approval
+auto-approve (default limit (PFC)) | other_division to Corporal               | member                   | needs approval
+auto-approve (default limit (PFC)) | other_division to Sergeant               | member                   | needs approval
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | member                   | needs approval
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | banned                   | needs approval
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | banned                   | needs approval
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | banned                   | needs approval
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | banned                   | needs approval
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | banned                   | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | banned                   | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | banned                   | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | banned                   | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | banned                   | needs approval
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | banned                   | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | banned                   | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | banned                   | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | banned                   | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | banned                   | needs approval
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | banned                   | needs approval
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | banned                   | needs approval
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | banned                   | needs approval
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | banned                   | needs approval
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | banned                   | needs approval
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | banned                   | needs approval
+auto-approve (default limit (PFC)) | other_division to Specialist             | banned                   | needs approval
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | banned                   | needs approval
+auto-approve (default limit (PFC)) | other_division to Corporal               | banned                   | needs approval
+auto-approve (default limit (PFC)) | other_division to Sergeant               | banned                   | needs approval
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | banned                   | needs approval
+auto-approve (default limit (PFC)) | same_squad to Specialist                 | pending                  | n/a
+auto-approve (default limit (PFC)) | same_squad to Lance Corporal             | pending                  | n/a
+auto-approve (default limit (PFC)) | same_squad to Corporal                   | pending                  | n/a
+auto-approve (default limit (PFC)) | same_squad to Sergeant                   | pending                  | n/a
+auto-approve (default limit (PFC)) | same_squad to Staff Sergeant             | pending                  | n/a
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Specialist   | pending                  | n/a
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Lance Corporal | pending                  | n/a
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Corporal     | pending                  | n/a
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Sergeant     | pending                  | n/a
+auto-approve (default limit (PFC)) | same_platoon_other_squad to Staff Sergeant | pending                  | n/a
+auto-approve (default limit (PFC)) | other_platoon to Specialist              | pending                  | n/a
+auto-approve (default limit (PFC)) | other_platoon to Lance Corporal          | pending                  | n/a
+auto-approve (default limit (PFC)) | other_platoon to Corporal                | pending                  | n/a
+auto-approve (default limit (PFC)) | other_platoon to Sergeant                | pending                  | n/a
+auto-approve (default limit (PFC)) | other_platoon to Staff Sergeant          | pending                  | n/a
+auto-approve (default limit (PFC)) | unassigned to Specialist                 | pending                  | n/a
+auto-approve (default limit (PFC)) | unassigned to Lance Corporal             | pending                  | n/a
+auto-approve (default limit (PFC)) | unassigned to Corporal                   | pending                  | n/a
+auto-approve (default limit (PFC)) | unassigned to Sergeant                   | pending                  | n/a
+auto-approve (default limit (PFC)) | unassigned to Staff Sergeant             | pending                  | n/a
+auto-approve (default limit (PFC)) | other_division to Specialist             | pending                  | n/a
+auto-approve (default limit (PFC)) | other_division to Lance Corporal         | pending                  | n/a
+auto-approve (default limit (PFC)) | other_division to Corporal               | pending                  | n/a
+auto-approve (default limit (PFC)) | other_division to Sergeant               | pending                  | n/a
+auto-approve (default limit (PFC)) | other_division to Staff Sergeant         | pending                  | n/a
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Specialist             | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Corporal               | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | admin                    | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | developer                | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | developer                | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | developer                | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | developer                | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | developer                | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | developer                | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | developer                | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | developer                | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | developer                | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | developer                | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | developer                | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | developer                | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | developer                | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | developer                | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | developer                | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | developer                | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | developer                | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | developer                | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | developer                | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | developer                | needs approval
+auto-approve (limit raised to Cpl) | other_division to Specialist             | developer                | needs approval
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | developer                | needs approval
+auto-approve (limit raised to Cpl) | other_division to Corporal               | developer                | needs approval
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | developer                | needs approval
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | developer                | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | admin_viewing_as_officer | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | admin_viewing_as_officer | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | admin_viewing_as_officer | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | admin_viewing_as_officer | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | admin_viewing_as_officer | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | admin_viewing_as_officer | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | admin_viewing_as_officer | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | admin_viewing_as_officer | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Specialist             | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | other_division to Corporal               | admin_viewing_as_officer | needs approval
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | admin_viewing_as_officer | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | admin_viewing_as_officer | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | other_division to Specialist             | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | other_division to Corporal               | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | senior_leader            | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | commanding_officer       | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | commanding_officer       | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | commanding_officer       | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | commanding_officer       | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | commanding_officer       | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | commanding_officer       | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | commanding_officer       | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | commanding_officer       | needs approval
+auto-approve (limit raised to Cpl) | other_division to Specialist             | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Corporal               | commanding_officer       | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | commanding_officer       | needs approval
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | commanding_officer       | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | executive_officer        | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | executive_officer        | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | executive_officer        | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | executive_officer        | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | executive_officer        | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | executive_officer        | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | executive_officer        | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | executive_officer        | needs approval
+auto-approve (limit raised to Cpl) | other_division to Specialist             | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Corporal               | executive_officer        | auto-approved
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | executive_officer        | needs approval
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | executive_officer        | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | officer                  | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | officer                  | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | officer                  | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | officer                  | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | officer                  | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | officer                  | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | officer                  | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | officer                  | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | officer                  | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | officer                  | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | officer                  | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | officer                  | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | officer                  | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | officer                  | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | officer                  | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | officer                  | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | officer                  | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | officer                  | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | officer                  | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | officer                  | needs approval
+auto-approve (limit raised to Cpl) | other_division to Specialist             | officer                  | needs approval
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | officer                  | needs approval
+auto-approve (limit raised to Cpl) | other_division to Corporal               | officer                  | needs approval
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | officer                  | needs approval
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | officer                  | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | platoon_leader           | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | platoon_leader           | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | platoon_leader           | auto-approved
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | platoon_leader           | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | platoon_leader           | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | platoon_leader           | auto-approved
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | other_division to Specialist             | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | other_division to Corporal               | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | platoon_leader           | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | other_division to Specialist             | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | other_division to Corporal               | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | squad_leader             | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | member                   | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | member                   | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | member                   | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | member                   | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | member                   | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | member                   | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | member                   | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | member                   | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | member                   | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | member                   | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | member                   | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | member                   | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | member                   | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | member                   | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | member                   | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | member                   | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | member                   | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | member                   | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | member                   | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | member                   | needs approval
+auto-approve (limit raised to Cpl) | other_division to Specialist             | member                   | needs approval
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | member                   | needs approval
+auto-approve (limit raised to Cpl) | other_division to Corporal               | member                   | needs approval
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | member                   | needs approval
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | member                   | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | banned                   | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | banned                   | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | banned                   | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | banned                   | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | banned                   | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | banned                   | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | banned                   | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | banned                   | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | banned                   | needs approval
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | banned                   | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | banned                   | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | banned                   | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | banned                   | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | banned                   | needs approval
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | banned                   | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | banned                   | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | banned                   | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | banned                   | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | banned                   | needs approval
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | banned                   | needs approval
+auto-approve (limit raised to Cpl) | other_division to Specialist             | banned                   | needs approval
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | banned                   | needs approval
+auto-approve (limit raised to Cpl) | other_division to Corporal               | banned                   | needs approval
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | banned                   | needs approval
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | banned                   | needs approval
+auto-approve (limit raised to Cpl) | same_squad to Specialist                 | pending                  | n/a
+auto-approve (limit raised to Cpl) | same_squad to Lance Corporal             | pending                  | n/a
+auto-approve (limit raised to Cpl) | same_squad to Corporal                   | pending                  | n/a
+auto-approve (limit raised to Cpl) | same_squad to Sergeant                   | pending                  | n/a
+auto-approve (limit raised to Cpl) | same_squad to Staff Sergeant             | pending                  | n/a
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Specialist   | pending                  | n/a
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Lance Corporal | pending                  | n/a
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Corporal     | pending                  | n/a
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Sergeant     | pending                  | n/a
+auto-approve (limit raised to Cpl) | same_platoon_other_squad to Staff Sergeant | pending                  | n/a
+auto-approve (limit raised to Cpl) | other_platoon to Specialist              | pending                  | n/a
+auto-approve (limit raised to Cpl) | other_platoon to Lance Corporal          | pending                  | n/a
+auto-approve (limit raised to Cpl) | other_platoon to Corporal                | pending                  | n/a
+auto-approve (limit raised to Cpl) | other_platoon to Sergeant                | pending                  | n/a
+auto-approve (limit raised to Cpl) | other_platoon to Staff Sergeant          | pending                  | n/a
+auto-approve (limit raised to Cpl) | unassigned to Specialist                 | pending                  | n/a
+auto-approve (limit raised to Cpl) | unassigned to Lance Corporal             | pending                  | n/a
+auto-approve (limit raised to Cpl) | unassigned to Corporal                   | pending                  | n/a
+auto-approve (limit raised to Cpl) | unassigned to Sergeant                   | pending                  | n/a
+auto-approve (limit raised to Cpl) | unassigned to Staff Sergeant             | pending                  | n/a
+auto-approve (limit raised to Cpl) | other_division to Specialist             | pending                  | n/a
+auto-approve (limit raised to Cpl) | other_division to Lance Corporal         | pending                  | n/a
+auto-approve (limit raised to Cpl) | other_division to Corporal               | pending                  | n/a
+auto-approve (limit raised to Cpl) | other_division to Sergeant               | pending                  | n/a
+auto-approve (limit raised to Cpl) | other_division to Staff Sergeant         | pending                  | n/a

@@ -34,3 +34,4 @@ LAST_REVISION
 /.vs
 /public/hot
 .phpunit.cache
+/storage/framework/testing/disks/*_test_*

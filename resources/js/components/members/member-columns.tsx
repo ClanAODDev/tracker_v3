@@ -1,12 +1,13 @@
 import { Link } from '@inertiajs/react';
 import { type ColumnDef } from '@tanstack/react-table';
-import { Bell, Clock } from 'lucide-react';
+import { AlertTriangle, Bell, Clock } from 'lucide-react';
 import { type CSSProperties, type Dispatch, type ReactNode, type SetStateAction, useMemo } from 'react';
 import { toast } from 'sonner';
 
 import type { HandleType, MemberFieldDefinition, MemberRow } from '@/components/members/types';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { postJson } from '@/lib/api';
 import { fieldBadgeClass } from '@/lib/field-colors';
 import { cn } from '@/lib/utils';
@@ -260,12 +261,27 @@ export function useMemberColumns({
                     cell: ({ row }) => {
                         const h = row.original.handles[type.id];
                         if (!h) return <span className="text-destructive">N/A</span>;
-                        return h.url ? (
+                        const value = h.url ? (
                             <a href={h.url} target="_blank" rel="noreferrer" className="hover:text-foreground">
                                 {h.value}
                             </a>
                         ) : (
                             <code className="text-xs">{h.value}</code>
+                        );
+                        if (!h.error) return value;
+                        return (
+                            <span className="inline-flex items-center gap-1.5">
+                                {value}
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <AlertTriangle
+                                            className="size-3.5 shrink-0 text-warning"
+                                            aria-label="Invalid handle"
+                                        />
+                                    </TooltipTrigger>
+                                    <TooltipContent>{h.error}</TooltipContent>
+                                </Tooltip>
+                            </span>
                         );
                     },
                 }),

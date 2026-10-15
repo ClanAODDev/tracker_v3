@@ -329,8 +329,7 @@ class MemberProfileTest extends TestCase
         $viewer         = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
         $member         = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
-            'squad_id'    => $squad->id,
+            'unit_id'     => $squad->id,
         ]);
 
         $this->actingAs($viewer)

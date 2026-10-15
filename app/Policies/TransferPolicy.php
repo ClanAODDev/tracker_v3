@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use App\Models\Transfer;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
@@ -10,14 +11,14 @@ class TransferPolicy
 {
     public function before(User $user)
     {
-        if ($user->isRole('admin') || $user->isDeveloper()) {
+        if ($user->can(Ability::ManageAllTransfers) || $user->isDeveloper()) {
             return true;
         }
     }
 
     public function viewAny(User $user): bool
     {
-        return $user->isRole(['officer', 'sr_ldr']);
+        return $user->can(Ability::ViewTransfers);
     }
 
     public function create(User $user): Response
@@ -42,6 +43,10 @@ class TransferPolicy
 
     public function approve(User $user, Transfer $transfer): bool
     {
+        if ($transfer->approved_at) {
+            return false;
+        }
+
         return $this->isGainingDivisionLeader($user, $transfer);
     }
 

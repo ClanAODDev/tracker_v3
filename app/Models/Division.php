@@ -8,6 +8,7 @@ use App\Enums\ActivityType;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Models\Division\HasHandles;
+use App\Models\Division\HasUnits;
 use App\Presenters\DivisionPresenter;
 use App\Settings\DivisionSettings;
 use Illuminate\Database\Eloquent\Attributes\RouteKey;
@@ -19,15 +20,17 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 #[RouteKey('slug')]
 class Division extends Model
 {
+    public const MAX_UNIT_LEVELS = 4;
+
     use HasFactory;
     use HasHandles;
+    use HasUnits;
     use Notifiable;
     use RecordsActivity;
     use SoftDeletes;
@@ -84,13 +87,6 @@ class Division extends Model
             ['task_description' => 'Introduce new member to the other members of the division'],
         ],
 
-        'locality' => [
-            ['old-string' => 'squad', 'new-string' => 'squad'],
-            ['old-string' => 'platoon', 'new-string' => 'platoon'],
-            ['old-string' => 'squad leader', 'new-string' => 'squad leader'],
-            ['old-string' => 'platoon leader', 'new-string' => 'platoon leader'],
-        ],
-
         'always_visible_in_discord' => false,
         'meta_description'          => '',
     ];
@@ -118,6 +114,8 @@ class Division extends Model
         });
 
         static::created(function (Division $division) {
+            DivisionUnitLevel::createDefaultsFor($division);
+
             $division->recordActivity(ActivityType::CREATED_DIVISION);
             $division->applicationFields()->createMany(DivisionApplicationField::DEFAULTS);
         });
@@ -185,11 +183,6 @@ class Division extends Model
         return $this->hasMany(LeaderboardSnapshot::class);
     }
 
-    public function squads(): HasManyThrough
-    {
-        return $this->hasManyThrough(Squad::class, Platoon::class);
-    }
-
     public function routeNotificationForMembers(): ?string
     {
         return $this->settings()->get('member_channel', '')
@@ -200,11 +193,6 @@ class Division extends Model
     {
         return $this->settings()->get('officer_channel', '')
             ?: ($this->abbreviation ? $this->abbreviation . '-officers' : null);
-    }
-
-    public function platoons(): HasMany
-    {
-        return $this->hasMany(Platoon::class)->orderBy('order');
     }
 
     public function activity(): HasMany
@@ -265,32 +253,10 @@ class Division extends Model
     public function unassigned(): HasMany
     {
         return $this->members()
-            ->where('platoon_id', 0)
+            ->whereNull('unit_id')
             ->whereIn('position', [Position::MEMBER])
             ->orderBy('rank', 'asc')
             ->orderBy('name', 'asc');
-    }
-
-    public function locality(string $string): string
-    {
-        $locality = collect($this->settings()->locality);
-        if (! $locality->count()) {
-            Log::error("No locality defaults were found for division {$this->name}");
-
-            return ucwords($string);
-        }
-        $results = $locality->first(function ($translation) use ($string) {
-            if (\array_key_exists('old-string', $translation)) {
-                return $translation['old-string'] === strtolower($string);
-            }
-        });
-        if (! $results) {
-            Log::error("The {$string} locality does not exist");
-
-            return ucwords($string);
-        }
-
-        return ucwords($results['new-string']);
     }
 
     public function settings(): DivisionSettings
@@ -303,6 +269,11 @@ class Division extends Model
         $mergedSettings['chat_alerts'] = array_merge($this->defaultSettings['chat_alerts'], $stored['chat_alerts'] ?? []);
 
         return new DivisionSettings($mergedSettings, $this);
+    }
+
+    public function maxPlatoonLeaderRank(): Rank
+    {
+        return Rank::from($this->settings()->get('max_platoon_leader_rank'));
     }
 
     public function inactivityThresholdDays(int $default = 30): int
@@ -364,7 +335,7 @@ class Division extends Model
 
     public function memberFields(): HasMany
     {
-        return $this->hasMany(DivisionMemberField::class)->orderBy('label');
+        return $this->hasMany(DivisionMemberField::class)->orderBy('display_order')->orderBy('label');
     }
 
     public function applications(): HasMany

@@ -1,0 +1,12 @@
+tag form visibility options | -                                        | admin                    | [public, leadership, senior_leader]
+tag form visibility options | -                                        | developer                | page not accessible
+tag form visibility options | -                                        | admin_viewing_as_officer | page not accessible
+tag form visibility options | -                                        | senior_leader            | [public, leadership, senior_leader]
+tag form visibility options | -                                        | commanding_officer       | [public, leadership, senior_leader]
+tag form visibility options | -                                        | executive_officer        | [public, leadership, senior_leader]
+tag form visibility options | -                                        | officer                  | page not accessible
+tag form visibility options | -                                        | platoon_leader           | page not accessible
+tag form visibility options | -                                        | squad_leader             | page not accessible
+tag form visibility options | -                                        | member                   | page not accessible
+tag form visibility options | -                                        | banned                   | page not accessible
+tag form visibility options | -                                        | pending                  | page not accessible

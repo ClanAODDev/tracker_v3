@@ -17,7 +17,7 @@ export interface MemberRow {
     canRemind: boolean;
     tags: Array<{ id: number; name: string; visibility: string }>;
     tagIds: number[];
-    handles: Record<number, { value: string; url: string | null }>;
+    handles: Record<number, { value: string; url: string | null; error: string | null }>;
     posts: number;
     leave: { until: string | null; reason: string | null; pending: boolean } | null;
     isParttimer: boolean;
@@ -70,7 +70,8 @@ export interface BulkConfig {
 export interface MemberListDivision {
     name: string;
     slug: string;
-    platoonLabel: string;
-    squadLabel: string;
+    hasUnits: boolean;
+    topLevelLabel: string;
+    levels: Array<{ depth: number; label: string }>;
     handleTypes: HandleType[];
 }

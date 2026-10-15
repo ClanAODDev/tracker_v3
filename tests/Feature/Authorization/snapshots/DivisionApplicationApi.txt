@@ -1,0 +1,120 @@
+GET index                | division A                               | admin                    | 200
+GET index                | division A                               | developer                | 200
+GET index                | division A                               | admin_viewing_as_officer | 200
+GET index                | division A                               | senior_leader            | 200
+GET index                | division A                               | commanding_officer       | 200
+GET index                | division A                               | executive_officer        | 200
+GET index                | division A                               | officer                  | 200
+GET index                | division A                               | platoon_leader           | 200
+GET index                | division A                               | squad_leader             | 200
+GET index                | division A                               | member                   | 403
+GET index                | division A                               | banned                   | 403
+GET index                | division A                               | pending                  | 408
+GET show                 | division A                               | admin                    | 200
+GET show                 | division A                               | developer                | 200
+GET show                 | division A                               | admin_viewing_as_officer | 200
+GET show                 | division A                               | senior_leader            | 200
+GET show                 | division A                               | commanding_officer       | 200
+GET show                 | division A                               | executive_officer        | 200
+GET show                 | division A                               | officer                  | 200
+GET show                 | division A                               | platoon_leader           | 200
+GET show                 | division A                               | squad_leader             | 200
+GET show                 | division A                               | member                   | 403
+GET show                 | division A                               | banned                   | 403
+GET show                 | division A                               | pending                  | 408
+POST comment             | division A                               | admin                    | 201
+POST comment             | division A                               | developer                | 201
+POST comment             | division A                               | admin_viewing_as_officer | 201
+POST comment             | division A                               | senior_leader            | 201
+POST comment             | division A                               | commanding_officer       | 201
+POST comment             | division A                               | executive_officer        | 201
+POST comment             | division A                               | officer                  | 201
+POST comment             | division A                               | platoon_leader           | 201
+POST comment             | division A                               | squad_leader             | 201
+POST comment             | division A                               | member                   | 403
+POST comment             | division A                               | banned                   | 403
+POST comment             | division A                               | pending                  | 408
+DELETE application       | division A                               | admin                    | 200
+DELETE application       | division A                               | developer                | 403
+DELETE application       | division A                               | admin_viewing_as_officer | 403
+DELETE application       | division A                               | senior_leader            | 200
+DELETE application       | division A                               | commanding_officer       | 200
+DELETE application       | division A                               | executive_officer        | 200
+DELETE application       | division A                               | officer                  | 403
+DELETE application       | division A                               | platoon_leader           | 403
+DELETE application       | division A                               | squad_leader             | 403
+DELETE application       | division A                               | member                   | 403
+DELETE application       | division A                               | banned                   | 403
+DELETE application       | division A                               | pending                  | 408
+DELETE others comment    | division A                               | admin                    | 200
+DELETE others comment    | division A                               | developer                | 403
+DELETE others comment    | division A                               | admin_viewing_as_officer | 403
+DELETE others comment    | division A                               | senior_leader            | 403
+DELETE others comment    | division A                               | commanding_officer       | 403
+DELETE others comment    | division A                               | executive_officer        | 403
+DELETE others comment    | division A                               | officer                  | 403
+DELETE others comment    | division A                               | platoon_leader           | 403
+DELETE others comment    | division A                               | squad_leader             | 403
+DELETE others comment    | division A                               | member                   | 403
+DELETE others comment    | division A                               | banned                   | 403
+DELETE others comment    | division A                               | pending                  | 408
+GET index                | division B                               | admin                    | 200
+GET index                | division B                               | developer                | 200
+GET index                | division B                               | admin_viewing_as_officer | 200
+GET index                | division B                               | senior_leader            | 200
+GET index                | division B                               | commanding_officer       | 200
+GET index                | division B                               | executive_officer        | 200
+GET index                | division B                               | officer                  | 200
+GET index                | division B                               | platoon_leader           | 200
+GET index                | division B                               | squad_leader             | 200
+GET index                | division B                               | member                   | 403
+GET index                | division B                               | banned                   | 403
+GET index                | division B                               | pending                  | 408
+GET show                 | division B                               | admin                    | 200
+GET show                 | division B                               | developer                | 200
+GET show                 | division B                               | admin_viewing_as_officer | 200
+GET show                 | division B                               | senior_leader            | 200
+GET show                 | division B                               | commanding_officer       | 200
+GET show                 | division B                               | executive_officer        | 200
+GET show                 | division B                               | officer                  | 200
+GET show                 | division B                               | platoon_leader           | 200
+GET show                 | division B                               | squad_leader             | 200
+GET show                 | division B                               | member                   | 403
+GET show                 | division B                               | banned                   | 403
+GET show                 | division B                               | pending                  | 408
+POST comment             | division B                               | admin                    | 201
+POST comment             | division B                               | developer                | 201
+POST comment             | division B                               | admin_viewing_as_officer | 201
+POST comment             | division B                               | senior_leader            | 201
+POST comment             | division B                               | commanding_officer       | 201
+POST comment             | division B                               | executive_officer        | 201
+POST comment             | division B                               | officer                  | 201
+POST comment             | division B                               | platoon_leader           | 201
+POST comment             | division B                               | squad_leader             | 201
+POST comment             | division B                               | member                   | 403
+POST comment             | division B                               | banned                   | 403
+POST comment             | division B                               | pending                  | 408
+DELETE application       | division B                               | admin                    | 200
+DELETE application       | division B                               | developer                | 403
+DELETE application       | division B                               | admin_viewing_as_officer | 403
+DELETE application       | division B                               | senior_leader            | 200
+DELETE application       | division B                               | commanding_officer       | 200
+DELETE application       | division B                               | executive_officer        | 200
+DELETE application       | division B                               | officer                  | 403
+DELETE application       | division B                               | platoon_leader           | 403
+DELETE application       | division B                               | squad_leader             | 403
+DELETE application       | division B                               | member                   | 403
+DELETE application       | division B                               | banned                   | 403
+DELETE application       | division B                               | pending                  | 408
+DELETE others comment    | division B                               | admin                    | 200
+DELETE others comment    | division B                               | developer                | 403
+DELETE others comment    | division B                               | admin_viewing_as_officer | 403
+DELETE others comment    | division B                               | senior_leader            | 403
+DELETE others comment    | division B                               | commanding_officer       | 403
+DELETE others comment    | division B                               | executive_officer        | 403
+DELETE others comment    | division B                               | officer                  | 403
+DELETE others comment    | division B                               | platoon_leader           | 403
+DELETE others comment    | division B                               | squad_leader             | 403
+DELETE others comment    | division B                               | member                   | 403
+DELETE others comment    | division B                               | banned                   | 403
+DELETE others comment    | division B                               | pending                  | 408

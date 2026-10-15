@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
@@ -12,7 +13,7 @@ class TicketPolicy
 
     public function before(User $user)
     {
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageAllTickets)) {
             return true;
         }
     }

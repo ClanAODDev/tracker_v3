@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Ability;
 use App\Filament\Mod\Resources\TransferResource\Pages\CreateTransfer;
 use App\Filament\Mod\Resources\TransferResource\Pages\ListTransfers;
 use App\Jobs\UpdateDivisionForMember;
@@ -199,7 +200,7 @@ class TransferResource extends Resource
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->visible(fn () => auth()->user()->isRole('admin')),
+                        ->visible(fn () => auth()->user()->can(Ability::ManageAllTransfers)),
                 ]),
             ]);
     }

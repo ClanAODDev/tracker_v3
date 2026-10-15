@@ -1,3 +1,4 @@
+import { pluralize } from '@/lib/format';
 import { router } from '@inertiajs/react';
 import { ArrowLeftRight, Bell, Megaphone, Tags, X } from 'lucide-react';
 import { type FormEvent, useEffect, useState } from 'react';
@@ -12,8 +13,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { SimpleSelect } from '@/components/ui/simple-select';
+import { type UnitOption, UnitCascadeSelect } from '@/components/units/unit-cascade-select';
 import { getJson, postJson } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
@@ -26,12 +26,6 @@ interface Props {
     division: MemberListDivision;
     onClear: () => void;
     onReminded: (ids: number[], date: string) => void;
-}
-
-interface PlatoonOption {
-    id: number;
-    name: string;
-    squads: Array<{ id: number; name: string }>;
 }
 
 export function BulkBar({ selectedIds, parttimersSelected, bulk, division, onClear, onReminded }: Props) {
@@ -245,33 +239,30 @@ function MoveDialog({
     dataUrl: string;
     submitUrl: string;
 }) {
-    const [platoons, setPlatoons] = useState<PlatoonOption[]>([]);
-    const [platoonId, setPlatoonId] = useState('');
-    const [squadId, setSquadId] = useState('');
+    const [units, setUnits] = useState<UnitOption[]>([]);
+    const [path, setPath] = useState<string[]>([]);
     const [busy, setBusy] = useState(false);
 
     useEffect(() => {
         if (!open) return;
-        setPlatoonId('');
-        setSquadId('');
-        if (platoons.length === 0) {
-            getJson<{ platoons: PlatoonOption[] }>(dataUrl)
-                .then((res) => setPlatoons(res.platoons))
-                .catch(() => toast.error('Failed to load ' + division.platoonLabel.toLowerCase() + 's'));
+        setPath([]);
+        if (units.length === 0) {
+            getJson<{ units: UnitOption[] }>(dataUrl)
+                .then((res) => setUnits(res.units))
+                .catch(() => toast.error('Failed to load ' + pluralize(division.topLevelLabel)));
         }
-    }, [open, dataUrl, division.platoonLabel, platoons.length]);
+    }, [open, dataUrl, division.topLevelLabel, units.length]);
 
-    const squads = platoons.find((p) => String(p.id) === platoonId)?.squads ?? [];
+    const destinationId = path.filter(Boolean).at(-1);
 
     async function submit(e: FormEvent) {
         e.preventDefault();
-        if (!platoonId) return;
+        if (!destinationId) return;
         setBusy(true);
         try {
             const res = await postJson<{ message: string }>(submitUrl, {
                 member_ids: memberIds,
-                platoon_id: platoonId,
-                squad_id: squadId || null,
+                unit_id: destinationId,
             });
             toast.success(res.message);
             onOpenChange(false);
@@ -293,37 +284,9 @@ function MoveDialog({
                     </DialogDescription>
                 </DialogHeader>
                 <form onSubmit={submit} className="space-y-4">
-                    <div className="grid gap-1.5">
-                        <Label>{division.platoonLabel}</Label>
-                        <SimpleSelect
-                            value={platoonId || '__all'}
-                            onChange={(v) => {
-                                setPlatoonId(v === '__all' ? '' : v);
-                                setSquadId('');
-                            }}
-                            placeholder={`Select ${division.platoonLabel.toLowerCase()}…`}
-                            options={[
-                                { value: '__all', label: `Select ${division.platoonLabel.toLowerCase()}…` },
-                                ...platoons.map((p) => ({ value: String(p.id), label: p.name })),
-                            ]}
-                        />
-                    </div>
-                    <div className="grid gap-1.5">
-                        <Label>
-                            {division.squadLabel} <span className="text-muted-foreground">(optional)</span>
-                        </Label>
-                        <SimpleSelect
-                            value={squadId || '__all'}
-                            onChange={(v) => setSquadId(v === '__all' ? '' : v)}
-                            placeholder={`No ${division.squadLabel.toLowerCase()}`}
-                            options={[
-                                { value: '__all', label: `No ${division.squadLabel.toLowerCase()} assignment` },
-                                ...squads.map((s) => ({ value: String(s.id), label: s.name })),
-                            ]}
-                        />
-                    </div>
+                    <UnitCascadeSelect units={units} path={path} onChange={setPath} showDetails />
                     <DialogFooter>
-                        <Button type="submit" size="sm" disabled={busy || !platoonId}>
+                        <Button type="submit" size="sm" disabled={busy || !destinationId}>
                             Move
                         </Button>
                     </DialogFooter>

@@ -5,6 +5,7 @@ namespace Tests\Unit\Models;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Models\Division;
+use App\Models\DivisionUnitLevel;
 use App\Models\LeaderboardSnapshot;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -334,13 +335,13 @@ class DivisionTest extends TestCase
 
         $unassigned = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => 0,
+            'unit_id'     => null,
             'position'    => Position::MEMBER,
         ]);
 
         $assigned = $this->createMember([
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => Position::MEMBER,
         ]);
 
@@ -407,26 +408,39 @@ class DivisionTest extends TestCase
     }
 
     #[Test]
-    public function locality_returns_correct_translation()
+    public function level_labels_and_leader_titles_come_from_the_divisions_levels()
     {
-        $division           = $this->createActiveDivision();
-        $division->settings = array_merge($division->defaultSettings, [
-            'locality' => [
-                ['old-string' => 'squad', 'new-string' => 'team'],
-                ['old-string' => 'platoon', 'new-string' => 'company'],
-            ],
-        ]);
-        $division->save();
+        $division = $this->createActiveDivision();
+        DivisionUnitLevel::where('division_id', $division->id)->where('depth', 1)->update(['label' => 'company', 'leader_title' => 'company commander']);
+        DivisionUnitLevel::where('division_id', $division->id)->where('depth', 2)->update(['label' => 'team', 'leader_title' => 'team lead']);
 
-        $this->assertEquals('Team', $division->locality('squad'));
-        $this->assertEquals('Company', $division->locality('platoon'));
+        $division = $division->fresh();
+
+        $this->assertEquals('Company', $division->topLevelLabel());
+        $this->assertEquals('Company Commander', $division->topLeaderTitle());
+        $this->assertEquals('Team', $division->bottomLevelLabel());
+        $this->assertEquals('Team Lead', $division->bottomLeaderTitle());
     }
 
     #[Test]
-    public function locality_returns_ucwords_for_missing_translation()
+    public function level_labels_fall_back_to_platoon_and_squad_for_a_flat_division()
     {
         $division = $this->createActiveDivision();
+        DivisionUnitLevel::where('division_id', $division->id)->delete();
 
-        $this->assertEquals('Unknown Term', $division->locality('unknown term'));
+        $division = $division->fresh();
+
+        $this->assertEquals('Platoon', $division->topLevelLabel());
+        $this->assertEquals('Squad', $division->bottomLevelLabel());
+        $this->assertSame(2, $division->bottomUnitDepth());
+    }
+
+    #[Test]
+    public function the_bottom_unit_depth_is_the_deepest_level()
+    {
+        $division = $this->createActiveDivision();
+        DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
+
+        $this->assertSame(3, $division->fresh()->bottomUnitDepth());
     }
 }

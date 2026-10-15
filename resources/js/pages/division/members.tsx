@@ -2,6 +2,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import { Pencil, Settings2, Users } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
+import { CreateChildUnit } from '@/components/division/create-child-unit';
 import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from '@/components/division/organize';
 import { MemberTable } from '@/components/members/member-table';
 import type { BulkConfig, MemberFieldDefinition, MemberListDivision, MemberRow, UnitStats } from '@/components/members/types';
@@ -10,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { postJson } from '@/lib/api';
 import AppLayout from '@/layouts/AppLayout';
 import { cn } from '@/lib/utils';
+
+const NO_ORGANIZE_MEMBERS: OrganizeMember[] = [];
 
 interface Crumb {
     label: string;
@@ -33,15 +36,16 @@ interface Scope {
     canManage?: boolean;
     editUrl?: string | null;
     manageUrl?: string | null;
+    createChildUrl?: string | null;
     unassignedCount?: number;
-    platoonLabel?: string;
-    squadLabel?: string;
+    unitLabel?: string;
+    childLabel?: string;
 }
 
 interface Props {
     division: MemberListDivision;
     members: MemberRow[];
-    assignmentKind: 'platoon' | 'squad';
+    assignmentDepth: number;
     unitStats: UnitStats;
     tagFilter: Array<{ id: number; name: string; count: number }>;
     memberFields: MemberFieldDefinition[];
@@ -55,7 +59,7 @@ interface Props {
 export default function MembersPage({
     division,
     members,
-    assignmentKind,
+    assignmentDepth,
     unitStats,
     tagFilter,
     memberFields,
@@ -79,10 +83,10 @@ export default function MembersPage({
         typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('organize') === '1';
 
     const organize = useOrganize({
-        members: organizeProps?.members ?? [],
+        members: organizeProps?.members ?? NO_ORGANIZE_MEMBERS,
         autoOpen: canOrganize && autoOrganize,
         assign: async (memberId, squadId) => {
-            await postJson('/members/assign-squad', { member_id: memberId, squad_id: squadId });
+            await postJson('/members/assign-unit', { member_id: memberId, unit_id: squadId });
             setSquadList((prev) =>
                 prev.map((s) => (s.id === squadId ? { ...s, count: (s.count ?? 0) + 1 } : s)),
             );
@@ -141,12 +145,7 @@ export default function MembersPage({
         <AppLayout
             width="wide"
             header={{
-                eyebrow:
-                    scope.kind === 'division'
-                        ? 'Division'
-                        : scope.kind === 'platoon'
-                          ? division.platoonLabel
-                          : division.squadLabel,
+                eyebrow: scope.kind === 'division' ? 'Division' : scope.unitLabel,
                 title,
                 breadcrumbs,
                 actions,
@@ -156,7 +155,7 @@ export default function MembersPage({
 
             {scope.kind === 'platoon' && !scope.canManage && (scope.unassignedCount ?? 0) > 0 && (
                 <div className="mb-6 rounded-md border border-warning/40 bg-warning/5 px-4 py-3 text-sm">
-                    This {scope.platoonLabel?.toLowerCase()} has{' '}
+                    This {scope.unitLabel} has{' '}
                     <span className="numeric font-semibold">{scope.unassignedCount}</span> unassigned member
                     {scope.unassignedCount === 1 ? '' : 's'}.
                 </div>
@@ -165,7 +164,7 @@ export default function MembersPage({
             {canOrganize && (
                 <OrganizeBanner
                     members={organize.members}
-                    unitLabel={scope.squadLabel ?? 'Squad'}
+                    unitLabel={scope.childLabel ?? 'Unit'}
                     organizing={organize.organizing}
                     onToggle={() => organize.setOrganizing((v) => !v)}
                     onDragStart={organize.onDragStart}
@@ -178,13 +177,20 @@ export default function MembersPage({
                 <MemberTable
                     rows={members}
                     division={division}
-                    assignmentKind={assignmentKind}
+                    assignmentDepth={assignmentDepth}
                     bulk={bulk}
                     tagFilter={tagFilter}
                     memberFields={memberFields}
                     storageKey={`member-table:${scope.kind}:${division.slug}`}
                 />
                 <div className="order-first space-y-6 xl:order-last">
+                    {scope.createChildUrl && (
+                        <CreateChildUnit
+                            url={scope.createChildUrl}
+                            label={scope.childLabel ?? 'Unit'}
+                            className="w-full"
+                        />
+                    )}
                     {squadList.length > 0 && (
                         <div ref={squadsRef}>
                             <SquadsList

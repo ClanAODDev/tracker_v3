@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Ticket\AddTicketCommentRequest;
@@ -49,7 +50,7 @@ class TicketApiController extends Controller
         $tickets = Ticket::with(['type', 'owner.member', 'division', 'caller.member'])
             ->orderBy('created_at', 'desc')
             ->get()
-            ->filter(fn ($ticket) => $ticket->type?->userCanWork($user) ?? $user->isRole('admin'))
+            ->filter(fn ($ticket) => $ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))
             ->map(fn ($ticket) => $this->transformTicket($ticket, false, true))
             ->values();
 
@@ -60,7 +61,7 @@ class TicketApiController extends Controller
     {
         $user = auth()->user();
 
-        if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+        if (! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
 
@@ -83,7 +84,7 @@ class TicketApiController extends Controller
     {
         $user = auth()->user();
 
-        if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+        if (! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
 
@@ -106,7 +107,7 @@ class TicketApiController extends Controller
     {
         $user = auth()->user();
 
-        if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+        if (! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
 
@@ -131,7 +132,7 @@ class TicketApiController extends Controller
     {
         $user = auth()->user();
 
-        if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+        if (! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
 
@@ -166,7 +167,7 @@ class TicketApiController extends Controller
     {
         $user = auth()->user();
 
-        if (! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+        if (! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -203,7 +204,7 @@ class TicketApiController extends Controller
     public function show(Ticket $ticket): JsonResponse
     {
         $user    = auth()->user();
-        $canWork = $ticket->type?->userCanWork($user) ?? $user->isRole('admin');
+        $canWork = $ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets);
 
         if ($ticket->caller_id !== $user->id && ! $canWork) {
             return response()->json(['error' => 'Unauthorized'], 403);
@@ -248,7 +249,7 @@ class TicketApiController extends Controller
     {
         $user = auth()->user();
 
-        if ($ticket->caller_id !== $user->id && ! ($ticket->type?->userCanWork($user) ?? $user->isRole('admin'))) {
+        if ($ticket->caller_id !== $user->id && ! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 

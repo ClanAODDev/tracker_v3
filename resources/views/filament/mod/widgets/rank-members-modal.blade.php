@@ -31,9 +31,9 @@
                     {{ $member->name }}
                 </a>
                 <p class="rmm-unit">
-                    @if($member->platoon)
-                        {{ $member->platoon->name ?? 'Untitled' }}
-                        @if($member->squad) &rsaquo; {{ $member->squad->name ?? 'Untitled' }}@endif
+                    @if($member->platoonUnit())
+                        {{ $member->platoonUnit()->name ?? 'Untitled' }}
+                        @if($member->squadUnit()) &rsaquo; {{ $member->squadUnit()->name ?? 'Untitled' }}@endif
                     @else
                         Unassigned
                     @endif

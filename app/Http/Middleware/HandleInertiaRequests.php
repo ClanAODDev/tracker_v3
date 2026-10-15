@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Ability;
 use App\Models\TicketType;
 use App\Support\Navigation;
 use Illuminate\Http\Request;
@@ -56,8 +57,8 @@ class HandleInertiaRequests extends Middleware
             ],
             'permissions' => [
                 'canWorkTickets' => TicketType::get()->contains(fn (TicketType $type) => $type->userCanWork($user)),
-                'canUseBulkMode' => $user->isRole(['officer', 'sr_ldr', 'admin']) || $user->isDeveloper(),
-                'isAdmin'        => $user->isRole('admin'),
+                'canUseBulkMode' => $user->can(Ability::UseBulkMode) || $user->isDeveloper(),
+                'isAdmin'        => $user->can(Ability::ViewAdminPages),
                 'isDeveloper'    => $user->isDeveloper(),
             ],
         ];

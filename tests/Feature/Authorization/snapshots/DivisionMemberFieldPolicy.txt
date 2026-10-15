@@ -1,0 +1,120 @@
+viewAny                  | (no division)                            | admin                    | allow
+viewAny                  | (no division)                            | developer                | allow
+viewAny                  | (no division)                            | admin_viewing_as_officer | deny
+viewAny                  | (no division)                            | senior_leader            | deny
+viewAny                  | (no division)                            | commanding_officer       | allow
+viewAny                  | (no division)                            | executive_officer        | allow
+viewAny                  | (no division)                            | officer                  | deny
+viewAny                  | (no division)                            | platoon_leader           | deny
+viewAny                  | (no division)                            | squad_leader             | deny
+viewAny                  | (no division)                            | member                   | deny
+viewAny                  | (no division)                            | banned                   | deny
+viewAny                  | (no division)                            | pending                  | deny
+viewAny                  | own_division                             | admin                    | allow
+viewAny                  | own_division                             | developer                | allow
+viewAny                  | own_division                             | admin_viewing_as_officer | deny
+viewAny                  | own_division                             | senior_leader            | deny
+viewAny                  | own_division                             | commanding_officer       | allow
+viewAny                  | own_division                             | executive_officer        | allow
+viewAny                  | own_division                             | officer                  | deny
+viewAny                  | own_division                             | platoon_leader           | deny
+viewAny                  | own_division                             | squad_leader             | deny
+viewAny                  | own_division                             | member                   | deny
+viewAny                  | own_division                             | banned                   | deny
+viewAny                  | own_division                             | pending                  | deny
+viewAny                  | other_division                           | admin                    | allow
+viewAny                  | other_division                           | developer                | allow
+viewAny                  | other_division                           | admin_viewing_as_officer | deny
+viewAny                  | other_division                           | senior_leader            | deny
+viewAny                  | other_division                           | commanding_officer       | deny
+viewAny                  | other_division                           | executive_officer        | deny
+viewAny                  | other_division                           | officer                  | deny
+viewAny                  | other_division                           | platoon_leader           | deny
+viewAny                  | other_division                           | squad_leader             | deny
+viewAny                  | other_division                           | member                   | deny
+viewAny                  | other_division                           | banned                   | deny
+viewAny                  | other_division                           | pending                  | deny
+create                   | (no division)                            | admin                    | allow
+create                   | (no division)                            | developer                | allow
+create                   | (no division)                            | admin_viewing_as_officer | deny
+create                   | (no division)                            | senior_leader            | deny
+create                   | (no division)                            | commanding_officer       | allow
+create                   | (no division)                            | executive_officer        | allow
+create                   | (no division)                            | officer                  | deny
+create                   | (no division)                            | platoon_leader           | deny
+create                   | (no division)                            | squad_leader             | deny
+create                   | (no division)                            | member                   | deny
+create                   | (no division)                            | banned                   | deny
+create                   | (no division)                            | pending                  | deny
+create                   | own_division                             | admin                    | allow
+create                   | own_division                             | developer                | allow
+create                   | own_division                             | admin_viewing_as_officer | deny
+create                   | own_division                             | senior_leader            | deny
+create                   | own_division                             | commanding_officer       | allow
+create                   | own_division                             | executive_officer        | allow
+create                   | own_division                             | officer                  | deny
+create                   | own_division                             | platoon_leader           | deny
+create                   | own_division                             | squad_leader             | deny
+create                   | own_division                             | member                   | deny
+create                   | own_division                             | banned                   | deny
+create                   | own_division                             | pending                  | deny
+create                   | other_division                           | admin                    | allow
+create                   | other_division                           | developer                | allow
+create                   | other_division                           | admin_viewing_as_officer | deny
+create                   | other_division                           | senior_leader            | deny
+create                   | other_division                           | commanding_officer       | deny
+create                   | other_division                           | executive_officer        | deny
+create                   | other_division                           | officer                  | deny
+create                   | other_division                           | platoon_leader           | deny
+create                   | other_division                           | squad_leader             | deny
+create                   | other_division                           | member                   | deny
+create                   | other_division                           | banned                   | deny
+create                   | other_division                           | pending                  | deny
+update                   | own_division_field                       | admin                    | allow
+update                   | own_division_field                       | developer                | allow
+update                   | own_division_field                       | admin_viewing_as_officer | deny
+update                   | own_division_field                       | senior_leader            | deny
+update                   | own_division_field                       | commanding_officer       | allow
+update                   | own_division_field                       | executive_officer        | allow
+update                   | own_division_field                       | officer                  | deny
+update                   | own_division_field                       | platoon_leader           | deny
+update                   | own_division_field                       | squad_leader             | deny
+update                   | own_division_field                       | member                   | deny
+update                   | own_division_field                       | banned                   | deny
+update                   | own_division_field                       | pending                  | deny
+update                   | other_division_field                     | admin                    | allow
+update                   | other_division_field                     | developer                | allow
+update                   | other_division_field                     | admin_viewing_as_officer | deny
+update                   | other_division_field                     | senior_leader            | deny
+update                   | other_division_field                     | commanding_officer       | deny
+update                   | other_division_field                     | executive_officer        | deny
+update                   | other_division_field                     | officer                  | deny
+update                   | other_division_field                     | platoon_leader           | deny
+update                   | other_division_field                     | squad_leader             | deny
+update                   | other_division_field                     | member                   | deny
+update                   | other_division_field                     | banned                   | deny
+update                   | other_division_field                     | pending                  | deny
+delete                   | own_division_field                       | admin                    | allow
+delete                   | own_division_field                       | developer                | allow
+delete                   | own_division_field                       | admin_viewing_as_officer | deny
+delete                   | own_division_field                       | senior_leader            | deny
+delete                   | own_division_field                       | commanding_officer       | allow
+delete                   | own_division_field                       | executive_officer        | allow
+delete                   | own_division_field                       | officer                  | deny
+delete                   | own_division_field                       | platoon_leader           | deny
+delete                   | own_division_field                       | squad_leader             | deny
+delete                   | own_division_field                       | member                   | deny
+delete                   | own_division_field                       | banned                   | deny
+delete                   | own_division_field                       | pending                  | deny
+delete                   | other_division_field                     | admin                    | allow
+delete                   | other_division_field                     | developer                | allow
+delete                   | other_division_field                     | admin_viewing_as_officer | deny
+delete                   | other_division_field                     | senior_leader            | deny
+delete                   | other_division_field                     | commanding_officer       | deny
+delete                   | other_division_field                     | executive_officer        | deny
+delete                   | other_division_field                     | officer                  | deny
+delete                   | other_division_field                     | platoon_leader           | deny
+delete                   | other_division_field                     | squad_leader             | deny
+delete                   | other_division_field                     | member                   | deny
+delete                   | other_division_field                     | banned                   | deny
+delete                   | other_division_field                     | pending                  | deny

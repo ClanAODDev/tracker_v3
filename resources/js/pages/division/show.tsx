@@ -1,3 +1,4 @@
+import { pluralize } from '@/lib/format';
 import { Head } from '@inertiajs/react';
 import { Headset, History, Settings, Shield, Star, TriangleAlert, UserPlus, Users } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
@@ -8,13 +9,15 @@ import { ApplicationsModal } from '@/components/division/applications-modal';
 import { LeaderAvatar } from '@/components/division/leader-avatar';
 import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from '@/components/division/organize';
 import { PlatoonCard, type Platoon } from '@/components/division/platoon-card';
-import { NoSquadModal } from '@/components/division/no-squad-modal';
+import { NoSquadModal, noLevelFromKey } from '@/components/division/no-squad-modal';
 import { RecentActivityModal, type RecentActivityGroup } from '@/components/division/recent-activity-modal';
 import { TileLink } from '@/components/division/tile-link';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
 import { SectionTitle } from '@/components/section';
 import { StatCard } from '@/components/stat-card';
+import { MemberTable } from '@/components/members/member-table';
+import type { BulkConfig, MemberFieldDefinition, MemberListDivision, MemberRow } from '@/components/members/types';
 import { Button } from '@/components/ui/button';
 import { postJson } from '@/lib/api';
 import { toneSurface } from '@/lib/tone';
@@ -28,7 +31,9 @@ interface DivisionShowProps {
         name: string;
         slug: string;
         logo: string | null;
-        platoonLabel: string;
+        hasUnits: boolean;
+        topLevelLabel: string;
+        childLabelPlural: string;
         isShutdown: boolean;
         shutdownAt: string | null;
         shutdownPending: boolean;
@@ -73,6 +78,14 @@ interface DivisionShowProps {
     allActivityUrl: string;
     organize: { canOrganize: boolean; members: OrganizeMember[] };
     pendingApplicationCount: number;
+    memberList?: {
+        division: MemberListDivision;
+        members: MemberRow[];
+        assignmentDepth: number;
+        tagFilter: Array<{ id: number; name: string; count: number }>;
+        memberFields: MemberFieldDefinition[];
+        bulk: BulkConfig;
+    };
 }
 
 export default function DivisionShow({
@@ -89,6 +102,7 @@ export default function DivisionShow({
     canViewAllActivity,
     allActivityUrl,
     organize: organizeProps,
+    memberList,
 }: DivisionShowProps) {
     const populationTrend = census.population.slice(-8);
     const voiceRateTrend = census.voiceActive
@@ -112,7 +126,13 @@ export default function DivisionShow({
     const [applicationsOpen, setApplicationsOpen] = useState(false);
     const [initialAppId, setInitialAppId] = useState<number | null>(null);
     const [activityOpen, setActivityOpen] = useState(false);
-    const [noSquadOpen, setNoSquadOpen] = useState(false);
+    const [noLevel, setNoLevel] = useState<{ level: number; label: string } | null>(null);
+    const [noLevelShown, setNoLevelShown] = useState({ level: 2, label: 'Squad' });
+    const openNoLevel = (level: number, actionLabel: string) => {
+        const next = { level, label: actionLabel.replace(/^No /, '') };
+        setNoLevelShown(next);
+        setNoLevel(next);
+    };
 
     const [platoonList, setPlatoonList] = useState(platoons);
     const [dropHoverId, setDropHoverId] = useState<number | null>(null);
@@ -201,7 +221,8 @@ export default function DivisionShow({
                             );
                             const opensOrganize =
                                 action.key === 'unassigned-members' && organizeProps.canOrganize;
-                            const opensNoSquadModal = action.key === 'unassigned-to-squad';
+                            const noLevelTarget = noLevelFromKey(action.key);
+                            const opensNoSquadModal = noLevelTarget !== null;
                             const opensApplicationsModal = action.key === 'pending-applications';
                             const onClick = opensOrganize
                                 ? () => {
@@ -212,7 +233,7 @@ export default function DivisionShow({
                                       });
                                   }
                                 : opensNoSquadModal
-                                  ? () => setNoSquadOpen(true)
+                                  ? () => openNoLevel(noLevelTarget, action.label)
                                   : opensApplicationsModal
                                     ? () => {
                                           setInitialAppId(null);
@@ -361,23 +382,24 @@ export default function DivisionShow({
                 )}
 
                 {/* Platoons */}
+                {d.hasUnits && (
                 <section ref={platoonsRef}>
                     <SectionTitle
                         action={
                             d.canCreatePlatoon ? (
                                 <Button variant="ghost" size="sm" asChild>
-                                    <a href={d.editUrl}>Create {d.platoonLabel}</a>
+                                    <a href={d.editUrl}>Create {d.topLevelLabel}</a>
                                 </Button>
                             ) : undefined
                         }
                     >
-                        {d.platoonLabel}s
+                        {pluralize(d.topLevelLabel)}
                     </SectionTitle>
 
                     {organizeProps.canOrganize && (
                         <OrganizeBanner
                             members={organize.members}
-                            unitLabel={d.platoonLabel}
+                            unitLabel={d.topLevelLabel}
                             organizing={organize.organizing}
                             onToggle={() => organize.setOrganizing((v) => !v)}
                             onDragStart={organize.onDragStart}
@@ -388,7 +410,7 @@ export default function DivisionShow({
 
                     {platoonList.length === 0 ? (
                         <p className="rounded-md border border-destructive/30 bg-card p-4 text-sm text-muted-foreground">
-                            No {d.platoonLabel.toLowerCase()}s found
+                            No {pluralize(d.topLevelLabel)} found
                         </p>
                     ) : (
                         <div className="grid gap-3 lg:grid-cols-2">
@@ -396,6 +418,7 @@ export default function DivisionShow({
                                 <PlatoonCard
                                     key={platoon.id}
                                     index={i}
+                                    childLabelPlural={d.childLabelPlural}
                                     platoon={platoon}
                                     organizing={organize.organizing}
                                     isHover={dropHoverId === platoon.id}
@@ -410,6 +433,22 @@ export default function DivisionShow({
                         </div>
                     )}
                 </section>
+                )}
+
+                {memberList && (
+                    <section>
+                        <SectionTitle>Members</SectionTitle>
+                        <MemberTable
+                            rows={memberList.members}
+                            division={memberList.division}
+                            assignmentDepth={memberList.assignmentDepth}
+                            bulk={memberList.bulk}
+                            tagFilter={memberList.tagFilter}
+                            memberFields={memberList.memberFields}
+                            storageKey={`member-table:division-home:${d.slug}`}
+                        />
+                    </section>
+                )}
             </div>
 
             {d.applicationRequired && d.canRecruit && (
@@ -431,7 +470,13 @@ export default function DivisionShow({
             />
 
             {d.canManageUnassigned && (
-                <NoSquadModal url={d.unassignedToSquadUrl} open={noSquadOpen} onOpenChange={setNoSquadOpen} />
+                <NoSquadModal
+                    url={d.unassignedToSquadUrl}
+                    level={noLevelShown.level}
+                    label={noLevelShown.label}
+                    open={noLevel !== null}
+                    onOpenChange={(open) => !open && setNoLevel(null)}
+                />
             )}
         </AppLayout>
     );

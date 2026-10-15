@@ -5,14 +5,14 @@ namespace App\Http\Controllers;
 use App\Data\UnitStatsData;
 use App\Enums\ActivityType;
 use App\Enums\Position;
+use App\Http\Requests\Division\AddPartTimerRequest;
+use App\Http\Requests\Division\UnassignedMembersRequest;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\User;
 use App\Repositories\DivisionRepository;
 use App\Services\DivisionShowService;
 use App\Services\MemberHandleService;
 use App\Services\MemberQueryService;
-use App\Support\HandleRules;
 use App\Support\MemberCard;
 use App\Support\MemberListProps;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -33,7 +33,19 @@ class DivisionController extends Controller
 
     public function show(Division $division): Response
     {
-        return Inertia::render('division/show', $this->divisionShow->getShowData($division)->toArray());
+        $props = $this->divisionShow->getShowData($division)->toArray();
+
+        if ($division->isFlat()) {
+            $members = $this->memberQuery->loadSortedMembers($division->members(), $division);
+
+            $props['memberList'] = MemberListProps::build(
+                $division,
+                $members,
+                UnitStatsData::fromMembers($members, $division, $this->division->getDivisionVoiceActivity($division)),
+            );
+        }
+
+        return Inertia::render('division/show', $props);
     }
 
     public function partTime(Division $division): Response
@@ -135,38 +147,28 @@ class DivisionController extends Controller
         ]);
     }
 
-    public function unassignedToSquad(Division $division): JsonResponse
+    public function unassignedToSquad(UnassignedMembersRequest $request, Division $division): JsonResponse
     {
-        $this->authorize('manageUnassigned', User::class);
-
         $members = $division->members()
-            ->with('platoon:id,name')
-            ->where('platoon_id', '>', 0)
-            ->where('squad_id', 0)
+            ->with('unit')
+            ->whereIn('unit_id', $division->units()->where('depth', $request->level() - 1)->select('id'))
             ->where('position', Position::MEMBER)
-            ->get(['id', 'clan_id', 'name', 'rank', 'platoon_id'])
+            ->get(['id', 'clan_id', 'name', 'rank', 'unit_id'])
             ->map(fn ($member) => [
                 'id'         => $member->clan_id,
                 'name'       => $member->present()->rankName,
-                'platoon'    => $member->platoon?->name ?? 'Unknown',
-                'platoon_id' => $member->platoon_id,
-                'manage_url' => route('platoon', [$division, $member->platoon_id]) . '?organize=1',
+                'platoon'    => $member->unit?->name ?? 'Unknown',
+                'platoon_id' => $member->unit_id,
+                'manage_url' => route('unit', [$division, $member->unit_id]) . '?organize=1',
             ]);
 
         return response()->json(['members' => $members]);
     }
 
-    public function addPartTimer(Division $division, MemberHandleService $handles): JsonResponse|RedirectResponse
+    public function addPartTimer(AddPartTimerRequest $request, Division $division, MemberHandleService $handles): JsonResponse|RedirectResponse
     {
-        $validated = request()->validate([
-            'member_id' => 'required|exists:members,clan_id',
-            'handles'   => ['nullable', 'array'],
-            ...HandleRules::forDivision($division),
-        ]);
-
-        $member = Member::where('clan_id', $validated['member_id'])->firstOrFail();
-
-        $this->authorize('managePartTime', $member);
+        $validated = $request->validated();
+        $member    = $request->member();
 
         if ($division->partTimeMembers()->where('member_id', $member->id)->exists()) {
             if (request()->expectsJson()) {

@@ -171,7 +171,7 @@ class TransferPolicyTest extends TestCase
 
         $user = $this->createMemberWithUser([
             'division_id' => $userDivision->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
             'position'    => $position,
         ]);
 

@@ -43,3 +43,9 @@ export function linkifyHtml(text: string | null | undefined): string {
         )
         .join('');
 }
+
+export function pluralize(label: string): string {
+    if (/[^aeiou]y$/i.test(label)) return label.slice(0, -1) + 'ies';
+    if (/(s|x|z|ch|sh)$/i.test(label)) return label + 'es';
+    return label + 's';
+}

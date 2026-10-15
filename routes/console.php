@@ -7,6 +7,7 @@ use App\Console\Commands\LeaderboardSnapshot;
 use App\Console\Commands\MemberSync;
 use App\Console\Commands\NotifyExpiringLeaves;
 use App\Console\Commands\NotifyMilestoneAwards;
+use App\Jobs\CleanupTenureAwards;
 use App\Jobs\CleanupUnassignedLeaders;
 use App\Jobs\PartTimeMemberCleanup;
 use App\Jobs\PurgePendingDiscordRegistrations;
@@ -51,6 +52,12 @@ Schedule::job(new CleanupUnassignedLeaders)->weekly()
     ->monitorName('cleanup-unassigned-leaders')
     ->description('Remove leader positions from members no longer assigned to a unit')
     ->when(fn () => scheduledTaskEnabled('cleanup-unassigned-leaders'));
+
+Schedule::job(new CleanupTenureAwards)->dailyAt('17:00')
+    ->timezone('America/New_York')
+    ->monitorName('cleanup-tenure-awards')
+    ->description('Grant tenure awards that members have reached but not received')
+    ->when(fn () => scheduledTaskEnabled('cleanup-tenure-awards'));
 
 Schedule::job(new PartTimeMemberCleanup)->weekly()
     ->monitorName('part-time-member-cleanup')

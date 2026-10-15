@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Enums\Ability;
 use App\Http\Controllers\Controller;
 use App\Models\Division;
 use App\Models\DivisionApplication;
@@ -87,7 +88,7 @@ class DivisionApplicationApiController extends Controller
     {
         $this->assertBelongsToDivision($division, $application);
 
-        if (! auth()->user()->isRole(['sr_ldr', 'admin'])) {
+        if (! auth()->user()->can(Ability::DeleteApplications)) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 

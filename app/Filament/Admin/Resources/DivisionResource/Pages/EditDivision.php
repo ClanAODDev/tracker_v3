@@ -5,8 +5,7 @@ namespace App\Filament\Admin\Resources\DivisionResource\Pages;
 use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource;
 use App\Models\Member;
-use App\Models\Platoon;
-use App\Models\Squad;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
 
@@ -74,21 +73,14 @@ class EditDivision extends EditRecord
                 ->update([
                     'position' => Position::MEMBER]);
             Member::where('id', $newCoId)
-                ->update([
-                    'position'   => Position::COMMANDING_OFFICER,
-                    'platoon_id' => 0,
-                    'squad_id'   => 0,
-                ]);
+                ->update(['position' => Position::COMMANDING_OFFICER]);
         } elseif (! $previousCoId) {
             Member::where('id', $newCoId)
-                ->update([
-                    'position'   => Position::COMMANDING_OFFICER,
-                    'platoon_id' => 0,
-                    'squad_id'   => 0,
-                ]);
+                ->update(['position' => Position::COMMANDING_OFFICER]);
         }
 
         $this->clearPlatoonAndSquadLeadership([$newCoId]);
+        $this->vacateUnits([$newCoId]);
 
         return $data;
     }
@@ -110,23 +102,24 @@ class EditDivision extends EditRecord
         $toAdd = $newXos->diff($previousXos);
         if ($toAdd->isNotEmpty()) {
             Member::whereIn('id', $toAdd)
-                ->update([
-                    'position'   => Position::EXECUTIVE_OFFICER,
-                    'platoon_id' => 0,
-                    'squad_id'   => 0,
-                ]);
+                ->update(['position' => Position::EXECUTIVE_OFFICER]);
 
             $this->clearPlatoonAndSquadLeadership($toAdd->all());
+            $this->vacateUnits($toAdd->all());
         }
 
         return $data;
+    }
+
+    protected function vacateUnits(array $memberIds): void
+    {
+        app(UnitAssignment::class)->assignMembers(Member::whereIn('id', $memberIds)->get(), null, recordActivity: false);
     }
 
     protected function clearPlatoonAndSquadLeadership(array $memberIds): void
     {
         $clanIds = Member::whereIn('id', $memberIds)->pluck('clan_id');
 
-        Platoon::whereIn('leader_id', $clanIds)->update(['leader_id' => null]);
-        Squad::whereIn('leader_id', $clanIds)->update(['leader_id' => null]);
+        app(UnitAssignment::class)->clearLeadership($clanIds->all());
     }
 }

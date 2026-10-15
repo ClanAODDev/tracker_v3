@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\RankActionResource\Pages;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource;
 use App\Jobs\UpdateRankForMember;
@@ -45,7 +46,7 @@ class EditRankAction extends EditRecord
                     ->label('Cancel Action')
                     ->hidden(fn (RankAction $action) => $action->member->division_id === 0)
                     ->visible(fn (RankAction $action) => auth()->user()->isDivisionLeader()
-                        || auth()->user()->isRole('admin')
+                        || auth()->user()->can(Ability::ManageAllRankActions)
                         || auth()->user()->member_id == $action->requester_id
                     )
                     ->requiresConfirmation(),
@@ -76,7 +77,7 @@ class EditRankAction extends EditRecord
                 Action::make('requeue')
                     ->label('Requeue Acceptance')
                     ->color('info')
-                    ->visible(fn ($action) => auth()->user()->isDivisionLeader() || auth()->user()->isRole('admin'))
+                    ->visible(fn ($action) => auth()->user()->isDivisionLeader() || auth()->user()->can(Ability::ManageAllRankActions))
                     ->hidden(function ($action) {
                         $record = $action->getRecord();
 

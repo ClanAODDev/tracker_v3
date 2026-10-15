@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\Rank;
 use App\Models\Note;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
@@ -21,7 +22,7 @@ class DivisionNotesPageTest extends TestCase
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member   = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -44,7 +45,7 @@ class DivisionNotesPageTest extends TestCase
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member   = $this->createMember(['division_id' => $division->id]);
+        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
 
         $positive = Note::factory()->create(['member_id' => $member->id, 'author_id' => $officer->id, 'type' => 'positive']);
         $negative = Note::factory()->create(['member_id' => $member->id, 'author_id' => $officer->id, 'type' => 'negative']);

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Ability;
 use App\Filament\Mod\Resources\LeaveResource\Pages\CreateLeave;
 use App\Filament\Mod\Resources\LeaveResource\Pages\EditLeave;
 use App\Filament\Mod\Resources\LeaveResource\Pages\ListLeaves;
@@ -40,7 +41,7 @@ class LeaveResource extends Resource
     {
         $user = auth()->user();
 
-        if (! $user?->isDivisionLeader() && ! $user?->isRole('admin')) {
+        if (! $user?->isDivisionLeader() && ! $user?->can(Ability::ActAcrossDivisions)) {
             return null;
         }
 

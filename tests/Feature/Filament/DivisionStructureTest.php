@@ -1,0 +1,141 @@
+<?php
+
+namespace Tests\Feature\Filament;
+
+use App\Enums\Position;
+use App\Enums\Role;
+use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
+use App\Models\DivisionUnitLevel;
+use Filament\Actions\Testing\TestAction;
+use Filament\Facades\Filament;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\TestCase;
+use Tests\Traits\CreatesDivisions;
+use Tests\Traits\CreatesMembers;
+
+class DivisionStructureTest extends TestCase
+{
+    use CreatesDivisions;
+    use CreatesMembers;
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Filament::setCurrentPanel('mod');
+    }
+
+    #[Test]
+    public function division_settings_show_each_levels_leader_powers(): void
+    {
+        [$division, $co] = $this->divisionWithCommander();
+
+        $this->actingAs($co);
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->assertSee('What leaders can do')
+            ->assertSee('Approve promotions in their Platoon and every Squad under it up to Private First Class')
+            ->assertSee('Request promotions for members of their Squad ranked below Specialist');
+    }
+
+    #[Test]
+    public function the_structure_preview_reflects_unsaved_level_changes(): void
+    {
+        [$division, $co] = $this->divisionWithCommander();
+        $this->actingAs($co);
+
+        $page            = Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()]);
+        $state           = $page->get('data.unitLevels');
+        $keys            = array_keys($state);
+        $state[$keys[0]] = ['label' => 'Company', 'label_plural' => 'Companies', 'leader_title' => 'Company Commander'];
+
+        $page->set('data.unitLevels', $state)
+            ->mountAction(TestAction::make('preview_structure')->schemaComponent('structure_actions'))
+            ->assertActionMounted(TestAction::make('preview_structure')->schemaComponent('structure_actions'));
+    }
+
+    #[Test]
+    public function the_structure_preview_view_draws_a_diagram_per_level(): void
+    {
+        $levels = collect([
+            ['depth' => 1, 'label' => 'Company', 'leader_title' => 'Company Commander', 'tier' => 'platoon', 'abbr' => 'CC', 'powers' => ['Edit their Company']],
+            ['depth' => 2, 'label' => 'Squad', 'leader_title' => 'Squad Leader', 'tier' => 'squad', 'abbr' => 'SL', 'powers' => ['Edit their Squad']],
+        ]);
+
+        $html = view('filament.components.unit-structure-preview', ['levels' => $levels])->render();
+
+        $this->assertSame(2, substr_count($html, '<svg'));
+        $this->assertStringContainsString('Company Commander', $html);
+        $this->assertStringContainsString('(CC)', $html);
+        $this->assertStringContainsString('Edit their Squad', $html);
+    }
+
+    #[Test]
+    public function renaming_levels_updates_unit_names_everywhere(): void
+    {
+        [$division, $co] = $this->divisionWithCommander();
+        $this->actingAs($co);
+
+        $page            = Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()]);
+        $state           = $page->get('data.unitLevels');
+        $keys            = array_keys($state);
+        $state[$keys[0]] = ['label' => 'Company', 'label_plural' => 'Companies', 'leader_title' => 'Company Commander'];
+
+        $page->set('data.unitLevels', $state)
+            ->assertSee('Approve promotions in their Company and every Squad under it')
+            ->call('save');
+
+        $this->assertSame('Company', DivisionUnitLevel::where('division_id', $division->id)->where('depth', 1)->value('label'));
+        $this->assertSame('Company', $division->fresh()->topLevelLabel());
+        $this->assertSame('Company Commander', $division->fresh()->topLeaderTitle());
+        $this->assertSame('Squad', $division->fresh()->bottomLevelLabel());
+    }
+
+    #[Test]
+    public function a_level_with_units_cannot_be_removed(): void
+    {
+        [$division, $co] = $this->divisionWithCommander();
+        $this->createSquad($this->createPlatoon($division));
+        $this->actingAs($co);
+
+        $page  = Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()]);
+        $state = $page->get('data.unitLevels');
+        array_pop($state);
+
+        $page->set('data.unitLevels', $state)
+            ->call('save')
+            ->assertHasFormErrors(['unitLevels' => 'This division still has units at level 2, so it needs at least 2 levels. Archive or move those units first.']);
+
+        $this->assertSame(2, DivisionUnitLevel::where('division_id', $division->id)->count());
+    }
+
+    #[Test]
+    public function a_division_can_grow_to_four_levels(): void
+    {
+        [$division, $co] = $this->divisionWithCommander();
+        $this->actingAs($co);
+
+        $page  = Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()]);
+        $state = $page->get('data.unitLevels');
+
+        $state['new-1'] = ['label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader'];
+        $state['new-2'] = ['label' => 'Fireteam', 'label_plural' => 'Fireteams', 'leader_title' => 'Fireteam Leader'];
+
+        $page->set('data.unitLevels', $state)->call('save');
+
+        $this->assertSame(
+            ['Platoon', 'Squad', 'Team', 'Fireteam'],
+            DivisionUnitLevel::where('division_id', $division->id)->orderBy('depth')->pluck('label')->all()
+        );
+    }
+
+    private function divisionWithCommander(): array
+    {
+        $division = $this->createActiveDivision();
+        $co       = $this->createMemberWithUser(['division_id' => $division->id, 'position' => Position::COMMANDING_OFFICER], ['role' => Role::SENIOR_LEADER]);
+
+        return [$division, $co];
+    }
+}

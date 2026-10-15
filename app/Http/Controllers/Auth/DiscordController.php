@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\AOD\ClanForumPermissions;
+use App\Enums\Ability;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\DiscordRegistrationRequest;
 use App\Models\Division;
@@ -101,7 +102,7 @@ class DiscordController extends Controller
 
     private function previewPending(User $user, string $divisionSlug): RedirectResponse|InertiaResponse
     {
-        if (! $user->isRole(['admin', 'sr_ldr', 'officer'])) {
+        if (! $user->can(Ability::PreviewApplicationForm)) {
             return redirect('/');
         }
 

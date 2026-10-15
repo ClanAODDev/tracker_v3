@@ -30,7 +30,7 @@ class LeavePolicyTest extends TestCase
         $officer = $this->createOfficer();
         $this->actingAs($officer);
 
-        $this->assertTrue($this->policy->create());
+        $this->assertTrue($this->policy->create(auth()->user()));
     }
 
     #[Test]
@@ -39,7 +39,7 @@ class LeavePolicyTest extends TestCase
         $srLdr = $this->createSeniorLeader();
         $this->actingAs($srLdr);
 
-        $this->assertTrue($this->policy->create());
+        $this->assertTrue($this->policy->create(auth()->user()));
     }
 
     #[Test]
@@ -48,7 +48,7 @@ class LeavePolicyTest extends TestCase
         $admin = $this->createAdmin();
         $this->actingAs($admin);
 
-        $this->assertTrue($this->policy->create());
+        $this->assertTrue($this->policy->create(auth()->user()));
     }
 
     #[Test]
@@ -62,7 +62,7 @@ class LeavePolicyTest extends TestCase
         $user->save();
         $this->actingAs($user);
 
-        $this->assertFalse($this->policy->create());
+        $this->assertFalse($this->policy->create(auth()->user()));
     }
 
     #[Test]
@@ -71,7 +71,7 @@ class LeavePolicyTest extends TestCase
         $officer = $this->createOfficer();
         $this->actingAs($officer);
 
-        $this->assertTrue($this->policy->viewAny());
+        $this->assertTrue($this->policy->viewAny(auth()->user()));
     }
 
     #[Test]
@@ -85,7 +85,7 @@ class LeavePolicyTest extends TestCase
         $user->save();
         $this->actingAs($user);
 
-        $this->assertFalse($this->policy->viewAny());
+        $this->assertFalse($this->policy->viewAny(auth()->user()));
     }
 
     #[Test]
@@ -94,7 +94,7 @@ class LeavePolicyTest extends TestCase
         $admin = $this->createAdmin();
         $this->actingAs($admin);
 
-        $this->assertTrue($this->policy->update());
+        $this->assertTrue($this->policy->update(auth()->user()));
     }
 
     #[Test]
@@ -103,7 +103,7 @@ class LeavePolicyTest extends TestCase
         $srLdr = $this->createSeniorLeader();
         $this->actingAs($srLdr);
 
-        $this->assertTrue($this->policy->update());
+        $this->assertTrue($this->policy->update(auth()->user()));
     }
 
     #[Test]
@@ -112,7 +112,7 @@ class LeavePolicyTest extends TestCase
         $officer = $this->createOfficer();
         $this->actingAs($officer);
 
-        $this->assertFalse($this->policy->update());
+        $this->assertFalse($this->policy->update(auth()->user()));
     }
 
     #[Test]
@@ -126,7 +126,7 @@ class LeavePolicyTest extends TestCase
         $user->save();
         $this->actingAs($user);
 
-        $this->assertFalse($this->policy->update());
+        $this->assertFalse($this->policy->update(auth()->user()));
     }
 
     #[Test]
@@ -135,7 +135,7 @@ class LeavePolicyTest extends TestCase
         $admin = $this->createAdmin();
         $this->actingAs($admin);
 
-        $this->assertTrue($this->policy->deleteAny());
+        $this->assertTrue($this->policy->deleteAny(auth()->user()));
     }
 
     #[Test]
@@ -144,7 +144,7 @@ class LeavePolicyTest extends TestCase
         $srLdr = $this->createSeniorLeader();
         $this->actingAs($srLdr);
 
-        $this->assertTrue($this->policy->deleteAny());
+        $this->assertTrue($this->policy->deleteAny(auth()->user()));
     }
 
     #[Test]
@@ -153,7 +153,7 @@ class LeavePolicyTest extends TestCase
         $officer = $this->createOfficer();
         $this->actingAs($officer);
 
-        $this->assertFalse($this->policy->deleteAny());
+        $this->assertFalse($this->policy->deleteAny(auth()->user()));
     }
 
     #[Test]
@@ -167,6 +167,6 @@ class LeavePolicyTest extends TestCase
         $user->save();
         $this->actingAs($user);
 
-        $this->assertFalse($this->policy->deleteAny());
+        $this->assertFalse($this->policy->deleteAny(auth()->user()));
     }
 }

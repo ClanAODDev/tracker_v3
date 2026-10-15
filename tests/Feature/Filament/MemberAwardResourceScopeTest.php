@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Filament;
 
+use App\Enums\Position;
 use App\Filament\Mod\Resources\MemberAwardResource\Pages\CreateMemberAward;
 use App\Filament\Mod\Resources\MemberAwardResource\Pages\EditMemberAward;
 use App\Models\Award;
@@ -93,6 +94,68 @@ class MemberAwardResourceScopeTest extends TestCase
                 'reason'    => 'Great work',
                 'approved'  => true,
             ])
+            ->call('create')
+            ->assertHasFormErrors(['award_id']);
+    }
+
+    #[Test]
+    public function senior_leader_division_leader_can_request_a_clan_wide_award_and_reach_the_edit_page(): void
+    {
+        $division  = $this->createActiveDivision();
+        $leader    = $this->createSeniorLeader($division);
+        $award     = Award::factory()->create(['division_id' => null]);
+        $recipient = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($leader);
+
+        Livewire::test(CreateMemberAward::class)
+            ->fillForm([
+                'division_filter' => 'clan-wide',
+                'award_id'        => $award->id,
+                'member_id'       => $recipient->id,
+                'reason'          => 'Five years of service',
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $memberAward = MemberAward::where('award_id', $award->id)->firstOrFail();
+
+        $this->assertFalse((bool) $memberAward->approved);
+
+        Livewire::test(EditMemberAward::class, ['record' => $memberAward->getRouteKey()])
+            ->assertSuccessful();
+    }
+
+    #[Test]
+    public function senior_leader_division_leader_still_cannot_use_another_divisions_award(): void
+    {
+        $division      = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+        $leader        = $this->createSeniorLeader($division);
+        $award         = Award::factory()->create(['division_id' => $otherDivision->id]);
+        $recipient     = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($leader);
+
+        Livewire::test(CreateMemberAward::class)
+            ->fillForm(['award_id' => $award->id, 'member_id' => $recipient->id, 'reason' => 'x'])
+            ->call('create')
+            ->assertHasFormErrors(['award_id']);
+    }
+
+    #[Test]
+    public function officer_division_leader_cannot_request_a_clan_wide_award(): void
+    {
+        $division = $this->createActiveDivision();
+        $leader   = $this->createOfficer($division);
+        $leader->member->update(['position' => Position::COMMANDING_OFFICER]);
+        $award     = Award::factory()->create(['division_id' => null]);
+        $recipient = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($leader);
+
+        Livewire::test(CreateMemberAward::class)
+            ->fillForm(['award_id' => $award->id, 'member_id' => $recipient->id, 'reason' => 'x'])
             ->call('create')
             ->assertHasFormErrors(['award_id']);
     }

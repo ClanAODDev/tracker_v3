@@ -9,6 +9,7 @@ use App\Data\PendingActionsData;
 use App\Enums\ActivityType;
 use App\Models\Division;
 use App\Models\DivisionApplication;
+use App\Models\Unit;
 use App\Repositories\DivisionRepository;
 
 class DivisionShowService
@@ -41,20 +42,30 @@ class DivisionShowService
 
     private function getPlatoons(Division $division, int $activityThresholdDays)
     {
-        return $division->platoons()
-            ->with([
-                'squads' => fn ($q) => $q->withCount(['members' => fn ($query) => $query->where('division_id', $division->id)])->with('leader.division'),
-                'leader.division',
-            ])
-            ->withCount([
-                'members'                       => fn ($query) => $query->where('division_id', $division->id),
-                'members as voice_active_count' => function ($query) use ($activityThresholdDays, $division) {
-                    $query->where('division_id', $division->id)
-                        ->where('last_voice_activity', '>=', now()->subDays($activityThresholdDays));
-                },
-            ])
-            ->orderBy('order')
-            ->get();
+        $counts = $division->members()
+            ->whereNotNull('unit_id')
+            ->selectRaw('unit_id, count(*) as total, sum(last_voice_activity >= ?) as voice_active', [now()->subDays($activityThresholdDays)])
+            ->groupBy('unit_id')
+            ->get()
+            ->keyBy('unit_id');
+
+        $paths = Unit::query()->where('division_id', $division->id)->pluck('path', 'id');
+
+        $subtree = function (Unit $unit, string $column) use ($counts, $paths): int {
+            return (int) $paths
+                ->filter(fn (string $path) => str_starts_with($path, $unit->path))
+                ->keys()
+                ->sum(fn (int $id) => (int) ($counts->get($id)?->{$column} ?? 0));
+        };
+
+        return $division->topUnits()
+            ->with(['children.leader.division', 'leader.division'])
+            ->get()
+            ->each(function (Unit $platoon) use ($subtree) {
+                $platoon->children->each(fn (Unit $squad) => $squad->setAttribute('members_count', $subtree($squad, 'total')));
+                $platoon->setAttribute('members_count', $subtree($platoon, 'total'));
+                $platoon->setAttribute('voice_active_count', $subtree($platoon, 'voice_active'));
+            });
     }
 
     private function getRecentActivity(Division $division)

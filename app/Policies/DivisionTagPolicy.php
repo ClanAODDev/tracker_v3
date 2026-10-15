@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
-use App\Enums\Role;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\User;
@@ -16,7 +16,7 @@ class DivisionTagPolicy
 
     public function before(User $user)
     {
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ManageGlobalTags)) {
             return true;
         }
     }
@@ -33,7 +33,7 @@ class DivisionTagPolicy
 
     public function create(User $user): bool
     {
-        return $user->isRole('sr_ldr');
+        return $user->can(Ability::ManageDivisionTags);
     }
 
     public function update(User $user, DivisionTag $tag): bool
@@ -42,7 +42,7 @@ class DivisionTagPolicy
             return false;
         }
 
-        if (! $user->isRole('sr_ldr')) {
+        if (! $user->can(Ability::ManageDivisionTags)) {
             return false;
         }
 
@@ -55,7 +55,7 @@ class DivisionTagPolicy
             return false;
         }
 
-        if (! $user->isRole('sr_ldr')) {
+        if (! $user->can(Ability::ManageDivisionTags)) {
             return false;
         }
 
@@ -72,7 +72,7 @@ class DivisionTagPolicy
 
         $isSgt     = $userMember->isAtLeast(Rank::SERGEANT);
         $isMsgt    = $userMember->isAtLeast(Rank::MASTER_SERGEANT);
-        $isOfficer = $user->isRole([Role::OFFICER, Role::SENIOR_LEADER]);
+        $isOfficer = $user->can(Ability::AssignTags);
 
         if (! $isOfficer && ! $isSgt) {
             return false;
@@ -95,7 +95,7 @@ class DivisionTagPolicy
 
     public function getAssignableTags(User $user): Builder
     {
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::ActAcrossDivisions)) {
             return DivisionTag::query()->visibleTo($user)->orderBy('name');
         }
 

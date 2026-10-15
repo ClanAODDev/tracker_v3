@@ -29,6 +29,27 @@ class MemberPolicyTest extends TestCase
     }
 
     #[Test]
+    public function policy_checks_use_the_given_user_not_the_authenticated_one()
+    {
+        $srLdr  = $this->createSeniorLeader();
+        $target = $this->createMember(['division_id' => $srLdr->member->division_id]);
+
+        $this->actingAs($this->createOfficer());
+
+        $this->assertTrue($this->policy->update($srLdr, $target));
+        $this->assertFalse($this->policy->update($srLdr, $srLdr->member));
+    }
+
+    #[Test]
+    public function separate_is_denied_for_a_user_without_a_member()
+    {
+        $user   = User::factory()->create(['member_id' => null, 'role' => Role::ADMIN]);
+        $target = $this->createMember();
+
+        $this->assertFalse($this->policy->separate($user, $target));
+    }
+
+    #[Test]
     public function admin_bypasses_all_checks()
     {
         $admin  = $this->createAdmin();
@@ -402,7 +423,7 @@ class MemberPolicyTest extends TestCase
         $squad  = $this->createSquad();
         $leader = $this->createSquadLeader($squad);
         $user   = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member = $this->createMember(['division_id' => $squad->platoon->division_id, 'squad_id' => $squad->id]);
+        $member = $this->createMember(['division_id' => $squad->division_id, 'unit_id' => $squad->id]);
 
         $this->actingAs($user);
         $this->assertTrue($this->policy->manageHandles($user, $member));
@@ -416,7 +437,7 @@ class MemberPolicyTest extends TestCase
         $otherSquad = $this->createSquad();
         $leader     = $this->createSquadLeader($squad);
         $user       = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member     = $this->createMember(['division_id' => $otherSquad->platoon->division_id, 'squad_id' => $otherSquad->id]);
+        $member     = $this->createMember(['division_id' => $otherSquad->division_id, 'unit_id' => $otherSquad->id]);
 
         $this->actingAs($user);
         $this->assertFalse($this->policy->manageHandles($user, $member));
@@ -429,7 +450,7 @@ class MemberPolicyTest extends TestCase
         $platoon = $this->createPlatoon();
         $leader  = $this->createPlatoonLeader($platoon);
         $user    = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member  = $this->createMember(['division_id' => $platoon->division_id, 'platoon_id' => $platoon->id]);
+        $member  = $this->createMember(['division_id' => $platoon->division_id, 'unit_id' => $platoon->id]);
 
         $this->actingAs($user);
         $this->assertTrue($this->policy->manageHandles($user, $member));
@@ -443,7 +464,7 @@ class MemberPolicyTest extends TestCase
         $otherPlatoon = $this->createPlatoon();
         $leader       = $this->createPlatoonLeader($platoon);
         $user         = User::factory()->create(['member_id' => $leader->id, 'name' => $leader->name]);
-        $member       = $this->createMember(['division_id' => $otherPlatoon->division_id, 'platoon_id' => $otherPlatoon->id]);
+        $member       = $this->createMember(['division_id' => $otherPlatoon->division_id, 'unit_id' => $otherPlatoon->id]);
 
         $this->actingAs($user);
         $this->assertFalse($this->policy->manageHandles($user, $member));

@@ -9,9 +9,7 @@ use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
-use App\Models\Platoon;
 use App\Models\RankAction;
-use App\Models\Squad;
 use App\Models\Transfer;
 use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
 use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
@@ -29,8 +27,7 @@ class RecruitmentService
         string $name,
         Division $division,
         int $rankId,
-        int $platoonId,
-        ?int $squadId,
+        ?int $unitId,
         array $handles,
         Member $recruiter
     ): Member {
@@ -42,12 +39,14 @@ class RecruitmentService
             );
         }
 
-        if (! Platoon::where('id', $platoonId)->where('division_id', $division->id)->exists()) {
-            throw new RecruitmentFailedException('Selected platoon does not belong to this division.');
-        }
+        $unit = null;
 
-        if ($squadId && ! Squad::where('id', $squadId)->where('platoon_id', $platoonId)->exists()) {
-            throw new RecruitmentFailedException('Selected squad does not belong to the selected platoon.');
+        if (! $division->isFlat()) {
+            $unit = $division->units()->find($unitId);
+
+            if (! $unit) {
+                throw new RecruitmentFailedException('Selected unit does not belong to this division.');
+            }
         }
 
         return DB::transaction(function () use (
@@ -55,8 +54,7 @@ class RecruitmentService
             $name,
             $division,
             $rankId,
-            $platoonId,
-            $squadId,
+            $unit,
             $handles,
             $recruiter
         ) {
@@ -72,8 +70,7 @@ class RecruitmentService
                 'division_id'            => $division->id,
                 'flagged_for_inactivity' => false,
                 'last_promoted_at'       => now(),
-                'platoon_id'             => $platoonId,
-                'squad_id'               => $squadId ?? 0,
+                'unit_id'                => $unit?->id,
             ])->save();
 
             $this->handles->setForDivision($member, $division, $handles);

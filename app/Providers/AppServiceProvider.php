@@ -6,8 +6,6 @@ use App\Http\Responses\LogoutResponse;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Observers\TicketTypeObserver;
-use App\Models\Platoon;
-use App\Models\Squad;
 use App\Models\TicketType;
 use App\Models\User;
 use App\Settings\UserSettings;
@@ -37,12 +35,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Route::bind('username', fn ($username) => User::whereName($username)->firstOrFail());
-
-        Route::bind('platoon', function ($platoon) {
-            return Platoon::whereId($platoon)->with('members')->first();
-        });
-
-        Route::bind('squad', fn ($squad) => Squad::whereId($squad)->first());
 
         Route::bind('member', fn ($member) => Member::whereClanId($member)->firstOrFail());
     }

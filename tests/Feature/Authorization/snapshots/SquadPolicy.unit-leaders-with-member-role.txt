@@ -1,0 +1,22 @@
+viewAny                  | (any squad)                              | platoon_leader           | deny
+viewAny                  | (any squad)                              | squad_leader             | deny
+deleteAny                | (any squad)                              | platoon_leader           | deny
+deleteAny                | (any squad)                              | squad_leader             | deny
+create                   | (any squad)                              | platoon_leader           | deny
+create                   | (any squad)                              | squad_leader             | deny
+update                   | own_squad                                | platoon_leader           | allow
+update                   | own_squad                                | squad_leader             | deny
+update                   | same_platoon_other_squad                 | platoon_leader           | allow
+update                   | same_platoon_other_squad                 | squad_leader             | deny
+update                   | other_platoon_squad                      | platoon_leader           | deny
+update                   | other_platoon_squad                      | squad_leader             | deny
+update                   | other_division_squad                     | platoon_leader           | deny
+update                   | other_division_squad                     | squad_leader             | deny
+delete                   | own_squad                                | platoon_leader           | allow
+delete                   | own_squad                                | squad_leader             | deny
+delete                   | same_platoon_other_squad                 | platoon_leader           | allow
+delete                   | same_platoon_other_squad                 | squad_leader             | deny
+delete                   | other_platoon_squad                      | platoon_leader           | deny
+delete                   | other_platoon_squad                      | squad_leader             | deny
+delete                   | other_division_squad                     | platoon_leader           | deny
+delete                   | other_division_squad                     | squad_leader             | deny

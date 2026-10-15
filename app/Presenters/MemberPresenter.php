@@ -69,9 +69,9 @@ class MemberPresenter extends Presenter
     public function coloredName($showRank = false)
     {
         if ($this->member->position) {
-            $title  = $this->member->position->getLabel() ?: null;
+            $title  = $this->member->positionLabel() ?: null;
             $name   = $showRank ? $this->rankName() : $this->member->name;
-            $prefix = $this->member->position->getAbbreviation();
+            $prefix = $this->member->positionAbbreviation();
 
             return strtr(
                 "<span title=\"{title}\" class=\"{$this->member->position->getClass()}\">{prefix} {name}</span>",

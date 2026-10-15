@@ -2,11 +2,13 @@
 
 namespace App\Filament\Mod\Resources;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
 use App\Filament\Mod\Resources\DivisionResource\Pages\ListDivisions;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\MemberFieldsRelationManager;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
+use App\Filament\Mod\Resources\DivisionResource\Schemas\StructureSection;
 use App\Models\Division;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
@@ -44,18 +46,18 @@ class DivisionResource extends Resource
     {
         $user = auth()->user();
 
-        if ($user?->isRole('admin')) {
+        if ($user?->can(Ability::ManageDivisions)) {
             return true;
         }
 
-        return $user?->member?->division_id !== null && $user->isRole('sr_ldr');
+        return $user?->member?->division_id !== null && $user->can(Ability::ViewDivisionSettings);
     }
 
     public static function getNavigationUrl(): string
     {
         $user = auth()->user();
 
-        if ($user?->isRole('admin')) {
+        if ($user?->can(Ability::ManageDivisions)) {
             return static::getUrl('index');
         }
 
@@ -118,6 +120,7 @@ class DivisionResource extends Resource
                                             ->helperText('Days without VoIP before marking inactive'),
                                         Select::make('settings.max_platoon_leader_rank')
                                             ->label('PL Promotion Cap')
+                                            ->live()
                                             ->options([
                                                 Rank::CADET->value               => Rank::CADET->getLabel(),
                                                 Rank::PRIVATE->value             => Rank::PRIVATE->getLabel(),
@@ -126,25 +129,7 @@ class DivisionResource extends Resource
                                             ->helperText('Highest rank PLs can promote to without approval'),
                                     ]),
 
-                                Section::make('Locality')
-                                    ->description('Update common vernacular to match division needs')
-                                    ->collapsible()
-                                    ->statePath('settings')
-                                    ->schema([
-                                        Repeater::make('locality')
-                                            ->schema([
-                                                TextInput::make('old-string')
-                                                    ->label('Replace')
-                                                    ->readOnly(),
-                                                TextInput::make('new-string')
-                                                    ->required()
-                                                    ->label('With'),
-                                            ])
-                                            ->reorderable(false)
-                                            ->columns(2)
-                                            ->addable(false)
-                                            ->deletable(false),
-                                    ]),
+                                StructureSection::make(),
                             ]),
 
                         Tab::make('Applications')

@@ -7,6 +7,7 @@ use App\Enums\ActivityType;
 use App\Http\Requests\Member\DeleteMember;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\Unit;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,9 +18,9 @@ use Inertia\Response;
 #[Middleware('auth')]
 class InactiveMemberController extends Controller
 {
-    public function index(Division $division): Response
+    public function index(Division $division, ?Unit $unit = null): Response
     {
-        return Inertia::render('division/inactive-members', InactiveMembersData::for($division)->toArray());
+        return Inertia::render('division/inactive-members', InactiveMembersData::for($division, $unit)->toArray());
     }
 
     public function create(Member $member): RedirectResponse

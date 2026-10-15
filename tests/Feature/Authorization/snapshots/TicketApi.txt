@@ -1,0 +1,312 @@
+GET index                | -                                        | admin                    | 200
+GET index                | -                                        | developer                | 200
+GET index                | -                                        | admin_viewing_as_officer | 200
+GET index                | -                                        | senior_leader            | 200
+GET index                | -                                        | commanding_officer       | 200
+GET index                | -                                        | executive_officer        | 200
+GET index                | -                                        | officer                  | 200
+GET index                | -                                        | platoon_leader           | 200
+GET index                | -                                        | squad_leader             | 200
+GET index                | -                                        | member                   | 200
+GET index                | -                                        | banned                   | 403
+GET index                | -                                        | pending                  | 408
+GET types                | -                                        | admin                    | 200
+GET types                | -                                        | developer                | 200
+GET types                | -                                        | admin_viewing_as_officer | 200
+GET types                | -                                        | senior_leader            | 200
+GET types                | -                                        | commanding_officer       | 200
+GET types                | -                                        | executive_officer        | 200
+GET types                | -                                        | officer                  | 200
+GET types                | -                                        | platoon_leader           | 200
+GET types                | -                                        | squad_leader             | 200
+GET types                | -                                        | member                   | 200
+GET types                | -                                        | banned                   | 403
+GET types                | -                                        | pending                  | 408
+GET workable             | -                                        | admin                    | 200
+GET workable             | -                                        | developer                | 403
+GET workable             | -                                        | admin_viewing_as_officer | 200
+GET workable             | -                                        | senior_leader            | 200
+GET workable             | -                                        | commanding_officer       | 200
+GET workable             | -                                        | executive_officer        | 200
+GET workable             | -                                        | officer                  | 403
+GET workable             | -                                        | platoon_leader           | 403
+GET workable             | -                                        | squad_leader             | 403
+GET workable             | -                                        | member                   | 403
+GET workable             | -                                        | banned                   | 403
+GET workable             | -                                        | pending                  | 408
+GET workers              | -                                        | admin                    | 200
+GET workers              | -                                        | developer                | 403
+GET workers              | -                                        | admin_viewing_as_officer | 200
+GET workers              | -                                        | senior_leader            | 200
+GET workers              | -                                        | commanding_officer       | 200
+GET workers              | -                                        | executive_officer        | 200
+GET workers              | -                                        | officer                  | 403
+GET workers              | -                                        | platoon_leader           | 403
+GET workers              | -                                        | squad_leader             | 403
+GET workers              | -                                        | member                   | 403
+GET workers              | -                                        | banned                   | 403
+GET workers              | -                                        | pending                  | 408
+POST store               | -                                        | admin                    | 201
+POST store               | -                                        | developer                | 201
+POST store               | -                                        | admin_viewing_as_officer | 201
+POST store               | -                                        | senior_leader            | 201
+POST store               | -                                        | commanding_officer       | 201
+POST store               | -                                        | executive_officer        | 201
+POST store               | -                                        | officer                  | 201
+POST store               | -                                        | platoon_leader           | 201
+POST store               | -                                        | squad_leader             | 201
+POST store               | -                                        | member                   | 201
+POST store               | -                                        | banned                   | 403
+POST store               | -                                        | pending                  | 408
+GET show                 | own ticket                               | admin                    | 200
+GET show                 | own ticket                               | developer                | 200
+GET show                 | own ticket                               | admin_viewing_as_officer | 200
+GET show                 | own ticket                               | senior_leader            | 200
+GET show                 | own ticket                               | commanding_officer       | 200
+GET show                 | own ticket                               | executive_officer        | 200
+GET show                 | own ticket                               | officer                  | 200
+GET show                 | own ticket                               | platoon_leader           | 200
+GET show                 | own ticket                               | squad_leader             | 200
+GET show                 | own ticket                               | member                   | 200
+GET show                 | own ticket                               | banned                   | 403
+GET show                 | own ticket                               | pending                  | 408
+GET show                 | others sergeant-level ticket             | admin                    | 200
+GET show                 | others sergeant-level ticket             | developer                | 403
+GET show                 | others sergeant-level ticket             | admin_viewing_as_officer | 200
+GET show                 | others sergeant-level ticket             | senior_leader            | 200
+GET show                 | others sergeant-level ticket             | commanding_officer       | 200
+GET show                 | others sergeant-level ticket             | executive_officer        | 200
+GET show                 | others sergeant-level ticket             | officer                  | 403
+GET show                 | others sergeant-level ticket             | platoon_leader           | 403
+GET show                 | others sergeant-level ticket             | squad_leader             | 403
+GET show                 | others sergeant-level ticket             | member                   | 403
+GET show                 | others sergeant-level ticket             | banned                   | 403
+GET show                 | others sergeant-level ticket             | pending                  | 408
+GET show                 | others admin-only ticket                 | admin                    | 200
+GET show                 | others admin-only ticket                 | developer                | 403
+GET show                 | others admin-only ticket                 | admin_viewing_as_officer | 403
+GET show                 | others admin-only ticket                 | senior_leader            | 403
+GET show                 | others admin-only ticket                 | commanding_officer       | 403
+GET show                 | others admin-only ticket                 | executive_officer        | 403
+GET show                 | others admin-only ticket                 | officer                  | 403
+GET show                 | others admin-only ticket                 | platoon_leader           | 403
+GET show                 | others admin-only ticket                 | squad_leader             | 403
+GET show                 | others admin-only ticket                 | member                   | 403
+GET show                 | others admin-only ticket                 | banned                   | 403
+GET show                 | others admin-only ticket                 | pending                  | 408
+POST comment             | own ticket                               | admin                    | 201
+POST comment             | own ticket                               | developer                | 201
+POST comment             | own ticket                               | admin_viewing_as_officer | 201
+POST comment             | own ticket                               | senior_leader            | 201
+POST comment             | own ticket                               | commanding_officer       | 201
+POST comment             | own ticket                               | executive_officer        | 201
+POST comment             | own ticket                               | officer                  | 201
+POST comment             | own ticket                               | platoon_leader           | 201
+POST comment             | own ticket                               | squad_leader             | 201
+POST comment             | own ticket                               | member                   | 201
+POST comment             | own ticket                               | banned                   | 403
+POST comment             | own ticket                               | pending                  | 408
+POST comment             | others sergeant-level ticket             | admin                    | 201
+POST comment             | others sergeant-level ticket             | developer                | 403
+POST comment             | others sergeant-level ticket             | admin_viewing_as_officer | 201
+POST comment             | others sergeant-level ticket             | senior_leader            | 201
+POST comment             | others sergeant-level ticket             | commanding_officer       | 201
+POST comment             | others sergeant-level ticket             | executive_officer        | 201
+POST comment             | others sergeant-level ticket             | officer                  | 403
+POST comment             | others sergeant-level ticket             | platoon_leader           | 403
+POST comment             | others sergeant-level ticket             | squad_leader             | 403
+POST comment             | others sergeant-level ticket             | member                   | 403
+POST comment             | others sergeant-level ticket             | banned                   | 403
+POST comment             | others sergeant-level ticket             | pending                  | 408
+POST comment             | others admin-only ticket                 | admin                    | 201
+POST comment             | others admin-only ticket                 | developer                | 403
+POST comment             | others admin-only ticket                 | admin_viewing_as_officer | 403
+POST comment             | others admin-only ticket                 | senior_leader            | 403
+POST comment             | others admin-only ticket                 | commanding_officer       | 403
+POST comment             | others admin-only ticket                 | executive_officer        | 403
+POST comment             | others admin-only ticket                 | officer                  | 403
+POST comment             | others admin-only ticket                 | platoon_leader           | 403
+POST comment             | others admin-only ticket                 | squad_leader             | 403
+POST comment             | others admin-only ticket                 | member                   | 403
+POST comment             | others admin-only ticket                 | banned                   | 403
+POST comment             | others admin-only ticket                 | pending                  | 408
+POST own                 | own ticket                               | admin                    | 200
+POST own                 | own ticket                               | developer                | 403
+POST own                 | own ticket                               | admin_viewing_as_officer | 200
+POST own                 | own ticket                               | senior_leader            | 200
+POST own                 | own ticket                               | commanding_officer       | 200
+POST own                 | own ticket                               | executive_officer        | 200
+POST own                 | own ticket                               | officer                  | 403
+POST own                 | own ticket                               | platoon_leader           | 403
+POST own                 | own ticket                               | squad_leader             | 403
+POST own                 | own ticket                               | member                   | 403
+POST own                 | own ticket                               | banned                   | 403
+POST own                 | own ticket                               | pending                  | 408
+POST own                 | others sergeant-level ticket             | admin                    | 200
+POST own                 | others sergeant-level ticket             | developer                | 403
+POST own                 | others sergeant-level ticket             | admin_viewing_as_officer | 200
+POST own                 | others sergeant-level ticket             | senior_leader            | 200
+POST own                 | others sergeant-level ticket             | commanding_officer       | 200
+POST own                 | others sergeant-level ticket             | executive_officer        | 200
+POST own                 | others sergeant-level ticket             | officer                  | 403
+POST own                 | others sergeant-level ticket             | platoon_leader           | 403
+POST own                 | others sergeant-level ticket             | squad_leader             | 403
+POST own                 | others sergeant-level ticket             | member                   | 403
+POST own                 | others sergeant-level ticket             | banned                   | 403
+POST own                 | others sergeant-level ticket             | pending                  | 408
+POST own                 | others admin-only ticket                 | admin                    | 200
+POST own                 | others admin-only ticket                 | developer                | 403
+POST own                 | others admin-only ticket                 | admin_viewing_as_officer | 403
+POST own                 | others admin-only ticket                 | senior_leader            | 403
+POST own                 | others admin-only ticket                 | commanding_officer       | 403
+POST own                 | others admin-only ticket                 | executive_officer        | 403
+POST own                 | others admin-only ticket                 | officer                  | 403
+POST own                 | others admin-only ticket                 | platoon_leader           | 403
+POST own                 | others admin-only ticket                 | squad_leader             | 403
+POST own                 | others admin-only ticket                 | member                   | 403
+POST own                 | others admin-only ticket                 | banned                   | 403
+POST own                 | others admin-only ticket                 | pending                  | 408
+POST resolve             | own ticket                               | admin                    | 200
+POST resolve             | own ticket                               | developer                | 403
+POST resolve             | own ticket                               | admin_viewing_as_officer | 200
+POST resolve             | own ticket                               | senior_leader            | 200
+POST resolve             | own ticket                               | commanding_officer       | 200
+POST resolve             | own ticket                               | executive_officer        | 200
+POST resolve             | own ticket                               | officer                  | 403
+POST resolve             | own ticket                               | platoon_leader           | 403
+POST resolve             | own ticket                               | squad_leader             | 403
+POST resolve             | own ticket                               | member                   | 403
+POST resolve             | own ticket                               | banned                   | 403
+POST resolve             | own ticket                               | pending                  | 408
+POST resolve             | others sergeant-level ticket             | admin                    | 200
+POST resolve             | others sergeant-level ticket             | developer                | 403
+POST resolve             | others sergeant-level ticket             | admin_viewing_as_officer | 200
+POST resolve             | others sergeant-level ticket             | senior_leader            | 200
+POST resolve             | others sergeant-level ticket             | commanding_officer       | 200
+POST resolve             | others sergeant-level ticket             | executive_officer        | 200
+POST resolve             | others sergeant-level ticket             | officer                  | 403
+POST resolve             | others sergeant-level ticket             | platoon_leader           | 403
+POST resolve             | others sergeant-level ticket             | squad_leader             | 403
+POST resolve             | others sergeant-level ticket             | member                   | 403
+POST resolve             | others sergeant-level ticket             | banned                   | 403
+POST resolve             | others sergeant-level ticket             | pending                  | 408
+POST resolve             | others admin-only ticket                 | admin                    | 200
+POST resolve             | others admin-only ticket                 | developer                | 403
+POST resolve             | others admin-only ticket                 | admin_viewing_as_officer | 403
+POST resolve             | others admin-only ticket                 | senior_leader            | 403
+POST resolve             | others admin-only ticket                 | commanding_officer       | 403
+POST resolve             | others admin-only ticket                 | executive_officer        | 403
+POST resolve             | others admin-only ticket                 | officer                  | 403
+POST resolve             | others admin-only ticket                 | platoon_leader           | 403
+POST resolve             | others admin-only ticket                 | squad_leader             | 403
+POST resolve             | others admin-only ticket                 | member                   | 403
+POST resolve             | others admin-only ticket                 | banned                   | 403
+POST resolve             | others admin-only ticket                 | pending                  | 408
+POST reject              | own ticket                               | admin                    | 200
+POST reject              | own ticket                               | developer                | 403
+POST reject              | own ticket                               | admin_viewing_as_officer | 200
+POST reject              | own ticket                               | senior_leader            | 200
+POST reject              | own ticket                               | commanding_officer       | 200
+POST reject              | own ticket                               | executive_officer        | 200
+POST reject              | own ticket                               | officer                  | 403
+POST reject              | own ticket                               | platoon_leader           | 403
+POST reject              | own ticket                               | squad_leader             | 403
+POST reject              | own ticket                               | member                   | 403
+POST reject              | own ticket                               | banned                   | 403
+POST reject              | own ticket                               | pending                  | 408
+POST reject              | others sergeant-level ticket             | admin                    | 200
+POST reject              | others sergeant-level ticket             | developer                | 403
+POST reject              | others sergeant-level ticket             | admin_viewing_as_officer | 200
+POST reject              | others sergeant-level ticket             | senior_leader            | 200
+POST reject              | others sergeant-level ticket             | commanding_officer       | 200
+POST reject              | others sergeant-level ticket             | executive_officer        | 200
+POST reject              | others sergeant-level ticket             | officer                  | 403
+POST reject              | others sergeant-level ticket             | platoon_leader           | 403
+POST reject              | others sergeant-level ticket             | squad_leader             | 403
+POST reject              | others sergeant-level ticket             | member                   | 403
+POST reject              | others sergeant-level ticket             | banned                   | 403
+POST reject              | others sergeant-level ticket             | pending                  | 408
+POST reject              | others admin-only ticket                 | admin                    | 200
+POST reject              | others admin-only ticket                 | developer                | 403
+POST reject              | others admin-only ticket                 | admin_viewing_as_officer | 403
+POST reject              | others admin-only ticket                 | senior_leader            | 403
+POST reject              | others admin-only ticket                 | commanding_officer       | 403
+POST reject              | others admin-only ticket                 | executive_officer        | 403
+POST reject              | others admin-only ticket                 | officer                  | 403
+POST reject              | others admin-only ticket                 | platoon_leader           | 403
+POST reject              | others admin-only ticket                 | squad_leader             | 403
+POST reject              | others admin-only ticket                 | member                   | 403
+POST reject              | others admin-only ticket                 | banned                   | 403
+POST reject              | others admin-only ticket                 | pending                  | 408
+POST reopen              | own ticket                               | admin                    | 422
+POST reopen              | own ticket                               | developer                | 403
+POST reopen              | own ticket                               | admin_viewing_as_officer | 422
+POST reopen              | own ticket                               | senior_leader            | 422
+POST reopen              | own ticket                               | commanding_officer       | 422
+POST reopen              | own ticket                               | executive_officer        | 422
+POST reopen              | own ticket                               | officer                  | 403
+POST reopen              | own ticket                               | platoon_leader           | 403
+POST reopen              | own ticket                               | squad_leader             | 403
+POST reopen              | own ticket                               | member                   | 403
+POST reopen              | own ticket                               | banned                   | 403
+POST reopen              | own ticket                               | pending                  | 408
+POST reopen              | others sergeant-level ticket             | admin                    | 422
+POST reopen              | others sergeant-level ticket             | developer                | 403
+POST reopen              | others sergeant-level ticket             | admin_viewing_as_officer | 422
+POST reopen              | others sergeant-level ticket             | senior_leader            | 422
+POST reopen              | others sergeant-level ticket             | commanding_officer       | 422
+POST reopen              | others sergeant-level ticket             | executive_officer        | 422
+POST reopen              | others sergeant-level ticket             | officer                  | 403
+POST reopen              | others sergeant-level ticket             | platoon_leader           | 403
+POST reopen              | others sergeant-level ticket             | squad_leader             | 403
+POST reopen              | others sergeant-level ticket             | member                   | 403
+POST reopen              | others sergeant-level ticket             | banned                   | 403
+POST reopen              | others sergeant-level ticket             | pending                  | 408
+POST reopen              | others admin-only ticket                 | admin                    | 422
+POST reopen              | others admin-only ticket                 | developer                | 403
+POST reopen              | others admin-only ticket                 | admin_viewing_as_officer | 403
+POST reopen              | others admin-only ticket                 | senior_leader            | 403
+POST reopen              | others admin-only ticket                 | commanding_officer       | 403
+POST reopen              | others admin-only ticket                 | executive_officer        | 403
+POST reopen              | others admin-only ticket                 | officer                  | 403
+POST reopen              | others admin-only ticket                 | platoon_leader           | 403
+POST reopen              | others admin-only ticket                 | squad_leader             | 403
+POST reopen              | others admin-only ticket                 | member                   | 403
+POST reopen              | others admin-only ticket                 | banned                   | 403
+POST reopen              | others admin-only ticket                 | pending                  | 408
+POST reassign            | own ticket                               | admin                    | 200
+POST reassign            | own ticket                               | developer                | 403
+POST reassign            | own ticket                               | admin_viewing_as_officer | 200
+POST reassign            | own ticket                               | senior_leader            | 200
+POST reassign            | own ticket                               | commanding_officer       | 200
+POST reassign            | own ticket                               | executive_officer        | 200
+POST reassign            | own ticket                               | officer                  | 403
+POST reassign            | own ticket                               | platoon_leader           | 403
+POST reassign            | own ticket                               | squad_leader             | 403
+POST reassign            | own ticket                               | member                   | 403
+POST reassign            | own ticket                               | banned                   | 403
+POST reassign            | own ticket                               | pending                  | 408
+POST reassign            | others sergeant-level ticket             | admin                    | 200
+POST reassign            | others sergeant-level ticket             | developer                | 403
+POST reassign            | others sergeant-level ticket             | admin_viewing_as_officer | 200
+POST reassign            | others sergeant-level ticket             | senior_leader            | 200
+POST reassign            | others sergeant-level ticket             | commanding_officer       | 200
+POST reassign            | others sergeant-level ticket             | executive_officer        | 200
+POST reassign            | others sergeant-level ticket             | officer                  | 403
+POST reassign            | others sergeant-level ticket             | platoon_leader           | 403
+POST reassign            | others sergeant-level ticket             | squad_leader             | 403
+POST reassign            | others sergeant-level ticket             | member                   | 403
+POST reassign            | others sergeant-level ticket             | banned                   | 403
+POST reassign            | others sergeant-level ticket             | pending                  | 408
+POST reassign            | others admin-only ticket                 | admin                    | 422
+POST reassign            | others admin-only ticket                 | developer                | 403
+POST reassign            | others admin-only ticket                 | admin_viewing_as_officer | 403
+POST reassign            | others admin-only ticket                 | senior_leader            | 403
+POST reassign            | others admin-only ticket                 | commanding_officer       | 403
+POST reassign            | others admin-only ticket                 | executive_officer        | 403
+POST reassign            | others admin-only ticket                 | officer                  | 403
+POST reassign            | others admin-only ticket                 | platoon_leader           | 403
+POST reassign            | others admin-only ticket                 | squad_leader             | 403
+POST reassign            | others admin-only ticket                 | member                   | 403
+POST reassign            | others admin-only ticket                 | banned                   | 403
+POST reassign            | others admin-only ticket                 | pending                  | 408

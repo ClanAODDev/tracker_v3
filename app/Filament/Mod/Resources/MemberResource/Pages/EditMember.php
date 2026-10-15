@@ -6,16 +6,19 @@ use App\Enums\ActivityType;
 use App\Filament\Forms\Components\DivisionMemberFieldsForm;
 use App\Filament\Forms\Components\IngameHandlesForm;
 use App\Filament\Forms\Components\PartTimeDivisionsForm;
+use App\Filament\Forms\Components\UnitPicker;
 use App\Filament\Mod\Resources\MemberResource;
 use App\Jobs\RemoveClanMember;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Models\Note;
+use App\Models\Unit;
 use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use App\Notifications\Channel\NotifyDivisionPartTimeMemberRemoved;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use App\Services\MemberHandleService;
+use App\Services\Units\UnitAssignment;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -64,7 +67,18 @@ class EditMember extends EditRecord
 
         unset($data['handleGroups'], $data['custom_fields']);
 
+        $assignUnit = UnitPicker::present($data, 'unit_level_');
+        $unitId     = $assignUnit ? UnitPicker::resolve($data, 'unit_level_') : null;
+
+        if ($assignUnit) {
+            $data = UnitPicker::without($data, 'unit_level_');
+        }
+
         $record->update($data);
+
+        if ($assignUnit) {
+            app(UnitAssignment::class)->assignMember($record, $unitId ? Unit::find($unitId) : null, recordActivity: false);
+        }
 
         return $record;
     }
@@ -164,7 +178,7 @@ class EditMember extends EditRecord
     private function notifyDivisions(Member $member, ?string $reason = null): void
     {
         if ($member->division()->exists()) {
-            $member->division->notify(new NotifyDivisionMemberRemoved($member, auth()->user(), $reason, $member->squad)
+            $member->division->notify(new NotifyDivisionMemberRemoved($member, auth()->user(), $reason, $member->unit)
             );
         }
 

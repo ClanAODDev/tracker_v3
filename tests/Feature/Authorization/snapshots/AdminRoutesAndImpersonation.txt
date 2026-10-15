@@ -1,0 +1,60 @@
+GET help admin           | (status)                                 | admin                    | 200
+GET help admin           | (status)                                 | developer                | 403
+GET help admin           | (status)                                 | admin_viewing_as_officer | 403
+GET help admin           | (status)                                 | senior_leader            | 403
+GET help admin           | (status)                                 | commanding_officer       | 403
+GET help admin           | (status)                                 | executive_officer        | 403
+GET help admin           | (status)                                 | officer                  | 403
+GET help admin           | (status)                                 | platoon_leader           | 403
+GET help admin           | (status)                                 | squad_leader             | 403
+GET help admin           | (status)                                 | member                   | 403
+GET help admin           | (status)                                 | banned                   | 403
+GET help admin           | (status)                                 | pending                  | 408
+GET division turnover    | (status)                                 | admin                    | 200
+GET division turnover    | (status)                                 | developer                | 403
+GET division turnover    | (status)                                 | admin_viewing_as_officer | 403
+GET division turnover    | (status)                                 | senior_leader            | 403
+GET division turnover    | (status)                                 | commanding_officer       | 403
+GET division turnover    | (status)                                 | executive_officer        | 403
+GET division turnover    | (status)                                 | officer                  | 403
+GET division turnover    | (status)                                 | platoon_leader           | 403
+GET division turnover    | (status)                                 | squad_leader             | 403
+GET division turnover    | (status)                                 | member                   | 403
+GET division turnover    | (status)                                 | banned                   | 403
+GET division turnover    | (status)                                 | pending                  | 408
+GET impersonate member   | (status)                                 | admin                    | 302
+GET impersonate member   | (status)                                 | developer                | 302
+GET impersonate member   | (status)                                 | admin_viewing_as_officer | 403
+GET impersonate member   | (status)                                 | senior_leader            | 403
+GET impersonate member   | (status)                                 | commanding_officer       | 403
+GET impersonate member   | (status)                                 | executive_officer        | 403
+GET impersonate member   | (status)                                 | officer                  | 403
+GET impersonate member   | (status)                                 | platoon_leader           | 403
+GET impersonate member   | (status)                                 | squad_leader             | 403
+GET impersonate member   | (status)                                 | member                   | 403
+GET impersonate member   | (status)                                 | banned                   | 403
+GET impersonate member   | (status)                                 | pending                  | 408
+GET impersonate role     | (status)                                 | admin                    | 302
+GET impersonate role     | (status)                                 | developer                | 302
+GET impersonate role     | (status)                                 | admin_viewing_as_officer | 403
+GET impersonate role     | (status)                                 | senior_leader            | 403
+GET impersonate role     | (status)                                 | commanding_officer       | 403
+GET impersonate role     | (status)                                 | executive_officer        | 403
+GET impersonate role     | (status)                                 | officer                  | 403
+GET impersonate role     | (status)                                 | platoon_leader           | 403
+GET impersonate role     | (status)                                 | squad_leader             | 403
+GET impersonate role     | (status)                                 | member                   | 403
+GET impersonate role     | (status)                                 | banned                   | 403
+GET impersonate role     | (status)                                 | pending                  | 408
+GET developers           | (status)                                 | admin                    | 200
+GET developers           | (status)                                 | developer                | 200
+GET developers           | (status)                                 | admin_viewing_as_officer | 403
+GET developers           | (status)                                 | senior_leader            | 403
+GET developers           | (status)                                 | commanding_officer       | 403
+GET developers           | (status)                                 | executive_officer        | 403
+GET developers           | (status)                                 | officer                  | 403
+GET developers           | (status)                                 | platoon_leader           | 403
+GET developers           | (status)                                 | squad_leader             | 403
+GET developers           | (status)                                 | member                   | 403
+GET developers           | (status)                                 | banned                   | 403
+GET developers           | (status)                                 | pending                  | 408

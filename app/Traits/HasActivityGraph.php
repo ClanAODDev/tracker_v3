@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Division;
+use App\Models\Unit;
 use Carbon\CarbonImmutable;
 
 trait HasActivityGraph
@@ -19,7 +20,7 @@ trait HasActivityGraph
 
         $maxDays = $division->settings()->get('inactivity_days') ?? 90;
         $now     = CarbonImmutable::now();
-        $members = $unit->members();
+        $members = $unit instanceof Unit ? $unit->allMembers() : $unit->members();
 
         // Define cutoffs including the final maxDays
         $cutoffs = collect(range(1, $buckets))

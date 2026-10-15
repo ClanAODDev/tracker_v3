@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use App\Data\UnitStatsData;
+use App\Enums\Ability;
 use App\Models\Division;
 use App\Models\DivisionTag;
 use App\Models\Member;
@@ -15,26 +16,30 @@ class MemberListProps
         Division $division,
         Collection $members,
         UnitStatsData $unitStats,
-        string $assignmentKind = 'platoon',
+        int $assignmentDepth = 1,
         ?int $directRecruitOfClanId = null,
     ): array {
         $user       = auth()->user();
-        $serializer = new MemberRowSerializer($division, $assignmentKind, $directRecruitOfClanId);
+        $serializer = new MemberRowSerializer($division, $assignmentDepth, $directRecruitOfClanId);
 
         return [
             'division' => [
-                'name'         => $division->name,
-                'slug'         => $division->slug,
-                'platoonLabel' => $division->locality('Platoon'),
-                'squadLabel'   => $division->locality('Squad'),
-                'handleTypes'  => $division->handles
+                'name'          => $division->name,
+                'slug'          => $division->slug,
+                'hasUnits'      => ! $division->isFlat(),
+                'topLevelLabel' => $division->topLevelLabel(),
+                'levels'        => $division->unitLevels
+                    ->map(fn ($level) => ['depth' => $level->depth, 'label' => $level->label])
+                    ->values()
+                    ->all(),
+                'handleTypes' => $division->handles
                     ->map(fn ($handle) => ['id' => $handle->id, 'label' => $handle->label])
                     ->values()
                     ->all(),
             ],
-            'members'        => $serializer->collection($members),
-            'assignmentKind' => $assignmentKind,
-            'unitStats'      => [
+            'members'         => $serializer->collection($members),
+            'assignmentDepth' => $assignmentDepth,
+            'unitStats'       => [
                 'totalCount'     => $unitStats->totalCount,
                 'onLeaveCount'   => $unitStats->onLeaveCount,
                 'inactiveCount'  => $unitStats->inactiveCount,
@@ -81,7 +86,7 @@ class MemberListProps
         $canRemind      = $user->can('remindActivity', Member::class);
         $canAssignTags  = $user->can('assign', DivisionTag::class);
         $canMoveMembers = $user->can('manageUnassigned', User::class);
-        $canUseBulkMode = $user->isRole(['officer', 'sr_ldr', 'admin']) || $user->isDeveloper();
+        $canUseBulkMode = $user->can(Ability::UseBulkMode) || $user->isDeveloper();
 
         return [
             'enabled'        => $canUseBulkMode,

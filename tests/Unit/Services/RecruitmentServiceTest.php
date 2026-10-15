@@ -3,8 +3,10 @@
 namespace Tests\Unit\Services;
 
 use App\Exceptions\RecruitmentFailedException;
+use App\Models\DivisionUnitLevel;
 use App\Models\Handle;
 use App\Models\Member;
+use App\Models\Unit;
 use App\Services\RecruitmentService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -38,7 +40,6 @@ class RecruitmentServiceTest extends TestCase
             $division,
             1,
             $platoon->id,
-            null,
             [],
             $recruiter
         );
@@ -47,8 +48,36 @@ class RecruitmentServiceTest extends TestCase
             'clan_id'     => 12345,
             'name'        => 'TestMember',
             'division_id' => $division->id,
-            'platoon_id'  => $platoon->id,
+            'unit_id'     => $platoon->id,
         ]);
+    }
+
+    #[Test]
+    public function create_member_can_place_a_recruit_in_a_deeper_unit(): void
+    {
+        $division = $this->createActiveDivision();
+        DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
+        $platoon   = $this->createPlatoon($division);
+        $middle    = Unit::factory()->childOf($platoon)->create();
+        $team      = Unit::factory()->childOf($middle)->create();
+        $recruiter = Member::factory()->create(['clan_id' => 99999]);
+
+        $member = $this->service->createMember(12345, 'TestMember', $division, 1, $team->id, [], $recruiter);
+
+        $this->assertSame($team->id, $member->unit_id);
+    }
+
+    #[Test]
+    public function create_member_in_a_flat_division_needs_no_unit(): void
+    {
+        $division = $this->createActiveDivision();
+        DivisionUnitLevel::where('division_id', $division->id)->delete();
+        $recruiter = Member::factory()->create(['clan_id' => 99999]);
+
+        $member = $this->service->createMember(12345, 'TestMember', $division->fresh(), 1, null, [], $recruiter);
+
+        $this->assertSame($division->id, $member->division_id);
+        $this->assertNull($member->unit_id);
     }
 
     #[Test]
@@ -72,7 +101,6 @@ class RecruitmentServiceTest extends TestCase
             $division,
             1,
             $platoon->id,
-            null,
             [],
             $recruiter
         );
@@ -99,7 +127,6 @@ class RecruitmentServiceTest extends TestCase
             $division,
             1,
             $platoon->id,
-            null,
             [],
             $recruiter
         );
@@ -110,7 +137,7 @@ class RecruitmentServiceTest extends TestCase
     }
 
     #[Test]
-    public function create_member_rejects_platoon_from_another_division(): void
+    public function create_member_rejects_unit_from_another_division(): void
     {
         $division      = $this->createActiveDivision();
         $otherDivision = $this->createActiveDivision();
@@ -125,30 +152,6 @@ class RecruitmentServiceTest extends TestCase
             $division,
             1,
             $otherPlatoon->id,
-            null,
-            [],
-            $recruiter
-        );
-    }
-
-    #[Test]
-    public function create_member_rejects_squad_from_another_platoon(): void
-    {
-        $division     = $this->createActiveDivision();
-        $platoon      = $this->createPlatoon($division);
-        $otherPlatoon = $this->createPlatoon($division);
-        $otherSquad   = $this->createSquad($otherPlatoon);
-        $recruiter    = Member::factory()->create(['clan_id' => 99999]);
-
-        $this->expectException(RecruitmentFailedException::class);
-
-        $this->service->createMember(
-            54321,
-            'NewName',
-            $division,
-            1,
-            $platoon->id,
-            $otherSquad->id,
             [],
             $recruiter
         );
@@ -169,7 +172,6 @@ class RecruitmentServiceTest extends TestCase
             $division,
             1,
             $platoon->id,
-            null,
             [$handle->id => 'MyGameHandle'],
             $recruiter
         );

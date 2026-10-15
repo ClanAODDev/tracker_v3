@@ -5,7 +5,6 @@ namespace App\Repositories;
 use App\Data\DivisionComparisonData;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Note;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
@@ -55,15 +54,16 @@ class MemberRepository
     public function getNotesForMember(Member $member, ?User $user = null): Collection
     {
         return $member->notes()
+            ->visibleTo($user)
             ->with('author.member')
-            ->get()
-            ->filter(fn ($note) => Note::isTypeVisibleTo($note->type, $user));
+            ->get();
     }
 
-    public function getTrashedNotesForMember(Member $member): Collection
+    public function getTrashedNotesForMember(Member $member, ?User $user = null): Collection
     {
         return $member->notes()
             ->onlyTrashed()
+            ->visibleTo($user)
             ->with('author.member')
             ->orderByDesc('deleted_at')
             ->get();
@@ -98,8 +98,7 @@ class MemberRepository
             'trainer',
             'tags.division',
             'memberRequest',
-            'platoon',
-            'squad',
+            'unit.parent',
             'transfers.division',
             'partTimeDivisions' => fn ($q) => $q->whereActive(true),
             'activityRemindedBy',

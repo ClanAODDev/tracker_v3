@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\Ability;
 use App\Models\Division;
 use App\Models\DivisionMemberField;
 use App\Models\User;
@@ -13,7 +14,7 @@ class DivisionMemberFieldPolicy
 
     public function before(User $user)
     {
-        if ($user->isRole('admin') || $user->isDeveloper()) {
+        if ($user->can(Ability::ManageDivisions) || $user->isDeveloper()) {
             return true;
         }
     }
