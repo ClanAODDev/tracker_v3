@@ -27,7 +27,7 @@ class CleanupTenureAwards implements ShouldQueue
         );
 
         if (! $this->silent) {
-            $this->notifyHighestTiers($stats->granted);
+            $this->notifyHighestTiers($stats->granted, $tenureAwards);
         }
 
         Log::info('Tenure awards reconciled', [
@@ -36,13 +36,13 @@ class CleanupTenureAwards implements ShouldQueue
         ]);
     }
 
-    private function notifyHighestTiers(Collection $granted): void
+    private function notifyHighestTiers(Collection $granted, TenureAwardService $tenureAwards): void
     {
         $highest = new EloquentCollection(
             $granted
                 ->groupBy('member_id')
                 ->map(fn (Collection $awards) => $awards->sortByDesc(
-                    fn (MemberAward $award) => array_search($award->award_id, TenureAwardService::AWARD_IDS, strict: true),
+                    fn (MemberAward $award) => $tenureAwards->milestoneOf($award),
                 )->first())
                 ->values()
                 ->all(),

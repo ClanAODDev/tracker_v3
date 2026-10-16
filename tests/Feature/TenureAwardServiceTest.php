@@ -14,6 +14,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionProperty;
+use RuntimeException;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -28,7 +29,7 @@ class TenureAwardServiceTest extends TestCase
     {
         parent::setUp();
 
-        foreach (TenureAwardService::AWARD_IDS as $years => $id) {
+        foreach ([5 => 18, 10 => 19, 15 => 139, 20 => 140, 25 => 343, 30 => 344] as $years => $id) {
             Award::factory()->create(['id' => $id, 'name' => "{$years} Years of Service", 'division_id' => null]);
         }
 
@@ -288,5 +289,26 @@ class TenureAwardServiceTest extends TestCase
             'name'       => 'cleanup-tenure-awards',
             'is_enabled' => false,
         ]);
+    }
+
+    #[Test]
+    public function awards_are_found_by_name_not_by_id(): void
+    {
+        Award::whereIn('id', [18, 19, 139, 140, 343, 344])->each(fn (Award $award) => $award->forceFill(['id' => $award->id + 1000])->save());
+
+        $ids = app(TenureAwardService::class)->awardIds();
+
+        $this->assertSame([5 => 1018, 10 => 1019, 15 => 1139, 20 => 1140, 25 => 1343, 30 => 1344], collect($ids)->sortKeys()->all());
+    }
+
+    #[Test]
+    public function a_missing_tenure_award_fails_loudly(): void
+    {
+        Award::where('name', '25 Years of Service')->delete();
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('25 Years of Service');
+
+        app(TenureAwardService::class)->awardIds();
     }
 }

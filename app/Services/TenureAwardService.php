@@ -3,22 +3,47 @@
 namespace App\Services;
 
 use App\Data\TenureReconciliation;
+use App\Models\Award;
 use App\Models\Member;
 use App\Models\MemberAward;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use RuntimeException;
 
 class TenureAwardService
 {
-    public const AWARD_IDS = [
-        30 => 344,
-        25 => 343,
-        20 => 140,
-        15 => 139,
-        10 => 19,
-        5  => 18,
-    ];
+    public const MILESTONES = [30, 25, 20, 15, 10, 5];
+
+    private ?array $awardIds = null;
+
+    public function awardIds(): array
+    {
+        if ($this->awardIds !== null) {
+            return $this->awardIds;
+        }
+
+        $names = collect(self::MILESTONES)->mapWithKeys(fn (int $years) => [$years => "{$years} Years of Service"]);
+
+        $found = Award::whereNull('division_id')
+            ->whereIn('name', $names->values())
+            ->pluck('id', 'name');
+
+        $missing = $names->reject(fn (string $name) => $found->has($name));
+
+        if ($missing->isNotEmpty()) {
+            throw new RuntimeException('Missing clan-wide tenure awards: ' . $missing->values()->join(', '));
+        }
+
+        return $this->awardIds = $names->map(fn (string $name) => $found[$name])->all();
+    }
+
+    public function milestoneOf(MemberAward $memberAward): ?int
+    {
+        $milestone = array_search($memberAward->award_id, $this->awardIds(), strict: true);
+
+        return $milestone === false ? null : $milestone;
+    }
 
     public function reconcile(Builder $members, bool $persist, bool $removeInvalid = true, ?Carbon $today = null): TenureReconciliation
     {
@@ -31,7 +56,7 @@ class TenureAwardService
             ->whereNotNull('join_date')
             ->chunkById(500, function (Collection $chunk) use ($persist, $removeInvalid, $today, &$missing, &$invalid, &$granted) {
                 $held = MemberAward::whereIn('member_id', $chunk->pluck('id'))
-                    ->whereIn('award_id', array_values(self::AWARD_IDS))
+                    ->whereIn('award_id', array_values($this->awardIds()))
                     ->get()
                     ->groupBy('member_id');
 
@@ -67,7 +92,7 @@ class TenureAwardService
         }
 
         return array_filter(
-            self::AWARD_IDS,
+            $this->awardIds(),
             fn (int $awardId, int $milestone) => $years >= $milestone,
             ARRAY_FILTER_USE_BOTH,
         );
@@ -77,13 +102,13 @@ class TenureAwardService
     {
         $heldMilestones = $existing
             ->where('approved', true)
-            ->map(fn (MemberAward $award) => array_search($award->award_id, self::AWARD_IDS, strict: true))
+            ->map(fn (MemberAward $award) => $this->milestoneOf($award))
             ->all();
 
         $ceiling = max([0, ...array_keys($eligible), ...$heldMilestones]);
 
         return array_filter(
-            self::AWARD_IDS,
+            $this->awardIds(),
             fn (int $awardId, int $milestone) => $milestone <= $ceiling,
             ARRAY_FILTER_USE_BOTH,
         );
