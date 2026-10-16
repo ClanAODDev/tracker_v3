@@ -13,6 +13,7 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use Illuminate\Support\HtmlString;
 
 class EditUnit extends EditRecord
 {
@@ -110,9 +111,7 @@ class EditUnit extends EditRecord
                 }),
 
             DeleteAction::make()
-                ->modalDescription(fn () => $this->record->isSquad()
-                    ? sprintf('Assigned members will be moved up to the parent %s. Are you sure?', $this->record->parent?->levelLabel() ?? 'Unit')
-                    : sprintf('Assigned members will be removed from this %s and every unit within it. Are you sure?', $this->record->levelLabel()))
+                ->modalDescription(fn () => $this->deleteDescription())
                 ->action(function ($record) {
                     $units = app(UnitAssignment::class);
                     $unit  = $record;
@@ -141,5 +140,27 @@ class EditUnit extends EditRecord
                         : redirect()->route('filament.mod.resources.divisions.edit', $record->division);
                 }),
         ];
+    }
+
+    private function deleteDescription(): HtmlString
+    {
+        $description = $this->record->isSquad()
+            ? sprintf('Assigned members will be moved up to the parent %s. Are you sure?', $this->record->parent?->levelLabel() ?? 'Unit')
+            : sprintf('Assigned members will be removed from this %s and every unit within it. Are you sure?', $this->record->levelLabel());
+
+        $leaders = app(UnitAssignment::class)->leadersLosingPositions($this->record);
+
+        if ($leaders->isNotEmpty()) {
+            $names = $leaders
+                ->map(fn (Member $leader) => sprintf('%s (%s)', e($leader->name), e($leader->position->getLabel())))
+                ->join(', ');
+
+            $description .= sprintf(
+                '<br><br><strong>These leaders will lose their position and become members with no position:</strong> %s. Assign them to another unit as a leader afterwards if needed.',
+                $names
+            );
+        }
+
+        return new HtmlString($description);
     }
 }

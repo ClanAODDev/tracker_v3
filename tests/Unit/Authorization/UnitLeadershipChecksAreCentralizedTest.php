@@ -14,7 +14,7 @@ class UnitLeadershipChecksAreCentralizedTest extends TestCase
     private const ALLOWED = [
         'Authorization/UnitTreeHierarchy.php'  => 2,
         'Models/Member.php'                    => 4,
-        'Services/Units/UnitAssignment.php'    => 6,
+        'Services/Units/UnitAssignment.php'    => 8,
         'Transformers/OrgChartTransformer.php' => 2,
     ];
 
