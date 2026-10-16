@@ -6,7 +6,6 @@ use App\Console\Commands\FetchApplicationFeeds;
 use App\Console\Commands\LeaderboardSnapshot;
 use App\Console\Commands\MemberSync;
 use App\Console\Commands\NotifyExpiringLeaves;
-use App\Console\Commands\NotifyMilestoneAwards;
 use App\Jobs\CleanupTenureAwards;
 use App\Jobs\CleanupUnassignedLeaders;
 use App\Jobs\PartTimeMemberCleanup;
@@ -34,10 +33,6 @@ Schedule::command(ClanSnapshot::class)->weekly()
 Schedule::command(LeaderboardSnapshot::class)->weekly()
     ->description('Capture division leaderboard rankings for trend tracking')
     ->when(fn () => scheduledTaskEnabled('tracker:leaderboard-snapshot'));
-
-Schedule::command(NotifyMilestoneAwards::class)->lastDayOfMonth('08:00')
-    ->description('Send Discord notifications for milestone award recipients')
-    ->when(fn () => scheduledTaskEnabled('tracker:notify-milestone-awards'));
 
 Schedule::command(NotifyExpiringLeaves::class)->dailyAt('15:00')
     ->description('Notify division channels of leaves of absence expiring soon or just expired')

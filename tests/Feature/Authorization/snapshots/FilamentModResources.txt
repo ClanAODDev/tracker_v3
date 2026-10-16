@@ -419,17 +419,17 @@ MemberAwardResource::canEdit | any award                                | member
 MemberAwardResource::canEdit | any award                                | banned                   | deny
 MemberAwardResource::canEdit | any award                                | pending                  | deny
 MemberAwardResource::canDelete | any award                                | admin                    | allow
-MemberAwardResource::canDelete | any award                                | developer                | allow
-MemberAwardResource::canDelete | any award                                | admin_viewing_as_officer | allow
+MemberAwardResource::canDelete | any award                                | developer                | deny
+MemberAwardResource::canDelete | any award                                | admin_viewing_as_officer | deny
 MemberAwardResource::canDelete | any award                                | senior_leader            | allow
 MemberAwardResource::canDelete | any award                                | commanding_officer       | allow
 MemberAwardResource::canDelete | any award                                | executive_officer        | allow
-MemberAwardResource::canDelete | any award                                | officer                  | allow
-MemberAwardResource::canDelete | any award                                | platoon_leader           | allow
-MemberAwardResource::canDelete | any award                                | squad_leader             | allow
-MemberAwardResource::canDelete | any award                                | member                   | allow
-MemberAwardResource::canDelete | any award                                | banned                   | allow
-MemberAwardResource::canDelete | any award                                | pending                  | allow
+MemberAwardResource::canDelete | any award                                | officer                  | deny
+MemberAwardResource::canDelete | any award                                | platoon_leader           | deny
+MemberAwardResource::canDelete | any award                                | squad_leader             | deny
+MemberAwardResource::canDelete | any award                                | member                   | deny
+MemberAwardResource::canDelete | any award                                | banned                   | deny
+MemberAwardResource::canDelete | any award                                | pending                  | deny
 MemberAwardResource::canDeleteAny | -                                        | admin                    | allow
 MemberAwardResource::canDeleteAny | -                                        | developer                | deny
 MemberAwardResource::canDeleteAny | -                                        | admin_viewing_as_officer | deny

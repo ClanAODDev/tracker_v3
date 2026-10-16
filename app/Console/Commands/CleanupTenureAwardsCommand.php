@@ -19,7 +19,7 @@ class CleanupTenureAwardsCommand extends BaseCommand
         if ($this->option('dry-run')) {
             $stats = $tenureAwards->reconcile(Member::query()->whereHas('division'), persist: false, removeInvalid: false);
 
-            $this->info("[Dry Run] {$stats['missing']} award(s) would be granted.");
+            $this->info("[Dry Run] {$stats->missing} award(s) would be granted.");
 
             return self::SUCCESS;
         }

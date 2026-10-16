@@ -2,6 +2,8 @@
 
 namespace App\Filament\Actions\Members;
 
+use App\Data\TenureReconciliation;
+use App\Exceptions\TenureReconciliationInProgress;
 use App\Models\Member;
 use App\Services\TenureAwardService;
 use Filament\Actions\Action;
@@ -24,6 +26,10 @@ class CleanupTenureAwards
                     ->label('Persist changes')
                     ->helperText('If off, runs a dry-run and only reports the counts.')
                     ->default(false),
+                Toggle::make('remove_invalid')
+                    ->label('Remove tenure awards the member has not reached')
+                    ->helperText('Use with care: members who returned to the clan can legitimately hold awards from earlier tenure.')
+                    ->default(false),
             ])
             ->requiresConfirmation()
             ->action(function (array $data, $livewire) {
@@ -32,25 +38,32 @@ class CleanupTenureAwards
                     ? $livewire->getFilteredTableQuery()
                     : Member::query();
 
-                $summary = DB::transaction(
-                    fn () => app(TenureAwardService::class)->reconcile(
-                        $query->whereHas('division'),
-                        (bool) ($data['persist'] ?? false),
-                    ),
-                    3,
-                );
+                try {
+                    $summary = DB::transaction(
+                        fn () => app(TenureAwardService::class)->reconcile(
+                            $query->whereHas('division'),
+                            persist: (bool) ($data['persist'] ?? false),
+                            removeInvalid: (bool) ($data['remove_invalid'] ?? false),
+                        ),
+                        3,
+                    );
+                } catch (TenureReconciliationInProgress $exception) {
+                    Notification::make()->title($exception->getMessage())->warning()->send();
+
+                    return;
+                }
 
                 self::notifySummary($summary, (bool) ($data['persist'] ?? false));
             });
     }
 
-    private static function notifySummary(array $summary, bool $persist): void
+    private static function notifySummary(TenureReconciliation $summary, bool $persist): void
     {
         $mode = $persist ? 'Applied' : 'Dry-run';
         $body = implode('<br />', [
             "{$mode} tenure award corrections:",
-            '- Missing awards ' . ($persist ? 'added' : 'found') . ": {$summary['missing']}",
-            '- Invalid awards ' . ($persist ? 'removed' : 'found') . ": {$summary['invalid']}",
+            '- Missing awards ' . ($persist ? 'added' : 'found') . ": {$summary->missing}",
+            '- Invalid awards ' . ($persist ? 'removed' : 'found') . ": {$summary->invalid}",
         ]);
 
         Notification::make()

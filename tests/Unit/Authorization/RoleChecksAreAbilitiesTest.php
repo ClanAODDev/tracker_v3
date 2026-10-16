@@ -15,7 +15,8 @@ class RoleChecksAreAbilitiesTest extends TestCase
         'Http/Controllers/API/TicketApiController.php'                                         => 1,
         'Filament/Admin/Resources/TicketResource/RelationManagers/CommentsRelationManager.php' => 1,
         'Services/TicketNotificationService.php'                                               => 1,
-        'Filament/Mod/Resources/MemberAwardResource.php'                                       => 6,
+        'Filament/Mod/Resources/MemberAwardResource.php'                                       => 5,
+        'Models/MemberAward.php'                                                               => 1,
         'Data/PendingActionsData.php'                                                          => 2,
     ];
 

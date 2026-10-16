@@ -4,10 +4,8 @@ namespace App\Filament\Mod\Resources\MemberAwardResource\Pages;
 
 use App\Filament\Mod\Resources\MemberAwardResource;
 use App\Models\MemberAward;
-use App\Notifications\Channel\NotifyDivisionMemberAwarded;
-use App\Notifications\DM\NotifyMemberAwardReceived;
-use App\Notifications\DM\NotifyRequesterAwardApproved;
 use App\Notifications\DM\NotifyRequesterAwardDenied;
+use App\Services\AwardNotificationService;
 use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Forms\Components\Textarea;
@@ -47,20 +45,7 @@ class EditMemberAward extends EditRecord
                 ->requiresConfirmation()
                 ->modalHeading('Approve Award')
                 ->modalDescription('Are you sure you want to approve this award?')
-                ->after(function (MemberAward $memberAward) {
-                    if ($memberAward->member->division->settings()->get('chat_alerts.member_awarded')) {
-                        $memberAward->member->division->notify(new NotifyDivisionMemberAwarded(
-                            $memberAward->member->name,
-                            $memberAward->award
-                        ));
-                    }
-
-                    $memberAward->member->notify(new NotifyMemberAwardReceived($memberAward->award->name));
-
-                    if ($memberAward->requester && $memberAward->requester_id !== $memberAward->member_id) {
-                        $memberAward->requester->notify(new NotifyRequesterAwardApproved($memberAward));
-                    }
-                }),
+                ->after(fn (MemberAward $memberAward) => app(AwardNotificationService::class)->notifyApproved($memberAward)),
         ];
     }
 }

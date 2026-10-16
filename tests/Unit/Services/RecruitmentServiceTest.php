@@ -137,6 +137,21 @@ class RecruitmentServiceTest extends TestCase
     }
 
     #[Test]
+    public function create_member_keeps_an_existing_join_date_and_sets_one_for_new_recruits(): void
+    {
+        $division  = $this->createActiveDivision();
+        $platoon   = $this->createPlatoon($division);
+        $recruiter = Member::factory()->create(['clan_id' => 99999]);
+        Member::factory()->create(['clan_id' => 12345, 'division_id' => 0, 'join_date' => '2016-05-12']);
+
+        $returning = $this->service->createMember(12345, 'Returning', $division, 1, $platoon->id, [], $recruiter);
+        $recruit   = $this->service->createMember(54321, 'Recruit', $division, 1, $platoon->id, [], $recruiter);
+
+        $this->assertSame('2016-05-12', $returning->join_date->toDateString());
+        $this->assertTrue($recruit->join_date->isToday());
+    }
+
+    #[Test]
     public function create_member_rejects_unit_from_another_division(): void
     {
         $division      = $this->createActiveDivision();
