@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use LogicException;
 
 class Award extends Model
 {
@@ -26,6 +27,12 @@ class Award extends Model
 
     protected static function booted(): void
     {
+        static::updating(function (self $award) {
+            if ($award->isDirty('name')) {
+                throw new LogicException("Award #{$award->id} cannot be renamed: code looks awards up by name (see `TenureAwardService`). Deactivate it and create a new award instead.");
+            }
+        });
+
         static::deleting(function (self $award) {
             $award->recipients()->delete();
         });
