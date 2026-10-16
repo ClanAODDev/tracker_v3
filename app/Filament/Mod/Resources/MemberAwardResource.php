@@ -106,16 +106,6 @@ class MemberAwardResource extends Resource
         });
     }
 
-    public static function canDeleteAny(): bool
-    {
-        return auth()->user()->can(Ability::ManageMemberAwards);
-    }
-
-    public static function canEdit(Model $record): bool
-    {
-        return auth()->user()->can(Ability::ManageMemberAwards);
-    }
-
     public static function form(Schema $schema): Schema
     {
         return $schema
