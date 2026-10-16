@@ -18,7 +18,7 @@ class AwardNotificationService
 
         $division = $memberAward->member->division;
 
-        if ($division?->settings()->get('chat_alerts.member_awarded')) {
+        if ($division?->chatAlert('member_awarded')) {
             $division->notify(new NotifyDivisionMemberAwarded($memberAward->member->name, $memberAward->award));
         }
 
@@ -56,7 +56,7 @@ class AwardNotificationService
         $memberAwards->load('member.division', 'award');
 
         $memberAwards
-            ->filter(fn (MemberAward $memberAward) => $memberAward->member->division?->settings()->get('chat_alerts.member_awarded'))
+            ->filter(fn (MemberAward $memberAward) => $memberAward->member->division?->chatAlert('member_awarded'))
             ->groupBy(fn (MemberAward $memberAward) => $memberAward->member->division_id)
             ->each(function (Collection $divisionAwards) {
                 $division = $divisionAwards->first()->member->division;
