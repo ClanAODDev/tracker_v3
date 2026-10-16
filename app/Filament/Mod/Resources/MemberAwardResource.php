@@ -51,9 +51,7 @@ class MemberAwardResource extends Resource
             $count = cache()->remember(
                 'nav_badge_member_awards_admin',
                 now()->addMinutes(2),
-                fn () => MemberAward::needsApproval()
-                    ->whereHas('award', fn ($query) => $query->whereNull('division_id'))
-                    ->count()
+                fn () => MemberAward::needsApproval()->visibleTo($user)->count()
             );
 
             return $count > 0 ? (string) $count : null;
@@ -63,9 +61,7 @@ class MemberAwardResource extends Resource
             $count = cache()->remember(
                 'nav_badge_member_awards_' . $user->id,
                 now()->addMinutes(2),
-                fn () => MemberAward::needsApproval()
-                    ->whereHas('award', fn ($query) => self::scopeToDivisionLeaderAwards($query, $user))
-                    ->count()
+                fn () => MemberAward::needsApproval()->visibleTo($user)->count()
             );
 
             return $count > 0 ? (string) $count : null;
@@ -76,34 +72,12 @@ class MemberAwardResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery();
-        $user  = auth()->user();
-
-        if ($user->isRole('admin')) {
-            return $query->whereHas('award', fn ($q) => $q->whereNull('division_id'));
-        }
-
-        if ($user->isDivisionLeader()) {
-            return $query->whereHas('award', fn ($q) => self::scopeToDivisionLeaderAwards($q, $user));
-        }
-
-        return $query;
+        return parent::getEloquentQuery()->visibleTo(auth()->user());
     }
 
     private static function canGrantClanWideAwards(User $user): bool
     {
         return $user->isDivisionLeader() && $user->can(Ability::ManageMemberAwards);
-    }
-
-    private static function scopeToDivisionLeaderAwards(Builder $query, User $user): Builder
-    {
-        return $query->where(function (Builder $q) use ($user) {
-            $q->where('division_id', $user->member->division_id);
-
-            if (self::canGrantClanWideAwards($user)) {
-                $q->orWhereNull('division_id');
-            }
-        });
     }
 
     public static function form(Schema $schema): Schema
