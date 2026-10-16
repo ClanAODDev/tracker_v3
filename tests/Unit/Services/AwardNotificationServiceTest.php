@@ -5,7 +5,10 @@ namespace Tests\Unit\Services;
 use App\Models\Award;
 use App\Models\Division;
 use App\Models\MemberAward;
+use App\Notifications\Channel\NotifyDivisionMemberAwarded;
 use App\Notifications\Channel\NotifyDivisionMemberAwardsBulk;
+use App\Notifications\DM\NotifyMemberAwardReceived;
+use App\Notifications\DM\NotifyRequesterAwardApproved;
 use App\Services\AwardNotificationService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -115,5 +118,27 @@ class AwardNotificationServiceTest extends TestCase
         $this->service->notifyBulkApproval($awards);
 
         Notification::assertNothingSent();
+    }
+
+    #[Test]
+    public function approving_notifies_the_recipient_the_requester_and_the_division()
+    {
+        $division = $this->createActiveDivision();
+        $this->enableAwardAlerts($division);
+        $member    = $this->createMember(['division_id' => $division->id]);
+        $requester = $this->createMember(['division_id' => $division->id]);
+        $award     = Award::factory()->global()->create();
+
+        $memberAward = MemberAward::factory()->approved()->create([
+            'member_id'    => $member->id,
+            'award_id'     => $award->id,
+            'requester_id' => $requester->id,
+        ]);
+
+        $this->service->notifyApproved($memberAward);
+
+        Notification::assertSentTo($member, NotifyMemberAwardReceived::class);
+        Notification::assertSentTo($requester, NotifyRequesterAwardApproved::class);
+        Notification::assertSentTo($division, NotifyDivisionMemberAwarded::class);
     }
 }

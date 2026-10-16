@@ -6,7 +6,7 @@ use App\Jobs\CleanupTenureAwards;
 use App\Models\Award;
 use App\Models\Member;
 use App\Models\MemberAward;
-use App\Notifications\Channel\NotifyDivisionMemberAwarded;
+use App\Notifications\Channel\NotifyDivisionMemberAwardsBulk;
 use App\Notifications\DM\NotifyMemberAwardReceived;
 use App\Services\TenureAwardService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -190,12 +190,30 @@ class TenureAwardServiceTest extends TestCase
         (new CleanupTenureAwards)->handle(app(TenureAwardService::class));
 
         Notification::assertSentToTimes($member, NotifyMemberAwardReceived::class, 1);
-        Notification::assertSentToTimes($member->division, NotifyDivisionMemberAwarded::class, 1);
+        Notification::assertSentToTimes($member->division, NotifyDivisionMemberAwardsBulk::class, 1);
         Notification::assertSentTo(
             $member,
             NotifyMemberAwardReceived::class,
             fn (NotifyMemberAwardReceived $notification) => (new ReflectionProperty($notification, 'award'))->getValue($notification) === '10 Years of Service',
         );
+    }
+
+    #[Test]
+    public function the_job_sends_one_division_message_for_many_members(): void
+    {
+        Notification::fake();
+
+        $division = $this->createActiveDivision();
+        $division->settings()->set('chat_alerts.member_awarded', 'officers');
+
+        $members = collect(['2015-01-01', '2021-06-01', '2010-02-02'])->map(
+            fn (string $date) => $this->createMember(['division_id' => $division->id, 'join_date' => $date]),
+        );
+
+        (new CleanupTenureAwards)->handle(app(TenureAwardService::class));
+
+        Notification::assertSentToTimes($division, NotifyDivisionMemberAwardsBulk::class, 1);
+        $members->each(fn (Member $member) => Notification::assertSentToTimes($member, NotifyMemberAwardReceived::class, 1));
     }
 
     #[Test]
@@ -259,7 +277,7 @@ class TenureAwardServiceTest extends TestCase
         (new CleanupTenureAwards)->handle(app(TenureAwardService::class));
 
         Notification::assertSentTo($member, NotifyMemberAwardReceived::class);
-        Notification::assertNotSentTo($member->division, NotifyDivisionMemberAwarded::class);
+        Notification::assertNotSentTo($member->division, NotifyDivisionMemberAwardsBulk::class);
     }
 
     #[Test]

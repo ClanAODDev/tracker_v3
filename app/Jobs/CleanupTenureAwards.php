@@ -4,10 +4,10 @@ namespace App\Jobs;
 
 use App\Models\Member;
 use App\Models\MemberAward;
-use App\Notifications\Channel\NotifyDivisionMemberAwarded;
-use App\Notifications\DM\NotifyMemberAwardReceived;
+use App\Services\AwardNotificationService;
 use App\Services\TenureAwardService;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -38,25 +38,19 @@ class CleanupTenureAwards implements ShouldQueue
 
     private function notifyHighestTiers(Collection $granted): void
     {
-        $granted
-            ->groupBy('member_id')
-            ->map(fn (Collection $awards) => $awards->sortByDesc(
-                fn (MemberAward $award) => array_search($award->award_id, TenureAwardService::AWARD_IDS, strict: true),
-            )->first())
-            ->each(fn (MemberAward $memberAward) => $this->notify($memberAward));
-    }
+        $highest = new EloquentCollection(
+            $granted
+                ->groupBy('member_id')
+                ->map(fn (Collection $awards) => $awards->sortByDesc(
+                    fn (MemberAward $award) => array_search($award->award_id, TenureAwardService::AWARD_IDS, strict: true),
+                )->first())
+                ->values()
+                ->all(),
+        );
 
-    private function notify(MemberAward $memberAward): void
-    {
-        $memberAward->loadMissing(['member.division', 'award']);
+        $notifications = app(AwardNotificationService::class);
 
-        $member   = $memberAward->member;
-        $division = $member->division;
-
-        if ($division?->settings()->get('chat_alerts.member_awarded')) {
-            $division->notify(new NotifyDivisionMemberAwarded($member->name, $memberAward->award));
-        }
-
-        $member->notify(new NotifyMemberAwardReceived($memberAward->award->name));
+        $notifications->notifyRecipients($highest);
+        $notifications->notifyBulkApproval($highest);
     }
 }
