@@ -28,7 +28,7 @@ Award::canBeRequestedBy  | requestable award                        | admin_view
 Award::canBeRequestedBy  | non-requestable award                    | admin_viewing_as_officer | allow
 Award::canBeRequestedBy  | inactive-division award                  | admin_viewing_as_officer | deny
 Award::canBeRequestedBy  | clan-wide non-requestable                | admin_viewing_as_officer | allow
-Member::eligibleForRankAction | (member names)                           | senior_leader            | [developer, unassigned]
+Member::eligibleForRankAction | (member names)                           | senior_leader            | [banned, developer, member, officer, other_platoon, platoon_leader, same_platoon_other_squad, same_squad, squad_leader, unassigned]
 RankAction::forUser      | (rank actions)                           | senior_leader            | [other_platoon to private_first_class, other_platoon to specialist, requested by admin, requested by admin_viewing_as_officer, requested by banned, requested by commanding_officer, requested by developer, requested by executive_officer, requested by member, requested by officer, requested by platoon_leader, requested by senior_leader, requested by squad_leader, same_platoon_other_squad to private_first_class, same_platoon_other_squad to specialist, same_squad to private_first_class, same_squad to specialist]
 DivisionTag::visibleTo   | (tag names)                              | senior_leader            | [division_a_officers, division_a_public, division_a_senior_leaders, division_b_public, global_public]
 DivisionTag::assignableBy | (tag names)                              | senior_leader            | [division_a_officers, division_a_public, division_a_senior_leaders, division_b_public, global_public]

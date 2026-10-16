@@ -4,6 +4,7 @@ namespace App\Notifications\Channel;
 
 use App\Channels\BotChannel;
 use App\Channels\Messages\BotChannelMessage;
+use App\Traits\DivisionSettableNotification;
 use App\Traits\RetryableNotification;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -12,7 +13,9 @@ use Illuminate\Notifications\Notification;
 
 class NotifyDivisionMemberPromotion extends Notification implements ShouldQueue
 {
-    use Queueable, RetryableNotification;
+    use DivisionSettableNotification, Queueable, RetryableNotification;
+
+    private string $alertSetting = 'chat_alerts.member_promoted';
 
     public function __construct(
         private readonly string $member,

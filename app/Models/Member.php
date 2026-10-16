@@ -406,6 +406,14 @@ class Member extends Model
             $query->where('name', 'like', "%{$search}%");
         }
 
+        if ($user->can(Ability::RequestDivisionRankActions)) {
+            return $query
+                ->where('id', '<>', $currentMember->id)
+                ->where('division_id', $currentMember->division_id)
+                ->where('rank', '<', $roleLimits['divisionLeader'])
+                ->where('rank', '<=', $currentMember->rank->value);
+        }
+
         $units = app(UnitHierarchy::class);
 
         return $query
