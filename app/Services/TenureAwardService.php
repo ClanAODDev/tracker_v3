@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Data\TenureReconciliation;
 use App\Models\Member;
 use App\Models\MemberAward;
 use Carbon\Carbon;
@@ -19,14 +20,16 @@ class TenureAwardService
         5  => 18,
     ];
 
-    public function reconcile(Builder $members, bool $persist, bool $removeInvalid = true, ?Carbon $today = null): array
+    public function reconcile(Builder $members, bool $persist, bool $removeInvalid = true, ?Carbon $today = null): TenureReconciliation
     {
         $today ??= now();
-        $stats = ['missing' => 0, 'invalid' => 0, 'granted' => collect()];
+        $missing = 0;
+        $invalid = 0;
+        $granted = collect();
 
         $members
             ->whereNotNull('join_date')
-            ->chunkById(500, function (Collection $chunk) use ($persist, $removeInvalid, $today, &$stats) {
+            ->chunkById(500, function (Collection $chunk) use ($persist, $removeInvalid, $today, &$missing, &$invalid, &$granted) {
                 $held = MemberAward::whereIn('member_id', $chunk->pluck('id'))
                     ->whereIn('award_id', array_values(self::AWARD_IDS))
                     ->get()
@@ -38,15 +41,15 @@ class TenureAwardService
 
                     $owed = $this->awardIdsOwed($eligible, $existing);
 
-                    $granted = $this->grantMissing($member, $owed, $existing, $persist);
+                    $grants = $this->grantMissing($member, $owed, $existing, $persist);
 
-                    $stats['missing'] += $granted['count'];
-                    $stats['granted'] = $stats['granted']->concat($granted['created']);
-                    $stats['invalid'] += $this->removeInvalid($owed, $existing, $persist && $removeInvalid);
+                    $missing += $grants['count'];
+                    $granted = $granted->concat($grants['created']);
+                    $invalid += $this->removeInvalid($owed, $existing, $persist && $removeInvalid);
                 }
             });
 
-        return $stats;
+        return new TenureReconciliation($missing, $invalid, $granted);
     }
 
     public function eligibleAwardIds(Member $member, Carbon $today): array

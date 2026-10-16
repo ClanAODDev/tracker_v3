@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Data\TenureReconciliation;
 use App\Jobs\CleanupTenureAwards;
 use App\Models\Award;
 use App\Models\Member;
@@ -47,7 +48,7 @@ class TenureAwardServiceTest extends TestCase
         return MemberAward::where('member_id', $member->id)->pluck('award_id')->sort()->values()->all();
     }
 
-    private function reconcile(Member $member, bool $persist = true, bool $removeInvalid = true): array
+    private function reconcile(Member $member, bool $persist = true, bool $removeInvalid = true): TenureReconciliation
     {
         return app(TenureAwardService::class)->reconcile(
             Member::query()->whereKey($member->id),
@@ -118,7 +119,7 @@ class TenureAwardServiceTest extends TestCase
         $stats = $this->reconcile($member, removeInvalid: false);
 
         $this->assertContains(139, $this->awardIdsFor($member));
-        $this->assertSame(0, $stats['invalid']);
+        $this->assertSame(0, $stats->invalid);
     }
 
     #[Test]
@@ -130,7 +131,7 @@ class TenureAwardServiceTest extends TestCase
 
         $stats = $this->reconcile($member);
 
-        $this->assertSame(0, $stats['invalid']);
+        $this->assertSame(0, $stats->invalid);
         $this->assertSame([18, 19], $this->awardIdsFor($member));
     }
 
@@ -141,7 +142,7 @@ class TenureAwardServiceTest extends TestCase
 
         $stats = $this->reconcile($member);
 
-        $this->assertSame(0, $stats['missing']);
+        $this->assertSame(0, $stats->missing);
         $this->assertSame([], $this->awardIdsFor($member));
     }
 
@@ -152,7 +153,7 @@ class TenureAwardServiceTest extends TestCase
 
         $stats = $this->reconcile($member, persist: false);
 
-        $this->assertSame(2, $stats['missing']);
+        $this->assertSame(2, $stats->missing);
         $this->assertSame([], $this->awardIdsFor($member));
     }
 
@@ -164,7 +165,7 @@ class TenureAwardServiceTest extends TestCase
 
         $stats = $this->reconcile($member);
 
-        $this->assertSame(0, $stats['missing']);
+        $this->assertSame(0, $stats->missing);
     }
 
     #[Test]
@@ -175,7 +176,7 @@ class TenureAwardServiceTest extends TestCase
         $this->reconcile($member);
         $second = $this->reconcile($member);
 
-        $this->assertSame(0, $second['missing']);
+        $this->assertSame(0, $second->missing);
         $this->assertCount(2, $this->awardIdsFor($member));
     }
 

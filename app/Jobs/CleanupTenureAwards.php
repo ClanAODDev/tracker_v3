@@ -27,12 +27,12 @@ class CleanupTenureAwards implements ShouldQueue
         );
 
         if (! $this->silent) {
-            $this->notifyHighestTiers($stats['granted']);
+            $this->notifyHighestTiers($stats->granted);
         }
 
         Log::info('Tenure awards reconciled', [
-            'granted'             => $stats['missing'],
-            'flagged_for_removal' => $stats['invalid'],
+            'granted'             => $stats->missing,
+            'flagged_for_removal' => $stats->invalid,
         ]);
     }
 
