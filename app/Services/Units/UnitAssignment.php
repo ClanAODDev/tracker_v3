@@ -11,6 +11,7 @@ use App\Models\DivisionUnitLevel;
 use App\Models\Member;
 use App\Models\Unit;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 
@@ -211,6 +212,30 @@ class UnitAssignment
 
             $unit->allMembers()->update(['unit_id' => null]);
         });
+    }
+
+    /**
+     * @return Collection<int, Member>
+     */
+    public function leadersLosingPositions(Unit $unit): Collection
+    {
+        $affected = Unit::query()
+            ->where('id', $unit->id)
+            ->orWhere(fn (Builder $query) => $query->where('path', 'like', $unit->path . '%'))
+            ->get(['id', 'leader_id']);
+
+        $clanIds = $affected->pluck('leader_id')->filter()->unique();
+
+        $ledElsewhere = Unit::query()
+            ->whereIn('leader_id', $clanIds)
+            ->whereNotIn('id', $affected->pluck('id'))
+            ->pluck('leader_id');
+
+        return Member::query()
+            ->whereIn('clan_id', $clanIds->diff($ledElsewhere))
+            ->whereIn('position', [Position::PLATOON_LEADER, Position::SQUAD_LEADER])
+            ->orderBy('name')
+            ->get();
     }
 
     public function reconcilePositions(): void
