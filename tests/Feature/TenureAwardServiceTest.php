@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Data\TenureReconciliation;
+use App\Exceptions\TenureReconciliationInProgress;
 use App\Jobs\CleanupTenureAwards;
 use App\Models\Award;
 use App\Models\Member;
@@ -11,6 +12,7 @@ use App\Notifications\Channel\NotifyDivisionMemberAwardsBulk;
 use App\Notifications\DM\NotifyMemberAwardReceived;
 use App\Services\TenureAwardService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionProperty;
@@ -310,5 +312,36 @@ class TenureAwardServiceTest extends TestCase
         $this->expectExceptionMessage('25 Years of Service');
 
         app(TenureAwardService::class)->awardIds();
+    }
+
+    #[Test]
+    public function a_second_persisting_run_is_refused_while_one_is_in_progress(): void
+    {
+        $member = $this->memberJoined('2015-01-01');
+        $lock   = Cache::lock('tenure-award-reconcile', 60);
+        $lock->get();
+
+        try {
+            $this->expectException(TenureReconciliationInProgress::class);
+
+            $this->reconcile($member);
+        } finally {
+            $lock->release();
+        }
+    }
+
+    #[Test]
+    public function dry_runs_are_not_blocked_and_the_lock_is_released_after_a_run(): void
+    {
+        $member = $this->memberJoined('2015-01-01');
+        $lock   = Cache::lock('tenure-award-reconcile', 60);
+        $lock->get();
+        $this->assertSame(2, $this->reconcile($member, persist: false)->missing);
+        $lock->release();
+
+        $this->reconcile($member);
+        $second = $this->reconcile($member);
+
+        $this->assertSame(0, $second->missing);
     }
 }

@@ -3,12 +3,14 @@
 namespace App\Services;
 
 use App\Data\TenureReconciliation;
+use App\Exceptions\TenureReconciliationInProgress;
 use App\Models\Award;
 use App\Models\Member;
 use App\Models\MemberAward;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use RuntimeException;
 
 class TenureAwardService
@@ -46,6 +48,25 @@ class TenureAwardService
     }
 
     public function reconcile(Builder $members, bool $persist, bool $removeInvalid = true, ?Carbon $today = null): TenureReconciliation
+    {
+        if (! $persist) {
+            return $this->run($members, persist: false, removeInvalid: $removeInvalid, today: $today);
+        }
+
+        $lock = Cache::lock('tenure-award-reconcile', 900);
+
+        if (! $lock->get()) {
+            throw new TenureReconciliationInProgress;
+        }
+
+        try {
+            return $this->run($members, persist: true, removeInvalid: $removeInvalid, today: $today);
+        } finally {
+            $lock->release();
+        }
+    }
+
+    private function run(Builder $members, bool $persist, bool $removeInvalid, ?Carbon $today): TenureReconciliation
     {
         $today ??= now();
         $missing = 0;

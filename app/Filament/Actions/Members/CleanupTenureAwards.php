@@ -3,6 +3,7 @@
 namespace App\Filament\Actions\Members;
 
 use App\Data\TenureReconciliation;
+use App\Exceptions\TenureReconciliationInProgress;
 use App\Models\Member;
 use App\Services\TenureAwardService;
 use Filament\Actions\Action;
@@ -37,14 +38,20 @@ class CleanupTenureAwards
                     ? $livewire->getFilteredTableQuery()
                     : Member::query();
 
-                $summary = DB::transaction(
-                    fn () => app(TenureAwardService::class)->reconcile(
-                        $query->whereHas('division'),
-                        persist: (bool) ($data['persist'] ?? false),
-                        removeInvalid: (bool) ($data['remove_invalid'] ?? false),
-                    ),
-                    3,
-                );
+                try {
+                    $summary = DB::transaction(
+                        fn () => app(TenureAwardService::class)->reconcile(
+                            $query->whereHas('division'),
+                            persist: (bool) ($data['persist'] ?? false),
+                            removeInvalid: (bool) ($data['remove_invalid'] ?? false),
+                        ),
+                        3,
+                    );
+                } catch (TenureReconciliationInProgress $exception) {
+                    Notification::make()->title($exception->getMessage())->warning()->send();
+
+                    return;
+                }
 
                 self::notifySummary($summary, (bool) ($data['persist'] ?? false));
             });
