@@ -156,7 +156,8 @@ class MemberSyncService
             $member->division->notify(new NotifyDivisionMemberRemoved(
                 member: $member,
                 remover: null,
-                removalReason: null
+                removalReason: null,
+                unit: $member->unit
             ));
         } catch (Exception $exception) {
         }

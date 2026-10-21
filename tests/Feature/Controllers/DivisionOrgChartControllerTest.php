@@ -81,4 +81,23 @@ class DivisionOrgChartControllerTest extends TestCase
         $this->assertSame('squad', $teamNode['type']);
         $this->assertSame(['Team Grunt'], collect($teamNode['children'])->pluck('name')->all());
     }
+
+    #[Test]
+    public function a_division_with_one_unit_level_shows_its_units_with_their_leader_title(): void
+    {
+        $officer  = $this->createOfficer();
+        $division = $officer->member->division;
+        DivisionUnitLevel::where('division_id', $division->id)->where('depth', 2)->delete();
+        $platoon = $this->createPlatoon($division, ['name' => 'First Platoon']);
+        $leader  = $this->createPlatoonLeader($platoon, ['division_id' => $division->id]);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $platoon->id, 'name' => 'Platoon Grunt']);
+
+        $tree = $this->actingAs($officer)->getJson(route('division.structure.data', $division->slug))->json();
+        $node = collect($tree['children'])->firstWhere('id', "platoon-{$platoon->id}");
+
+        $this->assertSame('platoon', $node['type']);
+        $this->assertSame($division->fresh()->unitLevel(1)->leader_title, $node['leaderTitle']);
+        $this->assertSame($leader->name, $node['leader']['name']);
+        $this->assertContains('Platoon Grunt', collect($node['children'])->flatMap(fn ($child) => collect($child['children'] ?? [])->pluck('name'))->all());
+    }
 }
