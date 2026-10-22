@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\MemberProfileData;
 use App\Enums\ActivityType;
 use App\Filament\Forms\Components\DivisionMemberFieldsForm;
+use App\Http\Requests\Member\SearchMembers;
 use App\Http\Requests\Member\UpdateMemberDetails;
 use App\Models\Member;
 use App\Models\Unit;
@@ -15,7 +16,6 @@ use App\Services\Units\UnitAssignment;
 use App\Support\MemberCard;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Inertia\Inertia;
@@ -29,12 +29,40 @@ class MemberController extends Controller
         private RankTimelineService $rankTimelineService,
     ) {}
 
-    public function search(Request $request): Response|JsonResponse
+    public function search(SearchMembers $request): Response|JsonResponse
     {
-        $query   = $request->query('q');
-        $members = $query ? $this->memberRepository->search($query) : collect();
+        $query   = trim((string) $request->validated('q'));
+        $partial = $request->isPartial($query);
 
-        $results = $members->values()->map(fn (Member $member) => [
+        if ($request->wantsJson()) {
+            $members = $query !== '' ? $this->memberRepository->search($query, $partial) : collect();
+
+            return response()->json(['results' => $members->values()->map(fn (Member $member) => $this->searchResult($member))]);
+        }
+
+        $paginator = $query !== ''
+            ? $this->memberRepository->searchPaginated($query, $partial)->withQueryString()
+            : null;
+
+        return Inertia::render('member/search', [
+            'query'      => $query !== '' ? $query : null,
+            'results'    => $paginator ? $paginator->getCollection()->values()->map(fn (Member $member) => $this->searchResult($member)) : [],
+            'partial'    => $partial,
+            'pagination' => $paginator ? [
+                'total'       => $paginator->total(),
+                'currentPage' => $paginator->currentPage(),
+                'lastPage'    => $paginator->lastPage(),
+                'from'        => $paginator->firstItem(),
+                'to'          => $paginator->lastItem(),
+                'prevUrl'     => $paginator->previousPageUrl(),
+                'nextUrl'     => $paginator->nextPageUrl(),
+            ] : null,
+        ]);
+    }
+
+    private function searchResult(Member $member): array
+    {
+        return [
             'rankName'   => $member->present()->rankName(),
             'clanId'     => $member->clan_id,
             'division'   => $member->division->name ?? 'Ex-AOD',
@@ -43,21 +71,14 @@ class MemberController extends Controller
             'handle'     => $member->handles->first()
                 ? $member->handles->first()->pivot->value . ' [' . $member->handles->first()->label . ']'
                 : null,
-        ]);
-
-        if ($request->wantsJson()) {
-            return response()->json(['results' => $results]);
-        }
-
-        return Inertia::render('member/search', [
-            'query'   => $query,
-            'results' => $results,
-        ]);
+        ];
     }
 
-    public function searchAutoComplete(Request $request)
+    public function searchAutoComplete(SearchMembers $request)
     {
-        return $this->memberRepository->searchAutocomplete($request->input('query'));
+        $query = trim((string) $request->validated('query'));
+
+        return $this->memberRepository->searchAutocomplete($query, partial: $request->isPartial($query));
     }
 
     public function show(Member $member): Response

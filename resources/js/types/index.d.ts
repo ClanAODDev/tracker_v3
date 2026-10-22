@@ -61,6 +61,7 @@ export interface SharedProps {
     };
     nav: NavItem[];
     sessionLifetime: number;
+    memberSearch: { minChars: number };
     flash: {
         toasts: Toast[];
     };

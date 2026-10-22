@@ -1,6 +1,8 @@
+import { usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 
 import { getJson } from '@/lib/api';
+import type { SharedProps } from '@/types';
 
 export interface MemberSearchResult {
     rankName: string;
@@ -21,6 +23,10 @@ interface State {
     results: MemberSearchResult[];
     loading: boolean;
     matchedQuery: string;
+}
+
+export function usePartialSearchMinChars(): number {
+    return usePage<SharedProps>().props.memberSearch?.minChars ?? 3;
 }
 
 export function useMemberSearch(

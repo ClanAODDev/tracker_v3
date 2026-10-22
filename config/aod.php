@@ -27,6 +27,10 @@ return [
     'msgt-channel'            => env('MSGT_CHANNEL', 'aod-msgt-up'),
     'it-team-channel'         => env('IT_TEAM_CHANNEL'),
 
+    'member_search' => [
+        'min_chars' => 3,
+    ],
+
     'rank' => [
         'promotion_acceptance_mins' => 1440,
         'rank_action_min_days'      => 7,

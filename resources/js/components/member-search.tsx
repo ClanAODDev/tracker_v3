@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { TronSpinner } from '@/components/tron-spinner';
-import { useMemberSearch, type MemberSearchResult } from '@/hooks/use-member-search';
+import { useMemberSearch, usePartialSearchMinChars, type MemberSearchResult } from '@/hooks/use-member-search';
 import { cn } from '@/lib/utils';
 
 type Result = MemberSearchResult;
@@ -25,6 +25,7 @@ export function MemberSearch({
     const boxRef = useRef<HTMLDivElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const partialMinChars = usePartialSearchMinChars();
     const { results, loading, matchedQuery } = useMemberSearch(value, { delayMs: 2000, jitterMs: 1000 });
 
     useEffect(() => {
@@ -155,7 +156,11 @@ export function MemberSearch({
                     </div>
                     {results.length === 0 ? (
                         <p className="px-3 py-4 text-center text-sm text-muted-foreground">
-                            {loading ? 'Searching…' : 'No members found.'}
+                            {loading
+                                ? 'Searching…'
+                                : matchedQuery.length < partialMinChars
+                                  ? `No exact match. Type at least ${partialMinChars} characters to search part of a name.`
+                                  : 'No members found.'}
                         </p>
                     ) : (
                         <ul className="max-h-96 overflow-y-auto py-1">
