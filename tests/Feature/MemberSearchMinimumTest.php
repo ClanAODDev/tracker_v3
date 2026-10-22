@@ -37,16 +37,17 @@ class MemberSearchMinimumTest extends TestCase
     }
 
     #[Test]
-    public function a_three_character_query_matches_part_of_a_name(): void
+    public function a_query_at_the_minimum_matches_part_of_a_name(): void
     {
+        $this->assertSame(['Joel', 'Jonas'], collect($this->names('Jo'))->sort()->values()->all());
         $this->assertSame(['Joel'], $this->names('oel'));
     }
 
     #[Test]
     public function a_short_query_is_an_exact_match_only(): void
     {
-        $this->assertSame([], $this->names('Jo'));
         $this->assertSame([], $this->names('J'));
+        $this->assertSame([], $this->names('o'));
     }
 
     #[Test]
@@ -57,17 +58,17 @@ class MemberSearchMinimumTest extends TestCase
     }
 
     #[Test]
-    public function a_short_discord_name_can_be_found_by_exact_match(): void
+    public function discord_names_are_matched_at_the_minimum_length(): void
     {
+        $this->assertSame([], $this->names('x'));
         $this->assertSame(['Alexander'], $this->names('ax'));
-        $this->assertSame([], $this->names('a'));
     }
 
     #[Test]
     public function the_search_page_says_when_only_exact_matches_were_used(): void
     {
-        $this->get(route('memberSearch', ['q' => 'DW']))
-            ->assertInertia(fn ($page) => $page->component('member/search')->where('partial', false)->where('query', 'DW'));
+        $this->get(route('memberSearch', ['q' => 'D']))
+            ->assertInertia(fn ($page) => $page->component('member/search')->where('partial', false)->where('query', 'D'));
 
         $this->get(route('memberSearch', ['q' => 'Joel']))
             ->assertInertia(fn ($page) => $page->where('partial', true));
@@ -76,9 +77,10 @@ class MemberSearchMinimumTest extends TestCase
     #[Test]
     public function the_minimum_comes_from_configuration(): void
     {
-        config(['aod.member_search.min_chars' => 2]);
+        config(['aod.member_search.min_chars' => 3]);
 
-        $this->assertSame(['Joel', 'Jonas'], collect($this->names('Jo'))->sort()->values()->all());
+        $this->assertSame([], $this->names('Jo'));
+        $this->assertSame(['Jonas'], $this->names('Jon'));
     }
 
     #[Test]

@@ -28,7 +28,7 @@ return [
     'it-team-channel'         => env('IT_TEAM_CHANNEL'),
 
     'member_search' => [
-        'min_chars' => 3,
+        'min_chars' => 2,
     ],
 
     'rank' => [
