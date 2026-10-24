@@ -173,6 +173,49 @@ class MemberSyncServiceTest extends TestCase
         $this->assertSame('2019-03-01', $member->fresh()->join_date->toDateString());
     }
 
+    #[Test]
+    public function sync_reads_the_epoch_join_date_the_forum_actually_sends(): void
+    {
+        $division = Division::factory()->create();
+        $member   = Member::factory()->create([
+            'clan_id'     => 55558,
+            'name'        => 'EpochMember',
+            'division_id' => $division->id,
+            'join_date'   => '2026-03-01',
+            'posts'       => 10,
+        ]);
+
+        $service = new MemberSyncService($this->forumInfoFor($member, $division, '1473639000'));
+        $service->sync();
+
+        $this->assertSame('2016-09-11', $member->fresh()->join_date->toDateString());
+        $this->assertSame(0, $service->getStats()['errors']);
+    }
+
+    #[Test]
+    public function sync_still_updates_other_fields_when_the_join_date_is_unusable(): void
+    {
+        $division = Division::factory()->create();
+        $member   = Member::factory()->create([
+            'clan_id'     => 55559,
+            'division_id' => $division->id,
+            'join_date'   => '2019-03-01',
+            'posts'       => 10,
+        ]);
+
+        foreach (['0', 'not-a-date', ''] as $bad) {
+            $info                       = $this->forumInfoFor($member, $division, $bad);
+            $info->data[0]['postcount'] = 99;
+
+            (new MemberSyncService($info))->sync();
+
+            $this->assertSame('2019-03-01', $member->fresh()->join_date->toDateString());
+            $this->assertSame(99, $member->fresh()->posts);
+
+            $member->update(['posts' => 10]);
+        }
+    }
+
     private function forumInfoFor(Member $member, Division $division, string $joinDate): GetDivisionInfo
     {
         $info       = Mockery::mock(GetDivisionInfo::class);
