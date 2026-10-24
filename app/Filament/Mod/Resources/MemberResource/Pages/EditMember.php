@@ -52,10 +52,6 @@ class EditMember extends EditRecord
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
-        if ($record->isDirty('last_trained_by')) {
-            $data['last_trained_at'] = now();
-        }
-
         app(MemberHandleService::class)->sync($record, $data['handleGroups']);
 
         PartTimeDivisionsForm::sync(

@@ -125,7 +125,8 @@ class UpdateRankForMemberTest extends TestCase
     public function job_sends_division_notification_on_promotion()
     {
         $division = $this->createActiveDivision();
-        $member   = $this->createMember([
+        $division->settings()->set('chat_alerts.member_promoted', 'officers');
+        $member = $this->createMember([
             'division_id' => $division->id,
             'rank'        => Rank::PRIVATE_FIRST_CLASS,
         ]);

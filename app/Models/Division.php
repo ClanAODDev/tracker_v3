@@ -259,6 +259,11 @@ class Division extends Model
             ->orderBy('name', 'asc');
     }
 
+    public function chatAlert(string $alert): string|bool|null
+    {
+        return $this->settings()->get("chat_alerts.{$alert}");
+    }
+
     public function settings(): DivisionSettings
     {
         $this->fireCustomModelEvent('settingsRead', true);

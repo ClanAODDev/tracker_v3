@@ -4,10 +4,10 @@ namespace App\Jobs;
 
 use App\Models\Member;
 use App\Models\MemberAward;
-use App\Notifications\Channel\NotifyDivisionMemberAwarded;
-use App\Notifications\DM\NotifyMemberAwardReceived;
+use App\Services\AwardNotificationService;
 use App\Services\TenureAwardService;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -27,36 +27,30 @@ class CleanupTenureAwards implements ShouldQueue
         );
 
         if (! $this->silent) {
-            $this->notifyHighestTiers($stats['granted']);
+            $this->notifyHighestTiers($stats->granted, $tenureAwards);
         }
 
         Log::info('Tenure awards reconciled', [
-            'granted'             => $stats['missing'],
-            'flagged_for_removal' => $stats['invalid'],
+            'granted'             => $stats->missing,
+            'flagged_for_removal' => $stats->invalid,
         ]);
     }
 
-    private function notifyHighestTiers(Collection $granted): void
+    private function notifyHighestTiers(Collection $granted, TenureAwardService $tenureAwards): void
     {
-        $granted
-            ->groupBy('member_id')
-            ->map(fn (Collection $awards) => $awards->sortByDesc(
-                fn (MemberAward $award) => array_search($award->award_id, TenureAwardService::AWARD_IDS, strict: true),
-            )->first())
-            ->each(fn (MemberAward $memberAward) => $this->notify($memberAward));
-    }
+        $highest = new EloquentCollection(
+            $granted
+                ->groupBy('member_id')
+                ->map(fn (Collection $awards) => $awards->sortByDesc(
+                    fn (MemberAward $award) => $tenureAwards->milestoneOf($award),
+                )->first())
+                ->values()
+                ->all(),
+        );
 
-    private function notify(MemberAward $memberAward): void
-    {
-        $memberAward->loadMissing(['member.division', 'award']);
+        $notifications = app(AwardNotificationService::class);
 
-        $member   = $memberAward->member;
-        $division = $member->division;
-
-        if ($division?->settings()->get('chat_alerts.member_awarded')) {
-            $division->notify(new NotifyDivisionMemberAwarded($member->name, $memberAward->award));
-        }
-
-        $member->notify(new NotifyMemberAwardReceived($memberAward->award->name));
+        $notifications->notifyRecipients($highest);
+        $notifications->notifyBulkApproval($highest);
     }
 }

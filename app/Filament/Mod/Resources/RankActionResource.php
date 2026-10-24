@@ -287,10 +287,11 @@ class RankActionResource extends Resource
                     $unit  = Str::lower($user->member?->leaderLevel()?->label ?? 'unit');
 
                     return match (true) {
-                        $level === UnitLevel::Squad   => sprintf('Only %s members up to %s can be selected. %s', $unit, self::rankCeiling('max_squad_leader'), $append),
-                        $level === UnitLevel::Platoon => sprintf('Only %s members up to %s can be selected. %s', $unit, self::rankCeiling('max_platoon_leader'), $append),
-                        $user->isDivisionLeader()     => sprintf('Only division members up to %s can be selected. %s', self::rankCeiling('max_division_leader'), $append),
-                        default                       => $append,
+                        $user->can(Ability::RequestDivisionRankActions) => sprintf('Only division members up to %s can be selected. %s', self::rankCeiling('max_division_leader'), $append),
+                        $level === UnitLevel::Squad                     => sprintf('Only %s members up to %s can be selected. %s', $unit, self::rankCeiling('max_squad_leader'), $append),
+                        $level === UnitLevel::Platoon                   => sprintf('Only %s members up to %s can be selected. %s', $unit, self::rankCeiling('max_platoon_leader'), $append),
+                        $user->isDivisionLeader()                       => sprintf('Only division members up to %s can be selected. %s', self::rankCeiling('max_division_leader'), $append),
+                        default                                         => $append,
                     };
                 })
                 ->rules([

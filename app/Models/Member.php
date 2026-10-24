@@ -35,6 +35,12 @@ class Member extends Model
 
     protected static function booted(): void
     {
+        static::updating(function (Member $member) {
+            if ($member->isDirty('last_trained_by') && $member->last_trained_by !== null && ! $member->isDirty('last_trained_at')) {
+                $member->last_trained_at = now();
+            }
+        });
+
         static::deleting(function (Member $member) {
             $member->transfers()->pending()->delete();
         });
@@ -398,6 +404,14 @@ class Member extends Model
 
         if ($search) {
             $query->where('name', 'like', "%{$search}%");
+        }
+
+        if ($user->can(Ability::RequestDivisionRankActions)) {
+            return $query
+                ->where('id', '<>', $currentMember->id)
+                ->where('division_id', $currentMember->division_id)
+                ->where('rank', '<', $roleLimits['divisionLeader'])
+                ->where('rank', '<=', $currentMember->rank->value);
         }
 
         $units = app(UnitHierarchy::class);

@@ -39,7 +39,7 @@ class StructureSection
                     ->minItems(fn (Division $record) => (int) $record->units()->max('depth'))
                     ->validationMessages([
                         'min' => fn (Division $record) => sprintf(
-                            'This division still has units at level %1$d, so it needs at least %1$d levels. Archive or move those units first.',
+                            'This division still has units at level %1$d, so it needs at least %1$d levels. Archive or move those units first. Leaders of archived units lose their position and become members with no position.',
                             (int) $record->units()->max('depth'),
                         ),
                     ])

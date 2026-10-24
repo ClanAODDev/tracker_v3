@@ -8,9 +8,11 @@ use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
 use App\Models\Unit;
+use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use App\Services\MemberSyncService;
 use App\Services\Units\UnitAssignment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -169,6 +171,49 @@ class MemberSyncServiceTest extends TestCase
         $service->sync();
 
         $this->assertSame('2019-03-01', $member->fresh()->join_date->toDateString());
+    }
+
+    #[Test]
+    public function sync_reads_the_epoch_join_date_the_forum_actually_sends(): void
+    {
+        $division = Division::factory()->create();
+        $member   = Member::factory()->create([
+            'clan_id'     => 55558,
+            'name'        => 'EpochMember',
+            'division_id' => $division->id,
+            'join_date'   => '2026-03-01',
+            'posts'       => 10,
+        ]);
+
+        $service = new MemberSyncService($this->forumInfoFor($member, $division, '1473639000'));
+        $service->sync();
+
+        $this->assertSame('2016-09-11', $member->fresh()->join_date->toDateString());
+        $this->assertSame(0, $service->getStats()['errors']);
+    }
+
+    #[Test]
+    public function sync_still_updates_other_fields_when_the_join_date_is_unusable(): void
+    {
+        $division = Division::factory()->create();
+        $member   = Member::factory()->create([
+            'clan_id'     => 55559,
+            'division_id' => $division->id,
+            'join_date'   => '2019-03-01',
+            'posts'       => 10,
+        ]);
+
+        foreach (['0', 'not-a-date', ''] as $bad) {
+            $info                       = $this->forumInfoFor($member, $division, $bad);
+            $info->data[0]['postcount'] = 99;
+
+            (new MemberSyncService($info))->sync();
+
+            $this->assertSame('2019-03-01', $member->fresh()->join_date->toDateString());
+            $this->assertSame(99, $member->fresh()->posts);
+
+            $member->update(['posts' => 10]);
+        }
     }
 
     private function forumInfoFor(Member $member, Division $division, string $joinDate): GetDivisionInfo
@@ -375,6 +420,39 @@ class MemberSyncServiceTest extends TestCase
         $service->sync();
 
         $this->assertEquals(1, $service->getStats()['removed']);
+    }
+
+    #[Test]
+    public function forum_removal_notice_names_the_members_unit(): void
+    {
+        Notification::fake();
+
+        $division = Division::factory()->create();
+        $division->settings()->set('chat_alerts.member_removed', 'officers');
+        $platoon = Unit::factory()->create(['division_id' => $division->id, 'name' => 'Alpha Company']);
+        $squad   = Unit::factory()->childOf($platoon)->create(['name' => 'Red Squad']);
+        $member  = Member::factory()->create(['clan_id' => 44445, 'division_id' => $division->id, 'unit_id' => $squad->id]);
+        MemberRequest::factory()->create([
+            'member_id'    => $member->id,
+            'requester_id' => $member->id,
+            'division_id'  => $division->id,
+            'approved_at'  => now(),
+        ]);
+
+        $mockInfo       = Mockery::mock(GetDivisionInfo::class);
+        $mockInfo->data = [[
+            'userid'       => 99992, 'username' => 'AOD_Other', 'joindate' => '2024-01-01', 'aoddivision' => $division->name,
+            'aodrankval'   => 3, 'discordtag' => 'o#1', 'discordid' => '999920000', 'postcount' => 5, 'allow_pm' => 1,
+            'allow_export' => 'yes', 'tsid' => 'x', 'lastdiscord_status' => 'connected', 'lastactivity' => time(), 'lastdiscord_connect' => time(),
+        ]];
+
+        (new MemberSyncService($mockInfo))->sync();
+
+        Notification::assertSentTo($division, NotifyDivisionMemberRemoved::class, function (NotifyDivisionMemberRemoved $notification) use ($division) {
+            $fields = $notification->toBot($division)['body']['embeds'][0]['fields'];
+
+            return collect($fields)->firstWhere('name', 'Unit')['value'] === 'Alpha Company / Red Squad';
+        });
     }
 
     #[Test]

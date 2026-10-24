@@ -24,6 +24,7 @@ class HandleInertiaRequests extends Middleware
             'auth'            => fn () => $this->authProps($request),
             'nav'             => fn () => ($user = $request->user()) ? Navigation::for($user) : [],
             'sessionLifetime' => (int) config('session.lifetime'),
+            'memberSearch'    => ['minChars' => (int) config('aod.member_search.min_chars')],
             'flash'           => fn () => [
                 'toasts' => $request->session()->get('toastr::messages', []),
             ],

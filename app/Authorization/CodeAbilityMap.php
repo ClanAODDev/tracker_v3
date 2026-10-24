@@ -50,7 +50,8 @@ class CodeAbilityMap implements AbilityMap
             Ability::ManagePermissions => [$admin],
 
             Ability::SeeDivisionHealthAlerts,
-            Ability::ApproveDivisionRankActions => [$senior],
+            Ability::ApproveDivisionRankActions,
+            Ability::RequestDivisionRankActions => [$senior],
 
             Ability::PromoteMembers => [$admin, $officer],
 

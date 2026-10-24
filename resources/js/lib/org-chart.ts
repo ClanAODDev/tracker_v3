@@ -185,7 +185,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
 
         if (node.data.type === 'division') {
             const leadershipGroup = node.children.find((c: any) => c.data.type === 'leadership-group');
-            const platoons = node.children.filter((c: any) => c.data.type === 'platoon');
+            const platoons = node.children.filter((c: any) => c.data.type !== 'leadership-group');
             const leadershipHeight = leadershipGroup ? leadershipGroup._height : 0;
             let platoonsWidth = 0;
             let platoonsHeight = 0;
@@ -222,7 +222,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
 
         if (node.data.type === 'division') {
             const leadershipGroup = node.children.find((c: any) => c.data.type === 'leadership-group');
-            const platoons = node.children.filter((c: any) => c.data.type === 'platoon');
+            const platoons = node.children.filter((c: any) => c.data.type !== 'leadership-group');
             let currentY = y + LAYOUT.ROW_SPACING;
             if (leadershipGroup) {
                 layoutTree(leadershipGroup, x, currentY);
