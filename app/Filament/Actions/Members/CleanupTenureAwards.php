@@ -10,7 +10,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ListRecords;
-use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class CleanupTenureAwards
 {
@@ -39,16 +39,17 @@ class CleanupTenureAwards
                     : Member::query();
 
                 try {
-                    $summary = DB::transaction(
-                        fn () => app(TenureAwardService::class)->reconcile(
-                            $query->whereHas('division'),
-                            persist: (bool) ($data['persist'] ?? false),
-                            removeInvalid: (bool) ($data['remove_invalid'] ?? false),
-                        ),
-                        3,
+                    $summary = app(TenureAwardService::class)->reconcile(
+                        $query->whereHas('division'),
+                        persist: (bool) ($data['persist'] ?? false),
+                        removeInvalid: (bool) ($data['remove_invalid'] ?? false),
                     );
                 } catch (TenureReconciliationInProgress $exception) {
                     Notification::make()->title($exception->getMessage())->warning()->send();
+
+                    return;
+                } catch (RuntimeException $exception) {
+                    Notification::make()->title($exception->getMessage())->danger()->send();
 
                     return;
                 }
