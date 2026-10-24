@@ -36,7 +36,7 @@ class Member extends Model
     protected static function booted(): void
     {
         static::updating(function (Member $member) {
-            if ($member->isDirty('last_trained_by') && ! $member->isDirty('last_trained_at')) {
+            if ($member->isDirty('last_trained_by') && $member->last_trained_by !== null && ! $member->isDirty('last_trained_at')) {
                 $member->last_trained_at = now();
             }
         });

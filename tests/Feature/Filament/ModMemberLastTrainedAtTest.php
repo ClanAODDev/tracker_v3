@@ -59,4 +59,22 @@ class ModMemberLastTrainedAtTest extends TestCase
 
         $this->assertSame('2024-01-01', $member->fresh()->last_trained_at->toDateString());
     }
+
+    #[Test]
+    public function clearing_the_trainer_does_not_stamp_last_trained_at(): void
+    {
+        $division = $this->createActiveDivision();
+        $this->actingAs($this->createSeniorLeader($division));
+
+        $trainer = $this->createMember(['division_id' => $division->id]);
+        $member  = $this->createMember([
+            'division_id'     => $division->id,
+            'last_trained_by' => $trainer->clan_id,
+            'last_trained_at' => '2024-01-01',
+        ]);
+
+        $member->update(['last_trained_by' => null]);
+
+        $this->assertSame('2024-01-01', $member->fresh()->last_trained_at->toDateString());
+    }
 }

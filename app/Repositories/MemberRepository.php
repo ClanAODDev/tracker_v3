@@ -42,7 +42,8 @@ class MemberRepository
         // unconstrained, against the fetched rows by the callers.
         return Member::whereHas('handles', fn ($query) => $query->where('value', $operator, $pattern))
             ->union($byName)
-            ->orderBy('name');
+            ->orderBy('name')
+            ->orderBy('id');
     }
 
     public function searchAutocomplete(string $query, int $limit = 5, bool $partial = true): Collection

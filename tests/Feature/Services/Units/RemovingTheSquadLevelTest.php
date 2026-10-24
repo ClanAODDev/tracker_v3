@@ -5,6 +5,7 @@ namespace Tests\Feature\Services\Units;
 use App\Enums\Position;
 use App\Enums\Role;
 use App\Filament\Mod\Resources\UnitResource\Pages\EditUnit;
+use App\Models\DivisionUnitLevel;
 use App\Models\Unit;
 use App\Models\User;
 use App\Services\Units\UnitAssignment;
@@ -101,5 +102,21 @@ class RemovingTheSquadLevelTest extends TestCase
 
         $this->assertStringContainsString('These leaders will lose their position', $description);
         $this->assertStringContainsString($squadLeader->name, $description);
+    }
+
+    #[Test]
+    public function level_labels_are_escaped_in_the_delete_warning(): void
+    {
+        Filament::setCurrentPanel('mod');
+        $this->actingAs($this->createAdmin());
+
+        DivisionUnitLevel::where('division_id', $this->division->id)->where('depth', 1)
+            ->update(['label' => '<script>alert(1)</script>']);
+
+        $page        = Livewire::test(EditUnit::class, ['record' => $this->squad->getRouteKey()])->mountAction('delete');
+        $description = (string) $page->instance()->getMountedAction()->getModalDescription();
+
+        $this->assertStringNotContainsStringIgnoringCase('<script', $description);
+        $this->assertStringContainsString('&lt;', $description);
     }
 }

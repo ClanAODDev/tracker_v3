@@ -145,8 +145,8 @@ class EditUnit extends EditRecord
     private function deleteDescription(): HtmlString
     {
         $description = $this->record->isSquad()
-            ? sprintf('Assigned members will be moved up to the parent %s. Are you sure?', $this->record->parent?->levelLabel() ?? 'Unit')
-            : sprintf('Assigned members will be removed from this %s and every unit within it. Are you sure?', $this->record->levelLabel());
+            ? sprintf('Assigned members will be moved up to the parent %s. Are you sure?', e($this->record->parent?->levelLabel() ?? 'Unit'))
+            : sprintf('Assigned members will be removed from this %s and every unit within it. Are you sure?', e($this->record->levelLabel()));
 
         $leaders = app(UnitAssignment::class)->leadersLosingPositions($this->record);
 
