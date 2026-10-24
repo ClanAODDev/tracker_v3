@@ -54,13 +54,13 @@ export function MemberSearch({
     }, [open, mobile]);
 
     useEffect(() => {
-        if (matchedQuery.length >= 2) {
+        if (matchedQuery.length >= partialMinChars) {
             setOpen(true);
             setActive(-1);
         } else {
             setOpen(false);
         }
-    }, [results, matchedQuery]);
+    }, [results, matchedQuery, partialMinChars]);
 
     useEffect(() => {
         function onClick(e: MouseEvent) {
@@ -156,11 +156,7 @@ export function MemberSearch({
                     </div>
                     {results.length === 0 ? (
                         <p className="px-3 py-4 text-center text-sm text-muted-foreground">
-                            {loading
-                                ? 'Searching…'
-                                : matchedQuery.length < partialMinChars
-                                  ? `No exact match. Type at least ${partialMinChars} characters to search part of a name.`
-                                  : 'No members found.'}
+                            {loading ? 'Searching…' : 'No members found.'}
                         </p>
                     ) : (
                         <ul className="max-h-96 overflow-y-auto py-1">
@@ -202,7 +198,7 @@ export function MemberSearch({
                             className="flex w-full items-center gap-2 border-t border-border px-3 py-2 text-left font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
                         >
                             <span className="h-px flex-1 bg-gradient-to-r from-primary/60 to-transparent" />
-                            {results.length - 8} more — view all
+                            View all results
                         </button>
                     )}
                 </div>
