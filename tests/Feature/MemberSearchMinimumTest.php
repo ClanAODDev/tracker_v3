@@ -28,11 +28,11 @@ class MemberSearchMinimumTest extends TestCase
         parent::setUp();
 
         $division = $this->createActiveDivision();
-        $this->actingAs($this->createOfficer($division));
+        $this->actingAs($this->createOfficer($division, ['name' => 'Searcher', 'discord' => null]));
 
-        $this->createMember(['division_id' => $division->id, 'name' => 'DW']);
+        $this->createMember(['division_id' => $division->id, 'name' => 'DW', 'discord' => null]);
         $this->createMember(['division_id' => $division->id, 'name' => 'Joel', 'discord' => 'joel_gaming']);
-        $this->createMember(['division_id' => $division->id, 'name' => 'Jonas']);
+        $this->createMember(['division_id' => $division->id, 'name' => 'Jonas', 'discord' => null]);
         $this->createMember(['division_id' => $division->id, 'name' => 'Alexander', 'discord' => 'ax']);
     }
 
@@ -95,7 +95,7 @@ class MemberSearchMinimumTest extends TestCase
     {
         $division = $this->createActiveDivision();
         foreach (range(1, 30) as $n) {
-            $this->createMember(['division_id' => $division->id, 'name' => sprintf('Zed%02d', $n)]);
+            $this->createMember(['division_id' => $division->id, 'name' => sprintf('Zed%02d', $n), 'discord' => null]);
         }
 
         $this->get(route('memberSearch', ['q' => 'Zed']))
@@ -113,7 +113,7 @@ class MemberSearchMinimumTest extends TestCase
     {
         $division = $this->createActiveDivision();
         foreach (range(1, 40) as $n) {
-            $this->createMember(['division_id' => $division->id, 'name' => sprintf('Yak%02d', $n)]);
+            $this->createMember(['division_id' => $division->id, 'name' => sprintf('Yak%02d', $n), 'discord' => null]);
         }
 
         $this->assertCount(25, $this->names('Yak'));
