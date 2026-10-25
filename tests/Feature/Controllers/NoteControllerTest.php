@@ -24,7 +24,7 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -50,7 +50,7 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -71,7 +71,7 @@ class NoteControllerTest extends TestCase
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -91,7 +91,7 @@ class NoteControllerTest extends TestCase
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -111,7 +111,7 @@ class NoteControllerTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -130,7 +130,7 @@ class NoteControllerTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -149,7 +149,7 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $response = $this->actingAs($srLdr)
             ->postJson(route('restoreNote', [$member->clan_id, 99999]));
@@ -162,7 +162,7 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $response = $this->actingAs($srLdr)
             ->deleteJson(route('forceDeleteNote', [$member->clan_id, 99999]));
@@ -175,8 +175,8 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member1  = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
-        $member2  = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member1  = $this->createMember(['division_id' => $division->id]);
+        $member2  = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member1->id,
@@ -195,7 +195,7 @@ class NoteControllerTest extends TestCase
     {
         $admin    = $this->createAdmin();
         $division = $this->createActiveDivision();
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -215,7 +215,7 @@ class NoteControllerTest extends TestCase
     {
         $admin    = $this->createAdmin();
         $division = $this->createActiveDivision();
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -236,7 +236,7 @@ class NoteControllerTest extends TestCase
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -255,7 +255,7 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -274,7 +274,7 @@ class NoteControllerTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id]);
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -296,7 +296,7 @@ class NoteControllerTest extends TestCase
     {
         $admin    = $this->createAdmin();
         $division = $this->createActiveDivision();
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create([
             'member_id' => $member->id,
@@ -314,7 +314,7 @@ class NoteControllerTest extends TestCase
     public function guest_cannot_create_note()
     {
         $division = $this->createActiveDivision();
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $response = $this->post(route('storeNote', $member->clan_id), [
             'body' => 'Unauthenticated note',
@@ -330,7 +330,7 @@ class NoteControllerTest extends TestCase
     {
         $division = $this->createActiveDivision();
         $user     = $this->createMemberWithUser(['division_id' => $division->id], ['role' => Role::MEMBER]);
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $response = $this->actingAs($user)
             ->post(route('storeNote', $member->clan_id), [
@@ -347,7 +347,7 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $tag = DivisionTag::factory()->create(['division_id' => $division->id]);
 
@@ -376,7 +376,7 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $response = $this->actingAs($srLdr)
             ->post(route('storeNote', $member->clan_id), [
@@ -405,7 +405,7 @@ class NoteControllerTest extends TestCase
         ], [
             'role' => Role::OFFICER,
         ]);
-        $member = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member = $this->createMember(['division_id' => $division->id]);
 
         $tag = DivisionTag::factory()->create(['division_id' => $division->id]);
 
@@ -435,7 +435,7 @@ class NoteControllerTest extends TestCase
         ], [
             'role' => Role::OFFICER,
         ]);
-        $member = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member = $this->createMember(['division_id' => $division->id]);
 
         $tag = DivisionTag::factory()->create(['division_id' => $division->id]);
 
@@ -464,7 +464,7 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $otherDivision = $this->createActiveDivision();
         $tag           = DivisionTag::factory()->create(['division_id' => $otherDivision->id]);
@@ -487,7 +487,7 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $globalTag = DivisionTag::factory()->global()->create();
 
@@ -511,7 +511,7 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create(['member_id' => $member->id, 'author_id' => $srLdr->id]);
 
@@ -534,7 +534,7 @@ class NoteControllerTest extends TestCase
     {
         $srLdr    = $this->createSeniorLeader();
         $division = $srLdr->member->division;
-        $member   = $this->createMember(['division_id' => $division->id, 'rank' => Rank::PRIVATE]);
+        $member   = $this->createMember(['division_id' => $division->id]);
 
         $note = Note::factory()->create(['member_id' => $member->id, 'author_id' => $srLdr->id]);
 
