@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-B7uridS0.js";import{o as t}from"./dist-MdoB2-rv.js";var n=e();function r({html:e,className:r}){return(0,n.jsx)(`div`,{className:t(`prose-tron`,r),dangerouslySetInnerHTML:{__html:e}})}export{r as t};
