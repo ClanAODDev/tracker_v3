@@ -8,6 +8,7 @@ use App\Data\PendingActionsData;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
+use App\Models\ReleaseNote;
 use App\Models\User;
 use App\Support\DivisionToolbar;
 use GrahamCampbell\Markdown\Facades\Markdown;
@@ -20,10 +21,25 @@ class AppController extends Controller
 {
     public function changeLog(): Response
     {
-        $markdown = file_get_contents(resource_path('views/changelog.md'));
+        $notes = ReleaseNote::published()
+            ->orderByDesc('published_at')
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('changelog', [
-            'body' => (string) Markdown::convertToHtml($markdown),
+            'notes' => $notes->getCollection()->map(fn (ReleaseNote $note) => [
+                'id'          => $note->id,
+                'title'       => $note->title,
+                'version'     => $note->version,
+                'publishedAt' => $note->published_at->format('M j, Y'),
+                'html'        => (string) Markdown::convertToHtml($note->body),
+            ])->values(),
+            'pagination' => [
+                'total'   => $notes->total(),
+                'prevUrl' => $notes->previousPageUrl(),
+                'nextUrl' => $notes->nextPageUrl(),
+            ],
         ]);
     }
 
