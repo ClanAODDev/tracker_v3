@@ -20,7 +20,7 @@ class NotePolicy
         $subject = is_string($arguments[0] ?? null) ? ($arguments[1] ?? null) : ($arguments[0] ?? null);
 
         if ($this->concernsOwnProfile($user, $ability, $subject)) {
-            return Response::deny('Notes on your own profile are not available to you');
+            return Response::deny('You cannot change notes on your own profile');
         }
 
         if ($user->can(Ability::ManageAllNotes) || $user->isDeveloper()) {
@@ -100,9 +100,9 @@ class NotePolicy
     private function concernsOwnProfile(User $user, ?string $ability, mixed $subject): bool
     {
         $memberId = match (true) {
-            $subject instanceof Note && in_array($ability, ['edit', 'delete', 'forceDelete'], true)      => $subject->member_id,
-            $subject instanceof Member && in_array($ability, ['viewForMember', 'createForMember'], true) => $subject->id,
-            default                                                                                      => null,
+            $subject instanceof Note && in_array($ability, ['edit', 'delete', 'restore', 'forceDelete'], true) => $subject->member_id,
+            $subject instanceof Member && $ability === 'createForMember'                                       => $subject->id,
+            default                                                                                            => null,
         };
 
         return $memberId !== null && $memberId === $user->member_id;
