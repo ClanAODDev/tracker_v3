@@ -146,6 +146,11 @@ class Unit extends Model
         return $units->values();
     }
 
+    public static function optionLabels(Builder $query): Collection
+    {
+        return $query->get(['id', 'name'])->mapWithKeys(fn (self $unit) => [$unit->id => $unit->name ?: 'Untitled']);
+    }
+
     public static function subtreeIdsOf(iterable $ids): QueryBuilder
     {
         return DB::table('units as descendant')
