@@ -262,10 +262,9 @@ class MemberResource extends Resource
                                     return [];
                                 }
 
-                                return Unit::where('division_id', $divisionId)
+                                return Unit::optionLabels(Unit::where('division_id', $divisionId)
                                     ->whereNull('parent_id')
-                                    ->orderBy('name')
-                                    ->pluck('name', 'id');
+                                    ->orderBy('name'));
                             })
                             ->multiple()
                             ->searchable()
