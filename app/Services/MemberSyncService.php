@@ -156,7 +156,8 @@ class MemberSyncService
             $member->division->notify(new NotifyDivisionMemberRemoved(
                 member: $member,
                 remover: null,
-                removalReason: null
+                removalReason: null,
+                unit: $member->unit
             ));
         } catch (Exception $exception) {
         }
@@ -252,13 +253,21 @@ class MemberSyncService
         ];
     }
 
-    protected function normalizeJoinDate(?string $joinDate): ?string
+    protected function normalizeJoinDate(mixed $joinDate): ?string
     {
-        if (empty($joinDate) || str_starts_with($joinDate, '1970') || str_starts_with($joinDate, '0000')) {
+        if ($joinDate === null || $joinDate === '' || $joinDate === 0 || $joinDate === '0') {
             return null;
         }
 
-        return Carbon::parse($joinDate)->toDateString();
+        try {
+            $date = is_numeric($joinDate)
+                ? Carbon::createFromTimestamp((int) $joinDate, config('app.timezone'))
+                : Carbon::parse($joinDate);
+        } catch (Exception) {
+            return null;
+        }
+
+        return $date->year < 1990 ? null : $date->toDateString();
     }
 
     protected function calculateRank(int $forumRank): int

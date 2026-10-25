@@ -62,7 +62,7 @@ class RecruitmentService
 
             $member->fill([
                 'name'                   => $name,
-                'join_date'              => now(),
+                'join_date'              => $member->join_date ?? now(),
                 'last_activity'          => now(),
                 'recruiter_id'           => $recruiter->clan_id,
                 'rank'                   => $rankId,

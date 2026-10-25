@@ -5,36 +5,56 @@ namespace App\Repositories;
 use App\Data\DivisionComparisonData;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\Note;
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Collection;
 
 class MemberRepository
 {
-    public function search(string $name): Collection
+    public function search(string $name, bool $partial = true, int $limit = 25): Collection
     {
-        $escaped = $this->escapeLike($name);
-        $byName  = Member::where('name', 'LIKE', "%{$escaped}%")
-            ->orWhere('discord', 'LIKE', "%{$escaped}%");
-
-        // Eager loads on either side of a union only apply to rows Eloquent
-        // fetches through that builder directly — `get()` on the outer query
-        // below never applies `$byName`'s loads, so both relations are instead
-        // loaded once, unconstrained, against the combined result.
-        return Member::whereHas('handles', fn ($query) => $query->where('value', 'LIKE', "%{$escaped}%"))
-            ->union($byName)
-            ->orderBy('name')
+        return $this->searchQuery($name, $partial)
+            ->limit($limit)
             ->get()
             ->load(['division', 'handles']);
     }
 
-    public function searchAutocomplete(string $query, int $limit = 5): Collection
+    public function searchPaginated(string $name, bool $partial = true, int $perPage = 25): LengthAwarePaginator
     {
-        $escaped = $this->escapeLike($query);
+        $paginator = $this->searchQuery($name, $partial)->paginate($perPage);
 
-        $byName = Member::where('name', 'LIKE', "%{$escaped}%")
-            ->orWhere('discord', 'LIKE', "%{$escaped}%");
+        $paginator->getCollection()->load(['division', 'handles']);
 
-        return Member::withWhereHas('handles', fn ($q) => $q->where('value', 'LIKE', "%{$escaped}%"))
+        return $paginator;
+    }
+
+    private function searchQuery(string $name, bool $partial): EloquentBuilder
+    {
+        [$operator, $pattern] = $this->searchComparison($name, $partial);
+
+        $byName = Member::where('name', $operator, $pattern)
+            ->orWhere('discord', $operator, $pattern);
+
+        // Eager loads on either side of a union only apply to rows Eloquent
+        // fetches through that builder directly — `get()` on the outer query
+        // never applies `$byName`'s loads, so both relations are loaded once,
+        // unconstrained, against the fetched rows by the callers.
+        return Member::whereHas('handles', fn ($query) => $query->where('value', $operator, $pattern))
+            ->union($byName)
+            ->orderBy('name')
+            ->orderBy('id');
+    }
+
+    public function searchAutocomplete(string $query, int $limit = 5, bool $partial = true): Collection
+    {
+        [$operator, $pattern] = $this->searchComparison($query, $partial);
+
+        $byName = Member::where('name', $operator, $pattern)
+            ->orWhere('discord', $operator, $pattern);
+
+        return Member::withWhereHas('handles', fn ($q) => $q->where('value', $operator, $pattern))
             ->union($byName)
             ->take($limit)
             ->get()
@@ -46,6 +66,13 @@ class MemberRepository
             ]);
     }
 
+    private function searchComparison(string $term, bool $partial): array
+    {
+        return $partial
+            ? ['LIKE', '%' . $this->escapeLike($term) . '%']
+            : ['=', $term];
+    }
+
     private function escapeLike(string $value): string
     {
         return str_replace(['\\', '%', '_'], ['\\\\', '\\%', '\\_'], $value);
@@ -54,16 +81,15 @@ class MemberRepository
     public function getNotesForMember(Member $member, ?User $user = null): Collection
     {
         return $member->notes()
-            ->visibleTo($user)
             ->with('author.member')
-            ->get();
+            ->get()
+            ->filter(fn ($note) => Note::isTypeVisibleTo($note->type, $user));
     }
 
-    public function getTrashedNotesForMember(Member $member, ?User $user = null): Collection
+    public function getTrashedNotesForMember(Member $member): Collection
     {
         return $member->notes()
             ->onlyTrashed()
-            ->visibleTo($user)
             ->with('author.member')
             ->orderByDesc('deleted_at')
             ->get();

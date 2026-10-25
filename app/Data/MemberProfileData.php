@@ -61,7 +61,7 @@ class MemberProfileData
         $this->division = $member->division;
 
         $this->notes             = $this->canViewNotes ? $repository->getNotesForMember($member, $this->user) : collect();
-        $this->trashedNotes      = $this->canViewTrashed ? $repository->getTrashedNotesForMember($member, $this->user) : collect();
+        $this->trashedNotes      = $this->canViewTrashed ? $repository->getTrashedNotesForMember($member) : collect();
         $this->transfers         = $repository->getTransfers($member);
         $this->partTimeDivisions = $member->partTimeDivisions()->whereActive(true)->get();
 

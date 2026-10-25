@@ -56,6 +56,13 @@ class AwardResource extends Resource
                 TextInput::make('name')
                     ->columnSpanFull()
                     ->required()
+                    ->disabledOn('edit')
+                    ->dehydrated(fn (string $operation) => $operation === 'create')
+                    ->hint(fn (string $operation) => $operation === 'edit' ? 'Locked' : null)
+                    ->hintIcon(fn (string $operation) => $operation === 'edit' ? 'heroicon-m-lock-closed' : null, tooltip: 'Award names cannot be changed once created.')
+                    ->helperText(fn (string $operation) => $operation === 'edit'
+                        ? 'Locked because code finds some awards by name, such as the "N Years of Service" tenure awards the daily job grants. Renaming one would stop that job. To retire an award, deactivate it and create a new one.'
+                        : 'Choose carefully: the name cannot be changed after the award is created.')
                     ->maxLength(191),
                 Textarea::make('description')
                     ->columnSpanFull()

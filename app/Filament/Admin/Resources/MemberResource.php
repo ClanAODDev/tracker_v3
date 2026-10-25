@@ -105,7 +105,7 @@ class MemberResource extends Resource
                 Section::make('Dates')
                     ->columnSpanFull()
                     ->schema([
-                        DateTimePicker::make('join_date'),
+                        DateTimePicker::make('join_date')->disabled()->helperText('Synced from the forums.'),
                         DateTimePicker::make('last_promoted_at'),
                         DateTimePicker::make('last_trained_at'),
                         Select::make('last_trained_by')

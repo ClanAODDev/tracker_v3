@@ -2,17 +2,21 @@
 
 namespace Tests\Feature;
 
+use App\Data\TenureReconciliation;
+use App\Exceptions\TenureReconciliationInProgress;
 use App\Jobs\CleanupTenureAwards;
 use App\Models\Award;
 use App\Models\Member;
 use App\Models\MemberAward;
-use App\Notifications\Channel\NotifyDivisionMemberAwarded;
+use App\Notifications\Channel\NotifyDivisionMemberAwardsBulk;
 use App\Notifications\DM\NotifyMemberAwardReceived;
 use App\Services\TenureAwardService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\Test;
 use ReflectionProperty;
+use RuntimeException;
 use Tests\TestCase;
 use Tests\Traits\CreatesDivisions;
 use Tests\Traits\CreatesMembers;
@@ -27,7 +31,7 @@ class TenureAwardServiceTest extends TestCase
     {
         parent::setUp();
 
-        foreach (TenureAwardService::AWARD_IDS as $years => $id) {
+        foreach ([5 => 18, 10 => 19, 15 => 139, 20 => 140, 25 => 343, 30 => 344] as $years => $id) {
             Award::factory()->create(['id' => $id, 'name' => "{$years} Years of Service", 'division_id' => null]);
         }
 
@@ -47,7 +51,7 @@ class TenureAwardServiceTest extends TestCase
         return MemberAward::where('member_id', $member->id)->pluck('award_id')->sort()->values()->all();
     }
 
-    private function reconcile(Member $member, bool $persist = true, bool $removeInvalid = true): array
+    private function reconcile(Member $member, bool $persist = true, bool $removeInvalid = true): TenureReconciliation
     {
         return app(TenureAwardService::class)->reconcile(
             Member::query()->whereKey($member->id),
@@ -118,7 +122,7 @@ class TenureAwardServiceTest extends TestCase
         $stats = $this->reconcile($member, removeInvalid: false);
 
         $this->assertContains(139, $this->awardIdsFor($member));
-        $this->assertSame(0, $stats['invalid']);
+        $this->assertSame(0, $stats->invalid);
     }
 
     #[Test]
@@ -130,7 +134,7 @@ class TenureAwardServiceTest extends TestCase
 
         $stats = $this->reconcile($member);
 
-        $this->assertSame(0, $stats['invalid']);
+        $this->assertSame(0, $stats->invalid);
         $this->assertSame([18, 19], $this->awardIdsFor($member));
     }
 
@@ -141,7 +145,7 @@ class TenureAwardServiceTest extends TestCase
 
         $stats = $this->reconcile($member);
 
-        $this->assertSame(0, $stats['missing']);
+        $this->assertSame(0, $stats->missing);
         $this->assertSame([], $this->awardIdsFor($member));
     }
 
@@ -152,7 +156,7 @@ class TenureAwardServiceTest extends TestCase
 
         $stats = $this->reconcile($member, persist: false);
 
-        $this->assertSame(2, $stats['missing']);
+        $this->assertSame(2, $stats->missing);
         $this->assertSame([], $this->awardIdsFor($member));
     }
 
@@ -164,7 +168,7 @@ class TenureAwardServiceTest extends TestCase
 
         $stats = $this->reconcile($member);
 
-        $this->assertSame(0, $stats['missing']);
+        $this->assertSame(0, $stats->missing);
     }
 
     #[Test]
@@ -175,7 +179,7 @@ class TenureAwardServiceTest extends TestCase
         $this->reconcile($member);
         $second = $this->reconcile($member);
 
-        $this->assertSame(0, $second['missing']);
+        $this->assertSame(0, $second->missing);
         $this->assertCount(2, $this->awardIdsFor($member));
     }
 
@@ -190,12 +194,30 @@ class TenureAwardServiceTest extends TestCase
         (new CleanupTenureAwards)->handle(app(TenureAwardService::class));
 
         Notification::assertSentToTimes($member, NotifyMemberAwardReceived::class, 1);
-        Notification::assertSentToTimes($member->division, NotifyDivisionMemberAwarded::class, 1);
+        Notification::assertSentToTimes($member->division, NotifyDivisionMemberAwardsBulk::class, 1);
         Notification::assertSentTo(
             $member,
             NotifyMemberAwardReceived::class,
             fn (NotifyMemberAwardReceived $notification) => (new ReflectionProperty($notification, 'award'))->getValue($notification) === '10 Years of Service',
         );
+    }
+
+    #[Test]
+    public function the_job_sends_one_division_message_for_many_members(): void
+    {
+        Notification::fake();
+
+        $division = $this->createActiveDivision();
+        $division->settings()->set('chat_alerts.member_awarded', 'officers');
+
+        $members = collect(['2015-01-01', '2021-06-01', '2010-02-02'])->map(
+            fn (string $date) => $this->createMember(['division_id' => $division->id, 'join_date' => $date]),
+        );
+
+        (new CleanupTenureAwards)->handle(app(TenureAwardService::class));
+
+        Notification::assertSentToTimes($division, NotifyDivisionMemberAwardsBulk::class, 1);
+        $members->each(fn (Member $member) => Notification::assertSentToTimes($member, NotifyMemberAwardReceived::class, 1));
     }
 
     #[Test]
@@ -259,7 +281,7 @@ class TenureAwardServiceTest extends TestCase
         (new CleanupTenureAwards)->handle(app(TenureAwardService::class));
 
         Notification::assertSentTo($member, NotifyMemberAwardReceived::class);
-        Notification::assertNotSentTo($member->division, NotifyDivisionMemberAwarded::class);
+        Notification::assertNotSentTo($member->division, NotifyDivisionMemberAwardsBulk::class);
     }
 
     #[Test]
@@ -269,5 +291,57 @@ class TenureAwardServiceTest extends TestCase
             'name'       => 'cleanup-tenure-awards',
             'is_enabled' => false,
         ]);
+    }
+
+    #[Test]
+    public function awards_are_found_by_name_not_by_id(): void
+    {
+        Award::whereIn('id', [18, 19, 139, 140, 343, 344])->each(fn (Award $award) => $award->forceFill(['id' => $award->id + 1000])->save());
+
+        $ids = app(TenureAwardService::class)->awardIds();
+
+        $this->assertSame([5 => 1018, 10 => 1019, 15 => 1139, 20 => 1140, 25 => 1343, 30 => 1344], collect($ids)->sortKeys()->all());
+    }
+
+    #[Test]
+    public function a_missing_tenure_award_fails_loudly(): void
+    {
+        Award::where('name', '25 Years of Service')->delete();
+
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('25 Years of Service');
+
+        app(TenureAwardService::class)->awardIds();
+    }
+
+    #[Test]
+    public function a_second_persisting_run_is_refused_while_one_is_in_progress(): void
+    {
+        $member = $this->memberJoined('2015-01-01');
+        $lock   = Cache::lock('tenure-award-reconcile', 60);
+        $lock->get();
+
+        try {
+            $this->expectException(TenureReconciliationInProgress::class);
+
+            $this->reconcile($member);
+        } finally {
+            $lock->release();
+        }
+    }
+
+    #[Test]
+    public function dry_runs_are_not_blocked_and_the_lock_is_released_after_a_run(): void
+    {
+        $member = $this->memberJoined('2015-01-01');
+        $lock   = Cache::lock('tenure-award-reconcile', 60);
+        $lock->get();
+        $this->assertSame(2, $this->reconcile($member, persist: false)->missing);
+        $lock->release();
+
+        $this->reconcile($member);
+        $second = $this->reconcile($member);
+
+        $this->assertSame(0, $second->missing);
     }
 }

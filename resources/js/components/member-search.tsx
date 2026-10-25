@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { TronSpinner } from '@/components/tron-spinner';
-import { useMemberSearch, type MemberSearchResult } from '@/hooks/use-member-search';
+import { useMemberSearch, usePartialSearchMinChars, type MemberSearchResult } from '@/hooks/use-member-search';
 import { cn } from '@/lib/utils';
 
 type Result = MemberSearchResult;
@@ -25,6 +25,7 @@ export function MemberSearch({
     const boxRef = useRef<HTMLDivElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const partialMinChars = usePartialSearchMinChars();
     const { results, loading, matchedQuery } = useMemberSearch(value, { delayMs: 2000, jitterMs: 1000 });
 
     useEffect(() => {
@@ -53,13 +54,13 @@ export function MemberSearch({
     }, [open, mobile]);
 
     useEffect(() => {
-        if (matchedQuery.length >= 2) {
+        if (matchedQuery.length >= partialMinChars) {
             setOpen(true);
             setActive(-1);
         } else {
             setOpen(false);
         }
-    }, [results, matchedQuery]);
+    }, [results, matchedQuery, partialMinChars]);
 
     useEffect(() => {
         function onClick(e: MouseEvent) {
@@ -197,7 +198,7 @@ export function MemberSearch({
                             className="flex w-full items-center gap-2 border-t border-border px-3 py-2 text-left font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
                         >
                             <span className="h-px flex-1 bg-gradient-to-r from-primary/60 to-transparent" />
-                            {results.length - 8} more — view all
+                            View all results
                         </button>
                     )}
                 </div>

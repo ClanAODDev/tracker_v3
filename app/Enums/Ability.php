@@ -62,6 +62,7 @@ enum Ability: string
     case ManageAllRankActions        = 'ability:manage_all_rank_actions';
     case OverrideRankActionRules     = 'ability:override_rank_action_rules';
     case ApproveDivisionRankActions  = 'ability:approve_division_rank_actions';
+    case RequestDivisionRankActions  = 'ability:request_division_rank_actions';
     case DemoteMembers               = 'ability:demote_members';
     case AutoApproveJuniorPromotions = 'ability:auto_approve_junior_promotions';
     case ManageMemberAwards          = 'ability:manage_member_awards';
@@ -137,6 +138,7 @@ enum Ability: string
             self::ManageAllRankActions        => 'Rank actions and awards',
             self::OverrideRankActionRules     => 'Rank actions and awards',
             self::ApproveDivisionRankActions  => 'Rank actions and awards',
+            self::RequestDivisionRankActions  => 'Rank actions and awards',
             self::DemoteMembers               => 'Rank actions and awards',
             self::AutoApproveJuniorPromotions => 'Rank actions and awards',
             self::ManageMemberAwards          => 'Rank actions and awards',
@@ -207,6 +209,7 @@ enum Ability: string
             self::ManageAllRankActions        => 'Edit, approve, delete, and requeue any rank action',
             self::OverrideRankActionRules     => 'Override the 30-day rank action rule',
             self::ApproveDivisionRankActions  => 'Approve rank actions in your own division up to the platoon leader rank limit',
+            self::RequestDivisionRankActions  => 'Request rank actions for any member of your own division, within the division leader rank limit',
             self::DemoteMembers               => 'Request demotions',
             self::AutoApproveJuniorPromotions => 'Auto-approve promotions up to Corporal',
             self::ManageMemberAwards          => 'Edit and delete member awards',
