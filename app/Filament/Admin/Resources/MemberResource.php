@@ -235,12 +235,12 @@ class MemberResource extends Resource
                 SelectFilter::make('division')
                     ->relationship('division', 'name'),
                 SelectFilter::make('platoon')
-                    ->options(fn () => Unit::whereNull('parent_id')->orderBy('name')->pluck('name', 'id'))
+                    ->options(fn () => Unit::optionLabels(Unit::whereNull('parent_id')->orderBy('name')))
                     ->query(fn (Builder $query, array $data) => $query->when($data['value'] ?? null, fn (Builder $query, $platoon) => $query
                         ->whereIn('unit_id', Unit::query()->where('id', $platoon)->orWhere('parent_id', $platoon)->select('id'))))
                     ->searchable(),
                 SelectFilter::make('squad')
-                    ->options(fn () => Unit::whereNotNull('parent_id')->orderBy('name')->pluck('name', 'id'))
+                    ->options(fn () => Unit::optionLabels(Unit::whereNotNull('parent_id')->orderBy('name')))
                     ->query(fn (Builder $query, array $data) => $query->when($data['value'] ?? null, fn (Builder $query, $squad) => $query->where('unit_id', $squad)))
                     ->searchable(),
                 Filter::make('Has Active Division')
