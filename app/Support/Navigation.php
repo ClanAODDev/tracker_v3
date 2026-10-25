@@ -76,6 +76,7 @@ class Navigation
                         : null,
                 ]),
             ],
+            ['label' => 'Release Notes', 'route' => 'changelog', 'match' => ['changelog'], 'icon' => 'megaphone'],
             $user->can('train', $user)
                 ? ['label' => 'Training', 'route' => 'training.index', 'match' => ['training', 'training/*'], 'icon' => 'graduation-cap']
                 : null,
