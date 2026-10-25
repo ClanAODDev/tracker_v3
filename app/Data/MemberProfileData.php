@@ -27,8 +27,6 @@ class MemberProfileData
 
     private bool $canViewTrashed;
 
-    private bool $canAddNote;
-
     private ?Division $division;
 
     private Collection $notes;
@@ -55,13 +53,12 @@ class MemberProfileData
         $this->user           = auth()->user();
         $this->canViewNotes   = $this->user->can('create', Note::class) && $this->user->can('viewForMember', [Note::class, $member]);
         $this->canViewTrashed = $this->user->can('viewTrashed', Note::class) && $this->user->can('viewForMember', [Note::class, $member]);
-        $this->canAddNote     = $this->user->can('createForMember', [Note::class, $member]);
 
         $repository->loadProfileRelations($member);
         $this->division = $member->division;
 
         $this->notes             = $this->canViewNotes ? $repository->getNotesForMember($member, $this->user) : collect();
-        $this->trashedNotes      = $this->canViewTrashed ? $repository->getTrashedNotesForMember($member, $this->user) : collect();
+        $this->trashedNotes      = $this->canViewTrashed ? $repository->getTrashedNotesForMember($member) : collect();
         $this->transfers         = $repository->getTransfers($member);
         $this->partTimeDivisions = $member->partTimeDivisions()->whereActive(true)->get();
 
@@ -120,7 +117,6 @@ class MemberProfileData
             'notices'        => $this->notices(),
             'canCreateNote'  => $this->canViewNotes,
             'canViewTrashed' => $this->canViewTrashed,
-            'canAddNote'     => $this->canAddNote,
             'noteTypes'      => Note::allNoteTypes(),
             'stats'          => [
                 'tenure' => [

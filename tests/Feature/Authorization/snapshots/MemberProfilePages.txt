@@ -1,5 +1,4 @@
 profile of self          | (status)                                 | admin                    | 200
-profile of self          | canAddNote                               | admin                    | false
 profile of self          | canCreateNote                            | admin                    | false
 profile of self          | canFullHistory                           | admin                    | true
 profile of self          | canViewTrashed                           | admin                    | false
@@ -9,7 +8,6 @@ profile of self          | stats.activity.canClearReminders         | admin     
 profile of self          | stats.activity.canRemind                 | admin                    | true
 profile of self          | tagManagement.canCreate                  | admin                    | true
 profile of self          | (status)                                 | developer                | 200
-profile of self          | canAddNote                               | developer                | false
 profile of self          | canCreateNote                            | developer                | false
 profile of self          | canFullHistory                           | developer                | true
 profile of self          | canViewTrashed                           | developer                | false
@@ -18,7 +16,6 @@ profile of self          | detailsManagement.canEditHandles         | developer 
 profile of self          | stats.activity.canClearReminders         | developer                | false
 profile of self          | stats.activity.canRemind                 | developer                | true
 profile of self          | (status)                                 | admin_viewing_as_officer | 200
-profile of self          | canAddNote                               | admin_viewing_as_officer | false
 profile of self          | canCreateNote                            | admin_viewing_as_officer | false
 profile of self          | canFullHistory                           | admin_viewing_as_officer | true
 profile of self          | canViewTrashed                           | admin_viewing_as_officer | false
@@ -28,7 +25,6 @@ profile of self          | stats.activity.canClearReminders         | admin_view
 profile of self          | stats.activity.canRemind                 | admin_viewing_as_officer | false
 profile of self          | tagManagement.canCreate                  | admin_viewing_as_officer | false
 profile of self          | (status)                                 | senior_leader            | 200
-profile of self          | canAddNote                               | senior_leader            | false
 profile of self          | canCreateNote                            | senior_leader            | false
 profile of self          | canFullHistory                           | senior_leader            | true
 profile of self          | canViewTrashed                           | senior_leader            | false
@@ -38,7 +34,6 @@ profile of self          | stats.activity.canClearReminders         | senior_lea
 profile of self          | stats.activity.canRemind                 | senior_leader            | false
 profile of self          | tagManagement.canCreate                  | senior_leader            | true
 profile of self          | (status)                                 | commanding_officer       | 200
-profile of self          | canAddNote                               | commanding_officer       | false
 profile of self          | canCreateNote                            | commanding_officer       | false
 profile of self          | canFullHistory                           | commanding_officer       | true
 profile of self          | canViewTrashed                           | commanding_officer       | false
@@ -48,7 +43,6 @@ profile of self          | stats.activity.canClearReminders         | commanding
 profile of self          | stats.activity.canRemind                 | commanding_officer       | false
 profile of self          | tagManagement.canCreate                  | commanding_officer       | true
 profile of self          | (status)                                 | executive_officer        | 200
-profile of self          | canAddNote                               | executive_officer        | false
 profile of self          | canCreateNote                            | executive_officer        | false
 profile of self          | canFullHistory                           | executive_officer        | true
 profile of self          | canViewTrashed                           | executive_officer        | false
@@ -58,7 +52,6 @@ profile of self          | stats.activity.canClearReminders         | executive_
 profile of self          | stats.activity.canRemind                 | executive_officer        | false
 profile of self          | tagManagement.canCreate                  | executive_officer        | true
 profile of self          | (status)                                 | officer                  | 200
-profile of self          | canAddNote                               | officer                  | false
 profile of self          | canCreateNote                            | officer                  | false
 profile of self          | canFullHistory                           | officer                  | true
 profile of self          | canViewTrashed                           | officer                  | false
@@ -68,7 +61,6 @@ profile of self          | stats.activity.canClearReminders         | officer   
 profile of self          | stats.activity.canRemind                 | officer                  | false
 profile of self          | tagManagement.canCreate                  | officer                  | false
 profile of self          | (status)                                 | platoon_leader           | 200
-profile of self          | canAddNote                               | platoon_leader           | false
 profile of self          | canCreateNote                            | platoon_leader           | false
 profile of self          | canFullHistory                           | platoon_leader           | true
 profile of self          | canViewTrashed                           | platoon_leader           | false
@@ -78,7 +70,6 @@ profile of self          | stats.activity.canClearReminders         | platoon_le
 profile of self          | stats.activity.canRemind                 | platoon_leader           | false
 profile of self          | tagManagement.canCreate                  | platoon_leader           | false
 profile of self          | (status)                                 | squad_leader             | 200
-profile of self          | canAddNote                               | squad_leader             | false
 profile of self          | canCreateNote                            | squad_leader             | false
 profile of self          | canFullHistory                           | squad_leader             | true
 profile of self          | canViewTrashed                           | squad_leader             | false
@@ -88,7 +79,6 @@ profile of self          | stats.activity.canClearReminders         | squad_lead
 profile of self          | stats.activity.canRemind                 | squad_leader             | false
 profile of self          | tagManagement.canCreate                  | squad_leader             | false
 profile of self          | (status)                                 | member                   | 200
-profile of self          | canAddNote                               | member                   | false
 profile of self          | canCreateNote                            | member                   | false
 profile of self          | canFullHistory                           | member                   | true
 profile of self          | canViewTrashed                           | member                   | false
@@ -99,7 +89,6 @@ profile of self          | stats.activity.canRemind                 | member    
 profile of self          | (status)                                 | banned                   | 403
 profile of self          | (status)                                 | pending                  | n/a
 profile of same_squad    | (status)                                 | admin                    | 200
-profile of same_squad    | canAddNote                               | admin                    | true
 profile of same_squad    | canCreateNote                            | admin                    | true
 profile of same_squad    | canFullHistory                           | admin                    | true
 profile of same_squad    | canViewTrashed                           | admin                    | true
@@ -109,7 +98,6 @@ profile of same_squad    | stats.activity.canClearReminders         | admin     
 profile of same_squad    | stats.activity.canRemind                 | admin                    | true
 profile of same_squad    | tagManagement.canCreate                  | admin                    | true
 profile of same_squad    | (status)                                 | developer                | 200
-profile of same_squad    | canAddNote                               | developer                | true
 profile of same_squad    | canCreateNote                            | developer                | true
 profile of same_squad    | canFullHistory                           | developer                | false
 profile of same_squad    | canViewTrashed                           | developer                | true
@@ -118,7 +106,6 @@ profile of same_squad    | detailsManagement.canEditHandles         | developer 
 profile of same_squad    | stats.activity.canClearReminders         | developer                | true
 profile of same_squad    | stats.activity.canRemind                 | developer                | true
 profile of same_squad    | (status)                                 | admin_viewing_as_officer | 200
-profile of same_squad    | canAddNote                               | admin_viewing_as_officer | true
 profile of same_squad    | canCreateNote                            | admin_viewing_as_officer | true
 profile of same_squad    | canFullHistory                           | admin_viewing_as_officer | true
 profile of same_squad    | canViewTrashed                           | admin_viewing_as_officer | false
@@ -128,7 +115,6 @@ profile of same_squad    | stats.activity.canClearReminders         | admin_view
 profile of same_squad    | stats.activity.canRemind                 | admin_viewing_as_officer | true
 profile of same_squad    | tagManagement.canCreate                  | admin_viewing_as_officer | false
 profile of same_squad    | (status)                                 | senior_leader            | 200
-profile of same_squad    | canAddNote                               | senior_leader            | true
 profile of same_squad    | canCreateNote                            | senior_leader            | true
 profile of same_squad    | canFullHistory                           | senior_leader            | true
 profile of same_squad    | canViewTrashed                           | senior_leader            | false
@@ -138,7 +124,6 @@ profile of same_squad    | stats.activity.canClearReminders         | senior_lea
 profile of same_squad    | stats.activity.canRemind                 | senior_leader            | true
 profile of same_squad    | tagManagement.canCreate                  | senior_leader            | true
 profile of same_squad    | (status)                                 | commanding_officer       | 200
-profile of same_squad    | canAddNote                               | commanding_officer       | true
 profile of same_squad    | canCreateNote                            | commanding_officer       | true
 profile of same_squad    | canFullHistory                           | commanding_officer       | true
 profile of same_squad    | canViewTrashed                           | commanding_officer       | true
@@ -148,7 +133,6 @@ profile of same_squad    | stats.activity.canClearReminders         | commanding
 profile of same_squad    | stats.activity.canRemind                 | commanding_officer       | true
 profile of same_squad    | tagManagement.canCreate                  | commanding_officer       | true
 profile of same_squad    | (status)                                 | executive_officer        | 200
-profile of same_squad    | canAddNote                               | executive_officer        | true
 profile of same_squad    | canCreateNote                            | executive_officer        | true
 profile of same_squad    | canFullHistory                           | executive_officer        | true
 profile of same_squad    | canViewTrashed                           | executive_officer        | true
@@ -158,7 +142,6 @@ profile of same_squad    | stats.activity.canClearReminders         | executive_
 profile of same_squad    | stats.activity.canRemind                 | executive_officer        | true
 profile of same_squad    | tagManagement.canCreate                  | executive_officer        | true
 profile of same_squad    | (status)                                 | officer                  | 200
-profile of same_squad    | canAddNote                               | officer                  | true
 profile of same_squad    | canCreateNote                            | officer                  | true
 profile of same_squad    | canFullHistory                           | officer                  | true
 profile of same_squad    | canViewTrashed                           | officer                  | false
@@ -168,7 +151,6 @@ profile of same_squad    | stats.activity.canClearReminders         | officer   
 profile of same_squad    | stats.activity.canRemind                 | officer                  | true
 profile of same_squad    | tagManagement.canCreate                  | officer                  | false
 profile of same_squad    | (status)                                 | platoon_leader           | 200
-profile of same_squad    | canAddNote                               | platoon_leader           | true
 profile of same_squad    | canCreateNote                            | platoon_leader           | true
 profile of same_squad    | canFullHistory                           | platoon_leader           | true
 profile of same_squad    | canViewTrashed                           | platoon_leader           | false
@@ -178,7 +160,6 @@ profile of same_squad    | stats.activity.canClearReminders         | platoon_le
 profile of same_squad    | stats.activity.canRemind                 | platoon_leader           | true
 profile of same_squad    | tagManagement.canCreate                  | platoon_leader           | false
 profile of same_squad    | (status)                                 | squad_leader             | 200
-profile of same_squad    | canAddNote                               | squad_leader             | true
 profile of same_squad    | canCreateNote                            | squad_leader             | true
 profile of same_squad    | canFullHistory                           | squad_leader             | true
 profile of same_squad    | canViewTrashed                           | squad_leader             | false
@@ -188,7 +169,6 @@ profile of same_squad    | stats.activity.canClearReminders         | squad_lead
 profile of same_squad    | stats.activity.canRemind                 | squad_leader             | true
 profile of same_squad    | tagManagement.canCreate                  | squad_leader             | false
 profile of same_squad    | (status)                                 | member                   | 200
-profile of same_squad    | canAddNote                               | member                   | false
 profile of same_squad    | canCreateNote                            | member                   | false
 profile of same_squad    | canFullHistory                           | member                   | false
 profile of same_squad    | canViewTrashed                           | member                   | false
@@ -198,7 +178,6 @@ profile of same_squad    | stats.activity.canRemind                 | member    
 profile of same_squad    | (status)                                 | banned                   | 403
 profile of same_squad    | (status)                                 | pending                  | 408
 profile of same_platoon_other_squad | (status)                                 | admin                    | 200
-profile of same_platoon_other_squad | canAddNote                               | admin                    | true
 profile of same_platoon_other_squad | canCreateNote                            | admin                    | true
 profile of same_platoon_other_squad | canFullHistory                           | admin                    | true
 profile of same_platoon_other_squad | canViewTrashed                           | admin                    | true
@@ -208,7 +187,6 @@ profile of same_platoon_other_squad | stats.activity.canClearReminders         |
 profile of same_platoon_other_squad | stats.activity.canRemind                 | admin                    | true
 profile of same_platoon_other_squad | tagManagement.canCreate                  | admin                    | true
 profile of same_platoon_other_squad | (status)                                 | developer                | 200
-profile of same_platoon_other_squad | canAddNote                               | developer                | true
 profile of same_platoon_other_squad | canCreateNote                            | developer                | true
 profile of same_platoon_other_squad | canFullHistory                           | developer                | false
 profile of same_platoon_other_squad | canViewTrashed                           | developer                | true
@@ -217,7 +195,6 @@ profile of same_platoon_other_squad | detailsManagement.canEditHandles         |
 profile of same_platoon_other_squad | stats.activity.canClearReminders         | developer                | true
 profile of same_platoon_other_squad | stats.activity.canRemind                 | developer                | true
 profile of same_platoon_other_squad | (status)                                 | admin_viewing_as_officer | 200
-profile of same_platoon_other_squad | canAddNote                               | admin_viewing_as_officer | true
 profile of same_platoon_other_squad | canCreateNote                            | admin_viewing_as_officer | true
 profile of same_platoon_other_squad | canFullHistory                           | admin_viewing_as_officer | true
 profile of same_platoon_other_squad | canViewTrashed                           | admin_viewing_as_officer | false
@@ -227,7 +204,6 @@ profile of same_platoon_other_squad | stats.activity.canClearReminders         |
 profile of same_platoon_other_squad | stats.activity.canRemind                 | admin_viewing_as_officer | true
 profile of same_platoon_other_squad | tagManagement.canCreate                  | admin_viewing_as_officer | false
 profile of same_platoon_other_squad | (status)                                 | senior_leader            | 200
-profile of same_platoon_other_squad | canAddNote                               | senior_leader            | true
 profile of same_platoon_other_squad | canCreateNote                            | senior_leader            | true
 profile of same_platoon_other_squad | canFullHistory                           | senior_leader            | true
 profile of same_platoon_other_squad | canViewTrashed                           | senior_leader            | false
@@ -237,7 +213,6 @@ profile of same_platoon_other_squad | stats.activity.canClearReminders         |
 profile of same_platoon_other_squad | stats.activity.canRemind                 | senior_leader            | true
 profile of same_platoon_other_squad | tagManagement.canCreate                  | senior_leader            | true
 profile of same_platoon_other_squad | (status)                                 | commanding_officer       | 200
-profile of same_platoon_other_squad | canAddNote                               | commanding_officer       | true
 profile of same_platoon_other_squad | canCreateNote                            | commanding_officer       | true
 profile of same_platoon_other_squad | canFullHistory                           | commanding_officer       | true
 profile of same_platoon_other_squad | canViewTrashed                           | commanding_officer       | true
@@ -247,7 +222,6 @@ profile of same_platoon_other_squad | stats.activity.canClearReminders         |
 profile of same_platoon_other_squad | stats.activity.canRemind                 | commanding_officer       | true
 profile of same_platoon_other_squad | tagManagement.canCreate                  | commanding_officer       | true
 profile of same_platoon_other_squad | (status)                                 | executive_officer        | 200
-profile of same_platoon_other_squad | canAddNote                               | executive_officer        | true
 profile of same_platoon_other_squad | canCreateNote                            | executive_officer        | true
 profile of same_platoon_other_squad | canFullHistory                           | executive_officer        | true
 profile of same_platoon_other_squad | canViewTrashed                           | executive_officer        | true
@@ -257,7 +231,6 @@ profile of same_platoon_other_squad | stats.activity.canClearReminders         |
 profile of same_platoon_other_squad | stats.activity.canRemind                 | executive_officer        | true
 profile of same_platoon_other_squad | tagManagement.canCreate                  | executive_officer        | true
 profile of same_platoon_other_squad | (status)                                 | officer                  | 200
-profile of same_platoon_other_squad | canAddNote                               | officer                  | true
 profile of same_platoon_other_squad | canCreateNote                            | officer                  | true
 profile of same_platoon_other_squad | canFullHistory                           | officer                  | true
 profile of same_platoon_other_squad | canViewTrashed                           | officer                  | false
@@ -267,7 +240,6 @@ profile of same_platoon_other_squad | stats.activity.canClearReminders         |
 profile of same_platoon_other_squad | stats.activity.canRemind                 | officer                  | true
 profile of same_platoon_other_squad | tagManagement.canCreate                  | officer                  | false
 profile of same_platoon_other_squad | (status)                                 | platoon_leader           | 200
-profile of same_platoon_other_squad | canAddNote                               | platoon_leader           | true
 profile of same_platoon_other_squad | canCreateNote                            | platoon_leader           | true
 profile of same_platoon_other_squad | canFullHistory                           | platoon_leader           | true
 profile of same_platoon_other_squad | canViewTrashed                           | platoon_leader           | false
@@ -277,7 +249,6 @@ profile of same_platoon_other_squad | stats.activity.canClearReminders         |
 profile of same_platoon_other_squad | stats.activity.canRemind                 | platoon_leader           | true
 profile of same_platoon_other_squad | tagManagement.canCreate                  | platoon_leader           | false
 profile of same_platoon_other_squad | (status)                                 | squad_leader             | 200
-profile of same_platoon_other_squad | canAddNote                               | squad_leader             | true
 profile of same_platoon_other_squad | canCreateNote                            | squad_leader             | true
 profile of same_platoon_other_squad | canFullHistory                           | squad_leader             | true
 profile of same_platoon_other_squad | canViewTrashed                           | squad_leader             | false
@@ -287,7 +258,6 @@ profile of same_platoon_other_squad | stats.activity.canClearReminders         |
 profile of same_platoon_other_squad | stats.activity.canRemind                 | squad_leader             | true
 profile of same_platoon_other_squad | tagManagement.canCreate                  | squad_leader             | false
 profile of same_platoon_other_squad | (status)                                 | member                   | 200
-profile of same_platoon_other_squad | canAddNote                               | member                   | false
 profile of same_platoon_other_squad | canCreateNote                            | member                   | false
 profile of same_platoon_other_squad | canFullHistory                           | member                   | false
 profile of same_platoon_other_squad | canViewTrashed                           | member                   | false
@@ -297,7 +267,6 @@ profile of same_platoon_other_squad | stats.activity.canRemind                 |
 profile of same_platoon_other_squad | (status)                                 | banned                   | 403
 profile of same_platoon_other_squad | (status)                                 | pending                  | 408
 profile of other_platoon | (status)                                 | admin                    | 200
-profile of other_platoon | canAddNote                               | admin                    | true
 profile of other_platoon | canCreateNote                            | admin                    | true
 profile of other_platoon | canFullHistory                           | admin                    | true
 profile of other_platoon | canViewTrashed                           | admin                    | true
@@ -307,7 +276,6 @@ profile of other_platoon | stats.activity.canClearReminders         | admin     
 profile of other_platoon | stats.activity.canRemind                 | admin                    | true
 profile of other_platoon | tagManagement.canCreate                  | admin                    | true
 profile of other_platoon | (status)                                 | developer                | 200
-profile of other_platoon | canAddNote                               | developer                | true
 profile of other_platoon | canCreateNote                            | developer                | true
 profile of other_platoon | canFullHistory                           | developer                | false
 profile of other_platoon | canViewTrashed                           | developer                | true
@@ -316,7 +284,6 @@ profile of other_platoon | detailsManagement.canEditHandles         | developer 
 profile of other_platoon | stats.activity.canClearReminders         | developer                | true
 profile of other_platoon | stats.activity.canRemind                 | developer                | true
 profile of other_platoon | (status)                                 | admin_viewing_as_officer | 200
-profile of other_platoon | canAddNote                               | admin_viewing_as_officer | true
 profile of other_platoon | canCreateNote                            | admin_viewing_as_officer | true
 profile of other_platoon | canFullHistory                           | admin_viewing_as_officer | true
 profile of other_platoon | canViewTrashed                           | admin_viewing_as_officer | false
@@ -326,7 +293,6 @@ profile of other_platoon | stats.activity.canClearReminders         | admin_view
 profile of other_platoon | stats.activity.canRemind                 | admin_viewing_as_officer | true
 profile of other_platoon | tagManagement.canCreate                  | admin_viewing_as_officer | false
 profile of other_platoon | (status)                                 | senior_leader            | 200
-profile of other_platoon | canAddNote                               | senior_leader            | true
 profile of other_platoon | canCreateNote                            | senior_leader            | true
 profile of other_platoon | canFullHistory                           | senior_leader            | true
 profile of other_platoon | canViewTrashed                           | senior_leader            | false
@@ -336,7 +302,6 @@ profile of other_platoon | stats.activity.canClearReminders         | senior_lea
 profile of other_platoon | stats.activity.canRemind                 | senior_leader            | true
 profile of other_platoon | tagManagement.canCreate                  | senior_leader            | true
 profile of other_platoon | (status)                                 | commanding_officer       | 200
-profile of other_platoon | canAddNote                               | commanding_officer       | true
 profile of other_platoon | canCreateNote                            | commanding_officer       | true
 profile of other_platoon | canFullHistory                           | commanding_officer       | true
 profile of other_platoon | canViewTrashed                           | commanding_officer       | true
@@ -346,7 +311,6 @@ profile of other_platoon | stats.activity.canClearReminders         | commanding
 profile of other_platoon | stats.activity.canRemind                 | commanding_officer       | true
 profile of other_platoon | tagManagement.canCreate                  | commanding_officer       | true
 profile of other_platoon | (status)                                 | executive_officer        | 200
-profile of other_platoon | canAddNote                               | executive_officer        | true
 profile of other_platoon | canCreateNote                            | executive_officer        | true
 profile of other_platoon | canFullHistory                           | executive_officer        | true
 profile of other_platoon | canViewTrashed                           | executive_officer        | true
@@ -356,7 +320,6 @@ profile of other_platoon | stats.activity.canClearReminders         | executive_
 profile of other_platoon | stats.activity.canRemind                 | executive_officer        | true
 profile of other_platoon | tagManagement.canCreate                  | executive_officer        | true
 profile of other_platoon | (status)                                 | officer                  | 200
-profile of other_platoon | canAddNote                               | officer                  | true
 profile of other_platoon | canCreateNote                            | officer                  | true
 profile of other_platoon | canFullHistory                           | officer                  | true
 profile of other_platoon | canViewTrashed                           | officer                  | false
@@ -366,7 +329,6 @@ profile of other_platoon | stats.activity.canClearReminders         | officer   
 profile of other_platoon | stats.activity.canRemind                 | officer                  | true
 profile of other_platoon | tagManagement.canCreate                  | officer                  | false
 profile of other_platoon | (status)                                 | platoon_leader           | 200
-profile of other_platoon | canAddNote                               | platoon_leader           | true
 profile of other_platoon | canCreateNote                            | platoon_leader           | true
 profile of other_platoon | canFullHistory                           | platoon_leader           | true
 profile of other_platoon | canViewTrashed                           | platoon_leader           | false
@@ -376,7 +338,6 @@ profile of other_platoon | stats.activity.canClearReminders         | platoon_le
 profile of other_platoon | stats.activity.canRemind                 | platoon_leader           | true
 profile of other_platoon | tagManagement.canCreate                  | platoon_leader           | false
 profile of other_platoon | (status)                                 | squad_leader             | 200
-profile of other_platoon | canAddNote                               | squad_leader             | true
 profile of other_platoon | canCreateNote                            | squad_leader             | true
 profile of other_platoon | canFullHistory                           | squad_leader             | true
 profile of other_platoon | canViewTrashed                           | squad_leader             | false
@@ -386,7 +347,6 @@ profile of other_platoon | stats.activity.canClearReminders         | squad_lead
 profile of other_platoon | stats.activity.canRemind                 | squad_leader             | true
 profile of other_platoon | tagManagement.canCreate                  | squad_leader             | false
 profile of other_platoon | (status)                                 | member                   | 200
-profile of other_platoon | canAddNote                               | member                   | false
 profile of other_platoon | canCreateNote                            | member                   | false
 profile of other_platoon | canFullHistory                           | member                   | false
 profile of other_platoon | canViewTrashed                           | member                   | false
@@ -396,7 +356,6 @@ profile of other_platoon | stats.activity.canRemind                 | member    
 profile of other_platoon | (status)                                 | banned                   | 403
 profile of other_platoon | (status)                                 | pending                  | 408
 profile of unassigned    | (status)                                 | admin                    | 200
-profile of unassigned    | canAddNote                               | admin                    | true
 profile of unassigned    | canCreateNote                            | admin                    | true
 profile of unassigned    | canFullHistory                           | admin                    | true
 profile of unassigned    | canViewTrashed                           | admin                    | true
@@ -406,7 +365,6 @@ profile of unassigned    | stats.activity.canClearReminders         | admin     
 profile of unassigned    | stats.activity.canRemind                 | admin                    | true
 profile of unassigned    | tagManagement.canCreate                  | admin                    | true
 profile of unassigned    | (status)                                 | developer                | 200
-profile of unassigned    | canAddNote                               | developer                | true
 profile of unassigned    | canCreateNote                            | developer                | true
 profile of unassigned    | canFullHistory                           | developer                | false
 profile of unassigned    | canViewTrashed                           | developer                | true
@@ -415,7 +373,6 @@ profile of unassigned    | detailsManagement.canEditHandles         | developer 
 profile of unassigned    | stats.activity.canClearReminders         | developer                | true
 profile of unassigned    | stats.activity.canRemind                 | developer                | true
 profile of unassigned    | (status)                                 | admin_viewing_as_officer | 200
-profile of unassigned    | canAddNote                               | admin_viewing_as_officer | true
 profile of unassigned    | canCreateNote                            | admin_viewing_as_officer | true
 profile of unassigned    | canFullHistory                           | admin_viewing_as_officer | true
 profile of unassigned    | canViewTrashed                           | admin_viewing_as_officer | false
@@ -425,7 +382,6 @@ profile of unassigned    | stats.activity.canClearReminders         | admin_view
 profile of unassigned    | stats.activity.canRemind                 | admin_viewing_as_officer | true
 profile of unassigned    | tagManagement.canCreate                  | admin_viewing_as_officer | false
 profile of unassigned    | (status)                                 | senior_leader            | 200
-profile of unassigned    | canAddNote                               | senior_leader            | true
 profile of unassigned    | canCreateNote                            | senior_leader            | true
 profile of unassigned    | canFullHistory                           | senior_leader            | true
 profile of unassigned    | canViewTrashed                           | senior_leader            | false
@@ -435,7 +391,6 @@ profile of unassigned    | stats.activity.canClearReminders         | senior_lea
 profile of unassigned    | stats.activity.canRemind                 | senior_leader            | true
 profile of unassigned    | tagManagement.canCreate                  | senior_leader            | true
 profile of unassigned    | (status)                                 | commanding_officer       | 200
-profile of unassigned    | canAddNote                               | commanding_officer       | true
 profile of unassigned    | canCreateNote                            | commanding_officer       | true
 profile of unassigned    | canFullHistory                           | commanding_officer       | true
 profile of unassigned    | canViewTrashed                           | commanding_officer       | true
@@ -445,7 +400,6 @@ profile of unassigned    | stats.activity.canClearReminders         | commanding
 profile of unassigned    | stats.activity.canRemind                 | commanding_officer       | true
 profile of unassigned    | tagManagement.canCreate                  | commanding_officer       | true
 profile of unassigned    | (status)                                 | executive_officer        | 200
-profile of unassigned    | canAddNote                               | executive_officer        | true
 profile of unassigned    | canCreateNote                            | executive_officer        | true
 profile of unassigned    | canFullHistory                           | executive_officer        | true
 profile of unassigned    | canViewTrashed                           | executive_officer        | true
@@ -455,7 +409,6 @@ profile of unassigned    | stats.activity.canClearReminders         | executive_
 profile of unassigned    | stats.activity.canRemind                 | executive_officer        | true
 profile of unassigned    | tagManagement.canCreate                  | executive_officer        | true
 profile of unassigned    | (status)                                 | officer                  | 200
-profile of unassigned    | canAddNote                               | officer                  | true
 profile of unassigned    | canCreateNote                            | officer                  | true
 profile of unassigned    | canFullHistory                           | officer                  | true
 profile of unassigned    | canViewTrashed                           | officer                  | false
@@ -465,7 +418,6 @@ profile of unassigned    | stats.activity.canClearReminders         | officer   
 profile of unassigned    | stats.activity.canRemind                 | officer                  | true
 profile of unassigned    | tagManagement.canCreate                  | officer                  | false
 profile of unassigned    | (status)                                 | platoon_leader           | 200
-profile of unassigned    | canAddNote                               | platoon_leader           | true
 profile of unassigned    | canCreateNote                            | platoon_leader           | true
 profile of unassigned    | canFullHistory                           | platoon_leader           | true
 profile of unassigned    | canViewTrashed                           | platoon_leader           | false
@@ -475,7 +427,6 @@ profile of unassigned    | stats.activity.canClearReminders         | platoon_le
 profile of unassigned    | stats.activity.canRemind                 | platoon_leader           | true
 profile of unassigned    | tagManagement.canCreate                  | platoon_leader           | false
 profile of unassigned    | (status)                                 | squad_leader             | 200
-profile of unassigned    | canAddNote                               | squad_leader             | true
 profile of unassigned    | canCreateNote                            | squad_leader             | true
 profile of unassigned    | canFullHistory                           | squad_leader             | true
 profile of unassigned    | canViewTrashed                           | squad_leader             | false
@@ -485,7 +436,6 @@ profile of unassigned    | stats.activity.canClearReminders         | squad_lead
 profile of unassigned    | stats.activity.canRemind                 | squad_leader             | true
 profile of unassigned    | tagManagement.canCreate                  | squad_leader             | false
 profile of unassigned    | (status)                                 | member                   | 200
-profile of unassigned    | canAddNote                               | member                   | false
 profile of unassigned    | canCreateNote                            | member                   | false
 profile of unassigned    | canFullHistory                           | member                   | false
 profile of unassigned    | canViewTrashed                           | member                   | false
@@ -495,7 +445,6 @@ profile of unassigned    | stats.activity.canRemind                 | member    
 profile of unassigned    | (status)                                 | banned                   | 403
 profile of unassigned    | (status)                                 | pending                  | 408
 profile of other_division | (status)                                 | admin                    | 200
-profile of other_division | canAddNote                               | admin                    | true
 profile of other_division | canCreateNote                            | admin                    | true
 profile of other_division | canFullHistory                           | admin                    | true
 profile of other_division | canViewTrashed                           | admin                    | true
@@ -504,7 +453,6 @@ profile of other_division | stats.activity.canClearReminders         | admin    
 profile of other_division | stats.activity.canRemind                 | admin                    | true
 profile of other_division | tagManagement.canCreate                  | admin                    | true
 profile of other_division | (status)                                 | developer                | 200
-profile of other_division | canAddNote                               | developer                | true
 profile of other_division | canCreateNote                            | developer                | true
 profile of other_division | canFullHistory                           | developer                | false
 profile of other_division | canViewTrashed                           | developer                | true
@@ -512,7 +460,6 @@ profile of other_division | detailsManagement.canEditHandles         | developer
 profile of other_division | stats.activity.canClearReminders         | developer                | true
 profile of other_division | stats.activity.canRemind                 | developer                | true
 profile of other_division | (status)                                 | admin_viewing_as_officer | 200
-profile of other_division | canAddNote                               | admin_viewing_as_officer | true
 profile of other_division | canCreateNote                            | admin_viewing_as_officer | true
 profile of other_division | canFullHistory                           | admin_viewing_as_officer | true
 profile of other_division | canViewTrashed                           | admin_viewing_as_officer | false
@@ -520,7 +467,6 @@ profile of other_division | stats.activity.canClearReminders         | admin_vie
 profile of other_division | stats.activity.canRemind                 | admin_viewing_as_officer | true
 profile of other_division | tagManagement.canCreate                  | admin_viewing_as_officer | false
 profile of other_division | (status)                                 | senior_leader            | 200
-profile of other_division | canAddNote                               | senior_leader            | true
 profile of other_division | canCreateNote                            | senior_leader            | true
 profile of other_division | canFullHistory                           | senior_leader            | true
 profile of other_division | canViewTrashed                           | senior_leader            | false
@@ -529,7 +475,6 @@ profile of other_division | stats.activity.canClearReminders         | senior_le
 profile of other_division | stats.activity.canRemind                 | senior_leader            | true
 profile of other_division | tagManagement.canCreate                  | senior_leader            | true
 profile of other_division | (status)                                 | commanding_officer       | 200
-profile of other_division | canAddNote                               | commanding_officer       | true
 profile of other_division | canCreateNote                            | commanding_officer       | true
 profile of other_division | canFullHistory                           | commanding_officer       | true
 profile of other_division | canViewTrashed                           | commanding_officer       | true
@@ -538,7 +483,6 @@ profile of other_division | stats.activity.canClearReminders         | commandin
 profile of other_division | stats.activity.canRemind                 | commanding_officer       | true
 profile of other_division | tagManagement.canCreate                  | commanding_officer       | true
 profile of other_division | (status)                                 | executive_officer        | 200
-profile of other_division | canAddNote                               | executive_officer        | true
 profile of other_division | canCreateNote                            | executive_officer        | true
 profile of other_division | canFullHistory                           | executive_officer        | true
 profile of other_division | canViewTrashed                           | executive_officer        | true
@@ -547,28 +491,24 @@ profile of other_division | stats.activity.canClearReminders         | executive
 profile of other_division | stats.activity.canRemind                 | executive_officer        | true
 profile of other_division | tagManagement.canCreate                  | executive_officer        | true
 profile of other_division | (status)                                 | officer                  | 200
-profile of other_division | canAddNote                               | officer                  | true
 profile of other_division | canCreateNote                            | officer                  | true
 profile of other_division | canFullHistory                           | officer                  | true
 profile of other_division | canViewTrashed                           | officer                  | false
 profile of other_division | stats.activity.canClearReminders         | officer                  | false
 profile of other_division | stats.activity.canRemind                 | officer                  | true
 profile of other_division | (status)                                 | platoon_leader           | 200
-profile of other_division | canAddNote                               | platoon_leader           | true
 profile of other_division | canCreateNote                            | platoon_leader           | true
 profile of other_division | canFullHistory                           | platoon_leader           | true
 profile of other_division | canViewTrashed                           | platoon_leader           | false
 profile of other_division | stats.activity.canClearReminders         | platoon_leader           | false
 profile of other_division | stats.activity.canRemind                 | platoon_leader           | true
 profile of other_division | (status)                                 | squad_leader             | 200
-profile of other_division | canAddNote                               | squad_leader             | true
 profile of other_division | canCreateNote                            | squad_leader             | true
 profile of other_division | canFullHistory                           | squad_leader             | true
 profile of other_division | canViewTrashed                           | squad_leader             | false
 profile of other_division | stats.activity.canClearReminders         | squad_leader             | false
 profile of other_division | stats.activity.canRemind                 | squad_leader             | true
 profile of other_division | (status)                                 | member                   | 200
-profile of other_division | canAddNote                               | member                   | false
 profile of other_division | canCreateNote                            | member                   | false
 profile of other_division | canFullHistory                           | member                   | false
 profile of other_division | canViewTrashed                           | member                   | false
@@ -577,7 +517,6 @@ profile of other_division | stats.activity.canRemind                 | member   
 profile of other_division | (status)                                 | banned                   | 403
 profile of other_division | (status)                                 | pending                  | 408
 profile of higher_rank   | (status)                                 | admin                    | 200
-profile of higher_rank   | canAddNote                               | admin                    | true
 profile of higher_rank   | canCreateNote                            | admin                    | true
 profile of higher_rank   | canFullHistory                           | admin                    | true
 profile of higher_rank   | canViewTrashed                           | admin                    | true
@@ -587,7 +526,6 @@ profile of higher_rank   | stats.activity.canClearReminders         | admin     
 profile of higher_rank   | stats.activity.canRemind                 | admin                    | true
 profile of higher_rank   | tagManagement.canCreate                  | admin                    | true
 profile of higher_rank   | (status)                                 | developer                | 200
-profile of higher_rank   | canAddNote                               | developer                | true
 profile of higher_rank   | canCreateNote                            | developer                | true
 profile of higher_rank   | canFullHistory                           | developer                | false
 profile of higher_rank   | canViewTrashed                           | developer                | true
@@ -596,8 +534,7 @@ profile of higher_rank   | detailsManagement.canEditHandles         | developer 
 profile of higher_rank   | stats.activity.canClearReminders         | developer                | true
 profile of higher_rank   | stats.activity.canRemind                 | developer                | true
 profile of higher_rank   | (status)                                 | admin_viewing_as_officer | 200
-profile of higher_rank   | canAddNote                               | admin_viewing_as_officer | false
-profile of higher_rank   | canCreateNote                            | admin_viewing_as_officer | false
+profile of higher_rank   | canCreateNote                            | admin_viewing_as_officer | true
 profile of higher_rank   | canFullHistory                           | admin_viewing_as_officer | true
 profile of higher_rank   | canViewTrashed                           | admin_viewing_as_officer | false
 profile of higher_rank   | customFields[].canEdit                   | admin_viewing_as_officer | true
@@ -606,8 +543,7 @@ profile of higher_rank   | stats.activity.canClearReminders         | admin_view
 profile of higher_rank   | stats.activity.canRemind                 | admin_viewing_as_officer | true
 profile of higher_rank   | tagManagement.canCreate                  | admin_viewing_as_officer | false
 profile of higher_rank   | (status)                                 | senior_leader            | 200
-profile of higher_rank   | canAddNote                               | senior_leader            | false
-profile of higher_rank   | canCreateNote                            | senior_leader            | false
+profile of higher_rank   | canCreateNote                            | senior_leader            | true
 profile of higher_rank   | canFullHistory                           | senior_leader            | true
 profile of higher_rank   | canViewTrashed                           | senior_leader            | false
 profile of higher_rank   | customFields[].canEdit                   | senior_leader            | true
@@ -616,28 +552,25 @@ profile of higher_rank   | stats.activity.canClearReminders         | senior_lea
 profile of higher_rank   | stats.activity.canRemind                 | senior_leader            | true
 profile of higher_rank   | tagManagement.canCreate                  | senior_leader            | true
 profile of higher_rank   | (status)                                 | commanding_officer       | 200
-profile of higher_rank   | canAddNote                               | commanding_officer       | false
-profile of higher_rank   | canCreateNote                            | commanding_officer       | false
+profile of higher_rank   | canCreateNote                            | commanding_officer       | true
 profile of higher_rank   | canFullHistory                           | commanding_officer       | true
-profile of higher_rank   | canViewTrashed                           | commanding_officer       | false
+profile of higher_rank   | canViewTrashed                           | commanding_officer       | true
 profile of higher_rank   | customFields[].canEdit                   | commanding_officer       | true
 profile of higher_rank   | detailsManagement.canEditHandles         | commanding_officer       | true
 profile of higher_rank   | stats.activity.canClearReminders         | commanding_officer       | true
 profile of higher_rank   | stats.activity.canRemind                 | commanding_officer       | true
 profile of higher_rank   | tagManagement.canCreate                  | commanding_officer       | true
 profile of higher_rank   | (status)                                 | executive_officer        | 200
-profile of higher_rank   | canAddNote                               | executive_officer        | false
-profile of higher_rank   | canCreateNote                            | executive_officer        | false
+profile of higher_rank   | canCreateNote                            | executive_officer        | true
 profile of higher_rank   | canFullHistory                           | executive_officer        | true
-profile of higher_rank   | canViewTrashed                           | executive_officer        | false
+profile of higher_rank   | canViewTrashed                           | executive_officer        | true
 profile of higher_rank   | customFields[].canEdit                   | executive_officer        | true
 profile of higher_rank   | detailsManagement.canEditHandles         | executive_officer        | true
 profile of higher_rank   | stats.activity.canClearReminders         | executive_officer        | true
 profile of higher_rank   | stats.activity.canRemind                 | executive_officer        | true
 profile of higher_rank   | tagManagement.canCreate                  | executive_officer        | true
 profile of higher_rank   | (status)                                 | officer                  | 200
-profile of higher_rank   | canAddNote                               | officer                  | false
-profile of higher_rank   | canCreateNote                            | officer                  | false
+profile of higher_rank   | canCreateNote                            | officer                  | true
 profile of higher_rank   | canFullHistory                           | officer                  | true
 profile of higher_rank   | canViewTrashed                           | officer                  | false
 profile of higher_rank   | customFields[].canEdit                   | officer                  | true
@@ -646,8 +579,7 @@ profile of higher_rank   | stats.activity.canClearReminders         | officer   
 profile of higher_rank   | stats.activity.canRemind                 | officer                  | true
 profile of higher_rank   | tagManagement.canCreate                  | officer                  | false
 profile of higher_rank   | (status)                                 | platoon_leader           | 200
-profile of higher_rank   | canAddNote                               | platoon_leader           | false
-profile of higher_rank   | canCreateNote                            | platoon_leader           | false
+profile of higher_rank   | canCreateNote                            | platoon_leader           | true
 profile of higher_rank   | canFullHistory                           | platoon_leader           | true
 profile of higher_rank   | canViewTrashed                           | platoon_leader           | false
 profile of higher_rank   | customFields[].canEdit                   | platoon_leader           | true
@@ -656,8 +588,7 @@ profile of higher_rank   | stats.activity.canClearReminders         | platoon_le
 profile of higher_rank   | stats.activity.canRemind                 | platoon_leader           | true
 profile of higher_rank   | tagManagement.canCreate                  | platoon_leader           | false
 profile of higher_rank   | (status)                                 | squad_leader             | 200
-profile of higher_rank   | canAddNote                               | squad_leader             | false
-profile of higher_rank   | canCreateNote                            | squad_leader             | false
+profile of higher_rank   | canCreateNote                            | squad_leader             | true
 profile of higher_rank   | canFullHistory                           | squad_leader             | true
 profile of higher_rank   | canViewTrashed                           | squad_leader             | false
 profile of higher_rank   | customFields[].canEdit                   | squad_leader             | true
@@ -666,7 +597,6 @@ profile of higher_rank   | stats.activity.canClearReminders         | squad_lead
 profile of higher_rank   | stats.activity.canRemind                 | squad_leader             | true
 profile of higher_rank   | tagManagement.canCreate                  | squad_leader             | false
 profile of higher_rank   | (status)                                 | member                   | 200
-profile of higher_rank   | canAddNote                               | member                   | false
 profile of higher_rank   | canCreateNote                            | member                   | false
 profile of higher_rank   | canFullHistory                           | member                   | false
 profile of higher_rank   | canViewTrashed                           | member                   | false
@@ -676,7 +606,6 @@ profile of higher_rank   | stats.activity.canRemind                 | member    
 profile of higher_rank   | (status)                                 | banned                   | 403
 profile of higher_rank   | (status)                                 | pending                  | 408
 profile of part_timer    | (status)                                 | admin                    | 200
-profile of part_timer    | canAddNote                               | admin                    | true
 profile of part_timer    | canCreateNote                            | admin                    | true
 profile of part_timer    | canFullHistory                           | admin                    | true
 profile of part_timer    | canViewTrashed                           | admin                    | true
@@ -685,7 +614,6 @@ profile of part_timer    | stats.activity.canClearReminders         | admin     
 profile of part_timer    | stats.activity.canRemind                 | admin                    | true
 profile of part_timer    | tagManagement.canCreate                  | admin                    | true
 profile of part_timer    | (status)                                 | developer                | 200
-profile of part_timer    | canAddNote                               | developer                | true
 profile of part_timer    | canCreateNote                            | developer                | true
 profile of part_timer    | canFullHistory                           | developer                | false
 profile of part_timer    | canViewTrashed                           | developer                | true
@@ -693,7 +621,6 @@ profile of part_timer    | detailsManagement.canEditHandles         | developer 
 profile of part_timer    | stats.activity.canClearReminders         | developer                | true
 profile of part_timer    | stats.activity.canRemind                 | developer                | true
 profile of part_timer    | (status)                                 | admin_viewing_as_officer | 200
-profile of part_timer    | canAddNote                               | admin_viewing_as_officer | true
 profile of part_timer    | canCreateNote                            | admin_viewing_as_officer | true
 profile of part_timer    | canFullHistory                           | admin_viewing_as_officer | true
 profile of part_timer    | canViewTrashed                           | admin_viewing_as_officer | false
@@ -701,7 +628,6 @@ profile of part_timer    | stats.activity.canClearReminders         | admin_view
 profile of part_timer    | stats.activity.canRemind                 | admin_viewing_as_officer | true
 profile of part_timer    | tagManagement.canCreate                  | admin_viewing_as_officer | false
 profile of part_timer    | (status)                                 | senior_leader            | 200
-profile of part_timer    | canAddNote                               | senior_leader            | true
 profile of part_timer    | canCreateNote                            | senior_leader            | true
 profile of part_timer    | canFullHistory                           | senior_leader            | true
 profile of part_timer    | canViewTrashed                           | senior_leader            | false
@@ -710,7 +636,6 @@ profile of part_timer    | stats.activity.canClearReminders         | senior_lea
 profile of part_timer    | stats.activity.canRemind                 | senior_leader            | true
 profile of part_timer    | tagManagement.canCreate                  | senior_leader            | true
 profile of part_timer    | (status)                                 | commanding_officer       | 200
-profile of part_timer    | canAddNote                               | commanding_officer       | true
 profile of part_timer    | canCreateNote                            | commanding_officer       | true
 profile of part_timer    | canFullHistory                           | commanding_officer       | true
 profile of part_timer    | canViewTrashed                           | commanding_officer       | true
@@ -719,7 +644,6 @@ profile of part_timer    | stats.activity.canClearReminders         | commanding
 profile of part_timer    | stats.activity.canRemind                 | commanding_officer       | true
 profile of part_timer    | tagManagement.canCreate                  | commanding_officer       | true
 profile of part_timer    | (status)                                 | executive_officer        | 200
-profile of part_timer    | canAddNote                               | executive_officer        | true
 profile of part_timer    | canCreateNote                            | executive_officer        | true
 profile of part_timer    | canFullHistory                           | executive_officer        | true
 profile of part_timer    | canViewTrashed                           | executive_officer        | true
@@ -728,28 +652,24 @@ profile of part_timer    | stats.activity.canClearReminders         | executive_
 profile of part_timer    | stats.activity.canRemind                 | executive_officer        | true
 profile of part_timer    | tagManagement.canCreate                  | executive_officer        | true
 profile of part_timer    | (status)                                 | officer                  | 200
-profile of part_timer    | canAddNote                               | officer                  | true
 profile of part_timer    | canCreateNote                            | officer                  | true
 profile of part_timer    | canFullHistory                           | officer                  | true
 profile of part_timer    | canViewTrashed                           | officer                  | false
 profile of part_timer    | stats.activity.canClearReminders         | officer                  | false
 profile of part_timer    | stats.activity.canRemind                 | officer                  | true
 profile of part_timer    | (status)                                 | platoon_leader           | 200
-profile of part_timer    | canAddNote                               | platoon_leader           | true
 profile of part_timer    | canCreateNote                            | platoon_leader           | true
 profile of part_timer    | canFullHistory                           | platoon_leader           | true
 profile of part_timer    | canViewTrashed                           | platoon_leader           | false
 profile of part_timer    | stats.activity.canClearReminders         | platoon_leader           | false
 profile of part_timer    | stats.activity.canRemind                 | platoon_leader           | true
 profile of part_timer    | (status)                                 | squad_leader             | 200
-profile of part_timer    | canAddNote                               | squad_leader             | true
 profile of part_timer    | canCreateNote                            | squad_leader             | true
 profile of part_timer    | canFullHistory                           | squad_leader             | true
 profile of part_timer    | canViewTrashed                           | squad_leader             | false
 profile of part_timer    | stats.activity.canClearReminders         | squad_leader             | false
 profile of part_timer    | stats.activity.canRemind                 | squad_leader             | true
 profile of part_timer    | (status)                                 | member                   | 200
-profile of part_timer    | canAddNote                               | member                   | false
 profile of part_timer    | canCreateNote                            | member                   | false
 profile of part_timer    | canFullHistory                           | member                   | false
 profile of part_timer    | canViewTrashed                           | member                   | false

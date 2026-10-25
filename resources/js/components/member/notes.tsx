@@ -152,7 +152,6 @@ export function NotesDialog({
     trashedNotes,
     noteTypes,
     canViewTrashed,
-    canAddNote,
     trigger,
     open,
     onOpenChange,
@@ -162,7 +161,6 @@ export function NotesDialog({
     trashedNotes: MemberNote[];
     noteTypes: Record<string, string>;
     canViewTrashed: boolean;
-    canAddNote: boolean;
     trigger?: ReactNode;
     open?: boolean;
     onOpenChange?: (open: boolean) => void;
@@ -200,11 +198,9 @@ export function NotesDialog({
                                 <Trash2 /> {showTrashed ? 'Hide' : 'Show'} deleted ({trashedNotes.length})
                             </Button>
                         )}
-                        {canAddNote && (
-                            <Button size="sm" className="ml-auto" onClick={() => setAdding((v) => !v)}>
-                                <Plus /> Add note
-                            </Button>
-                        )}
+                        <Button size="sm" className="ml-auto" onClick={() => setAdding((v) => !v)}>
+                            <Plus /> Add note
+                        </Button>
                     </div>
 
                     {adding && (

@@ -51,7 +51,6 @@ interface MemberShowProps {
     notices: Array<{ type: string; message: string; ctaLabel?: string; ctaUrl?: string; ctaAction?: string }>;
     canCreateNote: boolean;
     canViewTrashed: boolean;
-    canAddNote: boolean;
     noteTypes: Record<string, string>;
     stats: ProfileStatsData;
     awards: AwardsData;
@@ -69,7 +68,7 @@ interface MemberShowProps {
 export default function MemberShow(props: MemberShowProps) {
     const { member, actions, tags, tagManagement, breadcrumbs, notices, stats, awards, rankTimeline, canFullHistory } =
         props;
-    const { divisionComparison, handles, divisions, notes, trashedNotes, noteTypes, canViewTrashed, canAddNote, canCreateNote } =
+    const { divisionComparison, handles, divisions, notes, trashedNotes, noteTypes, canViewTrashed, canCreateNote } =
         props;
     const { customFields, detailsManagement } = props;
 
@@ -219,7 +218,6 @@ export default function MemberShow(props: MemberShowProps) {
                     trashedNotes={trashedNotes}
                     noteTypes={noteTypes}
                     canViewTrashed={canViewTrashed}
-                    canAddNote={canAddNote}
                     open={notesOpen}
                     onOpenChange={setNotesOpen}
                 />
