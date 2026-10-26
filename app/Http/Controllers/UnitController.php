@@ -103,7 +103,7 @@ class UnitController extends Controller
 
         $activityThreshold = now()->subDays($division->settings()->get('inactivity_days') ?? 30);
         $canManage         = auth()->user()->can('update', $platoon);
-        $unassigned        = $this->unassigned($division, $platoon);
+        $unassigned        = $platoon->childLevel() ? $this->unassigned($division, $platoon) : collect();
         $unitPaths         = Unit::query()->where('path', 'like', $platoon->path . '%')->pluck('path', 'id');
         $childLabel        = $this->childLabel($platoon);
 
@@ -138,7 +138,7 @@ class UnitController extends Controller
                 ];
             })->values(),
             'organize' => [
-                'canOrganize' => $canManage,
+                'canOrganize' => $canManage && $platoon->childLevel() !== null,
                 'members'     => $canManage
                     ? $unassigned->map(fn ($member) => [
                         'id'   => $member->id,

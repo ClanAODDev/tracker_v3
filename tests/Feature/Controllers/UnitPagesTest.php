@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\Position;
+use App\Models\DivisionUnitLevel;
 use App\Models\Unit;
 use App\Services\Units\UnitAssignment;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -86,5 +88,28 @@ class UnitPagesTest extends TestCase
                 ->where('activePlatoon', $alpha->id)
                 ->where('inactive', fn ($rows) => collect($rows)->pluck('name')->contains(fn ($name) => str_contains($name, $inAlpha->name)) && count($rows) === 1)
                 ->where('platoons', fn ($platoons) => collect($platoons)->firstWhere('id', $alpha->id)['count'] === 1));
+    }
+
+    #[Test]
+    public function the_organize_banner_only_appears_when_the_unit_has_a_level_below_it(): void
+    {
+        $admin    = $this->createAdmin();
+        $division = $this->createActiveDivision();
+        $platoon  = $this->createPlatoon($division);
+        $this->createMember(['division_id' => $division->id, 'unit_id' => $platoon->id, 'position' => Position::MEMBER]);
+
+        $this->actingAs($admin)->get(route('unit', [$division->slug, $platoon]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('organize.canOrganize', true)
+                ->has('organize.members', 1)
+                ->where('scope.unassignedCount', 1));
+
+        DivisionUnitLevel::where('division_id', $division->id)->where('depth', 2)->delete();
+
+        $this->get(route('unit', [$division->slug, $platoon->fresh()]))
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('organize.canOrganize', false)
+                ->has('organize.members', 0)
+                ->where('scope.unassignedCount', 0));
     }
 }

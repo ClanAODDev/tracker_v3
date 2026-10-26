@@ -18,7 +18,7 @@ Use this path when the recruit already has a forum account.
 1. Enter their **forum member ID** (the numeric ID from their forum profile).
 2. The Tracker validates the ID against the AOD forums and checks their forum group.
 3. If valid, the forum username auto-fills the recruit details form.
-4. Complete the remaining steps — in-game handle, rank, platoon/squad assignment, agreements, and tasks.
+4. Complete the remaining steps — in-game handle, rank, unit assignment, agreements, and tasks. Unit assignment follows your division's own structure, one picker per level, and is skipped for divisions without units.
 5. Submit. The member is created immediately.
 
 ### Path 2 — Pending Discord Registration
@@ -108,7 +108,8 @@ If a recruit's forum ID already exists in the Tracker (shown as **Previous Membe
 will overwrite the existing record's activity and assignment. This is expected for returning members.
 
 Review any existing tags, division history, and notes on the member's profile before proceeding — these
-are retained.
+are retained. The member also keeps their original join date, which the forum sync keeps in line with the forum,
+so tenure awards are not restarted by re-recruiting.
 
 ---
 
@@ -116,7 +117,7 @@ are retained.
 
 Once submitted successfully, the Tracker performs these actions automatically:
 
-- Creates the member record with the assigned rank, platoon, and squad
+- Creates the member record with the assigned rank and unit
 - Records an initial activity and rank action
 - Creates a member request for the division's review queue
 - Dispatches a Discord sync job to update the member's Discord roles

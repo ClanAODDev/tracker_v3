@@ -4,8 +4,8 @@ are based on the role of the user, the rank you are wanting to assign to a parti
 member being promoted or demoted.
 
 ### Promotion Process
-- NCO creates a rank action
-- Platoon or division leader approves
+- NCO or senior leader creates a rank action
+- Platoon leader, senior leader or division leader approves, within the limits below
 - Member affected receives discord notification of promotion (demotions do not notify)
 - Member accepts or declines promotion, link is good for a limited amount of time
   - If link expires, approver can requeue an acceptance notification- 
@@ -13,21 +13,26 @@ member being promoted or demoted.
 
 ### Additional considerations
 * Demotions are automatically approved and accepted - only admin/CO/XO may request
+* Promotions to Sergeant and above can only be approved by a Command Sergeant or higher
+* Lance Corporal and Corporal promotions need a CO/XO or an admin
 * Denied and declined rank actions are kept for posterity but are hidden from member profile
 * General members cannot view rank history
 
 ### Rank Thresholds
 Automatic approvals are rank changes that are immediately approved and moved to the acceptance process. 
-Recommendations must be approved by a platoon or division leader, or an admin.
+Recommendations must be approved by a platoon leader, senior leader or division leader, or an admin.
 
 | Role                    | Can demote |   Auto-approve up to    | Max rank to recommend |      Approve up to      |
 |-------------------------|:----------:|:-----------------------:|:---------------------:|:-----------------------:|
 | Squad Leader*           |     ❌      |           --            |         Spec          |           --            |
 | Platoon Leader*         |     ❌      | Pfc <br/>(Configurable) |          Cpl          | Pfc <br/>(Configurable) |
+| Senior Leader**         |     ❌      | Pfc <br/>(Configurable) |         SSgt          | Pfc <br/>(Configurable) |
 | Division Leader (CO/XO) |     ✅      |           Cpl           |         SSgt          |           Cpl           |
 | Admin                   |     ✅      |           Cpl           |        SgtMaj         |         SgtMaj          |
 
-**Can only promote members within their assigned platoon/squad*
+**Unit leaders can only promote members within the unit they lead. A leader of the lowest level of the division has squad leader limits, a leader of any level above it has platoon leader limits.*
+
+***Senior leaders can request a rank action for any member of their own division, whatever unit the member is in (or none), and approve rank actions for members of their division up to the division's platoon leader limit. They cannot approve their own rank action or a rank above their own.*
 
 ### Access to comments
 Comments can be made on rank action recommendations. Access to view comments is based on your rank and the rank 
