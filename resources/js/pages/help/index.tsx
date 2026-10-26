@@ -18,7 +18,8 @@ const ACCESS_MATRIX: Array<{ role: string; abilities: string[] }> = [
     {
         role: 'Senior Leader (SGT+)',
         abilities: [
-            'Create, delete, and update any division platoons, squads, and members',
+            'Create, delete, and update division units at any level, and members',
+            'Request rank actions for any member of their division and approve them up to the division limit',
             'Remove any member (requires SGT+ forum permissions)',
             'Change own division settings (must be CO/XO)',
             'Grant account access up to one role below their own',
@@ -27,7 +28,12 @@ const ACCESS_MATRIX: Array<{ role: string; abilities: string[] }> = [
     },
     {
         role: 'Admin (MSGT+)',
-        abilities: ['Inherits all Senior Leader permissions', 'Change any division settings', 'Access the admin panel'],
+        abilities: [
+            'Inherits all Senior Leader permissions',
+            'Change any division settings',
+            'Manage role permissions and individual grants',
+            'Access the admin panel',
+        ],
     },
 ];
 

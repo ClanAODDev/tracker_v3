@@ -304,6 +304,18 @@ Rough notes here. Needs some cleaning up.
 - Description: Provide some appropriate sub-title for the division.
 - Active: Self-explanatory
 
+### Division structure
+
+After the division exists, set up how its members are organized under **Settings, Structure** in the Mod panel.
+
+- A division can have from none up to four levels. Name each level and its leader title, for example
+  `Company`, `Platoon`, `Squad`, `Fireteam`.
+- Leave the levels empty for a flat division. Members are then listed on the division page and in the org chart without
+  units.
+- A level can only be removed once no units use it. Archiving the units first moves their members up a level, and the
+  leaders of the removed units lose their leader position and become members with no position. The confirmation lists
+  who is affected.
+
 ### Ingame Handles
 
 Handles are ingame names that a member can have across the variety of platforms of games AOD plays. Steam, Battlenet,
