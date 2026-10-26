@@ -41,6 +41,12 @@ class ReleaseNoteResource extends Resource
                 TextInput::make('title')
                     ->required()
                     ->maxLength(191),
+                TextInput::make('slug')
+                    ->required(fn (string $operation): bool => $operation === 'edit')
+                    ->maxLength(191)
+                    ->alphaDash()
+                    ->unique(ignoreRecord: true)
+                    ->helperText('Used in the link to this note. Leave empty on a new note to generate it from the title.'),
                 TextInput::make('version')
                     ->maxLength(50)
                     ->placeholder('e.g. 3.9')

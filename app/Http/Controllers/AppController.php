@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Support\DivisionToolbar;
 use GrahamCampbell\Markdown\Facades\Markdown;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -27,19 +28,39 @@ class AppController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return Inertia::render('changelog', [
+        return Inertia::render('changelog/index', [
             'notes' => $notes->getCollection()->map(fn (ReleaseNote $note) => [
                 'id'          => $note->id,
                 'title'       => $note->title,
                 'version'     => $note->version,
                 'publishedAt' => $note->published_at->format('M j, Y'),
-                'html'        => (string) Markdown::convertToHtml($note->body),
+                'excerpt'     => Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags((string) Markdown::convertToHtml($note->body)))), 240),
+                'url'         => route('changelog.show', $note->slug),
             ])->values(),
             'pagination' => [
                 'total'   => $notes->total(),
                 'prevUrl' => $notes->previousPageUrl(),
                 'nextUrl' => $notes->nextPageUrl(),
             ],
+        ]);
+    }
+
+    public function showChangelog(ReleaseNote $releaseNote): Response
+    {
+        abort_unless($releaseNote->status() === 'published', 404);
+
+        $link = fn (?ReleaseNote $note) => $note ? ['title' => $note->title, 'url' => route('changelog.show', $note->slug)] : null;
+
+        return Inertia::render('changelog/show', [
+            'note' => [
+                'title'       => $releaseNote->title,
+                'version'     => $releaseNote->version,
+                'publishedAt' => $releaseNote->published_at->format('M j, Y'),
+                'html'        => (string) Markdown::convertToHtml($releaseNote->body),
+            ],
+            'newer'    => $link($releaseNote->newer()),
+            'older'    => $link($releaseNote->older()),
+            'indexUrl' => route('changelog'),
         ]);
     }
 
