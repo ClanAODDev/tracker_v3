@@ -271,8 +271,8 @@
       "_flash-toaster-B3gJZnZT.js"
     ]
   },
-  "_member-table-CnxhlsFP.js": {
-    "file": "assets/member-table-CnxhlsFP.js",
+  "_member-table-BZUTj3PA.js": {
+    "file": "assets/member-table-BZUTj3PA.js",
     "name": "member-table",
     "imports": [
       "_rolldown-runtime-XKyaHtl9.js",
@@ -491,7 +491,7 @@
     "src": "resources/images/contours-minor.svg"
   },
   "resources/js/app.tsx": {
-    "file": "assets/app-DQ_ybmeO.js",
+    "file": "assets/app-BXLkL4qw.js",
     "name": "app",
     "src": "resources/js/app.tsx",
     "isEntry": true,
@@ -508,7 +508,8 @@
       "resources/js/pages/awards/index.tsx",
       "resources/js/pages/awards/show.tsx",
       "resources/js/pages/awards/tiered.tsx",
-      "resources/js/pages/changelog.tsx",
+      "resources/js/pages/changelog/index.tsx",
+      "resources/js/pages/changelog/show.tsx",
       "resources/js/pages/clan/code-of-conduct.tsx",
       "resources/js/pages/clan/ranks.tsx",
       "resources/js/pages/dev/gallery.tsx",
@@ -639,10 +640,20 @@
       "_stat-tiles-FgFe3xF0.js"
     ]
   },
-  "resources/js/pages/changelog.tsx": {
-    "file": "assets/changelog-BB2y5ww4.js",
+  "resources/js/pages/changelog/index.tsx": {
+    "file": "assets/changelog-CL9p_HwR.js",
     "name": "changelog",
-    "src": "resources/js/pages/changelog.tsx",
+    "src": "resources/js/pages/changelog/index.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_jsx-runtime-B7uridS0.js",
+      "_AppLayout-BqWNnLFv.js"
+    ]
+  },
+  "resources/js/pages/changelog/show.tsx": {
+    "file": "assets/show-mhLeZGVj.js",
+    "name": "show",
+    "src": "resources/js/pages/changelog/show.tsx",
     "isDynamicEntry": true,
     "imports": [
       "_jsx-runtime-B7uridS0.js",
@@ -676,7 +687,7 @@
     ]
   },
   "resources/js/pages/dev/gallery.tsx": {
-    "file": "assets/gallery-BYmfzQJd.js",
+    "file": "assets/gallery-9YiytpSg.js",
     "name": "gallery",
     "src": "resources/js/pages/dev/gallery.tsx",
     "isDynamicEntry": true,
@@ -768,7 +779,7 @@
     ]
   },
   "resources/js/pages/division/members.tsx": {
-    "file": "assets/members-CcDIvCh2.js",
+    "file": "assets/members-XENeUUbE.js",
     "name": "members",
     "src": "resources/js/pages/division/members.tsx",
     "isDynamicEntry": true,
@@ -779,14 +790,14 @@
       "_AppLayout-BqWNnLFv.js",
       "_label-Bp9SC65Y.js",
       "_flash-toaster-B3gJZnZT.js",
-      "_member-table-CnxhlsFP.js",
+      "_member-table-BZUTj3PA.js",
       "_pencil-DCN3QgDq.js",
       "_users-CYS-_Hi5.js",
       "_button-DCVOMJP4.js"
     ]
   },
   "resources/js/pages/division/notes.tsx": {
-    "file": "assets/notes-DMTkb-xh.js",
+    "file": "assets/notes-BlqpvMvV.js",
     "name": "notes",
     "src": "resources/js/pages/division/notes.tsx",
     "isDynamicEntry": true,
@@ -911,7 +922,7 @@
     ]
   },
   "resources/js/pages/division/show.tsx": {
-    "file": "assets/show-CSaCHu38.js",
+    "file": "assets/show-Buoav1pO.js",
     "name": "show",
     "src": "resources/js/pages/division/show.tsx",
     "isDynamicEntry": true,
@@ -922,7 +933,7 @@
       "_dist-MdoB2-rv.js",
       "_AppLayout-BqWNnLFv.js",
       "_flash-toaster-B3gJZnZT.js",
-      "_member-table-CnxhlsFP.js",
+      "_member-table-BZUTj3PA.js",
       "_arrow-left-8yEqe9l_.js",
       "_pending-action-icon-CXeUSMPe.js",
       "_circle-ZaTw25WF.js",
@@ -1053,7 +1064,7 @@
     ]
   },
   "resources/js/pages/member/show.tsx": {
-    "file": "assets/show-Bb1K55Gi.js",
+    "file": "assets/show-BWJDN9O_.js",
     "name": "show",
     "src": "resources/js/pages/member/show.tsx",
     "isDynamicEntry": true,
