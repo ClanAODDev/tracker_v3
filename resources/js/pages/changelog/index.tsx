@@ -1,6 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
 
-import { Prose } from '@/components/prose';
 import AppLayout from '@/layouts/AppLayout';
 
 interface Note {
@@ -8,7 +7,8 @@ interface Note {
     title: string;
     version: string | null;
     publishedAt: string;
-    html: string;
+    excerpt: string;
+    url: string;
 }
 
 interface Props {
@@ -26,7 +26,7 @@ export default function ReleaseNotes({ notes, pagination }: Props) {
             }}
         >
             <Head title="Release notes" />
-            <div className="max-w-3xl space-y-6">
+            <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
                     What has changed in Tracker. Minor refactoring and optimization are not recorded — see the{' '}
                     <a
@@ -42,22 +42,29 @@ export default function ReleaseNotes({ notes, pagination }: Props) {
 
                 {notes.length === 0 && <p className="text-sm text-muted-foreground">No release notes yet.</p>}
 
-                {notes.map((note) => (
-                    <article key={note.id} id={`note-${note.id}`} className="space-y-3 rounded-md border border-border bg-card p-5">
-                        <header className="flex flex-wrap items-baseline justify-between gap-2">
-                            <h2 className="text-lg font-semibold">
-                                {note.title}
-                                {note.version && (
-                                    <span className="ml-2 rounded border border-border px-1.5 py-0.5 align-middle text-xs font-normal text-muted-foreground">
-                                        {note.version}
-                                    </span>
-                                )}
-                            </h2>
-                            <time className="text-xs text-muted-foreground">{note.publishedAt}</time>
-                        </header>
-                        <Prose html={note.html} />
-                    </article>
-                ))}
+                <div className="space-y-3">
+                    {notes.map((note) => (
+                        <Link
+                            key={note.id}
+                            href={note.url}
+                            className="block rounded-md border border-border bg-card p-5 transition-colors hover:border-primary/30"
+                        >
+                            <div className="flex flex-wrap items-baseline justify-between gap-2">
+                                <h2 className="text-lg font-semibold">
+                                    {note.title}
+                                    {note.version && (
+                                        <span className="ml-2 rounded border border-border px-1.5 py-0.5 align-middle text-xs font-normal text-muted-foreground">
+                                            {note.version}
+                                        </span>
+                                    )}
+                                </h2>
+                                <time className="text-xs text-muted-foreground">{note.publishedAt}</time>
+                            </div>
+                            {note.excerpt && <p className="mt-2 text-sm text-muted-foreground">{note.excerpt}</p>}
+                            <span className="mt-3 inline-block text-xs text-primary">Read the full notes</span>
+                        </Link>
+                    ))}
+                </div>
 
                 {(pagination.prevUrl || pagination.nextUrl) && (
                     <div className="flex items-center justify-between text-xs text-muted-foreground">

@@ -5,6 +5,7 @@ use App\Http\Controllers\HelpController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('changelog', [AppController::class, 'changelog'])->name('changelog');
+Route::get('changelog/{releaseNote:slug}', [AppController::class, 'showChangelog'])->name('changelog.show');
 
 Route::controller(HelpController::class)->prefix('help/docs')->group(function () {
     Route::get('/', 'index')->name('help');

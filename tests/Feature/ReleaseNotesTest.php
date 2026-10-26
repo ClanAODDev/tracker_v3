@@ -37,7 +37,9 @@ class ReleaseNotesTest extends TestCase
         $props = $response->viewData('page')['props'];
 
         $this->assertSame(['Newer release', 'Older release'], collect($props['notes'])->pluck('title')->all());
-        $this->assertStringContainsString('<strong>bold</strong>', $props['notes'][0]['html']);
+        $this->assertSame('bold change', $props['notes'][0]['excerpt']);
+        $this->assertSame(route('changelog.show', $newer->slug), $props['notes'][0]['url']);
+        $this->assertArrayNotHasKey('html', $props['notes'][0]);
         $this->assertSame(2, $props['pagination']['total']);
     }
 
@@ -107,11 +109,17 @@ class ReleaseNotesTest extends TestCase
         $this->assertSame('published', $note->fresh()->status());
 
         Livewire::test(EditReleaseNote::class, ['record' => $note->getRouteKey()])
-            ->fillForm(['title' => 'October release (updated)'])
+            ->fillForm(['title' => 'October release (updated)', 'slug' => 'october'])
             ->call('save')
             ->assertHasNoFormErrors();
 
         $this->assertSame('October release (updated)', $note->fresh()->title);
+        $this->assertSame('october', $note->fresh()->slug);
+
+        Livewire::test(EditReleaseNote::class, ['record' => $note->getRouteKey()])
+            ->fillForm(['slug' => ''])
+            ->call('save')
+            ->assertHasFormErrors(['slug' => 'required']);
     }
 
     #[Test]
@@ -121,5 +129,64 @@ class ReleaseNotesTest extends TestCase
 
         $this->assertNotNull($imported);
         $this->assertStringContainsString('Markdown support added', $imported->body);
+    }
+
+    #[Test]
+    public function a_note_has_its_own_page_with_the_full_text_and_neighbour_links(): void
+    {
+        ReleaseNote::query()->delete();
+
+        $oldest = ReleaseNote::factory()->create(['title' => 'First release', 'published_at' => now()->subDays(3)]);
+        $middle = ReleaseNote::factory()->create(['title' => 'Middle release', 'body' => "# Heading\n\n**bold** change", 'published_at' => now()->subDays(2)]);
+        $newest = ReleaseNote::factory()->create(['title' => 'Newest release', 'published_at' => now()->subDay()]);
+
+        $props = $this->actingAs($this->createOfficer())->get(route('changelog.show', $middle->slug))->assertOk()->viewData('page')['props'];
+
+        $this->assertSame('Middle release', $props['note']['title']);
+        $this->assertStringContainsString('<strong>bold</strong>', $props['note']['html']);
+        $this->assertSame('Newest release', $props['newer']['title']);
+        $this->assertSame(route('changelog.show', $newest->slug), $props['newer']['url']);
+        $this->assertSame('First release', $props['older']['title']);
+        $this->assertSame(route('changelog'), $props['indexUrl']);
+
+        $edge = $this->get(route('changelog.show', $oldest->slug))->viewData('page')['props'];
+        $this->assertNull($edge['older']);
+    }
+
+    #[Test]
+    public function drafts_and_scheduled_notes_have_no_public_page(): void
+    {
+        $draft     = ReleaseNote::factory()->draft()->create();
+        $scheduled = ReleaseNote::factory()->scheduled()->create();
+        $officer   = $this->createOfficer();
+
+        $this->actingAs($officer)->get(route('changelog.show', $draft->slug))->assertNotFound();
+        $this->actingAs($officer)->get(route('changelog.show', $scheduled->slug))->assertNotFound();
+    }
+
+    #[Test]
+    public function guests_cannot_open_a_note(): void
+    {
+        $note = ReleaseNote::factory()->create();
+
+        $this->get(route('changelog.show', $note->slug))->assertRedirect();
+    }
+
+    #[Test]
+    public function slugs_are_generated_from_the_title_and_stay_unique(): void
+    {
+        $first  = ReleaseNote::factory()->create(['title' => 'October Release']);
+        $second = ReleaseNote::factory()->create(['title' => 'October Release']);
+        $custom = ReleaseNote::factory()->create(['title' => 'Anything', 'slug' => 'my-own-slug']);
+
+        $this->assertSame('october-release', $first->slug);
+        $this->assertSame('october-release-2', $second->slug);
+        $this->assertSame('my-own-slug', $custom->slug);
+    }
+
+    #[Test]
+    public function the_imported_changelog_has_a_slug(): void
+    {
+        $this->assertSame('earlier-changes', ReleaseNote::where('title', 'Earlier changes')->value('slug'));
     }
 }
