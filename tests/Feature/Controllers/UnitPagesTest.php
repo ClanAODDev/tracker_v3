@@ -91,7 +91,7 @@ class UnitPagesTest extends TestCase
     }
 
     #[Test]
-    public function the_organize_banner_only_appears_when_the_unit_has_a_level_below_it(): void
+    public function the_organize_banner_and_manage_link_only_appear_when_the_unit_has_a_level_below_it(): void
     {
         $admin    = $this->createAdmin();
         $division = $this->createActiveDivision();
@@ -102,7 +102,8 @@ class UnitPagesTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('organize.canOrganize', true)
                 ->has('organize.members', 1)
-                ->where('scope.unassignedCount', 1));
+                ->where('scope.unassignedCount', 1)
+                ->where('scope.manageUrl', route('unit.manage', [$division->slug, $platoon])));
 
         DivisionUnitLevel::where('division_id', $division->id)->where('depth', 2)->delete();
 
@@ -110,6 +111,9 @@ class UnitPagesTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('organize.canOrganize', false)
                 ->has('organize.members', 0)
-                ->where('scope.unassignedCount', 0));
+                ->where('scope.unassignedCount', 0)
+                ->where('scope.manageUrl', null));
+
+        $this->get(route('unit.manage', [$division->slug, $platoon]))->assertNotFound();
     }
 }
