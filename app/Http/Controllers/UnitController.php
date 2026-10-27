@@ -117,7 +117,7 @@ class UnitController extends Controller
                 'logo'            => $platoon->getLogoPath(),
                 'canManage'       => $canManage,
                 'editUrl'         => $canManage ? route('filament.mod.resources.units.edit', $platoon->id) : null,
-                'manageUrl'       => $canManage ? route('unit.manage', [$division->slug, $platoon]) : null,
+                'manageUrl'       => $canManage && $platoon->childLevel() ? route('unit.manage', [$division->slug, $platoon]) : null,
                 'createChildUrl'  => $canManage && $platoon->childLevel() ? route('unit.children.store', [$division->slug, $platoon]) : null,
                 'unassignedCount' => $unassigned->count(),
                 'breadcrumbs'     => $this->ancestry($division, $platoon),
