@@ -3,6 +3,7 @@
 namespace Tests\Feature\Filament;
 
 use App\Enums\Position;
+use App\Filament\Mod\Resources\MemberAwardResource;
 use App\Filament\Mod\Resources\MemberAwardResource\Pages\CreateMemberAward;
 use App\Filament\Mod\Resources\MemberAwardResource\Pages\EditMemberAward;
 use App\Models\Award;
@@ -158,5 +159,66 @@ class MemberAwardResourceScopeTest extends TestCase
             ->fillForm(['award_id' => $award->id, 'member_id' => $recipient->id, 'reason' => 'x'])
             ->call('create')
             ->assertHasFormErrors(['award_id']);
+    }
+
+    #[Test]
+    public function an_admin_who_is_also_the_division_leader_sees_division_and_clan_wide_awards(): void
+    {
+        $division      = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+        $leader        = $this->createAdmin(['division_id' => $division->id, 'position' => Position::COMMANDING_OFFICER]);
+
+        $divisionAward = MemberAward::factory()->create(['approved' => false, 'award_id' => Award::factory()->create(['division_id' => $division->id])->id]);
+        $clanWide      = MemberAward::factory()->create(['approved' => false, 'award_id' => Award::factory()->create(['division_id' => null])->id]);
+        $otherAward    = MemberAward::factory()->create(['approved' => false, 'award_id' => Award::factory()->create(['division_id' => $otherDivision->id])->id]);
+
+        $this->actingAs($leader);
+
+        $visible = MemberAwardResource::getEloquentQuery()->pluck('id')->all();
+
+        $this->assertEqualsCanonicalizing([$divisionAward->id, $clanWide->id], $visible);
+        $this->assertNotContains($otherAward->id, $visible);
+    }
+
+    #[Test]
+    public function an_admin_who_leads_a_division_can_request_an_award_for_that_division(): void
+    {
+        $division  = $this->createActiveDivision();
+        $leader    = $this->createAdmin(['division_id' => $division->id, 'position' => Position::COMMANDING_OFFICER]);
+        $award     = Award::factory()->create(['division_id' => $division->id]);
+        $recipient = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($leader);
+
+        Livewire::test(CreateMemberAward::class)
+            ->fillForm([
+                'division_filter' => $division->id,
+                'award_id'        => $award->id,
+                'member_id'       => $recipient->id,
+                'reason'          => 'Great work',
+            ])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $this->assertDatabaseHas('award_member', ['award_id' => $award->id, 'member_id' => $recipient->id]);
+    }
+
+    #[Test]
+    public function the_navigation_badge_counts_what_each_user_can_see(): void
+    {
+        $division      = $this->createActiveDivision();
+        $otherDivision = $this->createActiveDivision();
+        $leader        = $this->createAdmin(['division_id' => $division->id, 'position' => Position::COMMANDING_OFFICER]);
+        $plainAdmin    = $this->createAdmin(['division_id' => $otherDivision->id, 'position' => Position::MEMBER]);
+
+        foreach ([$division->id, null, $otherDivision->id] as $divisionId) {
+            MemberAward::factory()->create(['approved' => false, 'award_id' => Award::factory()->create(['division_id' => $divisionId])->id]);
+        }
+
+        $this->actingAs($leader);
+        $this->assertSame('2', MemberAwardResource::getNavigationBadge());
+
+        $this->actingAs($plainAdmin);
+        $this->assertSame('1', MemberAwardResource::getNavigationBadge());
     }
 }

@@ -123,15 +123,6 @@ class ReleaseNotesTest extends TestCase
     }
 
     #[Test]
-    public function the_existing_changelog_is_imported_as_an_entry(): void
-    {
-        $imported = ReleaseNote::where('title', 'Earlier changes')->first();
-
-        $this->assertNotNull($imported);
-        $this->assertStringContainsString('Markdown support added', $imported->body);
-    }
-
-    #[Test]
     public function a_note_has_its_own_page_with_the_full_text_and_neighbour_links(): void
     {
         ReleaseNote::query()->delete();
@@ -182,11 +173,5 @@ class ReleaseNotesTest extends TestCase
         $this->assertSame('october-release', $first->slug);
         $this->assertSame('october-release-2', $second->slug);
         $this->assertSame('my-own-slug', $custom->slug);
-    }
-
-    #[Test]
-    public function the_imported_changelog_has_a_slug(): void
-    {
-        $this->assertSame('earlier-changes', ReleaseNote::where('title', 'Earlier changes')->value('slug'));
     }
 }

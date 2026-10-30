@@ -47,27 +47,17 @@ class MemberAwardResource extends Resource
     {
         $user = auth()->user();
 
-        if ($user->isRole('admin')) {
-            $count = cache()->remember(
-                'nav_badge_member_awards_admin',
-                now()->addMinutes(2),
-                fn () => MemberAward::needsApproval()->visibleTo($user)->count()
-            );
-
-            return $count > 0 ? (string) $count : null;
+        if (! $user->isRole('admin') && ! $user->isDivisionLeader()) {
+            return null;
         }
 
-        if ($user->isDivisionLeader()) {
-            $count = cache()->remember(
-                'nav_badge_member_awards_' . $user->id,
-                now()->addMinutes(2),
-                fn () => MemberAward::needsApproval()->visibleTo($user)->count()
-            );
+        $count = cache()->remember(
+            'nav_badge_member_awards_' . $user->id,
+            now()->addMinutes(2),
+            fn () => MemberAward::needsApproval()->visibleTo($user)->count()
+        );
 
-            return $count > 0 ? (string) $count : null;
-        }
-
-        return null;
+        return $count > 0 ? (string) $count : null;
     }
 
     public static function getEloquentQuery(): Builder
@@ -94,16 +84,18 @@ class MemberAwardResource extends Resource
                             ->options(function () {
                                 $user = auth()->user();
 
+                                $ownDivision = $user->isDivisionLeader() && $user->member?->division
+                                    ? [$user->member->division_id => $user->member->division->name]
+                                    : [];
+
                                 if ($user->isRole('admin')) {
-                                    return ['clan-wide' => 'Clan-Wide'];
+                                    return $ownDivision + ['clan-wide' => 'Clan-Wide'];
                                 }
 
-                                if ($user->isDivisionLeader() && $user->member?->division) {
-                                    $options = [$user->member->division_id => $user->member->division->name];
-
+                                if ($ownDivision !== []) {
                                     return self::canGrantClanWideAwards($user)
-                                        ? $options + ['clan-wide' => 'Clan-Wide']
-                                        : $options;
+                                        ? $ownDivision + ['clan-wide' => 'Clan-Wide']
+                                        : $ownDivision;
                                 }
 
                                 return Division::where('active', true)
@@ -114,17 +106,13 @@ class MemberAwardResource extends Resource
                             ->default(function () {
                                 $user = auth()->user();
 
-                                if ($user->isRole('admin')) {
-                                    return 'clan-wide';
-                                }
-
                                 if ($user->isDivisionLeader()) {
                                     return $user->member?->division_id;
                                 }
 
-                                return null;
+                                return $user->isRole('admin') ? 'clan-wide' : null;
                             })
-                            ->disabled(fn () => auth()->user()->isRole('admin') || (auth()->user()->isDivisionLeader() && ! self::canGrantClanWideAwards(auth()->user())))
+                            ->disabled(fn () => ! auth()->user()->isDivisionLeader() && auth()->user()->isRole('admin') || (auth()->user()->isDivisionLeader() && ! auth()->user()->isRole('admin') && ! self::canGrantClanWideAwards(auth()->user())))
                             ->placeholder('All divisions')
                             ->live()
                             ->dehydrated(false),
@@ -152,9 +140,9 @@ class MemberAwardResource extends Resource
                                         return;
                                     }
 
-                                    if ($user->isRole('admin') && $award->division_id !== null) {
-                                        $fail('Admins can only grant clan-wide awards here.');
-                                    } elseif ($user->isDivisionLeader() && $award->division_id !== $user->member?->division_id && ! ($award->division_id === null && self::canGrantClanWideAwards($user))) {
+                                    if ($user->isRole('admin') && $award->division_id !== null && $award->division_id !== ($user->isDivisionLeader() ? $user->member?->division_id : null)) {
+                                        $fail($user->isDivisionLeader() ? 'You can only grant clan-wide awards or awards for your own division.' : 'Admins can only grant clan-wide awards here.');
+                                    } elseif (! $user->isRole('admin') && $user->isDivisionLeader() && $award->division_id !== $user->member?->division_id && ! ($award->division_id === null && self::canGrantClanWideAwards($user))) {
                                         $fail('You can only grant awards for your own division.');
                                     }
                                 },
