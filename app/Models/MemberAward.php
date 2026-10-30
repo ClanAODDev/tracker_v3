@@ -33,21 +33,19 @@ class MemberAward extends Model
 
     public function scopeVisibleTo(Builder $query, User $user): void
     {
-        if ($user->isRole('admin')) {
-            $query->whereHas('award', fn (Builder $award) => $award->whereNull('division_id'));
+        $isAdmin  = $user->isRole('admin');
+        $isLeader = $user->isDivisionLeader();
 
+        if (! $isAdmin && ! $isLeader) {
             return;
         }
 
-        if ($user->isDivisionLeader()) {
-            $query->whereHas('award', fn (Builder $award) => $award->where(function (Builder $scope) use ($user) {
-                $scope->where('division_id', $user->member->division_id);
+        $divisionId = $isLeader ? $user->member?->division_id : null;
+        $clanWide   = $isAdmin || $user->can(Ability::ManageMemberAwards);
 
-                if ($user->can(Ability::ManageMemberAwards)) {
-                    $scope->orWhereNull('division_id');
-                }
-            }));
-        }
+        $query->whereHas('award', fn (Builder $award) => $award->where(fn (Builder $scope) => $scope
+            ->when($divisionId, fn (Builder $q) => $q->where('division_id', $divisionId))
+            ->when($clanWide, fn (Builder $q) => $q->orWhereNull('division_id'))));
     }
 
     public function scopeNeedsApproval(Builder $query): void
