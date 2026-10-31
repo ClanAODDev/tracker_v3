@@ -17,6 +17,8 @@ class MemberSyncService
 {
     protected const FORUM_RANK_OFFSET = 2;
 
+    protected const APPROVAL_GRACE_HOURS = 24;
+
     protected const SYNCABLE_FIELDS = [
         'allow_pm',
         'discord',
@@ -124,9 +126,13 @@ class MemberSyncService
 
     protected function syncExistingMembers(Collection $forumMemberMap): void
     {
-        $unapprovedMemberDbIds = MemberRequest::whereNull('approved_at')->pluck('member_id');
-        $protectedClanIds      = $unapprovedMemberDbIds->isNotEmpty()
-            ? Member::whereIn('id', $unapprovedMemberDbIds)->pluck('clan_id')
+        $protectedMemberDbIds = MemberRequest::query()
+            ->where(fn ($query) => $query
+                ->whereNull('approved_at')
+                ->orWhere('approved_at', '>=', now()->subHours(self::APPROVAL_GRACE_HOURS)))
+            ->pluck('member_id');
+        $protectedClanIds = $protectedMemberDbIds->isNotEmpty()
+            ? Member::whereIn('id', $protectedMemberDbIds)->pluck('clan_id')
             : collect();
 
         $members = Member::whereNotIn('division_id', [0])
