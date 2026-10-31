@@ -60,7 +60,6 @@ export interface SharedProps {
         permissions: AuthPermissions | null;
     };
     nav: NavItem[];
-    sessionLifetime: number;
     memberSearch: { minChars: number };
     flash: {
         toasts: Toast[];

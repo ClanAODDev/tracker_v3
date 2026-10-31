@@ -21,11 +21,10 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             ...parent::share($request),
-            'auth'            => fn () => $this->authProps($request),
-            'nav'             => fn () => ($user = $request->user()) ? Navigation::for($user) : [],
-            'sessionLifetime' => (int) config('session.lifetime'),
-            'memberSearch'    => ['minChars' => (int) config('aod.member_search.min_chars')],
-            'flash'           => fn () => [
+            'auth'         => fn () => $this->authProps($request),
+            'nav'          => fn () => ($user = $request->user()) ? Navigation::for($user) : [],
+            'memberSearch' => ['minChars' => (int) config('aod.member_search.min_chars')],
+            'flash'        => fn () => [
                 'toasts' => $request->session()->get('toastr::messages', []),
             ],
         ];
