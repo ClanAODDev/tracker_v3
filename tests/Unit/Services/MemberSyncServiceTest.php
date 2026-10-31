@@ -396,14 +396,33 @@ class MemberSyncServiceTest extends TestCase
             'approved_at'  => now()->subHours(23),
         ]);
 
-        $mockInfo       = Mockery::mock(GetDivisionInfo::class);
-        $mockInfo->data = [];
-
-        $service = new MemberSyncService($mockInfo);
+        $service = new MemberSyncService($this->forumInfo(99993, $division->name));
         $service->sync();
 
         $this->assertDatabaseHas('members', ['clan_id' => 55555, 'division_id' => $division->id]);
         $this->assertEquals(0, $service->getStats()['removed']);
+    }
+
+    #[Test]
+    public function recently_approved_members_still_take_forum_updates(): void
+    {
+        $division = Division::factory()->create();
+        $member   = Member::factory()->create([
+            'clan_id'     => 55556,
+            'name'        => 'OldName',
+            'division_id' => $division->id,
+        ]);
+
+        MemberRequest::factory()->create([
+            'member_id'    => $member->id,
+            'requester_id' => $member->id,
+            'division_id'  => $division->id,
+            'approved_at'  => now()->subHour(),
+        ]);
+
+        (new MemberSyncService($this->forumInfo(55556, $division->name)))->sync();
+
+        $this->assertSame('Mover55556', $member->fresh()->name);
     }
 
     #[Test]
