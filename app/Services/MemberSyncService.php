@@ -11,6 +11,7 @@ use App\Notifications\Channel\NotifyDivisionMemberRemoved;
 use Carbon\Carbon;
 use Closure;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class MemberSyncService
@@ -126,30 +127,39 @@ class MemberSyncService
 
     protected function syncExistingMembers(Collection $forumMemberMap): void
     {
-        $protectedMemberDbIds = MemberRequest::query()
-            ->where(fn ($query) => $query
-                ->whereNull('approved_at')
-                ->orWhere('approved_at', '>=', now()->subHours(self::APPROVAL_GRACE_HOURS)))
-            ->pluck('member_id');
-        $protectedClanIds = $protectedMemberDbIds->isNotEmpty()
-            ? Member::whereIn('id', $protectedMemberDbIds)->pluck('clan_id')
-            : collect();
+        $unapprovedClanIds = $this->clanIdsForRequests(
+            MemberRequest::whereNull('approved_at')
+        );
+        $recentlyApprovedClanIds = $this->clanIdsForRequests(
+            MemberRequest::where('approved_at', '>=', now()->subHours(self::APPROVAL_GRACE_HOURS))
+        )->flip();
 
         $members = Member::whereNotIn('division_id', [0])
-            ->whereNotIn('clan_id', $protectedClanIds)
+            ->whereNotIn('clan_id', $unapprovedClanIds)
             ->get();
 
         foreach ($members as $member) {
             $forumData = $forumMemberMap->get($member->clan_id);
 
             if (! $forumData) {
-                $this->handleMemberRemoval($member);
+                if (! $recentlyApprovedClanIds->has($member->clan_id)) {
+                    $this->handleMemberRemoval($member);
+                }
 
                 continue;
             }
 
             $this->updateMemberIfChanged($member, (object) $forumData);
         }
+    }
+
+    protected function clanIdsForRequests(Builder $requests): Collection
+    {
+        $memberDbIds = $requests->pluck('member_id');
+
+        return $memberDbIds->isNotEmpty()
+            ? Member::whereIn('id', $memberDbIds)->pluck('clan_id')
+            : collect();
     }
 
     protected function handleMemberRemoval(Member $member): void
