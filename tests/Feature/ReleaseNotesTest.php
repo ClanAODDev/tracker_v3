@@ -174,4 +174,32 @@ class ReleaseNotesTest extends TestCase
         $this->assertSame('october-release-2', $second->slug);
         $this->assertSame('my-own-slug', $custom->slug);
     }
+
+    #[Test]
+    public function admins_get_links_to_edit_and_manage_release_notes(): void
+    {
+        $note = ReleaseNote::factory()->create(['published_at' => now()->subDay()]);
+
+        $this->actingAs($this->createAdmin());
+
+        $this->assertSame(
+            route('filament.admin.resources.release-notes.edit', $note),
+            $this->get(route('changelog.show', $note->slug))->viewData('page')['props']['editUrl'],
+        );
+        $this->assertSame(
+            route('filament.admin.resources.release-notes.index'),
+            $this->get(route('changelog'))->viewData('page')['props']['manageUrl'],
+        );
+    }
+
+    #[Test]
+    public function non_admins_get_no_edit_or_manage_links(): void
+    {
+        $note = ReleaseNote::factory()->create(['published_at' => now()->subDay()]);
+
+        $this->actingAs($this->createOfficer());
+
+        $this->assertNull($this->get(route('changelog.show', $note->slug))->viewData('page')['props']['editUrl']);
+        $this->assertNull($this->get(route('changelog'))->viewData('page')['props']['manageUrl']);
+    }
 }

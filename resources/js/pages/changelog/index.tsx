@@ -1,5 +1,7 @@
 import { Head, Link } from '@inertiajs/react';
+import { Settings2 } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout';
 
 interface Note {
@@ -14,15 +16,23 @@ interface Note {
 interface Props {
     notes: Note[];
     pagination: { total: number; prevUrl: string | null; nextUrl: string | null };
+    manageUrl: string | null;
 }
 
-export default function ReleaseNotes({ notes, pagination }: Props) {
+export default function ReleaseNotes({ notes, pagination, manageUrl }: Props) {
     return (
         <AppLayout
             header={{
                 eyebrow: 'AOD Tracker',
                 title: 'Release notes',
                 breadcrumbs: [{ label: 'Release notes' }],
+                actions: manageUrl && (
+                    <Button asChild variant="outline" size="sm">
+                        <a href={manageUrl}>
+                            <Settings2 /> Manage
+                        </a>
+                    </Button>
+                ),
             }}
         >
             <Head title="Release notes" />
