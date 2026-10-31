@@ -84,9 +84,7 @@ class LoginController extends Controller
 
         $request->session()->invalidate();
 
-        $response = response()
-            ->redirectTo('/login')
-            ->withoutCookie('aod_sessionhash');
+        $response = response()->redirectTo('/login');
 
         if (str_contains(app()->environment(), 'local')) {
             $response->cookie('tracker_logged_out', true, 60);
@@ -159,7 +157,7 @@ class LoginController extends Controller
 
             $user = User::findOrCreateForMember($member, $this->email);
 
-            auth()->login($user);
+            auth()->login(user: $user, remember: true);
 
             app(ClanForumPermissions::class)->handleAccountRoles(
                 $user->member->clan_id,

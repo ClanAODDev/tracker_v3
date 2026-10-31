@@ -5,6 +5,7 @@ namespace Tests\Feature\Controllers;
 use App\Models\Member;
 use App\Models\User;
 use App\Services\AODForumService;
+use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
@@ -109,5 +110,36 @@ class ForumLoginTest extends TestCase
         ]);
 
         $this->assertAuthenticatedAs($user2);
+    }
+
+    #[Test]
+    public function forum_login_remembers_the_user(): void
+    {
+        $member = Member::factory()->create(['clan_id' => 33333]);
+        $user   = User::factory()->create(['member_id' => $member->id]);
+
+        $this->mock(AODForumService::class)
+            ->shouldReceive('authenticate')
+            ->andReturn(['clan_id' => 33333, 'email' => 'test@example.com', 'roles' => [2]]);
+
+        $this->post('/login', ['username' => 'someone', 'password' => 'password'])
+            ->assertCookie(auth()->guard()->getRecallerName());
+
+        $this->assertNotNull($user->fresh()->remember_token);
+    }
+
+    #[Test]
+    public function a_forum_session_cookie_does_not_log_a_guest_back_in(): void
+    {
+        $member = Member::factory()->create(['clan_id' => 44444]);
+        User::factory()->create(['member_id' => $member->id]);
+
+        $this->mock(ForumProcedureService::class)->shouldNotReceive('checkSession');
+
+        $this->withCookie('aod_sessionhash', 'valid_hash')
+            ->get('/login')
+            ->assertOk();
+
+        $this->assertGuest();
     }
 }
