@@ -193,6 +193,16 @@ class ReleaseNotesTest extends TestCase
     }
 
     #[Test]
+    public function excerpts_leave_out_headings_and_their_permalink_marks(): void
+    {
+        $note = ReleaseNote::factory()->make([
+            'body' => "# Tracker Release Notes\n\n## Highlights\n\n- **Logging out** now works &amp; sticks.\n\n## Recruiting\n\nRecruits are kept.",
+        ]);
+
+        $this->assertSame('Logging out now works & sticks. Recruits are kept.', $note->excerpt());
+    }
+
+    #[Test]
     public function non_admins_get_no_edit_or_manage_links(): void
     {
         $note = ReleaseNote::factory()->create(['published_at' => now()->subDay()]);
