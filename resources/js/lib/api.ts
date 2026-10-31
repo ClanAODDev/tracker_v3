@@ -16,9 +16,6 @@ function guardAuth(response: Response): void {
     if (response.status === 401 || response.status === 419) {
         redirectToLogin();
     }
-    if (response.ok) {
-        window.dispatchEvent(new Event('session:touch'));
-    }
 }
 
 export class ApiError extends Error {

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -13,6 +14,13 @@ use Tests\TestCase;
 class RememberMeTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        Route::middleware(['web', 'auth'])->get('_test/whoami', fn () => response()->json(['ok' => true]));
+    }
 
     #[Test]
     public function a_remember_cookie_restores_a_passwordless_user_after_the_session_expires(): void
@@ -28,7 +36,7 @@ class RememberMeTest extends TestCase
 
         $this->withCredentials()
             ->withCookie($cookie->getName(), $cookie->getValue())
-            ->getJson(route('session.keep-alive'))
+            ->getJson('/_test/whoami')
             ->assertOk();
 
         $this->assertTrue(Auth::viaRemember());
@@ -44,7 +52,7 @@ class RememberMeTest extends TestCase
 
         $this->withCredentials()
             ->withCookie(Auth::guard()->getRecallerName(), "{$user->id}|legacy-token|{$legacyHash}")
-            ->getJson(route('session.keep-alive'))
+            ->getJson('/_test/whoami')
             ->assertOk();
 
         $this->assertTrue(Auth::user()->is($user));
