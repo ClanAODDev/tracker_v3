@@ -6,14 +6,16 @@ use App\Models\Division;
 use App\Models\Handle;
 use App\Models\Leave;
 use App\Models\Member;
+use App\Models\Unit;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Support\Collection;
 
 class MemberRowSerializer
 {
+    private ?Collection $divisionUnits = null;
+
     public function __construct(
         private Division $division,
-        private int $assignmentDepth = 1,
         private ?int $directRecruitOfClanId = null,
     ) {}
 
@@ -40,7 +42,7 @@ class MemberRowSerializer
             'positionAbbr'   => $member->positionAbbreviation(),
             'positionClass'  => $member->position?->getClass(),
             'profileUrl'     => route('member', $member->getUrlParams()),
-            'assignment'     => $this->assignment($member),
+            'units'          => $this->units($member),
             'joinDate'       => $member->join_date?->format('Y-m-d'),
             'voice'          => $this->voice($member),
             'lastPromotedAt' => $member->last_promoted_at?->format('Y-m-d'),
@@ -96,15 +98,27 @@ class MemberRowSerializer
         ];
     }
 
-    private function assignment(Member $member): ?array
+    private function units(Member $member): array
     {
-        $unit = $member->unitAt($this->assignmentDepth);
+        $units = $this->divisionUnits();
+        $trail = [];
 
-        return $unit
-            ? [
+        for ($unit = $units->get($member->unit_id); $unit !== null; $unit = $units->get($unit->parent_id)) {
+            array_unshift($trail, [
+                'id'    => $unit->id,
+                'depth' => $unit->depth,
                 'label' => $unit->name ?: 'Untitled',
                 'url'   => $unit->url($this->division),
-            ]
-            : null;
+            ]);
+        }
+
+        return $trail;
+    }
+
+    private function divisionUnits(): Collection
+    {
+        return $this->divisionUnits ??= Unit::where('division_id', $this->division->id)
+            ->get(['id', 'parent_id', 'depth', 'name'])
+            ->keyBy('id');
     }
 }

@@ -20,7 +20,7 @@ class MemberListProps
         ?int $directRecruitOfClanId = null,
     ): array {
         $user       = auth()->user();
-        $serializer = new MemberRowSerializer($division, $assignmentDepth, $directRecruitOfClanId);
+        $serializer = new MemberRowSerializer(division: $division, directRecruitOfClanId: $directRecruitOfClanId);
 
         return [
             'division' => [
