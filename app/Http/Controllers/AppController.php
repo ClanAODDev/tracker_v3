@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\DivisionLeaderboardData;
 use App\Data\PendingAction;
 use App\Data\PendingActionsData;
+use App\Enums\Ability;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
@@ -42,6 +43,9 @@ class AppController extends Controller
                 'prevUrl' => $notes->previousPageUrl(),
                 'nextUrl' => $notes->nextPageUrl(),
             ],
+            'manageUrl' => $this->canManageReleaseNotes()
+                ? route('filament.admin.resources.release-notes.index')
+                : null,
         ]);
     }
 
@@ -61,7 +65,17 @@ class AppController extends Controller
             'newer'    => $link($releaseNote->newer()),
             'older'    => $link($releaseNote->older()),
             'indexUrl' => route('changelog'),
+            'editUrl'  => $this->canManageReleaseNotes()
+                ? route('filament.admin.resources.release-notes.edit', $releaseNote)
+                : null,
         ]);
+    }
+
+    private function canManageReleaseNotes(): bool
+    {
+        $user = auth()->user();
+
+        return $user->isDeveloper() || $user->can(Ability::AccessAdminPanel);
     }
 
     public function index(): Response

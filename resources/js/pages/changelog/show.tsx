@@ -1,6 +1,8 @@
 import { Head, Link } from '@inertiajs/react';
+import { Pencil } from 'lucide-react';
 
 import { Prose } from '@/components/prose';
+import { Button } from '@/components/ui/button';
 import AppLayout from '@/layouts/AppLayout';
 
 interface NoteLink {
@@ -13,15 +15,23 @@ interface Props {
     newer: NoteLink | null;
     older: NoteLink | null;
     indexUrl: string;
+    editUrl: string | null;
 }
 
-export default function ReleaseNote({ note, newer, older, indexUrl }: Props) {
+export default function ReleaseNote({ note, newer, older, indexUrl, editUrl }: Props) {
     return (
         <AppLayout
             header={{
                 eyebrow: note.version ? `Release notes · ${note.version}` : 'Release notes',
                 title: note.title,
                 breadcrumbs: [{ label: 'Release notes', href: indexUrl }, { label: note.title }],
+                actions: editUrl && (
+                    <Button asChild variant="outline" size="sm">
+                        <a href={editUrl}>
+                            <Pencil /> Edit
+                        </a>
+                    </Button>
+                ),
             }}
         >
             <Head title={note.title} />
