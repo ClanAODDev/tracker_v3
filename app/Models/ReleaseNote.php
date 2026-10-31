@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use GrahamCampbell\Markdown\Facades\Markdown;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -72,5 +73,13 @@ class ReleaseNote extends Model
             $this->published_at->isFuture() => 'scheduled',
             default                         => 'published',
         };
+    }
+
+    public function excerpt(int $limit = 240): string
+    {
+        $html = preg_replace('#<h([1-6])\b[^>]*>.*?</h\1>#is', ' ', (string) Markdown::convertToHtml((string) $this->body));
+        $text = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5);
+
+        return Str::limit(trim(preg_replace('/\s+/u', ' ', $text)), $limit);
     }
 }

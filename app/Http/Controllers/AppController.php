@@ -14,7 +14,6 @@ use App\Models\User;
 use App\Support\DivisionToolbar;
 use GrahamCampbell\Markdown\Facades\Markdown;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
-use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -35,7 +34,7 @@ class AppController extends Controller
                 'title'       => $note->title,
                 'version'     => $note->version,
                 'publishedAt' => $note->published_at->format('M j, Y'),
-                'excerpt'     => Str::limit(trim(preg_replace('/\s+/', ' ', strip_tags((string) Markdown::convertToHtml($note->body)))), 240),
+                'excerpt'     => $note->excerpt(),
                 'url'         => route('changelog.show', $note->slug),
             ])->values(),
             'pagination' => [
