@@ -1,3 +1,15 @@
+export interface MemberUnit {
+    id: number;
+    depth: number;
+    label: string;
+    url: string;
+}
+
+export interface UnitLevel {
+    depth: number;
+    label: string;
+}
+
 export interface MemberRow {
     id: number;
     name: string;
@@ -9,7 +21,7 @@ export interface MemberRow {
     positionAbbr: string | null;
     positionClass: string | null;
     profileUrl: string;
-    assignment: { label: string; url: string } | null;
+    units: MemberUnit[];
     joinDate: string | null;
     voice: { label: string; tone: string; iso: string | null; bucket: number };
     lastPromotedAt: string | null;

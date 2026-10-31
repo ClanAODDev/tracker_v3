@@ -4,7 +4,7 @@ import { AlertTriangle, Bell, Clock } from 'lucide-react';
 import { type CSSProperties, type Dispatch, type ReactNode, type SetStateAction, useMemo } from 'react';
 import { toast } from 'sonner';
 
-import type { HandleType, MemberFieldDefinition, MemberRow } from '@/components/members/types';
+import type { HandleType, MemberFieldDefinition, MemberRow, UnitLevel } from '@/components/members/types';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -15,9 +15,10 @@ import { cn } from '@/lib/utils';
 const DOT_TINT = ['bg-success', 'bg-warning', 'bg-destructive', 'bg-muted-foreground'] as const;
 
 interface Options {
-    assignmentLabel: string;
+    unitLevels: UnitLevel[];
     bulkMode: boolean;
     selectedTags: Set<number>;
+    selectedUnits: Set<number>;
     reminded: Record<number, string>;
     setReminded: Dispatch<SetStateAction<Record<number, string>>>;
     activityStyle: 'row' | 'dot';
@@ -30,6 +31,14 @@ export function fieldColumnId(key: string): string {
     return `field:${key}`;
 }
 
+export function unitColumnId(depth: number): string {
+    return `unit:${depth}`;
+}
+
+export function matchesUnit(member: MemberRow, query: string): boolean {
+    return member.units.some((unit) => unit.label.toLowerCase().includes(query));
+}
+
 export function handleColumnId(id: number): string {
     return `handle:${id}`;
 }
@@ -39,9 +48,10 @@ export function matchesHandle(member: MemberRow, query: string): boolean {
 }
 
 export function useMemberColumns({
-    assignmentLabel,
+    unitLevels,
     bulkMode,
     selectedTags,
+    selectedUnits,
     reminded,
     setReminded,
     activityStyle,
@@ -147,7 +157,7 @@ export function useMemberColumns({
                         m.name.toLowerCase().includes(q) ||
                         (m.rankAbbr ?? '').toLowerCase().includes(q) ||
                         matchesHandle(m, q) ||
-                        (m.assignment?.label ?? '').toLowerCase().includes(q)
+                        matchesUnit(m, q)
                     );
                 },
             },
@@ -157,19 +167,29 @@ export function useMemberColumns({
                 header: 'Rank',
                 cell: ({ row }) => <span className="text-muted-foreground">{row.original.rankAbbr}</span>,
             },
-            {
-                id: 'assignment',
-                accessorFn: (m) => m.assignment?.label ?? '',
-                header: assignmentLabel,
-                cell: ({ row }) =>
-                    row.original.assignment ? (
-                        <Link href={row.original.assignment.url} className="text-muted-foreground hover:text-foreground">
-                            {row.original.assignment.label}
-                        </Link>
-                    ) : (
-                        <span className="text-muted-foreground">—</span>
-                    ),
-            },
+            ...unitLevels.map(
+                (level, i): ColumnDef<MemberRow> => ({
+                    id: unitColumnId(level.depth),
+                    accessorFn: (m) => m.units.find((unit) => unit.depth === level.depth)?.label ?? '',
+                    header: level.label,
+                    cell: ({ row }) => {
+                        const unit = row.original.units.find((u) => u.depth === level.depth);
+                        return unit ? (
+                            <Link href={unit.url} className="text-muted-foreground hover:text-foreground">
+                                {unit.label}
+                            </Link>
+                        ) : (
+                            <span className="text-muted-foreground">—</span>
+                        );
+                    },
+                    filterFn:
+                        i === 0
+                            ? (row) =>
+                                  selectedUnits.size === 0 ||
+                                  row.original.units.some((unit) => selectedUnits.has(unit.id))
+                            : undefined,
+                }),
+            ),
             {
                 id: 'joined',
                 accessorKey: 'joinDate',
@@ -329,8 +349,9 @@ export function useMemberColumns({
             ),
         ],
         [
-            assignmentLabel,
+            unitLevels,
             selectedTags,
+            selectedUnits,
             reminded,
             bulkMode,
             activityStyle,
@@ -343,7 +364,7 @@ export function useMemberColumns({
 
 export function columnLabel(
     id: string,
-    assignmentLabel: string,
+    unitLevels: UnitLevel[],
     memberFields: MemberFieldDefinition[],
     handleTypes: HandleType[],
 ): ReactNode {
@@ -354,9 +375,9 @@ export function columnLabel(
             return 'Discord activity';
         case 'reminder':
             return 'Inactivity reminder';
-        case 'assignment':
-            return assignmentLabel;
         default: {
+            const level = unitLevels.find((l) => unitColumnId(l.depth) === id);
+            if (level) return level.label;
             const field = memberFields.find((f) => fieldColumnId(f.key) === id);
             if (field) return field.label;
             return handleTypes.find((h) => handleColumnId(h.id) === id)?.label ?? id;
