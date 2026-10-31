@@ -17,6 +17,8 @@ import {
     fieldColumnId,
     handleColumnId,
     matchesHandle,
+    matchesUnit,
+    unitColumnId,
     useMemberColumns,
 } from '@/components/members/member-columns';
 import type { BulkConfig, MemberFieldDefinition, MemberListDivision, MemberRow } from '@/components/members/types';
@@ -98,6 +100,13 @@ export function MemberTable({
     storageKey,
 }: Props) {
     const persisted = useMemo(() => loadState(storageKey), [storageKey]);
+    const unitLevels = useMemo(
+        () =>
+            division.hasUnits
+                ? division.levels.filter((level) => level.depth >= assignmentDepth).sort((a, b) => a.depth - b.depth)
+                : [],
+        [division.hasUnits, division.levels, assignmentDepth],
+    );
 
     const [sorting, setSorting] = useState<SortingState>(withLeaveFirst(persisted.sorting ?? []));
     const [columnVisibility, setColumnVisibility] = useState<VisibilityState>(() => {
@@ -105,10 +114,12 @@ export function MemberTable({
         // out every viewer's default table width. Persisted choices still win.
         const defaultFieldHidden = Object.fromEntries(memberFields.map((f) => [fieldColumnId(f.key), false]));
         const defaultHandleHidden = Object.fromEntries(division.handleTypes.map((h) => [handleColumnId(h.id), false]));
+        const defaultUnitHidden = Object.fromEntries(unitLevels.slice(1).map((l) => [unitColumnId(l.depth), false]));
         return {
             ...DEFAULT_HIDDEN,
             ...defaultFieldHidden,
             ...defaultHandleHidden,
+            ...defaultUnitHidden,
             ...(persisted.columnVisibility ?? {}),
             select: false,
         };
@@ -118,6 +129,7 @@ export function MemberTable({
     const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
     const [bulkMode, setBulkMode] = useState(false);
     const [selectedTags, setSelectedTags] = useState<Set<number>>(new Set());
+    const [selectedUnits, setSelectedUnits] = useState<Set<number>>(new Set());
     const [selectedFieldValues, setSelectedFieldValues] = useState<Record<string, Set<string>>>({});
     const [reminded, setReminded] = useState<Record<number, string>>({});
     const [activityStyle, setActivityStyle] = useState<ActivityStyle>(persisted.activityStyle ?? 'row');
@@ -130,12 +142,11 @@ export function MemberTable({
         }
     }, [storageKey, sorting, columnVisibility, activityStyle]);
 
-    const assignmentLabel = division.levels.find((level) => level.depth === assignmentDepth)?.label ?? 'Unit';
-
-    const allColumns = useMemberColumns({
-        assignmentLabel,
+    const columns = useMemberColumns({
+        unitLevels,
         bulkMode,
         selectedTags,
+        selectedUnits,
         reminded,
         setReminded,
         activityStyle,
@@ -143,11 +154,6 @@ export function MemberTable({
         selectedFieldValues,
         handleTypes: division.handleTypes,
     });
-
-    const columns = useMemo(
-        () => (division.hasUnits ? allColumns : allColumns.filter((column) => column.id !== 'assignment')),
-        [allColumns, division.hasUnits],
-    );
 
     const table = useReactTable({
         data: rows,
@@ -167,7 +173,7 @@ export function MemberTable({
                 m.name.toLowerCase().includes(q) ||
                 (m.rankAbbr ?? '').toLowerCase().includes(q) ||
                 matchesHandle(m, q) ||
-                (m.assignment?.label ?? '').toLowerCase().includes(q) ||
+                matchesUnit(m, q) ||
                 Object.values(m.customFields).some((v) => (v ?? '').toLowerCase().includes(q))
             );
         },
@@ -184,6 +190,11 @@ export function MemberTable({
     useEffect(() => {
         table.getColumn('tags')?.setFilterValue(selectedTags.size > 0 ? [...selectedTags] : undefined);
     }, [selectedTags, table]);
+
+    useEffect(() => {
+        if (unitLevels.length === 0) return;
+        table.getColumn(unitColumnId(unitLevels[0].depth))?.setFilterValue(selectedUnits.size > 0 ? [...selectedUnits] : undefined);
+    }, [selectedUnits, unitLevels, table]);
 
     useEffect(() => {
         memberFields.forEach((field) => {
@@ -210,6 +221,27 @@ export function MemberTable({
                     })),
                 })),
         [memberFields, rows],
+    );
+
+    const unitFilter = useMemo(
+        () =>
+            unitLevels
+                .map((level) => {
+                    const counts = new Map<number, { id: number; label: string; count: number }>();
+                    rows.forEach((r) => {
+                        const unit = r.units.find((u) => u.depth === level.depth);
+                        if (!unit) return;
+                        const entry = counts.get(unit.id) ?? { id: unit.id, label: unit.label, count: 0 };
+                        entry.count += 1;
+                        counts.set(unit.id, entry);
+                    });
+                    return {
+                        level,
+                        units: [...counts.values()].sort((a, b) => a.label.localeCompare(b.label)),
+                    };
+                })
+                .filter((group) => group.units.length > 0),
+        [unitLevels, rows],
     );
 
     const totalSelectedFieldValues = Object.values(selectedFieldValues).reduce((sum, set) => sum + set.size, 0);
@@ -264,6 +296,45 @@ export function MemberTable({
                                 >
                                     {tag.name} <span className="ml-1 text-muted-foreground">({tag.count})</span>
                                 </DropdownMenuCheckboxItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                )}
+
+                {unitFilter.reduce((n, group) => n + group.units.length, 0) > 1 && (
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="sm">
+                                Units
+                                {selectedUnits.size > 0 && (
+                                    <span className="numeric rounded bg-primary/15 px-1 text-primary">
+                                        {selectedUnits.size}
+                                    </span>
+                                )}
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start" className="max-h-96 w-64 overflow-y-auto">
+                            {unitFilter.map(({ level, units }, i) => (
+                                <div key={level.depth}>
+                                    {i > 0 && <DropdownMenuSeparator />}
+                                    <DropdownMenuLabel>{level.label}</DropdownMenuLabel>
+                                    {units.map((unit) => (
+                                        <DropdownMenuCheckboxItem
+                                            key={unit.id}
+                                            checked={selectedUnits.has(unit.id)}
+                                            onCheckedChange={() =>
+                                                setSelectedUnits((prev) => {
+                                                    const next = new Set(prev);
+                                                    next.has(unit.id) ? next.delete(unit.id) : next.add(unit.id);
+                                                    return next;
+                                                })
+                                            }
+                                            onSelect={(e) => e.preventDefault()}
+                                        >
+                                            {unit.label} <span className="ml-1 text-muted-foreground">({unit.count})</span>
+                                        </DropdownMenuCheckboxItem>
+                                    ))}
+                                </div>
                             ))}
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -326,7 +397,7 @@ export function MemberTable({
                                 onSelect={(e) => e.preventDefault()}
                                 className="capitalize"
                             >
-                                {columnLabel(column.id, assignmentLabel, memberFields, division.handleTypes)}
+                                {columnLabel(column.id, unitLevels, memberFields, division.handleTypes)}
                             </DropdownMenuCheckboxItem>
                         ))}
                     </DropdownMenuContent>

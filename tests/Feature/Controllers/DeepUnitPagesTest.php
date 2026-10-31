@@ -56,10 +56,27 @@ class DeepUnitPagesTest extends TestCase
                 ->where('scope.childLabel', 'Squad')
                 ->where('assignmentDepth', 2)
                 ->where('division.levels.1.label', 'Squad')
-                ->where('members', fn ($members) => collect($members)->pluck('assignment.label')->unique()->all() === [$this->middle->name])
+                ->where('members', fn ($members) => collect($members)->map(fn ($member) => collect($member['units'])->firstWhere('depth', 2)['label'] ?? null)->unique()->all() === [$this->middle->name])
                 ->has('squads', 1)
                 ->where('squads.0.id', $this->middle->id)
                 ->where('squads.0.count', 2));
+    }
+
+    #[Test]
+    public function member_rows_carry_the_full_unit_trail(): void
+    {
+        $division = $this->officer->member->division;
+        $member   = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->leaf->id]);
+
+        $this->actingAs($this->officer)
+            ->get(route('division.members', $division))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('members', fn ($members) => collect($members)->firstWhere('id', $member->clan_id)['units'] === [
+                    ['id' => $this->company->id, 'depth' => 1, 'label' => $this->company->name, 'url' => $this->company->url($division)],
+                    ['id' => $this->middle->id, 'depth' => 2, 'label' => $this->middle->name, 'url' => $this->middle->url($division)],
+                    ['id' => $this->leaf->id, 'depth' => 3, 'label' => $this->leaf->name, 'url' => $this->leaf->url($division)],
+                ]));
     }
 
     #[Test]
