@@ -38,12 +38,6 @@ Route::prefix('primary-nav')->group(function () {
     Route::get('decollapse', fn () => session(['primary_nav_collapsed' => false]));
 });
 
-Route::middleware('auth')->get('session/keep-alive', function () {
-    return response()->json([
-        'expiresAt' => now()->addMinutes(config('session.lifetime'))->timestamp,
-    ]);
-})->name('session.keep-alive');
-
 Route::controller(SettingsController::class)->middleware('auth')->prefix('settings')->name('settings.')->group(function () {
     Route::get('/', 'data')->name('data');
     Route::post('/', 'update')->name('update');

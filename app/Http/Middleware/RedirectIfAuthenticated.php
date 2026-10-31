@@ -2,21 +2,18 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
-use Facades\App\AOD\ClanForumSession;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class RedirectIfAuthenticated
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @return mixed
-     */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
-        if (ClanForumSession::exists()) {
+        if ($this->shouldLoginLocalUser($request)) {
+            auth()->login($this->localUser());
+
             return redirect()->intended();
         }
 
@@ -29,5 +26,20 @@ class RedirectIfAuthenticated
         }
 
         return $next($request);
+    }
+
+    private function shouldLoginLocalUser(Request $request): bool
+    {
+        return str_contains(app()->environment(), 'local')
+            && ! auth()->check()
+            && ! $request->cookie('tracker_logged_out')
+            && User::exists();
+    }
+
+    private function localUser(): User
+    {
+        return config('dev_default_user')
+            ? User::findOrFail(config('dev_default_user'))
+            : User::first();
     }
 }

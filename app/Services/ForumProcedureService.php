@@ -9,8 +9,6 @@ class ForumProcedureService
 {
     protected string $connection = 'aod_forums';
 
-    private const CHECK_SESSION = 'check_session';
-
     private const CHECK_USER = 'check_user';
 
     private const GET_USER = 'get_user';
@@ -20,11 +18,6 @@ class ForumProcedureService
     private const SET_USER_DIVISION = 'set_user_division';
 
     private const SET_DISCORD_INFO = 'set_discord_info';
-
-    public function checkSession(string $sessionHash): ?object
-    {
-        return $this->call(self::CHECK_SESSION, ['session' => $sessionHash]);
-    }
 
     public function getUser(int $userId): ?object
     {
