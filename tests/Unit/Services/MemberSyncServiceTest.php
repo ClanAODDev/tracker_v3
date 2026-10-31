@@ -381,7 +381,33 @@ class MemberSyncServiceTest extends TestCase
     }
 
     #[Test]
-    public function members_with_approved_requests_are_removed_when_absent_from_forum(): void
+    public function recently_approved_members_are_not_removed_while_awaiting_the_forum(): void
+    {
+        $division = Division::factory()->create();
+        $member   = Member::factory()->create([
+            'clan_id'     => 55555,
+            'division_id' => $division->id,
+        ]);
+
+        MemberRequest::factory()->create([
+            'member_id'    => $member->id,
+            'requester_id' => $member->id,
+            'division_id'  => $division->id,
+            'approved_at'  => now()->subHours(23),
+        ]);
+
+        $mockInfo       = Mockery::mock(GetDivisionInfo::class);
+        $mockInfo->data = [];
+
+        $service = new MemberSyncService($mockInfo);
+        $service->sync();
+
+        $this->assertDatabaseHas('members', ['clan_id' => 55555, 'division_id' => $division->id]);
+        $this->assertEquals(0, $service->getStats()['removed']);
+    }
+
+    #[Test]
+    public function members_approved_past_the_grace_window_are_removed_when_absent_from_forum(): void
     {
         $division = Division::factory()->create();
         $member   = Member::factory()->create([
@@ -393,7 +419,7 @@ class MemberSyncServiceTest extends TestCase
             'member_id'    => $member->id,
             'requester_id' => $member->id,
             'division_id'  => $division->id,
-            'approved_at'  => now(),
+            'approved_at'  => now()->subHours(25),
         ]);
 
         $mockInfo       = Mockery::mock(GetDivisionInfo::class);
@@ -436,7 +462,7 @@ class MemberSyncServiceTest extends TestCase
             'member_id'    => $member->id,
             'requester_id' => $member->id,
             'division_id'  => $division->id,
-            'approved_at'  => now(),
+            'approved_at'  => now()->subHours(25),
         ]);
 
         $mockInfo       = Mockery::mock(GetDivisionInfo::class);
