@@ -17,6 +17,14 @@ class BotChannelMessage
 
     private const WARNING = 16776960;
 
+    private const MAX_TITLE = 256;
+
+    private const MAX_DESCRIPTION = 4096;
+
+    private const MAX_FIELD_NAME = 256;
+
+    private const MAX_FIELD_VALUE = 1024;
+
     private array $fields = [];
 
     private mixed $message;
@@ -174,13 +182,17 @@ class BotChannelMessage
             'body'    => [
                 'embeds' => [[
                     'color'       => $this->color ?? 0,
-                    'description' => $this->message ?? '',
+                    'description' => self::limit((string) ($this->message ?? ''), self::MAX_DESCRIPTION),
                     'author'      => [
-                        'name'     => $this->title,
+                        'name'     => self::limit((string) $this->title, self::MAX_TITLE),
                         'icon_url' => asset('images/logo_v2.png'),
                         'url'      => $this->url ?? config('app.url'),
                     ],
-                    'fields' => $this->fields ?? [],
+                    'fields' => array_map(fn (array $field) => [
+                        ...$field,
+                        'name'  => self::limit((string) $field['name'], self::MAX_FIELD_NAME),
+                        'value' => self::limit((string) $field['value'], self::MAX_FIELD_VALUE),
+                    ], $this->fields ?? []),
                 ]],
             ],
         ];
@@ -200,5 +212,10 @@ class BotChannelMessage
          **** ->error()
          */
         return $message;
+    }
+
+    private static function limit(string $text, int $max): string
+    {
+        return mb_strlen($text) > $max ? mb_substr($text, 0, $max - 1) . '…' : $text;
     }
 }
