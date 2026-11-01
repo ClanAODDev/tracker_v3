@@ -104,6 +104,12 @@ class RankAction extends Model implements Commentable
         ])->filter()->isNotEmpty();
     }
 
+    public function requiresAcceptance(): bool
+    {
+        return $this->rank->isPromotion($this->member->rank)
+            && $this->rank->value > Rank::PRIVATE_FIRST_CLASS->value;
+    }
+
     public function approve(): static
     {
         $this->update([
