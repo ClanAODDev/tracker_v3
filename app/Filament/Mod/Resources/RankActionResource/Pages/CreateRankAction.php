@@ -92,13 +92,17 @@ class CreateRankAction extends CreateRecord
             return;
         }
 
-        // promotions beyond platoon lead limit (>= SPC) require acceptance
-        if ($record->rank->isPromotion($record->member->rank) && ! $record->accepted_at) {
+        if ($record->requiresAcceptance() && ! $record->accepted_at) {
             $record->member->notify(new NotifyMemberPromotionPendingAcceptance($record));
-        } else {
-            // demotions are automatically accepted and applied
-            UpdateRankForMember::dispatch($record);
+
+            return;
         }
+
+        if (! $record->accepted_at) {
+            $record->approveAndAccept();
+        }
+
+        UpdateRankForMember::dispatch($record);
     }
 
     protected function getSteps(): array

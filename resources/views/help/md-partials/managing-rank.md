@@ -6,10 +6,10 @@ member being promoted or demoted.
 ### Promotion Process
 - NCO or senior leader creates a rank action
 - Platoon leader, senior leader or division leader approves, within the limits below
-- Member affected receives discord notification of promotion (demotions do not notify)
-- Member accepts or declines promotion, link is good for a limited amount of time
-  - If link expires, approver can requeue an acceptance notification- 
-- Upon acceptance, rank is updated on forums and tracker
+- Promotions up to Pfc are applied as soon as they are approved, with no acceptance step
+- For promotions above Pfc, the member receives a Discord notification and accepts or declines the promotion. The link is good for a limited amount of time
+  - If the link expires, the approver can requeue an acceptance notification
+- Upon approval (up to Pfc) or acceptance (above Pfc), rank is updated on forums and tracker
 
 ### Additional considerations
 * Demotions are automatically approved and accepted - only admin/CO/XO may request
@@ -19,7 +19,7 @@ member being promoted or demoted.
 * General members cannot view rank history
 
 ### Rank Thresholds
-Automatic approvals are rank changes that are immediately approved and moved to the acceptance process. 
+Automatic approvals are rank changes that are immediately approved. Up to Pfc they are applied right away; above Pfc they move to the acceptance process. 
 Recommendations must be approved by a platoon leader, senior leader or division leader, or an admin.
 
 | Role                    | Can demote |   Auto-approve up to    | Max rank to recommend |      Approve up to      |

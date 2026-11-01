@@ -3,7 +3,6 @@
 namespace App\Filament\Mod\Resources\RankActionResource\Pages;
 
 use App\Enums\Ability;
-use App\Enums\Rank;
 use App\Filament\Mod\Resources\RankActionResource;
 use App\Jobs\UpdateRankForMember;
 use App\Models\RankAction;
@@ -157,7 +156,7 @@ class EditRankAction extends EditRecord
                     ->label('Approve change')
                     ->closeModalByClickingAway(false)
                     ->schema(function ($record) {
-                        if ($record->rank->isOfficer()) {
+                        if ($record->rank->isOfficer() || ! $record->requiresAcceptance()) {
                             return [];
                         }
 
@@ -179,7 +178,7 @@ class EditRankAction extends EditRecord
                         ];
                     })
                     ->action(function (array $data, RankAction $action) {
-                        if ($action->rank->isPromotion($action->member->rank)) {
+                        if ($action->requiresAcceptance()) {
                             $action->approve();
 
                             if ($action->rank->isOfficer($action->member->rank)) {
@@ -197,7 +196,7 @@ class EditRankAction extends EditRecord
                                 $action->member->notify($notification);
                             }
                         } else {
-                            $action->approveAndAccept();
+                            $action->approve()->approveAndAccept();
                             UpdateRankForMember::dispatch($action);
                         }
                     })
@@ -212,23 +211,12 @@ class EditRankAction extends EditRecord
                             return 'The requester will be notified that the officer promotion was approved. They will need to coordinate with the member to award the promotion.';
                         }
 
+                        if (! $record->requiresAcceptance()) {
+                            return 'The rank change will be applied immediately';
+                        }
+
                         return 'Member will receive a notification prompting them to accept or decline the rank change';
                     }),
-
-                Action::make('approve_with_force')
-                    ->color('warning')
-                    ->requiresConfirmation()
-                    ->visible(
-                        fn (RankAction $action) => auth()->user()->can('approve', $action)
-                            && $action->rank->value <= Rank::PRIVATE_FIRST_CLASS->value
-                    )
-                    ->hidden(fn (RankAction $action) => $action->accepted_at && ! $action->actionable())
-                    ->action(function (RankAction $action) {
-                        $action->approveAndAccept();
-                        UpdateRankForMember::dispatch($action);
-                    })
-                    ->modalHeading('Approve Rank Change With Force')
-                    ->modalDescription('Apply rank change without prompting the user for acceptance'),
             ])
                 ->outlined()
                 ->label('Manage Rank Action')
