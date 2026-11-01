@@ -4,7 +4,9 @@ namespace Tests\Feature\Filament;
 
 use App\Enums\Position;
 use App\Enums\Rank;
+use App\Filament\Mod\Resources\RankActionResource\Pages\CreateRankAction;
 use App\Filament\Mod\Resources\RankActionResource\Pages\EditRankAction;
+use App\Jobs\UpdateRankForMember;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\RankAction;
@@ -13,6 +15,7 @@ use App\Notifications\DM\NotifyMemberPromotionPendingAcceptance;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Queue;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -86,6 +89,23 @@ class JuniorPromotionAcceptanceTest extends TestCase
         $this->assertNull($action->accepted_at);
         $this->assertSame(Rank::PRIVATE_FIRST_CLASS, Member::find($action->member_id)->rank);
         Notification::assertSentTo($action->member, NotifyMemberPromotionPendingAcceptance::class);
+    }
+
+    #[Test]
+    public function creating_a_rank_action_you_can_approve_queues_one_rank_update(): void
+    {
+        Queue::fake();
+        $member = $this->createMember(['division_id' => $this->division->id, 'rank' => Rank::PRIVATE]);
+
+        Livewire::test(CreateRankAction::class)
+            ->fillForm(['member_id' => $member->id, 'action' => 'promotion', 'promotion_rank' => Rank::PRIVATE_FIRST_CLASS->value, 'Justification' => 'Great work'])
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $action = RankAction::where('member_id', $member->id)->firstOrFail();
+        $this->assertNotNull($action->accepted_at);
+        Queue::assertPushed(UpdateRankForMember::class, 1);
+        Notification::assertNotSentTo($member, NotifyMemberPromotionPendingAcceptance::class);
     }
 
     #[Test]

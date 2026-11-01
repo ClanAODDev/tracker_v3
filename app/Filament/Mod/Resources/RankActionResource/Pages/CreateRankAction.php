@@ -65,10 +65,8 @@ class CreateRankAction extends CreateRecord
         /** @var RankAction $record */
         $record = $this->record;
 
-        // fast track promotions up to platoon lead limit (Cdt <-> PFC)
         if (auth()->user()->can('approve', $record)) {
             $record->approveAndAccept();
-            UpdateRankForMember::dispatch($record);
         }
 
         // notify admins if a Sergeant rank request is pending
