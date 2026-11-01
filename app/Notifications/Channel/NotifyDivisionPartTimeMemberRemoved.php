@@ -66,7 +66,7 @@ class NotifyDivisionPartTimeMemberRemoved extends Notification implements Should
                 ],
                 [
                     'name'  => 'Reason',
-                    'value' => addslashes($this->removalReason),
+                    'value' => $this->removalReason,
                 ],
                 $notifiable->handleFieldFor($this->member),
             ])->error()
