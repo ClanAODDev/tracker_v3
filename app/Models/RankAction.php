@@ -30,6 +30,14 @@ class RankAction extends Model implements Commentable
 
     public $guarded = [];
 
+    protected static function booted(): void
+    {
+        static::deleting(function (RankAction $action) {
+            $action->comments()->delete();
+            $action->reactions()->delete();
+        });
+    }
+
     public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);

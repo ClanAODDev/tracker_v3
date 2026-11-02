@@ -43,6 +43,7 @@ class Member extends Model
 
         static::deleting(function (Member $member) {
             $member->transfers()->pending()->delete();
+            $member->discardPendingRankActions();
         });
     }
 
@@ -194,11 +195,17 @@ class Member extends Model
         ]);
 
         $this->transfers()->pending()->delete();
+        $this->discardPendingRankActions();
         $this->leave()->delete();
         $this->partTimeDivisions()->detach();
 
         $divisionSpecificTagIds = $this->tags()->whereNotNull('division_tags.division_id')->pluck('division_tags.id');
         $this->tags()->detach($divisionSpecificTagIds);
+    }
+
+    public function discardPendingRankActions(): void
+    {
+        $this->rankActions()->pending()->get()->each->delete();
     }
 
     public function scopeUnassignedSquadLeaders(Builder $query): void
