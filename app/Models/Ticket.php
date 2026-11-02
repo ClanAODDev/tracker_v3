@@ -154,8 +154,8 @@ class Ticket extends Model
             throw new InvalidTicketTransitionException("Cannot resolve a ticket in the '{$this->state}' state.");
         }
 
-        $this->state       = 'resolved';
-        $this->owner_id    = auth()->id();
+        $this->state = 'resolved';
+        $this->owner_id ??= auth()->id();
         $this->resolved_at = now();
         $this->save();
         $this->say('resolved the ticket');

@@ -154,6 +154,27 @@ class TicketTest extends TestCase
     }
 
     #[Test]
+    public function resolve_keeps_the_assigned_owner()
+    {
+        $owner      = $this->createMemberWithUser();
+        $resolver   = $this->createMemberWithUser();
+        $ticketType = TicketType::factory()->create();
+
+        $this->actingAs($resolver);
+
+        $ticket = Ticket::factory()->create([
+            'caller_id'      => $owner->id,
+            'ticket_type_id' => $ticketType->id,
+            'state'          => 'assigned',
+            'owner_id'       => $owner->id,
+        ]);
+
+        $ticket->resolve();
+
+        $this->assertEquals($owner->id, $ticket->fresh()->owner_id);
+    }
+
+    #[Test]
     public function reopen_clears_resolved_at_and_sets_state()
     {
         $user       = $this->createMemberWithUser();
