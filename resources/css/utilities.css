@@ -63,6 +63,26 @@
         font-size: 0.875rem;
     }
 
+    .prose-tron img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .prose-tron-zoomable img {
+        display: inline-block;
+        max-height: 12rem;
+        width: auto;
+        margin-block: 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        cursor: zoom-in;
+        transition: border-color 150ms;
+    }
+
+    .prose-tron-zoomable img:hover {
+        border-color: color-mix(in oklab, var(--primary) 50%, transparent);
+    }
+
     .prose-tron :is(ul, ol) {
         margin-block: 0.75rem;
         padding-left: 1.25rem;
