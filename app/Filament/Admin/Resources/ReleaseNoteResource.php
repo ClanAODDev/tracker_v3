@@ -59,7 +59,9 @@ class ReleaseNoteResource extends Resource
                 MarkdownEditor::make('body')
                     ->required()
                     ->columnSpanFull()
-                    ->minHeight('24rem'),
+                    ->minHeight('24rem')
+                    ->fileAttachmentsDirectory('release-notes')
+                    ->helperText('Paste or drop images into the text. On the release note page they show as thumbnails that open full size when clicked.'),
             ]);
     }
 

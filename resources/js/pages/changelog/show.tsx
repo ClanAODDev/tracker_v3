@@ -37,7 +37,7 @@ export default function ReleaseNote({ note, newer, older, indexUrl, editUrl }: P
             <Head title={note.title} />
             <article className="space-y-4">
                 <time className="block text-xs text-muted-foreground">{note.publishedAt}</time>
-                <Prose html={note.html} />
+                <Prose html={note.html} zoomableImages />
             </article>
 
             <nav className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 text-sm">
