@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ActivityType;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,7 +33,8 @@ class Transfer extends Model implements Commentable
         return $this->belongsTo(User::class, 'approved_by');
     }
 
-    public function scopePending(Builder $query): void
+    #[Scope]
+    protected function pending(Builder $query): void
     {
         $query->whereNull('approved_at');
     }
