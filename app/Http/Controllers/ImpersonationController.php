@@ -7,16 +7,16 @@ use App\Enums\Role;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Redirector;
 
 class ImpersonationController extends Controller
 {
     use AuthorizesRequests;
 
+    #[Authorize('impersonate', 'user')]
     public function impersonate(User $user): Redirector|RedirectResponse
     {
-        $this->authorize('impersonate', $user);
-
         session(['impersonating' => true]);
         session(['impersonatingUser' => auth()->user()->id]);
 
