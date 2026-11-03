@@ -46,7 +46,7 @@ class ReleaseNoteResource extends Resource
                     ->maxLength(191)
                     ->alphaDash()
                     ->unique(ignoreRecord: true)
-                    ->helperText('Used in the link to this note. Leave empty on a new note to generate it from the title.'),
+                    ->helperText('Used in the link to this note. Leave empty on a new note to generate it from the publish date and title, e.g. 2026-11-03-october-release.'),
                 TextInput::make('version')
                     ->maxLength(50)
                     ->placeholder('e.g. 3.9')
