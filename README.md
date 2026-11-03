@@ -1,4 +1,4 @@
-# ![logo](https://clanaod.net/tracker/images/logo_v2.png) AOD Tracker v3
+# <img src="public/images/logo-tron.svg" alt="AOD Tracker logo" width="32" height="32"> AOD Tracker v3
 
 A member and organizational unit management system for the AOD gaming community.
 
