@@ -1,3 +1,34 @@
+<style>
+    .fi-fo-markdown-editor span[data-img-src]::after {
+        width: min(var(--width), 16rem);
+        height: 12rem;
+        max-height: 12rem;
+        padding-top: 0;
+        margin-block: 0.25rem;
+        background-position: left center;
+        border-radius: 0.375rem;
+        cursor: zoom-in;
+    }
+</style>
+
+<script>
+    if (!window.aodEditorImagePreview) {
+        window.aodEditorImagePreview = true;
+        document.addEventListener('click', function (event) {
+            var line = event.target.closest && event.target.closest('.fi-fo-markdown-editor span[data-img-src]');
+            if (!line) {
+                return;
+            }
+            var lineHeight = parseFloat(window.getComputedStyle(line).lineHeight) || 20;
+            if (event.clientY - line.getBoundingClientRect().top <= lineHeight) {
+                return;
+            }
+            event.preventDefault();
+            window.dispatchEvent(new CustomEvent('open-image-preview', { detail: { src: line.getAttribute('data-img-src') } }));
+        }, true);
+    }
+</script>
+
 <div
     x-data="{
         images: [],
@@ -8,9 +39,9 @@
         prev() { this.index = (this.index - 1 + this.count) % this.count; },
         next() { this.index = (this.index + 1) % this.count; },
         openAt(src) {
-            this.images = Array.from(document.querySelectorAll('[data-preview]')).map(function(el){ return el.src; });
-            var idx = this.images.indexOf(src);
-            this.index = idx >= 0 ? idx : 0;
+            var gallery = Array.from(document.querySelectorAll('[data-preview]')).map(function(el){ return el.src; });
+            this.images = gallery.indexOf(src) >= 0 ? gallery : [src];
+            this.index = this.images.indexOf(src);
             this.open = true;
         }
     }"

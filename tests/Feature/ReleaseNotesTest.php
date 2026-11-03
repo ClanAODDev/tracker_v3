@@ -123,6 +123,28 @@ class ReleaseNotesTest extends TestCase
     }
 
     #[Test]
+    public function the_editor_links_to_the_public_page_once_a_note_is_published(): void
+    {
+        Filament::setCurrentPanel('admin');
+        $this->actingAs($this->createAdmin());
+
+        $published = ReleaseNote::factory()->create(['published_at' => now()->subDay()]);
+        $draft     = ReleaseNote::factory()->draft()->create();
+        $scheduled = ReleaseNote::factory()->scheduled()->create();
+
+        Livewire::test(EditReleaseNote::class, ['record' => $published->getRouteKey()])
+            ->assertActionVisible('viewPosting')
+            ->assertActionHasUrl('viewPosting', route('changelog.show', $published->slug))
+            ->assertActionShouldOpenUrlInNewTab('viewPosting');
+
+        Livewire::test(EditReleaseNote::class, ['record' => $draft->getRouteKey()])
+            ->assertActionHidden('viewPosting');
+
+        Livewire::test(EditReleaseNote::class, ['record' => $scheduled->getRouteKey()])
+            ->assertActionHidden('viewPosting');
+    }
+
+    #[Test]
     public function a_note_has_its_own_page_with_the_full_text_and_neighbour_links(): void
     {
         ReleaseNote::query()->delete();
