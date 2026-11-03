@@ -2,20 +2,22 @@
 
 A member and organizational unit management system for the AOD gaming community.
 
-**Tech Stack:** Laravel 13 · PHP 8.4 · Vue.js 3 · MariaDB · Filament v4
+**Tech Stack:** Laravel 13 · PHP 8.4 · React 19 + Inertia 2 + TypeScript · Tailwind v4 + shadcn/ui · MariaDB · Filament v4
 
 ```mermaid
 graph TD
     AOD[AOD Clan] --> D1[Division]
     AOD --> D2[Division]
     AOD --> D3[Division]
-    D1 --> P1[Platoon]
-    D1 --> P2[Platoon]
-    P1 --> S1[Squad]
-    S1 --> M1[Member]
-    P1 -.-> M2[Member]
+    D1 --> U1["Unit (e.g. Platoon)"]
+    D1 --> U2["Unit (e.g. Platoon)"]
+    U1 --> U3["Unit (e.g. Squad)"]
+    U3 --> M1[Member]
+    U1 -.-> M2[Member]
     D1 -.-> M3[Member]
 ```
+
+Each division organizes its members into up to four levels of units and names those levels itself (Platoon and Squad by default). A division can also have no units at all.
 
 The Tracker consumes member data from external systems (AOD forums, Discord bot) and provides analytics for recruiting, retention, and activity.
 
@@ -62,6 +64,7 @@ The app auto-logs into a seeded user for local development.
 ./vendor/bin/sail artisan test          # Run tests
 ./vendor/bin/sail tinker                # Laravel REPL
 ./vendor/bin/pint                       # Format code
+./vendor/bin/sail npm run typecheck     # Type-check the React/TypeScript frontend
 ```
 
 ## Contributing
