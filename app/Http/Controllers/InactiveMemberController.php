@@ -11,6 +11,7 @@ use App\Models\Unit;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -23,27 +24,27 @@ class InactiveMemberController extends Controller
         return Inertia::render('division/inactive-members', InactiveMembersData::for($division, $unit)->toArray());
     }
 
+    #[Authorize('flag-inactive', 'member')]
     public function create(Member $member): RedirectResponse
     {
-        $this->authorize('flag-inactive', $member);
         $this->setFlagStatus($member, true);
         $this->showSuccessToast($member->name . ' successfully flagged for removal');
 
         return redirect()->back();
     }
 
+    #[Authorize('flag-inactive', 'member')]
     public function destroy(Member $member): RedirectResponse
     {
-        $this->authorize('flag-inactive', $member);
         $this->setFlagStatus($member, false);
         $this->showSuccessToast($member->name . ' successfully unflagged');
 
         return redirect(route('division.inactive-members', $member->division->slug) . '#flagged');
     }
 
+    #[Authorize('separate', 'member')]
     public function removeMember(Member $member, DeleteMember $form): RedirectResponse
     {
-        $this->authorize('separate', $member);
         $division = $member->division;
         $member->recordActivity(ActivityType::REMOVED);
         $form->persist();

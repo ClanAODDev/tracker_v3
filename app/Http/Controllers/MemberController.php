@@ -119,20 +119,18 @@ class MemberController extends Controller
         return response()->json(['success' => true]);
     }
 
+    #[Authorize('reset', 'member')]
     public function confirmUnassign(Member $member): Response
     {
-        $this->authorize('reset', $member);
-
         return Inertia::render('member/confirm-unassign', [
             'member'   => MemberCard::from($member),
             'resetUrl' => route('member.unassign', $member->clan_id),
         ]);
     }
 
+    #[Authorize('reset', 'member')]
     public function unassignMember(Member $member): RedirectResponse
     {
-        $this->authorize('reset', $member);
-
         app(UnitAssignment::class)->assignMember($member, null);
 
         $this->showSuccessToast('Member assignments reset successfully');

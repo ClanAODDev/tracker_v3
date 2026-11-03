@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\UnitLevel;
 use Closure;
 use Illuminate\Database\Eloquent\Attributes\Guarded;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -109,7 +110,8 @@ class Unit extends Model
         return $this->division?->unitLevel($this->depth + 1);
     }
 
-    public function scopeOfTier(Builder $query, UnitLevel $tier): Builder
+    #[Scope]
+    protected function ofTier(Builder $query, UnitLevel $tier): Builder
     {
         $deepest = '(select coalesce(max(division_unit_levels.depth), 2) from division_unit_levels where division_unit_levels.division_id = units.division_id)';
 

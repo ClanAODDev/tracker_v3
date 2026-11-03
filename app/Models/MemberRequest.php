@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Appends;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -45,22 +46,26 @@ class MemberRequest extends Model
         return $this->belongsTo(Member::class, 'holder_id');
     }
 
-    public function scopeOnHold(Builder $query): void
+    #[Scope]
+    protected function onHold(Builder $query): void
     {
         $query->whereNotNull('hold_placed_at')->whereNull('approved_at');
     }
 
-    public function scopePending(Builder $query): void
+    #[Scope]
+    protected function pending(Builder $query): void
     {
         $query->whereNull('approved_at')->whereNull('hold_placed_at');
     }
 
-    public function scopeApproved(Builder $query): void
+    #[Scope]
+    protected function approved(Builder $query): void
     {
         $query->whereNotNull('approved_at');
     }
 
-    public function scopePastGracePeriod(Builder $query): void
+    #[Scope]
+    protected function pastGracePeriod(Builder $query): void
     {
         $query->where('created_at', '<=', now()->subHours(2));
     }

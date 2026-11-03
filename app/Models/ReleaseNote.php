@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use GrahamCampbell\Markdown\Facades\Markdown;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -41,7 +42,7 @@ class ReleaseNote extends Model
 
     public function newer(): ?self
     {
-        return static::published()
+        return static::query()->published()
             ->where(fn (Builder $query) => $query
                 ->where('published_at', '>', $this->published_at)
                 ->orWhere(fn (Builder $query) => $query->where('published_at', $this->published_at)->where('id', '>', $this->id)))
@@ -52,7 +53,7 @@ class ReleaseNote extends Model
 
     public function older(): ?self
     {
-        return static::published()
+        return static::query()->published()
             ->where(fn (Builder $query) => $query
                 ->where('published_at', '<', $this->published_at)
                 ->orWhere(fn (Builder $query) => $query->where('published_at', $this->published_at)->where('id', '<', $this->id)))
@@ -61,7 +62,8 @@ class ReleaseNote extends Model
             ->first();
     }
 
-    public function scopePublished(Builder $query): void
+    #[Scope]
+    protected function published(Builder $query): void
     {
         $query->whereNotNull('published_at')->where('published_at', '<=', now());
     }

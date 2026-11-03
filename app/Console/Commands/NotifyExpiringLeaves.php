@@ -7,17 +7,17 @@ use App\Models\Leave;
 use App\Notifications\Channel\NotifyDivisionLoaExpired;
 use App\Notifications\Channel\NotifyDivisionLoaExpiring;
 use Exception;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Support\Collection;
 
+#[Signature('tracker:notify-expiring-loas
+                            {--division= : Slug of a specific division to check}
+                            {--dry-run : List affected leaves without sending notifications}')]
+#[Description('Notify division channels of leaves of absence expiring soon or just expired')]
 class NotifyExpiringLeaves extends BaseCommand
 {
     private const EXPIRING_LEAD_DAYS = 3;
-
-    protected $signature = 'tracker:notify-expiring-loas
-                            {--division= : Slug of a specific division to check}
-                            {--dry-run : List affected leaves without sending notifications}';
-
-    protected $description = 'Notify division channels of leaves of absence expiring soon or just expired';
 
     protected array $stats = [
         'divisions_notified' => 0,
