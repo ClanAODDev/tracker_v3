@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Models\Handle\HasCustomAttributes;
 use App\Support\Steam\SteamIdParser;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+#[Unguarded]
 class Handle extends Model
 {
     use HasCustomAttributes;
@@ -21,8 +23,6 @@ class Handle extends Model
         'visible' => 'boolean',
         'enabled' => 'boolean',
     ];
-
-    protected $guarded = [];
 
     public function divisions(): BelongsToMany
     {

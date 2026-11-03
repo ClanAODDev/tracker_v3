@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Appends;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Appends(['approvePath', 'timeWaiting', 'name', 'isPastGracePeriod'])]
+#[Unguarded]
 class MemberRequest extends Model
 {
     use HasFactory;
-
-    protected $appends = ['approvePath', 'timeWaiting', 'name', 'isPastGracePeriod'];
-
-    protected $guarded = [];
 
     protected $casts = [
         'approved_at'    => 'datetime',

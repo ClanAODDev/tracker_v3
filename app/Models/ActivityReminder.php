@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Unguarded]
 class ActivityReminder extends Model
 {
-    protected $guarded = [];
-
     public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class, 'member_id');

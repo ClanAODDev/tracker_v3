@@ -3,18 +3,18 @@
 namespace App\Models;
 
 use App\Enums\Ability;
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Table('award_member')]
+#[Unguarded]
 class MemberAward extends Model
 {
     use HasFactory;
-
-    protected $table = 'award_member';
-
-    protected $guarded = [];
 
     public function member(): BelongsTo
     {

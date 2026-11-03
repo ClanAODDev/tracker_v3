@@ -13,6 +13,7 @@ use App\Models\Member\HasCustomAttributes;
 use App\Models\Member\HasUnits;
 use App\Presenters\MemberPresenter;
 use App\Services\Units\UnitAssignment;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
+#[Unguarded]
 class Member extends Model
 {
     use HasCustomAttributes;
@@ -72,8 +74,6 @@ class Member extends Model
 
         'groups' => 'array',
     ];
-
-    protected $guarded = [];
 
     public function awards(): HasMany
     {

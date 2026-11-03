@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ActivityType;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,12 +11,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Kirschbaum\Commentions\Contracts\Commentable;
 use Kirschbaum\Commentions\HasComments;
 
+#[Unguarded]
 class Transfer extends Model implements Commentable
 {
     use HasComments;
     use HasFactory;
-
-    public $guarded = [];
 
     public function member(): BelongsTo
     {

@@ -5,12 +5,19 @@ namespace App\Models;
 use App\Enums\Ability;
 use App\Enums\ActivityType;
 use App\Enums\Rank;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[Fillable([
+    'body',
+    'member_id',
+    'author_id',
+    'type',
+])]
 class Note extends Model
 {
     use HasFactory;
@@ -41,13 +48,6 @@ class Note extends Model
         'misc'     => 'Misc',
         'negative' => 'Negative',
         'positive' => 'Positive',
-    ];
-
-    protected $fillable = [
-        'body',
-        'member_id',
-        'author_id',
-        'type',
     ];
 
     public static function allNoteTypes(): array

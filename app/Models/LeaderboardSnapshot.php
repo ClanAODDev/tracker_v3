@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
+use Illuminate\Database\Eloquent\Attributes\WithoutTimestamps;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[WithoutTimestamps]
+#[Unguarded]
 class LeaderboardSnapshot extends Model
 {
     use HasFactory;
-
-    public $timestamps = false;
-
-    protected $guarded = [];
 
     protected $casts = [
         'snapshot_date' => 'date',

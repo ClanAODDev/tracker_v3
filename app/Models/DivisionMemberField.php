@@ -4,25 +4,25 @@ namespace App\Models;
 
 use App\Enums\DivisionMemberFieldColor;
 use App\Enums\DivisionMemberFieldType;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Fillable([
+    'division_id',
+    'key',
+    'label',
+    'type',
+    'options',
+    'filterable',
+    'self_editable',
+    'display_order',
+])]
 class DivisionMemberField extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'division_id',
-        'key',
-        'label',
-        'type',
-        'options',
-        'filterable',
-        'self_editable',
-        'display_order',
-    ];
 
     protected $casts = [
         'type'          => DivisionMemberFieldType::class,

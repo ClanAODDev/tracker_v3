@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Ability;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,12 +13,11 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use LogicException;
 
+#[Unguarded]
 class Award extends Model
 {
     use HasFactory;
     use SoftDeletes;
-
-    protected $guarded = [];
 
     protected $casts = [
         'active'        => 'boolean',
