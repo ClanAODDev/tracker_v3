@@ -18,7 +18,7 @@ trait RetryableJob
         ];
     }
 
-    public function handleFailure($exception)
+    public function failed($exception)
     {
         Log::error('Job failed:', ['error' => $exception->getMessage()]);
     }
