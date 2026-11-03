@@ -2,17 +2,19 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterface;
 use GrahamCampbell\Markdown\Facades\Markdown;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
+#[Unguarded]
 class ReleaseNote extends Model
 {
     use HasFactory;
-
-    protected $guarded = [];
 
     protected $casts = [
         'published_at' => 'datetime',
@@ -22,14 +24,14 @@ class ReleaseNote extends Model
     {
         static::creating(function (self $note) {
             if (blank($note->slug)) {
-                $note->slug = static::uniqueSlug($note->title);
+                $note->slug = static::uniqueSlug($note->title, $note->published_at ?? now());
             }
         });
     }
 
-    public static function uniqueSlug(string $title, ?int $ignoreId = null): string
+    public static function uniqueSlug(string $title, CarbonInterface $date, ?int $ignoreId = null): string
     {
-        $base = Str::slug($title) ?: 'release-note';
+        $base = $date->format('Y-m-d') . '-' . (Str::slug($title) ?: 'release-note');
         $slug = $base;
 
         for ($suffix = 2; static::query()->where('slug', $slug)->when($ignoreId, fn (Builder $query) => $query->whereKeyNot($ignoreId))->exists(); $suffix++) {
@@ -41,7 +43,7 @@ class ReleaseNote extends Model
 
     public function newer(): ?self
     {
-        return static::published()
+        return static::query()->published()
             ->where(fn (Builder $query) => $query
                 ->where('published_at', '>', $this->published_at)
                 ->orWhere(fn (Builder $query) => $query->where('published_at', $this->published_at)->where('id', '>', $this->id)))
@@ -52,7 +54,7 @@ class ReleaseNote extends Model
 
     public function older(): ?self
     {
-        return static::published()
+        return static::query()->published()
             ->where(fn (Builder $query) => $query
                 ->where('published_at', '<', $this->published_at)
                 ->orWhere(fn (Builder $query) => $query->where('published_at', $this->published_at)->where('id', '<', $this->id)))
@@ -61,7 +63,8 @@ class ReleaseNote extends Model
             ->first();
     }
 
-    public function scopePublished(Builder $query): void
+    #[Scope]
+    protected function published(Builder $query): void
     {
         $query->whereNotNull('published_at')->where('published_at', '<=', now());
     }

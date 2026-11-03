@@ -5,8 +5,6 @@ namespace App\Providers;
 use App\Http\Responses\LogoutResponse;
 use App\Models\Division;
 use App\Models\Member;
-use App\Models\Observers\TicketTypeObserver;
-use App\Models\TicketType;
 use App\Models\User;
 use App\Settings\UserSettings;
 use Filament\Actions\Action;
@@ -23,8 +21,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
-
-        TicketType::observe(TicketTypeObserver::class);
 
         Paginator::useBootstrap();
 

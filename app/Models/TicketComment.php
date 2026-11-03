@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Touches;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+#[Touches(['ticket'])]
+#[Unguarded]
 class TicketComment extends Model
 {
     use HasFactory;
@@ -12,10 +16,6 @@ class TicketComment extends Model
     protected $with = [
         'user',
     ];
-
-    protected $touches = ['ticket'];
-
-    protected $guarded = [];
 
     public function ticket()
     {

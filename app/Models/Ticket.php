@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Exceptions\InvalidTicketTransitionException;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
+#[Unguarded]
 class Ticket extends Model
 {
     use HasFactory;
@@ -23,8 +26,6 @@ class Ticket extends Model
         'resolved' => 'success',
         'rejected' => 'danger',
     ];
-
-    protected $guarded = [];
 
     protected $with = [
         'type',
@@ -76,17 +77,20 @@ class Ticket extends Model
         return $this->type->notification_channel ?? config('aod.admin-ticketing-channel');
     }
 
-    public function scopeNew(Builder $query): void
+    #[Scope]
+    protected function new(Builder $query): void
     {
         $query->where('state', 'new');
     }
 
-    public function scopeAssigned(Builder $query): void
+    #[Scope]
+    protected function assigned(Builder $query): void
     {
         $query->where('state', 'assigned');
     }
 
-    public function scopeResolved(Builder $query): void
+    #[Scope]
+    protected function resolved(Builder $query): void
     {
         $query->where('state', 'resolved');
     }

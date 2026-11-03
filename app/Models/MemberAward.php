@@ -3,18 +3,19 @@
 namespace App\Models;
 
 use App\Enums\Ability;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Table;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Table('award_member')]
+#[Unguarded]
 class MemberAward extends Model
 {
     use HasFactory;
-
-    protected $table = 'award_member';
-
-    protected $guarded = [];
 
     public function member(): BelongsTo
     {
@@ -31,7 +32,8 @@ class MemberAward extends Model
         return $this->belongsTo(Award::class);
     }
 
-    public function scopeVisibleTo(Builder $query, User $user): void
+    #[Scope]
+    protected function visibleTo(Builder $query, User $user): void
     {
         $isAdmin  = $user->isRole('admin');
         $isLeader = $user->isDivisionLeader();
@@ -48,7 +50,8 @@ class MemberAward extends Model
             ->when($clanWide, fn (Builder $q) => $q->orWhereNull('division_id'))));
     }
 
-    public function scopeNeedsApproval(Builder $query): void
+    #[Scope]
+    protected function needsApproval(Builder $query): void
     {
         $query->where('approved', 0);
     }

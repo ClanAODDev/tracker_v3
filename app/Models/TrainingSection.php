@@ -2,16 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Unguarded]
 class TrainingSection extends Model
 {
     use HasFactory;
-
-    protected $guarded = [];
 
     public function module(): BelongsTo
     {
@@ -23,7 +24,8 @@ class TrainingSection extends Model
         return $this->hasMany(TrainingCheckpoint::class)->orderBy('display_order');
     }
 
-    public function scopeOrdered($query): void
+    #[Scope]
+    protected function ordered($query): void
     {
         $query->orderBy('display_order');
     }

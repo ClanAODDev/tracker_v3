@@ -164,14 +164,20 @@ class ReleaseNotesTest extends TestCase
     }
 
     #[Test]
-    public function slugs_are_generated_from_the_title_and_stay_unique(): void
+    public function slugs_start_with_the_publish_date_and_stay_unique(): void
     {
-        $first  = ReleaseNote::factory()->create(['title' => 'October Release']);
-        $second = ReleaseNote::factory()->create(['title' => 'October Release']);
-        $custom = ReleaseNote::factory()->create(['title' => 'Anything', 'slug' => 'my-own-slug']);
+        $this->travelTo('2026-11-03 12:00:00');
 
-        $this->assertSame('october-release', $first->slug);
-        $this->assertSame('october-release-2', $second->slug);
+        $october = ReleaseNote::factory()->create(['title' => 'October Release', 'published_at' => '2026-10-31 18:00:00']);
+        $later   = ReleaseNote::factory()->create(['title' => 'October Release', 'published_at' => '2026-11-07 18:00:00']);
+        $sameDay = ReleaseNote::factory()->create(['title' => 'October Release', 'published_at' => '2026-10-31 20:00:00']);
+        $draft   = ReleaseNote::factory()->create(['title' => 'Draft Notes', 'published_at' => null]);
+        $custom  = ReleaseNote::factory()->create(['title' => 'Anything', 'slug' => 'my-own-slug']);
+
+        $this->assertSame('2026-10-31-october-release', $october->slug);
+        $this->assertSame('2026-11-07-october-release', $later->slug);
+        $this->assertSame('2026-10-31-october-release-2', $sameDay->slug);
+        $this->assertSame('2026-11-03-draft-notes', $draft->slug);
         $this->assertSame('my-own-slug', $custom->slug);
     }
 

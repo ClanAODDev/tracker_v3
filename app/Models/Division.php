@@ -11,7 +11,10 @@ use App\Models\Division\HasHandles;
 use App\Models\Division\HasUnits;
 use App\Presenters\DivisionPresenter;
 use App\Settings\DivisionSettings;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Attributes\RouteKey;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -24,6 +27,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 #[RouteKey('slug')]
+#[Hidden(['structure'])]
+#[Unguarded]
 class Division extends Model
 {
     public const MAX_UNIT_LEVELS = 4;
@@ -99,11 +104,7 @@ class Division extends Model
         'shutdown_at'  => 'datetime',
     ];
 
-    protected $hidden = ['structure'];
-
     protected $withCount = ['sergeants', 'members'];
-
-    protected $guarded = [];
 
     protected static function booted(): void
     {
@@ -200,29 +201,34 @@ class Division extends Model
         return $this->hasMany(Activity::class);
     }
 
-    public function scopeActive($query): void
+    #[Scope]
+    protected function active($query): void
     {
         $query->whereActive(true);
     }
 
-    public function scopeWithoutFloaters($query): void
+    #[Scope]
+    protected function withoutFloaters($query): void
     {
         $query->whereNotIn('slug', ['floater']);
     }
 
-    public function scopeWithoutBR($query): void
+    #[Scope]
+    protected function withoutBR($query): void
     {
         $query->whereNotIn('slug', ['bluntz-reserves']);
     }
 
-    public function scopeWithoutShutdown($query, bool $includeShutdown = false): void
+    #[Scope]
+    protected function withoutShutdown($query, bool $includeShutdown = false): void
     {
         if (! $includeShutdown) {
             $query->whereNull('shutdown_at');
         }
     }
 
-    public function scopeRecruitable($query): void
+    #[Scope]
+    protected function recruitable($query): void
     {
         $query->active()->withoutShutdown()->withoutFloaters()->withoutBR()->orderBy('name');
     }
