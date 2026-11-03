@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,8 @@ class ClanSnapshot extends Model
         'snapshot_date' => 'date',
     ];
 
-    public function scopeRecent(Builder $query): Builder
+    #[Scope]
+    protected function recent(Builder $query): Builder
     {
         return $query->orderByDesc('snapshot_date');
     }

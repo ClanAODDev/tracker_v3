@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,7 +24,8 @@ class TrainingSection extends Model
         return $this->hasMany(TrainingCheckpoint::class)->orderBy('display_order');
     }
 
-    public function scopeOrdered($query): void
+    #[Scope]
+    protected function ordered($query): void
     {
         $query->orderBy('display_order');
     }

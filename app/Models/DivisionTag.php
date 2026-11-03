@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Enums\TagVisibility;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -37,17 +38,20 @@ class DivisionTag extends Model
             ->withTimestamps();
     }
 
-    public function scopeGlobal(Builder $query): Builder
+    #[Scope]
+    protected function global(Builder $query): Builder
     {
         return $query->whereNull('division_id');
     }
 
-    public function scopeByDivision(Builder $query, int $divisionId): Builder
+    #[Scope]
+    protected function byDivision(Builder $query, int $divisionId): Builder
     {
         return $query->where('division_id', $divisionId);
     }
 
-    public function scopeForDivision(Builder $query, int $divisionId): Builder
+    #[Scope]
+    protected function forDivision(Builder $query, int $divisionId): Builder
     {
         return $query->where(function ($q) use ($divisionId) {
             $q->where('division_id', $divisionId)
@@ -79,7 +83,8 @@ class DivisionTag extends Model
         return $this->visibility === TagVisibility::PUBLIC;
     }
 
-    public function scopeVisibleTo(Builder $query, ?User $user = null): Builder
+    #[Scope]
+    protected function visibleTo(Builder $query, ?User $user = null): Builder
     {
         $user = $user ?? auth()->user();
 
@@ -101,7 +106,8 @@ class DivisionTag extends Model
         return $query->where('visibility', TagVisibility::PUBLIC);
     }
 
-    public function scopeAssignableBy(Builder $query, ?User $user = null): Builder
+    #[Scope]
+    protected function assignableBy(Builder $query, ?User $user = null): Builder
     {
         $user = $user ?? auth()->user();
 

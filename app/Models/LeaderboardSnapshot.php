@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -25,17 +26,20 @@ class LeaderboardSnapshot extends Model
         return $this->belongsTo(Division::class);
     }
 
-    public function scopeForCategory(Builder $query, string $category): Builder
+    #[Scope]
+    protected function forCategory(Builder $query, string $category): Builder
     {
         return $query->where('category', $category);
     }
 
-    public function scopeForDivision(Builder $query, int $divisionId): Builder
+    #[Scope]
+    protected function forDivision(Builder $query, int $divisionId): Builder
     {
         return $query->where('division_id', $divisionId);
     }
 
-    public function scopeRecent(Builder $query): Builder
+    #[Scope]
+    protected function recent(Builder $query): Builder
     {
         return $query->orderByDesc('snapshot_date');
     }

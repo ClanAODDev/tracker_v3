@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\Rank;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,12 +35,14 @@ class TrainingModule extends Model
         return $this->hasMany(TrainingSection::class)->orderBy('display_order');
     }
 
-    public function scopeActive(Builder $query): void
+    #[Scope]
+    protected function active(Builder $query): void
     {
         $query->where('is_active', true);
     }
 
-    public function scopeOrdered(Builder $query): void
+    #[Scope]
+    protected function ordered(Builder $query): void
     {
         $query->orderBy('display_order');
     }
