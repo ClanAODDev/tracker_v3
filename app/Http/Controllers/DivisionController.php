@@ -18,6 +18,7 @@ use App\Support\MemberListProps;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -98,9 +99,9 @@ class DivisionController extends Controller
      *
      * @throws AuthorizationException
      */
+    #[Authorize('managePartTime', 'member')]
     public function assignPartTime(Division $division, Member $member)
     {
-        $this->authorize('managePartTime', $member);
         $division->partTimeMembers()->attach($member->id);
         $this->showSuccessToast("{$member->name} added as part-time member to {$division->name}!");
         $member->recordActivity(ActivityType::ADD_PART_TIME, [
@@ -110,9 +111,9 @@ class DivisionController extends Controller
         return redirect()->back();
     }
 
+    #[Authorize('managePartTime', 'member')]
     public function removePartTime(Division $division, Member $member)
     {
-        $this->authorize('managePartTime', $member);
         $division->partTimeMembers()->detach($member);
         $this->showSuccessToast("{$member->name} removed from {$division->name} part-timers!");
         $member->recordActivity(ActivityType::REMOVE_PART_TIME, [

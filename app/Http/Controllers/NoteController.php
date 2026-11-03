@@ -8,6 +8,7 @@ use App\Models\Member;
 use App\Models\Note;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Validation\Rule;
 
 class NoteController extends Controller
@@ -21,10 +22,9 @@ class NoteController extends Controller
         return redirect()->back();
     }
 
+    #[Authorize('edit', 'note')]
     public function update(Request $request, Member $member, Note $note): RedirectResponse
     {
-        $this->authorize('edit', $note);
-
         $request->validate(
             [
                 'body'            => 'required',
@@ -44,10 +44,9 @@ class NoteController extends Controller
         return redirect()->route('member', $member->getUrlParams());
     }
 
+    #[Authorize('delete', 'note')]
     public function delete(Member $member, Note $note): RedirectResponse
     {
-        $this->authorize('delete', $note);
-
         $leaveExists = Leave::whereHas('note')
             ->whereNoteId($note->id)
             ->exists();
