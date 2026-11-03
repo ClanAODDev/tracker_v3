@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterface;
 use GrahamCampbell\Markdown\Facades\Markdown;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\Unguarded;
@@ -23,14 +24,14 @@ class ReleaseNote extends Model
     {
         static::creating(function (self $note) {
             if (blank($note->slug)) {
-                $note->slug = static::uniqueSlug($note->title);
+                $note->slug = static::uniqueSlug($note->title, $note->published_at ?? now());
             }
         });
     }
 
-    public static function uniqueSlug(string $title, ?int $ignoreId = null): string
+    public static function uniqueSlug(string $title, CarbonInterface $date, ?int $ignoreId = null): string
     {
-        $base = Str::slug($title) ?: 'release-note';
+        $base = $date->format('Y-m-d') . '-' . (Str::slug($title) ?: 'release-note');
         $slug = $base;
 
         for ($suffix = 2; static::query()->where('slug', $slug)->when($ignoreId, fn (Builder $query) => $query->whereKeyNot($ignoreId))->exists(); $suffix++) {
