@@ -3,13 +3,13 @@
 namespace App\Console\Commands;
 
 use App\Services\MemberSyncService;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 
+#[Signature('tracker:member-sync')]
+#[Description('Performs member sync with AOD forums')]
 class MemberSync extends BaseCommand
 {
-    protected $signature = 'tracker:member-sync';
-
-    protected $description = 'Performs member sync with AOD forums';
-
     public function handle(MemberSyncService $syncService): int
     {
         $this->verbose('Starting member sync...');

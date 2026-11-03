@@ -2,12 +2,13 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
+
+#[Signature('tracker:make-token')]
+#[Description('Create a new token for interfacing with AOD API. Valid for one minute.')]
 class MakeAODToken extends BaseCommand
 {
-    protected $signature = 'tracker:make-token';
-
-    protected $description = 'Create a new token for interfacing with AOD API. Valid for one minute.';
-
     public function handle(): int
     {
         $token = $this->generateToken();

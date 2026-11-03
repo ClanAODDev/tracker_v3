@@ -3,17 +3,17 @@
 namespace App\Console\Commands;
 
 use Exception;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Support\Facades\File;
 
+#[Signature('tracker:maintenance-alert
+                            {--clear : Clear the current maintenance alert}
+                            {--set : Set a new maintenance alert}')]
+#[Description('Manage maintenance alert display')]
 class MakeMaintenanceAlert extends BaseCommand
 {
     protected const ALERT_FILE = 'maintenance.alert';
-
-    protected $signature = 'tracker:maintenance-alert
-                            {--clear : Clear the current maintenance alert}
-                            {--set : Set a new maintenance alert}';
-
-    protected $description = 'Manage maintenance alert display';
 
     public function handle(): int
     {

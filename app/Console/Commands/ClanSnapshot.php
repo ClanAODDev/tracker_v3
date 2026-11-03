@@ -6,15 +6,15 @@ use App\Models\Census;
 use App\Models\ClanSnapshot as Snapshot;
 use App\Models\Division;
 use App\Models\Member;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Support\Facades\DB;
 
+#[Signature('tracker:clan-snapshot
+                            {--force : Run even if a snapshot already exists for today}')]
+#[Description('Capture clan-wide aggregate stats for trend tracking')]
 class ClanSnapshot extends BaseCommand
 {
-    protected $signature = 'tracker:clan-snapshot
-                            {--force : Run even if a snapshot already exists for today}';
-
-    protected $description = 'Capture clan-wide aggregate stats for trend tracking';
-
     public function handle(): int
     {
         $today = today()->toDateString();

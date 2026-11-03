@@ -5,16 +5,16 @@ namespace App\Console\Commands;
 use App\Models\Census;
 use App\Models\Division;
 use Exception;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
+#[Signature('tracker:census
+                            {--force : Run census even if already performed today}')]
+#[Description('Collect division census data across all active divisions')]
 class DivisionCensus extends BaseCommand
 {
-    protected $signature = 'tracker:census
-                            {--force : Run census even if already performed today}';
-
-    protected $description = 'Collect division census data across all active divisions';
-
     public function handle(): int
     {
         if (! $this->option('force') && $this->censusAlreadyPerformed()) {
