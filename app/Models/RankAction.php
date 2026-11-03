@@ -7,6 +7,8 @@ use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Enums\UnitLevel;
 use Flashadvocate\FilamentReactions\Concerns\HasReactions;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Kirschbaum\Commentions\Contracts\Commentable;
 use Kirschbaum\Commentions\HasComments;
 
+#[Unguarded]
 class RankAction extends Model implements Commentable
 {
     use HasComments;
@@ -27,8 +30,6 @@ class RankAction extends Model implements Commentable
         'awarded_at'  => 'datetime',
         'declined_at' => 'datetime',
     ];
-
-    public $guarded = [];
 
     protected static function booted(): void
     {
@@ -53,12 +54,14 @@ class RankAction extends Model implements Commentable
         return $this->belongsTo(Member::class);
     }
 
-    public function scopeApprovedAndAccepted(Builder $query): void
+    #[Scope]
+    protected function approvedAndAccepted(Builder $query): void
     {
         $query->whereNotNull('approved_at')->whereNotNull('accepted_at');
     }
 
-    public function scopePending(Builder $query): Builder
+    #[Scope]
+    protected function pending(Builder $query): Builder
     {
         return $query->where(function ($query) {
             $query->whereNull('approved_at')
@@ -71,7 +74,8 @@ class RankAction extends Model implements Commentable
         });
     }
 
-    public function scopeForUser(Builder $query, $user): Builder
+    #[Scope]
+    protected function forUser(Builder $query, $user): Builder
     {
         $member          = $user->member;
         $userRank        = $member->rank->value;

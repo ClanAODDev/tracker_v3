@@ -7,9 +7,19 @@ use App\Models\Handle;
 use App\Models\MemberHandle;
 use App\Services\SteamApiService;
 use App\Support\Steam\SteamIdParser;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
+#[Signature('tracker:normalize-steam-handles
+                            {--dry-run : Report what would change without writing anything}
+                            {--include-vanity : Also write SteamIDs resolved from custom URL names}
+                            {--skip=* : handle_member IDs to leave untouched}
+                            {--delay=1000 : Minimum milliseconds between Steam API calls}
+                            {--unfixable : After normalizing, list members whose Steam handle could not be converted, without calling Steam or writing}
+                            {--active : With --unfixable, only list members currently in a division}')]
+#[Description('Convert stored Steam handles to SteamID64 and write a CSV report for review')]
 class NormalizeSteamHandles extends BaseCommand
 {
     private const STATUS_FIXED = 'fixed';
@@ -19,16 +29,6 @@ class NormalizeSteamHandles extends BaseCommand
     private const STATUS_SKIPPED = 'skipped';
 
     private const STATUS_UNFIXABLE = 'unfixable';
-
-    protected $signature = 'tracker:normalize-steam-handles
-                            {--dry-run : Report what would change without writing anything}
-                            {--include-vanity : Also write SteamIDs resolved from custom URL names}
-                            {--skip=* : handle_member IDs to leave untouched}
-                            {--delay=1000 : Minimum milliseconds between Steam API calls}
-                            {--unfixable : After normalizing, list members whose Steam handle could not be converted, without calling Steam or writing}
-                            {--active : With --unfixable, only list members currently in a division}';
-
-    protected $description = 'Convert stored Steam handles to SteamID64 and write a CSV report for review';
 
     private bool $apiAvailable = true;
 

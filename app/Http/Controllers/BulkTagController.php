@@ -12,12 +12,13 @@ use App\Models\Division;
 use App\Models\DivisionTag;
 use App\Models\Member;
 use App\Policies\DivisionTagPolicy;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 
 class BulkTagController extends Controller
 {
+    #[Authorize('assign', [DivisionTag::class, 'member'])]
     public function getTags(Division $division, Member $member)
     {
-        $this->authorize('assign', [DivisionTag::class, $member]);
         $user   = auth()->user();
         $policy = new DivisionTagPolicy;
 

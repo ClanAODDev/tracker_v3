@@ -13,6 +13,8 @@ use App\Models\Member\HasCustomAttributes;
 use App\Models\Member\HasUnits;
 use App\Presenters\MemberPresenter;
 use App\Services\Units\UnitAssignment;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,6 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 
+#[Unguarded]
 class Member extends Model
 {
     use HasCustomAttributes;
@@ -72,8 +75,6 @@ class Member extends Model
 
         'groups' => 'array',
     ];
-
-    protected $guarded = [];
 
     public function awards(): HasMany
     {
@@ -208,14 +209,16 @@ class Member extends Model
         $this->rankActions()->pending()->get()->each->delete();
     }
 
-    public function scopeUnassignedSquadLeaders(Builder $query): void
+    #[Scope]
+    protected function unassignedSquadLeaders(Builder $query): void
     {
         $query
             ->where('position', Position::SQUAD_LEADER)
             ->whereNotIn('clan_id', Unit::query()->ofTier(UnitLevel::Squad)->whereNotNull('leader_id')->select('leader_id'));
     }
 
-    public function scopeUnassignedPlatoonLeaders(Builder $query): void
+    #[Scope]
+    protected function unassignedPlatoonLeaders(Builder $query): void
     {
         $query
             ->where('position', Position::PLATOON_LEADER)
@@ -292,7 +295,8 @@ class Member extends Model
         ], true);
     }
 
-    public function scopeMisconfiguredDiscord(Builder $query): void
+    #[Scope]
+    protected function misconfiguredDiscord(Builder $query): void
     {
         $query->whereIn('last_voice_status', [
             DiscordStatus::NEVER_CONNECTED,
@@ -400,7 +404,8 @@ class Member extends Model
         ];
     }
 
-    public function scopeEligibleForRankAction(Builder $query, $user, ?string $search = null): Builder
+    #[Scope]
+    protected function eligibleForRankAction(Builder $query, $user, ?string $search = null): Builder
     {
         $currentMember = $user->member;
         $roleLimits    = [

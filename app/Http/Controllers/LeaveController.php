@@ -11,6 +11,7 @@ use App\Models\Member;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Illuminate\Routing\Redirector;
 
@@ -26,10 +27,9 @@ class LeaveController extends Controller
      * @throws Exception
      * @throws AuthorizationException
      */
+    #[Authorize('update', 'member')]
     public function delete(Member $member, Leave $leave)
     {
-        $this->authorize('update', $member);
-
         $leave->delete();
         $member->recordActivity(ActivityType::ENDED_LEAVE);
 

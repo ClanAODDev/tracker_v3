@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\UnitLevel;
 use Closure;
+use Illuminate\Database\Eloquent\Attributes\Guarded;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +17,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+#[Guarded(['id'])]
 class Unit extends Model
 {
     use HasFactory;
@@ -23,8 +26,6 @@ class Unit extends Model
     public const LEGACY_PLATOON = 'platoon';
 
     public const LEGACY_SQUAD = 'squad';
-
-    protected $guarded = ['id'];
 
     protected function casts(): array
     {
@@ -109,7 +110,8 @@ class Unit extends Model
         return $this->division?->unitLevel($this->depth + 1);
     }
 
-    public function scopeOfTier(Builder $query, UnitLevel $tier): Builder
+    #[Scope]
+    protected function ofTier(Builder $query, UnitLevel $tier): Builder
     {
         $deepest = '(select coalesce(max(division_unit_levels.depth), 2) from division_unit_levels where division_unit_levels.division_id = units.division_id)';
 

@@ -4,12 +4,15 @@ namespace App\Models;
 
 use App\Models\Handle\HasCustomAttributes;
 use App\Support\Steam\SteamIdParser;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+#[Unguarded]
 class Handle extends Model
 {
     use HasCustomAttributes;
@@ -21,8 +24,6 @@ class Handle extends Model
         'visible' => 'boolean',
         'enabled' => 'boolean',
     ];
-
-    protected $guarded = [];
 
     public function divisions(): BelongsToMany
     {
@@ -39,7 +40,8 @@ class Handle extends Model
      * A blank value or a type without a regex is always considered valid —
      * required-ness is a separate concern handled by the caller's rules.
      */
-    public function scopeSelectable(Builder $query, iterable $includeIds = []): void
+    #[Scope]
+    protected function selectable(Builder $query, iterable $includeIds = []): void
     {
         $query->where(fn (Builder $q) => $q->where('enabled', true)->orWhereIn('id', collect($includeIds)))
             ->orderBy('label');

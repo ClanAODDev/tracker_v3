@@ -15,6 +15,9 @@ use App\Settings\UserSettings;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,6 +31,25 @@ use InvalidArgumentException;
 use Kirschbaum\Commentions\Contracts\Commenter;
 use Laravel\Sanctum\HasApiTokens;
 
+#[Fillable([
+    'name',
+    'email',
+    'password',
+    'role',
+    'settings',
+    'developer',
+    'member_id',
+    'discord_id',
+    'discord_username',
+    'discord_avatar',
+    'date_of_birth',
+    'forum_password',
+])]
+#[Hidden([
+    'password',
+    'remember_token',
+    'forum_password',
+])]
 class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 {
     use HasApiTokens;
@@ -40,27 +62,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         'mobile_nav_side'      => 'left',
         'theme'                => 'dark',
         'accent'               => 'crimson',
-    ];
-
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'settings',
-        'developer',
-        'member_id',
-        'discord_id',
-        'discord_username',
-        'discord_avatar',
-        'date_of_birth',
-        'forum_password',
-    ];
-
-    protected $hidden = [
-        'password',
-        'remember_token',
-        'forum_password',
     ];
 
     protected $casts = [
@@ -126,12 +127,14 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         return $this->hasMany(UserAbility::class);
     }
 
-    public function scopeAdmins($query): void
+    #[Scope]
+    protected function admins($query): void
     {
         $query->whereRole(Role::ADMIN)->orderBy('name', 'ASC');
     }
 
-    public function scopePendingDiscord($query): void
+    #[Scope]
+    protected function pendingDiscord($query): void
     {
         $query->whereNotNull('discord_id')->whereNull('member_id');
     }

@@ -14,10 +14,9 @@ use Illuminate\Routing\Attributes\Controllers\Middleware;
 #[Middleware('auth')]
 class ActivityReminderController extends Controller
 {
+    #[Authorize('remindActivity', 'member')]
     public function store(Member $member): JsonResponse
     {
-        $this->authorize('remindActivity', $member);
-
         $alreadyRemindedToday = ActivityReminder::where('member_id', $member->id)
             ->whereDate('created_at', today())
             ->exists();
@@ -46,10 +45,9 @@ class ActivityReminderController extends Controller
         ]);
     }
 
+    #[Authorize('clearActivityReminders', 'member')]
     public function destroy(Member $member): JsonResponse
     {
-        $this->authorize('clearActivityReminders', $member);
-
         $count = ActivityReminder::where('member_id', $member->id)->delete();
 
         $member->last_activity_reminder_at = null;

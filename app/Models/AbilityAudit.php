@@ -3,14 +3,14 @@
 namespace App\Models;
 
 use App\Enums\Role;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Fillable(['actor_id', 'action', 'role', 'user_id', 'ability', 'reason'])]
 class AbilityAudit extends Model
 {
     public const UPDATED_AT = null;
-
-    protected $fillable = ['actor_id', 'action', 'role', 'user_id', 'ability', 'reason'];
 
     protected function casts(): array
     {

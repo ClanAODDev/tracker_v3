@@ -6,17 +6,17 @@ use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Models\Observers\TicketTypeObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[Unguarded]
 #[ObservedBy(TicketTypeObserver::class)]
 class TicketType extends Model
 {
     use HasFactory;
-
-    public $guarded = [];
 
     protected $casts = [
         'role_access'                     => 'json',

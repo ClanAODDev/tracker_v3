@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[Unguarded]
 class DivisionApplicationField extends Model
 {
-    protected $guarded = [];
-
     protected $casts = [
         'options'       => 'array',
         'required'      => 'boolean',

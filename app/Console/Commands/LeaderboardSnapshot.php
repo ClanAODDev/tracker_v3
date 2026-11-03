@@ -4,14 +4,14 @@ namespace App\Console\Commands;
 
 use App\Data\DivisionLeaderboardData;
 use App\Models\LeaderboardSnapshot as Snapshot;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 
+#[Signature('tracker:leaderboard-snapshot
+                            {--force : Run even if a snapshot already exists for today}')]
+#[Description('Capture division leaderboard rankings for trend tracking')]
 class LeaderboardSnapshot extends BaseCommand
 {
-    protected $signature = 'tracker:leaderboard-snapshot
-                            {--force : Run even if a snapshot already exists for today}';
-
-    protected $description = 'Capture division leaderboard rankings for trend tracking';
-
     public function handle(): int
     {
         $today = today()->toDateString();

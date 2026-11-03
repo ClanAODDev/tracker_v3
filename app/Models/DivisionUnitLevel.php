@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Attributes\Guarded;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
+#[Guarded(['id'])]
 class DivisionUnitLevel extends Model
 {
-    protected $guarded = ['id'];
-
     public function division(): BelongsTo
     {
         return $this->belongsTo(Division::class);

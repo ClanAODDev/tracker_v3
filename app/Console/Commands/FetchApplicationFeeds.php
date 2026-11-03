@@ -5,20 +5,20 @@ namespace App\Console\Commands;
 use App\Models\Division;
 use App\Notifications\Channel\NotifyDivisionNewApplication;
 use Exception;
+use Illuminate\Console\Attributes\Description;
+use Illuminate\Console\Attributes\Signature;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use SimpleXMLElement;
 
+#[Signature('tracker:fetch-applications
+                            {--notify : Send notifications for new applications}
+                            {--fresh : Clear cached items and process all feeds as new}')]
+#[Description('Fetch recruitment RSS feeds and notify about new applications')]
 class FetchApplicationFeeds extends BaseCommand
 {
-    protected $signature = 'tracker:fetch-applications
-                            {--notify : Send notifications for new applications}
-                            {--fresh : Clear cached items and process all feeds as new}';
-
-    protected $description = 'Fetch recruitment RSS feeds and notify about new applications';
-
     protected string $userAgent = 'Tracker - App Scraper';
 
     protected array $stats = [
