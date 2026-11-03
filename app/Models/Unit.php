@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\UnitLevel;
 use Closure;
+use Illuminate\Database\Eloquent\Attributes\Guarded;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,6 +17,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
+#[Guarded(['id'])]
 class Unit extends Model
 {
     use HasFactory;
@@ -24,8 +26,6 @@ class Unit extends Model
     public const LEGACY_PLATOON = 'platoon';
 
     public const LEGACY_SQUAD = 'squad';
-
-    protected $guarded = ['id'];
 
     protected function casts(): array
     {

@@ -11,8 +11,10 @@ use App\Models\Division\HasHandles;
 use App\Models\Division\HasUnits;
 use App\Presenters\DivisionPresenter;
 use App\Settings\DivisionSettings;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Attributes\RouteKey;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -25,6 +27,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 #[RouteKey('slug')]
+#[Hidden(['structure'])]
+#[Unguarded]
 class Division extends Model
 {
     public const MAX_UNIT_LEVELS = 4;
@@ -100,11 +104,7 @@ class Division extends Model
         'shutdown_at'  => 'datetime',
     ];
 
-    protected $hidden = ['structure'];
-
     protected $withCount = ['sergeants', 'members'];
-
-    protected $guarded = [];
 
     protected static function booted(): void
     {

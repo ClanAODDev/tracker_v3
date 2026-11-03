@@ -8,6 +8,7 @@ use App\Enums\Rank;
 use App\Enums\UnitLevel;
 use Flashadvocate\FilamentReactions\Concerns\HasReactions;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Kirschbaum\Commentions\Contracts\Commentable;
 use Kirschbaum\Commentions\HasComments;
 
+#[Unguarded]
 class RankAction extends Model implements Commentable
 {
     use HasComments;
@@ -28,8 +30,6 @@ class RankAction extends Model implements Commentable
         'awarded_at'  => 'datetime',
         'declined_at' => 'datetime',
     ];
-
-    public $guarded = [];
 
     protected static function booted(): void
     {

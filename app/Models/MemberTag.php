@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class MemberTag extends Pivot
 {
-    protected $table = 'member_tag';
-
     public function member(): BelongsTo
     {
         return $this->belongsTo(Member::class);

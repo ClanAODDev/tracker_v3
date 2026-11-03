@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Exceptions\InvalidTicketTransitionException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
+#[Unguarded]
 class Ticket extends Model
 {
     use HasFactory;
@@ -24,8 +26,6 @@ class Ticket extends Model
         'resolved' => 'success',
         'rejected' => 'danger',
     ];
-
-    protected $guarded = [];
 
     protected $with = [
         'type',

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Enums\TagVisibility;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,15 +13,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+#[Fillable([
+    'division_id',
+    'name',
+    'visibility',
+])]
 class DivisionTag extends Model
 {
     use HasFactory;
-
-    protected $fillable = [
-        'division_id',
-        'name',
-        'visibility',
-    ];
 
     protected $casts = [
         'visibility' => TagVisibility::class,
