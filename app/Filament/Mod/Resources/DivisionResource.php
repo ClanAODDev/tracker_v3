@@ -10,6 +10,7 @@ use App\Filament\Mod\Resources\DivisionResource\RelationManagers\MemberFieldsRel
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Filament\Mod\Resources\DivisionResource\Schemas\StructureSection;
 use App\Models\Division;
+use App\Support\ImageUploads;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\FileUpload;
@@ -367,7 +368,7 @@ class DivisionResource extends Resource
                                         FileUpload::make('screenshots')
                                             ->hiddenLabel()
                                             ->multiple()
-                                            ->image()
+                                            ->acceptedFileTypes(ImageUploads::RASTER_TYPES)
                                             ->disk('public')
                                             ->directory('division-screenshots')
                                             ->maxSize(5120)

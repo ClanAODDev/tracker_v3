@@ -12,6 +12,7 @@ use App\Models\Handle;
 use App\Models\Member;
 use App\Rules\HoldsNoOtherPosition;
 use App\Services\CloudflareDnsService;
+use App\Support\ImageUploads;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -75,6 +76,7 @@ class DivisionResource extends Resource
                             ->required()
                             ->alignCenter()
                             ->avatar()
+                            ->acceptedFileTypes(ImageUploads::RASTER_TYPES)
                             ->directory('logos'),
 
                         Fieldset::make()->schema([

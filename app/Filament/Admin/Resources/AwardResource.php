@@ -7,6 +7,7 @@ use App\Filament\Admin\Resources\AwardResource\Pages\EditAward;
 use App\Filament\Admin\Resources\AwardResource\Pages\ListAwards;
 use App\Filament\Admin\Resources\MemberAwardResource\RelationManagers\MemberAwardsRelationManager;
 use App\Models\Award;
+use App\Support\ImageUploads;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -52,7 +53,7 @@ class AwardResource extends Resource
                     ->avatar()
                     ->columnSpanFull()
                     ->alignCenter()
-                    ->image(),
+                    ->acceptedFileTypes(ImageUploads::RASTER_TYPES),
                 TextInput::make('name')
                     ->columnSpanFull()
                     ->required()
