@@ -1,3 +1,5 @@
+import DOMPurify from 'dompurify';
+
 export function relativeDate(input: string | null | undefined): string {
     if (!input) return '';
     const date = new Date(input);
@@ -29,19 +31,20 @@ export function linkify(text: string | null | undefined): string {
 }
 
 /**
- * Turn bare URLs into links WITHOUT escaping existing markup. Use only for
- * trusted, admin-authored content that is allowed to contain HTML (e.g. a
- * division's in-processing task descriptions). URLs already inside an
- * `href="…"` / `src="…"` attribute or `<a>…</a>` text are left alone.
+ * Turn bare URLs into links while keeping existing markup, then sanitize the
+ * result. For content that is allowed to contain HTML but is written by
+ * division leaders (e.g. in-processing task descriptions, application field
+ * labels), so scripts, event handlers and `javascript:` URLs are removed.
  */
 export function linkifyHtml(text: string | null | undefined): string {
     if (!text) return '';
     const parts = text.split(/(<a\b[^>]*>.*?<\/a>|<[^>]+>)/gis);
-    return parts
+    const linked = parts
         .map((part, i) =>
             i % 2 === 0 ? part.replace(URL_RE, `<a href="$1" ${LINK_ATTRS}>$1</a>`) : part,
         )
         .join('');
+    return DOMPurify.sanitize(linked, { ADD_ATTR: ['target'] });
 }
 
 export function pluralize(label: string): string {
