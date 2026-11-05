@@ -32,13 +32,12 @@ class HasPrimaryDivision
                 }
 
                 if (session('impersonating')) {
-                    auth()->logout();
-                    redirect()->to(route('end-impersonation'));
+                    return $request->routeIs('end-impersonation')
+                        ? $next($request)
+                        : redirect()->route('end-impersonation');
                 }
 
                 abort(408, 'You do not have a primary division.');
-
-                return false;
             }
         }
 
