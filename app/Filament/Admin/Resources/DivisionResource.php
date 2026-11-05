@@ -227,7 +227,7 @@ class DivisionResource extends Resource
                             ->description('Divisional website settings')
                             ->schema([
                                 MarkdownEditor::make('site_content')
-                                    ->helperText('Changes will prompt an admin review before being published')
+                                    ->helperText('Changes go live on the division page at clanaod.net as soon as you save.')
                                     ->columnSpanFull(),
                             ])->collapsible()->collapsed(),
                     ]),

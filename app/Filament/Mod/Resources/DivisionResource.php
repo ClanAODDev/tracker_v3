@@ -337,7 +337,7 @@ class DivisionResource extends Resource
                                     ->schema([
                                         MarkdownEditor::make('site_content')
                                             ->hint(str('[Markdown Guide >](https://www.markdownguide.org/basic-syntax/)')->inlineMarkdown()->toHtmlString())
-                                            ->helperText('Changes will prompt an admin review before being published. Start headings at H2 — the division name is already rendered as H1 — so anchor links generate correctly.')
+                                            ->helperText('Changes go live on the division page at clanaod.net as soon as you save. Start headings at H2 — the division name is already rendered as H1 — so anchor links generate correctly.')
                                             ->toolbarButtons([
                                                 'blockquote',
                                                 'bold',
