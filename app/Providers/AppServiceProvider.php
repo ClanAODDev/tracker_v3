@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Http\Responses\LogoutResponse;
 use App\Models\Division;
 use App\Models\Member;
+use App\Models\PersonalAccessToken;
 use App\Models\User;
 use App\Settings\UserSettings;
 use Filament\Actions\Action;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Sanctum\Sanctum;
 use SocialiteProviders\Discord\DiscordExtendSocialite;
 use SocialiteProviders\Manager\SocialiteWasCalled;
 
@@ -21,6 +23,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+
+        Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
 
         Paginator::useBootstrap();
 
