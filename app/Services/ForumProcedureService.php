@@ -19,13 +19,28 @@ class ForumProcedureService
 
     private const SET_DISCORD_INFO = 'set_discord_info';
 
+    public const MAX_USER_ID = 2147483647;
+
+    public static function isValidUserId(int $userId): bool
+    {
+        return $userId >= 1 && $userId <= self::MAX_USER_ID;
+    }
+
     public function getUser(int $userId): ?object
     {
+        if (! self::isValidUserId($userId)) {
+            return null;
+        }
+
         return $this->call(self::GET_USER, ['userid' => $userId]);
     }
 
     public function setUserRank(int $userId, string $rank): ?object
     {
+        if (! self::isValidUserId($userId)) {
+            return null;
+        }
+
         return $this->call(self::SET_USER_RANK, [
             'userid' => $userId,
             'rank'   => $rank,
@@ -34,6 +49,10 @@ class ForumProcedureService
 
     public function setUserDivision(int $userId, string $division): ?object
     {
+        if (! self::isValidUserId($userId)) {
+            return null;
+        }
+
         return $this->call(self::SET_USER_DIVISION, [
             'userid'   => $userId,
             'division' => $division,
@@ -42,6 +61,10 @@ class ForumProcedureService
 
     public function setDiscordInfo(int $userId, string $discordId, string $discordTag): ?object
     {
+        if (! self::isValidUserId($userId)) {
+            return null;
+        }
+
         return $this->call(self::SET_DISCORD_INFO, [
             'user_id'     => $userId,
             'discord_id'  => $discordId,

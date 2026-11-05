@@ -4,6 +4,8 @@ import type { RecruitForm } from '@/components/recruit/use-recruit-form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
+const looksLikeDiscordId = (id: string) => /^\d{17,20}$/.test(id);
+
 export function ForumIdPath({ form }: { form: RecruitForm }) {
     const v = form.memberIdValidation;
     return (
@@ -42,7 +44,11 @@ export function ForumIdPath({ form }: { form: RecruitForm }) {
                         )}
                     </div>
                     {form.member.id && !v.valid && !form.validating && (
-                        <p className="text-xs text-destructive">Member ID not found on forums</p>
+                        <p className="text-xs text-destructive">
+                            {looksLikeDiscordId(form.member.id)
+                                ? 'That looks like a Discord ID. Enter the forum member ID from their forum profile URL instead.'
+                                : 'Member ID not found on forums'}
+                        </p>
                     )}
                     {form.member.id && v.valid && !v.verifiedEmail && !form.validating && (
                         <p className="text-xs text-warning">
