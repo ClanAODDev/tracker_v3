@@ -73,16 +73,25 @@ class EndpointMatrixTest extends PermissionMatrixTestCase
         $lines = [];
 
         $pages = [
-            'GET help admin'         => fn () => route('help.admin.home'),
-            'GET division turnover'  => fn () => route('reports.division-turnover'),
-            'GET impersonate member' => fn () => route('impersonate', $this->world->users['member']),
-            'GET impersonate role'   => fn () => route('impersonate-role', 'officer'),
-            'GET developers'         => fn () => route('developer'),
+            'GET help admin'        => fn () => route('help.admin.home'),
+            'GET division turnover' => fn () => route('reports.division-turnover'),
+            'GET developers'        => fn () => route('developer'),
         ];
 
         foreach ($pages as $label => $url) {
             foreach (PermissionWorld::ACTORS as $actor) {
                 $lines[] = self::line($label, '(status)', $actor, (string) $this->asActor($actor)->get($url())->status());
+            }
+        }
+
+        $posts = [
+            'POST impersonate member' => fn () => route('impersonate', $this->world->users['member']),
+            'POST impersonate role'   => fn () => route('impersonate-role', 'officer'),
+        ];
+
+        foreach ($posts as $label => $url) {
+            foreach (PermissionWorld::ACTORS as $actor) {
+                $lines[] = self::line($label, '(status)', $actor, (string) $this->asActor($actor)->post($url())->status());
             }
         }
 

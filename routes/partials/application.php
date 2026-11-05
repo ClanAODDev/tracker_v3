@@ -13,10 +13,10 @@ Route::get('/', [AppController::class, 'index'])->name('index');
 Route::get('home', [AppController::class, 'index'])->name('home');
 
 Route::controller(ImpersonationController::class)->middleware('auth')->group(function () {
-    Route::get('impersonate/{user}', 'impersonate')->name('impersonate');
-    Route::get('impersonate-end', 'endImpersonation')->name('end-impersonation');
-    Route::get('impersonate-role/{role}', 'impersonateRole')->name('impersonate-role');
-    Route::get('impersonate-role-end', 'endRoleImpersonation')->name('end-role-impersonation');
+    Route::post('impersonate/{user}', 'impersonate')->name('impersonate');
+    Route::post('impersonate-end', 'endImpersonation')->name('end-impersonation');
+    Route::post('impersonate-role/{role}', 'impersonateRole')->name('impersonate-role');
+    Route::post('impersonate-role-end', 'endRoleImpersonation')->name('end-role-impersonation');
 });
 
 Route::controller(TrainingController::class)->prefix('training')->name('training.')->group(function () {
@@ -31,11 +31,6 @@ Route::controller(DeveloperController::class)->prefix('developers')->name('devel
     Route::post('tokens', 'generateToken')->name('.token.store');
     Route::patch('tokens', 'updateTokenScopes')->name('.token.update');
     Route::delete('tokens', 'destroyToken')->name('.token.delete');
-});
-
-Route::prefix('primary-nav')->group(function () {
-    Route::get('collapse', fn () => session(['primary_nav_collapsed' => true]));
-    Route::get('decollapse', fn () => session(['primary_nav_collapsed' => false]));
 });
 
 Route::controller(SettingsController::class)->middleware('auth')->prefix('settings')->name('settings.')->group(function () {

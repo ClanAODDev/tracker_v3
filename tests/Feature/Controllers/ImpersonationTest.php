@@ -3,6 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Enums\Role;
+use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -22,7 +23,7 @@ class ImpersonationTest extends TestCase
         $officer = $this->createOfficer();
 
         $response = $this->actingAs($admin)
-            ->get(route('impersonate', $officer));
+            ->post(route('impersonate', $officer));
 
         $response->assertRedirect('/');
         $this->assertAuthenticatedAs($officer);
@@ -36,7 +37,7 @@ class ImpersonationTest extends TestCase
         $developer = $this->createAdmin([], ['developer' => true]);
 
         $response = $this->actingAs($admin)
-            ->get(route('impersonate', $developer));
+            ->post(route('impersonate', $developer));
 
         $response->assertForbidden();
         $this->assertAuthenticatedAs($admin);
@@ -48,7 +49,7 @@ class ImpersonationTest extends TestCase
         $admin = $this->createAdmin();
 
         $response = $this->actingAs($admin)
-            ->get(route('impersonate', $admin));
+            ->post(route('impersonate', $admin));
 
         $response->assertForbidden();
     }
@@ -60,7 +61,7 @@ class ImpersonationTest extends TestCase
         $member  = $this->createMemberWithUser();
 
         $response = $this->actingAs($officer)
-            ->get(route('impersonate', $member));
+            ->post(route('impersonate', $member));
 
         $response->assertForbidden();
     }
@@ -74,7 +75,7 @@ class ImpersonationTest extends TestCase
 
         $this->actingAs($admin)
             ->withSession(['impersonating' => true, 'impersonatingUser' => $admin->id])
-            ->get(route('impersonate', $officer2))
+            ->post(route('impersonate', $officer2))
             ->assertForbidden();
     }
 
@@ -82,12 +83,13 @@ class ImpersonationTest extends TestCase
     public function developer_can_impersonate_in_local_environment()
     {
         $this->app->detectEnvironment(fn () => 'local');
+        $this->withoutMiddleware(PreventRequestForgery::class);
 
         $developer      = $this->createAdmin([], ['developer' => true]);
         $otherDeveloper = $this->createAdmin([], ['developer' => true]);
 
         $response = $this->actingAs($developer)
-            ->get(route('impersonate', $otherDeveloper));
+            ->post(route('impersonate', $otherDeveloper));
 
         $response->assertRedirect('/');
         $this->assertAuthenticatedAs($otherDeveloper);
@@ -102,7 +104,7 @@ class ImpersonationTest extends TestCase
         $officer   = $this->createOfficer();
 
         $response = $this->actingAs($developer)
-            ->get(route('impersonate', $officer));
+            ->post(route('impersonate', $officer));
 
         $response->assertRedirect('/');
         $this->assertAuthenticatedAs($officer);
@@ -112,12 +114,13 @@ class ImpersonationTest extends TestCase
     public function developer_cannot_impersonate_in_production()
     {
         $this->app->detectEnvironment(fn () => 'production');
+        $this->withoutMiddleware(PreventRequestForgery::class);
 
         $developer = $this->createMemberWithUser([], ['developer' => true, 'role' => Role::MEMBER]);
         $officer   = $this->createOfficer();
 
         $response = $this->actingAs($developer)
-            ->get(route('impersonate', $officer));
+            ->post(route('impersonate', $officer));
 
         $response->assertForbidden();
     }
@@ -130,7 +133,7 @@ class ImpersonationTest extends TestCase
 
         $this->actingAs($officer)
             ->withSession(['impersonating' => true, 'impersonatingUser' => $admin->id])
-            ->get(route('end-impersonation'));
+            ->post(route('end-impersonation'));
 
         $this->assertAuthenticatedAs($admin);
         $this->assertFalse(session('impersonating', false));

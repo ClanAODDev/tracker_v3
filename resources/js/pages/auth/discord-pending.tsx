@@ -1,4 +1,4 @@
-import { Head, useForm } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowRight, MessageSquare } from 'lucide-react';
 import { type FormEvent } from 'react';
 
@@ -70,9 +70,9 @@ export default function DiscordPending(props: Props) {
                 {!preview && (
                     <p className="text-center text-xs text-muted-foreground">
                         Already a member?{' '}
-                        <a href="/logout" className="text-primary hover:underline">
+                        <Link href="/logout" method="post" as="button" className="text-primary hover:underline">
                             Sign out and use forum login
-                        </a>
+                        </Link>
                     </p>
                 )}
             </div>

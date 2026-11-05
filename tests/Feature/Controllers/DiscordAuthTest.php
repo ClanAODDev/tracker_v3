@@ -410,7 +410,7 @@ class DiscordAuthTest extends TestCase
     {
         $user = User::factory()->pending()->create();
 
-        $response = $this->actingAs($user)->get(route('logout'));
+        $response = $this->actingAs($user)->post(route('logout'));
 
         $response->assertRedirect('/login');
         $this->assertGuest();

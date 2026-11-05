@@ -26,11 +26,10 @@ class ImpersonatingUserWithoutDivisionTest extends TestCase
         $this->actingAs($target)
             ->withSession(['impersonating' => true, 'impersonatingUser' => $admin->id])
             ->get(route('home'))
-            ->assertRedirect(route('end-impersonation'));
-
-        $this->get(route('end-impersonation'))->assertRedirect();
+            ->assertRedirect('/');
 
         $this->assertTrue(auth()->user()->is($admin));
+        $this->assertNull(session('impersonating'));
     }
 
     #[Test]

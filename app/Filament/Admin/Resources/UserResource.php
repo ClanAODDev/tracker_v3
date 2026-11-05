@@ -8,6 +8,7 @@ use App\Filament\Admin\Resources\UserResource\Pages\EditUser;
 use App\Filament\Admin\Resources\UserResource\Pages\ListUsers;
 use App\Filament\Admin\Resources\UserResource\RelationManagers\GrantedAbilitiesRelationManager;
 use App\Models\User;
+use App\Support\Impersonation;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
@@ -127,7 +128,11 @@ class UserResource extends Resource
                     ->label('Impersonate')
                     ->icon(Heroicon::User)
                     ->authorize('impersonate')
-                    ->url(fn (User $record): string => route('impersonate', ['user' => $record->id])),
+                    ->action(function (User $record) {
+                        Impersonation::start(auth()->user(), $record);
+
+                        return redirect('/');
+                    }),
                 EditAction::make(),
             ])
             ->toolbarActions([

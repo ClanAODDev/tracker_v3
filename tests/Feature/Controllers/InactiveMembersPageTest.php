@@ -50,7 +50,7 @@ class InactiveMembersPageTest extends TestCase
         $division = $officer->member->division;
         $target   = $this->createMember(['division_id' => $division->id]);
 
-        $this->actingAs($officer)->get(route('member.flag-inactive', $target->clan_id));
+        $this->actingAs($officer)->post(route('member.flag-inactive', $target->clan_id));
 
         $this->actingAs($officer)
             ->get(route('division.inactive-members', $division->slug))

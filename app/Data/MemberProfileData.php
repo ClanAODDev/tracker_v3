@@ -99,12 +99,12 @@ class MemberProfileData
                     ? ['label' => 'SGT training', 'url' => route('training.sgt', ['clan_id' => $member->clan_id])]
                     : null,
                 $member->user && $user->can('impersonate', $member->user)
-                    ? ['label' => 'Impersonate user', 'url' => route('impersonate', $member->user)]
+                    ? ['label' => 'Impersonate user', 'url' => route('impersonate', $member->user), 'method' => 'post']
                     : null,
                 $user->can('flagInactive', Member::class)
                     ? ($member->flagged_for_inactivity
-                        ? ['label' => 'Unflag for inactivity', 'url' => route('member.unflag-inactive', $member->clan_id)]
-                        : ['label' => 'Flag for inactivity', 'url' => route('member.flag-inactive', $member->clan_id)])
+                        ? ['label' => 'Unflag for inactivity', 'url' => route('member.unflag-inactive', $member->clan_id), 'method' => 'post']
+                        : ['label' => 'Flag for inactivity', 'url' => route('member.flag-inactive', $member->clan_id), 'method' => 'post'])
                     : null,
             ])),
             'tags' => $member->tags
@@ -355,10 +355,11 @@ class MemberProfileData
 
         if ($member->flagged_for_inactivity) {
             $notices[] = [
-                'type'     => 'warning',
-                'message'  => 'Member is flagged for removal due to inactivity.',
-                'ctaLabel' => 'Remove flag',
-                'ctaUrl'   => route('member.unflag-inactive', $member->clan_id) . '#flagged',
+                'type'      => 'warning',
+                'message'   => 'Member is flagged for removal due to inactivity.',
+                'ctaLabel'  => 'Remove flag',
+                'ctaUrl'    => route('member.unflag-inactive', $member->clan_id),
+                'ctaMethod' => 'post',
             ];
         }
 
