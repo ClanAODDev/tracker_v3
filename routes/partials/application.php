@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [AppController::class, 'index'])->name('index');
 Route::get('home', [AppController::class, 'index'])->name('home');
 
-Route::controller(ImpersonationController::class)->group(function () {
+Route::controller(ImpersonationController::class)->middleware('auth')->group(function () {
     Route::get('impersonate/{user}', 'impersonate')->name('impersonate');
     Route::get('impersonate-end', 'endImpersonation')->name('end-impersonation');
     Route::get('impersonate-role/{role}', 'impersonateRole')->name('impersonate-role');
