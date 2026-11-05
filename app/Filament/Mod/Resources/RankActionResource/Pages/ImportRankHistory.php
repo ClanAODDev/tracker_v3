@@ -78,7 +78,7 @@ class ImportRankHistory extends CreateRecord
 
             Section::make('CSV Import')
                 ->columnSpanFull()
-                ->description('Two columns per row: rank (full name or abbreviation) and date (YYYY-MM-DD). A header row is automatically skipped if the first cell does not match a known rank.')
+                ->description('Two columns per row: rank (full name or abbreviation) and date (YYYY-MM-DD, yesterday or earlier). A header row is automatically skipped if the first cell does not match a known rank.')
                 ->schema([
                     FileUpload::make('csv_file')
                         ->label('Upload CSV')
@@ -129,6 +129,7 @@ class ImportRankHistory extends CreateRecord
                                 )
                                 ->required(),
                             DatePicker::make('date')
+                                ->maxDate(now()->subDay()->toDateString())
                                 ->required(),
                         ])
                         ->columns(2)
@@ -179,13 +180,23 @@ class ImportRankHistory extends CreateRecord
             }
 
             try {
-                $entries[] = [
-                    'rank' => (string) $matched->value,
-                    'date' => Carbon::parse($dateInput)->format('Y-m-d'),
-                ];
+                $date = Carbon::parse($dateInput);
             } catch (\Exception) {
                 $skipped[] = "\"{$line}\" (invalid date)";
+
+                continue;
             }
+
+            if ($date->isAfter(now()->subDay()->endOfDay())) {
+                $skipped[] = "\"{$line}\" (date must be yesterday or earlier)";
+
+                continue;
+            }
+
+            $entries[] = [
+                'rank' => (string) $matched->value,
+                'date' => $date->format('Y-m-d'),
+            ];
         }
 
         $existing = collect($get('entries') ?? [])
