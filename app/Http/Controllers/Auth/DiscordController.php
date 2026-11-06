@@ -17,6 +17,7 @@ use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use Laravel\Socialite\Facades\Socialite;
@@ -178,7 +179,7 @@ class DiscordController extends Controller
                 'radio' => array_filter([
                     $field->required ? 'required' : 'nullable',
                     'string',
-                    $allowedOptions ? 'in:' . implode(',', $allowedOptions) : null,
+                    $allowedOptions ? Rule::in($allowedOptions) : null,
                 ]),
                 default => [
                     $field->required ? 'required' : 'nullable',
@@ -188,7 +189,7 @@ class DiscordController extends Controller
             };
 
             if ($field->type === 'checkbox' && $allowedOptions) {
-                $rules["{$key}.*"] = ['string', 'in:' . implode(',', $allowedOptions)];
+                $rules["{$key}.*"] = ['string', Rule::in($allowedOptions)];
             }
         }
 
