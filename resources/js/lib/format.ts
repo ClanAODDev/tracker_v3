@@ -47,6 +47,18 @@ export function linkifyHtml(text: string | null | undefined): string {
     return DOMPurify.sanitize(linked, { ADD_ATTR: ['target'] });
 }
 
+/**
+ * Sanitize short rich text (application labels and helper text) down to
+ * bold, italic, underline and links, decoding entities like `&#039;`.
+ */
+export function inlineRichText(html: string | null | undefined): string {
+    if (!html) return '';
+    return DOMPurify.sanitize(html, {
+        ALLOWED_TAGS: ['strong', 'b', 'em', 'i', 'u', 'a'],
+        ALLOWED_ATTR: ['href', 'target', 'rel'],
+    });
+}
+
 export function pluralize(label: string): string {
     if (/[^aeiou]y$/i.test(label)) return label.slice(0, -1) + 'ies';
     if (/(s|x|z|ch|sh)$/i.test(label)) return label + 'es';

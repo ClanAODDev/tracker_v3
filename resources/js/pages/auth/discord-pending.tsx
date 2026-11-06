@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import BlankLayout from '@/layouts/BlankLayout';
+import { inlineRichText } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
 interface ApplicationField {
@@ -225,9 +226,18 @@ function ApplicationForm({ fields, disabled }: { fields: ApplicationField[]; dis
                         return (
                             <Field
                                 key={field.id}
-                                label={`${field.label}${field.required ? ' *' : ''}`}
+                                label={
+                                    <span>
+                                        <span dangerouslySetInnerHTML={{ __html: inlineRichText(field.label) }} />
+                                        {field.required && ' *'}
+                                    </span>
+                                }
                                 error={error}
-                                hint={field.helperText ?? undefined}
+                                hint={
+                                    field.helperText ? (
+                                        <span dangerouslySetInnerHTML={{ __html: inlineRichText(field.helperText) }} />
+                                    ) : undefined
+                                }
                             >
                                 {field.type === 'text' && (
                                     <Input
@@ -333,9 +343,9 @@ function Field({
     hint,
     children,
 }: {
-    label: string;
+    label: React.ReactNode;
     error?: string;
-    hint?: string;
+    hint?: React.ReactNode;
     children: React.ReactNode;
 }) {
     return (
