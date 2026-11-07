@@ -8,6 +8,6 @@ class LogoutResponse implements \Filament\Auth\Http\Responses\Contracts\LogoutRe
 {
     public function toResponse($request): RedirectResponse
     {
-        return redirect()->route('logout');
+        return redirect()->route('login');
     }
 }

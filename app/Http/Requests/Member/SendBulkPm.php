@@ -10,7 +10,7 @@ class SendBulkPm extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('recruit', Member::class);
+        return $this->user()?->can('recruit', Member::class) ?? false;
     }
 
     public function rules(): array

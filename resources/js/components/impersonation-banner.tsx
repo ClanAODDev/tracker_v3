@@ -1,3 +1,4 @@
+import { Link } from '@inertiajs/react';
 import { ShieldAlert, UserCog } from 'lucide-react';
 
 import { useAuth } from '@/hooks/use-shared';
@@ -13,9 +14,9 @@ export function ImpersonationBanner() {
                     <span className="flex items-center gap-2">
                         <ShieldAlert className="size-4" /> Impersonating <strong>{user.name}</strong>
                     </span>
-                    <a href="/impersonate-end" className="font-medium underline underline-offset-2">
+                    <Link href="/impersonate-end" method="post" as="button" className="font-medium underline underline-offset-2">
                         End
-                    </a>
+                    </Link>
                 </div>
             )}
             {user.impersonatingRole && (
@@ -23,9 +24,9 @@ export function ImpersonationBanner() {
                     <span className="flex items-center gap-2">
                         <UserCog className="size-4" /> Viewing as <strong>{user.effectiveRole}</strong>
                     </span>
-                    <a href="/impersonate-role-end" className="font-medium underline underline-offset-2">
+                    <Link href="/impersonate-role-end" method="post" as="button" className="font-medium underline underline-offset-2">
                         End
-                    </a>
+                    </Link>
                 </div>
             )}
         </div>

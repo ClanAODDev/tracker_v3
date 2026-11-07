@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\Ability;
 use App\Enums\Role;
 use App\Models\User;
+use App\Support\Impersonation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
@@ -17,22 +18,16 @@ class ImpersonationController extends Controller
     #[Authorize('impersonate', 'user')]
     public function impersonate(User $user): Redirector|RedirectResponse
     {
-        session(['impersonating' => true]);
-        session(['impersonatingUser' => auth()->user()->id]);
+        Impersonation::start(auth()->user(), $user);
 
         $this->showSuccessToast('You are now impersonating ' . $user->name);
-
-        auth()->login($user);
 
         return redirect('/');
     }
 
     public function endImpersonation(): Redirector|RedirectResponse
     {
-        if (session('impersonating') && session('impersonatingUser')) {
-            $user = User::find(session('impersonatingUser'));
-            auth()->login($user);
-            session()->forget(['impersonating', 'impersonatingUser']);
+        if (Impersonation::stop()) {
             $this->showSuccessToast('Impersonation ended');
         }
 
