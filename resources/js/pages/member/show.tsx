@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { ListOrdered, Pencil, TriangleAlert, Wrench } from 'lucide-react';
 import { useState } from 'react';
 
@@ -44,11 +44,11 @@ interface MemberShowProps {
         forumProfileUrl: string;
         hasAccount: boolean;
     };
-    actions: Array<{ label: string; url: string; external?: boolean }>;
+    actions: Array<{ label: string; url: string; external?: boolean; method?: 'post' }>;
     tags: DisplayTag[];
     tagManagement: TagManagement | null;
     breadcrumbs: Array<{ label: string; href?: string }>;
-    notices: Array<{ type: string; message: string; ctaLabel?: string; ctaUrl?: string; ctaAction?: string }>;
+    notices: Array<{ type: string; message: string; ctaLabel?: string; ctaUrl?: string; ctaAction?: string; ctaMethod?: 'post' }>;
     canCreateNote: boolean;
     canViewTrashed: boolean;
     canAddNote: boolean;
@@ -97,9 +97,15 @@ export default function MemberShow(props: MemberShowProps) {
             <DropdownMenuContent align="end">
                 {actions.map((action) => (
                     <DropdownMenuItem key={action.label} asChild>
-                        <a href={action.url} target={action.external ? '_blank' : undefined}>
-                            {action.label}
-                        </a>
+                        {action.method === 'post' ? (
+                            <Link href={action.url} method="post" as="button" className="w-full">
+                                {action.label}
+                            </Link>
+                        ) : (
+                            <a href={action.url} target={action.external ? '_blank' : undefined}>
+                                {action.label}
+                            </a>
+                        )}
                     </DropdownMenuItem>
                 ))}
                 {actions.length > 0 && <DropdownMenuSeparator />}
@@ -154,7 +160,13 @@ export default function MemberShow(props: MemberShowProps) {
                                     notice.ctaLabel &&
                                     notice.ctaUrl && (
                                         <Button size="xs" variant="outline" asChild>
-                                            <a href={notice.ctaUrl}>{notice.ctaLabel}</a>
+                                            {notice.ctaMethod === 'post' ? (
+                                                <Link href={notice.ctaUrl} method="post" as="button">
+                                                    {notice.ctaLabel}
+                                                </Link>
+                                            ) : (
+                                                <a href={notice.ctaUrl}>{notice.ctaLabel}</a>
+                                            )}
                                         </Button>
                                     )
                                 )}

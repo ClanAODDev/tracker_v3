@@ -410,7 +410,7 @@ class DiscordAuthTest extends TestCase
     {
         $user = User::factory()->pending()->create();
 
-        $response = $this->actingAs($user)->get(route('logout'));
+        $response = $this->actingAs($user)->post(route('logout'));
 
         $response->assertRedirect('/login');
         $this->assertGuest();
@@ -1110,6 +1110,76 @@ class DiscordAuthTest extends TestCase
                 return ["field_{$f->id}" => $value];
             })
             ->all();
+    }
+
+    private function divisionWithCommaOptions(): Division
+    {
+        $division = Division::factory()->create(['active' => true]);
+        $division->applicationFields()->delete();
+
+        $division->applicationFields()->create([
+            'type'          => 'radio',
+            'label'         => 'How often do you play?',
+            'required'      => true,
+            'display_order' => 1,
+            'options'       => [['label' => 'Yes, daily'], ['label' => 'No']],
+        ]);
+
+        $division->applicationFields()->create([
+            'type'          => 'checkbox',
+            'label'         => 'What do you play?',
+            'required'      => true,
+            'display_order' => 2,
+            'options'       => [['label' => 'PvP, PvE'], ['label' => 'Raids']],
+        ]);
+
+        return $division->fresh();
+    }
+
+    private function submitApplicationFor(Division $division, array $answers)
+    {
+        Notification::fake();
+
+        $user = User::factory()->pending()->create(['discord_id' => '987654322', 'forum_password' => null]);
+
+        $fields  = $division->applicationFields->sortBy('display_order')->values();
+        $payload = [
+            "field_{$fields[0]->id}" => $answers[0],
+            "field_{$fields[1]->id}" => $answers[1],
+        ];
+
+        $response = $this->actingAs($user)
+            ->withSession(['pending_division_id' => $division->id])
+            ->post(route('auth.discord.application'), $payload);
+
+        return [$response, $user];
+    }
+
+    #[Test]
+    public function submit_application_accepts_options_containing_commas(): void
+    {
+        $division = $this->divisionWithCommaOptions();
+
+        [$response, $user] = $this->submitApplicationFor($division, ['Yes, daily', ['PvP, PvE']]);
+
+        $response->assertSessionHasNoErrors();
+        $application = DivisionApplication::where('user_id', $user->id)->first();
+        $this->assertNotNull($application);
+        $this->assertSame(
+            ['Yes, daily', ['PvP, PvE']],
+            collect($application->responses)->pluck('value')->values()->all(),
+        );
+    }
+
+    #[Test]
+    public function submit_application_rejects_fragments_of_comma_options(): void
+    {
+        $division = $this->divisionWithCommaOptions();
+
+        [$response, $user] = $this->submitApplicationFor($division, ['Yes', ['PvP']]);
+
+        $response->assertSessionHasErrors();
+        $this->assertNull(DivisionApplication::where('user_id', $user->id)->first());
     }
 
     #[Test]

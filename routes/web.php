@@ -15,7 +15,7 @@ if (app()->environment('local')) {
 }
 Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
-Route::get('logout', [LoginController::class, 'logout'])->name('logout');
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('auth/discord', [DiscordController::class, 'redirect'])->name('auth.discord');
 Route::get('auth/discord/callback', [DiscordController::class, 'callback'])->name('auth.discord.callback');

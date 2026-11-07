@@ -167,10 +167,6 @@ class BulkTagController extends Controller
             return response()->json(['success' => true, 'message' => $message]);
         }
 
-        if ($request->has('return_to')) {
-            return redirect($request->input('return_to'))->with('success', $message);
-        }
-
         return redirect()
             ->route('division.members', $division)
             ->with('success', $message);

@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { ExternalLink, LogOut, MessageSquare, Newspaper } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -63,9 +63,9 @@ export default function NoPrimaryDivision({ impersonating }: Props) {
                 )}
 
                 <Button variant="outline" size="sm" className="mt-6 w-full" asChild>
-                    <a href="/logout">
+                    <Link href="/logout" method="post" as="button">
                         <LogOut /> Log out
-                    </a>
+                    </Link>
                 </Button>
             </div>
         </BlankLayout>

@@ -68,7 +68,7 @@ Route::prefix('divisions/{division}')->group(function () {
         Route::get('{platoon}/squads/{squad}', [LegacyUnitRedirectController::class, 'squad'])->name('squad.show');
     });
 
-    Route::post('private-message', [PmController::class, 'create'])->name('private-message.create');
+    Route::post('private-message', [PmController::class, 'create'])->middleware('auth')->name('private-message.create');
 
     Route::controller(BulkTagController::class)->group(function () {
         Route::post('bulk-tags/store', 'store')->name('bulk-tags.store');

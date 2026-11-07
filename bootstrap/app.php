@@ -57,7 +57,7 @@ return Application::configure(basePath: dirname(__DIR__))
             EnsureFrontendRequestsAreStateful::class,
             'throttle:60,1',
             LogApiRequests::class,
-        ])->appendToGroup('api', 'auth:sanctum');
+        ])->appendToGroup('api', ['auth:sanctum', IsBanned::class]);
 
         $middleware->alias([
             'developer'      => MustBeDeveloper::class,

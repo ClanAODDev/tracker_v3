@@ -749,6 +749,20 @@ class RecruitingControllerTest extends TestCase
     }
 
     #[Test]
+    public function validate_member_id_rejects_a_discord_id_without_querying_the_forum(): void
+    {
+        $this->mockProcedureService()->shouldNotReceive('getUser');
+
+        $officer  = $this->createOfficer();
+        $response = $this->actingAs($officer)->post(route('validate-id', '395448095015567360'));
+
+        $response->assertOk()->assertJson([
+            'is_member'         => false,
+            'exists_in_tracker' => false,
+        ]);
+    }
+
+    #[Test]
     public function validate_member_id_flags_existing_tracker_member(): void
     {
         $existing = $this->createMember(['clan_id' => 1234]);

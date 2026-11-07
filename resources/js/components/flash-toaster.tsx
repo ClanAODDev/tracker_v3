@@ -30,5 +30,13 @@ export function FlashToaster() {
         }
     }, [flash]);
 
-    return <Toaster position="top-right" closeButton richColors={false} />;
+    return (
+        <Toaster
+            position="bottom-right"
+            offset={{ bottom: '5rem', right: '1.5rem' }}
+            mobileOffset={{ bottom: '6.5rem' }}
+            closeButton
+            richColors={false}
+        />
+    );
 }

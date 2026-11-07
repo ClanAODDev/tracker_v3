@@ -209,7 +209,7 @@ class RecruitingController extends Controller
     #[Authorize('recruit', Member::class)]
     public function validateMemberId($member_id)
     {
-        if (! is_numeric($member_id) || (int) $member_id < 1) {
+        if (! ctype_digit((string) $member_id) || ! ForumProcedureService::isValidUserId((int) $member_id)) {
             return [
                 'is_member'         => false,
                 'valid_group'       => false,

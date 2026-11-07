@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Support\Impersonation;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -31,14 +32,11 @@ class HasPrimaryDivision
                     return $next($request);
                 }
 
-                if (session('impersonating')) {
-                    auth()->logout();
-                    redirect()->to(route('end-impersonation'));
+                if (Impersonation::stop()) {
+                    return redirect('/');
                 }
 
                 abort(408, 'You do not have a primary division.');
-
-                return false;
             }
         }
 

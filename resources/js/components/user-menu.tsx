@@ -1,4 +1,5 @@
-import { ChevronsUpDown, LogOut, Settings, ShieldAlert, UserCog } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { ChevronsUpDown, Eye, LogOut, Settings, ShieldAlert, UserCog } from 'lucide-react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -7,9 +8,18 @@ import {
     DropdownMenuItem,
     DropdownMenuLabel,
     DropdownMenuSeparator,
+    DropdownMenuSub,
+    DropdownMenuSubContent,
+    DropdownMenuSubTrigger,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/use-shared';
+
+const VIEW_AS_ROLES = [
+    { slug: 'member', label: 'Member' },
+    { slug: 'officer', label: 'Officer' },
+    { slug: 'sr_ldr', label: 'Senior Leader' },
+];
 
 function initials(name: string) {
     return name
@@ -21,8 +31,10 @@ function initials(name: string) {
 }
 
 export function UserMenu({ onOpenSettings }: { onOpenSettings: () => void }) {
-    const { user } = useAuth();
+    const { user, permissions } = useAuth();
     if (!user) return null;
+
+    const canViewAsRole = (permissions?.isAdmin || permissions?.isDeveloper) && !user.impersonatingRole;
 
     return (
         <DropdownMenu>
@@ -44,25 +56,41 @@ export function UserMenu({ onOpenSettings }: { onOpenSettings: () => void }) {
                 <DropdownMenuSeparator />
                 {user.impersonating && (
                     <DropdownMenuItem asChild>
-                        <a href="/impersonate-end" className="text-destructive">
+                        <Link href="/impersonate-end" method="post" as="button" className="w-full text-destructive">
                             <ShieldAlert className="size-4" /> End impersonation
-                        </a>
+                        </Link>
                     </DropdownMenuItem>
                 )}
                 {user.impersonatingRole && (
                     <DropdownMenuItem asChild>
-                        <a href="/impersonate-role-end" className="text-warning">
+                        <Link href="/impersonate-role-end" method="post" as="button" className="w-full text-warning">
                             <UserCog className="size-4" /> End role view
-                        </a>
+                        </Link>
                     </DropdownMenuItem>
+                )}
+                {canViewAsRole && (
+                    <DropdownMenuSub>
+                        <DropdownMenuSubTrigger>
+                            <Eye className="size-4" /> View as role
+                        </DropdownMenuSubTrigger>
+                        <DropdownMenuSubContent>
+                            {VIEW_AS_ROLES.map((role) => (
+                                <DropdownMenuItem key={role.slug} asChild>
+                                    <Link href={`/impersonate-role/${role.slug}`} method="post" as="button" className="w-full">
+                                        {role.label}
+                                    </Link>
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuSubContent>
+                    </DropdownMenuSub>
                 )}
                 <DropdownMenuItem onSelect={() => onOpenSettings()}>
                     <Settings className="size-4" /> Settings
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                    <a href="/logout">
+                    <Link href="/logout" method="post" as="button" className="w-full">
                         <LogOut className="size-4" /> Log out
-                    </a>
+                    </Link>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

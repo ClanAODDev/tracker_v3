@@ -5,9 +5,11 @@ namespace Tests\Feature\Filament;
 use App\Enums\Rank;
 use App\Enums\Role;
 use App\Filament\Mod\Resources\RankActionResource\Pages\ImportRankHistory;
+use App\Jobs\UpdateRankForMember;
 use App\Models\RankAction;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -65,6 +67,66 @@ class ImportRankHistoryTest extends TestCase
             ->call('create');
 
         $this->assertDatabaseCount('rank_actions', 2);
+    }
+
+    #[Test]
+    public function import_rejects_dates_after_yesterday(): void
+    {
+        $user   = $this->createMasterSergeant();
+        $target = $this->createMember(['division_id' => $user->member->division_id]);
+
+        $this->actingAs($user);
+
+        Livewire::test(ImportRankHistory::class)
+            ->set('data.member_id', $target->id)
+            ->set('data.entries', [
+                ['rank' => (string) Rank::PRIVATE->value, 'date' => now()->toDateString()],
+            ])
+            ->call('create')
+            ->assertHasErrors();
+
+        $this->assertDatabaseCount('rank_actions', 0);
+    }
+
+    #[Test]
+    public function pasted_rows_dated_after_yesterday_are_skipped(): void
+    {
+        $user   = $this->createMasterSergeant();
+        $target = $this->createMember(['division_id' => $user->member->division_id]);
+
+        $this->actingAs($user);
+
+        $entries = Livewire::test(ImportRankHistory::class)
+            ->set('data.member_id', $target->id)
+            ->set('data.csv_paste', "Private,2020-01-01\nSpecialist," . now()->addDay()->toDateString())
+            ->get('data.entries');
+
+        $this->assertSame(['2020-01-01'], collect($entries)->pluck('date')->values()->all());
+    }
+
+    #[Test]
+    public function import_does_not_change_the_members_current_rank(): void
+    {
+        Bus::fake();
+
+        $user   = $this->createMasterSergeant();
+        $target = $this->createMember([
+            'division_id' => $user->member->division_id,
+            'rank'        => Rank::PRIVATE,
+        ]);
+
+        $this->actingAs($user);
+
+        Livewire::test(ImportRankHistory::class)
+            ->set('data.member_id', $target->id)
+            ->set('data.entries', [
+                ['rank' => (string) Rank::SERGEANT->value, 'date' => '2021-05-01'],
+            ])
+            ->call('create');
+
+        $this->assertDatabaseCount('rank_actions', 1);
+        $this->assertSame(Rank::PRIVATE, $target->fresh()->rank);
+        Bus::assertNotDispatched(UpdateRankForMember::class);
     }
 
     #[Test]

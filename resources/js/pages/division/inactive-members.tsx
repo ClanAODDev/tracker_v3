@@ -232,7 +232,7 @@ export default function InactiveMembers({
                                                                         size="sm"
                                                                         variant="outline"
                                                                         className="text-warning"
-                                                                        onClick={() => router.get(row.flagUrl)}
+                                                                        onClick={() => router.post(row.flagUrl)}
                                                                     >
                                                                         <Flag /> Flag
                                                                     </Button>
@@ -245,7 +245,7 @@ export default function InactiveMembers({
                                                                         size="sm"
                                                                         variant="outline"
                                                                         className="text-warning"
-                                                                        onClick={() => router.get(row.unflagUrl!)}
+                                                                        onClick={() => router.post(row.unflagUrl!)}
                                                                     >
                                                                         <Flag /> Unflag
                                                                     </Button>
