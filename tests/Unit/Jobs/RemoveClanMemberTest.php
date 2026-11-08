@@ -4,9 +4,12 @@ namespace Tests\Unit\Jobs;
 
 use App\Jobs\RemoveClanMember;
 use App\Models\Member;
+use App\Notifications\DM\NotifyRemoverForumRemovalFailed;
 use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Queue\ManuallyFailedException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Notification;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -114,5 +117,19 @@ class RemoveClanMemberTest extends TestCase
 
         $job->assertFailed();
         Http::assertNothingSent();
+    }
+
+    #[Test]
+    public function the_remover_is_messaged_when_the_job_fails()
+    {
+        Notification::fake();
+
+        $remover = Member::factory()->create(['discord_id' => '123456789012345678']);
+        $member  = Member::factory()->create(['name' => 'Removed']);
+
+        (new RemoveClanMember($member->clan_id, $remover->clan_id))
+            ->failed(new ManuallyFailedException('Forum rejected the removal'));
+
+        Notification::assertSentTo($remover, NotifyRemoverForumRemovalFailed::class);
     }
 }
