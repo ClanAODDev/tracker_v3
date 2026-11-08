@@ -7,7 +7,6 @@ use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Queue\UnrecoverableJobException;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
@@ -28,10 +27,12 @@ class RemoveClanMember implements ShouldQueue
 
         if ($member) {
             if (AODForumService::hasForumUsernameConflict($member->clan_id, $member->name)) {
-                throw new UnrecoverableJobException(
+                $this->fail(
                     "Cannot remove member {$this->memberIdBeingRemoved} ({$member->name}): " .
                     "username '{$member->name}' already exists for a different forum user. Manual intervention required."
                 );
+
+                return;
             }
         }
 
@@ -45,9 +46,11 @@ class RemoveClanMember implements ShouldQueue
         ];
 
         if ($member && ! Member::isValidForumName($member->name)) {
-            throw new UnrecoverableJobException(
+            $this->fail(
                 "Cannot remove member {$this->memberIdBeingRemoved} ({$member->name}): username contains HTML-unsafe characters stored as entities on the forum (e.g. &lt;), causing the forum API to reject the removal. Manual intervention required."
             );
+
+            return;
         }
 
         Log::info('Removing forum member', $context);

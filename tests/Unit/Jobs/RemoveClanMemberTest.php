@@ -3,6 +3,7 @@
 namespace Tests\Unit\Jobs;
 
 use App\Jobs\RemoveClanMember;
+use App\Models\Member;
 use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
@@ -99,5 +100,19 @@ class RemoveClanMemberTest extends TestCase
         ]));
 
         Http::assertSent(fn ($request) => str_contains($request->url(), 'do=remaod'));
+    }
+
+    #[Test]
+    public function job_fails_without_retrying_when_the_member_name_is_not_forum_safe()
+    {
+        Http::fake();
+
+        $member = Member::factory()->create(['name' => 'Bad<Name']);
+
+        $job = (new RemoveClanMember($member->clan_id, 67890))->withFakeQueueInteractions();
+        $job->handle($this->makeForumService());
+
+        $job->assertFailed();
+        Http::assertNothingSent();
     }
 }
