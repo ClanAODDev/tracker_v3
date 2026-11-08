@@ -101,7 +101,7 @@ class MemberProfileData
                 $member->user && $user->can('impersonate', $member->user)
                     ? ['label' => 'Impersonate user', 'url' => route('impersonate', $member->user), 'method' => 'post']
                     : null,
-                $user->can('flagInactive', Member::class)
+                $user->can('flagInactive', Member::class) && ($member->flagged_for_inactivity || $member->division_id)
                     ? ($member->flagged_for_inactivity
                         ? ['label' => 'Unflag for inactivity', 'url' => route('member.unflag-inactive', $member->clan_id), 'method' => 'post']
                         : ['label' => 'Flag for inactivity', 'url' => route('member.flag-inactive', $member->clan_id), 'method' => 'post'])

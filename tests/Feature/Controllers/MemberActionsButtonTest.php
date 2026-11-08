@@ -100,4 +100,19 @@ class MemberActionsButtonTest extends TestCase
                 $this->assertSame(route('member.unflag-inactive', $member->clan_id), $action['url']);
             });
     }
+
+    #[Test]
+    public function flag_action_is_not_offered_for_an_ex_aod_member()
+    {
+        $admin  = $this->createAdmin();
+        $member = $this->createMember(['division_id' => 0, 'flagged_for_inactivity' => false]);
+
+        $this->actingAs($admin)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page) {
+                $labels = collect($page->toArray()['props']['actions'])->pluck('label');
+                $this->assertFalse($labels->contains('Flag for inactivity'));
+            });
+    }
 }
