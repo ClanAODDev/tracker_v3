@@ -18,7 +18,6 @@ import {
 interface MemberFields {
     id: string;
     forum_name: string;
-    ingame_name: string;
     handles: Record<number, string>;
     rank: string;
     unitPath: string[];
@@ -27,7 +26,6 @@ interface MemberFields {
 const BLANK_MEMBER: MemberFields = {
     id: '',
     forum_name: '',
-    ingame_name: '',
     handles: {},
     rank: '',
     unitPath: [],
@@ -76,8 +74,8 @@ export function useRecruitForm(props: RecruitFormProps) {
                 .filter((handle) => handle.value !== ''),
         [props.handleTypes, member.handles],
     );
-    const hasHandle = props.handleTypes.length > 0 ? filledHandles.length > 0 : Boolean(member.ingame_name.trim());
-    const welcomeHandle = props.handleTypes.length > 0 ? (filledHandles[0]?.value ?? '') : member.ingame_name;
+    const hasHandle = filledHandles.length > 0;
+    const welcomeHandle = filledHandles[0]?.value ?? '';
 
     const validateForumName = useCallback(
         (name: string, memberId: string, email?: string) => {
@@ -230,10 +228,14 @@ export function useRecruitForm(props: RecruitFormProps) {
             if (!user) return;
             setSelectedPending(user);
             patchMember({ rank: '1' });
+            const appHandle = user.application_handle;
+            if (appHandle?.id && props.handleTypes.some((type) => type.id === appHandle.id)) {
+                setMember((m) => ({ ...m, handles: { ...m.handles, [appHandle.id as number]: appHandle.value } }));
+            }
             setEmailCheck(EMPTY_EMAIL_CHECK);
             checkForumEmail(user);
         },
-        [pending, checkForumEmail, patchMember],
+        [pending, checkForumEmail, patchMember, props.handleTypes],
     );
 
     const clearPending = useCallback(() => {
@@ -298,7 +300,7 @@ export function useRecruitForm(props: RecruitFormProps) {
                 division: props.divisionSlug,
                 member_id: member.id,
                 forum_name: member.forum_name,
-                ...(props.handleTypes.length > 0 ? { handles: member.handles } : { ingame_name: member.ingame_name }),
+                handles: member.handles,
                 rank: member.rank,
                 unit_id: member.unitPath.at(-1) ?? null,
                 pending_user_id: selectedPending?.id ?? null,

@@ -18,6 +18,12 @@ interface ApplicationField {
     options: string[];
 }
 
+interface ApplicationHandle {
+    id: number;
+    label: string;
+    hint: string | null;
+}
+
 interface Props {
     discordUsername: string;
     email: string;
@@ -27,6 +33,7 @@ interface Props {
     needsRegistration: boolean;
     divisions: Array<{ id: number; name: string; logo: string }>;
     applicationFields: ApplicationField[];
+    applicationHandles: ApplicationHandle[];
 }
 
 function Panel({ children }: { children: React.ReactNode }) {
@@ -36,8 +43,9 @@ function Panel({ children }: { children: React.ReactNode }) {
 }
 
 export default function DiscordPending(props: Props) {
-    const { preview, needsRegistration, applicationFields } = props;
+    const { preview, needsRegistration, applicationFields, applicationHandles } = props;
     const showRegister = preview || needsRegistration;
+    const hasApplication = applicationFields.length > 0 || applicationHandles.length > 0;
 
     return (
         <BlankLayout>
@@ -63,10 +71,10 @@ export default function DiscordPending(props: Props) {
                 </div>
 
                 {showRegister && <RegisterForm {...props} />}
-                {(preview || (!needsRegistration && applicationFields.length > 0)) && (
-                    <ApplicationForm fields={applicationFields} disabled={preview} />
+                {(preview || (!needsRegistration && hasApplication)) && (
+                    <ApplicationForm fields={applicationFields} handles={applicationHandles} disabled={preview} />
                 )}
-                {!preview && !needsRegistration && applicationFields.length === 0 && <RecruiterContact />}
+                {!preview && !needsRegistration && !hasApplication && <RecruiterContact />}
 
                 {!preview && (
                     <p className="text-center text-xs text-muted-foreground">
@@ -202,11 +210,22 @@ function RegisterForm({
     );
 }
 
-function ApplicationForm({ fields, disabled }: { fields: ApplicationField[]; disabled: boolean }) {
-    const initial = Object.fromEntries(
-        fields.map((f) => [`field_${f.id}`, f.type === 'checkbox' ? [] : '']),
-    );
+function ApplicationForm({
+    fields,
+    handles,
+    disabled,
+}: {
+    fields: ApplicationField[];
+    handles: ApplicationHandle[];
+    disabled: boolean;
+}) {
+    const initial = {
+        ...Object.fromEntries(fields.map((f) => [`field_${f.id}`, f.type === 'checkbox' ? [] : ''])),
+        handle_id: handles.length === 1 ? String(handles[0].id) : '',
+        handle_value: '',
+    };
     const form = useForm<Record<string, string | string[]>>(initial);
+    const chosenHandle = handles.find((h) => String(h.id) === form.data.handle_id);
 
     function submit(e: FormEvent) {
         e.preventDefault();
@@ -220,6 +239,37 @@ function ApplicationForm({ fields, disabled }: { fields: ApplicationField[]; dis
             </p>
             <form onSubmit={submit} className="space-y-4">
                 <fieldset disabled={disabled} className="space-y-4">
+                    {handles.length > 1 && (
+                        <Field label="Which do you play on? *" error={form.errors.handle_id}>
+                            {handles.map((handle) => (
+                                <label key={handle.id} className="flex items-center gap-2 text-sm">
+                                    <input
+                                        type="radio"
+                                        name="handle_id"
+                                        checked={form.data.handle_id === String(handle.id)}
+                                        onChange={() => form.setData('handle_id', String(handle.id))}
+                                        required
+                                    />
+                                    {handle.label}
+                                </label>
+                            ))}
+                        </Field>
+                    )}
+                    {handles.length > 0 && (
+                        <Field
+                            label={`${chosenHandle?.label ?? 'Your in-game ID'} *`}
+                            error={form.errors.handle_value}
+                            hint={chosenHandle?.hint ?? undefined}
+                        >
+                            <Input
+                                value={form.data.handle_value as string}
+                                onChange={(e) => form.setData('handle_value', e.target.value)}
+                                maxLength={255}
+                                required
+                                disabled={!chosenHandle}
+                            />
+                        </Field>
+                    )}
                     {fields.map((field) => {
                         const key = `field_${field.id}`;
                         const error = form.errors[key as keyof typeof form.errors] as string | undefined;

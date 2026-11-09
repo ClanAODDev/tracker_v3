@@ -28,17 +28,10 @@ class SubmitRecruitmentRequest extends FormRequest
             ],
         ];
 
-        if ($this->division()?->handles->isNotEmpty()) {
-            return [
-                ...$rules,
-                'handles' => ['nullable', 'array'],
-                ...HandleRules::forDivision($this->division()),
-            ];
-        }
-
         return [
             ...$rules,
-            'ingame_name' => ['required', 'string', 'max:255'],
+            'handles' => ['nullable', 'array'],
+            ...($this->division() ? HandleRules::forDivision($this->division()) : []),
         ];
     }
 
@@ -48,7 +41,17 @@ class SubmitRecruitmentRequest extends FormRequest
             function (Validator $validator) {
                 $division = $this->division();
 
-                if (! $division?->handles->isNotEmpty() || $this->hasAnyDivisionHandle($division)) {
+                if (! $division) {
+                    return;
+                }
+
+                if ($division->handles->isEmpty()) {
+                    $validator->errors()->add('handles', 'This division has no handle types set up. Ask an admin to add one before recruiting.');
+
+                    return;
+                }
+
+                if ($this->hasAnyDivisionHandle($division)) {
                     return;
                 }
 
@@ -56,13 +59,6 @@ class SubmitRecruitmentRequest extends FormRequest
                     ? 'Enter at least one handle: ' . $division->handles->pluck('label')->implode(', ') . '.'
                     : "A {$division->handles->first()->label} handle is required for this division.");
             },
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'ingame_name.required' => 'An in-game handle is required.',
         ];
     }
 
