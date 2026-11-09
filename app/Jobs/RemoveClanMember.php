@@ -2,7 +2,9 @@
 
 namespace App\Jobs;
 
+use App\Models\Division;
 use App\Models\Member;
+use App\Notifications\Channel\NotifyDivisionForumRemovalFailed;
 use App\Notifications\DM\NotifyRemoverForumRemovalFailed;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
@@ -21,6 +23,7 @@ class RemoveClanMember implements ShouldQueue
     public function __construct(
         private readonly int $memberIdBeingRemoved,
         private readonly int $impersonatingMemberId,
+        private readonly ?int $divisionId = null,
     ) {}
 
     public function handle(ForumProcedureService $forum): void
@@ -76,13 +79,27 @@ class RemoveClanMember implements ShouldQueue
 
     public function failed(?Throwable $exception): void
     {
-        $remover = Member::where('clan_id', $this->impersonatingMemberId)->first();
-        $member  = Member::withTrashed()->where('clan_id', $this->memberIdBeingRemoved)->first();
+        $remover    = Member::where('clan_id', $this->impersonatingMemberId)->first();
+        $member     = Member::withTrashed()->where('clan_id', $this->memberIdBeingRemoved)->first();
+        $division   = $this->divisionId ? Division::find($this->divisionId) : null;
+        $memberName = $member?->name ?? (string) $this->memberIdBeingRemoved;
+        $reason     = $exception?->getMessage() ?? 'Unknown error';
+
+        if ($division) {
+            $division->notify(new NotifyDivisionForumRemovalFailed(
+                memberName: $memberName,
+                clanId: $this->memberIdBeingRemoved,
+                removerName: $remover?->name,
+                reason: $reason,
+            ));
+
+            return;
+        }
 
         $remover?->notify(new NotifyRemoverForumRemovalFailed(
-            memberName: $member?->name ?? (string) $this->memberIdBeingRemoved,
+            memberName: $memberName,
             clanId: $this->memberIdBeingRemoved,
-            reason: $exception?->getMessage() ?? 'Unknown error',
+            reason: $reason,
         ));
     }
 }

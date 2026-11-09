@@ -3,7 +3,9 @@
 namespace Tests\Unit\Jobs;
 
 use App\Jobs\RemoveClanMember;
+use App\Models\Division;
 use App\Models\Member;
+use App\Notifications\Channel\NotifyDivisionForumRemovalFailed;
 use App\Notifications\DM\NotifyRemoverForumRemovalFailed;
 use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -120,7 +122,7 @@ class RemoveClanMemberTest extends TestCase
     }
 
     #[Test]
-    public function the_remover_is_messaged_when_the_job_fails()
+    public function the_remover_is_messaged_when_the_division_is_unknown()
     {
         Notification::fake();
 
@@ -131,5 +133,21 @@ class RemoveClanMemberTest extends TestCase
             ->failed(new ManuallyFailedException('Forum rejected the removal'));
 
         Notification::assertSentTo($remover, NotifyRemoverForumRemovalFailed::class);
+    }
+
+    #[Test]
+    public function the_division_officers_are_alerted_when_the_job_fails()
+    {
+        Notification::fake();
+
+        $division = Division::factory()->create();
+        $remover  = Member::factory()->create(['discord_id' => '123456789012345678']);
+        $member   = Member::factory()->create(['name' => 'Removed']);
+
+        (new RemoveClanMember($member->clan_id, $remover->clan_id, $division->id))
+            ->failed(new ManuallyFailedException('Forum rejected the removal'));
+
+        Notification::assertSentTo($division, NotifyDivisionForumRemovalFailed::class);
+        Notification::assertNotSentTo($remover, NotifyRemoverForumRemovalFailed::class);
     }
 }
