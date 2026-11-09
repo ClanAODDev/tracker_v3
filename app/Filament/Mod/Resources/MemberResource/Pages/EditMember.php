@@ -128,11 +128,12 @@ class EditMember extends EditRecord
                 ->action(function (array $data) {
                     $member = $this->record;
 
-                    if (AODForumService::hasForumUsernameConflict($member->clan_id, $member->name)) {
+                    if ($blocker = AODForumService::removalBlocker($member)) {
                         Notification::make()
                             ->title('Cannot Remove Member')
-                            ->body("The username '{$member->name}' is already in use by a different forum account. Manual intervention required.")
+                            ->body($blocker)
                             ->danger()
+                            ->persistent()
                             ->send();
 
                         return;

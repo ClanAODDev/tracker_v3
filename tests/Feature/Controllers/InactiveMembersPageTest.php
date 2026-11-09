@@ -60,4 +60,18 @@ class InactiveMembersPageTest extends TestCase
                     fn ($row) => $row['verb'] === 'flagged' && $row['user'] === $officer->name && $row['subject'] === $target->name,
                 )));
     }
+
+    #[Test]
+    public function unflagging_a_member_without_a_division_redirects_back()
+    {
+        $admin  = $this->createAdmin();
+        $target = $this->createMember(['division_id' => 0, 'flagged_for_inactivity' => true]);
+
+        $this->actingAs($admin)
+            ->from(route('member', $target->getUrlParams()))
+            ->post(route('member.unflag-inactive', $target->clan_id))
+            ->assertRedirect(route('member', $target->getUrlParams()));
+
+        $this->assertFalse((bool) $target->fresh()->flagged_for_inactivity);
+    }
 }

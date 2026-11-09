@@ -3,13 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\Member;
+use App\Notifications\DM\NotifyRemoverForumRemovalFailed;
 use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
-use Illuminate\Queue\UnrecoverableJobException;
 use Illuminate\Support\Facades\Log;
 use RuntimeException;
+use Throwable;
 
 class RemoveClanMember implements ShouldQueue
 {
@@ -26,13 +27,10 @@ class RemoveClanMember implements ShouldQueue
     {
         $member = Member::withTrashed()->where('clan_id', $this->memberIdBeingRemoved)->first();
 
-        if ($member) {
-            if (AODForumService::hasForumUsernameConflict($member->clan_id, $member->name)) {
-                throw new UnrecoverableJobException(
-                    "Cannot remove member {$this->memberIdBeingRemoved} ({$member->name}): " .
-                    "username '{$member->name}' already exists for a different forum user. Manual intervention required."
-                );
-            }
+        if ($member && $blocker = AODForumService::removalBlocker($member)) {
+            $this->fail("Cannot remove member {$this->memberIdBeingRemoved} ({$member->name}): {$blocker}");
+
+            return;
         }
 
         $forumUser = $forum->getUser($this->memberIdBeingRemoved);
@@ -43,12 +41,6 @@ class RemoveClanMember implements ShouldQueue
             'usergroupid'    => $forumUser?->usergroupid ?? null,
             'membergroupids' => $forumUser?->membergroupids ?? null,
         ];
-
-        if ($member && ! Member::isValidForumName($member->name)) {
-            throw new UnrecoverableJobException(
-                "Cannot remove member {$this->memberIdBeingRemoved} ({$member->name}): username contains HTML-unsafe characters stored as entities on the forum (e.g. &lt;), causing the forum API to reject the removal. Manual intervention required."
-            );
-        }
 
         Log::info('Removing forum member', $context);
 
@@ -80,5 +72,17 @@ class RemoveClanMember implements ShouldQueue
                 previous: $e
             );
         }
+    }
+
+    public function failed(?Throwable $exception): void
+    {
+        $remover = Member::where('clan_id', $this->impersonatingMemberId)->first();
+        $member  = Member::withTrashed()->where('clan_id', $this->memberIdBeingRemoved)->first();
+
+        $remover?->notify(new NotifyRemoverForumRemovalFailed(
+            memberName: $member?->name ?? (string) $this->memberIdBeingRemoved,
+            clanId: $this->memberIdBeingRemoved,
+            reason: $exception?->getMessage() ?? 'Unknown error',
+        ));
     }
 }
