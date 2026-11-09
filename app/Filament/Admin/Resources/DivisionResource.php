@@ -103,8 +103,10 @@ class DivisionResource extends Resource
 
                         Repeater::make('handleAssignments')
                             ->label('Game handles')
-                            ->helperText('Handle types members of this division use, e.g. separate NA and EU accounts. The first is used for the recruit welcome message. Recruits need at least one.')
+                            ->helperText('Handle types members of this division use, e.g. separate NA and EU accounts. The first is used for the recruit welcome message. Recruits need at least one, and every division needs at least one type. Division applications ask for it automatically.')
                             ->relationship()
+                            ->minItems(1)
+                            ->required()
                             ->orderColumn('sort_order')
                             ->reorderable()
                             ->addActionLabel('Add handle type')

@@ -112,7 +112,7 @@ class DiscordRecruitmentService
         }
 
         $pendingUsers = $query
-            ->with('divisionApplication.division')
+            ->with(['divisionApplication.division', 'divisionApplication.handle'])
             ->orderBy('created_at', 'desc')
             ->get();
 

@@ -20,6 +20,7 @@ class PendingDiscordUserTransformer extends Transformer
             'created_at'           => $item->created_at->diffForHumans(),
             'application'          => $this->transformApplication($item),
             'application_division' => $item->divisionApplication?->division?->name,
+            'application_handle'   => $item->divisionApplication?->handleSummary(),
         ];
     }
 

@@ -36,6 +36,24 @@ class DivisionApplication extends Model implements Commentable
         return $this->belongsTo(Division::class);
     }
 
+    public function handle(): BelongsTo
+    {
+        return $this->belongsTo(Handle::class);
+    }
+
+    public function handleSummary(): ?array
+    {
+        if (! $this->handle_value) {
+            return null;
+        }
+
+        return [
+            'id'    => $this->handle_id,
+            'label' => $this->handle?->label ?? 'Handle',
+            'value' => $this->handle_value,
+        ];
+    }
+
     public function discordAvatarUrl(): ?string
     {
         if (! $this->discord_avatar || ! $this->user?->discord_id) {

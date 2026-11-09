@@ -22,6 +22,7 @@ export interface PendingDiscordUser {
     forum_name: string | null;
     application_division: string | null;
     application: Array<{ label: string; value: string }> | null;
+    application_handle: { id: number | null; label: string; value: string } | null;
 }
 
 export interface DivisionRecruitData {

@@ -1109,6 +1109,7 @@ class DiscordAuthTest extends TestCase
 
                 return ["field_{$f->id}" => $value];
             })
+            ->put('handle_value', 'TestHandle')
             ->all();
     }
 
@@ -1146,6 +1147,7 @@ class DiscordAuthTest extends TestCase
         $payload = [
             "field_{$fields[0]->id}" => $answers[0],
             "field_{$fields[1]->id}" => $answers[1],
+            'handle_value'           => 'TestHandle',
         ];
 
         $response = $this->actingAs($user)

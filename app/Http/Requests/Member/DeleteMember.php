@@ -50,6 +50,7 @@ class DeleteMember extends FormRequest
         RemoveClanMember::dispatch(
             impersonatingMemberId: auth()->user()->member->clan_id,
             memberIdBeingRemoved: $member->clan_id,
+            divisionId: $member->division_id ?: null,
         );
 
         $this->notifyPartTimeDivisions($member);
