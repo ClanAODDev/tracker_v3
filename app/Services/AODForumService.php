@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\ForumGroup;
+use App\Models\Member;
 use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -230,6 +231,19 @@ class AODForumService
         }
 
         return ! empty($results);
+    }
+
+    public static function removalBlocker(Member $member): ?string
+    {
+        if (! Member::isValidForumName($member->name)) {
+            return 'The username contains characters the forum stores as HTML entities (e.g. &lt; &gt; &amp;), so the forum rejects the removal. Manual intervention required.';
+        }
+
+        if (self::hasForumUsernameConflict($member->clan_id, $member->name)) {
+            return "The username '{$member->name}' is already in use by a different forum account. Manual intervention required.";
+        }
+
+        return null;
     }
 
     public static function hasForumUsernameConflict(int $clanId, string $name): bool

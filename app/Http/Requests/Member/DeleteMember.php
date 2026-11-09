@@ -30,18 +30,8 @@ class DeleteMember extends FormRequest
             /** @var Member $member */
             $member = $this->route('member');
 
-            if (! Member::isValidForumName($member->name)) {
-                $validator->errors()->add(
-                    'removal_reason',
-                    "Cannot remove {$member->name}: the username contains characters that the forum stores as HTML entities (e.g. &lt; &gt; &amp;), which causes the forum API to reject the removal. Manual intervention required."
-                );
-            }
-
-            if (AODForumService::hasForumUsernameConflict($member->clan_id, $member->name)) {
-                $validator->errors()->add(
-                    'removal_reason',
-                    "Cannot remove {$member->name}: the username '{$member->name}' is already in use by a different forum account. Manual intervention required."
-                );
+            if ($blocker = AODForumService::removalBlocker($member)) {
+                $validator->errors()->add('removal_reason', "Cannot remove {$member->name}: {$blocker}");
             }
         });
     }
