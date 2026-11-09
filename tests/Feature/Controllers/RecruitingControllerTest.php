@@ -493,7 +493,7 @@ class RecruitingControllerTest extends TestCase
     }
 
     #[Test]
-    public function submit_recruitment_rejects_a_blank_ingame_name_even_when_the_division_has_no_configured_handle(): void
+    public function submit_recruitment_is_blocked_when_the_division_has_no_handle_types(): void
     {
         $officer  = $this->createOfficer();
         $division = $this->createDivisionWithHandles([]);
@@ -509,7 +509,7 @@ class RecruitingControllerTest extends TestCase
             ]);
 
         $response->assertStatus(422);
-        $response->assertJsonValidationErrors('ingame_name');
+        $response->assertJsonValidationErrors('handles');
         $this->assertDatabaseMissing('members', ['clan_id' => 23456]);
     }
 

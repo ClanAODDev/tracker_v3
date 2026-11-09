@@ -150,7 +150,7 @@ class DivisionResource extends Resource
                                 ]),
 
                                 Section::make('Application Fields')
-                                    ->description('Define the fields that applicants must complete. Keep it brief and only request what is necessary before recruitment.')
+                                    ->description(fn (?Division $record) => self::applicationFieldsDescription($record))
                                     ->schema([
                                         Repeater::make('applicationFields')
                                             ->relationship()
@@ -424,5 +424,21 @@ class DivisionResource extends Resource
             'index' => ListDivisions::route('/'),
             'edit'  => EditDivision::route('/{record}/edit'),
         ];
+    }
+
+    private static function applicationFieldsDescription(?Division $division): string
+    {
+        $base   = 'Define the fields that applicants must complete. Keep it brief and only request what is necessary before recruitment.';
+        $labels = $division?->handles->pluck('label') ?? collect();
+
+        if ($labels->isEmpty()) {
+            return $base;
+        }
+
+        $asked = $labels->count() === 1
+            ? "their {$labels->first()}"
+            : 'which of ' . $labels->join(', ', ' or ') . ' they play on, and that ID';
+
+        return "{$base} Applicants are automatically asked for {$asked}, so you don't need a question for it.";
     }
 }

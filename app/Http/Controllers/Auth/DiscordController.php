@@ -11,6 +11,7 @@ use App\Models\DivisionApplication;
 use App\Models\Member;
 use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionPendingDiscordRegistration;
+use App\Rules\HandleFormat;
 use App\Services\DiscordRegistrationService;
 use App\Services\ForumProcedureService;
 use GuzzleHttp\Exception\ClientException;
@@ -119,9 +120,12 @@ class DiscordController extends Controller
 
     private function buildPendingViewData(User $user, ?Division $division, bool $needsRegistration, bool $preview = false): array
     {
-        $applicationFields = collect();
+        $applicationFields  = collect();
+        $applicationHandles = collect();
 
         if ($division && $division->settings()->get('application_required', false)) {
+            $applicationHandles = collect($division->handleTypes());
+
             $applicationFields = $division->applicationFields->map(fn ($field) => [
                 'id'         => $field->id,
                 'label'      => strip_tags($field->label, '<strong><em><u><a>'),
@@ -142,7 +146,8 @@ class DiscordController extends Controller
             'divisions'         => Division::recruitable()
                 ->get(['id', 'name'])
                 ->map(fn ($d) => ['id' => $d->id, 'name' => $d->name, 'logo' => $d->getLogoPath()]),
-            'applicationFields' => $applicationFields->values(),
+            'applicationFields'  => $applicationFields->values(),
+            'applicationHandles' => $applicationHandles->values(),
         ];
     }
 
@@ -193,7 +198,23 @@ class DiscordController extends Controller
             }
         }
 
-        $validated = $request->validate($rules);
+        $handles = $division->handles;
+
+        if ($handles->count() === 1) {
+            $request->merge(['handle_id' => $handles->first()->id]);
+        }
+
+        $chosenHandle = $handles->firstWhere('id', (int) $request->input('handle_id'));
+
+        if ($handles->isNotEmpty()) {
+            $rules['handle_id']    = ['required', Rule::in($handles->pluck('id')->all())];
+            $rules['handle_value'] = ['required', 'string', 'max:255', new HandleFormat($chosenHandle)];
+        }
+
+        $validated = $request->validate($rules, [
+            'handle_id.required'    => 'Choose which one you play on.',
+            'handle_value.required' => $chosenHandle ? "Your {$chosenHandle->label} is required." : 'Your handle is required.',
+        ]);
 
         $responses = [];
         foreach ($fields as $field) {
@@ -208,6 +229,8 @@ class DiscordController extends Controller
             'user_id'        => $user->id,
             'division_id'    => $division->id,
             'discord_avatar' => session()->pull('discord_avatar_hash'),
+            'handle_id'      => $chosenHandle?->id,
+            'handle_value'   => $chosenHandle ? $chosenHandle->normalize(trim($validated['handle_value'])) : null,
             'responses'      => $responses,
         ]);
 

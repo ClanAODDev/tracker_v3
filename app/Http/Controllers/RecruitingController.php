@@ -132,7 +132,7 @@ class RecruitingController extends Controller
         $pendingUser = User::pendingDiscord()
             ->whereNotNull('date_of_birth')
             ->where('discord_id', $discordId)
-            ->with('divisionApplication.division')
+            ->with(['divisionApplication.division', 'divisionApplication.handle'])
             ->first();
 
         // The applicant's own division application, if any, is the only

@@ -25,7 +25,7 @@ class DivisionApplicationApiController extends Controller
         }
 
         $applications = DivisionApplication::where('division_id', $division->id)
-            ->with('user')
+            ->with(['user', 'handle'])
             ->withCount('comments')
             ->latest()
             ->get()
@@ -35,6 +35,7 @@ class DivisionApplicationApiController extends Controller
                 'avatar'           => $app->discordAvatarUrl(),
                 'created_at'       => $app->created_at->toIso8601String(),
                 'comments_count'   => $app->comments_count,
+                'handle'           => $app->handleSummary(),
                 'responses'        => collect($app->responses)->map(fn ($response) => [
                     'label' => $response['label'] ?? 'Unknown',
                     'value' => is_array($response['value'] ?? null)
@@ -55,7 +56,7 @@ class DivisionApplicationApiController extends Controller
     {
         $this->assertBelongsToDivision($division, $application);
 
-        $application->load(['user', 'comments.author.member']);
+        $application->load(['user', 'handle', 'comments.author.member']);
 
         return response()->json([
             'application' => [
@@ -64,6 +65,7 @@ class DivisionApplicationApiController extends Controller
                 'discord_username' => $application->user->discord_username,
                 'avatar'           => $application->discordAvatarUrl(),
                 'created_at'       => $application->created_at->toIso8601String(),
+                'handle'           => $application->handleSummary(),
                 'responses'        => collect($application->responses)->map(fn ($response) => [
                     'label' => $response['label'] ?? 'Unknown',
                     'value' => is_array($response['value'] ?? null)

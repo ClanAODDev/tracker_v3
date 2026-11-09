@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { SimpleSelect } from '@/components/ui/simple-select';
 import { Switch } from '@/components/ui/switch';
 import { UnitCascadeSelect } from '@/components/units/unit-cascade-select';
-import { linkifyHtml } from '@/lib/format';
+import { inlineRichText, linkifyHtml } from '@/lib/format';
 import { cn } from '@/lib/utils';
 
 const GUIDED_MODE_KEY = 'recruit-form:guided-mode';
@@ -145,30 +145,18 @@ export function FormStep({ form }: { form: RecruitForm }) {
                         </p>
                     )}
                     <div className="grid gap-4 sm:grid-cols-2">
-                        {props.handleTypes.length === 0 ? (
+                        {props.handleTypes.map((type) => (
                             <HandleInput
-                                id="ingame"
-                                label="In-game handle *"
-                                placeholder="In-game name"
-                                hint={null}
-                                value={form.member.ingame_name}
-                                onChange={(value) => form.patchMember({ ingame_name: value })}
-                                onUseForumName={() => form.patchMember({ ingame_name: form.member.forum_name })}
+                                key={type.id}
+                                id={`handle_${type.id}`}
+                                label={props.handleTypes.length === 1 ? `${type.label} *` : type.label}
+                                placeholder={`Their ${type.label}`}
+                                hint={type.hint}
+                                value={form.member.handles[type.id] ?? ''}
+                                onChange={(value) => form.patchHandle(type.id, value)}
+                                onUseForumName={() => form.patchHandle(type.id, form.member.forum_name)}
                             />
-                        ) : (
-                            props.handleTypes.map((type) => (
-                                <HandleInput
-                                    key={type.id}
-                                    id={`handle_${type.id}`}
-                                    label={props.handleTypes.length === 1 ? `${type.label} *` : type.label}
-                                    placeholder={`Their ${type.label}`}
-                                    hint={type.hint}
-                                    value={form.member.handles[type.id] ?? ''}
-                                    onChange={(value) => form.patchHandle(type.id, value)}
-                                    onUseForumName={() => form.patchHandle(type.id, form.member.forum_name)}
-                                />
-                            ))
-                        )}
+                        ))}
                     </div>
                 </Section>
             )}
@@ -351,7 +339,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 </Section>
             )}
 
-            {form.selectedPending?.application && (
+            {(form.selectedPending?.application || form.selectedPending?.application_handle) && (
                 <Section
                     icon={<MessageSquare className="size-4" />}
                     title="Application submitted"
@@ -362,11 +350,20 @@ export function FormStep({ form }: { form: RecruitForm }) {
                     onToggle={() => setAppOpen((v) => !v)}
                 >
                     <div className="grid gap-3 sm:grid-cols-2">
-                        {form.selectedPending.application.map((item, i) => (
-                            <div key={i}>
+                        {form.selectedPending.application_handle && (
+                            <div>
                                 <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
-                                    {item.label}
+                                    {form.selectedPending.application_handle.label}
                                 </p>
+                                <p className="font-mono text-sm">{form.selectedPending.application_handle.value}</p>
+                            </div>
+                        )}
+                        {(form.selectedPending.application ?? []).map((item, i) => (
+                            <div key={i}>
+                                <p
+                                    className="text-[11px] uppercase tracking-wide text-muted-foreground [&_p]:m-0"
+                                    dangerouslySetInnerHTML={{ __html: inlineRichText(item.label) }}
+                                />
                                 <p className="text-sm">{item.value || '—'}</p>
                             </div>
                         ))}

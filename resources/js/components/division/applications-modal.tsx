@@ -31,6 +31,7 @@ interface ApplicationSummary {
 
 interface ApplicationDetail extends ApplicationSummary {
     discord_id: string | null;
+    handle: { id: number | null; label: string; value: string } | null;
     responses: Response[];
     comments: Comment[];
 }
@@ -350,6 +351,14 @@ function DetailView({
             <section className="overflow-hidden rounded-md border border-border">
                 <h3 className="border-b border-border bg-card/40 px-4 py-2 text-sm font-semibold">Responses</h3>
                 <dl className="space-y-3 p-4">
+                    {detail.handle && (
+                        <div>
+                            <dt className="truncate text-[11px] font-semibold uppercase tracking-wide text-dim-foreground/75">
+                                {detail.handle.label}
+                            </dt>
+                            <dd className="mt-0.5 font-mono text-sm">{detail.handle.value}</dd>
+                        </div>
+                    )}
                     {detail.responses.map((r, i) => (
                         <div key={i}>
                             <dt

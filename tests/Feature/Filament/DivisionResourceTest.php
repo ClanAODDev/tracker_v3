@@ -265,4 +265,19 @@ class DivisionResourceTest extends TestCase
 
         (new \ReflectionMethod(EditDivision::class, $method))->invoke($page->instance(), $division->id, $data);
     }
+
+    #[Test]
+    public function a_division_must_keep_at_least_one_handle_type(): void
+    {
+        $division = $this->createActiveDivision();
+
+        $this->actingAs($this->createAdmin());
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->fillForm(['handleAssignments' => []])
+            ->call('save')
+            ->assertHasFormErrors(['handleAssignments']);
+
+        $this->assertTrue($division->handles()->exists());
+    }
 }

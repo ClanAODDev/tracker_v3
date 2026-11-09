@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { SimpleSelect } from '@/components/ui/simple-select';
 import AppLayout from '@/layouts/AppLayout';
+import { inlineRichText } from '@/lib/format';
 
 interface ForumAccount {
     found: boolean;
@@ -21,6 +22,7 @@ interface PendingUser {
     created_at: string;
     obfuscated_email: string | null;
     application: Array<{ label: string; value: string }> | null;
+    application_handle: { id: number | null; label: string; value: string } | null;
 }
 
 interface MemberMatch {
@@ -147,15 +149,26 @@ export default function DiscordConfirm({
                         )}
                     </div>
 
-                    {pendingUser.application && (
+                    {(pendingUser.application || pendingUser.application_handle) && (
                         <div className="border-b border-border p-5">
                             <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-primary">
                                 Application responses
                             </h3>
                             <div className="grid gap-3 sm:grid-cols-2">
-                                {pendingUser.application.map((item, i) => (
+                                {pendingUser.application_handle && (
+                                    <div>
+                                        <div className="text-xs text-muted-foreground">
+                                            {pendingUser.application_handle.label}
+                                        </div>
+                                        <div className="font-mono text-sm">{pendingUser.application_handle.value}</div>
+                                    </div>
+                                )}
+                                {(pendingUser.application ?? []).map((item, i) => (
                                     <div key={i}>
-                                        <div className="text-xs text-muted-foreground">{item.label}</div>
+                                        <div
+                                            className="text-xs text-muted-foreground [&_p]:m-0"
+                                            dangerouslySetInnerHTML={{ __html: inlineRichText(item.label) }}
+                                        />
                                         <div className="text-sm">{item.value || '—'}</div>
                                     </div>
                                 ))}
