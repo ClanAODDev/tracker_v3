@@ -27,6 +27,7 @@ use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -138,7 +139,8 @@ class DivisionResource extends Resource
                             ->schema([
                                 Toggle::make('settings.application_required')
                                     ->label('Required for recruitment')
-                                    ->helperText('New members will be prompted to complete this information during the registration process'),
+                                    ->live()
+                                    ->helperText(fn (Get $get, ?Division $record) => self::applicationRequiredHint((bool) $get('settings.application_required'), $record)),
 
                                 Actions::make([
                                     Action::make('preview_registration')
@@ -440,5 +442,16 @@ class DivisionResource extends Resource
             : 'which of ' . $labels->join(', ', ' or ') . ' they play on, and that ID';
 
         return "{$base} Applicants are automatically asked for {$asked}, so you don't need a question for it.";
+    }
+
+    private static function applicationRequiredHint(bool $required, ?Division $division): string
+    {
+        $handle = $division?->handles->pluck('label')->join(', ', ' or ') ?: 'handle';
+
+        if ($required) {
+            return "On: new members fill in the registration form (forum username, date of birth, password), then this application, including their {$handle}. Recruiters see the answers, and the handle is filled in on the recruit form.";
+        }
+
+        return "Off: new members fill in the registration form (forum username, date of birth, password), then are told to join Discord and post in #recruiting. There's no application, so recruiters enter their {$handle} by hand. The preview below always shows the application, even while this is off.";
     }
 }
