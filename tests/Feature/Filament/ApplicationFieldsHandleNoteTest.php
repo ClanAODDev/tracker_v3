@@ -47,4 +47,25 @@ class ApplicationFieldsHandleNoteTest extends TestCase
         Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
             ->assertSee('Applicants are automatically asked for which of Warships NA or Warships EU they play on');
     }
+
+    #[Test]
+    public function the_application_required_hint_describes_what_applicants_see(): void
+    {
+        $division = Division::factory()
+            ->withHandles(Handle::factory()->create(['label' => 'EA Username']))
+            ->create(['active' => true]);
+
+        $co = $this->createMemberWithUser([
+            'division_id' => $division->id,
+            'position'    => Position::COMMANDING_OFFICER,
+            'rank'        => Rank::CORPORAL,
+        ], ['role' => Role::OFFICER]);
+
+        $this->actingAs($co);
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->assertSee("then are told to join Discord and post in #recruiting. There's no application, so recruiters enter their EA Username by hand.")
+            ->set('data.settings.application_required', true)
+            ->assertSee('then this application, including their EA Username.');
+    }
 }
