@@ -452,6 +452,6 @@ class DivisionResource extends Resource
             return "On: new members fill in the registration form (forum username, date of birth, password), then this application, including their {$handle}. Recruiters see the answers, and the handle is filled in on the recruit form.";
         }
 
-        return "Off: new members fill in the registration form (forum username, date of birth, password), then are told to join Discord and post in #recruiting. There's no application, so recruiters enter their {$handle} by hand. The preview below always shows the application, even while this is off.";
+        return "Off: new members fill in the registration form (forum username, date of birth, password), then are told to join Discord and post in #recruiting. There's no application, so recruiters enter their {$handle} by hand.";
     }
 }

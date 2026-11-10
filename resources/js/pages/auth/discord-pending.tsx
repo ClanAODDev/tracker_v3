@@ -55,6 +55,12 @@ export default function DiscordPending(props: Props) {
                 {preview && (
                     <p className="rounded-md border border-warning/40 bg-warning/5 px-4 py-2 text-center text-sm">
                         Preview mode — registration flow
+                        {!hasApplication && (
+                            <span className="mt-1 block text-xs text-muted-foreground">
+                                Applications are off for this division, so after registering new members see the
+                                recruiter panel below.
+                            </span>
+                        )}
                     </p>
                 )}
 
@@ -71,10 +77,10 @@ export default function DiscordPending(props: Props) {
                 </div>
 
                 {showRegister && <RegisterForm {...props} />}
-                {(preview || (!needsRegistration && hasApplication)) && (
+                {(preview || !needsRegistration) && hasApplication && (
                     <ApplicationForm fields={applicationFields} handles={applicationHandles} disabled={preview} />
                 )}
-                {!preview && !needsRegistration && !hasApplication && <RecruiterContact />}
+                {(preview || !needsRegistration) && !hasApplication && <RecruiterContact />}
 
                 {!preview && (
                     <p className="text-center text-xs text-muted-foreground">
