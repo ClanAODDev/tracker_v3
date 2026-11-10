@@ -54,33 +54,66 @@ export function ApplicationsModal({ url, canDelete, open, onOpenChange, initialA
     const [loadingDetail, setLoadingDetail] = useState(false);
     const [listError, setListError] = useState<string | null>(null);
     const [detailError, setDetailError] = useState<string | null>(null);
+    const [requestedId, setRequestedId] = useState<number | null>(null);
+    const [notice, setNotice] = useState<string | null>(null);
 
     const loadList = useCallback(() => {
         setLoadingList(true);
         setListError(null);
         return getJson<{ applications: ApplicationSummary[] }>(url)
-            .then((res) => setApplications(res.applications ?? []))
-            .catch(() => setListError('Failed to load applications.'))
+            .then((res) => {
+                const list = res.applications ?? [];
+                setApplications(list);
+                return list;
+            })
+            .catch(() => {
+                setListError('Failed to load applications.');
+                return null;
+            })
             .finally(() => setLoadingList(false));
     }, [url]);
+
+    const showGoneNotice = useCallback(() => {
+        setView('list');
+        setDetail(null);
+        setNotice(
+            'That application appears to no longer be available. Applications are removed when the applicant is recruited or after 30 days.',
+        );
+    }, []);
 
     const openDetail = useCallback(
         (id: number) => {
             setView('detail');
+            setRequestedId(id);
+            setNotice(null);
             setLoadingDetail(true);
             setDetailError(null);
             getJson<{ application: ApplicationDetail }>(`${url}/${id}`)
                 .then((res) => setDetail(res.application))
-                .catch(() => setDetailError('Failed to load application.'))
+                .catch(() =>
+                    loadList().then((list) => {
+                        if (list && !list.some((app) => app.id === id)) {
+                            showGoneNotice();
+                        } else {
+                            setDetailError('Failed to load application.');
+                        }
+                    }),
+                )
                 .finally(() => setLoadingDetail(false));
         },
-        [url],
+        [url, loadList, showGoneNotice],
     );
 
     useEffect(() => {
         if (!open) return;
-        loadList().then(() => {
-            if (initialApplicationId) openDetail(initialApplicationId);
+        setNotice(null);
+        loadList().then((list) => {
+            if (!initialApplicationId) return;
+            if (list && !list.some((app) => app.id === initialApplicationId)) {
+                showGoneNotice();
+                return;
+            }
+            openDetail(initialApplicationId);
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [open]);
@@ -128,6 +161,10 @@ export function ApplicationsModal({ url, canDelete, open, onOpenChange, initialA
                     </Button>
                 )}
 
+                {view === 'list' && notice && (
+                    <p className="rounded-md border border-warning/40 bg-warning/5 px-4 py-3 text-sm">{notice}</p>
+                )}
+
                 {view === 'list' ? (
                     <ListView
                         applications={applications}
@@ -144,7 +181,7 @@ export function ApplicationsModal({ url, canDelete, open, onOpenChange, initialA
                         canDelete={canDelete}
                         currentUserId={currentUserId}
                         commentsUrl={detail ? `${url}/${detail.id}/comments` : ''}
-                        onRetry={() => detail && openDetail(detail.id)}
+                        onRetry={() => requestedId && openDetail(requestedId)}
                         onDelete={deleteApplication}
                         onCommentAdded={(comment) => {
                             setDetail((d) => (d ? { ...d, comments: [...d.comments, comment] } : d));
