@@ -4,8 +4,10 @@ namespace Tests\Unit\Jobs;
 
 use App\Enums\ForumGroup;
 use App\Jobs\AddClanMember;
+use App\Jobs\SyncDiscordMember;
 use App\Services\ForumProcedureService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -153,6 +155,68 @@ class AddClanMemberTest extends TestCase
         $this->assertContains('setDiscordInfo', $callOrder);
 
         Http::assertSent(fn ($req) => str_contains($req->url(), 'do=addaod'));
+    }
+
+    #[Test]
+    public function job_skips_forum_add_when_already_an_aod_member(): void
+    {
+        Http::fake();
+        Bus::fake([SyncDiscordMember::class]);
+
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $this->procedureService->shouldReceive('getUser')
+            ->with($member->clan_id)
+            ->andReturn((object) ['usergroupid' => ForumGroup::MEMBER->value]);
+
+        $job = new AddClanMember($member, 12345);
+        $job->handle($this->procedureService);
+
+        Http::assertNothingSent();
+        Bus::assertDispatched(SyncDiscordMember::class);
+    }
+
+    #[Test]
+    public function job_skips_forum_add_when_already_a_sergeant(): void
+    {
+        Http::fake();
+        Bus::fake([SyncDiscordMember::class]);
+
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $this->procedureService->shouldReceive('getUser')
+            ->with($member->clan_id)
+            ->andReturn((object) ['usergroupid' => ForumGroup::SERGEANT->value]);
+
+        $job = new AddClanMember($member, 12345);
+        $job->handle($this->procedureService);
+
+        Http::assertNothingSent();
+        Bus::assertDispatched(SyncDiscordMember::class);
+    }
+
+    #[Test]
+    public function job_adds_member_when_forum_group_is_eligible(): void
+    {
+        Http::fake([
+            '*' => Http::response('saved_user_x_successfully', 200),
+        ]);
+        Bus::fake([SyncDiscordMember::class]);
+
+        $division = $this->createActiveDivision();
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $this->procedureService->shouldReceive('getUser')
+            ->with($member->clan_id)
+            ->andReturn((object) ['usergroupid' => ForumGroup::REGISTERED_USER->value]);
+
+        $job = new AddClanMember($member, 12345);
+        $job->handle($this->procedureService);
+
+        Http::assertSent(fn ($req) => str_contains($req->url(), 'do=addaod'));
+        Bus::assertDispatched(SyncDiscordMember::class);
     }
 
     #[Test]

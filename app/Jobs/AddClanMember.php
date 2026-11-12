@@ -8,6 +8,7 @@ use App\Services\AODForumService;
 use App\Services\ForumProcedureService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 use RuntimeException;
 
 class AddClanMember implements ShouldQueue
@@ -35,6 +36,16 @@ class AddClanMember implements ShouldQueue
             );
         }
 
+        if ($this->alreadyInClan($procedureService)) {
+            Log::info('Skipping forum add, member already in an AOD group', [
+                'clan_id' => $this->member->clan_id,
+            ]);
+
+            SyncDiscordMember::dispatch($this->member);
+
+            return;
+        }
+
         try {
             AODForumService::addForumMember(
                 impersonatingMemberId: $this->admin_id,
@@ -53,6 +64,17 @@ class AddClanMember implements ShouldQueue
         }
 
         SyncDiscordMember::dispatch($this->member);
+    }
+
+    private function alreadyInClan(ForumProcedureService $procedureService): bool
+    {
+        $profile = $procedureService->getUser($this->member->clan_id);
+
+        if (! $profile || ! property_exists($profile, 'usergroupid')) {
+            return false;
+        }
+
+        return ForumGroup::tryFrom((int) $profile->usergroupid)?->isClanMember() ?? false;
     }
 
     private function diagnoseFailure(ForumProcedureService $procedureService): ?string
