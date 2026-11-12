@@ -33,6 +33,11 @@ enum ForumGroup: int
         };
     }
 
+    public function isClanMember(): bool
+    {
+        return $this === self::MEMBER || in_array($this->value, self::seniorLeaderGroups());
+    }
+
     public static function seniorLeaderGroups(): array
     {
         return [
