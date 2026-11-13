@@ -1,8 +1,6 @@
 import { Head } from '@inertiajs/react';
 
-import { useAuth } from '@/hooks/use-shared';
 import AppLayout from '@/layouts/AppLayout';
-import BlankLayout from '@/layouts/BlankLayout';
 
 interface CodeOfConductProps {
     rules: string[];
@@ -11,7 +9,7 @@ interface CodeOfConductProps {
 function Content({ rules }: CodeOfConductProps) {
     return (
         <>
-            <div className="max-w-prose space-y-4 text-sm leading-relaxed text-muted-foreground">
+            <div className="space-y-4 text-sm leading-relaxed text-muted-foreground">
                 <p>
                     The Angels of Death Code of Conduct is the face of our clan. It is not only a guideline for member
                     conduct — it is a statement about what kind of gamers we are, and who we're looking for. AOD is an
@@ -49,28 +47,16 @@ function Content({ rules }: CodeOfConductProps) {
 }
 
 export default function CodeOfConduct({ rules }: CodeOfConductProps) {
-    const { user } = useAuth();
-    const head = <Head title="Code of Conduct" />;
-
-    if (user) {
-        return (
-            <AppLayout
-                header={{
-                    eyebrow: 'Angels of Death',
-                    title: 'Code of Conduct',
-                    breadcrumbs: [{ label: 'Clan Information' }, { label: 'Code of Conduct' }],
-                }}
-            >
-                {head}
-                <Content rules={rules} />
-            </AppLayout>
-        );
-    }
-
     return (
-        <BlankLayout title="Code of Conduct">
-            {head}
+        <AppLayout
+            header={{
+                eyebrow: 'Angels of Death',
+                title: 'Code of Conduct',
+                breadcrumbs: [{ label: 'Clan Information' }, { label: 'Code of Conduct' }],
+            }}
+        >
+            <Head title="Code of Conduct" />
             <Content rules={rules} />
-        </BlankLayout>
+        </AppLayout>
     );
 }
