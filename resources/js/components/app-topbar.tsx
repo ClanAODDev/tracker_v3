@@ -7,11 +7,13 @@ import { ToolsMenu } from '@/components/tools/tools-menu';
 import { TrackerHomeLink } from '@/components/tracker-logo';
 import { UserMenu } from '@/components/user-menu';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/use-shared';
 import { cn } from '@/lib/utils';
 
 export function AppTopbar({ onOpenNav, navSide = 'left' }: { onOpenNav: () => void; navSide?: 'left' | 'right' }) {
     const [settingsOpen, setSettingsOpen] = useState(false);
     const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+    const { user } = useAuth();
 
     useEffect(() => {
         if (!mobileSearchOpen) return;
@@ -29,7 +31,7 @@ export function AppTopbar({ onOpenNav, navSide = 'left' }: { onOpenNav: () => vo
 
     return (
         <header className="sticky top-0 z-50 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur">
-            {mobileSearchOpen ? (
+            {user && mobileSearchOpen ? (
                 <div className="flex w-full animate-in items-center gap-2 fade-in slide-in-from-right-4 duration-200 sm:hidden">
                     <MemberSearch mobile className="flex-1" onClose={() => setMobileSearchOpen(false)} />
                     <Button
@@ -48,17 +50,21 @@ export function AppTopbar({ onOpenNav, navSide = 'left' }: { onOpenNav: () => vo
                     <TrackerHomeLink className={cn('lg:hidden', navSide === 'right' && 'ml-1')} />
 
                     <div className="ml-auto flex items-center gap-2">
-                        <Button
-                            variant="ghost"
-                            size="icon"
-                            className="sm:hidden"
-                            onClick={() => setMobileSearchOpen(true)}
-                            aria-label="Search members"
-                        >
-                            <Search className="size-5" />
-                        </Button>
-                        <MemberSearch className="hidden sm:block" />
-                        <ToolsMenu />
+                        {user && (
+                            <>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="sm:hidden"
+                                    onClick={() => setMobileSearchOpen(true)}
+                                    aria-label="Search members"
+                                >
+                                    <Search className="size-5" />
+                                </Button>
+                                <MemberSearch className="hidden sm:block" />
+                                <ToolsMenu />
+                            </>
+                        )}
                         <UserMenu onOpenSettings={() => setSettingsOpen(true)} />
                         {navSide === 'right' && hamburger}
                     </div>
