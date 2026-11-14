@@ -73,7 +73,7 @@ class SettingsController extends Controller
             $payload['handles'] = [
                 'types' => Handle::selectable($usedHandleIds)
                     ->get()
-                    ->map(fn (Handle $h) => ['id' => $h->id, 'label' => $h->selectLabel()]),
+                    ->map(fn (Handle $h) => ['id' => $h->id, 'label' => $h->selectLabel(), 'hint' => $h->regex_hint]),
                 'current' => $memberHandles->map(fn ($mh) => [
                     'id'       => $mh->id,
                     'handleId' => $mh->handle_id,
