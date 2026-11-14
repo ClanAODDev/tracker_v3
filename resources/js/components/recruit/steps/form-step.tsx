@@ -152,6 +152,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                                 label={props.handleTypes.length === 1 ? `${type.label} *` : type.label}
                                 placeholder={`Their ${type.label}`}
                                 hint={type.hint}
+                                error={form.handleErrors[type.id]}
                                 value={form.member.handles[type.id] ?? ''}
                                 onChange={(value) => form.patchHandle(type.id, value)}
                                 onUseForumName={() => form.patchHandle(type.id, form.member.forum_name)}
@@ -404,6 +405,7 @@ function HandleInput({
     label,
     placeholder,
     hint,
+    error,
     value,
     onChange,
     onUseForumName,
@@ -412,6 +414,7 @@ function HandleInput({
     label: string;
     placeholder: string;
     hint: string | null;
+    error?: string;
     value: string;
     onChange: (value: string) => void;
     onUseForumName: () => void;
@@ -420,12 +423,25 @@ function HandleInput({
         <div className="grid content-start gap-1.5">
             <Label htmlFor={id}>{label}</Label>
             <div className="flex gap-1.5">
-                <Input id={id} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} />
+                <Input
+                    id={id}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    placeholder={placeholder}
+                    aria-invalid={error ? true : undefined}
+                    aria-describedby={error ? `${id}_error` : undefined}
+                />
                 <Button type="button" variant="outline" size="icon-sm" title="Use forum name" onClick={onUseForumName}>
                     <CornerDownRight />
                 </Button>
             </div>
-            {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+            {error ? (
+                <p id={`${id}_error`} className="text-xs text-destructive">
+                    {error}
+                </p>
+            ) : (
+                hint && <p className="text-xs text-muted-foreground">{hint}</p>
+            )}
         </div>
     );
 }

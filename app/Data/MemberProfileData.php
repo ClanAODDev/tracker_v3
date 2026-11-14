@@ -282,7 +282,7 @@ class MemberProfileData
             'availableHandleTypes' => $canEditHandles
                 ? Handle::selectable($this->member->memberHandles()->pluck('handle_id'))
                     ->get()
-                    ->map(fn (Handle $h) => ['value' => $h->id, 'label' => $h->selectLabel()])
+                    ->map(fn (Handle $h) => ['value' => $h->id, 'label' => $h->selectLabel(), 'hint' => $h->regex_hint])
                     ->values()
                     ->all()
                 : [],

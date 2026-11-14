@@ -40,7 +40,7 @@ interface SettingsData {
     transferableDivisions?: DivisionRef[];
     partTimeDivisions?: { available: DivisionRef[]; selected: number[] };
     handles?: {
-        types: Array<{ id: number; label: string }>;
+        types: Array<{ id: number; label: string; hint: string | null }>;
         current: Array<{ id: number | null; handleId: number | null; value: string; primary: boolean }>;
     };
 }
@@ -345,7 +345,7 @@ function HandlesDialog({
     types,
     current,
 }: {
-    types: Array<{ id: number; label: string }>;
+    types: Array<{ id: number; label: string; hint: string | null }>;
     current: HandleRow[];
 }) {
     const [open, setOpen] = useState(false);
@@ -438,7 +438,11 @@ function HandlesDialog({
                                 className="h-9"
                                 aria-invalid={!!rowErrors[i]}
                             />
-                            {rowErrors[i] && <p className="mt-1 text-xs text-destructive">{rowErrors[i]}</p>}
+                            {rowErrors[i] ? (
+                                <p className="mt-1 text-xs text-destructive">{rowErrors[i]}</p>
+                            ) : (
+                                <HandleHint hint={types.find((t) => t.id === row.handleId)?.hint} />
+                            )}
                         </div>
                         <label className="flex items-center gap-1 text-xs text-muted-foreground">
                             <Checkbox checked={row.primary} onCheckedChange={(v) => update(i, { primary: v === true })} />
@@ -466,6 +470,10 @@ function HandlesDialog({
             </DialogContent>
         </Dialog>
     );
+}
+
+function HandleHint({ hint }: { hint?: string | null }) {
+    return hint ? <p className="mt-1 text-xs text-muted-foreground">{hint}</p> : null;
 }
 
 const ACCENTS: Accent[] = ['crimson', 'violet', 'emerald'];
