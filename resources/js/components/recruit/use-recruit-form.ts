@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { unitPathIsComplete } from '@/components/units/unit-cascade-select';
-import { postJson } from '@/lib/api';
+import { ApiError, postJson } from '@/lib/api';
 
 import {
     EMPTY_EMAIL_CHECK,
@@ -53,6 +53,7 @@ export function useRecruitForm(props: RecruitFormProps) {
     const [tasks, setTasks] = useState<RecruitTask[]>(props.tasks);
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+    const [handleErrors, setHandleErrors] = useState<Record<number, string>>({});
     const [submitted, setSubmitted] = useState(false);
 
     const timers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
@@ -63,7 +64,10 @@ export function useRecruitForm(props: RecruitFormProps) {
 
     const patchMember = useCallback((patch: Partial<MemberFields>) => setMember((m) => ({ ...m, ...patch })), []);
     const patchHandle = useCallback(
-        (id: number, value: string) => setMember((m) => ({ ...m, handles: { ...m.handles, [id]: value } })),
+        (id: number, value: string) => {
+            setMember((m) => ({ ...m, handles: { ...m.handles, [id]: value } }));
+            setHandleErrors(({ [id]: _cleared, ...rest }) => rest);
+        },
         [],
     );
 
@@ -295,6 +299,7 @@ export function useRecruitForm(props: RecruitFormProps) {
         if (!formValid || submitting) return;
         setSubmitting(true);
         setSubmitError(null);
+        setHandleErrors({});
         try {
             await postJson('/add-member', {
                 division: props.divisionSlug,
@@ -308,7 +313,15 @@ export function useRecruitForm(props: RecruitFormProps) {
             setSubmitted(true);
             setStep('confirmation');
         } catch (e) {
-            setSubmitError(e instanceof Error ? e.message : 'Failed to add recruit. Please try again.');
+            const fieldErrors = e instanceof ApiError ? handleErrorsFrom(e) : {};
+            setHandleErrors(fieldErrors);
+            setSubmitError(
+                Object.keys(fieldErrors).length > 0
+                    ? 'One or more handles are not in the expected format. See the highlighted fields above.'
+                    : e instanceof Error
+                      ? e.message
+                      : 'Failed to add recruit. Please try again.',
+            );
         } finally {
             setSubmitting(false);
         }
@@ -325,6 +338,7 @@ export function useRecruitForm(props: RecruitFormProps) {
         setThreads(props.threads.map((t) => ({ ...t, read: false })));
         setTasks(props.tasks.map((t) => ({ ...t, complete: false })));
         setSubmitError(null);
+        setHandleErrors({});
         setSubmitted(false);
     }, [props.threads, props.tasks]);
 
@@ -371,6 +385,7 @@ export function useRecruitForm(props: RecruitFormProps) {
         setTasks,
         submitting,
         submitError,
+        handleErrors,
         submitted,
         memberVerificationComplete,
         detailsComplete,
@@ -390,3 +405,14 @@ export function useRecruitForm(props: RecruitFormProps) {
 }
 
 export type RecruitForm = ReturnType<typeof useRecruitForm>;
+
+function handleErrorsFrom(error: ApiError): Record<number, string> {
+    const errors = (error.data.errors ?? {}) as Record<string, string[]>;
+
+    return Object.fromEntries(
+        Object.entries(errors).flatMap(([key, messages]) => {
+            const match = key.match(/^handles\.(\d+)$/);
+            return match && messages[0] ? [[Number(match[1]), messages[0]]] : [];
+        }),
+    );
+}
