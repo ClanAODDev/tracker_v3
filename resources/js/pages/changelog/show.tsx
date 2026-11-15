@@ -24,7 +24,6 @@ export default function ReleaseNote({ note, newer, older, indexUrl, editUrl }: P
             header={{
                 eyebrow: note.version ? `Release notes · ${note.version}` : 'Release notes',
                 title: note.title,
-                breadcrumbs: [{ label: 'Release notes', href: indexUrl }, { label: note.title }],
                 actions: editUrl && (
                     <Button asChild variant="outline" size="sm">
                         <a href={editUrl}>
