@@ -82,8 +82,8 @@ class TrainingController extends Controller
     public function update(CompleteTrainingRequest $request): RedirectResponse
     {
         Member::where('guid', $request->validated('member'))->update([
-            'last_trained_at' => now(),
-            'last_trained_by' => auth()->user()->member->clan_id,
+            'last_trained_at'   => now(),
+            'trainer_member_id' => auth()->user()->member_id,
         ]);
 
         $this->showSuccessToast('Training information successfully submitted!');

@@ -72,9 +72,11 @@ class MemberResource extends Resource
                         Select::make('position')
                             ->required()
                             ->options(Position::class),
-                        TextInput::make('recruiter_id')
-                            ->numeric()
-                            ->default(null),
+                        Select::make('recruiter_member_id')
+                            ->label('Recruiter')
+                            ->relationship('recruiter', 'name')
+                            ->searchable()
+                            ->nullable(),
                         Select::make('division_id')
                             ->relationship('division', 'name')
                             ->label('Division')
@@ -110,7 +112,7 @@ class MemberResource extends Resource
                         DateTimePicker::make('join_date')->disabled()->helperText('Synced from the forums.'),
                         DateTimePicker::make('last_promoted_at'),
                         DateTimePicker::make('last_trained_at'),
-                        Select::make('last_trained_by')
+                        Select::make('trainer_member_id')
                             ->label('Last Trained By')
                             ->searchable()
                             ->relationship('trainer', 'name'),
@@ -202,9 +204,8 @@ class MemberResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                TextColumn::make('last_trained_by')
-                    ->numeric()
-                    ->sortable()
+                TextColumn::make('trainer.name')
+                    ->label('Last Trained By')
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('xo_at')
                     ->label('Assigned XO')

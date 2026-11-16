@@ -184,7 +184,7 @@ class UnitRestructureTest extends TestCase
         $platoon  = $this->createPlatoon($division);
         $squad    = $this->createSquad($platoon);
         $leader   = $this->createMemberWithUser(['division_id' => $division->id, 'position' => Position::PLATOON_LEADER, 'unit_id' => $platoon->id], ['role' => Role::OFFICER]);
-        $platoon->update(['leader_id' => $leader->member->clan_id]);
+        $platoon->update(['leader_member_id' => $leader->member->id]);
         $this->actingAs($leader);
 
         Livewire::test(EditUnit::class, ['record' => $squad->getRouteKey()])

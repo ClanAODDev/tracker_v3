@@ -127,7 +127,7 @@ class MemberProfileData
                     'years'       => $this->stats->tenure->years,
                     'months'      => $this->stats->tenure->months,
                     'joinDate'    => $this->stats->tenure->joinDate?->format('M j, Y'),
-                    'recruitedBy' => $member->recruiter_id !== 0 ? MemberCard::ref($member->recruiter) : null,
+                    'recruitedBy' => MemberCard::ref($member->recruiter),
                     'trainedOn'   => $member->last_trained_at?->format('M j, Y'),
                     'trainedBy'   => MemberCard::ref($member->trainer),
                 ],

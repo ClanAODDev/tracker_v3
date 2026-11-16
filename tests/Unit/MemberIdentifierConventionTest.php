@@ -3,7 +3,6 @@
 namespace Tests\Unit;
 
 use App\Models\Member;
-use App\Models\Unit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,23 +18,13 @@ class MemberIdentifierConventionTest extends TestCase
 {
     use RefreshDatabase;
 
-    private const FORUM_ID_RELATIONS = [
-        Member::class . '::recruiter',
-        Member::class . '::recruits',
-        Member::class . '::trainer',
-        Member::class . '::ledUnit',
-        Unit::class . '::leader',
-    ];
-
     #[Test]
-    public function member_relations_use_the_member_primary_key_unless_allowlisted()
+    public function no_member_relation_is_keyed_on_the_forum_id()
     {
-        $forumIdRelations = $this->relationsKeyedOnClanId();
-
-        $this->assertEqualsCanonicalizing(
-            self::FORUM_ID_RELATIONS,
-            $forumIdRelations,
-            'A relation references members by `clan_id`. Use `members.id` instead, or add it to FORUM_ID_RELATIONS if the column really stores forum IDs.'
+        $this->assertSame(
+            [],
+            $this->relationsKeyedOnClanId(),
+            'A relation references members by `clan_id`. Point it at `members.id`; the forum ID is only for forum integration.'
         );
     }
 

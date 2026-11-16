@@ -568,12 +568,12 @@ class MemberSyncServiceTest extends TestCase
             'position'    => Position::PLATOON_LEADER,
         ]);
         $units = app(UnitAssignment::class);
-        $units->setLeader($platoon, $member->clan_id);
+        $units->setLeader($platoon, $member->id);
 
         (new MemberSyncService($this->forumInfo(77777, $to->name)))->sync();
 
         $this->assertSame(Position::MEMBER, $member->fresh()->position);
-        $this->assertNull($platoon->fresh()->leader_id);
+        $this->assertNull($platoon->fresh()->leader_member_id);
     }
 
     #[Test]

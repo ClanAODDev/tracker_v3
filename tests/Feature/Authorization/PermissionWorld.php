@@ -90,14 +90,14 @@ class PermissionWorld
         $this->divisionA = Division::factory()->withoutHandles()->create(['name' => 'Division A', 'active' => true]);
         $this->divisionB = Division::factory()->withoutHandles()->create(['name' => 'Division B', 'active' => true]);
 
-        $this->platoons['A1'] = Unit::factory()->create(['division_id' => $this->divisionA->id, 'name' => 'A1', 'leader_id' => null]);
-        $this->platoons['A2'] = Unit::factory()->create(['division_id' => $this->divisionA->id, 'name' => 'A2', 'leader_id' => null]);
-        $this->platoons['B1'] = Unit::factory()->create(['division_id' => $this->divisionB->id, 'name' => 'B1', 'leader_id' => null]);
+        $this->platoons['A1'] = Unit::factory()->create(['division_id' => $this->divisionA->id, 'name' => 'A1', 'leader_member_id' => null]);
+        $this->platoons['A2'] = Unit::factory()->create(['division_id' => $this->divisionA->id, 'name' => 'A2', 'leader_member_id' => null]);
+        $this->platoons['B1'] = Unit::factory()->create(['division_id' => $this->divisionB->id, 'name' => 'B1', 'leader_member_id' => null]);
 
         foreach (self::SQUAD_PLATOONS as $squad => $platoon) {
             $this->squads[$squad] = Unit::factory()->childOf($this->platoons[$platoon])->create([
-                'name'      => $squad,
-                'leader_id' => null,
+                'name'             => $squad,
+                'leader_member_id' => null,
             ]);
         }
     }
@@ -123,8 +123,8 @@ class PermissionWorld
             'developer' => false,
         ]);
 
-        $this->platoons['A1']->update(['leader_id' => $this->users['platoon_leader']->member->clan_id]);
-        $this->squads['A1a']->update(['leader_id' => $this->users['squad_leader']->member->clan_id]);
+        $this->platoons['A1']->update(['leader_member_id' => $this->users['platoon_leader']->member->id]);
+        $this->squads['A1a']->update(['leader_member_id' => $this->users['squad_leader']->member->id]);
     }
 
     private function buildTargets(): void

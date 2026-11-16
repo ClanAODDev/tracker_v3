@@ -182,7 +182,6 @@ class DivisionResource extends Resource
                                     }
                                 })
                                 ->rule(new HoldsNoOtherPosition(
-                                    column: 'id',
                                     allowedPositions: [Position::COMMANDING_OFFICER, Position::EXECUTIVE_OFFICER],
                                 )),
                         ])->columns(),
@@ -196,7 +195,6 @@ class DivisionResource extends Resource
                                     ->options(fn () => Member::where('division_id', $schema->getRecord()?->id)
                                         ->pluck('name', 'id'))
                                     ->rule(fn (Get $get) => new HoldsNoOtherPosition(
-                                        column: 'id',
                                         allowedPositions: $get('../../new_co')
                                             ? [Position::EXECUTIVE_OFFICER, Position::COMMANDING_OFFICER]
                                             : [Position::EXECUTIVE_OFFICER],

@@ -48,7 +48,7 @@ class Member extends Model
                 $member->guid = $member->getOriginal('guid');
             }
 
-            if ($member->isDirty('last_trained_by') && $member->last_trained_by !== null && ! $member->isDirty('last_trained_at')) {
+            if ($member->isDirty('trainer_member_id') && $member->trainer_member_id !== null && ! $member->isDirty('last_trained_at')) {
                 $member->last_trained_at = now();
             }
         });
@@ -191,7 +191,7 @@ class Member extends Model
     {
         $units = app(UnitAssignment::class);
 
-        Unit::query()->where('leader_id', $this->clan_id)->get()
+        Unit::query()->where('leader_member_id', $this->id)->get()
             ->each(fn (Unit $unit) => $units->setLeader($unit, null));
 
         $this->update([
@@ -203,7 +203,7 @@ class Member extends Model
 
     public function reset(): void
     {
-        app(UnitAssignment::class)->clearLeadership([$this->clan_id]);
+        app(UnitAssignment::class)->clearLeadership([$this->id]);
 
         $this->update([
             'unit_id'                => null,
@@ -232,7 +232,7 @@ class Member extends Model
     {
         $query
             ->where('position', Position::SQUAD_LEADER)
-            ->whereNotIn('clan_id', Unit::query()->ofTier(UnitLevel::Squad)->whereNotNull('leader_id')->select('leader_id'));
+            ->whereNotIn('id', Unit::query()->ofTier(UnitLevel::Squad)->whereNotNull('leader_member_id')->select('leader_member_id'));
     }
 
     #[Scope]
@@ -240,7 +240,7 @@ class Member extends Model
     {
         $query
             ->where('position', Position::PLATOON_LEADER)
-            ->whereNotIn('clan_id', Unit::query()->ofTier(UnitLevel::Platoon)->whereNotNull('leader_id')->select('leader_id'));
+            ->whereNotIn('id', Unit::query()->ofTier(UnitLevel::Platoon)->whereNotNull('leader_member_id')->select('leader_member_id'));
     }
 
     public function partTimeDivisions(): BelongsToMany
@@ -255,17 +255,17 @@ class Member extends Model
 
     public function recruiter(): BelongsTo
     {
-        return $this->belongsTo(self::class, 'recruiter_id', 'clan_id');
+        return $this->belongsTo(self::class, 'recruiter_member_id');
     }
 
     public function recruits(): HasMany
     {
-        return $this->hasMany(self::class, 'recruiter_id', 'clan_id');
+        return $this->hasMany(self::class, 'recruiter_member_id');
     }
 
     public function trainer(): BelongsTo
     {
-        return $this->belongsTo(self::class, 'last_trained_by', 'clan_id');
+        return $this->belongsTo(self::class, 'trainer_member_id');
     }
 
     public function leave(): HasOne

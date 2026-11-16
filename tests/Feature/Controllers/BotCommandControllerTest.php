@@ -72,9 +72,9 @@ class BotCommandControllerTest extends TestCase
         ]);
 
         Member::factory()->count(3)->create([
-            'division_id'     => $division->id,
-            'last_trained_by' => $ssgt->clan_id,
-            'last_trained_at' => now(),
+            'division_id'       => $division->id,
+            'trainer_member_id' => $ssgt->id,
+            'last_trained_at'   => now(),
         ]);
 
         $response = $this->botGet('reports', ['value' => 'sgt-training']);

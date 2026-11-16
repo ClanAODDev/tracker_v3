@@ -84,11 +84,11 @@ class UnitController extends Controller
     private function manageableMembers(Unit $unit): Collection
     {
         return $unit->members
-            ->sortByDesc(fn ($member) => $unit->leader && $unit->leader->clan_id === $member->recruiter_id)
+            ->sortByDesc(fn ($member) => $unit->leader_member_id !== null && $unit->leader_member_id === $member->recruiter_member_id)
             ->map(fn ($member) => [
                 'id'              => $member->id,
                 'name'            => $member->present()->rankName(),
-                'isDirectRecruit' => $unit->leader && $unit->leader->clan_id === $member->recruiter_id,
+                'isDirectRecruit' => $unit->leader_member_id !== null && $unit->leader_member_id === $member->recruiter_member_id,
             ])
             ->values();
     }
@@ -166,7 +166,7 @@ class UnitController extends Controller
                 $members,
                 $unitStats,
                 assignmentDepth: $squad->depth,
-                directRecruitOfClanId: $squad->leader?->clan_id,
+                directRecruitOf: $squad->leader_member_id,
             ),
             'scope' => [
                 'kind'        => 'squad',

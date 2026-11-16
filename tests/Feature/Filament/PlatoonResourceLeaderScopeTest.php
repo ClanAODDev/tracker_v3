@@ -36,9 +36,9 @@ class PlatoonResourceLeaderScopeTest extends TestCase
         $this->actingAs($this->createSeniorLeader($division));
 
         Livewire::test(EditUnit::class, ['record' => $platoon->getRouteKey()])
-            ->fillForm(['leader_id' => $outsider->clan_id])
+            ->fillForm(['leader_member_id' => $outsider->id])
             ->call('save')
-            ->assertHasFormErrors(['leader_id']);
+            ->assertHasFormErrors(['leader_member_id']);
 
         $this->assertNotEquals(Position::PLATOON_LEADER, $outsider->fresh()->position);
         $this->assertEquals($originalUnitId, $outsider->fresh()->unit_id);
@@ -54,7 +54,7 @@ class PlatoonResourceLeaderScopeTest extends TestCase
         $this->actingAs($this->createSeniorLeader($division));
 
         Livewire::test(EditUnit::class, ['record' => $platoon->getRouteKey()])
-            ->fillForm(['leader_id' => $member->clan_id])
+            ->fillForm(['leader_member_id' => $member->id])
             ->call('save')
             ->assertHasNoFormErrors();
 

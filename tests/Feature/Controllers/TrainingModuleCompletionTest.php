@@ -82,7 +82,7 @@ class TrainingModuleCompletionTest extends TestCase
     public function submitting_completion_form_updates_trainee_record(): void
     {
         $srLdr   = $this->createSeniorLeader(memberAttributes: ['rank' => Rank::STAFF_SERGEANT]);
-        $trainee = $this->createMember(['last_trained_at' => null, 'last_trained_by' => null]);
+        $trainee = $this->createMember(['last_trained_at' => null, 'trainer_member_id' => null]);
 
         $this->actingAs($srLdr)
             ->post(route('training.update'), [
@@ -93,7 +93,7 @@ class TrainingModuleCompletionTest extends TestCase
 
         $trainee->refresh();
         $this->assertNotNull($trainee->last_trained_at);
-        $this->assertSame($srLdr->member->clan_id, $trainee->last_trained_by);
+        $this->assertSame($srLdr->member->id, $trainee->trainer_member_id);
     }
 
     #[Test]

@@ -63,7 +63,7 @@ class RemovingTheSquadLevelTest extends TestCase
     {
         $otherSquad = $this->createSquad($this->platoon);
         $leader     = $this->createSquadLeader($this->squad, ['division_id' => $this->division->id]);
-        $otherSquad->update(['leader_id' => $leader->clan_id]);
+        $otherSquad->update(['leader_member_id' => $leader->id]);
 
         $this->assertTrue($this->units->leadersLosingPositions($this->squad)->isEmpty());
     }

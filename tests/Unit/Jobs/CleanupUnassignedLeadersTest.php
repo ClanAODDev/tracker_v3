@@ -146,7 +146,7 @@ class CleanupUnassignedLeadersTest extends TestCase
 
         (new CleanupUnassignedLeaders)->handle();
 
-        $this->assertNull($platoon->fresh()->leader_id);
+        $this->assertNull($platoon->fresh()->leader_member_id);
     }
 
     #[Test]
@@ -158,7 +158,7 @@ class CleanupUnassignedLeadersTest extends TestCase
 
         (new CleanupUnassignedLeaders)->handle();
 
-        $this->assertNull($platoon->fresh()->leader_id);
+        $this->assertNull($platoon->fresh()->leader_member_id);
         $this->assertEquals(Position::EXECUTIVE_OFFICER, $leader->fresh()->position);
     }
 
@@ -173,7 +173,7 @@ class CleanupUnassignedLeadersTest extends TestCase
 
         (new CleanupUnassignedLeaders)->handle();
 
-        $this->assertNull($squad->fresh()->leader_id);
+        $this->assertNull($squad->fresh()->leader_member_id);
         $this->assertEquals(Position::MEMBER, $leader->fresh()->position);
     }
 
@@ -186,7 +186,7 @@ class CleanupUnassignedLeadersTest extends TestCase
 
         (new CleanupUnassignedLeaders)->handle();
 
-        $this->assertNull($squad->fresh()->leader_id);
+        $this->assertNull($squad->fresh()->leader_member_id);
     }
 
     #[Test]
@@ -199,8 +199,8 @@ class CleanupUnassignedLeadersTest extends TestCase
 
         (new CleanupUnassignedLeaders)->handle();
 
-        $this->assertSame($pl->clan_id, $platoon->fresh()->leader_id);
-        $this->assertSame($sl->clan_id, $squad->fresh()->leader_id);
+        $this->assertSame($pl->id, $platoon->fresh()->leader_member_id);
+        $this->assertSame($sl->id, $squad->fresh()->leader_member_id);
         $this->assertEquals(Position::PLATOON_LEADER, $pl->fresh()->position);
         $this->assertEquals(Position::SQUAD_LEADER, $sl->fresh()->position);
     }
@@ -235,15 +235,15 @@ class CleanupUnassignedLeadersTest extends TestCase
         $middleLeader = $this->createMember(['division_id' => $division->id, 'unit_id' => $middle->id, 'position' => Position::PLATOON_LEADER]);
         $leafLeader   = $this->createMember(['division_id' => $division->id, 'unit_id' => $leaf->id, 'position' => Position::SQUAD_LEADER]);
         $units        = app(UnitAssignment::class);
-        $units->setLeader($top, $topLeader->clan_id);
-        $units->setLeader($middle, $middleLeader->clan_id);
-        $units->setLeader($leaf, $leafLeader->clan_id);
+        $units->setLeader($top, $topLeader->id);
+        $units->setLeader($middle, $middleLeader->id);
+        $units->setLeader($leaf, $leafLeader->id);
 
         (new CleanupUnassignedLeaders)->handle();
 
-        $this->assertSame($topLeader->clan_id, $top->fresh()->leader_id);
-        $this->assertSame($middleLeader->clan_id, $middle->fresh()->leader_id);
-        $this->assertSame($leafLeader->clan_id, $leaf->fresh()->leader_id);
+        $this->assertSame($topLeader->id, $top->fresh()->leader_member_id);
+        $this->assertSame($middleLeader->id, $middle->fresh()->leader_member_id);
+        $this->assertSame($leafLeader->id, $leaf->fresh()->leader_member_id);
         $this->assertEquals(Position::PLATOON_LEADER, $middleLeader->fresh()->position);
         $this->assertEquals(Position::SQUAD_LEADER, $leafLeader->fresh()->position);
     }
@@ -258,12 +258,12 @@ class CleanupUnassignedLeadersTest extends TestCase
         $leaf   = Unit::factory()->childOf($middle)->create();
 
         $leafLeader = $this->createMember(['division_id' => $division->id, 'unit_id' => $leaf->id, 'position' => Position::SQUAD_LEADER]);
-        app(UnitAssignment::class)->setLeader($leaf, $leafLeader->clan_id);
+        app(UnitAssignment::class)->setLeader($leaf, $leafLeader->id);
         $leafLeader->update(['unit_id' => null, 'position' => Position::MEMBER]);
 
         (new CleanupUnassignedLeaders)->handle();
 
-        $this->assertNull($leaf->fresh()->leader_id);
+        $this->assertNull($leaf->fresh()->leader_member_id);
     }
 
     #[Test]
@@ -275,12 +275,12 @@ class CleanupUnassignedLeadersTest extends TestCase
         $middle = Unit::factory()->childOf($top)->create();
 
         $leader = $this->createMember(['division_id' => $division->id, 'unit_id' => $middle->id, 'position' => Position::SQUAD_LEADER]);
-        app(UnitAssignment::class)->setLeader($middle, $leader->clan_id);
+        app(UnitAssignment::class)->setLeader($middle, $leader->id);
         $leader->update(['position' => Position::SQUAD_LEADER]);
 
         (new CleanupUnassignedLeaders)->handle();
 
-        $this->assertSame($leader->clan_id, $middle->fresh()->leader_id);
+        $this->assertSame($leader->id, $middle->fresh()->leader_member_id);
         $this->assertEquals(Position::PLATOON_LEADER, $leader->fresh()->position);
     }
 }

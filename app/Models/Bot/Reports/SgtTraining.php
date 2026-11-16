@@ -12,13 +12,13 @@ class SgtTraining implements Report
         $results = DB::select('
             SELECT
                 m.name AS ssgt_name,
-                COUNT(t.clan_id) AS trainings_completed
+                COUNT(t.id) AS trainings_completed
             FROM members m
-            LEFT JOIN members t ON t.last_trained_by = m.clan_id
+            LEFT JOIN members t ON t.trainer_member_id = m.id
                 AND t.last_trained_at IS NOT NULL
             WHERE m.rank = 10
             AND m.division_id != 0
-            GROUP BY m.clan_id, m.name
+            GROUP BY m.id, m.name
             ORDER BY trainings_completed DESC
         ');
 

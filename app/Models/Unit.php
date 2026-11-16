@@ -56,7 +56,7 @@ class Unit extends Model
 
     public function leader(): BelongsTo
     {
-        return $this->belongsTo(Member::class, 'leader_id', 'clan_id');
+        return $this->belongsTo(Member::class, 'leader_member_id');
     }
 
     public function isTopLevel(): bool

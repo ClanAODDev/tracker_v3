@@ -12,7 +12,7 @@ class UnitTree
     {
         $byParent = $division->units()
             ->withCount('members')
-            ->with('leader:clan_id,name')
+            ->with('leader:id,name')
             ->orderBy('order')
             ->orderBy('id')
             ->get()

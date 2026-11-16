@@ -25,11 +25,11 @@ class MemberResourceLastTrainedByTest extends TestCase
         $trainer = $this->createMember();
 
         Livewire::test(EditMember::class, ['record' => $member->id])
-            ->fillForm(['last_trained_by' => $trainer->clan_id])
+            ->fillForm(['trainer_member_id' => $trainer->id])
             ->call('save')
             ->assertHasNoFormErrors();
 
-        $this->assertSame($trainer->clan_id, $member->fresh()->last_trained_by);
+        $this->assertSame($trainer->id, $member->fresh()->trainer_member_id);
         $this->assertTrue($member->fresh()->trainer->is($trainer));
     }
 }

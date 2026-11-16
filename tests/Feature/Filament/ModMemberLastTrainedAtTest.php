@@ -33,7 +33,7 @@ class ModMemberLastTrainedAtTest extends TestCase
         $trainer = $this->createMember(['division_id' => $division->id]);
 
         Livewire::test(EditMember::class, ['record' => $member->id])
-            ->fillForm(['last_trained_by' => $trainer->clan_id])
+            ->fillForm(['trainer_member_id' => $trainer->id])
             ->call('save')
             ->assertHasNoFormErrors();
 
@@ -48,9 +48,9 @@ class ModMemberLastTrainedAtTest extends TestCase
 
         $trainer = $this->createMember(['division_id' => $division->id]);
         $member  = $this->createMember([
-            'division_id'     => $division->id,
-            'last_trained_by' => $trainer->clan_id,
-            'last_trained_at' => '2024-01-01',
+            'division_id'       => $division->id,
+            'trainer_member_id' => $trainer->id,
+            'last_trained_at'   => '2024-01-01',
         ]);
 
         Livewire::test(EditMember::class, ['record' => $member->id])
@@ -68,12 +68,12 @@ class ModMemberLastTrainedAtTest extends TestCase
 
         $trainer = $this->createMember(['division_id' => $division->id]);
         $member  = $this->createMember([
-            'division_id'     => $division->id,
-            'last_trained_by' => $trainer->clan_id,
-            'last_trained_at' => '2024-01-01',
+            'division_id'       => $division->id,
+            'trainer_member_id' => $trainer->id,
+            'last_trained_at'   => '2024-01-01',
         ]);
 
-        $member->update(['last_trained_by' => null]);
+        $member->update(['trainer_member_id' => null]);
 
         $this->assertSame('2024-01-01', $member->fresh()->last_trained_at->toDateString());
     }

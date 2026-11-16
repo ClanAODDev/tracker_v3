@@ -79,7 +79,7 @@ class UnitResource extends Resource
                     ->columnSpanFull()
                     ->hiddenOn('create')
                     ->schema([
-                        Select::make('leader_id')
+                        Select::make('leader_member_id')
                             ->label('Leader')
                             ->searchable()
                             ->reactive()
@@ -98,16 +98,16 @@ class UnitResource extends Resource
                                     })
                                     ->orderBy('name')
                                     ->limit(50)
-                                    ->pluck('name', 'clan_id');
+                                    ->pluck('name', 'id');
                             })
-                            ->getOptionLabelUsing(fn ($value) => Member::where('clan_id', $value)->value('name'))
+                            ->getOptionLabelUsing(fn ($value) => Member::whereKey($value)->value('name'))
                             ->helperText('Leave blank if position not yet assigned. Must be from the same division as the unit being assigned.')
                             ->rule(fn (?Unit $record): Closure => function (string $attribute, $value, Closure $fail) use ($record) {
                                 if (! $value) {
                                     return;
                                 }
 
-                                if (! Member::where('clan_id', $value)->where('division_id', $record->division_id)->exists()) {
+                                if (! Member::whereKey($value)->where('division_id', $record->division_id)->exists()) {
                                     $fail('The selected leader must be a member of this division.');
                                 }
                             })
@@ -116,7 +116,7 @@ class UnitResource extends Resource
 
                         Hidden::make('original_leader_id')
                             ->reactive()
-                            ->afterStateHydrated(fn (callable $set, $state, $record) => $set('original_leader_id', $record?->leader_id)),
+                            ->afterStateHydrated(fn (callable $set, $state, $record) => $set('original_leader_id', $record?->leader_member_id)),
 
                         Placeholder::make('Note: Changing Leadership')
                             ->content(fn (?Unit $record) => sprintf(
@@ -124,7 +124,7 @@ class UnitResource extends Resource
                                 $record?->leaderTitle() ?? 'leader',
                                 $record?->levelLabel() ?? 'Unit',
                             ))
-                            ->visible(fn (callable $get) => $get('leader_id') && $get('leader_id') !== $get('original_leader_id')),
+                            ->visible(fn (callable $get) => $get('leader_member_id') && $get('leader_member_id') !== $get('original_leader_id')),
                     ]),
             ]);
     }

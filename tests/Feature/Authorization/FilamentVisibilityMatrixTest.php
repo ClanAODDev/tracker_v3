@@ -111,7 +111,7 @@ class FilamentVisibilityMatrixTest extends PermissionMatrixTestCase
         $this->buildWorld();
         Filament::setCurrentPanel('mod');
 
-        $platoonB2 = Unit::factory()->create(['division_id' => $this->world->divisionB->id, 'name' => 'B2', 'leader_id' => null]);
+        $platoonB2 = Unit::factory()->create(['division_id' => $this->world->divisionB->id, 'name' => 'B2', 'leader_member_id' => null]);
 
         $cases = [
             'own division member'   => ['same_squad', $this->world->platoons['A2']],

@@ -29,11 +29,11 @@ class UnitAssignmentSingleLeadershipTest extends TestCase
         $squadB   = $this->createSquad($platoon);
         $leader   = $this->createSquadLeader($squadA);
 
-        app(UnitAssignment::class)->setLeader($squadB, $leader->clan_id);
+        app(UnitAssignment::class)->setLeader($squadB, $leader->id);
 
-        $this->assertNull($squadA->fresh()->leader_id);
-        $this->assertSame($leader->clan_id, $squadB->fresh()->leader_id);
-        $this->assertSame(1, Unit::where('leader_id', $leader->clan_id)->count());
+        $this->assertNull($squadA->fresh()->leader_member_id);
+        $this->assertSame($leader->id, $squadB->fresh()->leader_member_id);
+        $this->assertSame(1, Unit::where('leader_member_id', $leader->id)->count());
     }
 
     #[Test]
@@ -44,10 +44,10 @@ class UnitAssignmentSingleLeadershipTest extends TestCase
         $squad    = $this->createSquad($platoon);
         $leader   = $this->createSquadLeader($squad);
 
-        $new = app(UnitAssignment::class)->create($division, $platoon, ['name' => 'Fresh', 'leader_id' => $leader->clan_id]);
+        $new = app(UnitAssignment::class)->create($division, $platoon, ['name' => 'Fresh', 'leader_member_id' => $leader->id]);
 
-        $this->assertNull($squad->fresh()->leader_id);
-        $this->assertSame($leader->clan_id, $new->fresh()->leader_id);
+        $this->assertNull($squad->fresh()->leader_member_id);
+        $this->assertSame($leader->id, $new->fresh()->leader_member_id);
     }
 
     #[Test]

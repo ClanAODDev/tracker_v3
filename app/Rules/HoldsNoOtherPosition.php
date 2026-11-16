@@ -14,7 +14,6 @@ class HoldsNoOtherPosition implements ValidationRule
      * @param  array<Position>  $allowedPositions
      */
     public function __construct(
-        private string $column = 'clan_id',
         private ?Unit $exceptUnit = null,
         private array $allowedPositions = [],
     ) {}
@@ -25,7 +24,7 @@ class HoldsNoOtherPosition implements ValidationRule
             return;
         }
 
-        $member = Member::where($this->column, $value)->first();
+        $member = Member::find($value);
 
         if (! $member) {
             return;
@@ -47,7 +46,7 @@ class HoldsNoOtherPosition implements ValidationRule
             return "assigned as {$member->positionLabel()}";
         }
 
-        $platoon = Unit::where('leader_id', $member->clan_id)
+        $platoon = Unit::where('leader_member_id', $member->id)
             ->where('depth', 1)
             ->when($this->exceptUnit, fn ($query, $except) => $query->whereKeyNot($except->getKey()))
             ->first();
@@ -56,7 +55,7 @@ class HoldsNoOtherPosition implements ValidationRule
             return "leading {$platoon->name}";
         }
 
-        $squad = Unit::where('leader_id', $member->clan_id)
+        $squad = Unit::where('leader_member_id', $member->id)
             ->where('depth', '>', 1)
             ->when($this->exceptUnit, fn ($query, $except) => $query->whereKeyNot($except->getKey()))
             ->first();

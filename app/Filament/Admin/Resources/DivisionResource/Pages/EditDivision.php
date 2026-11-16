@@ -118,8 +118,6 @@ class EditDivision extends EditRecord
 
     protected function clearPlatoonAndSquadLeadership(array $memberIds): void
     {
-        $clanIds = Member::whereIn('id', $memberIds)->pluck('clan_id');
-
-        app(UnitAssignment::class)->clearLeadership($clanIds->all());
+        app(UnitAssignment::class)->clearLeadership($memberIds);
     }
 }

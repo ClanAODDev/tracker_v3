@@ -35,14 +35,14 @@ class EditUnit extends EditRecord
 
         $this->form->fill([
             ...$this->form->getState(),
-            'original_leader_id' => $this->record->leader_id,
+            'original_leader_id' => $this->record->leader_member_id,
         ]);
     }
 
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
         $units = app(UnitAssignment::class);
-        $units->update($record, Arr::only($data, ['name', 'description', 'logo', 'order', 'leader_id']));
+        $units->update($record, Arr::only($data, ['name', 'description', 'logo', 'order', 'leader_member_id']));
 
         return $record->refresh();
     }
@@ -54,16 +54,16 @@ class EditUnit extends EditRecord
         $unit  = $this->record;
 
         $originalLeaderId = $state['original_leader_id'] ?? null;
-        $newLeaderId      = (int) $this->record->leader_id;
+        $newLeaderId      = (int) $this->record->leader_member_id;
 
         if ($originalLeaderId !== $newLeaderId) {
             if ($newLeaderId) {
-                $newLeaders = Member::where('clan_id', $newLeaderId)->get();
+                $newLeaders = Member::whereKey($newLeaderId)->get();
                 $units->assignMembers($newLeaders, $unit, recordActivity: false);
             }
 
             if ($originalLeaderId) {
-                $units->assignMembers(Member::where('clan_id', $originalLeaderId)->get(), null, recordActivity: false);
+                $units->assignMembers(Member::whereKey($originalLeaderId)->get(), null, recordActivity: false);
             }
         }
     }
