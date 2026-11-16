@@ -13,8 +13,8 @@ class PmController extends Controller
     {
         $memberIds = explode(',', $request->validated()['pm-member-data']);
 
-        $selected = Member::whereIn('clan_id', $memberIds)
-            ->select('clan_id', 'allow_pm', 'name')
+        $selected = Member::whereIn('guid', $memberIds)
+            ->select('guid', 'clan_id', 'allow_pm', 'name')
             ->get();
 
         $available = $selected->filter->allow_pm;
@@ -36,7 +36,7 @@ class PmController extends Controller
             'omitted'        => $selected->diffAssoc($available)->pluck('name')->values(),
             'canRemind'      => $request->user()->can('remindActivity', Member::class),
             'reminderUrl'    => route('bulk-reminder.store', $division),
-            'reminderIds'    => $available->pluck('clan_id')->values(),
+            'reminderIds'    => $available->pluck('guid')->values(),
         ]);
     }
 }

@@ -161,7 +161,7 @@ export function MemberSearch({
                     ) : (
                         <ul className="max-h-96 overflow-y-auto py-1">
                             {results.slice(0, 8).map((result, i) => (
-                                <li key={result.clanId}>
+                                <li key={result.guid}>
                                     <button
                                         type="button"
                                         onMouseEnter={() => setActive(i)}

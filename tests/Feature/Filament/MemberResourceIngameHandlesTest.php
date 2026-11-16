@@ -35,7 +35,7 @@ class MemberResourceIngameHandlesTest extends TestCase
 
         $this->actingAs($srLdr);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm([
                 'handleGroups' => [
                     ['id' => null, 'handle_id' => $handle->id, 'value' => '76561198000000000', 'primary' => true],
@@ -65,7 +65,7 @@ class MemberResourceIngameHandlesTest extends TestCase
 
         $this->actingAs($srLdr);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm([
                 'handleGroups' => [
                     ['id' => null, 'handle_id' => $handle->id, 'value' => 'not-numeric', 'primary' => true],
@@ -93,7 +93,7 @@ class MemberResourceIngameHandlesTest extends TestCase
 
         $this->actingAs($srLdr);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->call('save')
             ->assertHasNoFormErrors();
 

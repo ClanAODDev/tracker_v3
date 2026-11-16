@@ -26,7 +26,7 @@ class PmControllerTest extends TestCase
 
         $this->actingAs($officer)
             ->post(route('private-message.create', $division->slug), [
-                'pm-member-data' => "{$willing->clan_id},{$declining->clan_id}",
+                'pm-member-data' => "{$willing->guid},{$declining->guid}",
             ])
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
@@ -44,7 +44,7 @@ class PmControllerTest extends TestCase
 
         $this->actingAs($user)
             ->post(route('private-message.create', $user->member->division->slug), [
-                'pm-member-data' => "{$user->member->clan_id},{$target->clan_id}",
+                'pm-member-data' => "{$user->member->guid},{$target->guid}",
             ])
             ->assertForbidden();
     }

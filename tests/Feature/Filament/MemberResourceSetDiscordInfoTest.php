@@ -37,7 +37,7 @@ class MemberResourceSetDiscordInfoTest extends TestCase
 
         $this->actingAs($srLdr);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->callAction('setDiscordInfo')
             ->assertHasNoActionErrors();
 

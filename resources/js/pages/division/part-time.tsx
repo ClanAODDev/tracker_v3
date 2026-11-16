@@ -46,7 +46,7 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
     const [addOpen, setAddOpen] = useState(false);
     const [selected, setSelected] = useState<MemberResult | null>(null);
 
-    const form = useForm<{ member_id: string; handles: Record<number, string> }>({ member_id: '', handles: {} });
+    const form = useForm<{ member: string; handles: Record<number, string> }>({ member: '', handles: {} });
     const labelHandles = division.handleTypes.length > 1;
     const formErrors = form.errors as Record<string, string | undefined>;
 
@@ -59,7 +59,7 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
     function submitAdd(e: React.FormEvent) {
         e.preventDefault();
         if (!selected) return;
-        form.transform((data) => ({ ...data, member_id: selected.clanId }));
+        form.transform((data) => ({ ...data, member: selected.guid }));
         form.post(addUrl, {
             preserveScroll: true,
             onSuccess: () => {
@@ -229,8 +229,8 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                         <div className="grid gap-1.5">
                             <Label>Member</Label>
                             <MemberCombobox value={selected} onSelect={setSelected} />
-                            {form.errors.member_id && (
-                                <p className="text-xs text-destructive">{form.errors.member_id}</p>
+                            {form.errors.member && (
+                                <p className="text-xs text-destructive">{form.errors.member}</p>
                             )}
                         </div>
                         {division.handleTypes.map((type) => (

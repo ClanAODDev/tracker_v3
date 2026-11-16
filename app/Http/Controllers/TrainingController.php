@@ -45,8 +45,8 @@ class TrainingController extends Controller
 
         abort_unless($module->isAccessibleBy(auth()->user()->member), 403);
 
-        $trainee = $request->filled('clan_id')
-            ? Member::where('clan_id', $request->clan_id)->first()
+        $trainee = $request->filled('member')
+            ? Member::where('guid', $request->string('member'))->first()
             : null;
 
         return Inertia::render('training/module', [
@@ -67,7 +67,7 @@ class TrainingController extends Controller
                 ])->values(),
             ],
             'trainee' => $trainee ? [
-                'clanId'   => $trainee->clan_id,
+                'guid'     => $trainee->guid,
                 'name'     => $trainee->name,
                 'rankName' => $trainee->present()->rankName,
             ] : null,
@@ -81,7 +81,7 @@ class TrainingController extends Controller
 
     public function update(CompleteTrainingRequest $request): RedirectResponse
     {
-        Member::whereClanId($request->clan_id)->update([
+        Member::where('guid', $request->validated('member'))->update([
             'last_trained_at' => now(),
             'last_trained_by' => auth()->user()->member->clan_id,
         ]);

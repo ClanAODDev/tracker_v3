@@ -45,7 +45,7 @@ class AdminMemberDivisionTransferTest extends TestCase
 
         $this->actingAs($admin);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm(['division_id' => $target->id])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -74,7 +74,7 @@ class AdminMemberDivisionTransferTest extends TestCase
 
         $this->actingAs($admin);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm(['division_id' => $division->id])
             ->call('save')
             ->assertHasNoFormErrors();

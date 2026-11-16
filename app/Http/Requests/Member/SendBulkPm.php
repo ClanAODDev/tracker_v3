@@ -16,7 +16,7 @@ class SendBulkPm extends FormRequest
     public function rules(): array
     {
         return [
-            'pm-member-data' => [(new Delimited('numeric', $this->messages()))->min(2)],
+            'pm-member-data' => [(new Delimited('string', $this->messages()))->min(2)],
             'set_reminder'   => ['nullable', 'boolean'],
         ];
     }

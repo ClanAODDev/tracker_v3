@@ -16,8 +16,10 @@ import { cn } from '@/lib/utils';
 
 export type MemberResult = MemberSearchResult;
 
+export type MemberPick = Pick<MemberSearchResult, 'guid' | 'rankName' | 'division'>;
+
 interface Props {
-    value: MemberResult | null;
+    value: MemberPick | null;
     onSelect: (member: MemberResult | null) => void;
     placeholder?: string;
 }
@@ -60,8 +62,8 @@ export function MemberCombobox({ value, onSelect, placeholder = 'Search membersâ
                             <CommandGroup>
                                 {results.map((member) => (
                                     <CommandItem
-                                        key={member.clanId}
-                                        value={String(member.clanId)}
+                                        key={member.guid}
+                                        value={member.guid}
                                         onSelect={() => {
                                             onSelect(member);
                                             setOpen(false);
@@ -70,7 +72,7 @@ export function MemberCombobox({ value, onSelect, placeholder = 'Search membersâ
                                         <Check
                                             className={cn(
                                                 'size-4',
-                                                value?.clanId === member.clanId ? 'opacity-100' : 'opacity-0',
+                                                value?.guid === member.guid ? 'opacity-100' : 'opacity-0',
                                             )}
                                         />
                                         <span>

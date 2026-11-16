@@ -27,8 +27,8 @@ class PromotionController extends Controller
             'rankLabel'    => $action->rank->getLabel(),
             'trainingNote' => $action->rank->value >= Rank::SERGEANT->value,
             'expiresText'  => Carbon::createFromTimestamp(request('expires'))->diffForHumans(),
-            'acceptUrl'    => URL::temporarySignedRoute('promotion.accept', now()->addMinutes($minutes), [$member->clan_id, $action]),
-            'declineUrl'   => URL::temporarySignedRoute('promotion.decline', now()->addMinutes($minutes), [$member->clan_id, $action]),
+            'acceptUrl'    => URL::temporarySignedRoute('promotion.accept', now()->addMinutes($minutes), [$member, $action]),
+            'declineUrl'   => URL::temporarySignedRoute('promotion.decline', now()->addMinutes($minutes), [$member, $action]),
         ]);
     }
 

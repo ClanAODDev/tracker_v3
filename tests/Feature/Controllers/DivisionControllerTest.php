@@ -48,7 +48,7 @@ class DivisionControllerTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('division/members')
                 ->where('division.slug', $division->slug)
-                ->where('members', fn ($members) => collect($members)->contains('id', $member->clan_id))
+                ->where('members', fn ($members) => collect($members)->contains('id', $member->guid))
                 ->has('unitStats.totalCount')
                 ->has('bulk.urls.tags')
                 ->has('tagFilter'));

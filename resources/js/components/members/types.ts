@@ -11,7 +11,7 @@ export interface UnitLevel {
 }
 
 export interface MemberRow {
-    id: number;
+    id: string;
     name: string;
     rankName: string;
     rankAbbr: string | null;

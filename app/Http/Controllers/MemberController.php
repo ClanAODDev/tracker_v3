@@ -82,8 +82,12 @@ class MemberController extends Controller
         return $this->memberRepository->searchAutocomplete($query, partial: $request->isPartial($query));
     }
 
-    public function show(Member $member): Response
+    public function show(Member $member): Response|RedirectResponse
     {
+        if (Member::isLegacyRouteKey(request()->route()->originalParameter('member'))) {
+            return redirect()->route('member', $member->getUrlParams(), 301);
+        }
+
         return Inertia::render(
             'member/show',
             MemberProfileData::for($member, $this->memberRepository, $this->rankTimelineService)->toArray(),
@@ -125,7 +129,7 @@ class MemberController extends Controller
     {
         return Inertia::render('member/confirm-unassign', [
             'member'   => MemberCard::from($member),
-            'resetUrl' => route('member.unassign', $member->clan_id),
+            'resetUrl' => route('member.unassign', $member),
         ]);
     }
 

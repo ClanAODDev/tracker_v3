@@ -112,16 +112,16 @@ class AwardController extends Controller
         }
 
         $validatedData = $request->validate([
-            'reason'    => 'required|string|max:255',
-            'member_id' => [
+            'reason' => 'required|string|max:255',
+            'member' => [
                 'required',
-                'numeric',
-                'exists:members,clan_id',
+                'string',
+                'exists:members,guid',
                 new UniqueAwardForMember($award->id),
             ],
         ]);
 
-        $member = Member::whereClanId($validatedData['member_id'])->firstOrFail();
+        $member = Member::where('guid', $validatedData['member'])->firstOrFail();
 
         MemberAward::create([
             'requester_id' => auth()->user()->member_id,

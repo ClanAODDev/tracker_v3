@@ -36,8 +36,8 @@ class InactiveMembersPageTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('division/inactive-members')
-                ->where('inactive', fn ($rows) => collect($rows)->contains('id', $inactive->clan_id))
-                ->where('flagged', fn ($rows) => collect($rows)->contains('id', $flagged->clan_id))
+                ->where('inactive', fn ($rows) => collect($rows)->contains('id', $inactive->guid))
+                ->where('flagged', fn ($rows) => collect($rows)->contains('id', $flagged->guid))
                 ->has('stats.total')
                 ->has('platoons')
                 ->has('bulk.flag'));

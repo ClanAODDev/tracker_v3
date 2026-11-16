@@ -45,7 +45,7 @@ class BulkMoveDeepUnitsTest extends TestCase
         $member  = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($this->createSeniorLeader($division))
-            ->postJson(route('bulk-transfer.store', $division->slug), ['member_ids' => [$member->clan_id], 'unit_id' => $leaf->id])
+            ->postJson(route('bulk-transfer.store', $division->slug), ['member_ids' => [$member->guid], 'unit_id' => $leaf->id])
             ->assertOk();
 
         $this->assertSame($leaf->id, $member->fresh()->unit_id);
@@ -59,7 +59,7 @@ class BulkMoveDeepUnitsTest extends TestCase
         $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($this->createSeniorLeader($division))
-            ->postJson(route('bulk-transfer.store', $division->slug), ['member_ids' => [$member->clan_id], 'unit_id' => $foreign->id])
+            ->postJson(route('bulk-transfer.store', $division->slug), ['member_ids' => [$member->guid], 'unit_id' => $foreign->id])
             ->assertUnprocessable();
 
         $this->assertNull($member->fresh()->unit_id);

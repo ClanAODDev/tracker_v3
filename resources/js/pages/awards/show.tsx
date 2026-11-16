@@ -3,6 +3,7 @@ import { Check, RefreshCw, Trophy } from 'lucide-react';
 import { type CSSProperties, type FormEvent, useState } from 'react';
 
 import { RarityPill } from '@/components/awards/award-card';
+import { MemberCombobox, type MemberPick } from '@/components/member-combobox';
 import { StatTiles } from '@/components/reports/stat-tiles';
 import { Button } from '@/components/ui/button';
 import {
@@ -33,7 +34,7 @@ interface AwardShowProps {
     };
     stats: { total: number; firstAwarded: string | null; lastAwarded: string | null; rarity: string };
     userHasAward: boolean;
-    currentMember: { name: string; clanId: number } | null;
+    currentMember: CurrentMember | null;
     recipients: {
         data: Array<{
             name: string | null;
@@ -50,12 +51,30 @@ interface AwardShowProps {
     };
 }
 
-function RequestDialog({ awardId, currentMember }: { awardId: number; currentMember: { name: string; clanId: number } | null }) {
-    const form = useForm({ member_id: '', reason: '' });
+interface CurrentMember {
+    guid: string;
+    rankName: string;
+    division: string;
+}
+
+function RequestDialog({ awardId, currentMember }: { awardId: number; currentMember: CurrentMember | null }) {
+    const [selected, setSelected] = useState<MemberPick | null>(null);
+    const form = useForm({ member: '', reason: '' });
+
+    function pick(member: MemberPick | null) {
+        setSelected(member);
+        form.setData('member', member?.guid ?? '');
+    }
 
     function submit(e: FormEvent) {
         e.preventDefault();
-        form.post(`/clan/awards/${awardId}`, { preserveScroll: true, onSuccess: () => form.reset() });
+        form.post(`/clan/awards/${awardId}`, {
+            preserveScroll: true,
+            onSuccess: () => {
+                form.reset();
+                setSelected(null);
+            },
+        });
     }
 
     return (
@@ -73,28 +92,16 @@ function RequestDialog({ awardId, currentMember }: { awardId: number; currentMem
                     </DialogHeader>
                     <div className="mt-4 space-y-3">
                         <div className="grid gap-1.5">
-                            <Label htmlFor="member_id">Member clan ID</Label>
+                            <Label>Member</Label>
                             <div className="flex gap-2">
-                                <Input
-                                    id="member_id"
-                                    value={form.data.member_id}
-                                    onChange={(e) => form.setData('member_id', e.target.value)}
-                                    aria-invalid={!!form.errors.member_id}
-                                />
+                                <MemberCombobox value={selected} onSelect={pick} />
                                 {currentMember && (
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => form.setData('member_id', String(currentMember.clanId))}
-                                    >
+                                    <Button type="button" variant="outline" onClick={() => pick(currentMember)}>
                                         Me
                                     </Button>
                                 )}
                             </div>
-                            {form.errors.member_id && (
-                                <p className="text-xs text-destructive">{form.errors.member_id}</p>
-                            )}
+                            {form.errors.member && <p className="text-xs text-destructive">{form.errors.member}</p>}
                         </div>
                         <div className="grid gap-1.5">
                             <Label htmlFor="reason">Reason</Label>

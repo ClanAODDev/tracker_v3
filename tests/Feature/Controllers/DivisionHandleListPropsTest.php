@@ -41,9 +41,9 @@ class DivisionHandleListPropsTest extends TestCase
                 ->where('members', function ($members) use ($both, $euOnly, $na, $eu) {
                     $rows = collect($members)->keyBy('id');
 
-                    return $rows[$both->clan_id]['handles'][$na->id]['value'] === 'NaCaptain'
-                        && $rows[$both->clan_id]['handles'][$eu->id]['value'] === 'EuCaptain'
-                        && array_keys($rows[$euOnly->clan_id]['handles']) === [$eu->id];
+                    return $rows[$both->guid]['handles'][$na->id]['value'] === 'NaCaptain'
+                        && $rows[$both->guid]['handles'][$eu->id]['value'] === 'EuCaptain'
+                        && array_keys($rows[$euOnly->guid]['handles']) === [$eu->id];
                 }));
     }
 
@@ -70,8 +70,8 @@ class DivisionHandleListPropsTest extends TestCase
                 ->where('members', function ($members) use ($valid, $invalid, $battlenet) {
                     $rows = collect($members)->keyBy('id');
 
-                    return $rows[$valid->clan_id]['handles'][$battlenet->id]['error'] === null
-                        && $rows[$invalid->clan_id]['handles'][$battlenet->id]['error'] === 'BattleTag must be in the form Name#1234.';
+                    return $rows[$valid->guid]['handles'][$battlenet->id]['error'] === null
+                        && $rows[$invalid->guid]['handles'][$battlenet->id]['error'] === 'BattleTag must be in the form Name#1234.';
                 }));
     }
 }

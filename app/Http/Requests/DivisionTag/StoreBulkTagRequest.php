@@ -16,7 +16,7 @@ class StoreBulkTagRequest extends FormRequest
     {
         return [
             'member_ids'   => 'required|array',
-            'member_ids.*' => 'integer',
+            'member_ids.*' => 'string',
             'tags'         => 'required|array',
             'tags.*'       => 'integer|exists:division_tags,id',
             'action'       => 'required|in:assign,remove',

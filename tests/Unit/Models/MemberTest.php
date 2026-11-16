@@ -614,15 +614,14 @@ class MemberTest extends TestCase
     }
 
     #[Test]
-    public function get_url_params_returns_clan_id_and_rank_slug()
+    public function get_url_params_returns_guid_and_rank_slug()
     {
         $member = $this->createMember([
-            'clan_id' => 42,
-            'name'    => 'testuser',
-            'rank'    => Rank::SERGEANT,
+            'name' => 'testuser',
+            'rank' => Rank::SERGEANT,
         ]);
 
-        $this->assertEquals([42, 'Sgt-testuser'], $member->getUrlParams());
+        $this->assertEquals([$member->guid, 'Sgt-testuser'], $member->getUrlParams());
     }
 
     #[Test]

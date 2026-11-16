@@ -49,7 +49,7 @@ class DivisionMemberFieldsListPropsTest extends TestCase
                     'DPS'    => 'red',
                 ])
                 ->where('members', fn ($members) => collect($members)
-                    ->firstWhere('id', $member->clan_id)['customFields']['class'] === 'Healer'));
+                    ->firstWhere('id', $member->guid)['customFields']['class'] === 'Healer'));
     }
 
     #[Test]

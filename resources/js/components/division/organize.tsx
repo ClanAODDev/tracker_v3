@@ -5,21 +5,23 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
+export type OrganizeMemberId = number | string;
+
 export interface OrganizeMember {
-    id: number;
+    id: OrganizeMemberId;
     name: string;
 }
 
 interface UseOrganizeOptions {
     members: OrganizeMember[];
-    assign: (memberId: number, targetId: number) => Promise<void>;
+    assign: (memberId: OrganizeMemberId, targetId: number) => Promise<void>;
     autoOpen?: boolean;
 }
 
 export function useOrganize({ members: initial, assign, autoOpen = false }: UseOrganizeOptions) {
     const [members, setMembers] = useState(initial);
     const [organizing, setOrganizing] = useState(false);
-    const [draggingId, setDraggingId] = useState<number | null>(null);
+    const [draggingId, setDraggingId] = useState<OrganizeMemberId | null>(null);
     const [busy, setBusy] = useState(false);
 
     useEffect(() => {
@@ -34,7 +36,7 @@ export function useOrganize({ members: initial, assign, autoOpen = false }: UseO
         if (organizing && members.length === 0) setOrganizing(false);
     }, [organizing, members.length]);
 
-    const onDragStart = useCallback((e: DragEvent, id: number) => {
+    const onDragStart = useCallback((e: DragEvent, id: OrganizeMemberId) => {
         setDraggingId(id);
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', String(id));
@@ -81,9 +83,9 @@ export function OrganizeBanner({
     unitLabel: string;
     organizing: boolean;
     onToggle: () => void;
-    onDragStart: (e: DragEvent, id: number) => void;
+    onDragStart: (e: DragEvent, id: OrganizeMemberId) => void;
     onDragEnd: () => void;
-    draggingId: number | null;
+    draggingId: OrganizeMemberId | null;
 }) {
     if (members.length === 0) return null;
 

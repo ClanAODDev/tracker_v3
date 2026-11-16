@@ -24,7 +24,7 @@ class MemberResourceLastTrainedByTest extends TestCase
         $member  = $this->createMember();
         $trainer = $this->createMember();
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm(['last_trained_by' => $trainer->clan_id])
             ->call('save')
             ->assertHasNoFormErrors();

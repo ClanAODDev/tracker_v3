@@ -131,7 +131,7 @@ export function MemberTable({
     const [selectedTags, setSelectedTags] = useState<Set<number>>(new Set());
     const [selectedUnits, setSelectedUnits] = useState<Set<number>>(new Set());
     const [selectedFieldValues, setSelectedFieldValues] = useState<Record<string, Set<string>>>({});
-    const [reminded, setReminded] = useState<Record<number, string>>({});
+    const [reminded, setReminded] = useState<Record<string, string>>({});
     const [activityStyle, setActivityStyle] = useState<ActivityStyle>(persisted.activityStyle ?? 'row');
 
     useEffect(() => {

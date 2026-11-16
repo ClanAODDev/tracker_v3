@@ -16,16 +16,16 @@ class CompleteTrainingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'module'  => ['required', 'string'],
-            'clan_id' => ['required', 'exists:members,clan_id'],
+            'module' => ['required', 'string'],
+            'member' => ['required', 'string', 'exists:members,guid'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'clan_id.required' => 'Please select a member',
-            'clan_id.exists'   => 'That member appears to be invalid',
+            'member.required' => 'Please select a member',
+            'member.exists'   => 'That member appears to be invalid',
         ];
     }
 }

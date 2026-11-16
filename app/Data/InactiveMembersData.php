@@ -101,7 +101,7 @@ class InactiveMembersData
         $user     = auth()->user();
 
         return [
-            'id'         => $member->clan_id,
+            'id'         => $member->guid,
             'name'       => $member->name,
             'rankAbbr'   => $member->rank->getAbbreviation(),
             'profileUrl' => route('member', $member->getUrlParams()),
@@ -118,9 +118,9 @@ class InactiveMembersData
             'unit'       => $member->unitTrail()->map(fn ($unit) => $unit->name ?: 'Untitled')->implode(' / ') ?: 'Unassigned',
             'severity'   => $severity,
             'forumPmUrl' => doForumFunction([$member->clan_id], 'pm'),
-            'flagUrl'    => route('member.flag-inactive', $member->clan_id),
-            'unflagUrl'  => $flagged ? route('member.unflag-inactive', $member->clan_id) : null,
-            'removeUrl'  => $flagged && $user->can('separate', $member) ? route('member.drop-for-inactivity', $member->clan_id) : null,
+            'flagUrl'    => route('member.flag-inactive', $member),
+            'unflagUrl'  => $flagged ? route('member.unflag-inactive', $member) : null,
+            'removeUrl'  => $flagged && $user->can('separate', $member) ? route('member.drop-for-inactivity', $member) : null,
             'canRemind'  => $user->can('remindActivity', $member),
             'canFlag'    => $user->can('flag-inactive', $member),
         ];

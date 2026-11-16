@@ -382,7 +382,26 @@ class Member extends Model
 
     public function getUrlParams(): array
     {
-        return [$this->clan_id, $this->rank->getAbbreviation() . '-' . $this->name];
+        return [$this->guid, $this->rank->getAbbreviation() . '-' . $this->name];
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'guid';
+    }
+
+    public function resolveRouteBinding($value, $field = null): ?Model
+    {
+        if ($field === null && ctype_digit((string) $value)) {
+            return $this->where('clan_id', (int) $value)->first();
+        }
+
+        return parent::resolveRouteBinding($value, $field);
+    }
+
+    public static function isLegacyRouteKey(?string $value): bool
+    {
+        return $value !== null && ctype_digit($value);
     }
 
     public function memberRequests(): HasMany

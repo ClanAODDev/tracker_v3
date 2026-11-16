@@ -27,7 +27,7 @@ class BulkTagControllerTest extends TestCase
 
         $response = $this->actingAs($srLdr)
             ->postJson(route('bulk-tags.store', $division->slug), [
-                'member_ids' => [$member1->clan_id, $member2->clan_id],
+                'member_ids' => [$member1->guid, $member2->guid],
                 'tags'       => [$tag->id],
                 'action'     => 'assign',
             ]);
@@ -52,7 +52,7 @@ class BulkTagControllerTest extends TestCase
 
         $response = $this->actingAs($srLdr)
             ->postJson(route('bulk-tags.store', $division->slug), [
-                'member_ids' => [$member1->clan_id, $member2->clan_id],
+                'member_ids' => [$member1->guid, $member2->guid],
                 'tags'       => [$tag->id],
                 'action'     => 'remove',
             ]);
@@ -73,7 +73,7 @@ class BulkTagControllerTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->postJson(route('bulk-tags.store', $division->slug), [
-                'member_ids' => [$member->clan_id],
+                'member_ids' => [$member->guid],
                 'tags'       => [$foreignTag->id],
                 'action'     => 'assign',
             ]);

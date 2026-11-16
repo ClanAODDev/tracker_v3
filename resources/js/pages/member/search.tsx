@@ -8,6 +8,7 @@ import AppLayout from '@/layouts/AppLayout';
 
 interface Result {
     rankName: string;
+    guid: string;
     clanId: number;
     division: string;
     profileUrl: string;
@@ -78,7 +79,7 @@ export default function MemberSearch({ query, results, partial, pagination }: Pr
                         ) : (
                             results.map((member, i) => (
                                 <Link
-                                    key={member.clanId}
+                                    key={member.guid}
                                     href={member.profileUrl}
                                     className="block rounded-md border border-border bg-card p-3 transition-colors hover:border-primary/30"
                                 >

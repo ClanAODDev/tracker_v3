@@ -32,7 +32,7 @@ class MemberRowSerializer
         $reminder    = $member->last_activity_reminder_at;
 
         return [
-            'id'             => $member->clan_id,
+            'id'             => $member->guid,
             'name'           => $member->name,
             'rankName'       => $member->present()->rankName(),
             'rankAbbr'       => $member->rank->getAbbreviation(),

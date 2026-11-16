@@ -24,7 +24,7 @@ class AwardShowData
         $recipientsQuery = MemberAward::where('award_id', $award->id)
             ->where('approved', true)
             ->whereHas('member', fn ($q) => $q->where('division_id', '>', 0))
-            ->with(['member:id,clan_id,name,rank,division_id,discord_id,discord_avatar', 'member.division:id,name,slug']);
+            ->with(['member:id,guid,clan_id,name,rank,division_id,discord_id,discord_avatar', 'member.division:id,name,slug']);
 
         $this->recipients = $award->repeatable
             ? $recipientsQuery
@@ -78,7 +78,11 @@ class AwardShowData
             ],
             'userHasAward'  => $this->userHasAward,
             'currentMember' => $this->userMember
-                ? ['name' => $this->userMember->name, 'clanId' => $this->userMember->clan_id]
+                ? [
+                    'guid'     => $this->userMember->guid,
+                    'rankName' => $this->userMember->present()->rankName(),
+                    'division' => $this->userMember->division->name ?? 'Ex-AOD',
+                ]
                 : null,
             'recipients' => [
                 'data' => collect($recipients->items())->map(fn ($record) => [

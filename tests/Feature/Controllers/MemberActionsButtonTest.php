@@ -77,7 +77,7 @@ class MemberActionsButtonTest extends TestCase
                 $page->component('member/show');
                 $action = collect($page->toArray()['props']['actions'])->firstWhere('label', 'Flag for inactivity');
                 $this->assertNotNull($action);
-                $this->assertSame(route('member.flag-inactive', $member->clan_id), $action['url']);
+                $this->assertSame(route('member.flag-inactive', $member), $action['url']);
             });
     }
 
@@ -97,7 +97,7 @@ class MemberActionsButtonTest extends TestCase
 
                 $action = collect($page->toArray()['props']['actions'])->firstWhere('label', 'Unflag for inactivity');
                 $this->assertNotNull($action);
-                $this->assertSame(route('member.unflag-inactive', $member->clan_id), $action['url']);
+                $this->assertSame(route('member.unflag-inactive', $member), $action['url']);
             });
     }
 

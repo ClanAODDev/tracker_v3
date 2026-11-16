@@ -32,7 +32,7 @@ class ModMemberLastTrainedAtTest extends TestCase
         $member  = $this->createMember(['division_id' => $division->id, 'last_trained_at' => null]);
         $trainer = $this->createMember(['division_id' => $division->id]);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm(['last_trained_by' => $trainer->clan_id])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -53,7 +53,7 @@ class ModMemberLastTrainedAtTest extends TestCase
             'last_trained_at' => '2024-01-01',
         ]);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->call('save')
             ->assertHasNoFormErrors();
 

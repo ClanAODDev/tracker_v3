@@ -40,7 +40,7 @@ class MemberResourceDivisionFieldsTest extends TestCase
 
         $this->actingAs($srLdr);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm(['custom_fields' => ['class' => 'Warlock']])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -72,7 +72,7 @@ class MemberResourceDivisionFieldsTest extends TestCase
 
         $this->actingAs($srLdr);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm(['custom_fields' => ['role' => 'Healer']])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -100,7 +100,7 @@ class MemberResourceDivisionFieldsTest extends TestCase
 
         $this->actingAs($srLdr);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->assertFormSet(['custom_fields' => ['class' => 'Rogue']]);
     }
 
@@ -120,7 +120,7 @@ class MemberResourceDivisionFieldsTest extends TestCase
 
         $this->actingAs($srLdr);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm(['custom_fields' => ['class' => '']])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -147,7 +147,7 @@ class MemberResourceDivisionFieldsTest extends TestCase
 
         $this->actingAs($srLdr);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm(['custom_fields' => ['realm' => 'Should not persist']])
             ->call('save')
             ->assertHasNoFormErrors();
