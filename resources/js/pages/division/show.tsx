@@ -64,7 +64,8 @@ interface DivisionShowProps {
     platoons: Platoon[];
     anniversaries: Array<{
         name: string;
-        clanId: number;
+        guid: string;
+        profileUrl: string;
         rankAbbr: string | null;
         years: number;
         hasTenureAward: boolean;
@@ -356,8 +357,8 @@ export default function DivisionShow({
                         <div className="flex flex-wrap gap-2">
                             {anniversaries.map((a) => (
                                 <TileLink
-                                    key={a.clanId}
-                                    href={`/members/${a.clanId}-${encodeURIComponent(a.name)}`}
+                                    key={a.guid}
+                                    href={a.profileUrl}
                                     hover={false}
                                     tint={cn(
                                         a.trophy ? 'border-primary/30 bg-primary/5' : 'border-border',

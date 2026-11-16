@@ -19,8 +19,8 @@ interface Options {
     bulkMode: boolean;
     selectedTags: Set<number>;
     selectedUnits: Set<number>;
-    reminded: Record<number, string>;
-    setReminded: Dispatch<SetStateAction<Record<number, string>>>;
+    reminded: Record<string, string>;
+    setReminded: Dispatch<SetStateAction<Record<string, string>>>;
     activityStyle: 'row' | 'dot';
     memberFields: MemberFieldDefinition[];
     selectedFieldValues: Record<string, Set<string>>;

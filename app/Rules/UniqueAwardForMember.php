@@ -31,7 +31,7 @@ class UniqueAwardForMember implements ValidationRule
             return;
         }
 
-        $member = Member::whereClanId($value)->first();
+        $member = Member::where('guid', $value)->first();
 
         if ($member && MemberAward::where('member_id', $member->id)
             ->where('award_id', $this->awardId)

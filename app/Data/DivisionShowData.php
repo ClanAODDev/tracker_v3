@@ -88,7 +88,8 @@ readonly class DivisionShowData
             ])->values(),
             'anniversaries' => $this->divisionAnniversaries->map(fn ($anniversary) => [
                 'name'           => $anniversary->name,
-                'clanId'         => $anniversary->clan_id,
+                'guid'           => $anniversary->guid,
+                'profileUrl'     => route('member', $anniversary->getUrlParams()),
                 'rankAbbr'       => $anniversary->rank?->getAbbreviation(),
                 'years'          => $anniversary->years_since_joined,
                 'hasTenureAward' => $anniversary->has_tenure_award ?? true,
@@ -129,7 +130,7 @@ readonly class DivisionShowData
                 'members'     => $user->can('manageUnassigned', User::class)
                     ? $division->unassigned()->get()
                         ->map(fn (Member $member) => [
-                            'id'   => $member->clan_id,
+                            'id'   => $member->guid,
                             'name' => $member->present()->rankName(),
                         ])->values()
                     : [],

@@ -36,7 +36,7 @@ interface TrainingModule {
 }
 
 interface Trainee {
-    clanId: number;
+    guid: string;
     name: string;
     rankName: string;
 }
@@ -244,7 +244,7 @@ function CheckpointList({
 }
 
 function CompleteTrainingCard({ slug, moduleName, trainee }: { slug: string; moduleName: string; trainee: Trainee }) {
-    const form = useForm({ module: slug, clan_id: trainee.clanId });
+    const form = useForm({ module: slug, member: trainee.guid });
 
     return (
         <div className="mt-8 rounded-md border border-success/30 bg-success/5 p-4">

@@ -72,7 +72,7 @@ class DeepUnitPagesTest extends TestCase
             ->get(route('division.members', $division))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('members', fn ($members) => collect($members)->firstWhere('id', $member->clan_id)['units'] === [
+                ->where('members', fn ($members) => collect($members)->firstWhere('id', $member->guid)['units'] === [
                     ['id' => $this->company->id, 'depth' => 1, 'label' => $this->company->name, 'url' => $this->company->url($division)],
                     ['id' => $this->middle->id, 'depth' => 2, 'label' => $this->middle->name, 'url' => $this->middle->url($division)],
                     ['id' => $this->leaf->id, 'depth' => 3, 'label' => $this->leaf->name, 'url' => $this->leaf->url($division)],

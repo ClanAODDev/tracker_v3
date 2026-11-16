@@ -20,12 +20,12 @@ import { cn } from '@/lib/utils';
 import type { BulkConfig, MemberListDivision } from './types';
 
 interface Props {
-    selectedIds: number[];
+    selectedIds: string[];
     parttimersSelected: boolean;
     bulk: BulkConfig;
     division: MemberListDivision;
     onClear: () => void;
-    onReminded: (ids: number[], date: string) => void;
+    onReminded: (ids: string[], date: string) => void;
 }
 
 export function BulkBar({ selectedIds, parttimersSelected, bulk, division, onClear, onReminded }: Props) {
@@ -41,7 +41,7 @@ export function BulkBar({ selectedIds, parttimersSelected, bulk, division, onCle
     async function markReminded() {
         setBusy(true);
         try {
-            const res = await postJson<{ count: number; skipped: number; updatedIds: number[]; date: string }>(
+            const res = await postJson<{ count: number; skipped: number; updatedIds: string[]; date: string }>(
                 bulk.urls.reminder,
                 { member_ids: selectedIds },
             );
@@ -140,7 +140,7 @@ function TagsDialog({
     open: boolean;
     onOpenChange: (v: boolean) => void;
     tags: Array<{ id: number; name: string }>;
-    memberIds: number[];
+    memberIds: string[];
     url: string;
 }) {
     const [selected, setSelected] = useState<Set<number>>(new Set());
@@ -234,7 +234,7 @@ function MoveDialog({
 }: {
     open: boolean;
     onOpenChange: (v: boolean) => void;
-    memberIds: number[];
+    memberIds: string[];
     division: MemberListDivision;
     dataUrl: string;
     submitUrl: string;

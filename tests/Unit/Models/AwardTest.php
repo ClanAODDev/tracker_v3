@@ -184,12 +184,12 @@ class AwardTest extends TestCase
         ]);
 
         $validator = Validator::make(
-            ['member_id' => $member->clan_id],
-            ['member_id' => [new UniqueAwardForMember($award->id)]]
+            ['member' => $member->guid],
+            ['member' => [new UniqueAwardForMember($award->id)]]
         );
 
         $this->assertTrue($validator->fails());
-        $this->assertArrayHasKey('member_id', $validator->errors()->toArray());
+        $this->assertArrayHasKey('member', $validator->errors()->toArray());
     }
 
     #[Test]
@@ -208,8 +208,8 @@ class AwardTest extends TestCase
         ]);
 
         $validator = Validator::make(
-            ['member_id' => $member->clan_id],
-            ['member_id' => [new UniqueAwardForMember($award->id)]]
+            ['member' => $member->guid],
+            ['member' => [new UniqueAwardForMember($award->id)]]
         );
 
         $this->assertFalse($validator->fails());
@@ -226,8 +226,8 @@ class AwardTest extends TestCase
         $member = $this->createMember(['division_id' => $division->id]);
 
         $validator = Validator::make(
-            ['member_id' => $member->clan_id],
-            ['member_id' => [new UniqueAwardForMember($award->id)]]
+            ['member' => $member->guid],
+            ['member' => [new UniqueAwardForMember($award->id)]]
         );
 
         $this->assertFalse($validator->fails());
@@ -366,8 +366,8 @@ class AwardTest extends TestCase
         ]);
 
         $validator = Validator::make(
-            ['member_id' => $member->clan_id],
-            ['member_id' => [new UniqueAwardForMember($tier2->id)]]
+            ['member' => $member->guid],
+            ['member' => [new UniqueAwardForMember($tier2->id)]]
         );
 
         $this->assertTrue($validator->fails());

@@ -26,7 +26,7 @@ class DivisionNoteController extends Controller
             : $division->notes();
 
         $notes = $notes
-            ->with(['member:id,name,clan_id,rank', 'author:id,name']);
+            ->with(['member:id,guid,name,clan_id,rank', 'author:id,name']);
 
         if ($search) {
             $notes = $notes->where(function ($query) use ($search) {

@@ -25,13 +25,13 @@ class BulkMoveController extends Controller
     {
         $validated = $request->validate([
             'member_ids'   => 'required|array',
-            'member_ids.*' => 'integer',
+            'member_ids.*' => 'string',
             'unit_id'      => ['required', 'integer', Rule::exists('units', 'id')->where('division_id', $division->id)->whereNull('deleted_at')],
         ]);
 
         $unit = Unit::query()->findOrFail($validated['unit_id']);
 
-        $members = Member::whereIn('clan_id', $validated['member_ids'])
+        $members = Member::whereIn('guid', $validated['member_ids'])
             ->where('division_id', $division->id)
             ->get();
 

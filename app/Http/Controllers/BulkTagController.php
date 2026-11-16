@@ -135,7 +135,7 @@ class BulkTagController extends Controller
     {
         $validated = $request->validated();
 
-        $members    = Member::whereIn('clan_id', $validated['member_ids'])->get();
+        $members    = Member::whereIn('guid', $validated['member_ids'])->get();
         $user       = auth()->user();
         $assignerId = $user->member?->id;
 

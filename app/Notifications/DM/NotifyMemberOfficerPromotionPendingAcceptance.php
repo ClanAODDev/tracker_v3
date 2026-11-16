@@ -41,7 +41,7 @@ class NotifyMemberOfficerPromotionPendingAcceptance extends Notification impleme
         $route = URL::temporarySignedRoute('promotion.confirm', now()->addMinutes(
             config('aod.rank.promotion_acceptance_mins')
         ), [
-            $notifiable->clan_id,
+            $notifiable,
             $this->action,
         ]);
 

@@ -25,8 +25,8 @@ class DivisionPartTimeTest extends TestCase
 
         $this->actingAs($officer)
             ->post(route('addPartTimer', $division->slug), [
-                'member_id' => $member->clan_id,
-                'handles'   => [$handle->id => '76561198000000000'],
+                'member'  => $member->guid,
+                'handles' => [$handle->id => '76561198000000000'],
             ])
             ->assertRedirect();
 
@@ -51,8 +51,8 @@ class DivisionPartTimeTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->post(route('addPartTimer', $division->slug), [
-                'member_id' => $member->clan_id,
-                'handles'   => [$handle->id => 'not-numeric'],
+                'member'  => $member->guid,
+                'handles' => [$handle->id => 'not-numeric'],
             ]);
 
         $response->assertSessionHasErrors(["handles.{$handle->id}" => 'Steam ID must be numeric.']);
@@ -70,8 +70,8 @@ class DivisionPartTimeTest extends TestCase
 
         $this->actingAs($officer)
             ->post(route('addPartTimer', $division->slug), [
-                'member_id' => $member->clan_id,
-                'handles'   => [$na->id => '', $eu->id => 'EuCaptain'],
+                'member'  => $member->guid,
+                'handles' => [$na->id => '', $eu->id => 'EuCaptain'],
             ])
             ->assertRedirect();
 

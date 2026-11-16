@@ -32,7 +32,7 @@ class UnitMemberListTest extends TestCase
                 ->component('division/members')
                 ->where('scope.kind', 'platoon')
                 ->where('assignmentDepth', 2)
-                ->where('members', fn ($members) => collect($members)->contains('id', $member->clan_id))
+                ->where('members', fn ($members) => collect($members)->contains('id', $member->guid))
                 ->has('squads'));
     }
 
@@ -96,6 +96,6 @@ class UnitMemberListTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('division/members')
                 ->where('scope.kind', 'squad')
-                ->where('members', fn ($members) => collect($members)->contains('id', $member->clan_id)));
+                ->where('members', fn ($members) => collect($members)->contains('id', $member->guid)));
     }
 }

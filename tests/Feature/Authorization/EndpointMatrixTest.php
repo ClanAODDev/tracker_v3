@@ -134,7 +134,7 @@ class EndpointMatrixTest extends PermissionMatrixTestCase
         foreach (PermissionWorld::ACTORS as $actor) {
             $targets  = [$this->world->targets['same_squad'], $this->world->targets['other_division']];
             $response = $this->asActor($actor)->postJson(route('bulk-tags.store', $this->world->divisionA->slug), [
-                'member_ids' => array_map(fn ($m) => $m->clan_id, $targets),
+                'member_ids' => array_map(fn ($m) => $m->guid, $targets),
                 'tags'       => [$tagA->id, $global->id],
                 'action'     => 'assign',
             ]);

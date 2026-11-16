@@ -226,7 +226,7 @@ export default function MemberShow(props: MemberShowProps) {
 
             {canCreateNote && (
                 <NotesDialog
-                    memberClanId={member.clanId}
+                    memberGuid={member.guid}
                     notes={notes}
                     trashedNotes={trashedNotes}
                     noteTypes={noteTypes}

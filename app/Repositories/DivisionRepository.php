@@ -33,7 +33,7 @@ class DivisionRepository
 
     public function getDivisionAnniversaries(Division $division): Collection
     {
-        $anniversaries = Member::select('id', 'name', 'join_date', 'clan_id', 'rank')
+        $anniversaries = Member::select('id', 'guid', 'name', 'join_date', 'clan_id', 'rank')
             ->selectRaw('TIMESTAMPDIFF(YEAR, join_date, CURRENT_DATE()) + IF(DAY(join_date) > DAY(CURRENT_DATE()), 1, 0) AS years_since_joined')
             ->whereMonth('join_date', now()->month)
             ->whereRaw('TIMESTAMPDIFF(YEAR, join_date, CURRENT_DATE()) + IF(DAY(join_date) > DAY(CURRENT_DATE()), 1, 0) IN (5, 10, 15, 20)')

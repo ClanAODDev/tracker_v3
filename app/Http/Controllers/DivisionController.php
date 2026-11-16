@@ -70,7 +70,7 @@ class DivisionController extends Controller
                     ])
                     ->values()
                     ->all(),
-                'removeUrl' => route('removePartTimer', [$division->slug, $member->clan_id]),
+                'removeUrl' => route('removePartTimer', [$division->slug, $member]),
             ];
         })->values();
 
@@ -154,9 +154,9 @@ class DivisionController extends Controller
             ->with('unit')
             ->whereIn('unit_id', $division->units()->where('depth', $request->level() - 1)->select('id'))
             ->where('position', Position::MEMBER)
-            ->get(['id', 'clan_id', 'name', 'rank', 'unit_id'])
+            ->get(['id', 'guid', 'name', 'rank', 'unit_id'])
             ->map(fn ($member) => [
-                'id'         => $member->clan_id,
+                'id'         => $member->guid,
                 'name'       => $member->present()->rankName,
                 'platoon'    => $member->unit?->name ?? 'Unknown',
                 'platoon_id' => $member->unit_id,

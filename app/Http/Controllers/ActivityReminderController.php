@@ -77,7 +77,7 @@ class ActivityReminderController extends Controller
             return response()->json(['success' => false, 'message' => 'No members selected'], 400);
         }
 
-        $members    = Member::whereIn('clan_id', $memberIds)->get()->keyBy('id');
+        $members    = Member::whereIn('guid', $memberIds)->get()->keyBy('id');
         $trackerIds = $members->keys()->toArray();
 
         $alreadyRemindedIds = ActivityReminder::whereIn('member_id', $trackerIds)
@@ -85,8 +85,8 @@ class ActivityReminderController extends Controller
             ->pluck('member_id')
             ->toArray();
 
-        $toUpdateIds    = array_values(array_diff($trackerIds, $alreadyRemindedIds));
-        $updatedClanIds = collect($toUpdateIds)->map(fn ($id) => $members->get($id)->clan_id)->all();
+        $toUpdateIds  = array_values(array_diff($trackerIds, $alreadyRemindedIds));
+        $updatedGuids = collect($toUpdateIds)->map(fn ($id) => $members->get($id)->guid)->all();
 
         if (empty($toUpdateIds)) {
             if ($request->has('redirect')) {
@@ -138,7 +138,7 @@ class ActivityReminderController extends Controller
             'success'    => true,
             'count'      => $count,
             'skipped'    => $skippedCount,
-            'updatedIds' => $updatedClanIds,
+            'updatedIds' => $updatedGuids,
             'date'       => $now->format('n/j'),
         ]);
     }

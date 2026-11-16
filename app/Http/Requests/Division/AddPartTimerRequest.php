@@ -18,14 +18,14 @@ class AddPartTimerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'member_id' => ['required', 'exists:members,clan_id'],
-            'handles'   => ['nullable', 'array'],
+            'member'  => ['required', 'string', 'exists:members,guid'],
+            'handles' => ['nullable', 'array'],
             ...HandleRules::forDivision($this->route('division')),
         ];
     }
 
     public function member(): ?Member
     {
-        return Member::where('clan_id', $this->input('member_id'))->first();
+        return Member::where('guid', $this->input('member'))->first();
     }
 }

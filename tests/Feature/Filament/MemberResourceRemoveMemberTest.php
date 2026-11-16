@@ -31,7 +31,7 @@ class MemberResourceRemoveMemberTest extends TestCase
 
         $this->actingAs($srLdr);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->callAction('remove_member', ['removal_reason' => 'Inactive'])
             ->assertNotified('Cannot Remove Member');
 

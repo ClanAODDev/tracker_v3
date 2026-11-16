@@ -48,6 +48,8 @@ class MemberResource extends Resource
 {
     protected static ?string $model = Member::class;
 
+    protected static ?string $recordRouteKeyName = 'id';
+
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
     protected static string|\UnitEnum|null $navigationGroup = 'Division';

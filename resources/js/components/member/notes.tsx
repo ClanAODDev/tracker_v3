@@ -33,7 +33,7 @@ const TYPE_META: Record<string, { icon: typeof ThumbsUp; className: string; hatc
     general: { icon: MessageSquare, className: 'text-muted-foreground', label: 'General' },
 };
 
-function NoteCard({ note, memberClanId, trashed }: { note: MemberNote; memberClanId: number; trashed?: boolean }) {
+function NoteCard({ note, memberGuid, trashed }: { note: MemberNote; memberGuid: string; trashed?: boolean }) {
     const meta = TYPE_META[note.type] ?? TYPE_META.general;
     const Icon = meta.icon;
     const edit = useForm({ body: note.body, type: note.type });
@@ -41,7 +41,7 @@ function NoteCard({ note, memberClanId, trashed }: { note: MemberNote; memberCla
 
     function submitEdit(e: FormEvent) {
         e.preventDefault();
-        edit.post(`/members/${memberClanId}/notes/${note.id}`, { onSuccess: () => setEditing(false) });
+        edit.post(`/members/${memberGuid}/notes/${note.id}`, { onSuccess: () => setEditing(false) });
     }
 
     return (
@@ -147,7 +147,7 @@ function NoteCard({ note, memberClanId, trashed }: { note: MemberNote; memberCla
 }
 
 export function NotesDialog({
-    memberClanId,
+    memberGuid,
     notes,
     trashedNotes,
     noteTypes,
@@ -157,7 +157,7 @@ export function NotesDialog({
     open,
     onOpenChange,
 }: {
-    memberClanId: number;
+    memberGuid: string;
     notes: MemberNote[];
     trashedNotes: MemberNote[];
     noteTypes: Record<string, string>;
@@ -173,7 +173,7 @@ export function NotesDialog({
 
     function submit(e: FormEvent) {
         e.preventDefault();
-        create.post(`/members/${memberClanId}/notes`, {
+        create.post(`/members/${memberGuid}/notes`, {
             preserveScroll: true,
             onSuccess: () => {
                 create.reset('body');
@@ -260,7 +260,7 @@ export function NotesDialog({
                             </p>
                         ) : (
                             (showTrashed ? trashedNotes : notes).map((note) => (
-                                <NoteCard key={note.id} note={note} memberClanId={memberClanId} trashed={showTrashed} />
+                                <NoteCard key={note.id} note={note} memberGuid={memberGuid} trashed={showTrashed} />
                             ))
                         )}
                     </div>

@@ -15,7 +15,7 @@ import { postJson } from '@/lib/api';
 import AppLayout from '@/layouts/AppLayout';
 
 interface InactiveRow {
-    id: number;
+    id: string;
     name: string;
     rankAbbr: string | null;
     profileUrl: string;
@@ -62,7 +62,7 @@ export default function InactiveMembers({
     bulk,
 }: Props) {
     const [query, setQuery] = useState('');
-    const [selected, setSelected] = useState<Set<number>>(new Set());
+    const [selected, setSelected] = useState<Set<string>>(new Set());
     const [tab, setTab] = useState<'inactive' | 'flagged'>(
         typeof window !== 'undefined' && window.location.hash === '#flagged' ? 'flagged' : 'inactive',
     );
@@ -79,7 +79,7 @@ export default function InactiveMembers({
         history.replaceState(null, '', `#${next}`);
     }
 
-    function toggle(id: number) {
+    function toggle(id: string) {
         setSelected((prev) => {
             const next = new Set(prev);
             next.has(id) ? next.delete(id) : next.add(id);

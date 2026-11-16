@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
 
         Route::bind('username', fn ($username) => User::whereName($username)->firstOrFail());
 
-        Route::bind('member', fn ($member) => Member::whereClanId($member)->firstOrFail());
+        Route::model('member', Member::class);
     }
 
     /**

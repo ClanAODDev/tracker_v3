@@ -158,7 +158,7 @@ class ActivityReminderTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->post(route('bulk-reminder.store', $division->slug), [
-                'member_ids' => implode(',', [$member1->clan_id, $member2->clan_id, $member3->clan_id]),
+                'member_ids' => implode(',', [$member1->guid, $member2->guid, $member3->guid]),
                 'confirm'    => true,
                 'redirect'   => route('division.inactive-members', $division->slug),
             ]);
@@ -171,7 +171,7 @@ class ActivityReminderTest extends TestCase
     }
 
     #[Test]
-    public function bulk_reminder_json_returns_updated_clan_ids()
+    public function bulk_reminder_json_returns_updated_member_guids()
     {
         $officer  = $this->createOfficer();
         $division = $officer->member->division;
@@ -180,13 +180,13 @@ class ActivityReminderTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->postJson(route('bulk-reminder.store', $division->slug), [
-                'member_ids' => [$member1->clan_id, $member2->clan_id],
+                'member_ids' => [$member1->guid, $member2->guid],
             ])
             ->assertOk()
             ->assertJsonPath('count', 2);
 
         $this->assertEqualsCanonicalizing(
-            [$member1->clan_id, $member2->clan_id],
+            [$member1->guid, $member2->guid],
             $response->json('updatedIds'),
         );
     }
@@ -207,7 +207,7 @@ class ActivityReminderTest extends TestCase
 
         $response = $this->actingAs($officer)
             ->post(route('bulk-reminder.store', $division->slug), [
-                'member_ids' => implode(',', [$member1->clan_id, $member2->clan_id]),
+                'member_ids' => implode(',', [$member1->guid, $member2->guid]),
                 'confirm'    => true,
                 'redirect'   => route('division.inactive-members', $division->slug),
             ]);

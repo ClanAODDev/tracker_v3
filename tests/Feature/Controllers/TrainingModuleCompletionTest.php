@@ -30,13 +30,13 @@ class TrainingModuleCompletionTest extends TestCase
         $trainee = $this->createMember();
 
         $this->actingAs($srLdr)
-            ->get(route('training.show', ['slug' => $module->slug, 'clan_id' => $trainee->clan_id]))
+            ->get(route('training.show', ['slug' => $module->slug, 'member' => $trainee->guid]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('training/module')
                 ->where('module.showCompletionForm', true)
                 ->where('trainee.name', $trainee->name)
-                ->where('trainee.clanId', $trainee->clan_id));
+                ->where('trainee.guid', $trainee->guid));
     }
 
     #[Test]
@@ -71,7 +71,7 @@ class TrainingModuleCompletionTest extends TestCase
         $trainee = $this->createMember();
 
         $this->actingAs($srLdr)
-            ->get(route('training.show', ['slug' => $module->slug, 'clan_id' => $trainee->clan_id]))
+            ->get(route('training.show', ['slug' => $module->slug, 'member' => $trainee->guid]))
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('training/module')
@@ -86,8 +86,8 @@ class TrainingModuleCompletionTest extends TestCase
 
         $this->actingAs($srLdr)
             ->post(route('training.update'), [
-                'module'  => 'general',
-                'clan_id' => $trainee->clan_id,
+                'module' => 'general',
+                'member' => $trainee->guid,
             ])
             ->assertRedirect('home');
 
@@ -104,8 +104,8 @@ class TrainingModuleCompletionTest extends TestCase
 
         $this->actingAs($user)
             ->post(route('training.update'), [
-                'module'  => 'general',
-                'clan_id' => $trainee->clan_id,
+                'module' => 'general',
+                'member' => $trainee->guid,
             ])
             ->assertForbidden();
 

@@ -80,10 +80,10 @@ class InactiveMemberController extends Controller
 
         $validated = $request->validate([
             'member_ids'   => 'required|array',
-            'member_ids.*' => 'integer',
+            'member_ids.*' => 'string',
         ]);
 
-        $members = Member::whereIn('clan_id', $validated['member_ids'])
+        $members = Member::whereIn('guid', $validated['member_ids'])
             ->where('division_id', $division->id)
             ->where('flagged_for_inactivity', ! $flag)
             ->get();
@@ -91,7 +91,7 @@ class InactiveMemberController extends Controller
         $updatedIds = [];
         foreach ($members as $member) {
             $this->setFlagStatus($member, $flag);
-            $updatedIds[] = $member->clan_id;
+            $updatedIds[] = $member->guid;
         }
 
         $action = $flag ? 'flagged for removal' : 'unflagged';

@@ -96,15 +96,15 @@ class MemberProfileData
                     ? ['label' => 'Edit member', 'url' => route('filament.mod.resources.members.edit', $member), 'external' => true]
                     : null,
                 $user->can('update', $member) && $user->can('train', $user) && $member->rank->isAtLeast(Rank::SERGEANT)
-                    ? ['label' => 'SGT training', 'url' => route('training.sgt', ['clan_id' => $member->clan_id])]
+                    ? ['label' => 'SGT training', 'url' => route('training.sgt', ['member' => $member->guid])]
                     : null,
                 $member->user && $user->can('impersonate', $member->user)
                     ? ['label' => 'Impersonate user', 'url' => route('impersonate', $member->user), 'method' => 'post']
                     : null,
                 $user->can('flagInactive', Member::class) && ($member->flagged_for_inactivity || $member->division_id)
                     ? ($member->flagged_for_inactivity
-                        ? ['label' => 'Unflag for inactivity', 'url' => route('member.unflag-inactive', $member->clan_id), 'method' => 'post']
-                        : ['label' => 'Flag for inactivity', 'url' => route('member.flag-inactive', $member->clan_id), 'method' => 'post'])
+                        ? ['label' => 'Unflag for inactivity', 'url' => route('member.unflag-inactive', $member), 'method' => 'post']
+                        : ['label' => 'Flag for inactivity', 'url' => route('member.flag-inactive', $member), 'method' => 'post'])
                     : null,
             ])),
             'tags' => $member->tags
@@ -144,9 +144,9 @@ class MemberProfileData
                         : [],
                     'remindedToday'     => $member->activityReminders->contains(fn ($r) => $r->created_at->isToday()),
                     'canRemind'         => $user->can('remindActivity', $member),
-                    'remindUrl'         => route('member.set-activity-reminder', $member->clan_id),
+                    'remindUrl'         => route('member.set-activity-reminder', $member),
                     'canClearReminders' => $user->can('clearActivityReminders', $member),
-                    'clearRemindersUrl' => route('member.clear-activity-reminders', $member->clan_id),
+                    'clearRemindersUrl' => route('member.clear-activity-reminders', $member),
                 ],
                 'recruiting' => [
                     'total'         => $this->stats->recruiting->total,
@@ -276,7 +276,7 @@ class MemberProfileData
         }
 
         return [
-            'saveUrl'              => route('member.update-details', $member->clan_id),
+            'saveUrl'              => route('member.update-details', $member),
             'canEditHandles'       => $canEditHandles,
             'handles'              => $canEditHandles ? $this->handlesForManagement() : [],
             'availableHandleTypes' => $canEditHandles
@@ -321,10 +321,10 @@ class MemberProfileData
             'createdAtFull'  => $note->created_at->format('M j, Y g:i A'),
             'forumThreadUrl' => $note->forum_thread_id ? doForumFunction([$note->forum_thread_id], 'showThread') : null,
             'canDelete'      => ! $trashed && $user->can('delete', $note),
-            'deleteUrl'      => route('deleteNote', [$member->clan_id, $note->id]),
+            'deleteUrl'      => route('deleteNote', [$member, $note->id]),
             'deletedAt'      => $trashed ? $note->deleted_at->diffForHumans() : null,
-            'restoreUrl'     => $trashed ? route('restoreNote', [$member->clan_id, $note->id]) : null,
-            'forceDeleteUrl' => $trashed ? route('forceDeleteNote', [$member->clan_id, $note->id]) : null,
+            'restoreUrl'     => $trashed ? route('restoreNote', [$member, $note->id]) : null,
+            'forceDeleteUrl' => $trashed ? route('forceDeleteNote', [$member, $note->id]) : null,
         ];
     }
 
@@ -358,7 +358,7 @@ class MemberProfileData
                 'type'      => 'warning',
                 'message'   => 'Member is flagged for removal due to inactivity.',
                 'ctaLabel'  => 'Remove flag',
-                'ctaUrl'    => route('member.unflag-inactive', $member->clan_id),
+                'ctaUrl'    => route('member.unflag-inactive', $member),
                 'ctaMethod' => 'post',
             ];
         }
@@ -412,10 +412,10 @@ class MemberProfileData
         }
 
         return [
-            'getUrl'            => route('member-tags.get', [$division, $member->clan_id]),
-            'addUrl'            => route('member-tags.add', [$division, $member->clan_id]),
-            'removeUrl'         => route('member-tags.remove', [$division, $member->clan_id]),
-            'createUrl'         => route('member-tags.create', [$division, $member->clan_id]),
+            'getUrl'            => route('member-tags.get', [$division, $member]),
+            'addUrl'            => route('member-tags.add', [$division, $member]),
+            'removeUrl'         => route('member-tags.remove', [$division, $member]),
+            'createUrl'         => route('member-tags.create', [$division, $member]),
             'canCreate'         => $user->can('create', DivisionTag::class),
             'visibilityOptions' => collect(TagVisibility::cases())
                 ->filter(fn (TagVisibility $v) => $v !== TagVisibility::SENIOR_LEADERS || $user->can(Ability::UseSeniorLeaderTags))

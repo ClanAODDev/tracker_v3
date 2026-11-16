@@ -15,7 +15,7 @@ interface Props {
     omitted: string[];
     canRemind: boolean;
     reminderUrl: string;
-    reminderIds: number[];
+    reminderIds: string[];
 }
 
 export default function CreatePm({

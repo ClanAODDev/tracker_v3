@@ -103,7 +103,7 @@ class UnitWritersTest extends TestCase
         $this->actingAs($this->createSeniorLeader($this->division));
         $member = $this->createMember(['division_id' => $this->division->id]);
 
-        $this->postJson(route('bulk-transfer.store', $this->division->slug), ['member_ids' => [$member->clan_id], 'unit_id' => $this->platoon->fresh()->id])->assertOk();
+        $this->postJson(route('bulk-transfer.store', $this->division->slug), ['member_ids' => [$member->guid], 'unit_id' => $this->platoon->fresh()->id])->assertOk();
         $this->assertSame($this->platoon->fresh()->id, $member->fresh()->unit_id);
 
         $this->postJson('/members/assign-unit', ['member_id' => $member->id, 'unit_id' => $this->squad->fresh()->id])->assertOk();
@@ -134,7 +134,7 @@ class UnitWritersTest extends TestCase
         $this->actingAs($this->createAdmin());
         $member = $this->createMember(['division_id' => $this->division->id, 'position' => Position::MEMBER]);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm(['unit_level_1' => $this->platoon->fresh()->id, 'unit_level_2' => $this->squad->fresh()->id])
             ->call('save')
             ->assertHasNoFormErrors();

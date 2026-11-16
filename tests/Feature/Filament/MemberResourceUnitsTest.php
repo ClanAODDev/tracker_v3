@@ -37,7 +37,7 @@ class MemberResourceUnitsTest extends TestCase
 
         $this->actingAs($leader);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->assertFormSet([
                 'unit_level_1' => $platoon->id,
                 'unit_level_2' => $squad->id,
@@ -78,7 +78,7 @@ class MemberResourceUnitsTest extends TestCase
 
         $this->actingAs($leader);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm(['unit_level_1' => null, 'unit_level_2' => null])
             ->call('save')
             ->assertHasNoFormErrors();
@@ -99,14 +99,14 @@ class MemberResourceUnitsTest extends TestCase
 
         $this->actingAs($leader);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->fillForm(['unit_level_1' => $company->id, 'unit_level_2' => $middle->id, 'unit_level_3' => $team->id])
             ->call('save')
             ->assertHasNoFormErrors();
 
         $this->assertSame($team->id, $member->fresh()->unit_id);
 
-        Livewire::test(EditMember::class, ['record' => $member->getRouteKey()])
+        Livewire::test(EditMember::class, ['record' => $member->id])
             ->assertFormSet(['unit_level_1' => $company->id, 'unit_level_2' => $middle->id, 'unit_level_3' => $team->id]);
     }
 
