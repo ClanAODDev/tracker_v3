@@ -125,12 +125,12 @@ class DeepUnitPagesTest extends TestCase
             ->assertOk()
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('root.id', $this->company->id)
-                ->where('root.members.0.id', $direct->id)
+                ->where('root.members.0.id', $direct->guid)
                 ->has('units', 2)
                 ->where('units.0.id', $this->middle->id)
-                ->where('units.0.members.0.id', $inMiddle->id)
+                ->where('units.0.members.0.id', $inMiddle->guid)
                 ->where('units.1.id', $this->leaf->id)
-                ->where('units.1.members.0.id', $inLeaf->id)
+                ->where('units.1.members.0.id', $inLeaf->guid)
                 ->where('units.1.trail', $this->middle->name . ' / ' . $this->leaf->name));
     }
 
@@ -151,12 +151,12 @@ class DeepUnitPagesTest extends TestCase
         $member   = $this->createMember(['division_id' => $division->id, 'unit_id' => $this->middle->id]);
 
         $this->actingAs($this->officer)
-            ->postJson('/members/assign-unit', ['member_id' => $member->id, 'unit_id' => $this->leaf->id])
+            ->postJson('/members/assign-unit', ['member' => $member->guid, 'unit_id' => $this->leaf->id])
             ->assertOk();
 
         $this->assertSame($this->leaf->id, $member->fresh()->unit_id);
 
-        $this->postJson('/members/assign-unit', ['member_id' => $member->id, 'unit_id' => $this->middle->id])
+        $this->postJson('/members/assign-unit', ['member' => $member->guid, 'unit_id' => $this->middle->id])
             ->assertOk();
 
         $this->assertSame($this->middle->id, $member->fresh()->unit_id);
@@ -169,7 +169,7 @@ class DeepUnitPagesTest extends TestCase
         $member = $this->createMember(['division_id' => $this->officer->member->division_id]);
 
         $this->actingAs($this->officer)
-            ->postJson('/members/assign-unit', ['member_id' => $member->id, 'unit_id' => $other->id])
+            ->postJson('/members/assign-unit', ['member' => $member->guid, 'unit_id' => $other->id])
             ->assertUnprocessable();
     }
 

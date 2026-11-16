@@ -106,7 +106,7 @@ class UnitWritersTest extends TestCase
         $this->postJson(route('bulk-transfer.store', $this->division->slug), ['member_ids' => [$member->guid], 'unit_id' => $this->platoon->fresh()->id])->assertOk();
         $this->assertSame($this->platoon->fresh()->id, $member->fresh()->unit_id);
 
-        $this->postJson('/members/assign-unit', ['member_id' => $member->id, 'unit_id' => $this->squad->fresh()->id])->assertOk();
+        $this->postJson('/members/assign-unit', ['member' => $member->guid, 'unit_id' => $this->squad->fresh()->id])->assertOk();
         $this->assertSame($this->squad->fresh()->id, $member->fresh()->unit_id);
 
         $this->post(route('member.unassign', $member->clan_id))->assertRedirect();

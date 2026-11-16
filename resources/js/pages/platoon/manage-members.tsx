@@ -10,7 +10,7 @@ import AppLayout from '@/layouts/AppLayout';
 import type { Crumb } from '@/components/page-header';
 
 interface MemberCard {
-    id: number;
+    id: string;
     name: string;
     isDirectRecruit?: boolean;
 }
@@ -55,11 +55,11 @@ function DropList({
     empty?: string;
     scroll?: boolean;
     hover: boolean;
-    draggingId: number | null;
+    draggingId: string | null;
     onDragOver: () => void;
     onDragLeave: () => void;
     onDrop: () => void;
-    onDragStart: (e: DragEvent, id: number, from: Bucket) => void;
+    onDragStart: (e: DragEvent, id: string, from: Bucket) => void;
     onDragEnd: () => void;
 }) {
     return (
@@ -107,16 +107,16 @@ export default function ManageMembers({ division, root, units, assignUrl, backUr
         { id: root.id, name: root.name, levelLabel: root.levelLabel, members: root.members },
         ...units,
     ]);
-    const [dragging, setDragging] = useState<{ id: number; from: Bucket } | null>(null);
+    const [dragging, setDragging] = useState<{ id: string; from: Bucket } | null>(null);
     const [hover, setHover] = useState<Bucket | null>(null);
 
     const memberIndex = useMemo(() => {
-        const map = new Map<number, MemberCard>();
+        const map = new Map<string, MemberCard>();
         columns.forEach((column) => column.members.forEach((member) => map.set(member.id, member)));
         return map;
     }, [columns]);
 
-    function removeFrom(bucket: Bucket, id: number) {
+    function removeFrom(bucket: Bucket, id: string) {
         if (bucket === REMOVE) return;
         setColumns((prev) =>
             prev.map((column) =>
@@ -152,7 +152,7 @@ export default function ManageMembers({ division, root, units, assignUrl, backUr
         addTo(target, card);
 
         try {
-            await postJson(assignUrl, { member_id: card.id, unit_id: target === REMOVE ? 0 : target });
+            await postJson(assignUrl, { member: card.id, unit_id: target === REMOVE ? 0 : target });
             toast.success(
                 target === REMOVE ? `${card.name} removed from ${root.name}` : `${card.name} moved to ${targetName}`,
             );
@@ -163,7 +163,7 @@ export default function ManageMembers({ division, root, units, assignUrl, backUr
         }
     }
 
-    function onDragStart(e: DragEvent, id: number, from: Bucket) {
+    function onDragStart(e: DragEvent, id: string, from: Bucket) {
         setDragging({ id, from });
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', String(id));

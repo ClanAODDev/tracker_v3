@@ -145,7 +145,7 @@ class RankActionResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])->defaultSort('created_at', 'desc')
             ->modifyQueryUsing(function (Builder $query) {
-                $query->with(['member', 'requester']);
+                $query->with(['member.unit.parent', 'requester']);
                 $query->forUser(auth()->user());
             })
             ->filters(
