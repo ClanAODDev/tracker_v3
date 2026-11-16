@@ -47,6 +47,23 @@ class MemberResourceSetDiscordInfoTest extends TestCase
     }
 
     #[Test]
+    public function the_profile_edit_member_link_opens_the_edit_page(): void
+    {
+        $division = $this->createActiveDivision();
+        $srLdr    = $this->createSeniorLeader($division);
+        $member   = $this->createMember(['division_id' => $division->id]);
+
+        $actions = $this->actingAs($srLdr)
+            ->get(route('member', $member->getUrlParams()))
+            ->assertOk()
+            ->inertiaProps('actions');
+
+        $editUrl = collect($actions)->firstWhere('label', 'Edit member')['url'];
+
+        $this->get($editUrl)->assertOk();
+    }
+
+    #[Test]
     public function member_role_cannot_reach_the_edit_page_at_all(): void
     {
         $division = $this->createActiveDivision();
@@ -54,7 +71,7 @@ class MemberResourceSetDiscordInfoTest extends TestCase
         $member   = $this->createMember(['division_id' => $division->id]);
 
         $this->actingAs($user)
-            ->get(route('filament.mod.resources.members.edit', $member))
+            ->get(route('filament.mod.resources.members.edit', $member->id))
             ->assertForbidden();
     }
 }

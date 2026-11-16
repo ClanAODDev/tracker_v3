@@ -13,7 +13,7 @@
                 <div class="flex items-center justify-between py-3 px-2 hover:bg-gray-100/50 dark:hover:bg-white/5 rounded">
                     <div class="flex items-center gap-3">
                         <div>
-                            <a href="{{ route('filament.admin.resources.members.edit', $member) }}"
+                            <a href="{{ route('filament.admin.resources.members.edit', $member->id) }}"
                                class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">
                                 {{ $member->name }}
                             </a>
