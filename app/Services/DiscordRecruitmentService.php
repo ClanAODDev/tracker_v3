@@ -28,12 +28,12 @@ class DiscordRecruitmentService
     public function recruit(User $pendingUser, Request $request, Division $division, Member $recruiter): Member
     {
         Log::channel('recruiting')->info('Discord recruitment started', [
-            'pending_user_id'  => $pendingUser->id,
-            'discord_id'       => $pendingUser->discord_id,
-            'discord_username' => $pendingUser->discord_username,
-            'email'            => $pendingUser->email,
-            'has_password'     => ! empty($pendingUser->forum_password),
-            'recruiter_id'     => $recruiter->clan_id,
+            'pending_user_id'   => $pendingUser->id,
+            'discord_id'        => $pendingUser->discord_id,
+            'discord_username'  => $pendingUser->discord_username,
+            'email'             => $pendingUser->email,
+            'has_password'      => ! empty($pendingUser->forum_password),
+            'recruiter_clan_id' => $recruiter->clan_id,
         ]);
 
         $forumUser = $this->resolveForumAccount($pendingUser, $request->forum_name, $recruiter->clan_id);
