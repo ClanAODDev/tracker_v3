@@ -22,10 +22,10 @@ class CleanupUnassignedLeaders implements ShouldQueue
             foreach ([UnitLevel::Platoon, UnitLevel::Squad] as $tier) {
                 Unit::query()
                     ->ofTier($tier)
-                    ->where('leader_id', '>', 0)
+                    ->whereNotNull('leader_member_id')
                     ->whereNotExists(fn (Builder $query) => $query
                         ->from('members')
-                        ->whereColumn('members.clan_id', 'units.leader_id')
+                        ->whereColumn('members.id', 'units.leader_member_id')
                         ->whereNull('members.deleted_at')
                         ->whereColumn('members.unit_id', 'units.id')
                         ->whereColumn('members.division_id', 'units.division_id'))

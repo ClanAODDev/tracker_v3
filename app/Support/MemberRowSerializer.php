@@ -16,7 +16,7 @@ class MemberRowSerializer
 
     public function __construct(
         private Division $division,
-        private ?int $directRecruitOfClanId = null,
+        private ?int $directRecruitOf = null,
     ) {}
 
     public function collection(Collection $members): array
@@ -81,8 +81,8 @@ class MemberRowSerializer
                 ->all(),
             'isParttimer'     => $isParttimer,
             'primaryDivision' => $isParttimer ? ($member->division?->name ?? 'None') : null,
-            'directRecruit'   => $this->directRecruitOfClanId !== null
-                && $member->recruiter_id === $this->directRecruitOfClanId,
+            'directRecruit'   => $this->directRecruitOf !== null
+                && $member->recruiter_member_id === $this->directRecruitOf,
         ];
     }
 

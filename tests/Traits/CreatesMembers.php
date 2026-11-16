@@ -85,7 +85,7 @@ trait CreatesMembers
             'unit_id'     => $squad->id,
         ], $memberAttributes));
 
-        $squad->update(['leader_id' => $member->clan_id]);
+        $squad->update(['leader_member_id' => $member->id]);
 
         return $member;
     }
@@ -97,7 +97,7 @@ trait CreatesMembers
             'unit_id'     => $platoon->id,
         ], $memberAttributes));
 
-        $platoon->update(['leader_id' => $member->clan_id]);
+        $platoon->update(['leader_member_id' => $member->id]);
 
         return $member;
     }
@@ -135,6 +135,6 @@ trait CreatesMembers
 
     protected function makeLeader(User $user, Unit $unit): void
     {
-        app(UnitAssignment::class)->setLeader($unit, $user->member->clan_id, recordActivity: false);
+        app(UnitAssignment::class)->setLeader($unit, $user->member->id, recordActivity: false);
     }
 }

@@ -47,8 +47,8 @@ class UnitPositionSyncTest extends TestCase
         $platoonLeader = $this->member();
         $squadLeader   = $this->member();
 
-        $this->units->setLeader($this->platoon, $platoonLeader->clan_id);
-        $this->units->setLeader($this->squad, $squadLeader->clan_id);
+        $this->units->setLeader($this->platoon, $platoonLeader->id);
+        $this->units->setLeader($this->squad, $squadLeader->id);
 
         $this->assertSame(Position::PLATOON_LEADER, $platoonLeader->fresh()->position);
         $this->assertSame(Position::SQUAD_LEADER, $squadLeader->fresh()->position);
@@ -60,8 +60,8 @@ class UnitPositionSyncTest extends TestCase
         $first  = $this->member();
         $second = $this->member();
 
-        $this->units->setLeader($this->squad, $first->clan_id);
-        $this->units->setLeader($this->squad, $second->clan_id);
+        $this->units->setLeader($this->squad, $first->id);
+        $this->units->setLeader($this->squad, $second->id);
 
         $this->assertSame(Position::MEMBER, $first->fresh()->position);
         $this->assertSame(Position::SQUAD_LEADER, $second->fresh()->position);
@@ -76,11 +76,11 @@ class UnitPositionSyncTest extends TestCase
     {
         $leader = $this->member();
 
-        $this->units->setLeader($this->squad, $leader->clan_id);
-        $this->units->setLeader($this->platoon, $leader->clan_id);
+        $this->units->setLeader($this->squad, $leader->id);
+        $this->units->setLeader($this->platoon, $leader->id);
 
         $this->assertSame(Position::PLATOON_LEADER, $leader->fresh()->position);
-        $this->assertNull($this->squad->fresh()->leader_id);
+        $this->assertNull($this->squad->fresh()->leader_member_id);
     }
 
     #[Test]
@@ -93,8 +93,8 @@ class UnitPositionSyncTest extends TestCase
         $middleLeader = $this->member();
         $leafLeader   = $this->member();
 
-        $this->units->setLeader($middle, $middleLeader->clan_id);
-        $this->units->setLeader($leaf, $leafLeader->clan_id);
+        $this->units->setLeader($middle, $middleLeader->id);
+        $this->units->setLeader($leaf, $leafLeader->id);
 
         $this->assertSame(Position::PLATOON_LEADER, $middleLeader->fresh()->position);
         $this->assertSame(Position::SQUAD_LEADER, $leafLeader->fresh()->position);
@@ -105,7 +105,7 @@ class UnitPositionSyncTest extends TestCase
     {
         $co = $this->member(['position' => Position::COMMANDING_OFFICER]);
 
-        $this->units->setLeader($this->platoon, $co->clan_id);
+        $this->units->setLeader($this->platoon, $co->id);
         $this->assertSame(Position::COMMANDING_OFFICER, $co->fresh()->position);
 
         $this->units->setLeader($this->platoon, null);
@@ -116,7 +116,7 @@ class UnitPositionSyncTest extends TestCase
     public function archiving_a_unit_returns_its_leader_to_member(): void
     {
         $leader = $this->member();
-        $this->units->setLeader($this->squad, $leader->clan_id);
+        $this->units->setLeader($this->squad, $leader->id);
 
         $this->units->archive($this->squad);
 
@@ -127,9 +127,9 @@ class UnitPositionSyncTest extends TestCase
     public function clearing_leadership_returns_the_leader_to_member(): void
     {
         $leader = $this->member();
-        $this->units->setLeader($this->squad, $leader->clan_id);
+        $this->units->setLeader($this->squad, $leader->id);
 
-        $this->units->clearLeadership([$leader->clan_id]);
+        $this->units->clearLeadership([$leader->id]);
 
         $this->assertSame(Position::MEMBER, $leader->fresh()->position);
     }

@@ -17,7 +17,7 @@ use InvalidArgumentException;
 
 class UnitAssignment
 {
-    private const UNIT_COLUMNS = ['name', 'description', 'logo', 'order', 'gen_pop', 'leader_id'];
+    private const UNIT_COLUMNS = ['name', 'description', 'logo', 'order', 'gen_pop', 'leader_member_id'];
 
     public function create(Division $division, ?Unit $parent, array $attributes): Unit
     {
@@ -37,7 +37,7 @@ class UnitAssignment
 
             $unit->update(['path' => ($parent?->path ?? '/') . $unit->id . '/']);
             $this->claimLeader($unit);
-            $this->syncPositions([$unit->leader_id]);
+            $this->syncPositions([$unit->leader_member_id]);
             $this->recordActivity($unit, ActivityType::CREATED_UNIT);
 
             return $unit;
@@ -101,17 +101,17 @@ class UnitAssignment
 
     public function update(Unit $unit, array $attributes): Unit
     {
-        if (array_key_exists('leader_id', $attributes)) {
-            $attributes['leader_id'] = ((int) $attributes['leader_id']) ?: null;
+        if (array_key_exists('leader_member_id', $attributes)) {
+            $attributes['leader_member_id'] = ((int) $attributes['leader_member_id']) ?: null;
         }
 
         DB::transaction(function () use ($unit, $attributes) {
-            $previousLeader = $unit->leader_id;
+            $previousLeader = $unit->leader_member_id;
 
             $unit->update(array_intersect_key($attributes, array_flip(self::UNIT_COLUMNS)));
             $this->claimLeader($unit);
             $this->flushHierarchy();
-            $this->syncPositions([$previousLeader, $unit->leader_id]);
+            $this->syncPositions([$previousLeader, $unit->leader_member_id]);
             $this->recordActivity($unit, ActivityType::UPDATED_UNIT);
         });
 
@@ -123,7 +123,7 @@ class UnitAssignment
         DB::transaction(function () use ($unit, $recordActivity) {
             $unit->delete();
             $this->flushHierarchy();
-            $this->syncPositions([$unit->leader_id]);
+            $this->syncPositions([$unit->leader_member_id]);
 
             if ($recordActivity) {
                 $this->recordActivity($unit, ActivityType::DELETED_UNIT);
@@ -136,19 +136,19 @@ class UnitAssignment
         DB::transaction(function () use ($unit) {
             $unit->restore();
             $this->flushHierarchy();
-            $this->syncPositions([$unit->leader_id]);
+            $this->syncPositions([$unit->leader_member_id]);
         });
     }
 
-    public function setLeader(Unit $unit, ?int $clanId, bool $recordActivity = true): void
+    public function setLeader(Unit $unit, ?int $memberId, bool $recordActivity = true): void
     {
-        DB::transaction(function () use ($unit, $clanId, $recordActivity) {
-            $previousLeader = $unit->leader_id;
+        DB::transaction(function () use ($unit, $memberId, $recordActivity) {
+            $previousLeader = $unit->leader_member_id;
 
-            $unit->update(['leader_id' => $clanId ?: null]);
+            $unit->update(['leader_member_id' => $memberId ?: null]);
             $this->claimLeader($unit);
             $this->flushHierarchy();
-            $this->syncPositions([$previousLeader, $unit->leader_id]);
+            $this->syncPositions([$previousLeader, $unit->leader_member_id]);
 
             if ($recordActivity) {
                 $this->recordActivity($unit, ActivityType::UPDATED_UNIT);
@@ -156,26 +156,26 @@ class UnitAssignment
         });
     }
 
-    public function clearLeadership(array $clanIds, ?Unit $except = null): int
+    public function clearLeadership(array $memberIds, ?Unit $except = null): int
     {
-        $clanIds = array_values(array_filter($clanIds));
+        $memberIds = array_values(array_filter($memberIds));
 
-        if ($clanIds === []) {
+        if ($memberIds === []) {
             return 0;
         }
 
-        return DB::transaction(function () use ($clanIds, $except) {
+        return DB::transaction(function () use ($memberIds, $except) {
             $units = Unit::query()
-                ->whereIn('leader_id', $clanIds)
+                ->whereIn('leader_member_id', $memberIds)
                 ->when($except, fn ($query) => $query->whereKeyNot($except->id))
                 ->get();
 
             foreach ($units as $unit) {
-                $unit->update(['leader_id' => null]);
+                $unit->update(['leader_member_id' => null]);
             }
 
             $this->flushHierarchy();
-            $this->syncPositions($clanIds);
+            $this->syncPositions($memberIds);
 
             return $units->count();
         });
@@ -222,17 +222,17 @@ class UnitAssignment
         $affected = Unit::query()
             ->where('id', $unit->id)
             ->orWhere(fn (Builder $query) => $query->where('path', 'like', $unit->path . '%'))
-            ->get(['id', 'leader_id']);
+            ->get(['id', 'leader_member_id']);
 
-        $clanIds = $affected->pluck('leader_id')->filter()->unique();
+        $memberIds = $affected->pluck('leader_member_id')->filter()->unique();
 
         $ledElsewhere = Unit::query()
-            ->whereIn('leader_id', $clanIds)
+            ->whereIn('leader_member_id', $memberIds)
             ->whereNotIn('id', $affected->pluck('id'))
-            ->pluck('leader_id');
+            ->pluck('leader_member_id');
 
         return Member::query()
-            ->whereIn('clan_id', $clanIds->diff($ledElsewhere))
+            ->whereIn('id', $memberIds->diff($ledElsewhere))
             ->whereIn('position', [Position::PLATOON_LEADER, Position::SQUAD_LEADER])
             ->orderBy('name')
             ->get();
@@ -242,25 +242,25 @@ class UnitAssignment
     {
         $holders = Member::query()
             ->whereIn('position', [Position::PLATOON_LEADER, Position::SQUAD_LEADER])
-            ->pluck('clan_id');
+            ->pluck('id');
 
-        $leaders = Unit::query()->whereNotNull('leader_id')->pluck('leader_id');
+        $leaders = Unit::query()->whereNotNull('leader_member_id')->pluck('leader_member_id');
 
         $this->syncPositions($holders->merge($leaders)->unique()->all());
     }
 
-    private function syncPositions(array $clanIds): void
+    private function syncPositions(array $memberIds): void
     {
-        $clanIds = array_values(array_unique(array_filter($clanIds)));
+        $memberIds = array_values(array_unique(array_filter($memberIds)));
 
-        if ($clanIds === []) {
+        if ($memberIds === []) {
             return;
         }
 
-        $led = Unit::query()->whereIn('leader_id', $clanIds)->get()->keyBy('leader_id');
+        $led = Unit::query()->whereIn('leader_member_id', $memberIds)->get()->keyBy('leader_member_id');
 
-        Member::query()->whereIn('clan_id', $clanIds)->get()->each(function (Member $member) use ($led) {
-            $position = $this->positionFor($member, $led->get($member->clan_id));
+        Member::query()->whereIn('id', $memberIds)->get()->each(function (Member $member) use ($led) {
+            $position = $this->positionFor($member, $led->get($member->id));
 
             if ($position !== $member->position) {
                 $member->update(['position' => $position]);
@@ -285,8 +285,8 @@ class UnitAssignment
 
     private function claimLeader(Unit $unit): void
     {
-        if ($unit->leader_id) {
-            $this->clearLeadership([$unit->leader_id], except: $unit);
+        if ($unit->leader_member_id) {
+            $this->clearLeadership([$unit->leader_member_id], except: $unit);
         }
     }
 

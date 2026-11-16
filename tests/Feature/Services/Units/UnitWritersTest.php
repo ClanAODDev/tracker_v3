@@ -56,7 +56,7 @@ class UnitWritersTest extends TestCase
         $leader->moveToDivision($other->id);
 
         $this->assertNull($leader->fresh()->unit_id);
-        $this->assertNull($this->squad->fresh()->leader_id);
+        $this->assertNull($this->squad->fresh()->leader_member_id);
 
         $member = $this->assigned();
         $member->reset();
@@ -71,7 +71,7 @@ class UnitWritersTest extends TestCase
 
         $leader->reset();
 
-        $this->assertNull($this->squad->fresh()->leader_id);
+        $this->assertNull($this->squad->fresh()->leader_member_id);
         $this->assertNull($leader->fresh()->unit_id);
         $this->assertSame(0, $leader->fresh()->division_id);
     }

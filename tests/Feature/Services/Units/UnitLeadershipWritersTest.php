@@ -48,12 +48,12 @@ class UnitLeadershipWritersTest extends TestCase
         $new = $this->createMember(['division_id' => $this->division->id]);
 
         Livewire::test(EditUnit::class, ['record' => $this->platoon->getRouteKey()])
-            ->fillForm(['leader_id' => $new->clan_id, 'name' => 'Renamed'])
+            ->fillForm(['leader_member_id' => $new->id, 'name' => 'Renamed'])
             ->call('save')
             ->assertHasNoFormErrors();
 
         $unit = $this->platoon->fresh();
-        $this->assertSame([$new->clan_id, 'Renamed'], [$unit->leader_id, $unit->name]);
+        $this->assertSame([$new->id, 'Renamed'], [$unit->leader_member_id, $unit->name]);
         $this->assertSame([Position::PLATOON_LEADER, $unit->id], [$new->fresh()->position, $new->fresh()->unit_id]);
         $this->assertSame([Position::MEMBER, null], [$old->fresh()->position, $old->fresh()->unit_id]);
     }
@@ -65,12 +65,12 @@ class UnitLeadershipWritersTest extends TestCase
         $new = $this->createMember(['division_id' => $this->division->id]);
 
         Livewire::test(EditUnit::class, ['record' => $this->squad->getRouteKey()])
-            ->fillForm(['leader_id' => $new->clan_id])
+            ->fillForm(['leader_member_id' => $new->id])
             ->call('save')
             ->assertHasNoFormErrors();
 
         $unit = $this->squad->fresh();
-        $this->assertSame($new->clan_id, $unit->leader_id);
+        $this->assertSame($new->id, $unit->leader_member_id);
         $this->assertSame($unit->id, $new->fresh()->unit_id);
         $this->assertSame([Position::MEMBER, null], [$old->fresh()->position, $old->fresh()->unit_id]);
     }
@@ -122,6 +122,6 @@ class UnitLeadershipWritersTest extends TestCase
 
         (new CleanupUnassignedLeaders)->handle();
 
-        $this->assertNull($this->platoon->fresh()->leader_id);
+        $this->assertNull($this->platoon->fresh()->leader_member_id);
     }
 }

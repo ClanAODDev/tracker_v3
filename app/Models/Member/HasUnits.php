@@ -11,7 +11,7 @@ trait HasUnits
 {
     public function ledUnit(): HasOne
     {
-        return $this->hasOne(Unit::class, 'leader_id', 'clan_id');
+        return $this->hasOne(Unit::class, 'leader_member_id');
     }
 
     public function unit(): BelongsTo

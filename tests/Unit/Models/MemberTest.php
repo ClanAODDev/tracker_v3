@@ -527,7 +527,7 @@ class MemberTest extends TestCase
     public function recruiter_relationship_resolves_via_clan_id()
     {
         $recruiter = $this->createMember();
-        $recruit   = $this->createMember(['recruiter_id' => $recruiter->clan_id]);
+        $recruit   = $this->createMember(['recruiter_member_id' => $recruiter->id]);
 
         $this->assertEquals($recruiter->id, $recruit->recruiter->id);
     }
@@ -536,7 +536,7 @@ class MemberTest extends TestCase
     public function recruits_returns_members_recruited_by_this_member()
     {
         $recruiter = $this->createMember();
-        $recruit   = $this->createMember(['recruiter_id' => $recruiter->clan_id]);
+        $recruit   = $this->createMember(['recruiter_member_id' => $recruiter->id]);
         $other     = $this->createMember();
 
         $recruits = $recruiter->recruits;
@@ -628,7 +628,7 @@ class MemberTest extends TestCase
     public function trainer_relationship_resolves_via_clan_id()
     {
         $trainer = $this->createMember();
-        $trainee = $this->createMember(['last_trained_by' => $trainer->clan_id]);
+        $trainee = $this->createMember(['trainer_member_id' => $trainer->id]);
 
         $this->assertEquals($trainer->id, $trainee->trainer->id);
     }

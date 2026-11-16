@@ -17,10 +17,10 @@ class MemberListProps
         Collection $members,
         UnitStatsData $unitStats,
         int $assignmentDepth = 1,
-        ?int $directRecruitOfClanId = null,
+        ?int $directRecruitOf = null,
     ): array {
         $user       = auth()->user();
-        $serializer = new MemberRowSerializer(division: $division, directRecruitOfClanId: $directRecruitOfClanId);
+        $serializer = new MemberRowSerializer(division: $division, directRecruitOf: $directRecruitOf);
 
         return [
             'division' => [

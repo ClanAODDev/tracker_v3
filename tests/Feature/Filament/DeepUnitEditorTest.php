@@ -112,7 +112,7 @@ class DeepUnitEditorTest extends TestCase
         $member = $this->createMember(['division_id' => $this->division->id, 'unit_id' => $this->squad->id]);
 
         Livewire::test(EditUnit::class, ['record' => $this->squad->getRouteKey()])
-            ->fillForm(['leader_id' => $member->clan_id])
+            ->fillForm(['leader_member_id' => $member->id])
             ->assertSee('will become the Fireteam Lead of this Fireteam')
             ->assertDontSee('Squad Leader');
     }

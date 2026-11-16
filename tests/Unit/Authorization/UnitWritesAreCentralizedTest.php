@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class UnitWritesAreCentralizedTest extends TestCase
 {
-    private const PATTERN = "/'(platoon_id|squad_id|leader_id|unit_id)'\\s*=>|->(platoon_id|squad_id|leader_id|unit_id)\\s*=[^=>]|->(platoon|squad|leader|unit)\\(\\)->(associate|dissociate)|\\b(Platoon|Squad|Unit)::(?!class\\b)[^;]*?->(update|delete|create|restore|forceDelete|insert)\\(/";
+    private const PATTERN = "/'(platoon_id|squad_id|leader_id|leader_member_id|unit_id)'\\s*=>|->(platoon_id|squad_id|leader_id|leader_member_id|unit_id)\\s*=[^=>]|->(platoon|squad|leader|unit)\\(\\)->(associate|dissociate)|\\b(Platoon|Squad|Unit)::(?!class\\b)[^;]*?->(update|delete|create|restore|forceDelete|insert)\\(/";
 
     private const ALLOWED = [
         'Http/Controllers/BulkMoveController.php'          => 1,

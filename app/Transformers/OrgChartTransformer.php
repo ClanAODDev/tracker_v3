@@ -106,7 +106,7 @@ class OrgChartTransformer
 
     private function directMemberRoster(Unit $unit): array
     {
-        $members = $unit->members->filter(fn (Member $member) => $member->clan_id !== $unit->leader_id);
+        $members = $unit->members->filter(fn (Member $member) => $member->id !== $unit->leader_member_id);
 
         return $members->isEmpty() ? [] : [$this->transformRoster("roster-{$unit->id}", $members)];
     }
@@ -114,7 +114,7 @@ class OrgChartTransformer
     private function transformSquad(Unit $squad): array
     {
         $members = $squad->members
-            ->filter(fn ($m) => $m->clan_id !== $squad->leader_id)
+            ->filter(fn ($m) => $m->id !== $squad->leader_member_id)
             ->sortByDesc('rank')
             ->sortBy('name')
             ->values();

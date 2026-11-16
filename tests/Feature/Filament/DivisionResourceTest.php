@@ -93,7 +93,7 @@ class DivisionResourceTest extends TestCase
             ->assertHasFormErrors(['executive_officers.0.xo']);
 
         $this->assertEquals(Position::PLATOON_LEADER, $leader->fresh()->position);
-        $this->assertEquals($leader->clan_id, $platoon->fresh()->leader_id);
+        $this->assertEquals($leader->id, $platoon->fresh()->leader_member_id);
     }
 
     #[Test]
@@ -161,15 +161,15 @@ class DivisionResourceTest extends TestCase
             ->test(EditDivision::class, ['record' => $division->getRouteKey()]);
 
         $units = app(UnitAssignment::class);
-        $units->setLeader($platoon, $member->clan_id);
-        $units->setLeader($squad, $member->clan_id);
+        $units->setLeader($platoon, $member->id);
+        $units->setLeader($squad, $member->id);
 
         (new \ReflectionMethod(EditDivision::class, 'handleXOs'))
             ->invoke($page->instance(), $division->id, ['executive_officers' => [['xo' => $member->id]]]);
 
         $this->assertEquals(Position::EXECUTIVE_OFFICER, $member->fresh()->position);
-        $this->assertNull($platoon->fresh()->leader_id);
-        $this->assertNull($squad->fresh()->leader_id);
+        $this->assertNull($platoon->fresh()->leader_member_id);
+        $this->assertNull($squad->fresh()->leader_member_id);
     }
 
     #[Test]

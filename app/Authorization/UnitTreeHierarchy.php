@@ -40,19 +40,19 @@ class UnitTreeHierarchy implements UnitHierarchy
             return null;
         }
 
-        if (! array_key_exists($member->clan_id, $this->ledUnits)) {
-            $this->ledUnits[$member->clan_id] = Unit::query()
-                ->where('leader_id', $member->clan_id)
+        if (! array_key_exists($member->id, $this->ledUnits)) {
+            $this->ledUnits[$member->id] = Unit::query()
+                ->where('leader_member_id', $member->id)
                 ->orderBy('depth')
                 ->first();
         }
 
-        return $this->ledUnits[$member->clan_id];
+        return $this->ledUnits[$member->id];
     }
 
     public function leads(Member $leader, Unit $unit): bool
     {
-        return $unit->leader_id !== null && (int) $unit->leader_id === (int) $leader->clan_id;
+        return $unit->leader_member_id !== null && (int) $unit->leader_member_id === (int) $leader->id;
     }
 
     public function leadsUnitOf(Member $leader, Member $member): bool

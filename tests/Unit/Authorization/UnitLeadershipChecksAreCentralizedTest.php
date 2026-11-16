@@ -9,10 +9,11 @@ use Tests\TestCase;
 
 class UnitLeadershipChecksAreCentralizedTest extends TestCase
 {
-    private const PATTERN = '/isPlatoonLeader\(|isSquadLeader\(|leader_id\s*(===|==|!==|!=)|(===|==|!==|!=)\s*\$[a-zA-Z_>()?-]*leader_id|Position::(PLATOON_LEADER|SQUAD_LEADER)/';
+    private const PATTERN = '/isPlatoonLeader\(|isSquadLeader\(|leader(_member)?_id\s*(===|==|!==|!=)|(===|==|!==|!=)\s*\$[a-zA-Z_>()?-]*leader(_member)?_id|Position::(PLATOON_LEADER|SQUAD_LEADER)/';
 
     private const ALLOWED = [
         'Authorization/UnitTreeHierarchy.php'  => 2,
+        'Http/Controllers/UnitController.php'  => 4,
         'Models/Member.php'                    => 4,
         'Services/Units/UnitAssignment.php'    => 8,
         'Transformers/OrgChartTransformer.php' => 2,
@@ -43,7 +44,7 @@ class UnitLeadershipChecksAreCentralizedTest extends TestCase
         $this->assertSame(
             $allowed,
             $found,
-            'Direct platoon/squad leadership checks changed. Authorization belongs in App\Authorization\UnitHierarchy; only leadership assignment and display code may read positions or leader_id directly.',
+            'Direct platoon/squad leadership checks changed. Authorization belongs in App\Authorization\UnitHierarchy; only leadership assignment and display code may read positions or leader_member_id directly.',
         );
     }
 }

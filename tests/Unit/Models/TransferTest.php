@@ -120,7 +120,7 @@ class TransferTest extends TestCase
 
         $member = $this->createSquadLeader($squad);
 
-        $this->assertEquals($member->clan_id, $squad->leader_id);
+        $this->assertEquals($member->id, $squad->leader_member_id);
 
         $transfer = Transfer::factory()->pending()->create([
             'member_id'   => $member->id,
@@ -130,7 +130,7 @@ class TransferTest extends TestCase
         $transfer->approve();
         $squad->refresh();
 
-        $this->assertEquals(0, $squad->leader_id);
+        $this->assertEquals(0, $squad->leader_member_id);
     }
 
     #[Test]
@@ -142,7 +142,7 @@ class TransferTest extends TestCase
         $platoon = $this->createPlatoon($sourceDivision);
         $member  = $this->createPlatoonLeader($platoon);
 
-        $this->assertEquals($member->clan_id, $platoon->leader_id);
+        $this->assertEquals($member->id, $platoon->leader_member_id);
 
         $transfer = Transfer::factory()->pending()->create([
             'member_id'   => $member->id,
@@ -152,7 +152,7 @@ class TransferTest extends TestCase
         $transfer->approve();
         $platoon->refresh();
 
-        $this->assertEquals(0, $platoon->leader_id);
+        $this->assertEquals(0, $platoon->leader_member_id);
     }
 
     #[Test]

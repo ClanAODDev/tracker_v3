@@ -66,11 +66,11 @@ class MemberResource extends Resource
                             ->readOnly()
                             ->required()
                             ->numeric(),
-                        Select::make('recruiter_id')
+                        Select::make('recruiter_member_id')
                             ->relationship('recruiter', 'name')
                             ->searchable()
                             ->nullable(),
-                        Select::make('last_trained_by')
+                        Select::make('trainer_member_id')
                             ->label('Last Trained By')
                             ->helperText('Update when NCO training occurs')
                             ->searchable()
