@@ -22,8 +22,8 @@ class AssignUnitAuthorizationTest extends TestCase
         $squad    = $this->createSquad($this->createPlatoon($division));
 
         $this->postJson('/members/assign-unit', [
-            'member_id' => $member->id,
-            'unit_id'   => $squad->id,
+            'member'  => $member->guid,
+            'unit_id' => $squad->id,
         ])->assertUnauthorized();
     }
 
@@ -37,8 +37,8 @@ class AssignUnitAuthorizationTest extends TestCase
 
         $this->actingAs($user)
             ->postJson('/members/assign-unit', [
-                'member_id' => $target->id,
-                'unit_id'   => $squad->id,
+                'member'  => $target->guid,
+                'unit_id' => $squad->id,
             ])->assertForbidden();
     }
 
@@ -52,8 +52,8 @@ class AssignUnitAuthorizationTest extends TestCase
 
         $this->actingAs($officer)
             ->postJson('/members/assign-unit', [
-                'member_id' => $target->id,
-                'unit_id'   => $squad->id,
+                'member'  => $target->guid,
+                'unit_id' => $squad->id,
             ])->assertOk();
 
         $target->refresh();
@@ -74,8 +74,8 @@ class AssignUnitAuthorizationTest extends TestCase
 
         $this->actingAs($officer)
             ->postJson('/members/assign-unit', [
-                'member_id' => $target->id,
-                'unit_id'   => 0,
+                'member'  => $target->guid,
+                'unit_id' => 0,
             ])->assertOk();
 
         $target->refresh();
@@ -97,8 +97,8 @@ class AssignUnitAuthorizationTest extends TestCase
 
         $this->actingAs($officer)
             ->postJson('/members/assign-unit', [
-                'member_id' => $target->id,
-                'unit_id'   => 0,
+                'member'  => $target->guid,
+                'unit_id' => 0,
             ])->assertForbidden();
 
         $target->refresh();
@@ -114,8 +114,8 @@ class AssignUnitAuthorizationTest extends TestCase
 
         $this->actingAs($user)
             ->postJson('/members/assign-unit', [
-                'member_id' => $target->id,
-                'unit_id'   => 0,
+                'member'  => $target->guid,
+                'unit_id' => 0,
             ])->assertOk();
     }
 }

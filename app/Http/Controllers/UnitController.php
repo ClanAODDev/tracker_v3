@@ -86,7 +86,7 @@ class UnitController extends Controller
         return $unit->members
             ->sortByDesc(fn ($member) => $unit->leader_member_id !== null && $unit->leader_member_id === $member->recruiter_member_id)
             ->map(fn ($member) => [
-                'id'              => $member->id,
+                'id'              => $member->guid,
                 'name'            => $member->present()->rankName(),
                 'isDirectRecruit' => $unit->leader_member_id !== null && $unit->leader_member_id === $member->recruiter_member_id,
             ])
@@ -141,7 +141,7 @@ class UnitController extends Controller
                 'canOrganize' => $canManage && $platoon->childLevel() !== null,
                 'members'     => $canManage
                     ? $unassigned->map(fn ($member) => [
-                        'id'   => $member->id,
+                        'id'   => $member->guid,
                         'name' => $member->present()->rankName(),
                     ])->values()
                     : [],

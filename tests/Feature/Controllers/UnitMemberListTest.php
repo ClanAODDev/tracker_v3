@@ -58,8 +58,8 @@ class UnitMemberListTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->component('platoon/manage-members')
                 ->where('units', fn ($units) => collect($units)
-                    ->firstWhere('id', $squad->id)['members'][0]['id'] === $assigned->id)
-                ->where('root.members', fn ($members) => collect($members)->contains('id', $floating->id))
+                    ->firstWhere('id', $squad->id)['members'][0]['id'] === $assigned->guid)
+                ->where('root.members', fn ($members) => collect($members)->contains('id', $floating->guid))
                 ->has('assignUrl'));
     }
 

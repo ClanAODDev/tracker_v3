@@ -92,8 +92,8 @@ class MemberAssignmentAuthorizationTest extends TestCase
 
         $this->actingAs($officer)
             ->post('/members/assign-unit', [
-                'member_id' => $target->id,
-                'unit_id'   => $squad->id,
+                'member'  => $target->guid,
+                'unit_id' => $squad->id,
             ])
             ->assertForbidden();
 
@@ -111,8 +111,8 @@ class MemberAssignmentAuthorizationTest extends TestCase
 
         $this->actingAs($srLdr)
             ->post('/members/assign-unit', [
-                'member_id' => $target->id,
-                'unit_id'   => $squad->id,
+                'member'  => $target->guid,
+                'unit_id' => $squad->id,
             ])
             ->assertOk();
 
@@ -131,8 +131,8 @@ class MemberAssignmentAuthorizationTest extends TestCase
 
         $this->actingAs($srLdr)
             ->post('/members/assign-unit', [
-                'member_id' => $target->id,
-                'unit_id'   => $squad->id,
+                'member'  => $target->guid,
+                'unit_id' => $squad->id,
             ])
             ->assertForbidden();
     }

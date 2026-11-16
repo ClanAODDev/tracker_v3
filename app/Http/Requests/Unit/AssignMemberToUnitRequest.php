@@ -10,7 +10,7 @@ class AssignMemberToUnitRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $member = Member::find($this->input('member_id'));
+        $member = $this->member();
 
         if ($member === null) {
             return true;
@@ -36,8 +36,13 @@ class AssignMemberToUnitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'member_id' => 'required|integer|exists:members,id',
-            'unit_id'   => 'required|integer',
+            'member'  => 'required|string|exists:members,guid',
+            'unit_id' => 'required|integer',
         ];
+    }
+
+    public function member(): ?Member
+    {
+        return Member::where('guid', $this->input('member'))->first();
     }
 }

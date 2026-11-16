@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Unit\AssignMemberToUnitRequest;
-use App\Models\Member;
 use App\Models\Unit;
 use App\Services\Units\UnitAssignment;
 use Illuminate\Http\JsonResponse;
@@ -14,7 +13,7 @@ class MemberUnitController extends Controller
 {
     public function assign(AssignMemberToUnitRequest $request, UnitAssignment $units): JsonResponse
     {
-        $member = Member::findOrFail($request->member_id);
+        $member = $request->member() ?? abort(404);
 
         if ((int) $request->unit_id === 0) {
             $current = $member->unit;
