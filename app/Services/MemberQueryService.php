@@ -18,6 +18,8 @@ class MemberQueryService
             'leave',
             'tags.division',
             'unit.parent',
+            'ledUnit',
+            'division.unitLevels',
             'fieldValues' => fn ($query) => $query->whereHas(
                 'field',
                 fn ($q) => $q->where('division_id', $division->id)
