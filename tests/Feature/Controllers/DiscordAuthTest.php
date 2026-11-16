@@ -112,6 +112,25 @@ class DiscordAuthTest extends TestCase
     }
 
     #[Test]
+    public function discord_callback_prefers_the_active_member_when_a_discord_id_is_shared(): void
+    {
+        $division = Division::factory()->create(['active' => true]);
+        Member::factory()->create(['discord_id' => '111222333', 'division_id' => 0]);
+        $active = Member::factory()->create(['discord_id' => '111222333', 'division_id' => $division->id]);
+        Member::factory()->create(['discord_id' => '111222333', 'division_id' => 0]);
+
+        $this->mockDiscordUser([
+            'id'       => '111222333',
+            'nickname' => 'Returning',
+            'email'    => 'returning@discord.com',
+        ]);
+
+        $this->get(route('auth.discord.callback'));
+
+        $this->assertSame($active->id, auth()->user()->member_id);
+    }
+
+    #[Test]
     public function discord_callback_uses_existing_user_with_discord_id(): void
     {
         $member = Member::factory()->create(['discord_id' => '777888999']);

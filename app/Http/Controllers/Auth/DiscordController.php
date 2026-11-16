@@ -56,7 +56,12 @@ class DiscordController extends Controller
             return $this->loginExistingUser($user, $avatarHash);
         }
 
-        if ($member = Member::where('discord_id', $discordId)->first()) {
+        $member = Member::where('discord_id', $discordId)
+            ->orderByRaw('division_id > 0 desc')
+            ->latest('id')
+            ->first();
+
+        if ($member) {
             return $this->loginExistingMember(
                 member: $member,
                 discordId: $discordId,
