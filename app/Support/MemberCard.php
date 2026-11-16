@@ -21,6 +21,7 @@ class MemberCard
 
         return [
             'name'       => $member->name,
+            'guid'       => $member->guid,
             'clanId'     => $member->clan_id,
             'rankName'   => $member->present()->rankName(),
             'rankAbbr'   => $member->rank->getAbbreviation(),

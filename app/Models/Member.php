@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 #[Unguarded]
 class Member extends Model
@@ -38,7 +39,15 @@ class Member extends Model
 
     protected static function booted(): void
     {
+        static::creating(function (Member $member) {
+            $member->guid ??= self::generateGuid();
+        });
+
         static::updating(function (Member $member) {
+            if ($member->isDirty('guid') && $member->getOriginal('guid') !== null) {
+                $member->guid = $member->getOriginal('guid');
+            }
+
             if ($member->isDirty('last_trained_by') && $member->last_trained_by !== null && ! $member->isDirty('last_trained_at')) {
                 $member->last_trained_at = now();
             }
@@ -48,6 +57,15 @@ class Member extends Model
             $member->transfers()->pending()->delete();
             $member->discardPendingRankActions();
         });
+    }
+
+    public static function generateGuid(): string
+    {
+        do {
+            $guid = Str::random(10);
+        } while (ctype_digit($guid) || self::withTrashed()->where('guid', $guid)->exists());
+
+        return $guid;
     }
 
     public function routeNotificationForBot(): ?string
