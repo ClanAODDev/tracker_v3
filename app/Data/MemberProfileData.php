@@ -93,7 +93,7 @@ class MemberProfileData
             ],
             'actions' => array_values(array_filter([
                 $user->can('update', $member)
-                    ? ['label' => 'Edit member', 'url' => route('filament.mod.resources.members.edit', $member), 'external' => true]
+                    ? ['label' => 'Edit member', 'url' => route('filament.mod.resources.members.edit', $member->id), 'external' => true]
                     : null,
                 $user->can('update', $member) && $user->can('train', $user) && $member->rank->isAtLeast(Rank::SERGEANT)
                     ? ['label' => 'SGT training', 'url' => route('training.sgt', ['member' => $member->guid])]
