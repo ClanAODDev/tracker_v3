@@ -64,6 +64,7 @@ class MemberController extends Controller
     {
         return [
             'rankName'   => $member->present()->rankName(),
+            'guid'       => $member->guid,
             'clanId'     => $member->clan_id,
             'division'   => $member->division->name ?? 'Ex-AOD',
             'profileUrl' => route('member', $member->getUrlParams()),

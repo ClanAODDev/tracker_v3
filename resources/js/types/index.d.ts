@@ -44,6 +44,7 @@ export interface Toast {
 /** Mirrors `App\Support\MemberCard::from()` — the canonical member reference. */
 export interface MemberCard {
     name: string;
+    guid: string;
     clanId: number;
     rankName: string;
     rankAbbr: string;

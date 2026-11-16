@@ -6,6 +6,7 @@ import type { SharedProps } from '@/types';
 
 export interface MemberSearchResult {
     rankName: string;
+    guid: string;
     clanId: number;
     division: string;
     profileUrl: string;
