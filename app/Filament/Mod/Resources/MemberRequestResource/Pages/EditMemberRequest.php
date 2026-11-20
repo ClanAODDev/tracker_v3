@@ -187,6 +187,7 @@ class EditMemberRequest extends EditRecord
 
             DeleteAction::make()
                 ->visible(fn () => ! $record->isApproved())
+                ->modalDescription("Deleting a request that hasn't been approved withdraws the recruitment: the member is moved out of the division, and a Discord applicant goes back to the pending list.")
                 ->before(function (Action $action): void {
                     $rec = $this->getRecord()->fresh();
 

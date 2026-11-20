@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Models\Observers\MemberRequestObserver;
 use Illuminate\Database\Eloquent\Attributes\Appends;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\Unguarded;
 use Illuminate\Database\Eloquent\Builder;
@@ -11,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Appends(['approvePath', 'timeWaiting', 'name', 'isPastGracePeriod'])]
+#[ObservedBy(MemberRequestObserver::class)]
 #[Unguarded]
 class MemberRequest extends Model
 {

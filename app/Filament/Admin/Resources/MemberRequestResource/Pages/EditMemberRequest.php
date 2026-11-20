@@ -13,7 +13,8 @@ class EditMemberRequest extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            DeleteAction::make(),
+            DeleteAction::make()
+                ->modalDescription("Deleting a request that hasn't been approved withdraws the recruitment: the member is moved out of the division, and a Discord applicant goes back to the pending list."),
         ];
     }
 }
