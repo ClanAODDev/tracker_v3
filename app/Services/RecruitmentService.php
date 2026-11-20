@@ -9,8 +9,10 @@ use App\Jobs\SyncDiscordMember;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\MemberRequest;
+use App\Models\Note;
 use App\Models\RankAction;
 use App\Models\Transfer;
+use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionNewExternalRecruit;
 use App\Notifications\Channel\NotifyDivisionNewMemberRecruited;
 use Illuminate\Support\Facades\DB;
@@ -130,5 +132,36 @@ class RecruitmentService
         }
 
         $division->notify(new NotifyDivisionNewMemberRecruited($member, auth()->user()));
+    }
+
+    public function withdrawRecruitment(MemberRequest $request): void
+    {
+        $member = $request->member;
+
+        if ($request->approved_at !== null || ! $member || (int) $member->division_id !== (int) $request->division_id) {
+            return;
+        }
+
+        if (MemberRequest::whereMemberId($member->id)->whereNull('approved_at')->exists()) {
+            return;
+        }
+
+        DB::transaction(function () use ($member, $request) {
+            if ($member->created_at->gte($request->created_at->copy()->subMinutes(5))) {
+                User::where('member_id', $member->id)->whereNotNull('discord_id')->update(['member_id' => null]);
+            }
+
+            if (auth()->check()) {
+                Note::create([
+                    'type'      => 'misc',
+                    'body'      => 'Recruitment withdrawn: the member request was deleted before approval.',
+                    'author_id' => auth()->id(),
+                    'member_id' => $member->id,
+                ]);
+            }
+
+            $member->recordActivity(ActivityType::REMOVED, ['reason' => 'Recruitment withdrawn']);
+            $member->reset();
+        });
     }
 }

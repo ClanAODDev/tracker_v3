@@ -98,7 +98,8 @@ class MemberRequestResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->modalDescription("Deleting a request that hasn't been approved withdraws the recruitment: the member is moved out of the division, and a Discord applicant goes back to the pending list."),
                 ]),
             ]);
     }

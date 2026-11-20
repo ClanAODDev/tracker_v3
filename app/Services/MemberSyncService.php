@@ -13,6 +13,7 @@ use Closure;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class MemberSyncService
 {
@@ -164,6 +165,13 @@ class MemberSyncService
 
     protected function handleMemberRemoval(Member $member): void
     {
+        Log::info('Forum sync removed member', [
+            'member_id'   => $member->id,
+            'clan_id'     => $member->clan_id,
+            'name'        => $member->name,
+            'division_id' => $member->division_id,
+        ]);
+
         if ($this->onRemove) {
             ($this->onRemove)($member->name, $member->clan_id);
         }
