@@ -27,6 +27,10 @@ class Reports extends Base implements Command
 
         $result = (new $class)->handle();
 
+        if (is_array($result)) {
+            return $result;
+        }
+
         return ['message' => "```\n{$result}\n```"];
     }
 }
