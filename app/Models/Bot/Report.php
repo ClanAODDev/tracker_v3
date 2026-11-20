@@ -4,5 +4,5 @@ namespace App\Models\Bot;
 
 interface Report
 {
-    public function handle(): string;
+    public function handle(): string|array;
 }
