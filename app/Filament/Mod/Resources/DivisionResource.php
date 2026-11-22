@@ -11,6 +11,7 @@ use App\Filament\Mod\Resources\DivisionResource\RelationManagers\MemberFieldsRel
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Filament\Mod\Resources\DivisionResource\Schemas\StructureSection;
 use App\Models\Division;
+use App\Support\HeroImageOptimizer;
 use App\Support\ImageUploads;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
@@ -34,6 +35,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class DivisionResource extends Resource
 {
@@ -374,6 +376,7 @@ class DivisionResource extends Resource
                                             ->acceptedFileTypes(ImageUploads::RASTER_TYPES)
                                             ->disk('public')
                                             ->directory('division-hero-images')
+                                            ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file) => HeroImageOptimizer::store($file->get(), 'division-hero-images'))
                                             ->maxSize(5120)
                                             ->imagePreviewHeight('200')
                                             ->openable()
