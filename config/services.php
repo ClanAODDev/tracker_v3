@@ -64,6 +64,11 @@ return [
         'api_key' => env('STEAM_API_KEY'),
     ],
 
+    'aod_site' => [
+        'division_webhook_url' => env('AOD_SITE_DIVISION_WEBHOOK_URL'),
+        'webhook_secret'       => env('AOD_SITE_WEBHOOK_SECRET'),
+    ],
+
     'cloudflare' => [
         'api_key'     => env('CLOUDFLARE_API_TOKEN'),
         'zone_id'     => env('CLOUDFLARE_ZONE_ID'),

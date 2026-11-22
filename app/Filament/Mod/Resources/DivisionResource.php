@@ -4,6 +4,7 @@ namespace App\Filament\Mod\Resources;
 
 use App\Enums\Ability;
 use App\Enums\Rank;
+use App\Filament\Forms\Components\HeroImagePositioner;
 use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
 use App\Filament\Mod\Resources\DivisionResource\Pages\ListDivisions;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\MemberFieldsRelationManager;
@@ -381,7 +382,11 @@ class DivisionResource extends Resource
                                                 '21:9',
                                                 '16:9',
                                             ])
+                                            ->live()
+                                            ->afterStateUpdated(HeroImagePositioner::resetWhenImageReplaced('hero_image_position'))
                                             ->helperText('No text or logos: the page adds your division name and icon. Use a wide, atmospheric image (landscape, at least 1920 pixels wide, 5MB max). The site dims and tints it to match the theme. Without one, your first screenshot is used.'),
+                                        HeroImagePositioner::make('hero_image_position')
+                                            ->label('Position'),
                                     ]),
 
                                 Section::make('Screenshot Gallery')

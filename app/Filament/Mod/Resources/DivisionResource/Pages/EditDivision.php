@@ -4,6 +4,7 @@ namespace App\Filament\Mod\Resources\DivisionResource\Pages;
 
 use App\Enums\Ability;
 use App\Filament\Mod\Resources\DivisionResource;
+use App\Jobs\PurgeSiteDivisionCache;
 use App\Notifications\Channel\NotifyDivisionSettingsEdited;
 use App\Notifications\Channel\TestChannelNotification;
 use Filament\Actions\Action;
@@ -96,6 +97,7 @@ class EditDivision extends EditRecord
 
         $record->update($data);
         $record->notify(new NotifyDivisionSettingsEdited(auth()->user()));
+        PurgeSiteDivisionCache::dispatch($record->slug)->afterCommit();
 
         return $record;
     }
