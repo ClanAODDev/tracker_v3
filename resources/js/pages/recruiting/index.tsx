@@ -19,8 +19,8 @@ export default function RecruitingIndex({ divisions }: Props) {
 
             <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                    Select the division you're recruiting for. Each division's recruiting process is unique — coordinate
-                    with them before processing a recruit for a division that isn't your own.
+                    Select the division you're recruiting for. Each division's recruiting process is unique — coordinate with them before processing a
+                    recruit for a division that isn't your own.
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {divisions.map((division) => (

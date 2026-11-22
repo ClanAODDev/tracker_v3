@@ -35,9 +35,7 @@ export function ToolsMenu() {
                     ))}
                 </DropdownMenuContent>
             </DropdownMenu>
-            {activeTool && (
-                <activeTool.component open onOpenChange={(v) => !v && setActiveToolId(null)} />
-            )}
+            {activeTool && <activeTool.component open onOpenChange={(v) => !v && setActiveToolId(null)} />}
         </>
     );
 }

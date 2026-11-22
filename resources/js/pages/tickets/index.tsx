@@ -90,9 +90,7 @@ export default function TicketsIndex({ view, canWorkTickets, currentUserId, tick
                                 onClick={() => switchView(key)}
                                 className={cn(
                                     'flex-1 rounded px-3 py-1.5 transition-colors',
-                                    view === key
-                                        ? 'bg-primary/15 font-medium text-foreground'
-                                        : 'text-muted-foreground hover:text-foreground',
+                                    view === key ? 'bg-primary/15 font-medium text-foreground' : 'text-muted-foreground hover:text-foreground',
                                 )}
                             >
                                 {label}
@@ -103,17 +101,17 @@ export default function TicketsIndex({ view, canWorkTickets, currentUserId, tick
 
                 <div className="flex flex-wrap items-center gap-2">
                     <div className="relative">
-                        <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Search tickets"
-                            className="h-8 w-56 pl-8 pr-8"
+                            className="h-8 w-56 pr-8 pl-8"
                         />
                         {search && (
                             <button
                                 onClick={() => setSearch('')}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                className="absolute top-1/2 right-2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                             >
                                 <X className="size-4" />
                             </button>
@@ -134,10 +132,7 @@ export default function TicketsIndex({ view, canWorkTickets, currentUserId, tick
                         <SimpleSelect
                             value={type}
                             onChange={setType}
-                            options={[
-                                { value: '__all', label: 'All types' },
-                                ...ticketTypes.map((t) => ({ value: String(t.id), label: t.name })),
-                            ]}
+                            options={[{ value: '__all', label: 'All types' }, ...ticketTypes.map((t) => ({ value: String(t.id), label: t.name }))]}
                         />
                     )}
                     <Button
@@ -188,9 +183,7 @@ export default function TicketsIndex({ view, canWorkTickets, currentUserId, tick
                             >
                                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                     <span className="numeric font-medium text-foreground">#{ticket.id}</span>
-                                    <span className="rounded bg-muted px-1.5 py-0.5">
-                                        {ticket.type?.name ?? 'Unknown'}
-                                    </span>
+                                    <span className="rounded bg-muted px-1.5 py-0.5">{ticket.type?.name ?? 'Unknown'}</span>
                                     <StatusBadge state={ticket.state} className="ml-auto" />
                                 </div>
                                 <p className="mt-1.5 text-sm">{truncate(ticket.description)}</p>
@@ -226,8 +219,6 @@ function Avatar({ person: r }: { person: { name: string; avatar: string | null }
     return r.avatar ? (
         <img src={r.avatar} alt="" className="size-4 rounded-full" />
     ) : (
-        <span className="grid size-4 place-items-center rounded-full bg-muted text-[8px]">
-            {r.name.charAt(0).toUpperCase()}
-        </span>
+        <span className="grid size-4 place-items-center rounded-full bg-muted text-[8px]">{r.name.charAt(0).toUpperCase()}</span>
     );
 }

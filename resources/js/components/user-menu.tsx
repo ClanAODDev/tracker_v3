@@ -38,7 +38,7 @@ export function UserMenu({ onOpenSettings }: { onOpenSettings: () => void }) {
 
     return (
         <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent data-[state=open]:bg-accent">
+            <DropdownMenuTrigger className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors outline-none hover:bg-accent data-[state=open]:bg-accent">
                 <Avatar className="size-7 rounded-md">
                     {user.avatarUrl && <AvatarImage src={user.avatarUrl} alt={user.name} />}
                     <AvatarFallback className="rounded-md bg-secondary text-xs">{initials(user.name)}</AvatarFallback>
@@ -49,9 +49,7 @@ export function UserMenu({ onOpenSettings }: { onOpenSettings: () => void }) {
             <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="flex flex-col gap-0.5">
                     <span className="truncate">{user.name}</span>
-                    {user.effectiveRole && (
-                        <span className="text-xs font-normal text-muted-foreground">{user.effectiveRole}</span>
-                    )}
+                    {user.effectiveRole && <span className="text-xs font-normal text-muted-foreground">{user.effectiveRole}</span>}
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {user.impersonating && (

@@ -15,9 +15,7 @@ interface OrgChartProps {
 export default function OrgChart({ division, tree }: OrgChartProps) {
     const svgRef = useRef<SVGSVGElement>(null);
     const chartRef = useRef<OrgChartHandle | null>(null);
-    const [query, setQuery] = useState(
-        () => new URLSearchParams(window.location.search).get('q') ?? '',
-    );
+    const [query, setQuery] = useState(() => new URLSearchParams(window.location.search).get('q') ?? '');
     const [matches, setMatches] = useState<SearchMatch[]>([]);
     const [showResults, setShowResults] = useState(false);
     const [handlesOn, setHandlesOn] = useState(false);
@@ -47,11 +45,7 @@ export default function OrgChart({ division, tree }: OrgChartProps) {
             header={{
                 title: 'Organization chart',
                 eyebrow: `${division.name} Division`,
-                breadcrumbs: [
-                    { label: 'Divisions' },
-                    { label: division.name, href: `/divisions/${division.slug}` },
-                    { label: 'Structure' },
-                ],
+                breadcrumbs: [{ label: 'Divisions' }, { label: division.name, href: `/divisions/${division.slug}` }, { label: 'Structure' }],
             }}
         >
             <Head title={`Org chart · ${division.name}`} />
@@ -59,7 +53,7 @@ export default function OrgChart({ division, tree }: OrgChartProps) {
             <div className="border-b border-border bg-card/40">
                 <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-2 px-6 py-3">
                     <div className="relative">
-                        <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                        <Search className="pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2 text-muted-foreground" />
                         <Input
                             value={query}
                             onChange={(e) => runSearch(e.target.value)}
@@ -73,7 +67,7 @@ export default function OrgChart({ division, tree }: OrgChartProps) {
                                     runSearch('');
                                     chartRef.current?.collapseAll();
                                 }}
-                                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                className="absolute top-1/2 right-2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                             >
                                 <X className="size-3.5" />
                             </button>
@@ -96,11 +90,7 @@ export default function OrgChart({ division, tree }: OrgChartProps) {
                                                 {m.rankName}
                                             </span>
                                             <span className="truncate">{m.name}</span>
-                                            {m.handle && (
-                                                <span className="ml-auto truncate text-xs text-muted-foreground">
-                                                    {m.handle}
-                                                </span>
-                                            )}
+                                            {m.handle && <span className="ml-auto truncate text-xs text-muted-foreground">{m.handle}</span>}
                                         </button>
                                     ))
                                 )}

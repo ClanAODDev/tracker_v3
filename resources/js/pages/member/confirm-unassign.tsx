@@ -30,20 +30,15 @@ export default function ConfirmUnassign({ member, resetUrl }: Props) {
                     Reset member assignments
                 </h2>
                 <p className="mt-3 text-sm text-muted-foreground">
-                    You are about to clear the platoon and squad assignments for{' '}
-                    <span className="text-foreground">{member.name}</span> ({member.position ?? 'no position'}). This
-                    cannot be undone from here.
+                    You are about to clear the platoon and squad assignments for <span className="text-foreground">{member.name}</span> (
+                    {member.position ?? 'no position'}). This cannot be undone from here.
                 </p>
 
                 <div className="mt-6 flex items-center gap-3">
                     <Button variant="outline" size="sm" asChild>
                         <Link href={profileUrl}>Cancel</Link>
                     </Button>
-                    <Button
-                        size="sm"
-                        disabled={form.processing}
-                        onClick={() => form.post(resetUrl)}
-                    >
+                    <Button size="sm" disabled={form.processing} onClick={() => form.post(resetUrl)}>
                         Reset assignments
                     </Button>
                 </div>

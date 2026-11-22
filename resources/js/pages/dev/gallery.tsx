@@ -11,21 +11,8 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
@@ -62,19 +49,7 @@ const PROMOTIONS = [
     { rank: 'Sgt', q1: 3, q2: 4 },
 ];
 
-const TOKENS = [
-    'background',
-    'card',
-    'popover',
-    'muted',
-    'secondary',
-    'accent',
-    'primary',
-    'destructive',
-    'success',
-    'warning',
-    'info',
-];
+const TOKENS = ['background', 'card', 'popover', 'muted', 'secondary', 'accent', 'primary', 'destructive', 'success', 'warning', 'info'];
 
 const RARITIES = ['mythic', 'legendary', 'epic', 'rare', 'common', 'unclaimed'];
 
@@ -101,42 +76,36 @@ export default function Gallery() {
                         <div className="tron-corners rounded-md border border-border bg-card p-5">
                             <p className="text-sm font-medium">Corner brackets</p>
                             <p className="mt-1 text-sm text-muted-foreground">
-                                <code className="font-mono text-xs">.tron-corners</code> — opt-in L-brackets for feature
-                                panels.
+                                <code className="font-mono text-xs">.tron-corners</code> — opt-in L-brackets for feature panels.
                             </p>
                         </div>
                         <div className="tron-glow rounded-md border border-border bg-card p-5">
                             <p className="text-sm font-medium">Underglow</p>
                             <p className="mt-1 text-sm text-muted-foreground">
-                                <code className="font-mono text-xs">.tron-glow</code> — crimson halo on focus / active
-                                surfaces.
+                                <code className="font-mono text-xs">.tron-glow</code> — crimson halo on focus / active surfaces.
                             </p>
                         </div>
                         <div className="tron-hairline rounded-md border border-border bg-card p-5 pb-6">
                             <p className="text-sm font-medium">Hairline</p>
                             <p className="mt-1 text-sm text-muted-foreground">
-                                <code className="font-mono text-xs">.tron-hairline</code> — fading accent rule under a
-                                block.
+                                <code className="font-mono text-xs">.tron-hairline</code> — fading accent rule under a block.
                             </p>
                         </div>
                         <div className="tron-hatch rounded-md border border-border bg-card p-5">
                             <p className="text-sm font-medium">Diagonal hatch</p>
                             <p className="mt-1 text-sm text-muted-foreground">
-                                <code className="font-mono text-xs">.tron-hatch</code> — fine 45° texture for empty
-                                states and inert surfaces; <code className="font-mono text-xs">.tron-hatch-primary</code>{' '}
-                                tints it crimson.
+                                <code className="font-mono text-xs">.tron-hatch</code> — fine 45° texture for empty states and inert surfaces;{' '}
+                                <code className="font-mono text-xs">.tron-hatch-primary</code> tints it crimson.
                             </p>
                         </div>
                         <div className="tron-hatch tron-hatch-primary rounded-md border border-primary/30 bg-card p-5">
                             <p className="text-sm font-medium">Hatch · primary</p>
-                            <p className="mt-1 text-sm text-muted-foreground">
-                                Same texture, crimson tint — for accented empty states or callouts.
-                            </p>
+                            <p className="mt-1 text-sm text-muted-foreground">Same texture, crimson tint — for accented empty states or callouts.</p>
                         </div>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                        The page sits on faint <code className="font-mono text-xs">.tron-contours</code> and every section
-                        label is a <code className="font-mono text-xs">.tron-eyebrow</code> (tick + wide tracking).
+                        The page sits on faint <code className="font-mono text-xs">.tron-contours</code> and every section label is a{' '}
+                        <code className="font-mono text-xs">.tron-eyebrow</code> (tick + wide tracking).
                     </p>
 
                     <div className="grid gap-4 sm:grid-cols-2">
@@ -146,8 +115,8 @@ export default function Gallery() {
                             <p className="text-sm font-medium">Corner ID plate + edge flash</p>
                             <p className="mt-1 text-sm text-muted-foreground">
                                 <code className="font-mono text-xs">&lt;TronIdPlate&gt;</code> HUD tag with a live pip, and{' '}
-                                <code className="font-mono text-xs">&lt;TronFlash&gt;</code> — crimson gradients sweeping the
-                                top and bottom edges in opposite directions on mount.
+                                <code className="font-mono text-xs">&lt;TronFlash&gt;</code> — crimson gradients sweeping the top and bottom edges in
+                                opposite directions on mount.
                             </p>
                             <Button size="xs" variant="outline" className="mt-3" onClick={() => setScanKey((k) => k + 1)}>
                                 Replay flash
@@ -156,8 +125,8 @@ export default function Gallery() {
                         <div className="rounded-md border border-border bg-card p-5">
                             <p className="text-sm font-medium">Circuit-trace rule</p>
                             <p className="mt-1 mb-4 text-sm text-muted-foreground">
-                                <code className="font-mono text-xs">&lt;TronTrace&gt;</code> — bright lead + node + a slow
-                                travelling pulse. Sits under every page header.
+                                <code className="font-mono text-xs">&lt;TronTrace&gt;</code> — bright lead + node + a slow travelling pulse. Sits
+                                under every page header.
                             </p>
                             <TronTrace />
                         </div>
@@ -183,9 +152,9 @@ export default function Gallery() {
                         </Button>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                        <code className="font-mono text-xs">&lt;CountUp&gt;</code> / <code className="font-mono text-xs">useCountUp</code>{' '}
-                        — eases figures up from zero on mount; honours the reduce-animations preference. Wired into stat
-                        tiles, the dashboard, and division stats.
+                        <code className="font-mono text-xs">&lt;CountUp&gt;</code> / <code className="font-mono text-xs">useCountUp</code> — eases
+                        figures up from zero on mount; honours the reduce-animations preference. Wired into stat tiles, the dashboard, and division
+                        stats.
                     </p>
                 </Section>
 
@@ -194,9 +163,7 @@ export default function Gallery() {
                         {TOKENS.map((token) => (
                             <div key={token} className="overflow-hidden rounded-md border border-border">
                                 <div className="h-16" style={{ background: `var(--${token})` }} />
-                                <div className="bg-card px-2 py-1.5 font-mono text-[11px] text-muted-foreground">
-                                    --{token}
-                                </div>
+                                <div className="bg-card px-2 py-1.5 font-mono text-[11px] text-muted-foreground">--{token}</div>
                             </div>
                         ))}
                     </div>
@@ -229,9 +196,7 @@ export default function Gallery() {
                 <Section title="Typography">
                     <div className="space-y-2">
                         <p className="text-3xl font-semibold tracking-tight">Angels of Death Tracker</p>
-                        <p className="text-base text-muted-foreground">
-                            Body copy in Inter. The quick brown fox jumps over the lazy dog.
-                        </p>
+                        <p className="text-base text-muted-foreground">Body copy in Inter. The quick brown fox jumps over the lazy dog.</p>
                         <p className="numeric text-2xl">1,284 members · 97.3% retention · +42 MTD</p>
                     </div>
                 </Section>
@@ -280,9 +245,7 @@ export default function Gallery() {
                                     {['Reaper', 'Nomad', 'Vex'].map((n) => (
                                         <tr key={n} className="border-b border-border transition-colors last:border-0 hover:bg-muted/50">
                                             <td className="px-3 py-2">{n}</td>
-                                            <td className="numeric px-3 py-2 text-right text-muted-foreground">
-                                                {n.length}d ago
-                                            </td>
+                                            <td className="numeric px-3 py-2 text-right text-muted-foreground">{n.length}d ago</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -299,7 +262,7 @@ export default function Gallery() {
                         <div className="rounded-md border border-border bg-card p-4 text-sm">
                             <input
                                 placeholder="focus me"
-                                className="w-full rounded-md border border-input bg-transparent px-3 py-1.5 text-sm outline-none transition-[box-shadow,border-color] focus:border-ring focus:ring-2 focus:ring-ring/40"
+                                className="w-full rounded-md border border-input bg-transparent px-3 py-1.5 text-sm transition-[box-shadow,border-color] outline-none focus:border-ring focus:ring-2 focus:ring-ring/40"
                             />
                             <p className="mt-1 text-xs text-muted-foreground">crimson ring on focus</p>
                         </div>
@@ -310,11 +273,7 @@ export default function Gallery() {
                     <div className="grid gap-6 lg:grid-cols-2">
                         <div className="rounded-md border border-border bg-card p-4">
                             <p className="mb-3 text-sm font-medium">Census — single series area</p>
-                            <ThemedAreaChart
-                                data={CENSUS}
-                                x="month"
-                                series={[{ key: 'members', label: 'Members' }]}
-                            />
+                            <ThemedAreaChart data={CENSUS} x="month" series={[{ key: 'members', label: 'Members' }]} />
                         </div>
                         <div className="rounded-md border border-border bg-card p-4">
                             <p className="mb-3 text-sm font-medium">Retention — two-series line</p>
@@ -352,9 +311,9 @@ export default function Gallery() {
                         </div>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                        Series colours come from the validated <code className="font-mono text-xs">--chart-1…5</code>{' '}
-                        ramp (dataviz skill: passes lightness, chroma, CVD and normal-vision separation, and ≥3:1
-                        contrast on the dark surface). Every chart ships a hover tooltip; ≥2 series always get a legend.
+                        Series colours come from the validated <code className="font-mono text-xs">--chart-1…5</code> ramp (dataviz skill: passes
+                        lightness, chroma, CVD and normal-vision separation, and ≥3:1 contrast on the dark surface). Every chart ships a hover
+                        tooltip; ≥2 series always get a legend.
                     </p>
 
                     <div className="rounded-md border border-border bg-card p-4">
@@ -487,9 +446,7 @@ export default function Gallery() {
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogTitle>Remove member</DialogTitle>
-                                    <DialogDescription>
-                                        This flags the member for removal from AOD. This cannot be undone.
-                                    </DialogDescription>
+                                    <DialogDescription>This flags the member for removal from AOD. This cannot be undone.</DialogDescription>
                                 </DialogHeader>
                                 <DialogFooter>
                                     <Button variant="ghost">Cancel</Button>

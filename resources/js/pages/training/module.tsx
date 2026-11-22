@@ -4,15 +4,7 @@ import { useMemo, useState } from 'react';
 
 import { Prose } from '@/components/prose';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
 
@@ -84,12 +76,7 @@ export default function TrainingModulePage({ module, trainee }: TrainingModulePr
 
             <div className="flex gap-6">
                 <aside className="hidden w-64 shrink-0 lg:block">
-                    <SectionNav
-                        sections={module.sections}
-                        progress={progress.sections}
-                        active={active}
-                        onSelect={setActive}
-                    />
+                    <SectionNav sections={module.sections} progress={progress.sections} active={active} onSelect={setActive} />
 
                     <div className="mt-4 rounded-md border border-border p-3">
                         <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -126,12 +113,7 @@ export default function TrainingModulePage({ module, trainee }: TrainingModulePr
                     )}
 
                     <div className="mt-6 flex items-center justify-between">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={active === 0}
-                            onClick={() => setActive((i) => Math.max(0, i - 1))}
-                        >
+                        <Button variant="outline" size="sm" disabled={active === 0} onClick={() => setActive((i) => Math.max(0, i - 1))}>
                             <ArrowLeft /> Previous
                         </Button>
                         {active < module.sections.length - 1 && (
@@ -141,9 +123,7 @@ export default function TrainingModulePage({ module, trainee }: TrainingModulePr
                         )}
                     </div>
 
-                    {trainee && module.showCompletionForm && (
-                        <CompleteTrainingCard slug={module.slug} moduleName={module.name} trainee={trainee} />
-                    )}
+                    {trainee && module.showCompletionForm && <CompleteTrainingCard slug={module.slug} moduleName={module.name} trainee={trainee} />}
                 </div>
             </div>
         </AppLayout>
@@ -171,9 +151,7 @@ function SectionNav({
                             onClick={() => onSelect(index)}
                             className={cn(
                                 'flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm transition-colors',
-                                index === active
-                                    ? 'bg-primary/10 text-foreground'
-                                    : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+                                index === active ? 'bg-primary/10 text-foreground' : 'text-muted-foreground hover:bg-accent hover:text-foreground',
                             )}
                         >
                             <span
@@ -217,7 +195,7 @@ function CheckpointList({
 }) {
     return (
         <div className="mt-6 rounded-md border border-border bg-card p-4">
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-primary">{label}</h3>
+            <h3 className="mb-3 text-xs font-semibold tracking-[0.2em] text-primary uppercase">{label}</h3>
             <div className="space-y-1">
                 {checkpoints.map((checkpoint, ci) => {
                     const key = checkpointKey(sectionIndex, ci);
@@ -230,9 +208,7 @@ function CheckpointList({
                                 className="mt-0.5 size-4 shrink-0 accent-primary"
                             />
                             <span className="text-sm">
-                                <span className={checked[key] ? 'text-muted-foreground line-through' : ''}>
-                                    {checkpoint.label}
-                                </span>
+                                <span className={checked[key] ? 'text-muted-foreground line-through' : ''}>{checkpoint.label}</span>
                                 {checkpoint.description && <Prose html={checkpoint.description} className="mt-1" />}
                             </span>
                         </label>
@@ -250,8 +226,7 @@ function CompleteTrainingCard({ slug, moduleName, trainee }: { slug: string; mod
         <div className="mt-8 rounded-md border border-success/30 bg-success/5 p-4">
             <p className="text-sm font-medium">Complete training</p>
             <p className="mt-1 text-sm text-muted-foreground">
-                Mark this session complete for <strong>{trainee.name}</strong> — updates their last training date and
-                records you as the trainer.
+                Mark this session complete for <strong>{trainee.name}</strong> — updates their last training date and records you as the trainer.
             </p>
             <Dialog>
                 <DialogTrigger asChild>

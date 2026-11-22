@@ -39,10 +39,7 @@ export default function TieredAward({ group, stats, tiers }: TieredProps) {
             header={{
                 eyebrow: 'Tiered Award',
                 title: group.name,
-                breadcrumbs: [
-                    { label: 'Achievements', href: '/clan/awards' },
-                    { label: group.name },
-                ],
+                breadcrumbs: [{ label: 'Achievements', href: '/clan/awards' }, { label: group.name }],
             }}
         >
             <Head title={group.name} />
@@ -104,7 +101,7 @@ export default function TieredAward({ group, stats, tiers }: TieredProps) {
                                         <Trophy className="size-5 text-muted-foreground" />
                                     )}
                                     {tier.earned && (
-                                        <span className="absolute -right-1.5 -top-1.5 flex size-4 items-center justify-center rounded-full bg-success text-[var(--background)]">
+                                        <span className="absolute -top-1.5 -right-1.5 flex size-4 items-center justify-center rounded-full bg-success text-[var(--background)]">
                                             <Check className="size-2.5" />
                                         </span>
                                     )}
@@ -114,23 +111,17 @@ export default function TieredAward({ group, stats, tiers }: TieredProps) {
                                     <p className="flex items-center gap-2 text-sm font-medium">
                                         {tier.name}
                                         {tier.isNext && (
-                                            <span className="rounded bg-primary px-1.5 py-0.5 text-[10px] text-primary-foreground">
-                                                Next
-                                            </span>
+                                            <span className="rounded bg-primary px-1.5 py-0.5 text-[10px] text-primary-foreground">Next</span>
                                         )}
                                     </p>
-                                    {tier.description && (
-                                        <p className="mt-0.5 text-xs text-muted-foreground">{tier.description}</p>
-                                    )}
+                                    {tier.description && <p className="mt-0.5 text-xs text-muted-foreground">{tier.description}</p>}
                                     <div className="mt-1.5 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                                         <RarityPill rarity={tier.rarity} />
                                         <span className="flex items-center gap-1">
                                             <Users className="size-3" />
                                             {tier.recipientsCount} ({tier.pct}%)
                                         </span>
-                                        {tier.earned && tier.earnedDate && (
-                                            <span className="text-success">Earned {tier.earnedDate}</span>
-                                        )}
+                                        {tier.earned && tier.earnedDate && <span className="text-success">Earned {tier.earnedDate}</span>}
                                     </div>
                                 </div>
 

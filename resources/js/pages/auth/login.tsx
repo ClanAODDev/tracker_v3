@@ -26,11 +26,11 @@ export default function Login({ discordEnabled, expired }: LoginProps) {
 
             <div className="relative z-10 mx-auto flex min-h-[70vh] w-full max-w-sm flex-col justify-center">
                 <div className="mb-8 flex items-center gap-3">
-                    <span className="flex size-10 shrink-0 items-center justify-center rounded-sm border border-primary/40 bg-primary/10 text-primary tron-glow">
+                    <span className="tron-glow flex size-10 shrink-0 items-center justify-center rounded-sm border border-primary/40 bg-primary/10 text-primary">
                         <LockKeyhole className="size-5" />
                     </span>
                     <div className="min-w-0 flex-1">
-                        <p className="text-xs font-medium uppercase tracking-[0.2em] text-primary">AOD Tracker</p>
+                        <p className="text-xs font-medium tracking-[0.2em] text-primary uppercase">AOD Tracker</p>
                         <div className="flex items-center gap-3">
                             <h1 className="text-lg font-semibold tracking-tight">Sign in</h1>
                             <span className="tron-hatch h-3 flex-1" />
@@ -92,16 +92,10 @@ export default function Login({ discordEnabled, expired }: LoginProps) {
 
                     <div className="flex items-center justify-between gap-2 pt-1">
                         <div className="flex gap-2 text-sm">
-                            <a
-                                href="https://www.clanaod.net/forums/register.php"
-                                className="text-muted-foreground hover:text-foreground"
-                            >
+                            <a href="https://www.clanaod.net/forums/register.php" className="text-muted-foreground hover:text-foreground">
                                 Register
                             </a>
-                            <a
-                                href="https://www.clanaod.net/forums/login.php?do=lostpw"
-                                className="text-muted-foreground hover:text-foreground"
-                            >
+                            <a href="https://www.clanaod.net/forums/login.php?do=lostpw" className="text-muted-foreground hover:text-foreground">
                                 Forgot
                             </a>
                         </div>

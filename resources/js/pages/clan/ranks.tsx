@@ -54,8 +54,8 @@ export default function Ranks({ sections }: RanksProps) {
             <div className="grid gap-8 xl:grid-cols-[1fr_20rem]">
                 <div className="space-y-4">
                     <p className="text-sm text-muted-foreground">
-                        Rank in AOD is earned through tenure and service, not handed out for authority. The structure
-                        runs as one continuous line from the enlisted path up through clan administration.
+                        Rank in AOD is earned through tenure and service, not handed out for authority. The structure runs as one continuous line from
+                        the enlisted path up through clan administration.
                     </p>
 
                     <div className="rank-tree">
@@ -71,10 +71,7 @@ export default function Ranks({ sections }: RanksProps) {
                                     {section.ranks.map((rank) => (
                                         <div
                                             key={rank.abbr}
-                                            className={cn(
-                                                'rank-row',
-                                                rank.tier === 'enlisted' && 'rank-row--muted',
-                                            )}
+                                            className={cn('rank-row', rank.tier === 'enlisted' && 'rank-row--muted')}
                                             style={
                                                 {
                                                     '--rank-color': rank.color,
@@ -101,7 +98,7 @@ export default function Ranks({ sections }: RanksProps) {
                 </div>
 
                 <aside className="space-y-4">
-                    <h2 className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">Roles</h2>
+                    <h2 className="text-xs font-semibold tracking-[0.2em] text-primary uppercase">Roles</h2>
                     {ROLES.map((role) => (
                         <Card key={role.abbr}>
                             <CardContent className="space-y-2">
@@ -111,8 +108,7 @@ export default function Ranks({ sections }: RanksProps) {
                                 </div>
                                 <p className="text-sm text-muted-foreground">{role.body}</p>
                                 <p className="text-sm">
-                                    <span className="text-muted-foreground">Minimum rank:</span>{' '}
-                                    <strong>{role.minimum}</strong>
+                                    <span className="text-muted-foreground">Minimum rank:</span> <strong>{role.minimum}</strong>
                                 </p>
                             </CardContent>
                         </Card>
@@ -121,15 +117,14 @@ export default function Ranks({ sections }: RanksProps) {
                     <div className="flex gap-3 rounded-md border border-border bg-muted/40 p-4 text-sm text-muted-foreground">
                         <Info className="mt-0.5 size-4 shrink-0" />
                         <p>
-                            Only Sergeants and above may issue promotions or demotions, and these are given solely for
-                            good service to AOD. Promotions to CO or XO positions and all Sergeant-level promotions
-                            require approval from clan leadership.
+                            Only Sergeants and above may issue promotions or demotions, and these are given solely for good service to AOD. Promotions
+                            to CO or XO positions and all Sergeant-level promotions require approval from clan leadership.
                         </p>
                     </div>
 
                     <p className="text-sm text-muted-foreground">
-                        Divisional roles carry authority within a specific division, are independent of rank, and require
-                        nomination and approval by clan leadership.
+                        Divisional roles carry authority within a specific division, are independent of rank, and require nomination and approval by
+                        clan leadership.
                     </p>
                 </aside>
             </div>

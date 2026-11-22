@@ -5,12 +5,7 @@ import { useState } from 'react';
 import { MemberFieldBadges, type FieldBadgeData } from '@/components/member/field-badges';
 import { HandleEditor, type DetailsManagement } from '@/components/member/handle-editor';
 import { NotesDialog, type MemberNote } from '@/components/member/notes';
-import {
-    RankHistoryDialog,
-    RecruitsDialog,
-    ReminderHistoryDialog,
-    TenureDialog,
-} from '@/components/member/profile-dialogs';
+import { RankHistoryDialog, RecruitsDialog, ReminderHistoryDialog, TenureDialog } from '@/components/member/profile-dialogs';
 import {
     Achievements,
     DivisionComparison,
@@ -27,13 +22,7 @@ import { RankTimeline, type RankTimelineData } from '@/components/member/rank-ti
 import { MemberTagEditor, type DisplayTag, type TagManagement } from '@/components/member/tag-editor';
 import { SectionTitle } from '@/components/section';
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import AppLayout from '@/layouts/AppLayout';
 import type { MemberCard } from '@/types';
 
@@ -67,10 +56,8 @@ interface MemberShowProps {
 }
 
 export default function MemberShow(props: MemberShowProps) {
-    const { member, actions, tags, tagManagement, breadcrumbs, notices, stats, awards, rankTimeline, canFullHistory } =
-        props;
-    const { divisionComparison, handles, divisions, notes, trashedNotes, noteTypes, canViewTrashed, canAddNote, canCreateNote } =
-        props;
+    const { member, actions, tags, tagManagement, breadcrumbs, notices, stats, awards, rankTimeline, canFullHistory } = props;
+    const { divisionComparison, handles, divisions, notes, trashedNotes, noteTypes, canViewTrashed, canAddNote, canCreateNote } = props;
     const { customFields, detailsManagement } = props;
 
     const [tenureOpen, setTenureOpen] = useState(false);
@@ -80,12 +67,7 @@ export default function MemberShow(props: MemberShowProps) {
     const [notesOpen, setNotesOpen] = useState(false);
     const [handleEditorOpen, setHandleEditorOpen] = useState(false);
 
-    const statusLabel =
-        member.status === 'pending'
-            ? 'Pending'
-            : member.status === 'ex-aod'
-              ? 'Ex-AOD'
-              : (member.position ?? 'No position');
+    const statusLabel = member.status === 'pending' ? 'Pending' : member.status === 'ex-aod' ? 'Ex-AOD' : (member.position ?? 'No position');
 
     const actionMenu = (
         <DropdownMenu>
@@ -238,12 +220,7 @@ export default function MemberShow(props: MemberShowProps) {
             )}
 
             <TenureDialog open={tenureOpen} onOpenChange={setTenureOpen} tenure={stats.tenure} forumId={member.clanId} />
-            <RecruitsDialog
-                open={recruitsOpen}
-                onOpenChange={setRecruitsOpen}
-                recruiting={stats.recruiting}
-                memberName={member.name}
-            />
+            <RecruitsDialog open={recruitsOpen} onOpenChange={setRecruitsOpen} recruiting={stats.recruiting} memberName={member.name} />
             <ReminderHistoryDialog open={remindersOpen} onOpenChange={setRemindersOpen} activity={stats.activity} />
             <RankHistoryDialog open={historyOpen} onOpenChange={setHistoryOpen} items={rankTimeline.historyItems} />
         </AppLayout>

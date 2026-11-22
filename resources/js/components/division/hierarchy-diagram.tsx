@@ -48,12 +48,7 @@ export function HierarchyDiagram({ levels, highlightDepth, className }: Hierarch
     }
 
     return (
-        <svg
-            viewBox={`0 0 ${width} ${height}`}
-            style={{ maxWidth: width }}
-            className={cn('h-auto w-full', className)}
-            role="img"
-        >
+        <svg viewBox={`0 0 ${width} ${height}`} style={{ maxWidth: width }} className={cn('h-auto w-full', className)} role="img">
             {xs.slice(1).map((row, di) =>
                 row.map((x, i) => {
                     const d = di + 1;
@@ -103,10 +98,7 @@ export function HierarchyDiagram({ levels, highlightDepth, className }: Hierarch
                     key={`l-${i}`}
                     x={6}
                     y={y(i + 1) + NODE_H - 6}
-                    className={cn(
-                        'text-[14px]',
-                        highlightDepth === i + 1 ? 'fill-foreground font-semibold' : 'fill-muted-foreground',
-                    )}
+                    className={cn('text-[14px]', highlightDepth === i + 1 ? 'fill-foreground font-semibold' : 'fill-muted-foreground')}
                 >
                     {level.label}
                 </text>

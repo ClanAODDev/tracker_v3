@@ -43,12 +43,7 @@ export default function TransfersReport({ division, range, stats, sources }: Tra
                         <section>
                             <h2 className="mb-3 text-sm font-semibold">Transfers by source division</h2>
                             <div className="rounded-md border border-border bg-card p-4">
-                                <ThemedBarChart
-                                    data={chartData}
-                                    x="name"
-                                    series={[{ key: 'count', label: 'Transfers' }]}
-                                    height={260}
-                                />
+                                <ThemedBarChart data={chartData} x="name" series={[{ key: 'count', label: 'Transfers' }]} height={260} />
                             </div>
                         </section>
                     )}
@@ -60,13 +55,7 @@ export default function TransfersReport({ division, range, stats, sources }: Tra
                         </div>
                         <div className="divide-y divide-border overflow-hidden rounded-md border border-border">
                             {sources.map((source, i) => (
-                                <div
-                                    key={i}
-                                    className={cn(
-                                        'flex items-center gap-3 p-3 text-sm',
-                                        source.is_original && 'text-muted-foreground',
-                                    )}
-                                >
+                                <div key={i} className={cn('flex items-center gap-3 p-3 text-sm', source.is_original && 'text-muted-foreground')}>
                                     <span
                                         className={cn(
                                             'flex w-5 justify-center text-xs',
@@ -77,8 +66,7 @@ export default function TransfersReport({ division, range, stats, sources }: Tra
                                     </span>
                                     <span className="flex-1">{source.name}</span>
                                     <span className="numeric">
-                                        {source.count}{' '}
-                                        <span className="text-xs text-muted-foreground">({source.percentage}%)</span>
+                                        {source.count} <span className="text-xs text-muted-foreground">({source.percentage}%)</span>
                                     </span>
                                 </div>
                             ))}

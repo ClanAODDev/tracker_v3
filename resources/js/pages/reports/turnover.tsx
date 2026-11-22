@@ -43,8 +43,8 @@ export default function Turnover({ divisions, totals }: Props) {
             />
 
             <p className="text-xs text-muted-foreground">
-                Counts and percentages of members recruited within 30/60/90-day windows. Each column is cumulative — 90
-                days includes 60 and 30. Calculated in real time from member join dates.
+                Counts and percentages of members recruited within 30/60/90-day windows. Each column is cumulative — 90 days includes 60 and 30.
+                Calculated in real time from member join dates.
             </p>
 
             <div className="overflow-x-auto rounded-md border border-border">
@@ -62,9 +62,7 @@ export default function Turnover({ divisions, totals }: Props) {
                         {divisions.map((row) => (
                             <TableRow key={row.name}>
                                 <TableCell>{row.name}</TableCell>
-                                <TableCell className="numeric text-right text-muted-foreground">
-                                    {row.population}
-                                </TableCell>
+                                <TableCell className="numeric text-right text-muted-foreground">{row.population}</TableCell>
                                 <TableCell className="min-w-32">
                                     <Meter pct={row.pct30} tone="bg-chart-2" />
                                     <span className="mt-1 block text-xs">

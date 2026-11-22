@@ -57,12 +57,7 @@ function DetailRow({ label, children }: { label: string; children: ReactNode }) 
     );
 }
 
-export function TenureDialog({
-    open,
-    onOpenChange,
-    tenure,
-    forumId,
-}: DialogControl & { tenure: TenureStats; forumId: number }) {
+export function TenureDialog({ open, onOpenChange, tenure, forumId }: DialogControl & { tenure: TenureStats; forumId: number }) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-sm">
@@ -97,12 +92,7 @@ export function TenureDialog({
     );
 }
 
-export function RecruitsDialog({
-    open,
-    onOpenChange,
-    recruiting,
-    memberName,
-}: DialogControl & { recruiting: RecruitingStats; memberName: string }) {
+export function RecruitsDialog({ open, onOpenChange, recruiting, memberName }: DialogControl & { recruiting: RecruitingStats; memberName: string }) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-lg">
@@ -112,10 +102,7 @@ export function RecruitsDialog({
                 </DialogHeader>
                 <div className="max-h-[60vh] space-y-1 overflow-y-auto">
                     {recruiting.recruits.map((recruit) => (
-                        <div
-                            key={recruit.url}
-                            className="flex items-center justify-between gap-3 border-b border-border py-2 text-sm last:border-0"
-                        >
+                        <div key={recruit.url} className="flex items-center justify-between gap-3 border-b border-border py-2 text-sm last:border-0">
                             <Link href={recruit.url} className="text-primary hover:underline">
                                 {recruit.name}
                             </Link>
@@ -132,11 +119,7 @@ export function RecruitsDialog({
     );
 }
 
-export function ReminderHistoryDialog({
-    open,
-    onOpenChange,
-    activity,
-}: DialogControl & { activity: ActivityStats }) {
+export function ReminderHistoryDialog({ open, onOpenChange, activity }: DialogControl & { activity: ActivityStats }) {
     const count = activity.reminders.length;
     const [reminding, setReminding] = useState(false);
     const [clearing, setClearing] = useState(false);
@@ -203,11 +186,7 @@ export function ReminderHistoryDialog({
     );
 }
 
-export function RankHistoryDialog({
-    open,
-    onOpenChange,
-    items,
-}: DialogControl & { items: RankTimelineData['historyItems'] }) {
+export function RankHistoryDialog({ open, onOpenChange, items }: DialogControl & { items: RankTimelineData['historyItems'] }) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-sm">

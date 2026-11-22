@@ -18,15 +18,7 @@ interface Props {
     reminderIds: string[];
 }
 
-export default function CreatePm({
-    division,
-    groups,
-    recipientCount,
-    omitted,
-    canRemind,
-    reminderUrl,
-    reminderIds,
-}: Props) {
+export default function CreatePm({ division, groups, recipientCount, omitted, canRemind, reminderUrl, reminderIds }: Props) {
     const [visited, setVisited] = useState<Set<string>>(new Set());
     const [confirmReminder, setConfirmReminder] = useState(false);
     const [reminding, setReminding] = useState(false);
@@ -63,8 +55,7 @@ export default function CreatePm({
 
             <div className="max-w-2xl space-y-6">
                 <p className="text-sm text-muted-foreground">
-                    The AOD forums cap private messages at 20 recipients. Recipients have been split into groups — open
-                    each to compose that batch.
+                    The AOD forums cap private messages at 20 recipients. Recipients have been split into groups — open each to compose that batch.
                 </p>
 
                 <section className="tron-corners rounded-md border border-border bg-card">
@@ -73,9 +64,7 @@ export default function CreatePm({
                         <span className="text-xs text-muted-foreground">{recipientCount} recipients</span>
                     </div>
                     <div className="flex flex-wrap gap-2 p-4">
-                        {groups.length === 0 && (
-                            <p className="text-sm text-muted-foreground">No selected members accept forum PMs.</p>
-                        )}
+                        {groups.length === 0 && <p className="text-sm text-muted-foreground">No selected members accept forum PMs.</p>}
                         {groups.map((group) => (
                             <Button
                                 key={group.label}
@@ -93,8 +82,7 @@ export default function CreatePm({
                     {omitted.length > 0 && (
                         <div className="border-t border-border px-4 py-3 text-xs text-muted-foreground">
                             <strong className="text-foreground">{omitted.length}</strong> member
-                            {omitted.length === 1 ? '' : 's'} filtered out — they don't accept PMs from forum
-                            administrators: {omitted.join(', ')}
+                            {omitted.length === 1 ? '' : 's'} filtered out — they don't accept PMs from forum administrators: {omitted.join(', ')}
                         </div>
                     )}
                 </section>
@@ -115,17 +103,10 @@ export default function CreatePm({
                             ) : (
                                 <>
                                     <label className="flex items-center gap-2 text-sm">
-                                        <Checkbox
-                                            checked={confirmReminder}
-                                            onCheckedChange={(v) => setConfirmReminder(v === true)}
-                                        />
+                                        <Checkbox checked={confirmReminder} onCheckedChange={(v) => setConfirmReminder(v === true)} />
                                         Mark {recipientCount} member{recipientCount === 1 ? '' : 's'} as reminded
                                     </label>
-                                    <Button
-                                        size="sm"
-                                        disabled={!confirmReminder || reminding}
-                                        onClick={markReminded}
-                                    >
+                                    <Button size="sm" disabled={!confirmReminder || reminding} onClick={markReminded}>
                                         <Bell /> Set reminder date
                                     </Button>
                                 </>

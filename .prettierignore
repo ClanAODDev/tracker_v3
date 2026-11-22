@@ -1,0 +1,6 @@
+public/
+vendor/
+storage/
+bootstrap/cache/
+resources/views/
+resources/lang/

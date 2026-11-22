@@ -18,19 +18,7 @@ interface StatCardProps {
     onClick?: () => void;
 }
 
-export function StatCard({
-    icon,
-    value,
-    label,
-    unit,
-    sub,
-    detail,
-    delta,
-    trend,
-    tone,
-    align = 'start',
-    onClick,
-}: StatCardProps) {
+export function StatCard({ icon, value, label, unit, sub, detail, delta, trend, tone, align = 'start', onClick }: StatCardProps) {
     const Comp = onClick ? 'button' : 'div';
     return (
         <Comp

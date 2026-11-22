@@ -63,19 +63,13 @@ export function useRecruitForm(props: RecruitFormProps) {
     }, []);
 
     const patchMember = useCallback((patch: Partial<MemberFields>) => setMember((m) => ({ ...m, ...patch })), []);
-    const patchHandle = useCallback(
-        (id: number, value: string) => {
-            setMember((m) => ({ ...m, handles: { ...m.handles, [id]: value } }));
-            setHandleErrors(({ [id]: _cleared, ...rest }) => rest);
-        },
-        [],
-    );
+    const patchHandle = useCallback((id: number, value: string) => {
+        setMember((m) => ({ ...m, handles: { ...m.handles, [id]: value } }));
+        setHandleErrors(({ [id]: _cleared, ...rest }) => rest);
+    }, []);
 
     const filledHandles = useMemo(
-        () =>
-            props.handleTypes
-                .map((type) => ({ ...type, value: (member.handles[type.id] ?? '').trim() }))
-                .filter((handle) => handle.value !== ''),
+        () => props.handleTypes.map((type) => ({ ...type, value: (member.handles[type.id] ?? '').trim() })).filter((handle) => handle.value !== ''),
         [props.handleTypes, member.handles],
     );
     const hasHandle = filledHandles.length > 0;
@@ -103,10 +97,11 @@ export function useRecruitForm(props: RecruitFormProps) {
 
             setValidating(true);
             debounce('forumName', () => {
-                postJson<{ memberExists: boolean; existingAccount?: boolean; existingUserId?: number }>(
-                    '/validate-name',
-                    { name, member_id: memberId, ...(email ? { email } : {}) },
-                )
+                postJson<{ memberExists: boolean; existingAccount?: boolean; existingUserId?: number }>('/validate-name', {
+                    name,
+                    member_id: memberId,
+                    ...(email ? { email } : {}),
+                })
                     .then((res) => {
                         const available = !res.memberExists;
                         setForumNameValidation({
@@ -274,9 +269,7 @@ export function useRecruitForm(props: RecruitFormProps) {
         return memberIdValidation.valid && memberIdValidation.verifiedEmail;
     }, [path, selectedPending, emailCheck, memberIdValidation]);
 
-    const detailsComplete = Boolean(
-        member.forum_name && forumNameValidation.valid && hasHandle && member.rank,
-    );
+    const detailsComplete = Boolean(member.forum_name && forumNameValidation.valid && hasHandle && member.rank);
     const assignmentComplete = props.units.length === 0 || unitPathIsComplete(props.units, member.unitPath);
     const agreementsComplete = threads.length === 0 || threads.every((t) => t.read);
     const tasksComplete = tasks.length === 0 || tasks.every((t) => t.complete);
@@ -284,15 +277,8 @@ export function useRecruitForm(props: RecruitFormProps) {
     const formValid = useMemo(() => {
         const hasPending = selectedPending !== null;
         if (hasPending && emailCheck.found && !emailCheck.eligible) return false;
-        const idValid =
-            hasPending || Boolean(member.id && memberIdValidation.valid && memberIdValidation.verifiedEmail);
-        return (
-            idValid &&
-            hasHandle &&
-            Boolean(member.forum_name && member.rank) &&
-            assignmentComplete &&
-            forumNameValidation.valid
-        );
+        const idValid = hasPending || Boolean(member.id && memberIdValidation.valid && memberIdValidation.verifiedEmail);
+        return idValid && hasHandle && Boolean(member.forum_name && member.rank) && assignmentComplete && forumNameValidation.valid;
     }, [selectedPending, emailCheck, member, memberIdValidation, forumNameValidation, assignmentComplete, hasHandle]);
 
     const submit = useCallback(async () => {
