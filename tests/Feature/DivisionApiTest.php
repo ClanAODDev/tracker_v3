@@ -285,4 +285,29 @@ final class DivisionApiTest extends TestCase
             ->assertOk()
             ->assertJsonMissingPath('data.division.hero_image');
     }
+
+    #[Test]
+    public function the_site_view_includes_the_hero_image_position_only_with_an_image()
+    {
+        Sanctum::actingAs($this->user, ['division:read']);
+
+        $positioned = Division::factory([
+            'abbreviation'        => 'pos',
+            'hero_image'          => 'division-hero-images/hero.jpg',
+            'hero_image_position' => '30% 70%',
+        ])->create();
+        $orphaned = Division::factory([
+            'abbreviation'        => 'orph',
+            'name'                => 'Orphan Division',
+            'hero_image_position' => '10% 10%',
+        ])->create();
+
+        $this->json('get', route('v1.divisions.show', $positioned->slug), ['include-site' => true])
+            ->assertOk()
+            ->assertJsonPath('data.division.hero_image_position', '30% 70%');
+
+        $this->json('get', route('v1.divisions.show', $orphaned->slug), ['include-site' => true])
+            ->assertOk()
+            ->assertJsonPath('data.division.hero_image_position', null);
+    }
 }

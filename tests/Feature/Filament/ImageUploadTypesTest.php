@@ -89,6 +89,73 @@ class ImageUploadTypesTest extends TestCase
     }
 
     #[Test]
+    public function division_hero_image_position_is_saved(): void
+    {
+        $division = $this->actingAsCommandingOfficer();
+        $division->update(['hero_image' => 'division-hero-images/existing.jpg']);
+        Storage::disk('public')->put('division-hero-images/existing.jpg', 'image');
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->set('data.hero_image_position', '30% 70%')
+            ->call('save')
+            ->assertHasNoFormErrors()
+            ->assertSet('data.hero_image_position', '30% 70%');
+
+        $this->assertSame('30% 70%', $division->fresh()->hero_image_position);
+    }
+
+    #[Test]
+    public function removing_the_hero_image_clears_the_position(): void
+    {
+        $division = $this->actingAsCommandingOfficer();
+        $division->update(['hero_image' => 'division-hero-images/existing.jpg', 'hero_image_position' => '30% 70%']);
+        Storage::disk('public')->put('division-hero-images/existing.jpg', 'image');
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->set('data.hero_image', null)
+            ->assertSet('data.hero_image_position', null);
+    }
+
+    #[Test]
+    public function division_hero_image_position_rejects_values_outside_the_frame(): void
+    {
+        $division = $this->actingAsCommandingOfficer();
+        $division->update(['hero_image' => 'division-hero-images/existing.jpg']);
+        Storage::disk('public')->put('division-hero-images/existing.jpg', 'image');
+
+        foreach (['150% 20%', 'center', '30% 70%; color: red'] as $position) {
+            Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+                ->set('data.hero_image_position', $position)
+                ->call('save')
+                ->assertHasFormErrors(['hero_image_position']);
+        }
+
+        $this->assertNull($division->fresh()->hero_image_position);
+    }
+
+    #[Test]
+    public function a_new_hero_image_resets_the_position(): void
+    {
+        $division = $this->actingAsCommandingOfficer();
+        $division->update(['hero_image' => 'division-hero-images/existing.jpg', 'hero_image_position' => '30% 70%']);
+        Storage::disk('public')->put('division-hero-images/existing.jpg', 'image');
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->assertSet('data.hero_image_position', '30% 70%')
+            ->set('data.hero_image', [UploadedFile::fake()->image('new.png', 1920, 820)])
+            ->assertSet('data.hero_image_position', null)
+            ->set('data.hero_image_position', '20% 80%')
+            ->call('save')
+            ->assertHasNoFormErrors()
+            ->assertSet('data.hero_image_position', '20% 80%');
+
+        $division->refresh();
+
+        $this->assertNotSame('division-hero-images/existing.jpg', $division->hero_image);
+        $this->assertSame('20% 80%', $division->hero_image_position);
+    }
+
+    #[Test]
     public function division_hero_image_rejects_svg_files(): void
     {
         $division = $this->actingAsCommandingOfficer();
