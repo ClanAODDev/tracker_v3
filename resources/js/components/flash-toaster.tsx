@@ -19,13 +19,7 @@ export function FlashToaster() {
 
         for (const item of toasts) {
             const fn =
-                item.type === 'success'
-                    ? toast.success
-                    : item.type === 'error'
-                      ? toast.error
-                      : item.type === 'warning'
-                        ? toast.warning
-                        : toast.info;
+                item.type === 'success' ? toast.success : item.type === 'error' ? toast.error : item.type === 'warning' ? toast.warning : toast.info;
             fn(item.title ?? item.message, item.title ? { description: item.message } : undefined);
         }
     }, [flash]);

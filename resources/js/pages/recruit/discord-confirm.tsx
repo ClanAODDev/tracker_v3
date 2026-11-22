@@ -126,8 +126,7 @@ export default function DiscordConfirm({
                                 <p className="flex items-start gap-2 text-success">
                                     <CheckCircle2 className="mt-0.5 size-4 shrink-0" />
                                     <span>
-                                        Forum account found: <strong>{forumAccount.username}</strong> (ID:{' '}
-                                        {forumAccount.user_id})
+                                        Forum account found: <strong>{forumAccount.username}</strong> (ID: {forumAccount.user_id})
                                     </span>
                                 </p>
                             ) : (
@@ -135,9 +134,7 @@ export default function DiscordConfirm({
                                     <TriangleAlert className="mt-0.5 size-4 shrink-0" />
                                     <span>
                                         A forum account was found: <strong>{forumAccount.username}</strong>
-                                        <span className="mt-0.5 block text-xs text-muted-foreground">
-                                            {forumAccount.rejection_reason}
-                                        </span>
+                                        <span className="mt-0.5 block text-xs text-muted-foreground">{forumAccount.rejection_reason}</span>
                                     </span>
                                 </p>
                             )
@@ -151,15 +148,11 @@ export default function DiscordConfirm({
 
                     {(pendingUser.application || pendingUser.application_handle) && (
                         <div className="border-b border-border p-5">
-                            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wide text-primary">
-                                Application responses
-                            </h3>
+                            <h3 className="mb-3 text-xs font-semibold tracking-wide text-primary uppercase">Application responses</h3>
                             <div className="grid gap-3 sm:grid-cols-2">
                                 {pendingUser.application_handle && (
                                     <div>
-                                        <div className="text-xs text-muted-foreground">
-                                            {pendingUser.application_handle.label}
-                                        </div>
+                                        <div className="text-xs text-muted-foreground">{pendingUser.application_handle.label}</div>
                                         <div className="font-mono text-sm">{pendingUser.application_handle.value}</div>
                                     </div>
                                 )}
@@ -188,12 +181,7 @@ export default function DiscordConfirm({
                                 <p className="mb-3 text-sm text-muted-foreground">
                                     No division application on file — select which division to recruit them into:
                                 </p>
-                                {divisions && (
-                                    <DivisionPicker
-                                        options={divisions}
-                                        query={`?pending_user_id=${pendingUserId}`}
-                                    />
-                                )}
+                                {divisions && <DivisionPicker options={divisions} query={`?pending_user_id=${pendingUserId}`} />}
                             </>
                         )}
                     </div>
@@ -207,48 +195,31 @@ export default function DiscordConfirm({
                         </p>
                         <p className="mt-3 text-sm text-muted-foreground">
                             This Discord account isn't tied to a pending registration, but it matches{' '}
-                            {memberMatches.length > 1 ? 'these member records' : 'a member record'} already in the
-                            Tracker:
+                            {memberMatches.length > 1 ? 'these member records' : 'a member record'} already in the Tracker:
                         </p>
                     </div>
 
                     {memberMatches.map((match) => (
-                        <div
-                            key={match.clan_id}
-                            className="flex flex-wrap items-center gap-3 border-b border-border p-5"
-                        >
+                        <div key={match.clan_id} className="flex flex-wrap items-center gap-3 border-b border-border p-5">
                             {match.avatarUrl ? (
                                 <img src={match.avatarUrl} alt="" className="size-10 rounded-full" />
                             ) : (
                                 <div className="flex size-10 items-center justify-center rounded-full bg-muted">
-                                    {match.isExMember ? (
-                                        <History className="size-4" />
-                                    ) : (
-                                        <User className="size-4" />
-                                    )}
+                                    {match.isExMember ? <History className="size-4" /> : <User className="size-4" />}
                                 </div>
                             )}
                             <div className="flex-1">
-                                <a
-                                    href={match.url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="font-semibold hover:text-primary"
-                                >
+                                <a href={match.url} target="_blank" rel="noreferrer" className="font-semibold hover:text-primary">
                                     {match.name}
                                 </a>
                                 <div className="text-xs text-muted-foreground">
-                                    {match.isExMember
-                                        ? 'Former member — no longer in a division'
-                                        : `Active member of ${match.division}`}
+                                    {match.isExMember ? 'Former member — no longer in a division' : `Active member of ${match.division}`}
                                 </div>
                             </div>
                             {match.isExMember && divisions ? (
                                 <DivisionPicker options={divisions} query={`?member_id=${match.clan_id}`} />
                             ) : (
-                                <span className="text-xs text-muted-foreground">
-                                    Already active — no recruitment needed
-                                </span>
+                                <span className="text-xs text-muted-foreground">Already active — no recruitment needed</span>
                             )}
                         </div>
                     ))}
@@ -275,8 +246,7 @@ export default function DiscordConfirm({
                         </p>
                     </div>
                     <div className="border-b border-border p-5 text-sm text-muted-foreground">
-                        This Discord account isn't tied to a pending registration or an existing member record. Have the
-                        recruit apply to AOD via{' '}
+                        This Discord account isn't tied to a pending registration or an existing member record. Have the recruit apply to AOD via{' '}
                         <a href="https://clanaod.net" target="_blank" rel="noreferrer" className="text-primary">
                             clanaod.net
                         </a>{' '}

@@ -15,8 +15,7 @@ const MESSAGES: Record<number, { slug: string; title: string; message: string; h
     400: {
         slug: 'BAD_REQUEST',
         title: 'Bad request',
-        message:
-            "The request couldn't be processed. If you typed a URL manually, check it for errors — otherwise contact a clan administrator.",
+        message: "The request couldn't be processed. If you typed a URL manually, check it for errors — otherwise contact a clan administrator.",
     },
     403: {
         slug: 'ACCESS_DENIED',
@@ -27,14 +26,12 @@ const MESSAGES: Record<number, { slug: string; title: string; message: string; h
     404: {
         slug: 'SIGNAL_LOST',
         title: 'Signal lost',
-        message:
-            "The coordinates you entered don't match any known location. Check your navigation and try again — or fall back to base.",
+        message: "The coordinates you entered don't match any known location. Check your navigation and try again — or fall back to base.",
     },
     405: {
         slug: 'METHOD_BLOCKED',
         title: 'Not permitted',
-        message:
-            "You're not allowed to do that. Contact your division leadership or a clan administrator if you believe this is a mistake.",
+        message: "You're not allowed to do that. Contact your division leadership or a clan administrator if you believe this is a mistake.",
     },
     409: {
         slug: 'MEMBER_INACTIVE',
@@ -49,14 +46,12 @@ const MESSAGES: Record<number, { slug: string; title: string; message: string; h
     500: {
         slug: 'SYSTEM_FAILURE',
         title: 'System failure',
-        message:
-            'Something went sideways on our end. Our engineers have been alerted — report this to a clan administrator if it persists.',
+        message: 'Something went sideways on our end. Our engineers have been alerted — report this to a clan administrator if it persists.',
     },
     503: {
         slug: 'MAINTENANCE',
         title: 'Offline',
-        message:
-            "The Tracker is currently unavailable due to maintenance or an update in progress. Stand by — we'll be back online shortly.",
+        message: "The Tracker is currently unavailable due to maintenance or an update in progress. Stand by — we'll be back online shortly.",
         home: false,
     },
 };
@@ -78,10 +73,7 @@ export default function ErrorPage({ status, title, message, path }: Props) {
     return (
         <BlankLayout>
             <Head title={`${status} — ${info.title}`} />
-            <div
-                onMouseEnter={replay}
-                className="tron-corners mx-auto mt-16 max-w-md rounded-md border border-border bg-card p-10 text-center"
-            >
+            <div onMouseEnter={replay} className="tron-corners mx-auto mt-16 max-w-md rounded-md border border-border bg-card p-10 text-center">
                 <div>
                     <span className="tron-eyebrow">
                         ERR · {status} · {info.slug}
@@ -106,8 +98,7 @@ export default function ErrorPage({ status, title, message, path }: Props) {
 
                 {path && (
                     <p className="mt-4 truncate border-t border-border pt-4 font-mono text-xs text-muted-foreground">
-                        <span className="text-primary">&gt;</span> {path}{' '}
-                        <span className="text-primary">✗</span>
+                        <span className="text-primary">&gt;</span> {path} <span className="text-primary">✗</span>
                         <span className="tron-caret ml-1 align-middle" />
                     </p>
                 )}

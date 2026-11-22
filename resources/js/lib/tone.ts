@@ -40,8 +40,7 @@ const FILL: Record<Tone, string> = {
     muted: 'bg-muted',
 };
 
-const asTone = (tone: string | null | undefined): Tone =>
-    tone && tone in TEXT ? (tone as Tone) : 'default';
+const asTone = (tone: string | null | undefined): Tone => (tone && tone in TEXT ? (tone as Tone) : 'default');
 
 export const toneText = (tone: string | null | undefined) => TEXT[asTone(tone)];
 export const toneBorder = (tone: string | null | undefined) => BORDER[asTone(tone)];

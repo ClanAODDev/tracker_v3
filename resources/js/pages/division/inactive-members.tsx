@@ -50,17 +50,7 @@ const SEVERITY_ROW: Record<string, string> = {
     normal: '',
 };
 
-export default function InactiveMembers({
-    division,
-    stats,
-    activePlatoon,
-    platoons,
-    inactive,
-    flagged,
-    activityLog,
-    can,
-    bulk,
-}: Props) {
+export default function InactiveMembers({ division, stats, activePlatoon, platoons, inactive, flagged, activityLog, can, bulk }: Props) {
     const [query, setQuery] = useState('');
     const [selected, setSelected] = useState<Set<string>>(new Set());
     const [tab, setTab] = useState<'inactive' | 'flagged'>(
@@ -105,11 +95,7 @@ export default function InactiveMembers({
             header={{
                 eyebrow: 'Division',
                 title: `${division.name} — inactive members`,
-                breadcrumbs: [
-                    { label: 'Divisions' },
-                    { label: division.name, href: `/divisions/${division.slug}` },
-                    { label: 'Inactive members' },
-                ],
+                breadcrumbs: [{ label: 'Divisions' }, { label: division.name, href: `/divisions/${division.slug}` }, { label: 'Inactive members' }],
             }}
         >
             <Head title={`${division.name} inactive members`} />
@@ -128,11 +114,7 @@ export default function InactiveMembers({
                     {division.hasUnits && (
                         <SimpleSelect
                             value={activePlatoon ? String(activePlatoon) : '__all'}
-                            onChange={(v) =>
-                                router.get(
-                                    `/divisions/${division.slug}/inactive-members${v === '__all' ? '' : `/${v}`}`,
-                                )
-                            }
+                            onChange={(v) => router.get(`/divisions/${division.slug}/inactive-members${v === '__all' ? '' : `/${v}`}`)}
                             options={[
                                 { value: '__all', label: `All ${pluralize(division.topLevelLabel)}` },
                                 ...platoons.map((p) => ({
@@ -143,13 +125,8 @@ export default function InactiveMembers({
                         />
                     )}
                     <div className="relative">
-                        <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                        <Input
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            placeholder="Search members"
-                            className="h-8 w-56 pl-8"
-                        />
+                        <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search members" className="h-8 w-56 pl-8" />
                     </div>
                 </div>
 
@@ -162,9 +139,7 @@ export default function InactiveMembers({
                     <TabsContent value={tab} className="mt-4">
                         {filtered.length === 0 ? (
                             <p className="rounded-md border border-border py-10 text-center text-sm text-muted-foreground">
-                                {tab === 'inactive'
-                                    ? 'No inactive members match the selected filter.'
-                                    : 'No members are flagged for removal.'}
+                                {tab === 'inactive' ? 'No inactive members match the selected filter.' : 'No members are flagged for removal.'}
                             </p>
                         ) : (
                             <div className="overflow-x-auto rounded-md border border-border">
@@ -185,31 +160,21 @@ export default function InactiveMembers({
                                             <TableRow key={row.id} className={SEVERITY_ROW[row.severity]}>
                                                 {can.remind && (
                                                     <TableCell>
-                                                        <Checkbox
-                                                            checked={selected.has(row.id)}
-                                                            onCheckedChange={() => toggle(row.id)}
-                                                        />
+                                                        <Checkbox checked={selected.has(row.id)} onCheckedChange={() => toggle(row.id)} />
                                                     </TableCell>
                                                 )}
                                                 <TableCell>
                                                     <Link href={row.profileUrl} className="hover:text-foreground">
-                                                        {row.name}{' '}
-                                                        <span className="text-xs text-muted-foreground">
-                                                            {row.rankAbbr}
-                                                        </span>
+                                                        {row.name} <span className="text-xs text-muted-foreground">{row.rankAbbr}</span>
                                                     </Link>
                                                 </TableCell>
-                                                <TableCell title={row.voice.iso ?? undefined}>
-                                                    {row.voice.label}
-                                                </TableCell>
+                                                <TableCell title={row.voice.iso ?? undefined}>{row.voice.label}</TableCell>
                                                 {can.remind && (
                                                     <TableCell>
                                                         <ReminderButton row={row} />
                                                     </TableCell>
                                                 )}
-                                                {tab === 'inactive' && (
-                                                    <TableCell className="text-muted-foreground">{row.status}</TableCell>
-                                                )}
+                                                {tab === 'inactive' && <TableCell className="text-muted-foreground">{row.status}</TableCell>}
                                                 {division.hasUnits && <TableCell className="text-muted-foreground">{row.unit}</TableCell>}
                                                 <TableCell className="text-right">
                                                     <div className="flex justify-end gap-1.5">
@@ -255,15 +220,10 @@ export default function InactiveMembers({
                                                                         size="sm"
                                                                         variant="destructive"
                                                                         onClick={() => {
-                                                                            if (
-                                                                                confirm(
-                                                                                    `Remove ${row.name} from AOD?`,
-                                                                                )
-                                                                            )
+                                                                            if (confirm(`Remove ${row.name} from AOD?`))
                                                                                 router.delete(row.removeUrl!, {
                                                                                     data: {
-                                                                                        removal_reason:
-                                                                                            'Member removed for inactivity',
+                                                                                        removal_reason: 'Member removed for inactivity',
                                                                                     },
                                                                                 });
                                                                         }}
@@ -315,41 +275,25 @@ export default function InactiveMembers({
                                     <Button
                                         size="sm"
                                         variant="outline"
-                                        onClick={() =>
-                                            router.post(bulk.pm, { 'pm-member-data': selectedIds.join(',') })
-                                        }
+                                        onClick={() => router.post(bulk.pm, { 'pm-member-data': selectedIds.join(',') })}
                                     >
                                         <Mail /> Send PM
                                     </Button>
                                 )}
                                 {can.remind && (
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() => bulkAction(bulk.reminder, 'remind')}
-                                    >
+                                    <Button size="sm" variant="outline" onClick={() => bulkAction(bulk.reminder, 'remind')}>
                                         <Bell /> Reminder
                                     </Button>
                                 )}
                                 {can.flag && (
-                                    <Button
-                                        size="sm"
-                                        variant="outline"
-                                        className="text-warning"
-                                        onClick={() => bulkAction(bulk.flag, 'flag')}
-                                    >
+                                    <Button size="sm" variant="outline" className="text-warning" onClick={() => bulkAction(bulk.flag, 'flag')}>
                                         <Flag /> Flag
                                     </Button>
                                 )}
                             </>
                         ) : (
                             can.flag && (
-                                <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-warning"
-                                    onClick={() => bulkAction(bulk.unflag, 'unflag')}
-                                >
+                                <Button size="sm" variant="outline" className="text-warning" onClick={() => bulkAction(bulk.unflag, 'unflag')}>
                                     <Flag /> Unflag
                                 </Button>
                             )

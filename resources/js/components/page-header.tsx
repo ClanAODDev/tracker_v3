@@ -1,13 +1,6 @@
 import type { ReactNode } from 'react';
 
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
 import { LAYOUT_MAX_WIDTH, type LayoutWidth } from '@/lib/layout';
 import { cn } from '@/lib/utils';
 

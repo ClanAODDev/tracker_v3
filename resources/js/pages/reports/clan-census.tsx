@@ -39,15 +39,7 @@ interface Props {
     hasDateFilter: boolean;
 }
 
-export default function ClanCensus({
-    stats,
-    chart,
-    censusTable,
-    divisionPopulations,
-    rankDemographic,
-    dateRange,
-    hasDateFilter,
-}: Props) {
+export default function ClanCensus({ stats, chart, censusTable, divisionPopulations, rankDemographic, dateRange, hasDateFilter }: Props) {
     const chartData = chart.map((row) => ({ date: row.date, Population: row.population, 'Voice active': row.voice }));
 
     const change =
@@ -60,8 +52,8 @@ export default function ClanCensus({
             <Head title="Clan Census Data" />
 
             <p className="text-xs text-muted-foreground">
-                Tracker data is synced with the AOD forums hourly. Census statistics are polled weekly. Division-specific
-                populations carry annotations viewable on individual division pages.
+                Tracker data is synced with the AOD forums hourly. Census statistics are polled weekly. Division-specific populations carry
+                annotations viewable on individual division pages.
             </p>
 
             <StatTiles
@@ -137,17 +129,11 @@ export default function ClanCensus({
                                     {censusTable.map((row, i) => (
                                         <TableRow key={i}>
                                             <TableCell>{row.date}</TableCell>
-                                            <TableCell className="numeric text-right">
-                                                {row.population.toLocaleString()}
-                                            </TableCell>
+                                            <TableCell className="numeric text-right">{row.population.toLocaleString()}</TableCell>
                                             <TableCell
                                                 className={cn(
                                                     'numeric text-right',
-                                                    row.change > 0
-                                                        ? 'text-success'
-                                                        : row.change < 0
-                                                          ? 'text-destructive'
-                                                          : 'text-muted-foreground',
+                                                    row.change > 0 ? 'text-success' : row.change < 0 ? 'text-destructive' : 'text-muted-foreground',
                                                 )}
                                             >
                                                 {row.change > 0 ? '+' : ''}
@@ -190,17 +176,12 @@ export default function ClanCensus({
                                     {divisionPopulations.rows.map((division) => (
                                         <TableRow key={division.slug}>
                                             <TableCell>
-                                                <Link
-                                                    href={`/divisions/${division.slug}/census`}
-                                                    className="hover:text-primary"
-                                                >
+                                                <Link href={`/divisions/${division.slug}/census`} className="hover:text-primary">
                                                     {division.name}
                                                 </Link>
                                             </TableCell>
                                             <TableCell className="numeric text-right">{division.population}</TableCell>
-                                            <TableCell className="numeric text-right text-muted-foreground">
-                                                {division.voicePercent}%
-                                            </TableCell>
+                                            <TableCell className="numeric text-right text-muted-foreground">{division.voicePercent}%</TableCell>
                                         </TableRow>
                                     ))}
                                     <TableRow className="border-t-2 border-border font-medium">
@@ -208,9 +189,7 @@ export default function ClanCensus({
                                         <TableCell className="numeric text-right">
                                             <CountUp value={divisionPopulations.totalPopulation} />
                                         </TableCell>
-                                        <TableCell className="numeric text-right">
-                                            {divisionPopulations.totalPercent}%
-                                        </TableCell>
+                                        <TableCell className="numeric text-right">{divisionPopulations.totalPercent}%</TableCell>
                                     </TableRow>
                                 </TableBody>
                             </Table>
@@ -227,15 +206,11 @@ export default function ClanCensus({
                                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
                                     <div className="h-full bg-warning" style={{ width: `${rank.percent}%` }} />
                                 </div>
-                                <span className="numeric w-12 shrink-0 text-right text-muted-foreground">
-                                    {rank.count.toLocaleString()}
-                                </span>
-                                <span className="numeric w-14 shrink-0 text-right text-muted-foreground">
-                                    {rank.percent}%
-                                </span>
+                                <span className="numeric w-12 shrink-0 text-right text-muted-foreground">{rank.count.toLocaleString()}</span>
+                                <span className="numeric w-14 shrink-0 text-right text-muted-foreground">{rank.percent}%</span>
                             </div>
                         ))}
-                        <div className="mt-1 flex items-center justify-between border-t border-border px-2 pb-1 pt-2 font-medium">
+                        <div className="mt-1 flex items-center justify-between border-t border-border px-2 pt-2 pb-1 font-medium">
                             <span>Total</span>
                             <span className="numeric">
                                 <CountUp value={stats.memberCount} />

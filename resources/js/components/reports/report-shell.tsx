@@ -20,14 +20,7 @@ interface ReportShellProps {
     actions?: ReactNode;
 }
 
-export function ReportShell({
-    divisionName,
-    divisionSlug,
-    title,
-    active,
-    actions,
-    children,
-}: PropsWithChildren<ReportShellProps>) {
+export function ReportShell({ divisionName, divisionSlug, title, active, actions, children }: PropsWithChildren<ReportShellProps>) {
     const currentUrl = usePage().url;
 
     return (
@@ -36,11 +29,7 @@ export function ReportShell({
             header={{
                 eyebrow: `${divisionName} Division`,
                 title,
-                breadcrumbs: [
-                    { label: 'Divisions' },
-                    { label: divisionName, href: `/divisions/${divisionSlug}` },
-                    { label: 'Reports' },
-                ],
+                breadcrumbs: [{ label: 'Divisions' }, { label: divisionName, href: `/divisions/${divisionSlug}` }, { label: 'Reports' }],
                 actions,
             }}
         >

@@ -58,9 +58,7 @@ export default function CensusReport({ division, stats, series, weeks }: CensusP
                 ]}
             />
 
-            <p className="text-xs text-muted-foreground">
-                Census data is collected automatically every Sunday at midnight (server time).
-            </p>
+            <p className="text-xs text-muted-foreground">Census data is collected automatically every Sunday at midnight (server time).</p>
 
             <section>
                 <h2 className="mb-3 text-sm font-semibold">Census history</h2>
@@ -101,20 +99,14 @@ export default function CensusReport({ division, stats, series, weeks }: CensusP
                                     <TableCell
                                         className={cn(
                                             'numeric text-right',
-                                            week.change > 0
-                                                ? 'text-success'
-                                                : week.change < 0
-                                                  ? 'text-destructive'
-                                                  : 'text-muted-foreground',
+                                            week.change > 0 ? 'text-success' : week.change < 0 ? 'text-destructive' : 'text-muted-foreground',
                                         )}
                                     >
                                         {week.change > 0 ? '+' : ''}
                                         {week.change}
                                     </TableCell>
                                     <TableCell className="numeric text-right">{week.voicePercent}%</TableCell>
-                                    <TableCell className="numeric text-right text-muted-foreground">
-                                        {week.voiceCount}
-                                    </TableCell>
+                                    <TableCell className="numeric text-right text-muted-foreground">{week.voiceCount}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

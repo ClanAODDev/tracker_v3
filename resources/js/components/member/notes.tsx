@@ -70,7 +70,7 @@ function NoteCard({ note, memberGuid, trashed }: { note: MemberNote; memberGuid:
                     </div>
                 </form>
             ) : (
-                <p className="whitespace-pre-line text-sm">{note.body}</p>
+                <p className="text-sm whitespace-pre-line">{note.body}</p>
             )}
 
             <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
@@ -89,12 +89,7 @@ function NoteCard({ note, memberGuid, trashed }: { note: MemberNote; memberGuid:
                 )}
                 <span title={note.createdAtFull}>· {trashed ? `deleted ${note.deletedAt}` : note.createdAt}</span>
                 {note.forumThreadUrl && (
-                    <a
-                        href={note.forumThreadUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 hover:text-foreground"
-                    >
+                    <a href={note.forumThreadUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 hover:text-foreground">
                         <ExternalLink className="size-3" /> Discussion
                     </a>
                 )}
@@ -129,10 +124,7 @@ function NoteCard({ note, memberGuid, trashed }: { note: MemberNote; memberGuid:
                                     size="icon-xs"
                                     variant="ghost"
                                     className="text-destructive"
-                                    onClick={() =>
-                                        confirm('Delete this note?') &&
-                                        router.delete(note.deleteUrl, { preserveScroll: true })
-                                    }
+                                    onClick={() => confirm('Delete this note?') && router.delete(note.deleteUrl, { preserveScroll: true })}
                                     title="Delete"
                                 >
                                     <Trash2 />
@@ -215,9 +207,7 @@ export function NotesDialog({
                                         key={value}
                                         className={cn(
                                             'cursor-pointer rounded-md border px-2.5 py-1 text-xs',
-                                            create.data.type === value
-                                                ? 'border-primary bg-primary/10'
-                                                : 'border-border',
+                                            create.data.type === value ? 'border-primary bg-primary/10' : 'border-border',
                                         )}
                                     >
                                         <input
@@ -241,9 +231,7 @@ export function NotesDialog({
                                     rows={3}
                                     className="w-full rounded-md border border-input bg-transparent p-2 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/40"
                                 />
-                                {create.errors.body && (
-                                    <p className="text-xs text-destructive">{create.errors.body}</p>
-                                )}
+                                {create.errors.body && <p className="text-xs text-destructive">{create.errors.body}</p>}
                             </div>
                             <div className="flex justify-end">
                                 <Button type="submit" size="sm" disabled={create.processing}>

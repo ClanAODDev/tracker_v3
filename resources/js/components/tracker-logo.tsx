@@ -12,28 +12,13 @@ const BAND: Record<number, string> = {
     [-3]: 'color-mix(in srgb, var(--primary) 14%, #fff)',
 };
 
-const CELLS = Array.from({ length: 4 }, (_, row) =>
-    Array.from({ length: 4 }, (_, col) => ({ row, col })),
-).flat();
+const CELLS = Array.from({ length: 4 }, (_, row) => Array.from({ length: 4 }, (_, col) => ({ row, col }))).flat();
 
 export function TrackerMark({ className }: { className?: string }) {
     return (
-        <svg
-            viewBox="0 0 16 16"
-            className={cn('size-5 shrink-0', className)}
-            role="img"
-            aria-label="AOD Tracker"
-        >
+        <svg viewBox="0 0 16 16" className={cn('size-5 shrink-0', className)} role="img" aria-label="AOD Tracker">
             {CELLS.map(({ row, col }) => (
-                <rect
-                    key={`${row}-${col}`}
-                    x={col * 4 + 0.35}
-                    y={row * 4 + 0.35}
-                    width={3.3}
-                    height={3.3}
-                    rx={0.4}
-                    fill={BAND[col - row]}
-                />
+                <rect key={`${row}-${col}`} x={col * 4 + 0.35} y={row * 4 + 0.35} width={3.3} height={3.3} rx={0.4} fill={BAND[col - row]} />
             ))}
         </svg>
     );
@@ -50,11 +35,7 @@ export function TrackerLogo({ className }: { className?: string }) {
 
 export function TrackerHomeLink({ className, markClassName }: { className?: string; markClassName?: string }) {
     return (
-        <Link
-            href="/"
-            aria-label="AOD Tracker home"
-            className={cn('flex items-center gap-2.5 transition-opacity hover:opacity-80', className)}
-        >
+        <Link href="/" aria-label="AOD Tracker home" className={cn('flex items-center gap-2.5 transition-opacity hover:opacity-80', className)}>
             <TrackerMark className={cn('size-5', markClassName)} />
             <span className="font-mono text-sm font-semibold tracking-[0.3em] text-foreground">TRACKER</span>
         </Link>

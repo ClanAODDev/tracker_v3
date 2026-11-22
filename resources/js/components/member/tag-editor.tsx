@@ -5,15 +5,7 @@ import { toast } from 'sonner';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandSeparator,
-} from '@/components/ui/command';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList, CommandSeparator } from '@/components/ui/command';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { SimpleSelect } from '@/components/ui/simple-select';
@@ -63,12 +55,7 @@ export function MemberTagEditor({ tags, management }: { tags: DisplayTag[]; mana
         return (
             <div className="flex flex-wrap gap-1.5">
                 {tags.map((tag) => (
-                    <Badge
-                        key={tag.id}
-                        variant="outline"
-                        title={tag.division ?? undefined}
-                        className={cn(VISIBILITY_CLASS[tag.visibility])}
-                    >
+                    <Badge key={tag.id} variant="outline" title={tag.division ?? undefined} className={cn(VISIBILITY_CLASS[tag.visibility])}>
                         {tag.name}
                     </Badge>
                 ))}
@@ -172,22 +159,10 @@ export function MemberTagEditor({ tags, management }: { tags: DisplayTag[]; mana
                                     <CommandEmpty>No assignable tags.</CommandEmpty>
                                     <CommandGroup>
                                         {available.map((tag) => (
-                                            <CommandItem
-                                                key={tag.id}
-                                                value={tag.name}
-                                                disabled={busy === tag.id}
-                                                onSelect={() => toggle(tag)}
-                                            >
-                                                <Check
-                                                    className={cn(
-                                                        'size-4',
-                                                        assigned.includes(tag.id) ? 'opacity-100' : 'opacity-0',
-                                                    )}
-                                                />
+                                            <CommandItem key={tag.id} value={tag.name} disabled={busy === tag.id} onSelect={() => toggle(tag)}>
+                                                <Check className={cn('size-4', assigned.includes(tag.id) ? 'opacity-100' : 'opacity-0')} />
                                                 <span className="flex-1">{tag.name}</span>
-                                                {tag.global && (
-                                                    <span className="text-[0.65rem] text-muted-foreground">global</span>
-                                                )}
+                                                {tag.global && <span className="text-[0.65rem] text-muted-foreground">global</span>}
                                             </CommandItem>
                                         ))}
                                     </CommandGroup>
@@ -218,12 +193,7 @@ export function MemberTagEditor({ tags, management }: { tags: DisplayTag[]; mana
                                             options={management.visibilityOptions}
                                             className="h-8 flex-1"
                                         />
-                                        <Button
-                                            size="sm"
-                                            className="h-8"
-                                            disabled={!newName.trim() || busy === 'create'}
-                                            onClick={create}
-                                        >
+                                        <Button size="sm" className="h-8" disabled={!newName.trim() || busy === 'create'} onClick={create}>
                                             Add
                                         </Button>
                                     </div>

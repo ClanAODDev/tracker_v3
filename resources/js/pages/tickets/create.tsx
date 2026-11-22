@@ -41,14 +41,10 @@ export default function TicketCreate({ ticketTypes }: Props) {
                 <div className="space-y-4">
                     <div className="text-center">
                         <h2 className="text-lg font-semibold">What do you need help with?</h2>
-                        <p className="text-sm text-muted-foreground">
-                            Select the category that best describes your request.
-                        </p>
+                        <p className="text-sm text-muted-foreground">Select the category that best describes your request.</p>
                     </div>
                     {ticketTypes.length === 0 ? (
-                        <p className="py-10 text-center text-sm text-muted-foreground">
-                            There are no ticket types available for your role.
-                        </p>
+                        <p className="py-10 text-center text-sm text-muted-foreground">There are no ticket types available for your role.</p>
                     ) : (
                         <div className="mx-auto max-w-xl space-y-2">
                             {ticketTypes.map((type) => {
@@ -118,8 +114,7 @@ function TicketForm({ type, onCancel }: { type: TicketType; onCancel: () => void
             const res = await fetch('/api/tickets', {
                 method: 'POST',
                 headers: {
-                    'X-CSRF-TOKEN':
-                        document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
+                    'X-CSRF-TOKEN': document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
                     Accept: 'application/json',
                     'X-Requested-With': 'XMLHttpRequest',
                 },
@@ -141,23 +136,19 @@ function TicketForm({ type, onCancel }: { type: TicketType; onCancel: () => void
             <div className="flex items-center gap-3">
                 <FileEdit className="size-5 text-primary" />
                 <div>
-                    <p className="text-xs uppercase tracking-wide text-muted-foreground">New request</p>
+                    <p className="text-xs tracking-wide text-muted-foreground uppercase">New request</p>
                     <h2 className="text-lg font-semibold">{type.name}</h2>
                 </div>
             </div>
 
             {type.boilerplate && (
                 <div className="overflow-hidden rounded-md border border-border">
-                    <p className="border-b border-border bg-card/40 px-4 py-2 text-xs font-semibold">
-                        Please include the following information
-                    </p>
-                    <pre className="whitespace-pre-wrap p-4 text-xs text-muted-foreground">{type.boilerplate}</pre>
+                    <p className="border-b border-border bg-card/40 px-4 py-2 text-xs font-semibold">Please include the following information</p>
+                    <pre className="p-4 text-xs whitespace-pre-wrap text-muted-foreground">{type.boilerplate}</pre>
                 </div>
             )}
 
-            {error && (
-                <p className="rounded-md border border-destructive/40 bg-destructive/5 px-4 py-2 text-sm">{error}</p>
-            )}
+            {error && <p className="rounded-md border border-destructive/40 bg-destructive/5 px-4 py-2 text-sm">{error}</p>}
 
             <div className="space-y-1.5">
                 <label htmlFor="description" className="text-sm font-medium">
@@ -181,9 +172,7 @@ function TicketForm({ type, onCancel }: { type: TicketType; onCancel: () => void
                 <div className="flex items-center justify-between">
                     <span className="flex items-center gap-1.5 text-sm font-medium">
                         <Paperclip className="size-3.5" /> Attachments
-                        <span className="text-xs font-normal text-muted-foreground">
-                            images only · max 5 · 1 MB each
-                        </span>
+                        <span className="text-xs font-normal text-muted-foreground">images only · max 5 · 1 MB each</span>
                     </span>
                     {files.length < 5 && (
                         <label className="cursor-pointer text-xs text-primary hover:underline">
@@ -210,7 +199,7 @@ function TicketForm({ type, onCancel }: { type: TicketType; onCancel: () => void
                                 <button
                                     type="button"
                                     onClick={() => removeFile(i)}
-                                    className="absolute -right-1.5 -top-1.5 grid size-5 place-items-center rounded-full bg-destructive text-white"
+                                    className="absolute -top-1.5 -right-1.5 grid size-5 place-items-center rounded-full bg-destructive text-white"
                                 >
                                     <X className="size-3" />
                                 </button>

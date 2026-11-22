@@ -6,15 +6,7 @@ import { RarityPill } from '@/components/awards/award-card';
 import { MemberCombobox, type MemberPick } from '@/components/member-combobox';
 import { StatTiles } from '@/components/reports/stat-tiles';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -133,10 +125,7 @@ export default function AwardShow({ award, stats, userHasAward, currentMember, r
             header={{
                 eyebrow: 'Achievement',
                 title: award.name,
-                breadcrumbs: [
-                    { label: 'Achievements', href: '/clan/awards' },
-                    { label: award.name },
-                ],
+                breadcrumbs: [{ label: 'Achievements', href: '/clan/awards' }, { label: award.name }],
             }}
         >
             <Head title={award.name} />
@@ -189,9 +178,7 @@ export default function AwardShow({ award, stats, userHasAward, currentMember, r
                                 </span>
                             )}
                         </div>
-                        {award.description && (
-                            <p className="mt-2 text-sm text-muted-foreground">{award.description}</p>
-                        )}
+                        {award.description && <p className="mt-2 text-sm text-muted-foreground">{award.description}</p>}
                         <div className="mt-3">
                             {userHasAward && !award.repeatable ? (
                                 <span className="inline-flex items-center gap-1.5 rounded-md bg-success/15 px-3 py-1.5 text-sm text-success">
@@ -222,9 +209,7 @@ export default function AwardShow({ award, stats, userHasAward, currentMember, r
                                             <TableHead>Member</TableHead>
                                             <TableHead>Division</TableHead>
                                             <TableHead>Rank</TableHead>
-                                            <TableHead className="text-right">
-                                                {award.repeatable ? 'Most recent' : 'Awarded'}
-                                            </TableHead>
+                                            <TableHead className="text-right">{award.repeatable ? 'Most recent' : 'Awarded'}</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -232,13 +217,7 @@ export default function AwardShow({ award, stats, userHasAward, currentMember, r
                                             <TableRow key={i}>
                                                 <TableCell>
                                                     <span className="flex items-center gap-2">
-                                                        {r.avatarUrl && (
-                                                            <img
-                                                                src={r.avatarUrl}
-                                                                alt=""
-                                                                className="size-6 rounded-full"
-                                                            />
-                                                        )}
+                                                        {r.avatarUrl && <img src={r.avatarUrl} alt="" className="size-6 rounded-full" />}
                                                         {r.url ? (
                                                             <a href={r.url} className="font-medium hover:text-primary">
                                                                 {r.name}
@@ -247,9 +226,7 @@ export default function AwardShow({ award, stats, userHasAward, currentMember, r
                                                             <span className="text-muted-foreground">Unknown</span>
                                                         )}
                                                         {r.timesReceived && r.timesReceived > 1 && (
-                                                            <span className="text-xs text-muted-foreground">
-                                                                ×{r.timesReceived}
-                                                            </span>
+                                                            <span className="text-xs text-muted-foreground">×{r.timesReceived}</span>
                                                         )}
                                                     </span>
                                                 </TableCell>
@@ -263,9 +240,7 @@ export default function AwardShow({ award, stats, userHasAward, currentMember, r
                                                     )}
                                                 </TableCell>
                                                 <TableCell className="text-muted-foreground">{r.rank ?? '—'}</TableCell>
-                                                <TableCell className="numeric text-right text-muted-foreground">
-                                                    {r.awardedAt}
-                                                </TableCell>
+                                                <TableCell className="numeric text-right text-muted-foreground">{r.awardedAt}</TableCell>
                                             </TableRow>
                                         ))}
                                     </TableBody>
@@ -277,9 +252,7 @@ export default function AwardShow({ award, stats, userHasAward, currentMember, r
                                         variant="outline"
                                         size="sm"
                                         disabled={page <= 1}
-                                        onClick={() =>
-                                            router.get(`/clan/awards/${award.id}`, { page: page - 1 }, { preserveScroll: true })
-                                        }
+                                        onClick={() => router.get(`/clan/awards/${award.id}`, { page: page - 1 }, { preserveScroll: true })}
                                     >
                                         Previous
                                     </Button>
@@ -290,9 +263,7 @@ export default function AwardShow({ award, stats, userHasAward, currentMember, r
                                         variant="outline"
                                         size="sm"
                                         disabled={page >= recipients.lastPage}
-                                        onClick={() =>
-                                            router.get(`/clan/awards/${award.id}`, { page: page + 1 }, { preserveScroll: true })
-                                        }
+                                        onClick={() => router.get(`/clan/awards/${award.id}`, { page: page + 1 }, { preserveScroll: true })}
                                     >
                                         Next
                                     </Button>

@@ -62,23 +62,14 @@ export default function VoiceReport({ division, stats, members }: VoiceProps) {
                             {members.map((member, i) => (
                                 <TableRow key={i}>
                                     <TableCell>
-                                        <a
-                                            href={member.url}
-                                            className="flex items-center gap-1.5 font-medium hover:text-primary"
-                                        >
+                                        <a href={member.url} className="flex items-center gap-1.5 font-medium hover:text-primary">
                                             <Search className="size-3 text-muted-foreground" />
                                             {member.rankName}
                                         </a>
                                     </TableCell>
-                                    <TableCell className={cn('text-sm', STATUS_TONE[member.status])}>
-                                        {member.statusLabel}
-                                    </TableCell>
-                                    {division.hasUnits && (
-                                        <TableCell className="text-muted-foreground">{member.platoon ?? '—'}</TableCell>
-                                    )}
-                                    <TableCell className="numeric text-muted-foreground">
-                                        {member.discord ?? '—'}
-                                    </TableCell>
+                                    <TableCell className={cn('text-sm', STATUS_TONE[member.status])}>{member.statusLabel}</TableCell>
+                                    {division.hasUnits && <TableCell className="text-muted-foreground">{member.platoon ?? '—'}</TableCell>}
+                                    <TableCell className="numeric text-muted-foreground">{member.discord ?? '—'}</TableCell>
                                     <TableCell className="text-muted-foreground">{member.lastActive}</TableCell>
                                     <TableCell className="text-right">
                                         <a

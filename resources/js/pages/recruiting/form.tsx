@@ -14,17 +14,11 @@ export default function RecruitingForm(props: RecruitFormProps) {
             header={{
                 eyebrow: 'Recruiting',
                 title: `Add recruit — ${props.name}`,
-                breadcrumbs: [
-                    { label: 'Recruiting', href: '/recruit' },
-                    { label: props.name, href: props.cancelUrl },
-                    { label: 'Add recruit' },
-                ],
+                breadcrumbs: [{ label: 'Recruiting', href: '/recruit' }, { label: props.name, href: props.cancelUrl }, { label: 'Add recruit' }],
             }}
         >
             <Head title={`Add recruit — ${props.name}`} />
-            <div className="mx-auto max-w-3xl">
-                {form.step === 'form' ? <FormStep form={form} /> : <ConfirmationStep form={form} />}
-            </div>
+            <div className="mx-auto max-w-3xl">{form.step === 'form' ? <FormStep form={form} /> : <ConfirmationStep form={form} />}</div>
         </AppLayout>
     );
 }

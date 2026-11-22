@@ -43,7 +43,7 @@ function PositionBadge({ kind, label }: { kind: string; label: string }) {
     return (
         <span
             className={cn(
-                'inline-block rounded border px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide',
+                'inline-block rounded border px-1.5 py-0.5 text-[0.65rem] font-semibold tracking-wide uppercase',
                 POSITION_CLASS[kind] ?? POSITION_CLASS.member,
             )}
         >
@@ -67,15 +67,11 @@ function JumpNav({ items }: { items: JumpItem[] }) {
     const [active, setActive] = useState(items[0]?.id ?? '');
 
     useEffect(() => {
-        const sections = items
-            .map((item) => document.getElementById(item.id))
-            .filter((el): el is HTMLElement => el !== null);
+        const sections = items.map((item) => document.getElementById(item.id)).filter((el): el is HTMLElement => el !== null);
 
         const observer = new IntersectionObserver(
             (entries) => {
-                const visible = entries
-                    .filter((entry) => entry.isIntersecting)
-                    .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+                const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
                 if (visible[0]) setActive(visible[0].target.id);
             },
             { rootMargin: '-96px 0px -60% 0px' },
@@ -102,9 +98,7 @@ function JumpNav({ items }: { items: JumpItem[] }) {
                     onClick={() => jumpTo(item.id)}
                     className={cn(
                         'flex w-full items-center justify-between rounded px-2 py-1.5 text-left transition-colors',
-                        active === item.id
-                            ? 'bg-primary/10 text-foreground'
-                            : 'text-muted-foreground hover:bg-accent hover:text-foreground',
+                        active === item.id ? 'bg-primary/10 text-foreground' : 'text-muted-foreground hover:bg-accent hover:text-foreground',
                     )}
                 >
                     <span className="flex items-center gap-2">
@@ -186,9 +180,7 @@ export default function Leadership({ clanLeadership, divisions }: Props) {
                                     <span className="rounded border border-border px-1.5 py-0.5" title="Sergeants and Staff Sergeants">
                                         {division.sgtCount} Sgts
                                     </span>
-                                    <span className="rounded border border-border px-1.5 py-0.5">
-                                        {division.memberCount} Members
-                                    </span>
+                                    <span className="rounded border border-border px-1.5 py-0.5">{division.memberCount} Members</span>
                                     <span className="rounded border border-border px-1.5 py-0.5" title="Sgt to member ratio">
                                         {division.sgtRatio}
                                     </span>

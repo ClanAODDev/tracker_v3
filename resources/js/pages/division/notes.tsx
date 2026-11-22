@@ -70,11 +70,7 @@ export default function DivisionNotes({ division, noteTypes, tags, filters, note
             header={{
                 eyebrow: 'Division',
                 title: `${division.name} — member notes`,
-                breadcrumbs: [
-                    { label: 'Divisions' },
-                    { label: division.name, href: `/divisions/${division.slug}` },
-                    { label: 'Notes' },
-                ],
+                breadcrumbs: [{ label: 'Divisions' }, { label: division.name, href: `/divisions/${division.slug}` }, { label: 'Notes' }],
             }}
         >
             <Head title={`${division.name} notes`} />
@@ -88,11 +84,7 @@ export default function DivisionNotes({ division, noteTypes, tags, filters, note
                         {Object.entries(noteTypes).map(([key, label]) => {
                             const Icon = TYPE_ICON[key] ?? FileText;
                             return (
-                                <FilterChip
-                                    key={key}
-                                    active={filters.type === key}
-                                    onClick={() => navigate({ type: key })}
-                                >
+                                <FilterChip key={key} active={filters.type === key} onClick={() => navigate({ type: key })}>
                                     <Icon className={cn('size-3.5', TYPE_TONE[key])} />
                                     {label}
                                 </FilterChip>
@@ -105,19 +97,16 @@ export default function DivisionNotes({ division, noteTypes, tags, filters, note
                             <SimpleSelect
                                 value={filters.tag ? String(filters.tag) : '__all'}
                                 onChange={(v) => navigate({ tag: v === '__all' ? null : Number(v) })}
-                                options={[
-                                    { value: '__all', label: 'All tags' },
-                                    ...tags.map((t) => ({ value: String(t.id), label: t.name })),
-                                ]}
+                                options={[{ value: '__all', label: 'All tags' }, ...tags.map((t) => ({ value: String(t.id), label: t.name }))]}
                             />
                         )}
                         <form onSubmit={submitSearch} className="relative">
-                            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
                             <Input
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                                 placeholder="Search member or content"
-                                className="h-8 w-64 pl-8 pr-8"
+                                className="h-8 w-64 pr-8 pl-8"
                             />
                             {search && (
                                 <button
@@ -126,7 +115,7 @@ export default function DivisionNotes({ division, noteTypes, tags, filters, note
                                         setSearch('');
                                         navigate({ search: null });
                                     }}
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                                    className="absolute top-1/2 right-2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                                 >
                                     <X className="size-4" />
                                 </button>
@@ -136,19 +125,13 @@ export default function DivisionNotes({ division, noteTypes, tags, filters, note
                 </div>
 
                 <div className="flex items-baseline gap-2">
-                    <h2 className="text-sm font-semibold">
-                        {filters.type ? (noteTypes[filters.type] ?? filters.type) : 'All notes'}
-                    </h2>
+                    <h2 className="text-sm font-semibold">{filters.type ? (noteTypes[filters.type] ?? filters.type) : 'All notes'}</h2>
                     <span className="numeric text-xs text-muted-foreground">{notes.length}</span>
-                    {filters.search && (
-                        <span className="text-xs text-muted-foreground">for “{filters.search}”</span>
-                    )}
+                    {filters.search && <span className="text-xs text-muted-foreground">for “{filters.search}”</span>}
                 </div>
 
                 {notes.length === 0 ? (
-                    <p className="rounded-md border border-border py-12 text-center text-sm text-muted-foreground">
-                        No notes found.
-                    </p>
+                    <p className="rounded-md border border-border py-12 text-center text-sm text-muted-foreground">No notes found.</p>
                 ) : (
                     <div className="space-y-2">
                         {notes.map((note) => {
@@ -169,7 +152,7 @@ export default function DivisionNotes({ division, noteTypes, tags, filters, note
                                         <TooltipContent>{noteTypes[note.type] ?? note.type}</TooltipContent>
                                     </Tooltip>
                                     <div className="min-w-0 flex-1">
-                                        <p className="whitespace-pre-line break-words text-sm">{note.body}</p>
+                                        <p className="text-sm break-words whitespace-pre-line">{note.body}</p>
                                         <div className="mt-1.5 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                                             <span className="font-medium text-foreground">{note.memberName}</span>
                                             <span>by {note.author}</span>
@@ -186,15 +169,7 @@ export default function DivisionNotes({ division, noteTypes, tags, filters, note
     );
 }
 
-function FilterChip({
-    active,
-    onClick,
-    children,
-}: {
-    active: boolean;
-    onClick: () => void;
-    children: React.ReactNode;
-}) {
+function FilterChip({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
     return (
         <button
             type="button"

@@ -51,7 +51,7 @@ export function PlatoonCard({
                 <div className="flex items-start gap-3">
                     {platoon.logo && <img src={platoon.logo} alt="" className="size-9 shrink-0 rounded" />}
                     <div className="min-w-0 flex-1">
-                        <p className="font-mono text-[13px] font-semibold uppercase leading-tight tracking-[0.08em]">
+                        <p className="font-mono text-[13px] leading-tight font-semibold tracking-[0.08em] uppercase">
                             <span className="text-dim-foreground">P{index + 1}</span>
                             <span className="mx-1.5 text-border-strong">·</span>
                             {platoon.name}
@@ -77,15 +77,9 @@ export function PlatoonCard({
                                 key={squad.id}
                                 className={cn(
                                     'rounded border p-2 text-xs',
-                                    squad.leader
-                                        ? 'border-border/60'
-                                        : 'tron-hatch border-dashed border-border/60 opacity-75',
+                                    squad.leader ? 'border-border/60' : 'tron-hatch border-dashed border-border/60 opacity-75',
                                 )}
-                                style={
-                                    squad.leader
-                                        ? { borderLeftColor: squad.leader.rankColor, borderLeftWidth: 2 }
-                                        : undefined
-                                }
+                                style={squad.leader ? { borderLeftColor: squad.leader.rankColor, borderLeftWidth: 2 } : undefined}
                             >
                                 <div className="flex items-center justify-between">
                                     <span className="font-medium">{squad.name}</span>
@@ -94,9 +88,7 @@ export function PlatoonCard({
                                 {squad.leader ? (
                                     <span className="text-muted-foreground">{squad.leader.rankName}</span>
                                 ) : (
-                                    <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-dim-foreground">
-                                        TBA
-                                    </span>
+                                    <span className="font-mono text-[11px] tracking-[0.1em] text-dim-foreground uppercase">TBA</span>
                                 )}
                             </div>
                         ))}
@@ -104,31 +96,25 @@ export function PlatoonCard({
                 )}
             </div>
 
-            <div className="relative -mx-4 -mb-4 mt-3 overflow-hidden rounded-b-[5px] border-t border-border bg-black/15 px-4 py-2">
+            <div className="relative -mx-4 mt-3 -mb-4 overflow-hidden rounded-b-[5px] border-t border-border bg-black/15 px-4 py-2">
                 <FillBar
                     pct={platoon.voiceRate}
-                    className={cn(
-                        'absolute inset-y-0 left-0',
-                        platoon.voiceRate < 100 && 'border-r',
-                        voiceFill(platoon.voiceRate),
-                    )}
+                    className={cn('absolute inset-y-0 left-0', platoon.voiceRate < 100 && 'border-r', voiceFill(platoon.voiceRate))}
                     style={{ borderRightColor: voiceCorner(platoon.voiceRate) }}
                 />
                 <div className="relative flex items-center font-mono text-[11px] tracking-[0.04em]">
                     <span className="flex items-baseline gap-1.5 pr-3">
-                        <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Voice</span>
-                        <span className={cn('font-semibold', voiceTone(platoon.voiceRate))}>
-                            {platoon.voiceRate}%
-                        </span>
+                        <span className="text-[10px] tracking-[0.12em] text-muted-foreground uppercase">Voice</span>
+                        <span className={cn('font-semibold', voiceTone(platoon.voiceRate))}>{platoon.voiceRate}%</span>
                     </span>
                     <span className="flex items-baseline gap-1.5 border-l border-border-strong px-3">
-                        <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">Members</span>
+                        <span className="text-[10px] tracking-[0.12em] text-muted-foreground uppercase">Members</span>
                         <FlashOnChange value={platoon.memberCount} className="font-semibold">
                             {platoon.memberCount}
                         </FlashOnChange>
                     </span>
                     <span className="flex items-baseline gap-1.5 border-l border-border-strong px-3">
-                        <span className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground">{childLabelPlural}</span>
+                        <span className="text-[10px] tracking-[0.12em] text-muted-foreground uppercase">{childLabelPlural}</span>
                         <span className="font-semibold">
                             {ledSquads}/{platoon.squads.length}
                         </span>

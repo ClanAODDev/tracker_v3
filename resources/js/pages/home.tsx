@@ -86,11 +86,7 @@ export default function Home({ myDivision, toolbar, pendingActions, leaderboard,
                 {/* My division */}
                 <div className="tron-corners rounded-md border border-border bg-card p-5">
                     <TronFlash />
-                    <TronIdPlate
-                        label={`DIV · ${d.abbr}`}
-                        live
-                        className="absolute -top-2 left-3"
-                    />
+                    <TronIdPlate label={`DIV · ${d.abbr}`} live className="absolute -top-2 left-3" />
                     <div className="flex flex-wrap items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             {d.logo && <img src={d.logo} alt="" className="size-12 rounded" />}
@@ -112,7 +108,7 @@ export default function Home({ myDivision, toolbar, pendingActions, leaderboard,
                         )}
                     </div>
 
-                    <div className="tron-hatch -mx-5 -mb-5 mt-4 rounded-b-md border-t border-border px-5 pt-4 pb-5">
+                    <div className="tron-hatch -mx-5 mt-4 -mb-5 rounded-b-md border-t border-border px-5 pt-4 pb-5">
                         <DivisionToolbar tools={toolbar} />
                     </div>
                 </div>

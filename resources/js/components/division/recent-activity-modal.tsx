@@ -101,14 +101,11 @@ function ActivityRow({ group, index }: { group: RecentActivityGroup; index: numb
                                 <span>
                                     <strong className="font-semibold">{group.count}</strong> members {group.description}
                                 </span>
-                                <ChevronDown
-                                    className={cn('size-3.5 transition-transform', expanded && 'rotate-180')}
-                                />
+                                <ChevronDown className={cn('size-3.5 transition-transform', expanded && 'rotate-180')} />
                             </button>
                         ) : (
                             <span>
-                                <TargetName target={group.targets[0] ?? { name: 'Unknown', url: null }} />{' '}
-                                {group.description}
+                                <TargetName target={group.targets[0] ?? { name: 'Unknown', url: null }} /> {group.description}
                             </span>
                         )}
                     </div>

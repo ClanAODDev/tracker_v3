@@ -131,9 +131,7 @@ export function OrganizeBanner({
                             {member.name}
                         </span>
                     ))}
-                    <span className="self-center text-xs text-muted-foreground">
-                        Drag onto a {unitLabel} below
-                    </span>
+                    <span className="self-center text-xs text-muted-foreground">Drag onto a {unitLabel} below</span>
                 </div>
             )}
         </section>

@@ -21,12 +21,7 @@ const LINK_ATTRS = 'target="_blank" rel="noopener noreferrer" class="text-primar
 /** Escape HTML then turn bare URLs into links. Returns a string for dangerouslySetInnerHTML. */
 export function linkify(text: string | null | undefined): string {
     if (!text) return '';
-    const escaped = text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+    const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     return escaped.replace(URL_RE, `<a href="$1" ${LINK_ATTRS}>$1</a>`);
 }
 
@@ -39,11 +34,7 @@ export function linkify(text: string | null | undefined): string {
 export function linkifyHtml(text: string | null | undefined): string {
     if (!text) return '';
     const parts = text.split(/(<a\b[^>]*>.*?<\/a>|<[^>]+>)/gis);
-    const linked = parts
-        .map((part, i) =>
-            i % 2 === 0 ? part.replace(URL_RE, `<a href="$1" ${LINK_ATTRS}>$1</a>`) : part,
-        )
-        .join('');
+    const linked = parts.map((part, i) => (i % 2 === 0 ? part.replace(URL_RE, `<a href="$1" ${LINK_ATTRS}>$1</a>`) : part)).join('');
     return DOMPurify.sanitize(linked, { ADD_ATTR: ['target'] });
 }
 

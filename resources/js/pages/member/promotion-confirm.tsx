@@ -26,8 +26,8 @@ export default function PromotionConfirm({ memberName, outcome }: Props) {
                 ) : (
                     <div className="mt-5 space-y-3 text-sm text-muted-foreground">
                         <p>
-                            Your promotion has been declined. No change will be made, but a record will be kept should you
-                            change your mind in the future.
+                            Your promotion has been declined. No change will be made, but a record will be kept should you change your mind in the
+                            future.
                         </p>
                         <p>You may now close this window.</p>
                     </div>

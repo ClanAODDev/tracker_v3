@@ -32,7 +32,7 @@ export function ForumIdPath({ form }: { form: RecruitForm }) {
                             placeholder="e.g. 12345"
                         />
                         {form.member.id && (
-                            <span className="absolute right-2.5 top-1/2 -translate-y-1/2">
+                            <span className="absolute top-1/2 right-2.5 -translate-y-1/2">
                                 {form.validating ? (
                                     <Loader2 className="size-4 animate-spin text-muted-foreground" />
                                 ) : v.valid && v.verifiedEmail ? (
@@ -64,19 +64,13 @@ export function ForumIdPath({ form }: { form: RecruitForm }) {
                         <p className="text-sm">
                             {v.currentUsername}
                             {v.existsInTracker && (
-                                <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-                                    Previous member
-                                </span>
+                                <span className="ml-2 rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">Previous member</span>
                             )}
                         </p>
                         {v.tags.length > 0 && (
                             <div className="flex flex-wrap gap-1">
                                 {v.tags.map((tag, i) => (
-                                    <span
-                                        key={i}
-                                        title={tag.division}
-                                        className="rounded bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground"
-                                    >
+                                    <span key={i} title={tag.division} className="rounded bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
                                         {tag.name}
                                     </span>
                                 ))}

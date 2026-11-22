@@ -48,10 +48,7 @@ export interface Worker {
     avatar: string | null;
 }
 
-export const TICKET_STATUS: Record<
-    string,
-    { label: string; icon: typeof Circle; tone: string; badge: string }
-> = {
+export const TICKET_STATUS: Record<string, { label: string; icon: typeof Circle; tone: string; badge: string }> = {
     new: { label: 'Open', icon: Circle, tone: 'text-info', badge: 'border-info/40 bg-info/10 text-info' },
     assigned: {
         label: 'In progress',
@@ -77,25 +74,13 @@ export function StatusBadge({ state, className }: { state: string; className?: s
     const meta = TICKET_STATUS[state] ?? TICKET_STATUS.new;
     const Icon = meta.icon;
     return (
-        <span
-            className={cn(
-                'inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium',
-                meta.badge,
-                className,
-            )}
-        >
+        <span className={cn('inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-medium', meta.badge, className)}>
             <Icon className="size-3" /> {meta.label}
         </span>
     );
 }
 
-const SYSTEM_PATTERNS = [
-    'owned the ticket',
-    'assigned the ticket to',
-    'resolved the ticket',
-    'reopened the ticket',
-    'rejected the ticket',
-];
+const SYSTEM_PATTERNS = ['owned the ticket', 'assigned the ticket to', 'resolved the ticket', 'reopened the ticket', 'rejected the ticket'];
 
 export function isSystemMessage(comment: TicketComment): boolean {
     const body = comment.body.toLowerCase();
@@ -103,12 +88,7 @@ export function isSystemMessage(comment: TicketComment): boolean {
 }
 
 function escapeHtml(text: string): string {
-    return text
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
+    return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 function escapeAndLink(text: string): string {
@@ -141,9 +121,7 @@ export function renderTicketText(text: string | null | undefined): string {
     let m: RegExpExecArray | null;
     while ((m = re.exec(text)) !== null) {
         if (m.index > last) out.push(renderInline(text.slice(last, m.index)));
-        out.push(
-            `<pre class="overflow-x-auto rounded-md bg-muted p-3 text-xs"><code>${escapeHtml(m[1])}</code></pre>`,
-        );
+        out.push(`<pre class="overflow-x-auto rounded-md bg-muted p-3 text-xs"><code>${escapeHtml(m[1])}</code></pre>`);
         last = m.index + m[0].length;
     }
     if (last < text.length) out.push(renderInline(text.slice(last)));

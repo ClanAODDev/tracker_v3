@@ -37,9 +37,7 @@ interface Props {
 }
 
 function Panel({ children }: { children: React.ReactNode }) {
-    return (
-        <div className="tron-corners rounded-md border border-border bg-card p-6">{children}</div>
-    );
+    return <div className="tron-corners rounded-md border border-border bg-card p-6">{children}</div>;
 }
 
 export default function DiscordPending(props: Props) {
@@ -57,8 +55,7 @@ export default function DiscordPending(props: Props) {
                         Preview mode — registration flow
                         {!hasApplication && (
                             <span className="mt-1 block text-xs text-muted-foreground">
-                                Applications are off for this division, so after registering new members see the
-                                recruiter panel below.
+                                Applications are off for this division, so after registering new members see the recruiter panel below.
                             </span>
                         )}
                     </p>
@@ -95,13 +92,7 @@ export default function DiscordPending(props: Props) {
     );
 }
 
-function RegisterForm({
-    divisions,
-    email,
-    defaultUsername,
-    preview,
-    previewDivisionId,
-}: Props) {
+function RegisterForm({ divisions, email, defaultUsername, preview, previewDivisionId }: Props) {
     const form = useForm({
         division_id: previewDivisionId ? String(previewDivisionId) : '',
         username: defaultUsername,
@@ -117,16 +108,12 @@ function RegisterForm({
 
     return (
         <Panel>
-            <p className="mb-4 text-center text-sm text-muted-foreground">
-                Before we continue, we need a few more details.
-            </p>
+            <p className="mb-4 text-center text-sm text-muted-foreground">Before we continue, we need a few more details.</p>
             <form onSubmit={submit} className="space-y-4">
                 <fieldset disabled={preview} className="space-y-4">
                     <div className="space-y-1.5">
                         <Label>What game are you interested in playing? *</Label>
-                        {form.errors.division_id && (
-                            <p className="text-xs text-destructive">{form.errors.division_id}</p>
-                        )}
+                        {form.errors.division_id && <p className="text-xs text-destructive">{form.errors.division_id}</p>}
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
                             {divisions.map((division) => (
                                 <label
@@ -155,29 +142,15 @@ function RegisterForm({
 
                     <div className="grid gap-4 sm:grid-cols-2">
                         <Field label="Forum username *" error={form.errors.username} hint="Letters, numbers, and underscores only.">
-                            <Input
-                                value={form.data.username}
-                                onChange={(e) => form.setData('username', e.target.value)}
-                                maxLength={50}
-                                required
-                            />
+                            <Input value={form.data.username} onChange={(e) => form.setData('username', e.target.value)} maxLength={50} required />
                         </Field>
                         <Field label="Email" hint="From your Discord account.">
                             <Input value={email} readOnly />
                         </Field>
                     </div>
 
-                    <Field
-                        label="Date of birth *"
-                        error={form.errors.date_of_birth}
-                        hint="You must be at least 13 years old to join."
-                    >
-                        <Input
-                            type="date"
-                            value={form.data.date_of_birth}
-                            onChange={(e) => form.setData('date_of_birth', e.target.value)}
-                            required
-                        />
+                    <Field label="Date of birth *" error={form.errors.date_of_birth} hint="You must be at least 13 years old to join.">
+                        <Input type="date" value={form.data.date_of_birth} onChange={(e) => form.setData('date_of_birth', e.target.value)} required />
                     </Field>
 
                     <div className="grid gap-4 sm:grid-cols-2">
@@ -216,15 +189,7 @@ function RegisterForm({
     );
 }
 
-function ApplicationForm({
-    fields,
-    handles,
-    disabled,
-}: {
-    fields: ApplicationField[];
-    handles: ApplicationHandle[];
-    disabled: boolean;
-}) {
+function ApplicationForm({ fields, handles, disabled }: { fields: ApplicationField[]; handles: ApplicationHandle[]; disabled: boolean }) {
     const initial = {
         ...Object.fromEntries(fields.map((f) => [`field_${f.id}`, f.type === 'checkbox' ? [] : ''])),
         handle_id: handles.length === 1 ? String(handles[0].id) : '',
@@ -240,9 +205,7 @@ function ApplicationForm({
 
     return (
         <Panel>
-            <p className="mb-4 text-center text-sm text-muted-foreground">
-                Almost there — complete this application for your selected division.
-            </p>
+            <p className="mb-4 text-center text-sm text-muted-foreground">Almost there — complete this application for your selected division.</p>
             <form onSubmit={submit} className="space-y-4">
                 <fieldset disabled={disabled} className="space-y-4">
                     {handles.length > 1 && (
@@ -289,11 +252,7 @@ function ApplicationForm({
                                     </span>
                                 }
                                 error={error}
-                                hint={
-                                    field.helperText ? (
-                                        <span dangerouslySetInnerHTML={{ __html: inlineRichText(field.helperText) }} />
-                                    ) : undefined
-                                }
+                                hint={field.helperText ? <span dangerouslySetInnerHTML={{ __html: inlineRichText(field.helperText) }} /> : undefined}
                             >
                                 {field.type === 'text' && (
                                     <Input
@@ -334,12 +293,7 @@ function ApplicationForm({
                                                 checked={(form.data[key] as string[]).includes(opt)}
                                                 onChange={(e) => {
                                                     const cur = form.data[key] as string[];
-                                                    form.setData(
-                                                        key,
-                                                        e.target.checked
-                                                            ? [...cur, opt]
-                                                            : cur.filter((v) => v !== opt),
-                                                    );
+                                                    form.setData(key, e.target.checked ? [...cur, opt] : cur.filter((v) => v !== opt));
                                                 }}
                                                 className="accent-primary"
                                             />
@@ -365,20 +319,14 @@ function ApplicationForm({
 function RecruiterContact() {
     return (
         <Panel>
-            <p className="mb-4 text-center text-sm text-muted-foreground">
-                Connect with one of our recruiters to complete the process.
-            </p>
+            <p className="mb-4 text-center text-sm text-muted-foreground">Connect with one of our recruiters to complete the process.</p>
             <ol className="mx-auto max-w-xs space-y-3 text-sm">
                 <li className="flex gap-3">
-                    <span className="grid size-6 shrink-0 place-items-center rounded-full border border-primary/40 text-xs text-primary">
-                        1
-                    </span>
+                    <span className="grid size-6 shrink-0 place-items-center rounded-full border border-primary/40 text-xs text-primary">1</span>
                     Join our Discord server
                 </li>
                 <li className="flex gap-3">
-                    <span className="grid size-6 shrink-0 place-items-center rounded-full border border-primary/40 text-xs text-primary">
-                        2
-                    </span>
+                    <span className="grid size-6 shrink-0 place-items-center rounded-full border border-primary/40 text-xs text-primary">2</span>
                     Post in <code className="rounded bg-muted px-1">#recruiting</code>
                 </li>
             </ol>
@@ -393,26 +341,12 @@ function RecruiterContact() {
     );
 }
 
-function Field({
-    label,
-    error,
-    hint,
-    children,
-}: {
-    label: React.ReactNode;
-    error?: string;
-    hint?: React.ReactNode;
-    children: React.ReactNode;
-}) {
+function Field({ label, error, hint, children }: { label: React.ReactNode; error?: string; hint?: React.ReactNode; children: React.ReactNode }) {
     return (
         <div className="space-y-1.5">
             <Label>{label}</Label>
             {children}
-            {error ? (
-                <p className="text-xs text-destructive">{error}</p>
-            ) : hint ? (
-                <p className="text-xs text-muted-foreground">{hint}</p>
-            ) : null}
+            {error ? <p className="text-xs text-destructive">{error}</p> : hint ? <p className="text-xs text-muted-foreground">{hint}</p> : null}
         </div>
     );
 }

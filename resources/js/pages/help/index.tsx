@@ -9,11 +9,7 @@ const ACCESS_MATRIX: Array<{ role: string; abilities: string[] }> = [
     { role: 'Member', abilities: ['View access only'] },
     {
         role: 'Officer (NCO)',
-        abilities: [
-            'View the division structure',
-            'Manage part-time members of a division',
-            'Manage member in-game handles',
-        ],
+        abilities: ['View the division structure', 'Manage part-time members of a division', 'Manage member in-game handles'],
     },
     {
         role: 'Senior Leader (SGT+)',
@@ -72,13 +68,13 @@ export default function HelpIndex() {
             <div className="max-w-3xl space-y-8">
                 <section className="space-y-3 text-sm text-muted-foreground">
                     <p>
-                        The Tracker complements the AOD forums — it doesn't replace them — helping clan and division
-                        leadership do their everyday work more easily and effectively.
+                        The Tracker complements the AOD forums — it doesn't replace them — helping clan and division leadership do their everyday work
+                        more easily and effectively.
                     </p>
                     <p>
-                        It began as a way to solve recruiting: consolidating everything a recruiter needs in one place
-                        and automating the tedious parts. It has since grown into a way to track member activity in the
-                        context of the whole clan, with weekly censuses that surface population and activity trends.
+                        It began as a way to solve recruiting: consolidating everything a recruiter needs in one place and automating the tedious
+                        parts. It has since grown into a way to track member activity in the context of the whole clan, with weekly censuses that
+                        surface population and activity trends.
                     </p>
                 </section>
 
@@ -116,9 +112,7 @@ export default function HelpIndex() {
                 <section>
                     <h2 className="mb-3 text-sm font-semibold">More documentation</h2>
                     <div className="grid gap-2 sm:grid-cols-2">
-                        {DOC_LINKS.filter(
-                            (link) => (!link.adminOnly || isAdmin) && (!link.officerOnly || isOfficerPlus),
-                        ).map((link) => (
+                        {DOC_LINKS.filter((link) => (!link.adminOnly || isAdmin) && (!link.officerOnly || isOfficerPlus)).map((link) => (
                             <Link
                                 key={link.href}
                                 href={link.href}

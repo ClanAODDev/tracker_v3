@@ -1,18 +1,5 @@
 import { type ReactNode } from 'react';
-import {
-    Area,
-    AreaChart,
-    Bar,
-    BarChart,
-    CartesianGrid,
-    Legend,
-    Line,
-    LineChart,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis,
-} from 'recharts';
+import { Area, AreaChart, Bar, BarChart, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
 import { ChartTooltip } from '@/components/charts/chart-tooltip';
 import { useReducedMotion } from '@/hooks/use-reduced-motion';
@@ -49,9 +36,7 @@ function Frame({ height = 240, children }: { height?: number; children: ReactNod
 
 /* Legend labels wear a text token; only the swatch carries series identity. */
 const legendText = (value: string) => <span className="text-muted-foreground">{value}</span>;
-const legend = (
-    <Legend iconType="square" iconSize={10} formatter={legendText} wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-);
+const legend = <Legend iconType="square" iconSize={10} formatter={legendText} wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />;
 
 const tooltip = (
     <Tooltip
