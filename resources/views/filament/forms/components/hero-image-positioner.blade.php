@@ -6,7 +6,7 @@
         'desktop' => ['label' => 'Desktop', 'width' => 1920, 'height' => 544, 'padding' => '160px 24px 80px', 'nameSize' => 72, 'row' => 'row'],
         'phone' => ['label' => 'Phone', 'width' => 390, 'height' => 600, 'padding' => '160px 16px 80px', 'nameSize' => 48, 'row' => 'column'],
     ];
-    $veil = 'radial-gradient(ellipse 55% 70% at 85% 35%, rgba(188, 9, 19, 0.24), transparent 70%), linear-gradient(to right, rgba(12, 12, 12, 0.92) 0%, rgba(12, 12, 12, 0.6) 45%, rgba(12, 12, 12, 0.25) 100%), radial-gradient(ellipse 70% 60% at 50% 45%, rgba(12, 12, 12, 0.1), rgba(12, 12, 12, 0.75)), linear-gradient(to bottom, rgba(27, 2, 2, 0.6), rgba(12, 12, 12, 0.3) 40%, #0c0c0c)';
+    $veil = 'linear-gradient(to bottom, rgba(12, 12, 12, 0.9) 0, rgba(12, 12, 12, 0.55) 72px, transparent 168px), radial-gradient(ellipse 55% 70% at 85% 35%, rgba(188, 9, 19, 0.18), transparent 70%), linear-gradient(to right, rgba(12, 12, 12, 0.85) 0%, rgba(12, 12, 12, 0.45) 45%, rgba(12, 12, 12, 0.08) 100%), radial-gradient(ellipse 70% 60% at 50% 45%, transparent, rgba(12, 12, 12, 0.5)), linear-gradient(to bottom, rgba(27, 2, 2, 0.35), rgba(12, 12, 12, 0.1) 40%, #0c0c0c)';
 @endphp
 
 <x-dynamic-component :component="$getFieldWrapperView()" :field="$field">
@@ -97,7 +97,7 @@
                         >
                             <div
                                 :style="{ backgroundPosition: position }"
-                                style="position: absolute; inset: -4%; background-image: url('{{ $imageUrl }}'); background-size: cover; background-repeat: no-repeat; opacity: 0.62; filter: saturate(0.55) contrast(1.1) brightness(0.9);"
+                                style="position: absolute; inset: -4%; background-image: url('{{ $imageUrl }}'); background-size: cover; background-repeat: no-repeat; opacity: 0.85; filter: saturate(0.8) contrast(1.08);"
                             ></div>
                             <div style="position: absolute; inset: 0; background: {{ $veil }};"></div>
                             <div style="position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 4px); mask-image: linear-gradient(to bottom, #000 60%, transparent);"></div>
