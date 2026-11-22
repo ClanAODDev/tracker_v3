@@ -360,9 +360,10 @@ class DivisionResource extends Resource
                                 Section::make('SEO')
                                     ->schema([
                                         Textarea::make('settings.meta_description')
-                                            ->label('Meta Description')
-                                            ->maxLength(100)
-                                            ->helperText('60-100 character summary of division for SEO purposes. Exposed in URL previews / unfurling.'),
+                                            ->label('Link Preview Description')
+                                            ->maxLength(160)
+                                            ->placeholder('Squad up for Warzone and multiplayer nights with an organized, mature Call of Duty community.')
+                                            ->helperText('One or two sentences about your division, shown under links to your division page and in search results. Write a sentence, not a list of keywords. Leave blank to use your division name and member count.'),
                                     ]),
 
                                 Section::make('Header Image')
