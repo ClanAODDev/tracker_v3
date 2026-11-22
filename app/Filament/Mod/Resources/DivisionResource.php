@@ -364,6 +364,26 @@ class DivisionResource extends Resource
                                             ->helperText('60-100 character summary of division for SEO purposes. Exposed in URL previews / unfurling.'),
                                     ]),
 
+                                Section::make('Header Image')
+                                    ->description('Shown full width behind your division name at the top of your division page.')
+                                    ->schema([
+                                        FileUpload::make('hero_image')
+                                            ->hiddenLabel()
+                                            ->acceptedFileTypes(ImageUploads::RASTER_TYPES)
+                                            ->disk('public')
+                                            ->directory('division-hero-images')
+                                            ->maxSize(5120)
+                                            ->imagePreviewHeight('200')
+                                            ->openable()
+                                            ->downloadable()
+                                            ->imageEditor()
+                                            ->imageEditorAspectRatios([
+                                                '21:9',
+                                                '16:9',
+                                            ])
+                                            ->helperText('No text or logos: the page adds your division name and icon. Use a wide, atmospheric image (landscape, at least 1920 pixels wide, 5MB max). The site dims and tints it to match the theme. Without one, your first screenshot is used.'),
+                                    ]),
+
                                 Section::make('Screenshot Gallery')
                                     ->description('Upload screenshots to display on your division page')
                                     ->schema([

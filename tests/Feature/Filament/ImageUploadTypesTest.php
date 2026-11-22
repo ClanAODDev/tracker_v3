@@ -71,4 +71,36 @@ class ImageUploadTypesTest extends TestCase
             ->call('save')
             ->assertHasNoFormErrors(['screenshots']);
     }
+
+    #[Test]
+    public function division_hero_image_accepts_png_files_and_saves_the_path(): void
+    {
+        $division = $this->actingAsCommandingOfficer();
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->set('data.hero_image', UploadedFile::fake()->image('hero.png', 1920, 820))
+            ->call('save')
+            ->assertHasNoFormErrors(['hero_image']);
+
+        $path = $division->fresh()->hero_image;
+
+        $this->assertStringStartsWith('division-hero-images/', $path);
+        Storage::disk('public')->assertExists($path);
+    }
+
+    #[Test]
+    public function division_hero_image_rejects_svg_files(): void
+    {
+        $division = $this->actingAsCommandingOfficer();
+
+        $svg = UploadedFile::fake()->createWithContent(
+            'hero.svg',
+            '<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>',
+        );
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->set('data.hero_image', $svg)
+            ->call('save')
+            ->assertHasFormErrors(['hero_image']);
+    }
 }
