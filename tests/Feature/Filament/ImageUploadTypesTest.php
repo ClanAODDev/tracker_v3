@@ -6,6 +6,7 @@ use App\Enums\Position;
 use App\Enums\Rank;
 use App\Enums\Role;
 use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
+use App\Support\HeroImageOptimizer;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -153,6 +154,39 @@ class ImageUploadTypesTest extends TestCase
 
         $this->assertNotSame('division-hero-images/existing.jpg', $division->hero_image);
         $this->assertSame('20% 80%', $division->hero_image_position);
+    }
+
+    #[Test]
+    public function large_hero_images_are_scaled_down_to_a_jpeg_without_cropping(): void
+    {
+        $division = $this->actingAsCommandingOfficer();
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->set('data.hero_image', UploadedFile::fake()->image('wide.png', 4000, 1600))
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $path                    = $division->fresh()->hero_image;
+        [$width, $height, $type] = getimagesizefromstring(Storage::disk('public')->get($path));
+
+        $this->assertStringEndsWith('.jpg', $path);
+        $this->assertSame(IMAGETYPE_JPEG, $type);
+        $this->assertSame([HeroImageOptimizer::MAX_WIDTH, 1024], [$width, $height]);
+    }
+
+    #[Test]
+    public function small_hero_images_are_not_upscaled(): void
+    {
+        $division = $this->actingAsCommandingOfficer();
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->set('data.hero_image', UploadedFile::fake()->image('small.png', 1600, 900))
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        [$width, $height] = getimagesizefromstring(Storage::disk('public')->get($division->fresh()->hero_image));
+
+        $this->assertSame([1600, 900], [$width, $height]);
     }
 
     #[Test]

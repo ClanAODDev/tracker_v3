@@ -11,6 +11,7 @@ use App\Filament\Mod\Resources\DivisionResource\RelationManagers\MemberFieldsRel
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Filament\Mod\Resources\DivisionResource\Schemas\StructureSection;
 use App\Models\Division;
+use App\Support\HeroImageOptimizer;
 use App\Support\ImageUploads;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
@@ -34,6 +35,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class DivisionResource extends Resource
 {
@@ -360,9 +362,10 @@ class DivisionResource extends Resource
                                 Section::make('SEO')
                                     ->schema([
                                         Textarea::make('settings.meta_description')
-                                            ->label('Meta Description')
-                                            ->maxLength(100)
-                                            ->helperText('60-100 character summary of division for SEO purposes. Exposed in URL previews / unfurling.'),
+                                            ->label('Link Preview Description')
+                                            ->maxLength(160)
+                                            ->placeholder('Squad up for Warzone and multiplayer nights with an organized, mature Call of Duty community.')
+                                            ->helperText('One or two sentences about your division, shown under links to your division page and in search results. Write a sentence, not a list of keywords. Leave blank to use your division name and member count.'),
                                     ]),
 
                                 Section::make('Header Image')
@@ -373,6 +376,7 @@ class DivisionResource extends Resource
                                             ->acceptedFileTypes(ImageUploads::RASTER_TYPES)
                                             ->disk('public')
                                             ->directory('division-hero-images')
+                                            ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file) => HeroImageOptimizer::store($file->get(), 'division-hero-images'))
                                             ->maxSize(5120)
                                             ->imagePreviewHeight('200')
                                             ->openable()
