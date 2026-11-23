@@ -106,17 +106,12 @@ export default function DivisionShow({
     memberList,
 }: DivisionShowProps) {
     const populationTrend = census.population.slice(-8);
-    const voiceRateTrend = census.voiceActive
-        .slice(-8)
-        .map((v, i) => {
-            const pop = populationTrend[i] ?? 1;
-            return pop > 0 ? Math.round((v / pop) * 100) : 0;
-        });
+    const voiceRateTrend = census.voiceActive.slice(-8).map((v, i) => {
+        const pop = populationTrend[i] ?? 1;
+        return pop > 0 ? Math.round((v / pop) * 100) : 0;
+    });
     const prev = census.previous;
-    const memberDelta =
-        prev && prev.count && stats.memberCount
-            ? Math.round((1 - prev.count / stats.memberCount) * 1000) / 10
-            : 0;
+    const memberDelta = prev && prev.count && stats.memberCount ? Math.round((1 - prev.count / stats.memberCount) * 1000) / 10 : 0;
 
     const censusData = census.labels.map((label, i) => ({
         label,
@@ -141,17 +136,14 @@ export default function DivisionShow({
 
     useEffect(() => setPlatoonList(platoons), [platoons]);
 
-    const autoOrganize =
-        typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('organize') === '1';
+    const autoOrganize = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('organize') === '1';
 
     const organize = useOrganize({
         members: organizeProps.members,
         autoOpen: autoOrganize,
         assign: async (memberId, platoonId) => {
             await postJson(`/members/${memberId}/assign-platoon`, { platoon_id: platoonId });
-            setPlatoonList((prev) =>
-                prev.map((p) => (p.id === platoonId ? { ...p, memberCount: p.memberCount + 1 } : p)),
-            );
+            setPlatoonList((prev) => prev.map((p) => (p.id === platoonId ? { ...p, memberCount: p.memberCount + 1 } : p)));
         },
     });
 
@@ -220,8 +212,7 @@ export default function DivisionShow({
                                     </span>
                                 </>
                             );
-                            const opensOrganize =
-                                action.key === 'unassigned-members' && organizeProps.canOrganize;
+                            const opensOrganize = action.key === 'unassigned-members' && organizeProps.canOrganize;
                             const noLevelTarget = noLevelFromKey(action.key);
                             const opensNoSquadModal = noLevelTarget !== null;
                             const opensApplicationsModal = action.key === 'pending-applications';
@@ -242,12 +233,7 @@ export default function DivisionShow({
                                       }
                                     : undefined;
                             return (
-                                <TileLink
-                                    key={action.key}
-                                    href={onClick ? undefined : action.url}
-                                    onClick={onClick}
-                                    tint={toneSurface(action.style)}
-                                >
+                                <TileLink key={action.key} href={onClick ? undefined : action.url} onClick={onClick} tint={toneSurface(action.style)}>
                                     {inner}
                                 </TileLink>
                             );
@@ -360,22 +346,14 @@ export default function DivisionShow({
                                     key={a.guid}
                                     href={a.profileUrl}
                                     hover={false}
-                                    tint={cn(
-                                        a.trophy ? 'border-primary/30 bg-primary/5' : 'border-border',
-                                        !a.hasTenureAward && 'border-warning/40',
-                                    )}
+                                    tint={cn(a.trophy ? 'border-primary/30 bg-primary/5' : 'border-border', !a.hasTenureAward && 'border-warning/40')}
                                 >
-                                    <Star
-                                        className="size-3.5"
-                                        style={a.trophy ? { color: a.trophy.color } : undefined}
-                                    />
+                                    <Star className="size-3.5" style={a.trophy ? { color: a.trophy.color } : undefined} />
                                     <span>
                                         {a.rankAbbr} {a.name}
                                     </span>
                                     <span className="numeric text-xs text-muted-foreground">{a.years}yr</span>
-                                    {!a.hasTenureAward && (
-                                        <TriangleAlert className="size-3 text-warning" aria-label="Tenure award not granted" />
-                                    )}
+                                    {!a.hasTenureAward && <TriangleAlert className="size-3 text-warning" aria-label="Tenure award not granted" />}
                                 </TileLink>
                             ))}
                         </div>
@@ -384,56 +362,56 @@ export default function DivisionShow({
 
                 {/* Platoons */}
                 {d.hasUnits && (
-                <section ref={platoonsRef}>
-                    <SectionTitle
-                        action={
-                            d.canCreatePlatoon ? (
-                                <Button variant="ghost" size="sm" asChild>
-                                    <a href={d.editUrl}>Create {d.topLevelLabel}</a>
-                                </Button>
-                            ) : undefined
-                        }
-                    >
-                        {pluralize(d.topLevelLabel)}
-                    </SectionTitle>
+                    <section ref={platoonsRef}>
+                        <SectionTitle
+                            action={
+                                d.canCreatePlatoon ? (
+                                    <Button variant="ghost" size="sm" asChild>
+                                        <a href={d.editUrl}>Create {d.topLevelLabel}</a>
+                                    </Button>
+                                ) : undefined
+                            }
+                        >
+                            {pluralize(d.topLevelLabel)}
+                        </SectionTitle>
 
-                    {organizeProps.canOrganize && (
-                        <OrganizeBanner
-                            members={organize.members}
-                            unitLabel={d.topLevelLabel}
-                            organizing={organize.organizing}
-                            onToggle={() => organize.setOrganizing((v) => !v)}
-                            onDragStart={organize.onDragStart}
-                            onDragEnd={organize.onDragEnd}
-                            draggingId={organize.draggingId}
-                        />
-                    )}
+                        {organizeProps.canOrganize && (
+                            <OrganizeBanner
+                                members={organize.members}
+                                unitLabel={d.topLevelLabel}
+                                organizing={organize.organizing}
+                                onToggle={() => organize.setOrganizing((v) => !v)}
+                                onDragStart={organize.onDragStart}
+                                onDragEnd={organize.onDragEnd}
+                                draggingId={organize.draggingId}
+                            />
+                        )}
 
-                    {platoonList.length === 0 ? (
-                        <p className="rounded-md border border-destructive/30 bg-card p-4 text-sm text-muted-foreground">
-                            No {pluralize(d.topLevelLabel)} found
-                        </p>
-                    ) : (
-                        <div className="grid gap-3 lg:grid-cols-2">
-                            {platoonList.map((platoon, i) => (
-                                <PlatoonCard
-                                    key={platoon.id}
-                                    index={i}
-                                    childLabelPlural={d.childLabelPlural}
-                                    platoon={platoon}
-                                    organizing={organize.organizing}
-                                    isHover={dropHoverId === platoon.id}
-                                    {...dropZoneProps({
-                                        organizing: organize.organizing,
-                                        targetId: platoon.id,
-                                        setHoverId: setDropHoverId,
-                                        onDrop: organize.drop,
-                                    })}
-                                />
-                            ))}
-                        </div>
-                    )}
-                </section>
+                        {platoonList.length === 0 ? (
+                            <p className="rounded-md border border-destructive/30 bg-card p-4 text-sm text-muted-foreground">
+                                No {pluralize(d.topLevelLabel)} found
+                            </p>
+                        ) : (
+                            <div className="grid gap-3 lg:grid-cols-2">
+                                {platoonList.map((platoon, i) => (
+                                    <PlatoonCard
+                                        key={platoon.id}
+                                        index={i}
+                                        childLabelPlural={d.childLabelPlural}
+                                        platoon={platoon}
+                                        organizing={organize.organizing}
+                                        isHover={dropHoverId === platoon.id}
+                                        {...dropZoneProps({
+                                            organizing: organize.organizing,
+                                            targetId: platoon.id,
+                                            setHoverId: setDropHoverId,
+                                            onDrop: organize.drop,
+                                        })}
+                                    />
+                                ))}
+                            </div>
+                        )}
+                    </section>
                 )}
 
                 {memberList && (

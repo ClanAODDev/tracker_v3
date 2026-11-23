@@ -40,9 +40,7 @@ export default function TrainingIndex({ modules }: TrainingIndexProps) {
                                     <GraduationCap className="size-4" />
                                 </div>
                                 <h3 className="text-sm font-semibold">{module.name}</h3>
-                                {module.description && (
-                                    <p className="mt-1 text-sm text-muted-foreground">{module.description}</p>
-                                )}
+                                {module.description && <p className="mt-1 text-sm text-muted-foreground">{module.description}</p>}
                             </div>
                             <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
                                 <span className="numeric">{module.sectionsCount} sections</span>

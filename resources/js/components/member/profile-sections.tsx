@@ -1,15 +1,5 @@
 import { Link } from '@inertiajs/react';
-import {
-    Bell,
-    Copy,
-    ExternalLink,
-    Gamepad2,
-    MessageSquareText,
-    Mic,
-    Sparkles,
-    Trophy,
-    UserPlus,
-} from 'lucide-react';
+import { Bell, Copy, ExternalLink, Gamepad2, MessageSquareText, Mic, Sparkles, Trophy, UserPlus } from 'lucide-react';
 import { type CSSProperties, type ReactNode, useState } from 'react';
 
 import type { ActivityStats, RecruitingStats, TenureStats } from '@/components/member/profile-dialogs';
@@ -17,14 +7,7 @@ import { FillBar } from '@/components/motion';
 import { SectionTitle as BaseSectionTitle } from '@/components/section';
 import { StatCard } from '@/components/stat-card';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
 export interface NoteSummary {
@@ -137,11 +120,7 @@ export function ProfileStats({ stats, canCreateNote, onTenure, onRecruits, onRem
             <StatCard
                 icon={<Mic className="size-5" />}
                 tone={
-                    stats.activity.health === 'critical'
-                        ? 'text-destructive'
-                        : stats.activity.health === 'warning'
-                          ? 'text-warning'
-                          : 'text-success'
+                    stats.activity.health === 'critical' ? 'text-destructive' : stats.activity.health === 'warning' ? 'text-warning' : 'text-success'
                 }
                 value={stats.activity.daysSinceVoice ?? '--'}
                 unit={stats.activity.daysSinceVoice !== null ? 'd' : undefined}
@@ -178,9 +157,7 @@ export function ProfileStats({ stats, canCreateNote, onTenure, onRecruits, onRem
                         )}
                     </>
                 }
-                onClick={
-                    stats.activity.reminders.length > 0 || stats.activity.canRemind ? onReminders : undefined
-                }
+                onClick={stats.activity.reminders.length > 0 || stats.activity.canRemind ? onReminders : undefined}
             />
 
             <StatCard
@@ -191,9 +168,7 @@ export function ProfileStats({ stats, canCreateNote, onTenure, onRecruits, onRem
                     stats.recruiting.total > 0 ? (
                         <>
                             <span className="text-success">{stats.recruiting.active} active</span>
-                            {stats.recruiting.retentionRate !== null && (
-                                <span> ({stats.recruiting.retentionRate}% retention)</span>
-                            )}
+                            {stats.recruiting.retentionRate !== null && <span> ({stats.recruiting.retentionRate}% retention)</span>}
                         </>
                     ) : (
                         'No recruits yet'
@@ -212,9 +187,7 @@ export function ProfileStats({ stats, canCreateNote, onTenure, onRecruits, onRem
                         stats.notes.total > 0 ? (
                             <span className="flex gap-2">
                                 {stats.notes.positive > 0 && <span className="text-success">+{stats.notes.positive}</span>}
-                                {stats.notes.negative > 0 && (
-                                    <span className="text-destructive">−{stats.notes.negative}</span>
-                                )}
+                                {stats.notes.negative > 0 && <span className="text-destructive">−{stats.notes.negative}</span>}
                                 {stats.notes.misc > 0 && <span>{stats.notes.misc} general</span>}
                                 {stats.notes.srLdr > 0 && <span className="text-success">{stats.notes.srLdr} sr</span>}
                                 {stats.notes.msgt > 0 && <span className="text-[#CC00FF]">{stats.notes.msgt} msgt</span>}
@@ -247,11 +220,7 @@ function ComparisonBar({
     na?: boolean;
 }) {
     const pos = Math.min(95, Math.max(5, percentile));
-    const rankText = na
-        ? 'N/A'
-        : percentile >= 50
-          ? `Top ${Math.max(1, 100 - percentile)}%`
-          : `Bottom ${Math.max(1, percentile)}%`;
+    const rankText = na ? 'N/A' : percentile >= 50 ? `Top ${Math.max(1, 100 - percentile)}%` : `Bottom ${Math.max(1, percentile)}%`;
 
     return (
         <div className="space-y-2">
@@ -284,8 +253,7 @@ export function DivisionComparison({ data }: { data: ComparisonData }) {
     return (
         <section>
             <SectionTitle>
-                Division comparison{' '}
-                <span className="ml-1 text-xs font-normal text-muted-foreground">vs {data.divisionName} avg</span>
+                Division comparison <span className="ml-1 text-xs font-normal text-muted-foreground">vs {data.divisionName} avg</span>
             </SectionTitle>
             <div className="grid gap-6 rounded-md border border-border bg-card p-5 md:grid-cols-2">
                 <ComparisonBar
@@ -343,12 +311,7 @@ function TierStack({ tiers }: { tiers: NonNullable<AwardsData['list'][number]['t
                         }}
                     >
                         {tier.image ? (
-                            <img
-                                src={tier.image}
-                                alt=""
-                                loading="lazy"
-                                className="max-h-14 max-w-full object-contain drop-shadow"
-                            />
+                            <img src={tier.image} alt="" loading="lazy" className="max-h-14 max-w-full object-contain drop-shadow" />
                         ) : (
                             <Trophy className="size-7 text-muted-foreground" />
                         )}
@@ -371,7 +334,7 @@ function AwardCard({ award, className }: { award: AwardsData['list'][number]; cl
             style={{ '--rarity': rarityColor(award.rarity) } as CSSProperties}
         >
             {award.count > 1 && (
-                <span className="absolute right-1.5 top-1.5 rounded-full bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                <span className="absolute top-1.5 right-1.5 rounded-full bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
                     ×{award.count}
                 </span>
             )}
@@ -537,12 +500,7 @@ export function HandlesSection({ handles, editAction }: { handles: HandlesData; 
             <SectionTitle action={editAction}>Handles</SectionTitle>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {handles.discord && (
-                    <HandleCard
-                        label="Discord"
-                        value={handles.discord}
-                        url={handles.discordUrl}
-                        icon={<MessageSquareText className="size-4" />}
-                    />
+                    <HandleCard label="Discord" value={handles.discord} url={handles.discordUrl} icon={<MessageSquareText className="size-4" />} />
                 )}
                 {handles.groups.map((group) => (
                     <HandleCard

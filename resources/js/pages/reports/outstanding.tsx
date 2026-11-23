@@ -71,8 +71,7 @@ export default function Outstanding({ clanMax, divisions, totals }: Props) {
 
             <p className="text-xs text-muted-foreground">
                 <span className="text-destructive">Outstanding</span> members exceed the clan maximum of {clanMax} days.{' '}
-                <span className="text-warning">Inactive</span> members exceed their division's configured threshold.
-                Members on leave are excluded.
+                <span className="text-warning">Inactive</span> members exceed their division's configured threshold. Members on leave are excluded.
             </p>
 
             <div className="overflow-x-auto rounded-md border border-border">
@@ -94,14 +93,11 @@ export default function Outstanding({ clanMax, divisions, totals }: Props) {
                                         {division.name}
                                     </Link>
                                 </TableCell>
-                                <TableCell className="numeric text-right text-muted-foreground">
-                                    {division.population}
-                                </TableCell>
+                                <TableCell className="numeric text-right text-muted-foreground">{division.population}</TableCell>
                                 <TableCell className="numeric text-right">
                                     {division.outstanding > 0 ? (
                                         <span className="text-destructive">
-                                            {division.outstanding}{' '}
-                                            <span className="text-muted-foreground">({division.pctOutstanding}%)</span>
+                                            {division.outstanding} <span className="text-muted-foreground">({division.pctOutstanding}%)</span>
                                         </span>
                                     ) : (
                                         <span className="text-success">0</span>
@@ -110,8 +106,7 @@ export default function Outstanding({ clanMax, divisions, totals }: Props) {
                                 <TableCell className="numeric text-right">
                                     <span className="inline-flex items-center gap-2">
                                         <span>
-                                            {division.inactive}{' '}
-                                            <span className="text-muted-foreground">({division.pctInactive}%)</span>
+                                            {division.inactive} <span className="text-muted-foreground">({division.pctInactive}%)</span>
                                         </span>
                                         <Link
                                             href={division.inactiveUrl}
@@ -123,13 +118,8 @@ export default function Outstanding({ clanMax, divisions, totals }: Props) {
                                     </span>
                                 </TableCell>
                                 <TableCell>
-                                    <HealthBar
-                                        pctInactive={division.pctInactive}
-                                        pctOutstanding={division.pctOutstanding}
-                                    />
-                                    <span className="mt-1 block text-xs text-muted-foreground">
-                                        {division.divisionMax}d threshold
-                                    </span>
+                                    <HealthBar pctInactive={division.pctInactive} pctOutstanding={division.pctOutstanding} />
+                                    <span className="mt-1 block text-xs text-muted-foreground">{division.divisionMax}d threshold</span>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -137,17 +127,13 @@ export default function Outstanding({ clanMax, divisions, totals }: Props) {
                             <TableCell>Clan total</TableCell>
                             <TableCell className="numeric text-right">{totals.population}</TableCell>
                             <TableCell className="numeric text-right text-destructive">
-                                {totals.outstanding}{' '}
-                                <span className="text-muted-foreground">({totals.pctOutstanding}%)</span>
+                                {totals.outstanding} <span className="text-muted-foreground">({totals.pctOutstanding}%)</span>
                             </TableCell>
                             <TableCell className="numeric text-right">
                                 {totals.inactive} <span className="text-muted-foreground">({totals.pctInactive}%)</span>
                             </TableCell>
                             <TableCell>
-                                <HealthBar
-                                    pctInactive={totals.pctInactive}
-                                    pctOutstanding={totals.pctOutstanding}
-                                />
+                                <HealthBar pctInactive={totals.pctInactive} pctOutstanding={totals.pctOutstanding} />
                             </TableCell>
                         </TableRow>
                     </TableBody>

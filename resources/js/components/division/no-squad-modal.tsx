@@ -60,9 +60,7 @@ export function NoSquadModal({ url, level, label, open, onOpenChange }: Props) {
                     ) : error ? (
                         <p className="px-6 py-10 text-center text-sm text-destructive">{error}</p>
                     ) : members.length === 0 ? (
-                        <p className="px-6 py-10 text-center text-sm text-muted-foreground">
-                            No members without {label}.
-                        </p>
+                        <p className="px-6 py-10 text-center text-sm text-muted-foreground">No members without {label}.</p>
                     ) : (
                         <ul className="divide-y divide-border">
                             {members.map((member) => (

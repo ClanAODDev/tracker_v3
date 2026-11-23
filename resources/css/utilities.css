@@ -212,11 +212,7 @@
        than a theme token, so the bars stay dark (not just faintly tinted) against
        both the near-black card surface in dark mode and a light card in light mode. */
     .tron-hatch-bold {
-        background-image: repeating-linear-gradient(
-            -45deg,
-            var(--hatch-color, rgba(0, 0, 0, 0.45)) 0 3px,
-            transparent 3px 14px
-        );
+        background-image: repeating-linear-gradient(-45deg, var(--hatch-color, rgba(0, 0, 0, 0.45)) 0 3px, transparent 3px 14px);
     }
 
     /* Tint overrides for .tron-hatch-bold, matching each note tier's own color

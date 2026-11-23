@@ -5,14 +5,7 @@ import { type FormEvent, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { type UnitOption, UnitCascadeSelect } from '@/components/units/unit-cascade-select';
 import { getJson, postJson } from '@/lib/api';
 import { cn } from '@/lib/utils';
@@ -41,10 +34,9 @@ export function BulkBar({ selectedIds, parttimersSelected, bulk, division, onCle
     async function markReminded() {
         setBusy(true);
         try {
-            const res = await postJson<{ count: number; skipped: number; updatedIds: string[]; date: string }>(
-                bulk.urls.reminder,
-                { member_ids: selectedIds },
-            );
+            const res = await postJson<{ count: number; skipped: number; updatedIds: string[]; date: string }>(bulk.urls.reminder, {
+                member_ids: selectedIds,
+            });
             let msg = `${res.count} member${res.count === 1 ? '' : 's'} marked as reminded`;
             if (res.skipped > 0) msg += ` (${res.skipped} skipped — already reminded today)`;
             toast.success(msg);
@@ -67,9 +59,7 @@ export function BulkBar({ selectedIds, parttimersSelected, bulk, division, onCle
                             <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() =>
-                                    router.post(bulk.urls.pm, { 'pm-member-data': selectedIds.join(',') })
-                                }
+                                onClick={() => router.post(bulk.urls.pm, { 'pm-member-data': selectedIds.join(',') })}
                             >
                                 <Megaphone /> Send PM
                             </Button>
@@ -84,11 +74,7 @@ export function BulkBar({ selectedIds, parttimersSelected, bulk, division, onCle
                                 size="sm"
                                 variant="outline"
                                 disabled={parttimersSelected}
-                                title={
-                                    parttimersSelected
-                                        ? 'Cannot move: selection includes part-time members'
-                                        : undefined
-                                }
+                                title={parttimersSelected ? 'Cannot move: selection includes part-time members' : undefined}
                                 onClick={() => setMoveOpen(true)}
                             >
                                 <ArrowLeftRight /> Move
@@ -107,13 +93,7 @@ export function BulkBar({ selectedIds, parttimersSelected, bulk, division, onCle
             </div>
 
             {bulk.canAssignTags && (
-                <TagsDialog
-                    open={tagsOpen}
-                    onOpenChange={setTagsOpen}
-                    tags={bulk.assignableTags}
-                    memberIds={selectedIds}
-                    url={bulk.urls.tags}
-                />
+                <TagsDialog open={tagsOpen} onOpenChange={setTagsOpen} tags={bulk.assignableTags} memberIds={selectedIds} url={bulk.urls.tags} />
             )}
 
             {bulk.canMoveMembers && (
@@ -195,10 +175,7 @@ function TagsDialog({
                                             return next;
                                         })
                                     }
-                                    className={cn(
-                                        'rounded-md border px-2.5 py-1 text-xs',
-                                        on ? 'border-primary bg-primary/10' : 'border-border',
-                                    )}
+                                    className={cn('rounded-md border px-2.5 py-1 text-xs', on ? 'border-primary bg-primary/10' : 'border-border')}
                                 >
                                     {tag.name}
                                 </button>
@@ -207,12 +184,7 @@ function TagsDialog({
                     </div>
                 )}
                 <DialogFooter>
-                    <Button
-                        variant="destructive"
-                        size="sm"
-                        disabled={busy || selected.size === 0}
-                        onClick={() => run('remove')}
-                    >
+                    <Button variant="destructive" size="sm" disabled={busy || selected.size === 0} onClick={() => run('remove')}>
                         Remove
                     </Button>
                     <Button size="sm" disabled={busy || selected.size === 0} onClick={() => run('assign')}>

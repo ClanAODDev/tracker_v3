@@ -8,15 +8,7 @@ interface EnlargedImage {
     alt: string;
 }
 
-export function Prose({
-    html,
-    className,
-    zoomableImages = false,
-}: {
-    html: string;
-    className?: string;
-    zoomableImages?: boolean;
-}) {
+export function Prose({ html, className, zoomableImages = false }: { html: string; className?: string; zoomableImages?: boolean }) {
     const container = useRef<HTMLDivElement>(null);
     const [enlarged, setEnlarged] = useState<EnlargedImage | null>(null);
 
@@ -60,13 +52,7 @@ export function Prose({
                 <Dialog open={enlarged !== null} onOpenChange={(open) => !open && setEnlarged(null)}>
                     <DialogContent className="w-auto max-w-[95vw] p-2 sm:max-w-[95vw]" aria-describedby={undefined}>
                         <DialogTitle className="sr-only">{enlarged?.alt || 'Image'}</DialogTitle>
-                        {enlarged && (
-                            <img
-                                src={enlarged.src}
-                                alt={enlarged.alt}
-                                className="max-h-[85vh] max-w-full rounded object-contain"
-                            />
-                        )}
+                        {enlarged && <img src={enlarged.src} alt={enlarged.alt} className="max-h-[85vh] max-w-full rounded object-contain" />}
                     </DialogContent>
                 </Dialog>
             )}

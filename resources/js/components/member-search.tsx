@@ -9,15 +9,7 @@ import { cn } from '@/lib/utils';
 
 type Result = MemberSearchResult;
 
-export function MemberSearch({
-    className,
-    mobile = false,
-    onClose,
-}: {
-    className?: string;
-    mobile?: boolean;
-    onClose?: () => void;
-}) {
+export function MemberSearch({ className, mobile = false, onClose }: { className?: string; mobile?: boolean; onClose?: () => void }) {
     const [value, setValue] = useState('');
     const [open, setOpen] = useState(false);
     const [active, setActive] = useState(-1);
@@ -38,11 +30,7 @@ export function MemberSearch({
             const el = boxRef.current;
             if (!el) return;
             const r = el.getBoundingClientRect();
-            setAnchor(
-                mobile
-                    ? { top: r.bottom + 8, left: 16, right: 16 }
-                    : { top: r.bottom + 8, right: window.innerWidth - r.right },
-            );
+            setAnchor(mobile ? { top: r.bottom + 8, left: 16, right: 16 } : { top: r.bottom + 8, right: window.innerWidth - r.right });
         };
         measure();
         window.addEventListener('resize', measure);
@@ -106,14 +94,13 @@ export function MemberSearch({
                     }
                     if (e.key === 'Enter') {
                         if (active >= 0 && results[active]) go(results[active]);
-                        else if (value.trim())
-                            router.get('/search/members', { q: value.trim() });
+                        else if (value.trim()) router.get('/search/members', { q: value.trim() });
                     }
                 }}
                 placeholder="Search players…"
                 className={cn(
-                    'rounded-none border-0 border-b border-transparent bg-transparent outline-none transition-all placeholder:text-muted-foreground focus:border-b-border-strong',
-                    mobile ? 'h-9 w-full pl-9 pr-9 text-base' : 'h-8 w-40 pl-7 pr-6 text-sm focus:w-64',
+                    'rounded-none border-0 border-b border-transparent bg-transparent transition-all outline-none placeholder:text-muted-foreground focus:border-b-border-strong',
+                    mobile ? 'h-9 w-full pr-9 pl-9 text-base' : 'h-8 w-40 pr-6 pl-7 text-sm focus:w-64',
                 )}
             />
             {loading ? (
@@ -125,10 +112,7 @@ export function MemberSearch({
                         setValue('');
                         setOpen(false);
                     }}
-                    className={cn(
-                        'absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground',
-                        mobile ? 'right-2' : 'right-0.5',
-                    )}
+                    className={cn('absolute top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground', mobile ? 'right-2' : 'right-0.5')}
                 >
                     <X className={mobile ? 'size-4' : 'size-3.5'} />
                 </button>
@@ -138,70 +122,61 @@ export function MemberSearch({
                 anchor &&
                 createPortal(
                     <>
-                        <div
-                            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm"
-                            onMouseDown={() => setOpen(false)}
-                        />
+                        <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" onMouseDown={() => setOpen(false)} />
                         <div
                             ref={dropdownRef}
                             className={cn('fixed z-50', !mobile && 'w-80')}
                             style={{ top: anchor.top, right: anchor.right, left: mobile ? anchor.left : undefined }}
                         >
-                <div className="tron-corners rounded-md border border-border bg-popover shadow-lg [box-shadow:0_0_24px_-6px_var(--primary-glow)]">
-                    <div className="flex items-center gap-2 border-b border-border px-3 py-2">
-                        <span className="h-3 w-0.5 shrink-0 rounded-full bg-primary shadow-[0_0_6px_var(--primary-glow)]" />
-                        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                            {loading ? 'Scanning…' : `${results.length} ${results.length === 1 ? 'match' : 'matches'}`}
-                        </span>
-                    </div>
-                    {results.length === 0 ? (
-                        <p className="px-3 py-4 text-center text-sm text-muted-foreground">
-                            {loading ? 'Searching…' : 'No members found.'}
-                        </p>
-                    ) : (
-                        <ul className="max-h-96 overflow-y-auto py-1">
-                            {results.slice(0, 8).map((result, i) => (
-                                <li key={result.guid}>
+                            <div className="tron-corners rounded-md border border-border bg-popover shadow-lg [box-shadow:0_0_24px_-6px_var(--primary-glow)]">
+                                <div className="flex items-center gap-2 border-b border-border px-3 py-2">
+                                    <span className="h-3 w-0.5 shrink-0 rounded-full bg-primary shadow-[0_0_6px_var(--primary-glow)]" />
+                                    <span className="font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase">
+                                        {loading ? 'Scanning…' : `${results.length} ${results.length === 1 ? 'match' : 'matches'}`}
+                                    </span>
+                                </div>
+                                {results.length === 0 ? (
+                                    <p className="px-3 py-4 text-center text-sm text-muted-foreground">
+                                        {loading ? 'Searching…' : 'No members found.'}
+                                    </p>
+                                ) : (
+                                    <ul className="max-h-96 overflow-y-auto py-1">
+                                        {results.slice(0, 8).map((result, i) => (
+                                            <li key={result.guid}>
+                                                <button
+                                                    type="button"
+                                                    onMouseEnter={() => setActive(i)}
+                                                    onClick={() => go(result)}
+                                                    className={cn(
+                                                        'flex w-full flex-col items-start gap-0.5 border-l-2 border-transparent px-3 py-2 text-left text-sm transition-colors',
+                                                        i === active && 'border-l-primary bg-primary/10',
+                                                    )}
+                                                >
+                                                    <span className="font-medium">
+                                                        {result.rankName}{' '}
+                                                        <span className="numeric text-xs text-muted-foreground">[{result.clanId}]</span>
+                                                    </span>
+                                                    <span className="text-xs text-muted-foreground">
+                                                        {[result.division, result.discord && `${result.discord} [Discord]`, result.handle]
+                                                            .filter(Boolean)
+                                                            .join(' · ')}
+                                                    </span>
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+                                {results.length > 8 && (
                                     <button
                                         type="button"
-                                        onMouseEnter={() => setActive(i)}
-                                        onClick={() => go(result)}
-                                        className={cn(
-                                            'flex w-full flex-col items-start gap-0.5 border-l-2 border-transparent px-3 py-2 text-left text-sm transition-colors',
-                                            i === active && 'border-l-primary bg-primary/10',
-                                        )}
+                                        onClick={() => router.get('/search/members', { q: value.trim() })}
+                                        className="flex w-full items-center gap-2 border-t border-border px-3 py-2 text-left font-mono text-[10px] tracking-[0.2em] text-muted-foreground uppercase hover:text-foreground"
                                     >
-                                        <span className="font-medium">
-                                            {result.rankName}{' '}
-                                            <span className="numeric text-xs text-muted-foreground">
-                                                [{result.clanId}]
-                                            </span>
-                                        </span>
-                                        <span className="text-xs text-muted-foreground">
-                                            {[
-                                                result.division,
-                                                result.discord && `${result.discord} [Discord]`,
-                                                result.handle,
-                                            ]
-                                                .filter(Boolean)
-                                                .join(' · ')}
-                                        </span>
+                                        <span className="h-px flex-1 bg-gradient-to-r from-primary/60 to-transparent" />
+                                        View all results
                                     </button>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                    {results.length > 8 && (
-                        <button
-                            type="button"
-                            onClick={() => router.get('/search/members', { q: value.trim() })}
-                            className="flex w-full items-center gap-2 border-t border-border px-3 py-2 text-left font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-foreground"
-                        >
-                            <span className="h-px flex-1 bg-gradient-to-r from-primary/60 to-transparent" />
-                            View all results
-                        </button>
-                    )}
-                </div>
+                                )}
+                            </div>
                         </div>
                     </>,
                     document.body,

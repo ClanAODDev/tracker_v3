@@ -94,11 +94,7 @@ export default function LeaderPowers({ division, levels, tiers, examples }: Prop
             header={{
                 title: 'Leader powers',
                 eyebrow: `${division.name} Division`,
-                breadcrumbs: [
-                    { label: 'Divisions' },
-                    { label: division.name, href: `/divisions/${division.slug}` },
-                    { label: 'Leader powers' },
-                ],
+                breadcrumbs: [{ label: 'Divisions' }, { label: division.name, href: `/divisions/${division.slug}` }, { label: 'Leader powers' }],
             }}
         >
             <Head title={`Leader powers · ${division.name}`} />
@@ -108,8 +104,8 @@ export default function LeaderPowers({ division, levels, tiers, examples }: Prop
                     <div>
                         <h2 className="text-lg font-semibold">What each leader can do</h2>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            A unit leader's powers apply to their own unit and everything beneath it. The filled box in
-                            each diagram is the leader; the tinted boxes under it are the units they cover.
+                            A unit leader's powers apply to their own unit and everything beneath it. The filled box in each diagram is the leader;
+                            the tinted boxes under it are the units they cover.
                         </p>
                     </div>
 
@@ -149,9 +145,8 @@ export default function LeaderPowers({ division, levels, tiers, examples }: Prop
                     <div>
                         <h2 className="text-lg font-semibold">How powers follow depth</h2>
                         <p className="mt-1 text-sm text-muted-foreground">
-                            Divisions can have no levels, or up to four. Only the bottom level gets {tiers.squad.title}{' '}
-                            powers; any level above it gets {tiers.platoon.title} powers, and a division with one level
-                            treats its leader as a {tiers.platoon.title}.
+                            Divisions can have no levels, or up to four. Only the bottom level gets {tiers.squad.title} powers; any level above it
+                            gets {tiers.platoon.title} powers, and a division with one level treats its leader as a {tiers.platoon.title}.
                         </p>
                     </div>
 

@@ -25,15 +25,15 @@ export default function Promotion({ memberName, rankLabel, trainingNote, expires
                 <h1 className="mt-3 text-xl font-semibold">Congratulations, {memberName}</h1>
 
                 <p className="mt-5 text-sm text-muted-foreground">
-                    The Angels of Death congratulate you on your achievements and contributions to the community. Please
-                    indicate whether you choose to accept the rank of:
+                    The Angels of Death congratulate you on your achievements and contributions to the community. Please indicate whether you choose
+                    to accept the rank of:
                 </p>
-                <p className="mt-3 text-lg font-semibold uppercase tracking-wide text-primary">{rankLabel}</p>
+                <p className="mt-3 text-lg font-semibold tracking-wide text-primary uppercase">{rankLabel}</p>
 
                 {trainingNote && (
                     <p className="mt-4 text-sm text-muted-foreground">
-                        Your promotion takes effect immediately after accepting. Additional training is required before
-                        full permissions are granted — seek assistance from division or clan leadership on next steps.
+                        Your promotion takes effect immediately after accepting. Additional training is required before full permissions are granted —
+                        seek assistance from division or clan leadership on next steps.
                     </p>
                 )}
 

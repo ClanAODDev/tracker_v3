@@ -76,9 +76,7 @@ function DropList({
                 hover && 'border-primary/60 bg-primary/5',
             )}
         >
-            {members.length === 0 && (
-                <li className="px-1 py-2 text-center text-xs text-muted-foreground">{empty ?? 'Empty'}</li>
-            )}
+            {members.length === 0 && <li className="px-1 py-2 text-center text-xs text-muted-foreground">{empty ?? 'Empty'}</li>}
             {members.map((member) => (
                 <li
                     key={member.id}
@@ -119,20 +117,14 @@ export default function ManageMembers({ division, root, units, assignUrl, backUr
     function removeFrom(bucket: Bucket, id: string) {
         if (bucket === REMOVE) return;
         setColumns((prev) =>
-            prev.map((column) =>
-                column.id === bucket ? { ...column, members: column.members.filter((member) => member.id !== id) } : column,
-            ),
+            prev.map((column) => (column.id === bucket ? { ...column, members: column.members.filter((member) => member.id !== id) } : column)),
         );
     }
 
     function addTo(bucket: Bucket, card: MemberCard) {
         if (bucket === REMOVE) return;
         setColumns((prev) =>
-            prev.map((column) =>
-                column.id === bucket
-                    ? { ...column, members: [...column.members, { id: card.id, name: card.name }] }
-                    : column,
-            ),
+            prev.map((column) => (column.id === bucket ? { ...column, members: [...column.members, { id: card.id, name: card.name }] } : column)),
         );
     }
 
@@ -153,9 +145,7 @@ export default function ManageMembers({ division, root, units, assignUrl, backUr
 
         try {
             await postJson(assignUrl, { member: card.id, unit_id: target === REMOVE ? 0 : target });
-            toast.success(
-                target === REMOVE ? `${card.name} removed from ${root.name}` : `${card.name} moved to ${targetName}`,
-            );
+            toast.success(target === REMOVE ? `${card.name} removed from ${root.name}` : `${card.name} moved to ${targetName}`);
         } catch (e) {
             removeFrom(target, card.id);
             addTo(from, card);
@@ -221,8 +211,8 @@ export default function ManageMembers({ division, root, units, assignUrl, backUr
 
             <div className="space-y-6">
                 <p className="text-sm text-muted-foreground">
-                    Drag members into any unit under {root.name} to reassign them. Members dropped on {root.name} belong
-                    to it directly. Unit leaders are not listed here and cannot be moved.
+                    Drag members into any unit under {root.name} to reassign them. Members dropped on {root.name} belong to it directly. Unit leaders
+                    are not listed here and cannot be moved.
                 </p>
 
                 <section className="rounded-md border border-border bg-card">

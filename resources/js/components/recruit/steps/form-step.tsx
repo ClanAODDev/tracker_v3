@@ -57,9 +57,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
             <label className="flex items-center justify-between gap-3 rounded-md border border-border px-4 py-2.5 text-sm">
                 <span>
                     Guided mode
-                    <span className="mt-0.5 block text-xs text-muted-foreground">
-                        Reveal each section only once the one before it is complete
-                    </span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">Reveal each section only once the one before it is complete</span>
                 </span>
                 <Switch
                     checked={guided}
@@ -70,12 +68,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 />
             </label>
 
-            <Section
-                icon={<IdCard className="size-4" />}
-                title="Member verification"
-                step={1}
-                complete={form.memberVerificationComplete}
-            >
+            <Section icon={<IdCard className="size-4" />} title="Member verification" step={1} complete={form.memberVerificationComplete}>
                 {!form.path ? (
                     <div className="space-y-2">
                         <p className="text-sm text-muted-foreground">Does the recruit have a forum account?</p>
@@ -105,12 +98,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
             </Section>
 
             {(!guided || revealed[1]) && (
-                <Section
-                    icon={<IdCard className="size-4" />}
-                    title="Recruit details"
-                    step={2}
-                    complete={form.detailsComplete}
-                >
+                <Section icon={<IdCard className="size-4" />} title="Recruit details" step={2} complete={form.detailsComplete}>
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="grid gap-1.5">
                             <Label htmlFor="forum_name">Forum name *</Label>
@@ -140,8 +128,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                     </div>
                     {props.handleTypes.length > 1 && (
                         <p className="text-sm text-muted-foreground">
-                            Ask the recruit which of these they have and fill in every one that applies. At least one
-                            is required.
+                            Ask the recruit which of these they have and fill in every one that applies. At least one is required.
                         </p>
                     )}
                     <div className="grid gap-4 sm:grid-cols-2">
@@ -163,12 +150,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
             )}
 
             {props.units.length > 0 && (!guided || revealed[2]) && (
-                <Section
-                    icon={<Users className="size-4" />}
-                    title="Assignment"
-                    step={3}
-                    complete={form.assignmentComplete}
-                >
+                <Section icon={<Users className="size-4" />} title="Assignment" step={3} complete={form.assignmentComplete}>
                     <UnitCascadeSelect
                         units={props.units}
                         path={form.member.unitPath}
@@ -194,28 +176,19 @@ export function FormStep({ form }: { form: RecruitForm }) {
                     {form.threads.map((thread, i) => (
                         <div
                             key={i}
-                            className={cn(
-                                'flex items-center gap-2 text-sm transition-opacity',
-                                thread.read && 'opacity-50 hover:opacity-100',
-                            )}
+                            className={cn('flex items-center gap-2 text-sm transition-opacity', thread.read && 'opacity-50 hover:opacity-100')}
                         >
                             <input
                                 type="checkbox"
                                 checked={thread.read}
-                                onChange={(e) =>
-                                    form.setThreads((prev) =>
-                                        prev.map((t, idx) => (idx === i ? { ...t, read: e.target.checked } : t)),
-                                    )
-                                }
+                                onChange={(e) => form.setThreads((prev) => prev.map((t, idx) => (idx === i ? { ...t, read: e.target.checked } : t)))}
                                 className="accent-primary"
                             />
                             <div className="flex-1">
                                 <a href={thread.url} target="_blank" rel="noreferrer" className="text-primary hover:underline">
                                     {thread.name}
                                 </a>
-                                {thread.comments && (
-                                    <span className="ml-2 text-xs text-muted-foreground">{thread.comments}</span>
-                                )}
+                                {thread.comments && <span className="ml-2 text-xs text-muted-foreground">{thread.comments}</span>}
                             </div>
                             <Button
                                 type="button"
@@ -223,9 +196,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                                 variant="ghost"
                                 onClick={() =>
                                     navigator.clipboard.writeText(thread.url).then(() => {
-                                        form.setThreads((prev) =>
-                                            prev.map((t, idx) => (idx === i ? { ...t, read: true } : t)),
-                                        );
+                                        form.setThreads((prev) => prev.map((t, idx) => (idx === i ? { ...t, read: true } : t)));
                                         toast.success('URL copied');
                                     })
                                 }
@@ -251,18 +222,13 @@ export function FormStep({ form }: { form: RecruitForm }) {
                     {form.tasks.map((task, i) => (
                         <label
                             key={i}
-                            className={cn(
-                                'flex items-start gap-2 text-sm transition-opacity',
-                                task.complete && 'opacity-50 hover:opacity-100',
-                            )}
+                            className={cn('flex items-start gap-2 text-sm transition-opacity', task.complete && 'opacity-50 hover:opacity-100')}
                         >
                             <input
                                 type="checkbox"
                                 checked={task.complete}
                                 onChange={(e) =>
-                                    form.setTasks((prev) =>
-                                        prev.map((t, idx) => (idx === i ? { ...t, complete: e.target.checked } : t)),
-                                    )
+                                    form.setTasks((prev) => prev.map((t, idx) => (idx === i ? { ...t, complete: e.target.checked } : t)))
                                 }
                                 className="mt-0.5 accent-primary"
                             />
@@ -317,9 +283,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                                     type="button"
                                     size="sm"
                                     variant="outline"
-                                    onClick={() =>
-                                        navigator.clipboard.writeText(welcomePm).then(() => toast.success('Copied'))
-                                    }
+                                    onClick={() => navigator.clipboard.writeText(welcomePm).then(() => toast.success('Copied'))}
                                 >
                                     <Copy /> Copy
                                 </Button>
@@ -353,7 +317,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                     <div className="grid gap-3 sm:grid-cols-2">
                         {form.selectedPending.application_handle && (
                             <div>
-                                <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                                <p className="text-[11px] tracking-wide text-muted-foreground uppercase">
                                     {form.selectedPending.application_handle.label}
                                 </p>
                                 <p className="font-mono text-sm">{form.selectedPending.application_handle.value}</p>
@@ -362,7 +326,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                         {(form.selectedPending.application ?? []).map((item, i) => (
                             <div key={i}>
                                 <p
-                                    className="text-[11px] uppercase tracking-wide text-muted-foreground [&_p]:m-0"
+                                    className="text-[11px] tracking-wide text-muted-foreground uppercase [&_p]:m-0"
                                     dangerouslySetInnerHTML={{ __html: inlineRichText(item.label) }}
                                 />
                                 <p className="text-sm">{item.value || '—'}</p>
@@ -378,11 +342,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                 </p>
             )}
 
-            {form.submitError && (
-                <p className="rounded-md border border-destructive/40 bg-destructive/5 px-4 py-2 text-sm">
-                    {form.submitError}
-                </p>
-            )}
+            {form.submitError && <p className="rounded-md border border-destructive/40 bg-destructive/5 px-4 py-2 text-sm">{form.submitError}</p>}
 
             <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" size="sm" asChild>
@@ -393,9 +353,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
                     {form.submitting ? 'Adding recruit…' : 'Add recruit'}
                 </Button>
             </div>
-            {attempted && !form.formValid && (
-                <p className="text-right text-xs text-muted-foreground">Complete the required fields above.</p>
-            )}
+            {attempted && !form.formValid && <p className="text-right text-xs text-muted-foreground">Complete the required fields above.</p>}
         </form>
     );
 }

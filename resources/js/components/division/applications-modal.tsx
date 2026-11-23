@@ -76,9 +76,7 @@ export function ApplicationsModal({ url, canDelete, open, onOpenChange, initialA
     const showGoneNotice = useCallback(() => {
         setView('list');
         setDetail(null);
-        setNotice(
-            'That application appears to no longer be available. Applications are removed when the applicant is recruited or after 30 days.',
-        );
+        setNotice('That application appears to no longer be available. Applications are removed when the applicant is recruited or after 30 days.');
     }, []);
 
     const openDetail = useCallback(
@@ -129,8 +127,7 @@ export function ApplicationsModal({ url, canDelete, open, onOpenChange, initialA
             await fetch(`${url}/${detail.id}`, {
                 method: 'DELETE',
                 headers: {
-                    'X-CSRF-TOKEN':
-                        document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
+                    'X-CSRF-TOKEN': document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
                     Accept: 'application/json',
                 },
                 credentials: 'same-origin',
@@ -150,9 +147,7 @@ export function ApplicationsModal({ url, canDelete, open, onOpenChange, initialA
                     <DialogTitle className="flex items-center gap-2">
                         <UserPlus className="size-4 text-info" /> Pending applications
                     </DialogTitle>
-                    <DialogDescription>
-                        Discord applications for this division. Removed on recruitment or after 30 days.
-                    </DialogDescription>
+                    <DialogDescription>Discord applications for this division. Removed on recruitment or after 30 days.</DialogDescription>
                 </DialogHeader>
 
                 {view === 'detail' && (
@@ -161,18 +156,10 @@ export function ApplicationsModal({ url, canDelete, open, onOpenChange, initialA
                     </Button>
                 )}
 
-                {view === 'list' && notice && (
-                    <p className="rounded-md border border-warning/40 bg-warning/5 px-4 py-3 text-sm">{notice}</p>
-                )}
+                {view === 'list' && notice && <p className="rounded-md border border-warning/40 bg-warning/5 px-4 py-3 text-sm">{notice}</p>}
 
                 {view === 'list' ? (
-                    <ListView
-                        applications={applications}
-                        loading={loadingList}
-                        error={listError}
-                        onRetry={loadList}
-                        onOpen={openDetail}
-                    />
+                    <ListView applications={applications} loading={loadingList} error={listError} onRetry={loadList} onOpen={openDetail} />
                 ) : (
                     <DetailView
                         detail={detail}
@@ -185,22 +172,12 @@ export function ApplicationsModal({ url, canDelete, open, onOpenChange, initialA
                         onDelete={deleteApplication}
                         onCommentAdded={(comment) => {
                             setDetail((d) => (d ? { ...d, comments: [...d.comments, comment] } : d));
-                            setApplications((prev) =>
-                                prev.map((a) =>
-                                    a.id === detail?.id ? { ...a, comments_count: a.comments_count + 1 } : a,
-                                ),
-                            );
+                            setApplications((prev) => prev.map((a) => (a.id === detail?.id ? { ...a, comments_count: a.comments_count + 1 } : a)));
                         }}
                         onCommentDeleted={(commentId) => {
-                            setDetail((d) =>
-                                d ? { ...d, comments: d.comments.filter((c) => c.id !== commentId) } : d,
-                            );
+                            setDetail((d) => (d ? { ...d, comments: d.comments.filter((c) => c.id !== commentId) } : d));
                             setApplications((prev) =>
-                                prev.map((a) =>
-                                    a.id === detail?.id
-                                        ? { ...a, comments_count: Math.max(0, a.comments_count - 1) }
-                                        : a,
-                                ),
+                                prev.map((a) => (a.id === detail?.id ? { ...a, comments_count: Math.max(0, a.comments_count - 1) } : a)),
                             );
                         }}
                     />
@@ -234,11 +211,7 @@ function ListView({
             </div>
         );
     if (applications.length === 0)
-        return (
-            <p className="py-10 text-center text-sm text-muted-foreground">
-                No pending Discord applications for this division.
-            </p>
-        );
+        return <p className="py-10 text-center text-sm text-muted-foreground">No pending Discord applications for this division.</p>;
 
     return (
         <div className="space-y-2">
@@ -332,8 +305,7 @@ function DetailView({
             await fetch(`${commentsUrl}/${id}`, {
                 method: 'DELETE',
                 headers: {
-                    'X-CSRF-TOKEN':
-                        document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
+                    'X-CSRF-TOKEN': document.querySelector<HTMLMetaElement>('meta[name="csrf-token"]')?.content ?? '',
                     Accept: 'application/json',
                 },
                 credentials: 'same-origin',
@@ -344,9 +316,7 @@ function DetailView({
         }
     }
 
-    const comments = [...detail.comments].sort(
-        (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
-    );
+    const comments = [...detail.comments].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
     return (
         <div className="min-w-0 space-y-5">
@@ -390,7 +360,7 @@ function DetailView({
                 <dl className="space-y-3 p-4">
                     {detail.handle && (
                         <div>
-                            <dt className="truncate text-[11px] font-semibold uppercase tracking-wide text-dim-foreground/75">
+                            <dt className="truncate text-[11px] font-semibold tracking-wide text-dim-foreground/75 uppercase">
                                 {detail.handle.label}
                             </dt>
                             <dd className="mt-0.5 font-mono text-sm">{detail.handle.value}</dd>
@@ -399,13 +369,10 @@ function DetailView({
                     {detail.responses.map((r, i) => (
                         <div key={i}>
                             <dt
-                                className="truncate text-[11px] font-semibold uppercase tracking-wide text-dim-foreground/75 [&_p]:m-0 [&_p]:truncate"
+                                className="truncate text-[11px] font-semibold tracking-wide text-dim-foreground/75 uppercase [&_p]:m-0 [&_p]:truncate"
                                 dangerouslySetInnerHTML={{ __html: linkifyHtml(r.label) }}
                             />
-                            <dd
-                                className="mt-0.5 whitespace-pre-wrap text-sm"
-                                dangerouslySetInnerHTML={{ __html: linkify(r.value) }}
-                            />
+                            <dd className="mt-0.5 text-sm whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: linkify(r.value) }} />
                         </div>
                     ))}
                 </dl>
@@ -414,14 +381,10 @@ function DetailView({
             <section className="overflow-hidden rounded-md border border-border">
                 <h3 className="flex items-center gap-2 border-b border-border bg-card/40 px-4 py-2 text-sm font-semibold">
                     Internal comments
-                    <span className="text-xs font-normal text-muted-foreground">
-                        not visible to member · {comments.length}
-                    </span>
+                    <span className="text-xs font-normal text-muted-foreground">not visible to member · {comments.length}</span>
                 </h3>
                 <div className="space-y-3 p-4">
-                    {comments.length === 0 && (
-                        <p className="py-4 text-center text-sm text-muted-foreground">No comments yet.</p>
-                    )}
+                    {comments.length === 0 && <p className="py-4 text-center text-sm text-muted-foreground">No comments yet.</p>}
                     {comments.map((comment) => (
                         <div key={comment.id} className="flex gap-3">
                             {comment.user?.avatar ? (
@@ -448,7 +411,7 @@ function DetailView({
                                     </span>
                                 </div>
                                 <p
-                                    className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground"
+                                    className="mt-1 text-sm whitespace-pre-wrap text-muted-foreground"
                                     dangerouslySetInnerHTML={{ __html: linkify(comment.body) }}
                                 />
                             </div>

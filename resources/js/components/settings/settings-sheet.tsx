@@ -6,13 +6,7 @@ import { toast } from 'sonner';
 import { TronSpinner } from '@/components/tron-spinner';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -50,23 +44,13 @@ type HandleRow = { id: number | null; handleId: number | null; value: string; pr
 function Section({ title, children }: { title: string; children: ReactNode }) {
     return (
         <section className="space-y-3">
-            <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-primary">{title}</h3>
+            <h3 className="text-xs font-semibold tracking-[0.15em] text-primary uppercase">{title}</h3>
             {children}
         </section>
     );
 }
 
-function SettingRow({
-    icon,
-    label,
-    count,
-    onClick,
-}: {
-    icon: ReactNode;
-    label: string;
-    count: number;
-    onClick: () => void;
-}) {
+function SettingRow({ icon, label, count, onClick }: { icon: ReactNode; label: string; count: number; onClick: () => void }) {
     return (
         <button
             type="button"
@@ -119,14 +103,9 @@ export function SettingsSheet({ open, onOpenChange }: { open: boolean; onOpenCha
                         {data.member && (data.partTimeDivisions || data.handles) && (
                             <Section title="Assignments">
                                 {data.partTimeDivisions && (
-                                    <PartTimeDialog
-                                        available={data.partTimeDivisions.available}
-                                        selected={data.partTimeDivisions.selected}
-                                    />
+                                    <PartTimeDialog available={data.partTimeDivisions.available} selected={data.partTimeDivisions.selected} />
                                 )}
-                                {data.handles && (
-                                    <HandlesDialog types={data.handles.types} current={data.handles.current} />
-                                )}
+                                {data.handles && <HandlesDialog types={data.handles.types} current={data.handles.current} />}
                             </Section>
                         )}
                         <AppearanceSection settings={data.settings} />
@@ -172,13 +151,7 @@ function ProfileSection({ member }: { member: NonNullable<SettingsData['member']
                 <div className="flex-1">
                     <p className="text-sm font-medium">{member.name}</p>
                     {member.canSyncAvatar ? (
-                        <Button
-                            variant="link"
-                            size="sm"
-                            className="h-auto p-0 text-xs"
-                            disabled={syncing || cooldown}
-                            onClick={sync}
-                        >
+                        <Button variant="link" size="sm" className="h-auto p-0 text-xs" disabled={syncing || cooldown} onClick={sync}>
                             <RefreshCw className={cn('size-3', syncing && 'animate-spin')} /> Sync avatar from Discord
                         </Button>
                     ) : (
@@ -231,8 +204,7 @@ function TransferSection({
                     <p className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
                         <TronSpinner className="size-3.5 shrink-0" />
                         <span>
-                            Transfer to <span className="text-foreground">{pending.division}</span> pending leadership
-                            approval.
+                            Transfer to <span className="text-foreground">{pending.division}</span> pending leadership approval.
                         </span>
                     </p>
                 ) : (
@@ -314,15 +286,10 @@ function PartTimeDialog({ available, selected }: { available: DivisionRef[]; sel
                 <DialogHeader>
                     <DialogTitle>Part-time divisions</DialogTitle>
                 </DialogHeader>
-                <p className="text-xs text-muted-foreground">
-                    Divisions you participate in alongside your primary division.
-                </p>
+                <p className="text-xs text-muted-foreground">Divisions you participate in alongside your primary division.</p>
                 <div className="grid max-h-72 grid-cols-2 gap-2 overflow-y-auto">
                     {available.map((division) => (
-                        <label
-                            key={division.id}
-                            className="flex items-center gap-2 rounded border border-border px-2.5 py-1.5 text-sm"
-                        >
+                        <label key={division.id} className="flex items-center gap-2 rounded border border-border px-2.5 py-1.5 text-sm">
                             <Checkbox checked={chosen.has(division.id)} onCheckedChange={() => toggle(division.id)} />
                             {division.name}
                         </label>
@@ -341,13 +308,7 @@ function PartTimeDialog({ available, selected }: { available: DivisionRef[]; sel
     );
 }
 
-function HandlesDialog({
-    types,
-    current,
-}: {
-    types: Array<{ id: number; label: string; hint: string | null }>;
-    current: HandleRow[];
-}) {
+function HandlesDialog({ types, current }: { types: Array<{ id: number; label: string; hint: string | null }>; current: HandleRow[] }) {
     const [open, setOpen] = useState(false);
     const [rows, setRows] = useState<HandleRow[]>(current);
     const [count, setCount] = useState(current.length);
@@ -414,46 +375,41 @@ function HandlesDialog({
                 <DialogHeader>
                     <DialogTitle>In-game handles</DialogTitle>
                 </DialogHeader>
-                <p className="text-xs text-muted-foreground">
-                    Your usernames for different games and platforms, so other members can find you.
-                </p>
+                <p className="text-xs text-muted-foreground">Your usernames for different games and platforms, so other members can find you.</p>
                 <div className="max-h-80 space-y-2 overflow-y-auto">
-                {rows.length === 0 && <p className="text-sm text-muted-foreground">No handles added.</p>}
-                {rows.map((row, i) => (
-                    <div key={i} className="flex flex-wrap items-start gap-2">
-                        <SimpleSelect
-                            value={row.handleId ? String(row.handleId) : '__none'}
-                            onChange={(v) => update(i, { handleId: v === '__none' ? null : Number(v) })}
-                            options={[
-                                { value: '__none', label: 'Platform…' },
-                                ...types.map((t) => ({ value: String(t.id), label: t.label })),
-                            ]}
-                            className="w-32"
-                        />
-                        <div className="min-w-0 flex-1">
-                            <Input
-                                value={row.value}
-                                onChange={(e) => update(i, { value: e.target.value })}
-                                placeholder="Username"
-                                className="h-9"
-                                aria-invalid={!!rowErrors[i]}
+                    {rows.length === 0 && <p className="text-sm text-muted-foreground">No handles added.</p>}
+                    {rows.map((row, i) => (
+                        <div key={i} className="flex flex-wrap items-start gap-2">
+                            <SimpleSelect
+                                value={row.handleId ? String(row.handleId) : '__none'}
+                                onChange={(v) => update(i, { handleId: v === '__none' ? null : Number(v) })}
+                                options={[{ value: '__none', label: 'Platform…' }, ...types.map((t) => ({ value: String(t.id), label: t.label }))]}
+                                className="w-32"
                             />
-                            {rowErrors[i] ? (
-                                <p className="mt-1 text-xs text-destructive">{rowErrors[i]}</p>
-                            ) : (
-                                <HandleHint hint={types.find((t) => t.id === row.handleId)?.hint} />
-                            )}
+                            <div className="min-w-0 flex-1">
+                                <Input
+                                    value={row.value}
+                                    onChange={(e) => update(i, { value: e.target.value })}
+                                    placeholder="Username"
+                                    className="h-9"
+                                    aria-invalid={!!rowErrors[i]}
+                                />
+                                {rowErrors[i] ? (
+                                    <p className="mt-1 text-xs text-destructive">{rowErrors[i]}</p>
+                                ) : (
+                                    <HandleHint hint={types.find((t) => t.id === row.handleId)?.hint} />
+                                )}
+                            </div>
+                            <label className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <Checkbox checked={row.primary} onCheckedChange={(v) => update(i, { primary: v === true })} />
+                                Primary
+                            </label>
+                            <Button size="icon" variant="ghost" className="size-8 text-destructive" onClick={() => removeRow(i)}>
+                                <Trash2 className="size-4" />
+                            </Button>
                         </div>
-                        <label className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Checkbox checked={row.primary} onCheckedChange={(v) => update(i, { primary: v === true })} />
-                            Primary
-                        </label>
-                        <Button size="icon" variant="ghost" className="size-8 text-destructive" onClick={() => removeRow(i)}>
-                            <Trash2 className="size-4" />
-                        </Button>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
                 <div className="mt-2">
                     <Button size="sm" variant="outline" onClick={addRow}>
                         <Plus /> Add handle
@@ -548,9 +504,7 @@ function AppearanceSection({ settings }: { settings: SettingsData['settings'] })
             <label className="flex items-center justify-between gap-3 text-sm">
                 <span>
                     Reduce animations
-                    <span className="mt-0.5 block text-xs text-muted-foreground">
-                        Minimise motion across the interface and charts
-                    </span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">Minimise motion across the interface and charts</span>
                 </span>
                 <Switch
                     checked={reduce}

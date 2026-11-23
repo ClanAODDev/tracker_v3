@@ -32,14 +32,9 @@ export function AppTopbar({ onOpenNav, navSide = 'left' }: { onOpenNav: () => vo
     return (
         <header className="sticky top-0 z-50 flex h-14 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur">
             {user && mobileSearchOpen ? (
-                <div className="flex w-full animate-in items-center gap-2 fade-in slide-in-from-right-4 duration-200 sm:hidden">
+                <div className="flex w-full animate-in items-center gap-2 duration-200 fade-in slide-in-from-right-4 sm:hidden">
                     <MemberSearch mobile className="flex-1" onClose={() => setMobileSearchOpen(false)} />
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setMobileSearchOpen(false)}
-                        aria-label="Close search"
-                    >
+                    <Button variant="ghost" size="icon" onClick={() => setMobileSearchOpen(false)} aria-label="Close search">
                         <X className="size-5" />
                     </Button>
                 </div>

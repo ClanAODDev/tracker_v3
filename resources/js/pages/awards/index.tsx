@@ -63,9 +63,7 @@ export default function AwardsIndex({
         const filtered = awards.filter((a) => !hidden.has(a.rarity));
         if (sort === 'default') return filtered;
         return [...filtered].sort((a, b) =>
-            sort === 'rarity-desc'
-                ? rarityRank(b.rarity) - rarityRank(a.rarity)
-                : rarityRank(a.rarity) - rarityRank(b.rarity),
+            sort === 'rarity-desc' ? rarityRank(b.rarity) - rarityRank(a.rarity) : rarityRank(a.rarity) - rarityRank(b.rarity),
         );
     }
 
@@ -99,12 +97,7 @@ export default function AwardsIndex({
                         <HeroStat icon={Hand} value={totals.requestable} label="Requestable" tone="text-success" />
                     </div>
 
-                    <RarityBar
-                        breakdown={rarityBreakdown}
-                        rarities={rarities}
-                        total={totals.awards}
-                        className="tron-hatch rounded-b-md"
-                    />
+                    <RarityBar breakdown={rarityBreakdown} rarities={rarities} total={totals.awards} className="tron-hatch rounded-b-md" />
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4">
@@ -118,10 +111,7 @@ export default function AwardsIndex({
                                     hidden.has(r.key) ? 'border-border opacity-40' : 'border-border',
                                 )}
                             >
-                                <span
-                                    className="size-2 rounded-full"
-                                    style={{ background: `var(--rarity-${r.key})` }}
-                                />
+                                <span className="size-2 rounded-full" style={{ background: `var(--rarity-${r.key})` }} />
                                 {r.label}
                                 <span className="text-muted-foreground">{rarityRange(r)}</span>
                             </button>
@@ -185,15 +175,12 @@ export default function AwardsIndex({
                             <span className="text-sm font-semibold">Legacy awards</span>
                         </div>
                         <p className="text-xs text-muted-foreground">
-                            Awards from divisions that are no longer active. No longer requestable but remain on member
-                            profiles.
+                            Awards from divisions that are no longer active. No longer requestable but remain on member profiles.
                         </p>
                         {legacySections.map((section) => (
                             <div key={section.name} className="space-y-2">
                                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    {section.logo && (
-                                        <img src={section.logo} alt="" className="size-3.5 opacity-50" />
-                                    )}
+                                    {section.logo && <img src={section.logo} alt="" className="size-3.5 opacity-50" />}
                                     {section.name}
                                 </div>
                                 <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
@@ -214,22 +201,12 @@ export default function AwardsIndex({
     );
 }
 
-function HeroStat({
-    icon: Icon,
-    value,
-    label,
-    tone,
-}: {
-    icon: LucideIcon;
-    value: number;
-    label: string;
-    tone?: string;
-}) {
+function HeroStat({ icon: Icon, value, label, tone }: { icon: LucideIcon; value: number; label: string; tone?: string }) {
     return (
         <div className="flex-1 px-5 py-4">
             <div className="flex items-center gap-1.5 text-muted-foreground">
                 <Icon className="size-3.5" />
-                <span className="text-[11px] font-medium uppercase tracking-wider">{label}</span>
+                <span className="text-[11px] font-medium tracking-wider uppercase">{label}</span>
             </div>
             <span className={cn('numeric mt-1.5 block text-2xl font-semibold', tone)}>
                 <CountUp value={value} />

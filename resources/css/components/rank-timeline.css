@@ -6,17 +6,28 @@
    Used by resources/js/components/member/rank-timeline.tsx. */
 
 @keyframes rank-timeline-node-enter {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes rank-timeline-trace-draw {
-    from { transform: scaleX(0); }
-    to   { transform: scaleX(1); }
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
 }
 
 @keyframes rank-timeline-pulse {
-    0%, 100% {
+    0%,
+    100% {
         opacity: 0.5;
         transform: translate(-50%, -50%) rotate(45deg) scale(1);
     }
@@ -99,7 +110,9 @@
     transition: transform 0.2s ease;
 }
 
-.rank-timeline .timeline-node:hover { transform: translateY(-2px); }
+.rank-timeline .timeline-node:hover {
+    transform: translateY(-2px);
+}
 
 /* Diamond marker, centred on the trace line. */
 .rank-timeline .timeline-marker {
@@ -110,7 +123,10 @@
     background: var(--card);
     border: 2px solid var(--primary);
     transform: rotate(45deg);
-    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .rank-timeline .timeline-node:hover .timeline-marker {
@@ -171,10 +187,14 @@
     border: 1px solid color-mix(in srgb, var(--rank-color, var(--primary)) 34%, transparent);
     padding: 0.1rem 0.5rem;
     margin-bottom: 0.25rem;
-    transition: background 0.2s ease, transform 0.2s ease;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
 }
 
-.rank-timeline .timeline-node:hover .timeline-rank { transform: scale(1.04); }
+.rank-timeline .timeline-node:hover .timeline-rank {
+    transform: scale(1.04);
+}
 
 .rank-timeline .timeline-rank.timeline-rank-consolidated {
     font-weight: 500;
@@ -197,7 +217,10 @@
 }
 
 @media (max-width: 640px) {
-    .rank-timeline .timeline-connector { flex-basis: 1.5rem; font-size: 0; }
+    .rank-timeline .timeline-connector {
+        flex-basis: 1.5rem;
+        font-size: 0;
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -208,7 +231,9 @@
         opacity: 1;
         transform: none;
     }
-    .rank-timeline .timeline-connector::before { transform: scaleX(1); }
+    .rank-timeline .timeline-connector::before {
+        transform: scaleX(1);
+    }
     .rank-timeline .timeline-node:last-child .timeline-marker.marker-promotion::before {
         animation: none;
     }

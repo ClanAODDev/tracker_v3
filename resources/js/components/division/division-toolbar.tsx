@@ -18,12 +18,7 @@ import {
 } from 'lucide-react';
 import { useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 
 export interface DivisionTool {
@@ -53,8 +48,7 @@ const ICONS: Record<string, LucideIcon> = {
     'sticky-note': StickyNote,
 };
 
-const CARD_BASE =
-    'flex h-[4.25rem] flex-col items-center justify-center gap-1.5 rounded-md border px-2 text-center text-xs transition-colors';
+const CARD_BASE = 'flex h-[4.25rem] flex-col items-center justify-center gap-1.5 rounded-md border px-2 text-center text-xs transition-colors';
 
 const MIN_CARD = 92;
 
@@ -88,7 +82,9 @@ function ToolCard({ tool, onOverride }: { tool: DivisionTool; onOverride?: () =>
                 <DropdownMenuContent align="start">
                     {tool.menu.map((item) => (
                         <DropdownMenuItem key={item.href} asChild>
-                            <Link href={item.href} prefetch>{item.label}</Link>
+                            <Link href={item.href} prefetch>
+                                {item.label}
+                            </Link>
                         </DropdownMenuItem>
                     ))}
                 </DropdownMenuContent>
@@ -135,19 +131,15 @@ function OverflowItem({ tool, onOverride }: { tool: DivisionTool; onOverride?: (
                     {content}
                 </a>
             ) : (
-                <Link href={tool.href} prefetch>{content}</Link>
+                <Link href={tool.href} prefetch>
+                    {content}
+                </Link>
             )}
         </DropdownMenuItem>
     );
 }
 
-export function DivisionToolbar({
-    tools,
-    overrides,
-}: {
-    tools: DivisionTool[];
-    overrides?: Record<string, () => void>;
-}) {
+export function DivisionToolbar({ tools, overrides }: { tools: DivisionTool[]; overrides?: Record<string, () => void> }) {
     const { rowTools, menuOnly, minVisible } = useMemo(() => {
         const row = tools.filter((t) => t.tier !== 'overflow');
         return {

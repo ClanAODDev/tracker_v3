@@ -34,12 +34,7 @@ function LeafLink({ item, currentUrl, nested }: { item: NavItem; currentUrl: str
     }
 
     return (
-        <Link
-            href={item.href ?? '#'}
-            prefetch
-            aria-current={active ? 'page' : undefined}
-            className={className}
-        >
+        <Link href={item.href ?? '#'} prefetch aria-current={active ? 'page' : undefined} className={className}>
             {content}
         </Link>
     );
@@ -77,7 +72,7 @@ export function NavSidebar({ items, currentUrl }: { items: NavItem[]; currentUrl
                     return (
                         <div
                             key={`${item.label}-${index}`}
-                            className="px-3 pt-5 pb-1.5 text-[11px] font-semibold uppercase tracking-[0.15em] text-dim-foreground first:pt-1"
+                            className="px-3 pt-5 pb-1.5 text-[11px] font-semibold tracking-[0.15em] text-dim-foreground uppercase first:pt-1"
                         >
                             {item.label}
                         </div>

@@ -70,10 +70,7 @@ function FieldBadge({ field, saveUrl }: { field: FieldBadgeData; saveUrl: string
             <PopoverTrigger asChild>
                 {field.value ? (
                     <button type="button">
-                        <Badge
-                            variant="outline"
-                            className={cn('cursor-pointer transition-opacity hover:opacity-80', fieldBadgeClass(field.color))}
-                        >
+                        <Badge variant="outline" className={cn('cursor-pointer transition-opacity hover:opacity-80', fieldBadgeClass(field.color))}>
                             <span className="text-[10px] font-bold tracking-wide uppercase">{field.label}</span>: {field.value}
                         </Badge>
                     </button>

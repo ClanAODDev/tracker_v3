@@ -49,9 +49,7 @@ export function SteamVanityUrlTool({ open, onOpenChange }: { open: boolean; onOp
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>Steam Vanity URL → SteamID64</DialogTitle>
-                    <DialogDescription>
-                        Paste a Steam profile URL, vanity name, or ID to get the numeric SteamID64.
-                    </DialogDescription>
+                    <DialogDescription>Paste a Steam profile URL, vanity name, or ID to get the numeric SteamID64.</DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-1.5">
                     <Label htmlFor="steam-vanity-input">Vanity URL, name, or profile link</Label>

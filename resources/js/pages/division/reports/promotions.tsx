@@ -21,16 +21,7 @@ interface PromotionsProps {
     bbCode: string;
 }
 
-export default function PromotionsReport({
-    division,
-    periods,
-    selectedKey,
-    periodLabel,
-    chart,
-    groups,
-    total,
-    bbCode,
-}: PromotionsProps) {
+export default function PromotionsReport({ division, periods, selectedKey, periodLabel, chart, groups, total, bbCode }: PromotionsProps) {
     const [copied, setCopied] = useState(false);
 
     return (
@@ -61,12 +52,7 @@ export default function PromotionsReport({
                         <section>
                             <h2 className="mb-3 text-sm font-semibold">By rank</h2>
                             <div className="rounded-md border border-border bg-card p-4">
-                                <ThemedBarChart
-                                    data={chart}
-                                    x="rank"
-                                    series={[{ key: 'count', label: 'Promotions' }]}
-                                    height={200}
-                                />
+                                <ThemedBarChart data={chart} x="rank" series={[{ key: 'count', label: 'Promotions' }]} height={200} />
                             </div>
                         </section>
 
@@ -80,16 +66,11 @@ export default function PromotionsReport({
                                     <div key={group.rankName} className="rounded-md border border-border">
                                         <div className="flex items-center justify-between border-b border-border px-3 py-2">
                                             <span className="text-sm font-medium">{group.rankName}</span>
-                                            <span className="numeric text-xs text-muted-foreground">
-                                                {group.members.length}
-                                            </span>
+                                            <span className="numeric text-xs text-muted-foreground">{group.members.length}</span>
                                         </div>
                                         <div className="divide-y divide-border">
                                             {group.members.map((member, i) => (
-                                                <div
-                                                    key={i}
-                                                    className="flex items-center justify-between px-3 py-2 text-sm"
-                                                >
+                                                <div key={i} className="flex items-center justify-between px-3 py-2 text-sm">
                                                     {member.url ? (
                                                         <a href={member.url} className="hover:text-primary">
                                                             {member.name}
@@ -110,9 +91,7 @@ export default function PromotionsReport({
                     <section>
                         <h2 className="mb-3 text-sm font-semibold">Share</h2>
                         <div className="rounded-md border border-border bg-card p-3">
-                            <pre className="max-h-64 overflow-auto rounded bg-muted p-3 font-mono text-xs whitespace-pre-wrap">
-                                {bbCode}
-                            </pre>
+                            <pre className="max-h-64 overflow-auto rounded bg-muted p-3 font-mono text-xs whitespace-pre-wrap">{bbCode}</pre>
                             <Button
                                 size="sm"
                                 className="mt-3 w-full"

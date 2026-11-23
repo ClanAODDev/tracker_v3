@@ -69,8 +69,7 @@ export default function MembersPage({
     squads,
     organize: organizeProps,
 }: Props) {
-    const title =
-        scope.kind === 'division' ? `${division.name} members` : scope.name;
+    const title = scope.kind === 'division' ? `${division.name} members` : scope.name;
 
     const [squadList, setSquadList] = useState<SquadEntry[]>(squads ?? []);
     const [dropHoverId, setDropHoverId] = useState<number | null>(null);
@@ -79,17 +78,14 @@ export default function MembersPage({
     useEffect(() => setSquadList(squads ?? []), [squads]);
 
     const canOrganize = scope.kind === 'platoon' && (organizeProps?.canOrganize ?? false);
-    const autoOrganize =
-        typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('organize') === '1';
+    const autoOrganize = typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('organize') === '1';
 
     const organize = useOrganize({
         members: organizeProps?.members ?? NO_ORGANIZE_MEMBERS,
         autoOpen: canOrganize && autoOrganize,
         assign: async (memberId, squadId) => {
             await postJson('/members/assign-unit', { member: memberId, unit_id: squadId });
-            setSquadList((prev) =>
-                prev.map((s) => (s.id === squadId ? { ...s, count: (s.count ?? 0) + 1 } : s)),
-            );
+            setSquadList((prev) => prev.map((s) => (s.id === squadId ? { ...s, count: (s.count ?? 0) + 1 } : s)));
         },
     });
 
@@ -99,13 +95,11 @@ export default function MembersPage({
         }
     }, [canOrganize, autoOrganize]);
 
-    const breadcrumbs: Crumb[] =
-        scope.breadcrumbs ??
-        [
-            { label: 'Divisions' },
-            { label: division.name, href: `/divisions/${division.slug}` },
-            { label: 'Members' },
-        ];
+    const breadcrumbs: Crumb[] = scope.breadcrumbs ?? [
+        { label: 'Divisions' },
+        { label: division.name, href: `/divisions/${division.slug}` },
+        { label: 'Members' },
+    ];
 
     const actions =
         scope.kind === 'division' ? (
@@ -113,11 +107,7 @@ export default function MembersPage({
                 variant={includeParttimers ? 'default' : 'outline'}
                 size="sm"
                 onClick={() =>
-                    router.get(
-                        `/divisions/${division.slug}/members`,
-                        includeParttimers ? {} : { parttimers: 1 },
-                        { preserveState: false },
-                    )
+                    router.get(`/divisions/${division.slug}/members`, includeParttimers ? {} : { parttimers: 1 }, { preserveState: false })
                 }
             >
                 <Users /> Part-timers
@@ -155,8 +145,7 @@ export default function MembersPage({
 
             {scope.kind === 'platoon' && !scope.canManage && (scope.unassignedCount ?? 0) > 0 && (
                 <div className="mb-6 rounded-md border border-warning/40 bg-warning/5 px-4 py-3 text-sm">
-                    This {scope.unitLabel} has{' '}
-                    <span className="numeric font-semibold">{scope.unassignedCount}</span> unassigned member
+                    This {scope.unitLabel} has <span className="numeric font-semibold">{scope.unassignedCount}</span> unassigned member
                     {scope.unassignedCount === 1 ? '' : 's'}.
                 </div>
             )}
@@ -184,13 +173,7 @@ export default function MembersPage({
                     storageKey={`member-table:${scope.kind}:${division.slug}`}
                 />
                 <div className="order-first space-y-6 xl:order-last">
-                    {scope.createChildUrl && (
-                        <CreateChildUnit
-                            url={scope.createChildUrl}
-                            label={scope.childLabel ?? 'Unit'}
-                            className="w-full"
-                        />
-                    )}
+                    {scope.createChildUrl && <CreateChildUnit url={scope.createChildUrl} label={scope.childLabel ?? 'Unit'} className="w-full" />}
                     {squadList.length > 0 && (
                         <div ref={squadsRef}>
                             <SquadsList
@@ -234,9 +217,7 @@ function SquadsList({
                     <>
                         <div className="flex items-center justify-between gap-2">
                             <span className="font-medium">{squad.name}</span>
-                            {squad.count !== undefined && (
-                                <span className="numeric text-xs text-muted-foreground">{squad.count}</span>
-                            )}
+                            {squad.count !== undefined && <span className="numeric text-xs text-muted-foreground">{squad.count}</span>}
                         </div>
                         <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
                             <span>{squad.leader ?? 'TBA'}</span>
@@ -244,11 +225,7 @@ function SquadsList({
                                 <span
                                     className={cn(
                                         'numeric',
-                                        squad.voiceRate >= 50
-                                            ? 'text-success'
-                                            : squad.voiceRate >= 25
-                                              ? 'text-warning'
-                                              : 'text-destructive',
+                                        squad.voiceRate >= 50 ? 'text-success' : squad.voiceRate >= 25 ? 'text-warning' : 'text-destructive',
                                     )}
                                 >
                                     {squad.voiceRate}%
@@ -268,10 +245,7 @@ function SquadsList({
                                 setHoverId: setDropHoverId,
                                 onDrop,
                             })}
-                            className={cn(
-                                'block px-3 py-2.5 text-sm transition-colors',
-                                dropHoverId === squad.id && 'bg-primary/10',
-                            )}
+                            className={cn('block px-3 py-2.5 text-sm transition-colors', dropHoverId === squad.id && 'bg-primary/10')}
                         >
                             {inner}
                         </div>
@@ -282,10 +256,7 @@ function SquadsList({
                     <Link
                         key={squad.url}
                         href={squad.url}
-                        className={cn(
-                            'block px-3 py-2.5 text-sm transition-colors hover:bg-muted/50',
-                            squad.current && 'bg-primary/10',
-                        )}
+                        className={cn('block px-3 py-2.5 text-sm transition-colors hover:bg-muted/50', squad.current && 'bg-primary/10')}
                     >
                         {inner}
                     </Link>

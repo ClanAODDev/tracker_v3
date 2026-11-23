@@ -74,7 +74,7 @@ export default function AppLayout({ header, width = 'default', children }: Props
                 <SheetContent side={navSide} showCloseButton={false} className="w-72 p-0">
                     <SheetTitle className="flex h-14 items-center justify-between border-b border-border px-5">
                         <TrackerHomeLink />
-                        <SheetClose className="rounded-xs text-muted-foreground opacity-70 transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring">
+                        <SheetClose className="rounded-xs text-muted-foreground opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:outline-hidden">
                             <XIcon className="size-4" />
                             <span className="sr-only">Close</span>
                         </SheetClose>
