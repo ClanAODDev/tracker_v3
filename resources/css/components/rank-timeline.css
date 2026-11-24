@@ -1,5 +1,5 @@
 /* Rank timeline — a horizontal "circuit trace" of a member's rank progression.
-   Angular diamond nodes wired by rank-coloured track segments; the newest
+   Angular diamond nodes wired by neutral track segments; the newest
    rank sits under a pulsing bracket. Markers and connector traces both start
    at the container's 2.5rem top padding, so the trace lands on marker centre
    (5.5px = half the 11px diamond) with no per-element offset maths.
@@ -59,7 +59,7 @@
     overflow-y: hidden;
 }
 
-/* Track segment between two nodes — coloured by the rank being promoted into. */
+/* Track segment between two nodes. */
 .rank-timeline .timeline-connector {
     flex: 1 1 2.5rem;
     min-width: 2rem;
@@ -82,17 +82,11 @@
     right: -1px;
     top: 5px;
     height: 2px;
-    background: color-mix(in srgb, var(--seg-color, var(--primary)) 28%, transparent);
+    background: var(--border-strong);
     transform-origin: left center;
     transform: scaleX(0);
     animation: rank-timeline-trace-draw 0.4s ease-out forwards;
     animation-delay: calc(0.25s + var(--i, 0) * 0.07s);
-}
-
-/* The final segment glows — that's the current rank. */
-.rank-timeline > span.timeline-connector:last-of-type::before {
-    background: color-mix(in srgb, var(--seg-color, var(--primary)) 60%, transparent);
-    box-shadow: 0 0 6px -2px var(--seg-color, var(--primary));
 }
 
 .rank-timeline .timeline-node {
