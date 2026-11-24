@@ -1,5 +1,7 @@
 <?php
 
+use Pdo\Mysql;
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -56,7 +58,7 @@ return [
             'engine'                              => null,
             'mask_bindings_in_exception_messages' => env('DB_MASK_BINDINGS', true),
             'options'                             => extension_loaded('pdo_mysql') ? array_filter([
-                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                (PHP_VERSION_ID >= 80500 ? Mysql::ATTR_SSL_CA : PDO::MYSQL_ATTR_SSL_CA) => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
         ],
 

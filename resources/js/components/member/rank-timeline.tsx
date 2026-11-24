@@ -46,15 +46,7 @@ export function RankTimeline({ timeline }: { timeline: RankTimelineData }) {
                     return (
                         <Fragment key={i}>
                             {i > 0 && (
-                                <span
-                                    className="timeline-connector"
-                                    style={
-                                        {
-                                            '--i': i,
-                                            '--seg-color': node.rankColor ?? undefined,
-                                        } as React.CSSProperties
-                                    }
-                                >
+                                <span className="timeline-connector" style={{ '--i': i } as React.CSSProperties}>
                                     {prev?.duration ?? ''}
                                 </span>
                             )}
