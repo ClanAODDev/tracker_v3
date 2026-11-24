@@ -10,7 +10,7 @@ const BUCKET_TEXT = ['text-success', 'text-warning', 'text-destructive', 'text-m
 function Stat({ label, value, tone, title }: { label: string; value: string; tone?: string; title?: string }) {
     return (
         <div title={title}>
-            <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</p>
+            <p className="text-[11px] tracking-wide text-muted-foreground uppercase">{label}</p>
             <p className={cn('numeric text-lg font-semibold', tone)}>{value}</p>
         </div>
     );
@@ -31,11 +31,7 @@ export function UnitStatsPanel({ stats }: { stats: UnitStats }) {
             {(stats.onLeaveCount > 0 || stats.inactiveCount > 0) && (
                 <div className="grid grid-cols-2 gap-3 rounded-md border border-border bg-card p-4">
                     {stats.onLeaveCount > 0 && (
-                        <Stat
-                            label="On leave"
-                            value={String(stats.onLeaveCount)}
-                            title="Members with an active leave of absence"
-                        />
+                        <Stat label="On leave" value={String(stats.onLeaveCount)} title="Members with an active leave of absence" />
                     )}
                     {stats.inactiveCount > 0 && (
                         <Stat
@@ -50,11 +46,7 @@ export function UnitStatsPanel({ stats }: { stats: UnitStats }) {
 
             <div className="grid grid-cols-2 gap-3 rounded-md border border-border bg-card p-4">
                 <Stat label="Avg tenure" value={`${stats.avgTenureYears}y`} title="Average time in AOD" />
-                <Stat
-                    label="Officer ratio"
-                    value={`${stats.officerCount}/${stats.memberCount}`}
-                    title="Officers (LCpl+) to members"
-                />
+                <Stat label="Officer ratio" value={`${stats.officerCount}/${stats.memberCount}`} title="Officers (LCpl+) to members" />
             </div>
 
             {total > 0 && (
@@ -79,9 +71,7 @@ export function UnitStatsPanel({ stats }: { stats: UnitStats }) {
                                     <span className={cn('size-1.5 rounded-full', BUCKET_TONE[i] ?? 'bg-muted')} />
                                     {labelText}
                                 </span>
-                                <span className={cn('numeric', BUCKET_TEXT[i] ?? 'text-muted-foreground')}>
-                                    {graph.values[i]}
-                                </span>
+                                <span className={cn('numeric', BUCKET_TEXT[i] ?? 'text-muted-foreground')}>{graph.values[i]}</span>
                             </li>
                         ))}
                     </ul>

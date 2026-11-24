@@ -15,14 +15,7 @@ interface RetentionProps {
     topRecruiters: Array<{ rankName: string; recruits: number; url: string }>;
 }
 
-export default function RetentionReport({
-    division,
-    range,
-    stats,
-    totalRecruitCount,
-    series,
-    topRecruiters,
-}: RetentionProps) {
+export default function RetentionReport({ division, range, stats, totalRecruitCount, series, topRecruiters }: RetentionProps) {
     return (
         <ReportShell divisionName={division.name} divisionSlug={division.slug} title="Member retention" active="retention">
             <Head title={`Retention · ${division.name}`} />
@@ -75,10 +68,7 @@ export default function RetentionReport({
                                 className="flex items-center gap-3 p-3 text-sm transition-colors hover:bg-accent"
                             >
                                 <span
-                                    className={cn(
-                                        'numeric w-5 text-center text-xs',
-                                        i < 3 ? 'font-semibold text-primary' : 'text-muted-foreground',
-                                    )}
+                                    className={cn('numeric w-5 text-center text-xs', i < 3 ? 'font-semibold text-primary' : 'text-muted-foreground')}
                                 >
                                     {i + 1}
                                 </span>

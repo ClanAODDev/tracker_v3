@@ -4,12 +4,14 @@ namespace App\Filament\Mod\Resources;
 
 use App\Enums\Ability;
 use App\Enums\Rank;
+use App\Filament\Forms\Components\HeroImagePositioner;
 use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
 use App\Filament\Mod\Resources\DivisionResource\Pages\ListDivisions;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\MemberFieldsRelationManager;
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Filament\Mod\Resources\DivisionResource\Schemas\StructureSection;
 use App\Models\Division;
+use App\Support\HeroImageOptimizer;
 use App\Support\ImageUploads;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
@@ -33,6 +35,7 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class DivisionResource extends Resource
 {
@@ -359,9 +362,35 @@ class DivisionResource extends Resource
                                 Section::make('SEO')
                                     ->schema([
                                         Textarea::make('settings.meta_description')
-                                            ->label('Meta Description')
-                                            ->maxLength(100)
-                                            ->helperText('60-100 character summary of division for SEO purposes. Exposed in URL previews / unfurling.'),
+                                            ->label('Link Preview Description')
+                                            ->maxLength(160)
+                                            ->placeholder('Squad up for Warzone and multiplayer nights with an organized, mature Call of Duty community.')
+                                            ->helperText('One or two sentences about your division, shown under links to your division page and in search results. Write a sentence, not a list of keywords. Leave blank to use your division name and member count.'),
+                                    ]),
+
+                                Section::make('Header Image')
+                                    ->description('Shown full width behind your division name at the top of your division page.')
+                                    ->schema([
+                                        FileUpload::make('hero_image')
+                                            ->hiddenLabel()
+                                            ->acceptedFileTypes(ImageUploads::RASTER_TYPES)
+                                            ->disk('public')
+                                            ->directory('division-hero-images')
+                                            ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file) => HeroImageOptimizer::store($file->get(), 'division-hero-images'))
+                                            ->maxSize(5120)
+                                            ->imagePreviewHeight('200')
+                                            ->openable()
+                                            ->downloadable()
+                                            ->imageEditor()
+                                            ->imageEditorAspectRatios([
+                                                '21:9',
+                                                '16:9',
+                                            ])
+                                            ->live()
+                                            ->afterStateUpdated(HeroImagePositioner::resetWhenImageReplaced('hero_image_position'))
+                                            ->helperText('No text or logos: the page adds your division name and icon. Use a wide, atmospheric image (landscape, at least 1920 pixels wide, 5MB max). The site dims and tints it to match the theme. Without one, your first screenshot is used.'),
+                                        HeroImagePositioner::make('hero_image_position')
+                                            ->label('Position'),
                                     ]),
 
                                 Section::make('Screenshot Gallery')

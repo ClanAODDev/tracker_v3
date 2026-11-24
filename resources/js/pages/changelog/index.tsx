@@ -81,12 +81,18 @@ export default function ReleaseNotes({ notes, pagination, manageUrl }: Props) {
                         <span>{pagination.total} release notes</span>
                         <div className="flex items-center gap-2">
                             {pagination.prevUrl && (
-                                <Link href={pagination.prevUrl} className="rounded-md border border-border px-3 py-1.5 hover:border-primary/30 hover:text-foreground">
+                                <Link
+                                    href={pagination.prevUrl}
+                                    className="rounded-md border border-border px-3 py-1.5 hover:border-primary/30 hover:text-foreground"
+                                >
                                     Newer
                                 </Link>
                             )}
                             {pagination.nextUrl && (
-                                <Link href={pagination.nextUrl} className="rounded-md border border-border px-3 py-1.5 hover:border-primary/30 hover:text-foreground">
+                                <Link
+                                    href={pagination.nextUrl}
+                                    className="rounded-md border border-border px-3 py-1.5 hover:border-primary/30 hover:text-foreground"
+                                >
                                     Older
                                 </Link>
                             )}

@@ -8,8 +8,12 @@
    Used by resources/js/components/tron-spinner.tsx. */
 
 @keyframes tron-spinner-trace {
-    from { stroke-dashoffset: 0; }
-    to   { stroke-dashoffset: -216; }
+    from {
+        stroke-dashoffset: 0;
+    }
+    to {
+        stroke-dashoffset: -216;
+    }
 }
 
 .tron-spinner-trace {
@@ -17,5 +21,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .tron-spinner-trace { animation: none; }
+    .tron-spinner-trace {
+        animation: none;
+    }
 }

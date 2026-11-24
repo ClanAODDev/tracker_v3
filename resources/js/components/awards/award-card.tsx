@@ -28,27 +28,14 @@ function counted(noun: string, n: number) {
     return `${n.toLocaleString()} ${noun}${n === 1 ? '' : 's'}`;
 }
 
-function CardShell({
-    href,
-    rarity,
-    image,
-    children,
-}: {
-    href: string;
-    rarity: string;
-    image: string | null;
-    children: React.ReactNode;
-}) {
+function CardShell({ href, rarity, image, children }: { href: string; rarity: string; image: string | null; children: React.ReactNode }) {
     return (
         <Link
             href={href}
             className="group flex flex-col items-center rounded-md border border-border bg-card p-3 text-center transition-colors hover:border-[color:var(--rarity)]"
             style={{ '--rarity': rarityColor(rarity) } as React.CSSProperties}
         >
-            <span
-                className="mb-2 h-0.5 w-8 rounded-full"
-                style={{ background: rarityColor(rarity) }}
-            />
+            <span className="mb-2 h-0.5 w-8 rounded-full" style={{ background: rarityColor(rarity) }} />
             <div className="flex size-16 items-center justify-center">
                 {image ? (
                     <img src={image} alt="" loading="lazy" className="max-h-16 max-w-full object-contain" />

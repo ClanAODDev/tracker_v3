@@ -15,11 +15,7 @@ export function TileLink({
     hover?: boolean;
     children: ReactNode;
 }) {
-    const className = cn(
-        'flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors',
-        hover && 'hover:border-primary/40',
-        tint,
-    );
+    const className = cn('flex items-center gap-2 rounded-md border px-3 py-2 text-sm transition-colors', hover && 'hover:border-primary/40', tint);
     if (onClick) {
         return (
             <button type="button" onClick={onClick} className={className}>

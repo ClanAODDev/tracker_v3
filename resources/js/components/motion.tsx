@@ -27,15 +27,7 @@ export function FillBar({ pct, className, style }: { pct: number; className?: st
  * Wraps a value that updates in place and pulses it crimson on change — never on
  * first render.
  */
-export function FlashOnChange({
-    value,
-    children,
-    className,
-}: {
-    value: string | number;
-    children: ReactNode;
-    className?: string;
-}) {
+export function FlashOnChange({ value, children, className }: { value: string | number; children: ReactNode; className?: string }) {
     const [flashing, setFlashing] = useState(false);
     const first = useRef(true);
 

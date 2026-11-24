@@ -83,10 +83,7 @@ function EditScopesDialog({ token, availableScopes }: { token: Token; availableS
                     availableScopes={availableScopes}
                     selected={update.data.scopes}
                     onToggle={(value, checked) =>
-                        update.setData(
-                            'scopes',
-                            checked ? [...update.data.scopes, value] : update.data.scopes.filter((s) => s !== value),
-                        )
+                        update.setData('scopes', checked ? [...update.data.scopes, value] : update.data.scopes.filter((s) => s !== value))
                     }
                 />
                 <DialogFooter>
@@ -119,13 +116,12 @@ export default function DeveloperIndex({ tokens, plainTextToken, availableScopes
             <div className="max-w-3xl space-y-8">
                 <div className="space-y-3 text-sm text-muted-foreground">
                     <p>
-                        AOD provides several consumable APIs intended solely for internal community use. AOD data,
-                        tokens, and other resources are not to be shared outside the AOD community.
+                        AOD provides several consumable APIs intended solely for internal community use. AOD data, tokens, and other resources are not
+                        to be shared outside the AOD community.
                     </p>
                     <p className="text-destructive">
                         <strong>
-                            Misuse of these resources will result in revocation of access, and could lead to permanent
-                            removal from the clan.
+                            Misuse of these resources will result in revocation of access, and could lead to permanent removal from the clan.
                         </strong>
                     </p>
                 </div>
@@ -134,9 +130,7 @@ export default function DeveloperIndex({ tokens, plainTextToken, availableScopes
                     <div className="tron-corners rounded-md border border-primary/30 bg-primary/5 p-4">
                         <p className="text-sm font-medium">Your new token — copy it now, it won't be shown again.</p>
                         <div className="mt-2 flex items-center gap-2">
-                            <code className="flex-1 truncate rounded bg-muted px-2 py-1.5 font-mono text-xs">
-                                {plainTextToken}
-                            </code>
+                            <code className="flex-1 truncate rounded bg-muted px-2 py-1.5 font-mono text-xs">{plainTextToken}</code>
                             <Button
                                 size="sm"
                                 variant="outline"
@@ -161,9 +155,7 @@ export default function DeveloperIndex({ tokens, plainTextToken, availableScopes
                                 <li key={token.id} className="flex items-center justify-between gap-4 p-4">
                                     <div>
                                         <p className="text-sm font-medium">{token.name}</p>
-                                        <p className="numeric text-xs text-muted-foreground">
-                                            Last used: {token.lastUsedAt ?? 'never'}
-                                        </p>
+                                        <p className="numeric text-xs text-muted-foreground">Last used: {token.lastUsedAt ?? 'never'}</p>
                                         <div className="mt-1.5 flex flex-wrap gap-1.5">
                                             {token.scopes.length === 0 ? (
                                                 <span className="text-xs text-muted-foreground">No scopes</span>
@@ -225,9 +217,7 @@ export default function DeveloperIndex({ tokens, plainTextToken, availableScopes
                                 <KeyRound /> Create token
                             </Button>
                         </div>
-                        {create.errors.token_name && (
-                            <p className="text-sm text-destructive">{create.errors.token_name}</p>
-                        )}
+                        {create.errors.token_name && <p className="text-sm text-destructive">{create.errors.token_name}</p>}
 
                         <div className="grid gap-1.5">
                             <Label>Scopes</Label>
@@ -235,10 +225,7 @@ export default function DeveloperIndex({ tokens, plainTextToken, availableScopes
                                 availableScopes={availableScopes}
                                 selected={create.data.scopes}
                                 onToggle={(value, checked) =>
-                                    create.setData(
-                                        'scopes',
-                                        checked ? [...create.data.scopes, value] : create.data.scopes.filter((s) => s !== value),
-                                    )
+                                    create.setData('scopes', checked ? [...create.data.scopes, value] : create.data.scopes.filter((s) => s !== value))
                                 }
                             />
                         </div>

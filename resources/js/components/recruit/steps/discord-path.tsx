@@ -54,9 +54,7 @@ export function DiscordPath({ form }: { form: RecruitForm }) {
                         Show all pending registrations
                     </label>
                     {form.pending.length === 0 && !form.loadingPending && (
-                        <p className="text-xs text-muted-foreground">
-                            No pending Discord registrations found for this division.
-                        </p>
+                        <p className="text-xs text-muted-foreground">No pending Discord registrations found for this division.</p>
                     )}
                 </div>
             ) : (
@@ -85,25 +83,20 @@ export function DiscordPath({ form }: { form: RecruitForm }) {
                             <p className="flex items-start gap-2 text-success">
                                 <CircleCheck className="mt-0.5 size-4 shrink-0" />
                                 <span>
-                                    Existing forum account: <strong>{form.emailCheck.username}</strong> (ID{' '}
-                                    {form.emailCheck.userId}). It will be used for recruitment.
+                                    Existing forum account: <strong>{form.emailCheck.username}</strong> (ID {form.emailCheck.userId}). It will be used
+                                    for recruitment.
                                 </span>
                             </p>
                         ) : form.emailCheck.checked && form.emailCheck.found && !form.emailCheck.eligible ? (
                             <p className="flex items-start gap-2 text-warning">
                                 <TriangleAlert className="mt-0.5 size-4 shrink-0" />
                                 <span>
-                                    A forum account exists (<strong>{form.emailCheck.username}</strong>) but is not
-                                    eligible:{' '}
-                                    {form.emailCheck.groupId === 3
-                                        ? 'pending email verification.'
-                                        : form.emailCheck.rejectionReason}
+                                    A forum account exists (<strong>{form.emailCheck.username}</strong>) but is not eligible:{' '}
+                                    {form.emailCheck.groupId === 3 ? 'pending email verification.' : form.emailCheck.rejectionReason}
                                 </span>
                             </p>
                         ) : form.emailCheck.checked && !form.emailCheck.found ? (
-                            <p className="text-muted-foreground">
-                                No existing forum account found. One will be created during recruitment.
-                            </p>
+                            <p className="text-muted-foreground">No existing forum account found. One will be created during recruitment.</p>
                         ) : null}
                     </div>
                 </div>

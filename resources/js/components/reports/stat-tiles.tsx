@@ -47,17 +47,8 @@ export function StatTiles({ stats }: { stats: Stat[] }) {
                     </div>
                     <p className="mt-0.5 text-xs text-muted-foreground">{stat.label}</p>
                     {stat.change != null && stat.change.value !== 0 && (
-                        <p
-                            className={cn(
-                                'mt-1 flex items-center gap-1 text-xs',
-                                stat.change.value > 0 ? 'text-success' : 'text-destructive',
-                            )}
-                        >
-                            {stat.change.value > 0 ? (
-                                <ArrowUp className="size-3" />
-                            ) : (
-                                <ArrowDown className="size-3" />
-                            )}
+                        <p className={cn('mt-1 flex items-center gap-1 text-xs', stat.change.value > 0 ? 'text-success' : 'text-destructive')}>
+                            {stat.change.value > 0 ? <ArrowUp className="size-3" /> : <ArrowDown className="size-3" />}
                             {Math.abs(stat.change.value)}
                             {stat.change.suffix}
                         </p>

@@ -30,10 +30,7 @@ export function usePartialSearchMinChars(): number {
     return usePage<SharedProps>().props.memberSearch?.minChars ?? 2;
 }
 
-export function useMemberSearch(
-    query: string,
-    { minChars: minCharsOverride, delayMs = 250, jitterMs = 0 }: Options = {},
-): State {
+export function useMemberSearch(query: string, { minChars: minCharsOverride, delayMs = 250, jitterMs = 0 }: Options = {}): State {
     const sharedMinChars = usePartialSearchMinChars();
     const minChars = minCharsOverride ?? sharedMinChars;
     const [state, setState] = useState<Omit<State, 'loading'>>({ results: [], matchedQuery: '' });
@@ -51,12 +48,15 @@ export function useMemberSearch(
         }
 
         setLoading(true);
-        const timer = setTimeout(() => {
-            getJson<{ results: MemberSearchResult[] }>(`/search/members?q=${encodeURIComponent(q)}`)
-                .then((res) => id === reqId.current && setState({ results: res.results, matchedQuery: q }))
-                .catch(() => id === reqId.current && setState({ results: [], matchedQuery: q }))
-                .finally(() => id === reqId.current && setLoading(false));
-        }, delayMs + Math.random() * jitterMs);
+        const timer = setTimeout(
+            () => {
+                getJson<{ results: MemberSearchResult[] }>(`/search/members?q=${encodeURIComponent(q)}`)
+                    .then((res) => id === reqId.current && setState({ results: res.results, matchedQuery: q }))
+                    .catch(() => id === reqId.current && setState({ results: [], matchedQuery: q }))
+                    .finally(() => id === reqId.current && setLoading(false));
+            },
+            delayMs + Math.random() * jitterMs,
+        );
 
         return () => clearTimeout(timer);
     }, [query, minChars, delayMs, jitterMs]);

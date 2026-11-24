@@ -5,13 +5,7 @@ import { useMemo, useState } from 'react';
 import { MemberCombobox, type MemberResult } from '@/components/member-combobox';
 import { StatTiles } from '@/components/reports/stat-tiles';
 import { Button } from '@/components/ui/button';
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -75,11 +69,7 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
             header={{
                 eyebrow: division.name,
                 title: 'Part-timers',
-                breadcrumbs: [
-                    { label: 'Divisions' },
-                    { label: division.name, href: `/divisions/${division.slug}` },
-                    { label: 'Part-timers' },
-                ],
+                breadcrumbs: [{ label: 'Divisions' }, { label: division.name, href: `/divisions/${division.slug}` }, { label: 'Part-timers' }],
                 actions: canManage ? (
                     <Button size="sm" onClick={() => setAddOpen(true)}>
                         <Plus /> Add part-timer
@@ -103,20 +93,13 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                     <div className="rounded-md border border-border bg-card p-10 text-center">
                         <Users className="mx-auto size-8 text-muted-foreground" />
                         <h3 className="mt-3 text-sm font-semibold">No part-time members</h3>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                            This division currently has no part-time members assigned.
-                        </p>
+                        <p className="mt-1 text-sm text-muted-foreground">This division currently has no part-time members assigned.</p>
                     </div>
                 ) : (
                     <>
                         <div className="relative max-w-xs">
-                            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                            <Input
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                placeholder="Search members…"
-                                className="pl-8"
-                            />
+                            <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
+                            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search members…" className="pl-8" />
                         </div>
 
                         <div className="overflow-x-auto rounded-md border border-border">
@@ -139,27 +122,16 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                                                     <Link href={member.profileUrl} className="hover:text-primary">
                                                         {member.name}
                                                     </Link>{' '}
-                                                    <span className="text-xs text-muted-foreground">
-                                                        {member.rankAbbr}
-                                                    </span>
+                                                    <span className="text-xs text-muted-foreground">{member.rankAbbr}</span>
                                                 </TableCell>
-                                                <TableCell>
-                                                    {member.primaryDivision ?? (
-                                                        <span className="text-destructive">None</span>
-                                                    )}
-                                                </TableCell>
+                                                <TableCell>{member.primaryDivision ?? <span className="text-destructive">None</span>}</TableCell>
                                                 <TableCell>
                                                     {member.handles.length > 0 ? (
                                                         <div className="flex flex-col gap-0.5">
                                                             {member.handles.map((handle) => (
-                                                                <span
-                                                                    key={handle.label}
-                                                                    className="inline-flex items-center gap-1.5"
-                                                                >
+                                                                <span key={handle.label} className="inline-flex items-center gap-1.5">
                                                                     {labelHandles && (
-                                                                        <span className="text-xs text-muted-foreground">
-                                                                            {handle.label}
-                                                                        </span>
+                                                                        <span className="text-xs text-muted-foreground">{handle.label}</span>
                                                                     )}
                                                                     <code className="numeric text-xs">{handle.value}</code>
                                                                     {handle.url && (
@@ -182,7 +154,7 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                                                 <TableCell>
                                                     <span
                                                         className={cn(
-                                                            'inline-block rounded border px-1.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide',
+                                                            'inline-block rounded border px-1.5 py-0.5 text-[0.65rem] font-semibold tracking-wide uppercase',
                                                             badge.className,
                                                         )}
                                                     >
@@ -197,11 +169,7 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                                                             className="size-8 text-destructive hover:text-destructive"
                                                             title="Remove from part-timers"
                                                             onClick={() => {
-                                                                if (
-                                                                    confirm(
-                                                                        `Remove ${member.name} from ${division.name} part-timers?`,
-                                                                    )
-                                                                ) {
+                                                                if (confirm(`Remove ${member.name} from ${division.name} part-timers?`)) {
                                                                     router.get(member.removeUrl, {}, { preserveScroll: true });
                                                                 }
                                                             }}
@@ -229,9 +197,7 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                         <div className="grid gap-1.5">
                             <Label>Member</Label>
                             <MemberCombobox value={selected} onSelect={setSelected} />
-                            {form.errors.member && (
-                                <p className="text-xs text-destructive">{form.errors.member}</p>
-                            )}
+                            {form.errors.member && <p className="text-xs text-destructive">{form.errors.member}</p>}
                         </div>
                         {division.handleTypes.map((type) => (
                             <div key={type.id} className="grid gap-1.5">
@@ -241,17 +207,13 @@ export default function PartTime({ division, members, stats, canManage, addUrl }
                                 <Input
                                     id={`handle_${type.id}`}
                                     value={form.data.handles[type.id] ?? ''}
-                                    onChange={(e) =>
-                                        form.setData('handles', { ...form.data.handles, [type.id]: e.target.value })
-                                    }
+                                    onChange={(e) => form.setData('handles', { ...form.data.handles, [type.id]: e.target.value })}
                                     placeholder={`Their ${type.label} name…`}
                                 />
                                 <p className="text-xs text-muted-foreground">
                                     {type.hint ?? `Sets their ${type.label} handle for ${division.name}.`}
                                 </p>
-                                {formErrors[`handles.${type.id}`] && (
-                                    <p className="text-xs text-destructive">{formErrors[`handles.${type.id}`]}</p>
-                                )}
+                                {formErrors[`handles.${type.id}`] && <p className="text-xs text-destructive">{formErrors[`handles.${type.id}`]}</p>}
                             </div>
                         ))}
                         <DialogFooter>

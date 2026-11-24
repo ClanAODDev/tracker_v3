@@ -264,4 +264,50 @@ final class DivisionApiTest extends TestCase
         $response->assertOk();
         $response->assertJsonPath('data.division.leadership.0.discord_id', '123456789012345678');
     }
+
+    #[Test]
+    public function the_site_view_includes_the_hero_image_url()
+    {
+        Sanctum::actingAs($this->user, ['division:read']);
+
+        $division = Division::factory(['abbreviation' => 'hero', 'hero_image' => 'division-hero-images/hero.jpg'])->create();
+        $plain    = Division::factory(['abbreviation' => 'plain', 'name' => 'Plain Division'])->create();
+
+        $this->json('get', route('v1.divisions.show', $division->slug), ['include-site' => true])
+            ->assertOk()
+            ->assertJsonPath('data.division.hero_image', asset('storage/division-hero-images/hero.jpg'));
+
+        $this->json('get', route('v1.divisions.show', $plain->slug), ['include-site' => true])
+            ->assertOk()
+            ->assertJsonPath('data.division.hero_image', null);
+
+        $this->json('get', route('v1.divisions.show', $division->slug))
+            ->assertOk()
+            ->assertJsonMissingPath('data.division.hero_image');
+    }
+
+    #[Test]
+    public function the_site_view_includes_the_hero_image_position_only_with_an_image()
+    {
+        Sanctum::actingAs($this->user, ['division:read']);
+
+        $positioned = Division::factory([
+            'abbreviation'        => 'pos',
+            'hero_image'          => 'division-hero-images/hero.jpg',
+            'hero_image_position' => '30% 70%',
+        ])->create();
+        $orphaned = Division::factory([
+            'abbreviation'        => 'orph',
+            'name'                => 'Orphan Division',
+            'hero_image_position' => '10% 10%',
+        ])->create();
+
+        $this->json('get', route('v1.divisions.show', $positioned->slug), ['include-site' => true])
+            ->assertOk()
+            ->assertJsonPath('data.division.hero_image_position', '30% 70%');
+
+        $this->json('get', route('v1.divisions.show', $orphaned->slug), ['include-site' => true])
+            ->assertOk()
+            ->assertJsonPath('data.division.hero_image_position', null);
+    }
 }

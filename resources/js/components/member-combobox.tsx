@@ -2,14 +2,7 @@ import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-} from '@/components/ui/command';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { useMemberSearch, type MemberSearchResult } from '@/hooks/use-member-search';
 import { cn } from '@/lib/utils';
@@ -52,9 +45,7 @@ export function MemberCombobox({ value, onSelect, placeholder = 'Search membersâ
                                 <Loader2 className="size-4 animate-spin" /> Searchingâ€¦
                             </div>
                         )}
-                        {!loading && query.trim().length >= 2 && results.length === 0 && (
-                            <CommandEmpty>No members found.</CommandEmpty>
-                        )}
+                        {!loading && query.trim().length >= 2 && results.length === 0 && <CommandEmpty>No members found.</CommandEmpty>}
                         {!loading && query.trim().length < 2 && (
                             <div className="py-6 text-center text-sm text-muted-foreground">Type at least 2 characters.</div>
                         )}
@@ -69,15 +60,9 @@ export function MemberCombobox({ value, onSelect, placeholder = 'Search membersâ
                                             setOpen(false);
                                         }}
                                     >
-                                        <Check
-                                            className={cn(
-                                                'size-4',
-                                                value?.guid === member.guid ? 'opacity-100' : 'opacity-0',
-                                            )}
-                                        />
+                                        <Check className={cn('size-4', value?.guid === member.guid ? 'opacity-100' : 'opacity-0')} />
                                         <span>
-                                            {member.rankName}{' '}
-                                            <span className="text-muted-foreground">Â· {member.division}</span>
+                                            {member.rankName} <span className="text-muted-foreground">Â· {member.division}</span>
                                         </span>
                                     </CommandItem>
                                 ))}

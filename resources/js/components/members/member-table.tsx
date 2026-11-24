@@ -32,14 +32,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -90,21 +83,10 @@ function loadState(key: string): Partial<PersistedState> {
     }
 }
 
-export function MemberTable({
-    rows,
-    division,
-    assignmentDepth,
-    bulk,
-    tagFilter,
-    memberFields,
-    storageKey,
-}: Props) {
+export function MemberTable({ rows, division, assignmentDepth, bulk, tagFilter, memberFields, storageKey }: Props) {
     const persisted = useMemo(() => loadState(storageKey), [storageKey]);
     const unitLevels = useMemo(
-        () =>
-            division.hasUnits
-                ? division.levels.filter((level) => level.depth >= assignmentDepth).sort((a, b) => a.depth - b.depth)
-                : [],
+        () => (division.hasUnits ? division.levels.filter((level) => level.depth >= assignmentDepth).sort((a, b) => a.depth - b.depth) : []),
         [division.hasUnits, division.levels, assignmentDepth],
     );
 
@@ -256,7 +238,7 @@ export function MemberTable({
         <div className="space-y-3">
             <div className="flex flex-wrap items-center gap-2">
                 <div className="relative">
-                    <Search className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Search className="pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                         value={globalFilter}
                         onChange={(e) => setGlobalFilter(e.target.value)}
@@ -272,9 +254,7 @@ export function MemberTable({
                             <Button variant="outline" size="sm">
                                 Tags
                                 {selectedTags.size > 0 && (
-                                    <span className="numeric rounded bg-primary/15 px-1 text-primary">
-                                        {selectedTags.size}
-                                    </span>
+                                    <span className="numeric rounded bg-primary/15 px-1 text-primary">{selectedTags.size}</span>
                                 )}
                             </Button>
                         </DropdownMenuTrigger>
@@ -307,9 +287,7 @@ export function MemberTable({
                             <Button variant="outline" size="sm">
                                 Units
                                 {selectedUnits.size > 0 && (
-                                    <span className="numeric rounded bg-primary/15 px-1 text-primary">
-                                        {selectedUnits.size}
-                                    </span>
+                                    <span className="numeric rounded bg-primary/15 px-1 text-primary">{selectedUnits.size}</span>
                                 )}
                             </Button>
                         </DropdownMenuTrigger>
@@ -346,9 +324,7 @@ export function MemberTable({
                             <Button variant="outline" size="sm">
                                 Fields
                                 {totalSelectedFieldValues > 0 && (
-                                    <span className="numeric rounded bg-primary/15 px-1 text-primary">
-                                        {totalSelectedFieldValues}
-                                    </span>
+                                    <span className="numeric rounded bg-primary/15 px-1 text-primary">{totalSelectedFieldValues}</span>
                                 )}
                             </Button>
                         </DropdownMenuTrigger>
@@ -407,22 +383,14 @@ export function MemberTable({
                     variant="outline"
                     size="sm"
                     onClick={() => setActivityStyle((s) => (s === 'row' ? 'dot' : 'row'))}
-                    title={
-                        activityStyle === 'row'
-                            ? 'Activity shading: whole row'
-                            : 'Activity shading: dot only'
-                    }
+                    title={activityStyle === 'row' ? 'Activity shading: whole row' : 'Activity shading: dot only'}
                     aria-label="Toggle activity shading"
                 >
                     {activityStyle === 'row' ? <Rows3 /> : <CircleDot />}
                 </Button>
 
                 {bulk.enabled && (
-                    <Button
-                        variant={bulkMode ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => setBulkMode((v) => !v)}
-                    >
+                    <Button variant={bulkMode ? 'default' : 'outline'} size="sm" onClick={() => setBulkMode((v) => !v)}>
                         {bulkMode ? 'Exit bulk mode' : 'Bulk mode'}
                     </Button>
                 )}
@@ -445,13 +413,7 @@ export function MemberTable({
                                             key={header.id}
                                             className={cn('text-xs', mobileColumnClass(header.column.id))}
                                             aria-sort={
-                                                !canSort
-                                                    ? undefined
-                                                    : sorted === 'asc'
-                                                      ? 'ascending'
-                                                      : sorted === 'desc'
-                                                        ? 'descending'
-                                                        : 'none'
+                                                !canSort ? undefined : sorted === 'asc' ? 'ascending' : sorted === 'desc' ? 'descending' : 'none'
                                             }
                                         >
                                             {header.isPlaceholder ? null : canSort ? (
@@ -460,10 +422,7 @@ export function MemberTable({
                                                     className="flex items-center gap-1 hover:text-foreground"
                                                     onClick={header.column.getToggleSortingHandler()}
                                                 >
-                                                    {flexRender(
-                                                        header.column.columnDef.header,
-                                                        header.getContext(),
-                                                    )}
+                                                    {flexRender(header.column.columnDef.header, header.getContext())}
                                                     {sorted === 'asc' ? (
                                                         <ArrowUp className="size-3" />
                                                     ) : sorted === 'desc' ? (
@@ -484,10 +443,7 @@ export function MemberTable({
                     <TableBody>
                         {table.getRowModel().rows.length === 0 ? (
                             <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="tron-hatch py-10 text-center text-muted-foreground"
-                                >
+                                <TableCell colSpan={columns.length} className="tron-hatch py-10 text-center text-muted-foreground">
                                     No members match your filters.
                                 </TableCell>
                             </TableRow>
@@ -504,8 +460,7 @@ export function MemberTable({
                                     )}
                                     onMouseDown={(e) => {
                                         if (!bulkMode) return;
-                                        if ((e.target as HTMLElement).closest('a, button, input, [role=checkbox]'))
-                                            return;
+                                        if ((e.target as HTMLElement).closest('a, button, input, [role=checkbox]')) return;
                                         if (e.button !== 0) return;
                                         dragging.current = true;
                                         dragValue.current = !row.getIsSelected();
@@ -533,7 +488,7 @@ export function MemberTable({
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                 <span className="flex items-center gap-1.5">
-                    <span className="rounded-sm border border-warning/40 bg-warning/10 px-1 font-mono text-[9px] font-semibold uppercase leading-[1.4] tracking-wide text-warning">
+                    <span className="rounded-sm border border-warning/40 bg-warning/10 px-1 font-mono text-[9px] leading-[1.4] font-semibold tracking-wide text-warning uppercase">
                         LOA
                     </span>
                     On leave

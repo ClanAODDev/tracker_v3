@@ -30,9 +30,7 @@ export interface RankTimelineData {
 function nodeTitle(node: TimelineNode): string {
     if (node.type === 'join') return `${node.label} · ${node.date}`;
     if (node.type === 'consolidated') return `${node.label} · ${node.dateRange}`;
-    return [`Promoted to ${node.rank}`, node.date, node.duration && `held ${node.duration}`]
-        .filter(Boolean)
-        .join(' · ');
+    return [`Promoted to ${node.rank}`, node.date, node.duration && `held ${node.duration}`].filter(Boolean).join(' · ');
 }
 
 export function RankTimeline({ timeline }: { timeline: RankTimelineData }) {
@@ -42,60 +40,60 @@ export function RankTimeline({ timeline }: { timeline: RankTimelineData }) {
 
     return (
         <div className="rank-timeline-wrapper">
-        <div className="rank-timeline">
-            {timeline.nodes.map((node, i) => {
-                const prev = timeline.nodes[i - 1];
-                return (
-                    <Fragment key={i}>
-                        {i > 0 && (
-                            <span
-                                className="timeline-connector"
+            <div className="rank-timeline">
+                {timeline.nodes.map((node, i) => {
+                    const prev = timeline.nodes[i - 1];
+                    return (
+                        <Fragment key={i}>
+                            {i > 0 && (
+                                <span
+                                    className="timeline-connector"
+                                    style={
+                                        {
+                                            '--i': i,
+                                            '--seg-color': node.rankColor ?? undefined,
+                                        } as React.CSSProperties
+                                    }
+                                >
+                                    {prev?.duration ?? ''}
+                                </span>
+                            )}
+                            <div
+                                className="timeline-node"
+                                title={nodeTitle(node)}
                                 style={
                                     {
                                         '--i': i,
-                                        '--seg-color': node.rankColor ?? undefined,
+                                        '--rank-color': node.rankColor ?? undefined,
                                     } as React.CSSProperties
                                 }
                             >
-                                {prev?.duration ?? ''}
-                            </span>
-                        )}
-                        <div
-                            className="timeline-node"
-                            title={nodeTitle(node)}
-                            style={
-                                {
-                                    '--i': i,
-                                    '--rank-color': node.rankColor ?? undefined,
-                                } as React.CSSProperties
-                            }
-                        >
-                            <span className={cn('timeline-marker', `marker-${node.type}`)} />
-                            <div className="timeline-content">
-                                {node.type === 'join' && (
-                                    <>
-                                        <p className="timeline-label">{node.label}</p>
-                                        <p className="timeline-date">{node.date}</p>
-                                    </>
-                                )}
-                                {node.type === 'consolidated' && (
-                                    <>
-                                        <span className="timeline-rank timeline-rank-consolidated">{node.label}</span>
-                                        <p className="timeline-date">{node.dateRange}</p>
-                                    </>
-                                )}
-                                {node.type === 'promotion' && (
-                                    <>
-                                        <span className="timeline-rank">{node.rank}</span>
-                                        <p className="timeline-date">{node.date}</p>
-                                    </>
-                                )}
+                                <span className={cn('timeline-marker', `marker-${node.type}`)} />
+                                <div className="timeline-content">
+                                    {node.type === 'join' && (
+                                        <>
+                                            <p className="timeline-label">{node.label}</p>
+                                            <p className="timeline-date">{node.date}</p>
+                                        </>
+                                    )}
+                                    {node.type === 'consolidated' && (
+                                        <>
+                                            <span className="timeline-rank timeline-rank-consolidated">{node.label}</span>
+                                            <p className="timeline-date">{node.dateRange}</p>
+                                        </>
+                                    )}
+                                    {node.type === 'promotion' && (
+                                        <>
+                                            <span className="timeline-rank">{node.rank}</span>
+                                            <p className="timeline-date">{node.date}</p>
+                                        </>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    </Fragment>
-                );
-            })}
-        </div>
+                        </Fragment>
+                    );
+                })}
+            </div>
         </div>
     );
 }

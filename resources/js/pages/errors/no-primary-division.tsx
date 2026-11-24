@@ -16,9 +16,7 @@ export default function NoPrimaryDivision({ impersonating }: Props) {
                 <div className="text-center">
                     <img src="/images/logo_v2.svg" alt="AOD" className="mx-auto size-12" />
                     <h1 className="mt-4 text-lg font-semibold">No primary division</h1>
-                    <p className="text-sm text-muted-foreground">
-                        You are no longer associated with a primary division.
-                    </p>
+                    <p className="text-sm text-muted-foreground">You are no longer associated with a primary division.</p>
                 </div>
 
                 <p className="mt-6 text-sm">
@@ -53,14 +51,8 @@ export default function NoPrimaryDivision({ impersonating }: Props) {
                     </a>
                 </div>
 
-                <p className="mt-4 text-xs text-muted-foreground">
-                    If you believe this is an error, speak with your intended division leadership.
-                </p>
-                {impersonating && (
-                    <p className="mt-2 text-xs text-warning">
-                        You appear to be impersonating. Try refreshing the page.
-                    </p>
-                )}
+                <p className="mt-4 text-xs text-muted-foreground">If you believe this is an error, speak with your intended division leadership.</p>
+                {impersonating && <p className="mt-2 text-xs text-warning">You appear to be impersonating. Try refreshing the page.</p>}
 
                 <Button variant="outline" size="sm" className="mt-6 w-full" asChild>
                     <Link href="/logout" method="post" as="button">

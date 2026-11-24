@@ -36,7 +36,9 @@ class DivisionBasicTransformer extends Transformer
         }
 
         if (request()->has('include-site')) {
-            $data['site_content'] = $item->site_content;
+            $data['site_content']        = $item->site_content;
+            $data['hero_image']          = $item->hero_image ? asset('storage/' . $item->hero_image) : null;
+            $data['hero_image_position'] = $item->hero_image ? $item->hero_image_position : null;
         }
 
         if (request()->has('include-screenshots')) {

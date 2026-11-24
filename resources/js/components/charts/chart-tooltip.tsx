@@ -10,15 +10,7 @@ interface TooltipEntry {
  * series identity. Matches the dataviz skill's "text never wears the series
  * colour" rule.
  */
-export function ChartTooltip({
-    active,
-    payload,
-    label,
-}: {
-    active?: boolean;
-    payload?: TooltipEntry[];
-    label?: string | number;
-}) {
+export function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: TooltipEntry[]; label?: string | number }) {
     if (!active || !payload?.length) return null;
 
     return (

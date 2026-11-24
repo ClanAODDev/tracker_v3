@@ -54,7 +54,7 @@ export default function MemberSearch({ query, results, partial, pagination }: Pr
 
             <div className="max-w-2xl space-y-4">
                 <form onSubmit={submit} className="relative">
-                    <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                    <Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                         autoFocus
                         value={value}
@@ -86,18 +86,13 @@ export default function MemberSearch({ query, results, partial, pagination }: Pr
                                     <div className="flex items-baseline justify-between gap-3">
                                         <p className="text-sm font-medium">
                                             <span className="mr-1.5 text-muted-foreground">{(pagination?.from ?? 1) + i}.</span>
-                                            {member.rankName}{' '}
-                                            <span className="numeric text-xs text-muted-foreground">
-                                                [{member.clanId}]
-                                            </span>
+                                            {member.rankName} <span className="numeric text-xs text-muted-foreground">[{member.clanId}]</span>
                                         </p>
                                         <span className="text-xs text-muted-foreground">{member.division}</span>
                                     </div>
                                     {(member.discord || member.handle) && (
                                         <p className="mt-0.5 text-xs text-muted-foreground">
-                                            {[member.discord && `${member.discord} [Discord]`, member.handle]
-                                                .filter(Boolean)
-                                                .join(' · ')}
+                                            {[member.discord && `${member.discord} [Discord]`, member.handle].filter(Boolean).join(' · ')}
                                         </p>
                                     )}
                                 </Link>
@@ -107,17 +102,22 @@ export default function MemberSearch({ query, results, partial, pagination }: Pr
                         {pagination && pagination.total > 0 && (
                             <div className="flex items-center justify-between gap-3 pt-2 text-xs text-muted-foreground">
                                 <span>
-                                    {pagination.from}–{pagination.to} of {pagination.total}{' '}
-                                    {pagination.total === 1 ? 'member' : 'members'}
+                                    {pagination.from}–{pagination.to} of {pagination.total} {pagination.total === 1 ? 'member' : 'members'}
                                 </span>
                                 <div className="flex items-center gap-2">
                                     {pagination.prevUrl ? (
-                                        <Link href={pagination.prevUrl} className="rounded-md border border-border px-3 py-1.5 hover:border-primary/30 hover:text-foreground">
+                                        <Link
+                                            href={pagination.prevUrl}
+                                            className="rounded-md border border-border px-3 py-1.5 hover:border-primary/30 hover:text-foreground"
+                                        >
                                             Previous
                                         </Link>
                                     ) : null}
                                     {pagination.nextUrl ? (
-                                        <Link href={pagination.nextUrl} className="rounded-md border border-border px-3 py-1.5 hover:border-primary/30 hover:text-foreground">
+                                        <Link
+                                            href={pagination.nextUrl}
+                                            className="rounded-md border border-border px-3 py-1.5 hover:border-primary/30 hover:text-foreground"
+                                        >
                                             Next
                                         </Link>
                                     ) : null}

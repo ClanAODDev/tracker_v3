@@ -65,19 +65,13 @@ export function useMemberColumns({
                 id: 'select',
                 header: ({ table }) => (
                     <Checkbox
-                        checked={
-                            table.getIsAllRowsSelected() || (table.getIsSomeRowsSelected() && 'indeterminate')
-                        }
+                        checked={table.getIsAllRowsSelected() || (table.getIsSomeRowsSelected() && 'indeterminate')}
                         onCheckedChange={(v) => table.toggleAllRowsSelected(!!v)}
                         aria-label="Select all"
                     />
                 ),
                 cell: ({ row }) => (
-                    <Checkbox
-                        checked={row.getIsSelected()}
-                        onCheckedChange={(v) => row.toggleSelected(!!v)}
-                        aria-label="Select row"
-                    />
+                    <Checkbox checked={row.getIsSelected()} onCheckedChange={(v) => row.toggleSelected(!!v)} aria-label="Select row" />
                 ),
                 enableSorting: false,
                 enableHiding: false,
@@ -116,7 +110,7 @@ export function useMemberColumns({
                                             : `On leave${m.leave.reason ? ` (${m.leave.reason})` : ''}${m.leave.until ? ` · back ${m.leave.until}` : ''}`
                                     }
                                     className={cn(
-                                        'shrink-0 rounded-sm border px-1 font-mono text-[9px] font-semibold uppercase leading-[1.4] tracking-wide',
+                                        'shrink-0 rounded-sm border px-1 font-mono text-[9px] leading-[1.4] font-semibold tracking-wide uppercase',
                                         m.leave.pending
                                             ? 'border-muted-foreground/30 text-muted-foreground'
                                             : 'border-warning/40 bg-warning/10 text-warning',
@@ -140,10 +134,7 @@ export function useMemberColumns({
                                 </Link>
                             )}
                             {m.isParttimer && (
-                                <span
-                                    className="text-info"
-                                    title={`Part-timer (primary: ${m.primaryDivision ?? 'None'})`}
-                                >
+                                <span className="text-info" title={`Part-timer (primary: ${m.primaryDivision ?? 'None'})`}>
                                     <Clock className="size-3" />
                                 </span>
                             )}
@@ -154,10 +145,7 @@ export function useMemberColumns({
                     const q = value.toLowerCase();
                     const m = row.original;
                     return (
-                        m.name.toLowerCase().includes(q) ||
-                        (m.rankAbbr ?? '').toLowerCase().includes(q) ||
-                        matchesHandle(m, q) ||
-                        matchesUnit(m, q)
+                        m.name.toLowerCase().includes(q) || (m.rankAbbr ?? '').toLowerCase().includes(q) || matchesHandle(m, q) || matchesUnit(m, q)
                     );
                 },
             },
@@ -167,29 +155,22 @@ export function useMemberColumns({
                 header: 'Rank',
                 cell: ({ row }) => <span className="text-muted-foreground">{row.original.rankAbbr}</span>,
             },
-            ...unitLevels.map(
-                (level, i): ColumnDef<MemberRow> => ({
-                    id: unitColumnId(level.depth),
-                    accessorFn: (m) => m.units.find((unit) => unit.depth === level.depth)?.label ?? '',
-                    header: level.label,
-                    cell: ({ row }) => {
-                        const unit = row.original.units.find((u) => u.depth === level.depth);
-                        return unit ? (
-                            <Link href={unit.url} className="text-muted-foreground hover:text-foreground">
-                                {unit.label}
-                            </Link>
-                        ) : (
-                            <span className="text-muted-foreground">—</span>
-                        );
-                    },
-                    filterFn:
-                        i === 0
-                            ? (row) =>
-                                  selectedUnits.size === 0 ||
-                                  row.original.units.some((unit) => selectedUnits.has(unit.id))
-                            : undefined,
-                }),
-            ),
+            ...unitLevels.map((level, i): ColumnDef<MemberRow> => ({
+                id: unitColumnId(level.depth),
+                accessorFn: (m) => m.units.find((unit) => unit.depth === level.depth)?.label ?? '',
+                header: level.label,
+                cell: ({ row }) => {
+                    const unit = row.original.units.find((u) => u.depth === level.depth);
+                    return unit ? (
+                        <Link href={unit.url} className="text-muted-foreground hover:text-foreground">
+                            {unit.label}
+                        </Link>
+                    ) : (
+                        <span className="text-muted-foreground">—</span>
+                    );
+                },
+                filterFn: i === 0 ? (row) => selectedUnits.size === 0 || row.original.units.some((unit) => selectedUnits.has(unit.id)) : undefined,
+            })),
             {
                 id: 'joined',
                 accessorKey: 'joinDate',
@@ -210,9 +191,7 @@ export function useMemberColumns({
                 id: 'promoted',
                 accessorKey: 'lastPromotedAt',
                 header: 'Last promoted',
-                cell: ({ row }) => (
-                    <span className="numeric text-muted-foreground">{row.original.lastPromotedAt ?? 'Never'}</span>
-                ),
+                cell: ({ row }) => <span className="numeric text-muted-foreground">{row.original.lastPromotedAt ?? 'Never'}</span>,
             },
             {
                 id: 'reminder',
@@ -232,10 +211,7 @@ export function useMemberColumns({
                             title={justReminded ? 'Reminded just now' : m.reminder.human}
                             onClick={async () => {
                                 try {
-                                    const res = await postJson<{ date: string }>(
-                                        `/members/${m.id}/set-activity-reminder`,
-                                        {},
-                                    );
+                                    const res = await postJson<{ date: string }>(`/members/${m.id}/set-activity-reminder`, {});
                                     setReminded((prev) => ({ ...prev, [m.id]: res.date }));
                                     toast.success(`${m.name} marked as reminded`);
                                 } catch (e) {
@@ -244,9 +220,7 @@ export function useMemberColumns({
                             }}
                         >
                             <Bell />
-                            {(justReminded || m.reminder.date) && (
-                                <span className="numeric">{justReminded ?? m.reminder.date}</span>
-                            )}
+                            {(justReminded || m.reminder.date) && <span className="numeric">{justReminded ?? m.reminder.date}</span>}
                         </Button>
                     );
                 },
@@ -263,49 +237,41 @@ export function useMemberColumns({
                 cell: ({ row }) => (
                     <div className="flex flex-wrap gap-1">
                         {row.original.tags.map((tag) => (
-                            <span
-                                key={tag.id}
-                                className="rounded bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground"
-                            >
+                            <span key={tag.id} className="rounded bg-muted px-1.5 py-0.5 text-[11px] text-muted-foreground">
                                 {tag.name}
                             </span>
                         ))}
                     </div>
                 ),
             },
-            ...handleTypes.map(
-                (type): ColumnDef<MemberRow> => ({
-                    id: handleColumnId(type.id),
-                    accessorFn: (m) => m.handles[type.id]?.value ?? '',
-                    header: type.label,
-                    cell: ({ row }) => {
-                        const h = row.original.handles[type.id];
-                        if (!h) return <span className="text-destructive">N/A</span>;
-                        const value = h.url ? (
-                            <a href={h.url} target="_blank" rel="noreferrer" className="hover:text-foreground">
-                                {h.value}
-                            </a>
-                        ) : (
-                            <code className="text-xs">{h.value}</code>
-                        );
-                        if (!h.error) return value;
-                        return (
-                            <span className="inline-flex items-center gap-1.5">
-                                {value}
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <AlertTriangle
-                                            className="size-3.5 shrink-0 text-warning"
-                                            aria-label="Invalid handle"
-                                        />
-                                    </TooltipTrigger>
-                                    <TooltipContent>{h.error}</TooltipContent>
-                                </Tooltip>
-                            </span>
-                        );
-                    },
-                }),
-            ),
+            ...handleTypes.map((type): ColumnDef<MemberRow> => ({
+                id: handleColumnId(type.id),
+                accessorFn: (m) => m.handles[type.id]?.value ?? '',
+                header: type.label,
+                cell: ({ row }) => {
+                    const h = row.original.handles[type.id];
+                    if (!h) return <span className="text-destructive">N/A</span>;
+                    const value = h.url ? (
+                        <a href={h.url} target="_blank" rel="noreferrer" className="hover:text-foreground">
+                            {h.value}
+                        </a>
+                    ) : (
+                        <code className="text-xs">{h.value}</code>
+                    );
+                    if (!h.error) return value;
+                    return (
+                        <span className="inline-flex items-center gap-1.5">
+                            {value}
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <AlertTriangle className="size-3.5 shrink-0 text-warning" aria-label="Invalid handle" />
+                                </TooltipTrigger>
+                                <TooltipContent>{h.error}</TooltipContent>
+                            </Tooltip>
+                        </span>
+                    );
+                },
+            })),
             {
                 id: 'posts',
                 accessorKey: 'posts',
@@ -320,54 +286,35 @@ export function useMemberColumns({
                 sortDescFirst: true,
                 cell: () => null,
             },
-            ...memberFields.map(
-                (field): ColumnDef<MemberRow> => ({
-                    id: fieldColumnId(field.key),
-                    accessorFn: (m) => m.customFields[field.key] ?? '',
-                    header: field.label,
-                    cell: ({ row }) => {
-                        const value = row.original.customFields[field.key];
-                        if (!value) return <span className="text-muted-foreground">—</span>;
-                        if (field.type !== 'select') {
-                            return <span className="text-muted-foreground">{value}</span>;
-                        }
-                        const colorClass = fieldBadgeClass(field.colors[value] ?? null);
-                        return (
-                            <span className={cn('rounded px-1.5 py-0.5 text-[11px]', colorClass)}>{value}</span>
-                        );
-                    },
-                    filterFn:
-                        field.type === 'select'
-                            ? (row) => {
-                                  const selected = selectedFieldValues[field.key];
-                                  if (!selected || selected.size === 0) return true;
-                                  const value = row.original.customFields[field.key];
-                                  return value != null && selected.has(value);
-                              }
-                            : undefined,
-                }),
-            ),
+            ...memberFields.map((field): ColumnDef<MemberRow> => ({
+                id: fieldColumnId(field.key),
+                accessorFn: (m) => m.customFields[field.key] ?? '',
+                header: field.label,
+                cell: ({ row }) => {
+                    const value = row.original.customFields[field.key];
+                    if (!value) return <span className="text-muted-foreground">—</span>;
+                    if (field.type !== 'select') {
+                        return <span className="text-muted-foreground">{value}</span>;
+                    }
+                    const colorClass = fieldBadgeClass(field.colors[value] ?? null);
+                    return <span className={cn('rounded px-1.5 py-0.5 text-[11px]', colorClass)}>{value}</span>;
+                },
+                filterFn:
+                    field.type === 'select'
+                        ? (row) => {
+                              const selected = selectedFieldValues[field.key];
+                              if (!selected || selected.size === 0) return true;
+                              const value = row.original.customFields[field.key];
+                              return value != null && selected.has(value);
+                          }
+                        : undefined,
+            })),
         ],
-        [
-            unitLevels,
-            selectedTags,
-            selectedUnits,
-            reminded,
-            bulkMode,
-            activityStyle,
-            memberFields,
-            selectedFieldValues,
-            handleTypes,
-        ],
+        [unitLevels, selectedTags, selectedUnits, reminded, bulkMode, activityStyle, memberFields, selectedFieldValues, handleTypes],
     );
 }
 
-export function columnLabel(
-    id: string,
-    unitLevels: UnitLevel[],
-    memberFields: MemberFieldDefinition[],
-    handleTypes: HandleType[],
-): ReactNode {
+export function columnLabel(id: string, unitLevels: UnitLevel[], memberFields: MemberFieldDefinition[], handleTypes: HandleType[]): ReactNode {
     switch (id) {
         case 'promoted':
             return 'Last promoted';

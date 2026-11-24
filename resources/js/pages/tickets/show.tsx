@@ -1,27 +1,9 @@
 import { Head, Link, router } from '@inertiajs/react';
-import {
-    ArrowLeft,
-    Bell,
-    BellOff,
-    Check,
-    CheckCircle2,
-    Hand,
-    RotateCcw,
-    Send,
-    UserCog,
-    X,
-} from 'lucide-react';
+import { ArrowLeft, Bell, BellOff, Check, CheckCircle2, Hand, RotateCcw, Send, UserCog, X } from 'lucide-react';
 import { type FormEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
-import {
-    isSystemMessage,
-    renderTicketText,
-    StatusBadge,
-    type TicketComment,
-    type TicketDetail,
-    type Worker,
-} from '@/components/tickets/shared';
+import { isSystemMessage, renderTicketText, StatusBadge, type TicketComment, type TicketDetail, type Worker } from '@/components/tickets/shared';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -38,15 +20,7 @@ interface Props {
 }
 
 function stateColor(state: string): string {
-    return `var(--${
-        state === 'resolved'
-            ? 'success'
-            : state === 'rejected'
-              ? 'destructive'
-              : state === 'assigned'
-                ? 'warning'
-                : 'info'
-    })`;
+    return `var(--${state === 'resolved' ? 'success' : state === 'rejected' ? 'destructive' : state === 'assigned' ? 'warning' : 'info'})`;
 }
 
 function playChime() {
@@ -90,8 +64,7 @@ export default function TicketShow({ ticket, canWork, currentUserId, workers }: 
     }, [ticket, soundOn]);
 
     const resolved = ticket.state === 'resolved' || ticket.state === 'rejected';
-    const canAssignSelf =
-        ticket.state === 'new' || (ticket.state === 'assigned' && ticket.owner?.id !== currentUserId);
+    const canAssignSelf = ticket.state === 'new' || (ticket.state === 'assigned' && ticket.owner?.id !== currentUserId);
     const canModify = ticket.state === 'new' || ticket.state === 'assigned';
 
     async function act(action: string, data: Record<string, unknown> = {}) {
@@ -113,10 +86,7 @@ export default function TicketShow({ ticket, canWork, currentUserId, workers }: 
             header={{
                 eyebrow: 'Help center',
                 title: `Ticket #${ticket.id}`,
-                breadcrumbs: [
-                    { label: 'Help center', href: '/help/tickets' },
-                    { label: `#${ticket.id}` },
-                ],
+                breadcrumbs: [{ label: 'Help center', href: '/help/tickets' }, { label: `#${ticket.id}` }],
                 actions: (
                     <Button variant="ghost" size="sm" asChild>
                         <Link href="/help/tickets">
@@ -150,9 +120,7 @@ export default function TicketShow({ ticket, canWork, currentUserId, workers }: 
                                 <span className="flex items-center gap-1.5">
                                     <Avatar person={ticket.caller} /> {ticket.caller.name}
                                     {ticket.division && (
-                                        <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-                                            {ticket.division.name}
-                                        </span>
+                                        <span className="rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">{ticket.division.name}</span>
                                     )}
                                 </span>
                             ) : (
@@ -192,12 +160,7 @@ export default function TicketShow({ ticket, canWork, currentUserId, workers }: 
                             </Button>
                         )}
                         {canModify && (
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                className="text-destructive"
-                                onClick={() => setRejectOpen(true)}
-                            >
+                            <Button size="sm" variant="outline" className="text-destructive" onClick={() => setRejectOpen(true)}>
                                 <X /> Reject
                             </Button>
                         )}
@@ -212,10 +175,7 @@ export default function TicketShow({ ticket, canWork, currentUserId, workers }: 
                 <section className="overflow-hidden rounded-md border border-border">
                     <h3 className="border-b border-border bg-card/40 px-4 py-2 text-sm font-semibold">Description</h3>
                     <div className="p-4">
-                        <div
-                            className="whitespace-pre-wrap text-sm"
-                            dangerouslySetInnerHTML={{ __html: renderTicketText(ticket.description) }}
-                        />
+                        <div className="text-sm whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: renderTicketText(ticket.description) }} />
                         {ticket.attachments.length > 0 && (
                             <div className="mt-3 flex flex-wrap gap-2">
                                 {ticket.attachments.map((url, i) => (
@@ -231,9 +191,7 @@ export default function TicketShow({ ticket, canWork, currentUserId, workers }: 
                 <section className="overflow-hidden rounded-md border border-border">
                     <h3 className="flex items-center gap-2 border-b border-border bg-card/40 px-4 py-2 text-sm font-semibold">
                         Discussion
-                        <span className="text-xs font-normal text-muted-foreground">
-                            {comments.filter((c) => !isSystemMessage(c)).length}
-                        </span>
+                        <span className="text-xs font-normal text-muted-foreground">{comments.filter((c) => !isSystemMessage(c)).length}</span>
                         <button
                             onClick={() => setSoundOn((v) => !v)}
                             className="ml-auto text-muted-foreground hover:text-foreground"
@@ -243,25 +201,17 @@ export default function TicketShow({ ticket, canWork, currentUserId, workers }: 
                         </button>
                     </h3>
                     <div className="space-y-3 p-4">
-                        {comments.length === 0 && (
-                            <p className="py-4 text-center text-sm text-muted-foreground">No comments yet.</p>
-                        )}
+                        {comments.length === 0 && <p className="py-4 text-center text-sm text-muted-foreground">No comments yet.</p>}
                         {comments.map((comment) =>
                             isSystemMessage(comment) ? (
                                 <p key={comment.id} className="flex items-center gap-2 text-xs text-muted-foreground">
                                     <Check className="size-3" />
-                                    <strong className="font-medium text-foreground">
-                                        {comment.user?.name ?? 'Unknown'}
-                                    </strong>
+                                    <strong className="font-medium text-foreground">{comment.user?.name ?? 'Unknown'}</strong>
                                     {comment.body.replace(/^.*?\b(owned|assigned|resolved|reopened|rejected)\b/i, '$1')}
                                     <span className="ml-auto">{relativeDate(comment.created_at)}</span>
                                 </p>
                             ) : (
-                                <CommentRow
-                                    key={comment.id}
-                                    comment={comment}
-                                    isOwner={comment.user?.id === ticket.owner?.id}
-                                />
+                                <CommentRow key={comment.id} comment={comment} isOwner={comment.user?.id === ticket.owner?.id} />
                             ),
                         )}
 
@@ -295,7 +245,7 @@ export default function TicketShow({ ticket, canWork, currentUserId, workers }: 
 function Meta({ label, children }: { label: string; children: React.ReactNode }) {
     return (
         <div>
-            <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
+            <p className="text-xs tracking-wide text-muted-foreground uppercase">{label}</p>
             <div className="mt-0.5">{children}</div>
         </div>
     );
@@ -305,9 +255,7 @@ function Avatar({ person }: { person: { name: string; avatar: string | null } })
     return person.avatar ? (
         <img src={person.avatar} alt="" className="size-5 rounded-full" />
     ) : (
-        <span className="grid size-5 place-items-center rounded-full bg-muted text-[9px]">
-            {person.name.charAt(0).toUpperCase()}
-        </span>
+        <span className="grid size-5 place-items-center rounded-full bg-muted text-[9px]">{person.name.charAt(0).toUpperCase()}</span>
     );
 }
 
@@ -319,14 +267,12 @@ function CommentRow({ comment, isOwner }: { comment: TicketComment; isOwner: boo
                 <div className="flex items-center justify-between gap-2 text-xs">
                     <span className="font-medium">
                         {comment.user?.name ?? 'Unknown'}
-                        {isOwner && (
-                            <span className="ml-1.5 rounded bg-primary/15 px-1 text-[10px] text-primary">Support</span>
-                        )}
+                        {isOwner && <span className="ml-1.5 rounded bg-primary/15 px-1 text-[10px] text-primary">Support</span>}
                     </span>
                     <span className="text-muted-foreground">{relativeDate(comment.created_at)}</span>
                 </div>
                 <div
-                    className="mt-1 whitespace-pre-wrap text-sm text-muted-foreground"
+                    className="mt-1 text-sm whitespace-pre-wrap text-muted-foreground"
                     dangerouslySetInnerHTML={{ __html: renderTicketText(comment.body) }}
                 />
             </div>
@@ -407,13 +353,7 @@ function RejectDialog({ onSubmit }: { onSubmit: (reason: string) => Promise<void
     );
 }
 
-function ReassignDialog({
-    workers,
-    onSubmit,
-}: {
-    workers: Worker[];
-    onSubmit: (userId: string) => Promise<void>;
-}) {
+function ReassignDialog({ workers, onSubmit }: { workers: Worker[]; onSubmit: (userId: string) => Promise<void> }) {
     const [userId, setUserId] = useState('');
     const [busy, setBusy] = useState(false);
     return (

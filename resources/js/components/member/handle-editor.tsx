@@ -61,8 +61,7 @@ export function HandleEditor({
         setRowErrors(({ [index]: _cleared, ...rest }) => rest);
     };
 
-    const hintFor = (handleId: number | null) =>
-        management.availableHandleTypes.find((type) => type.value === handleId)?.hint ?? null;
+    const hintFor = (handleId: number | null) => management.availableHandleTypes.find((type) => type.value === handleId)?.hint ?? null;
 
     const save = async () => {
         setSaving(true);
@@ -70,8 +69,7 @@ export function HandleEditor({
         const kept = handles.filter((h) => h.handleId && h.value.trim() !== '');
         try {
             const payload = {
-                handles: kept
-                    .map((h) => ({ id: h.id ?? undefined, handle_id: h.handleId, value: h.value, primary: h.primary })),
+                handles: kept.map((h) => ({ id: h.id ?? undefined, handle_id: h.handleId, value: h.value, primary: h.primary })),
             };
             await postJson(management.saveUrl, payload);
             toast.success('Handles updated');
@@ -122,9 +120,7 @@ export function HandleEditor({
                                 {rowErrors[i] ? (
                                     <p className="mt-1 text-xs text-destructive">{rowErrors[i]}</p>
                                 ) : (
-                                    hintFor(row.handleId) && (
-                                        <p className="mt-1 text-xs text-muted-foreground">{hintFor(row.handleId)}</p>
-                                    )
+                                    hintFor(row.handleId) && <p className="mt-1 text-xs text-muted-foreground">{hintFor(row.handleId)}</p>
                                 )}
                             </div>
                             <label className="flex h-9 items-center gap-1 text-xs whitespace-nowrap text-muted-foreground">

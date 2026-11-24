@@ -171,8 +171,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
     }
 
     const maxCols = (d: any) => (d.data.type === 'division' ? 1 : LAYOUT.MAX_COLS);
-    const rowSpacing = (parentType: string) =>
-        parentType === 'platoon' ? LAYOUT.PLATOON_ROW_SPACING : LAYOUT.ROW_SPACING;
+    const rowSpacing = (parentType: string) => (parentType === 'platoon' ? LAYOUT.PLATOON_ROW_SPACING : LAYOUT.ROW_SPACING);
 
     function calcDimensions(node: any) {
         const w = nodeWidth();
@@ -193,7 +192,10 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
             const numRows = Math.ceil(platoons.length / cols);
             for (let r = 0; r < numRows; r++) {
                 const rp = platoons.slice(r * cols, (r + 1) * cols);
-                platoonsWidth = Math.max(platoonsWidth, rp.reduce((s: number, p: any) => s + p._width, 0));
+                platoonsWidth = Math.max(
+                    platoonsWidth,
+                    rp.reduce((s: number, p: any) => s + p._width, 0),
+                );
                 platoonsHeight += Math.max(...rp.map((p: any) => p._height)) + LAYOUT.ROW_SPACING;
             }
             node._width = Math.max(leadershipGroup?._width || 0, platoonsWidth) + LAYOUT.COL_SPACING;
@@ -208,7 +210,10 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
         let totalHeight = spacing;
         for (let r = 0; r < numRows; r++) {
             const rc = node.children.slice(r * cols, Math.min(r * cols + cols, node.children.length));
-            totalWidth = Math.max(totalWidth, rc.reduce((s: number, c: any) => s + c._width, 0));
+            totalWidth = Math.max(
+                totalWidth,
+                rc.reduce((s: number, c: any) => s + c._width, 0),
+            );
             totalHeight += Math.max(...rc.map((c: any) => c._height)) + (r < numRows - 1 ? spacing / 2 : 0);
         }
         node._width = Math.max(w + LAYOUT.COL_SPACING, totalWidth);
@@ -538,8 +543,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
                 .attr('stroke-opacity', 0.4)
                 .style('cursor', isCollapsible ? 'pointer' : 'default')
                 .on('click', () => isCollapsible && toggleNode(d));
-            if (data.leader)
-                renderLeaderContent(ng, data.leader, colors, { fontSize: '11px', handleFontSize: FONT.HANDLE_SMALL });
+            if (data.leader) renderLeaderContent(ng, data.leader, colors, { fontSize: '11px', handleFontSize: FONT.HANDLE_SMALL });
             else if (!data.roster) renderTBA(ng, colors, '11px');
             ng.append('text')
                 .attr('y', height / 2 - 8)
@@ -676,11 +680,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
         root.descendants().forEach((d: any) => {
             const data = d.data;
             if (['member', 'co', 'xo'].includes(data.type)) {
-                if (
-                    data.name?.toLowerCase().includes(t) ||
-                    data.handle?.toLowerCase().includes(t) ||
-                    data.rankName?.toLowerCase().includes(t)
-                ) {
+                if (data.name?.toLowerCase().includes(t) || data.handle?.toLowerCase().includes(t) || data.rankName?.toLowerCase().includes(t)) {
                     results.push({
                         id: data.id,
                         name: data.name,

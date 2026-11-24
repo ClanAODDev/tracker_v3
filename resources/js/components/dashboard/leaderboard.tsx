@@ -42,28 +42,14 @@ function Movement({ change }: { change?: number }) {
 
 function Row({ entry, rank, highlight, signed }: { entry: LeaderEntry; rank: number; highlight: boolean; signed?: boolean }) {
     const numeric = typeof entry.value === 'number' ? entry.value : 0;
-    const valueClass = signed
-        ? numeric > 0
-            ? 'text-success'
-            : numeric < 0
-              ? 'text-destructive'
-              : 'text-muted-foreground'
-        : 'text-foreground';
+    const valueClass = signed ? (numeric > 0 ? 'text-success' : numeric < 0 ? 'text-destructive' : 'text-muted-foreground') : 'text-foreground';
 
     return (
         <Link
             href={`/divisions/${entry.slug}`}
-            className={cn(
-                'flex items-center gap-3 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent',
-                highlight && 'bg-primary/10',
-            )}
+            className={cn('flex items-center gap-3 rounded-md px-2 py-1.5 text-sm transition-colors hover:bg-accent', highlight && 'bg-primary/10')}
         >
-            <span
-                className={cn(
-                    'numeric w-5 shrink-0 text-center text-xs',
-                    rank <= 3 ? 'font-semibold text-primary' : 'text-muted-foreground',
-                )}
-            >
+            <span className={cn('numeric w-5 shrink-0 text-center text-xs', rank <= 3 ? 'font-semibold text-primary' : 'text-muted-foreground')}>
                 {rank}
             </span>
             {entry.logo && <img src={entry.logo} alt="" className="size-5 shrink-0 rounded" />}
@@ -101,18 +87,12 @@ export function Leaderboard({ userDivisionId, recruits, voice, growth }: Leaderb
                         )}
                     >
                         <div className="flex items-center justify-between border-b border-border px-3 py-2">
-                            <span className="text-xs font-semibold uppercase tracking-wide">{label}</span>
+                            <span className="text-xs font-semibold tracking-wide uppercase">{label}</span>
                             <span className="text-[11px] text-muted-foreground">{period}</span>
                         </div>
                         <div className="space-y-0.5 p-2">
                             {data[key].map((entry, i) => (
-                                <Row
-                                    key={entry.id}
-                                    entry={entry}
-                                    rank={i + 1}
-                                    highlight={entry.id === userDivisionId}
-                                    signed={key === 'growth'}
-                                />
+                                <Row key={entry.id} entry={entry} rank={i + 1} highlight={entry.id === userDivisionId} signed={key === 'growth'} />
                             ))}
                         </div>
                         <div className="border-t border-border px-3 py-2 text-[11px] text-muted-foreground">{footer}</div>
@@ -129,9 +109,7 @@ export function Leaderboard({ userDivisionId, recruits, voice, growth }: Leaderb
                             onClick={() => setTab(key)}
                             className={cn(
                                 'flex-1 px-3 py-2 text-xs font-medium transition-colors',
-                                tab === key
-                                    ? 'border-b-2 border-primary text-foreground'
-                                    : 'text-muted-foreground',
+                                tab === key ? 'border-b-2 border-primary text-foreground' : 'text-muted-foreground',
                             )}
                         >
                             {label}
@@ -140,13 +118,7 @@ export function Leaderboard({ userDivisionId, recruits, voice, growth }: Leaderb
                 </div>
                 <div className="space-y-0.5 p-2">
                     {data[tab].map((entry, i) => (
-                        <Row
-                            key={entry.id}
-                            entry={entry}
-                            rank={i + 1}
-                            highlight={entry.id === userDivisionId}
-                            signed={tab === 'growth'}
-                        />
+                        <Row key={entry.id} entry={entry} rank={i + 1} highlight={entry.id === userDivisionId} signed={tab === 'growth'} />
                     ))}
                 </div>
             </div>
