@@ -80,7 +80,7 @@ class ReportsControllerTest extends TestCase
         $clanMax = config('aod.maximum_days_inactive');
 
         $division    = $this->createActiveDivision(['name' => 'AAA Division']);
-        $officer     = $this->createOfficer($division);
+        $officer     = $this->createOfficer($division, ['last_voice_activity' => now()->subDay()]);
         $outstanding = $this->createMember(['division_id' => $division->id, 'last_voice_activity' => now()->subDays($clanMax + 5)]);
         $active      = $this->createMember(['division_id' => $division->id, 'last_voice_activity' => now()->subDays(10)]);
         $onLeave     = $this->createMember(['division_id' => $division->id, 'last_voice_activity' => now()->subDays($clanMax + 5)]);
