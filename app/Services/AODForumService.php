@@ -44,10 +44,11 @@ class AODForumService
                 ->retry(config('aod.external_request.retry_times'), config('aod.external_request.retry_delay_ms'))
                 ->get($url, $params);
 
-            $clean = strip_tags($resp->body());
-            $clean = preg_replace('/\s+/', ' ', $clean);
-            $parts = explode(' ', trim($clean));
-            $last  = array_last($parts);
+            $last = strip_tags($resp->body())
+                |> (fn (string $text) => preg_replace('/\s+/', ' ', $text))
+                |> trim(...)
+                |> (fn (string $text) => explode(' ', $text))
+                |> array_last(...);
 
         } catch (Exception $e) {
             Log::error($e->getMessage());

@@ -80,9 +80,12 @@ class ReleaseNote extends Model
 
     public function excerpt(int $limit = 240): string
     {
-        $html = preg_replace('#<h([1-6])\b[^>]*>.*?</h\1>#is', ' ', (string) Markdown::convertToHtml((string) $this->body));
-        $text = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5);
-
-        return Str::limit(trim(preg_replace('/\s+/u', ' ', $text)), $limit);
+        return (string) Markdown::convertToHtml((string) $this->body)
+            |> (fn (string $html) => preg_replace('#<h([1-6])\b[^>]*>.*?</h\1>#is', ' ', $html))
+            |> strip_tags(...)
+            |> (fn (string $text) => html_entity_decode($text, ENT_QUOTES | ENT_HTML5))
+            |> (fn (string $text) => preg_replace('/\s+/u', ' ', $text))
+            |> trim(...)
+            |> (fn (string $text) => Str::limit($text, $limit));
     }
 }
