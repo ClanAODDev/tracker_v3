@@ -7,12 +7,10 @@
     "require": {
         "php": "^8.5",
         "laravel/framework": "^13.0",
-        "doctrine/dbal": "^3.0",
         "barryvdh/laravel-debugbar": "^4.0",
         "guzzlehttp/guzzle": "^7.2",
         "league/csv": "^9.11",
         "laravel/tinker": "^3.0",
-        "doctrine/annotations": "^1.10.4",
         "google/apiclient": "^2.0",
         "brian2694/laravel-toastr": "^5.53",
         "spatie/laravel-query-builder": "^6.0",
