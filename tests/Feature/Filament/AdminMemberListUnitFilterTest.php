@@ -5,6 +5,7 @@ namespace Tests\Feature\Filament;
 use App\Filament\Admin\Resources\MemberResource\Pages\ListMembers;
 use App\Models\Unit;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\Select;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
@@ -26,10 +27,19 @@ class AdminMemberListUnitFilterTest extends TestCase
 
         $division = $this->createActiveDivision();
         $platoon  = Unit::factory()->create(['division_id' => $division->id, 'name' => null]);
-        Unit::factory()->childOf($platoon)->create(['name' => '']);
+        $squad    = Unit::factory()->childOf($platoon)->create(['name' => '']);
 
-        Livewire::test(ListMembers::class)
-            ->assertSuccessful()
-            ->assertSee('Untitled');
+        $page = Livewire::test(ListMembers::class)->assertSuccessful()->instance();
+
+        $this->assertSame('Untitled', $this->filterOptions($page, 'platoon')[$platoon->id] ?? null);
+        $this->assertSame('Untitled', $this->filterOptions($page, 'squad')[$squad->id] ?? null);
+    }
+
+    private function filterOptions(ListMembers $page, string $filter): array
+    {
+        $select = collect($page->getTableFiltersForm()->getFlatComponents())
+            ->first(fn ($component) => $component instanceof Select && $component->getStatePath() === "tableDeferredFilters.{$filter}.value");
+
+        return collect($select->getOptionsForJs())->pluck('label', 'value')->all();
     }
 }
