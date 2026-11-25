@@ -251,7 +251,7 @@ class UnitAssignment
 
     private function syncPositions(array $memberIds): void
     {
-        $memberIds = array_values(array_unique(array_filter($memberIds)));
+        $memberIds = $memberIds |> array_filter(...) |> array_unique(...) |> array_values(...);
 
         if ($memberIds === []) {
             return;

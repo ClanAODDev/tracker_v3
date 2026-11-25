@@ -13,6 +13,7 @@ use App\Models\ReleaseNote;
 use App\Models\User;
 use App\Support\DivisionToolbar;
 use GrahamCampbell\Markdown\Facades\Markdown;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -77,9 +78,8 @@ class AppController extends Controller
         return $user->isDeveloper() || $user->can(Ability::AccessAdminPanel);
     }
 
-    public function index(): Response
+    public function index(#[CurrentUser] User $user): Response
     {
-        $user       = auth()->user();
         $myDivision = $user->member->division;
 
         $pendingActions = PendingActionsData::forDivision($myDivision, $user);

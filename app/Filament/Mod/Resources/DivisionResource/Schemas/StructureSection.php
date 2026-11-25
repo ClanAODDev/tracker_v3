@@ -90,7 +90,7 @@ class StructureSection
                             app(UnitAssignment::class)->insertTopLevel(
                                 $record,
                                 ['label' => $data['label'], 'label_plural' => $data['label_plural'], 'leader_title' => $data['leader_title']],
-                                ['name'  => $data['unit_name']],
+                                ['name' => $data['unit_name']],
                             );
 
                             Notification::make()->success()->title("{$data['label']} level added")->send();

@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Enums\ForumGroup;
 use App\Models\Member;
 use Exception;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Log;
@@ -45,10 +44,11 @@ class AODForumService
                 ->retry(config('aod.external_request.retry_times'), config('aod.external_request.retry_delay_ms'))
                 ->get($url, $params);
 
-            $clean = strip_tags($resp->body());
-            $clean = preg_replace('/\s+/', ' ', $clean);
-            $parts = explode(' ', trim($clean));
-            $last  = end($parts);
+            $last = strip_tags($resp->body())
+                |> (fn (string $text) => preg_replace('/\s+/', ' ', $text))
+                |> trim(...)
+                |> (fn (string $text) => explode(' ', $text))
+                |> array_last(...);
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -213,7 +213,7 @@ class AODForumService
             return null;
         }
 
-        return Arr::first($results);
+        return array_first($results);
     }
 
     public function userExists(string $username, int $adminUserId): bool

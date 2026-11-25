@@ -106,19 +106,19 @@ function doForumFunction(array $ids, $action)
     switch ($action) {
         case 'email':
             $path   = 'https://www.clanaod.net/forums/sendmessage.php?';
-            $params = ['do' => 'mailmember', 'u' => Arr::first($ids)];
+            $params = ['do' => 'mailmember', 'u' => array_first($ids)];
 
             break;
 
         case 'showThread':
             $path   = 'https://www.clanaod.net/forums/showthread.php?';
-            $params = ['t' => Arr::first($ids)];
+            $params = ['t' => array_first($ids)];
 
             break;
 
         case 'forumProfile':
             $path   = 'https://www.clanaod.net/forums/member.php?';
-            $params = ['u' => Arr::first($ids)];
+            $params = ['u' => array_first($ids)];
 
             break;
 
@@ -129,13 +129,13 @@ function doForumFunction(array $ids, $action)
             break;
 
         case 'createThread':
-            $params = ['do' => 'newthread', 'f' => Arr::first($ids)];
+            $params = ['do' => 'newthread', 'f' => array_first($ids)];
             $path   = 'https://www.clanaod.net/forums/newthread.php?';
 
             break;
 
         case 'replyToThread':
-            $params = ['do' => 'postreply', 't' => Arr::first($ids)];
+            $params = ['do' => 'postreply', 't' => array_first($ids)];
             $path   = 'https://www.clanaod.net/forums/newreply.php?';
 
             break;

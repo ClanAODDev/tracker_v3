@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Training\CompleteTrainingRequest;
 use App\Models\Member;
 use App\Models\TrainingModule;
+use App\Models\User;
 use GrahamCampbell\Markdown\Facades\Markdown;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -15,11 +18,10 @@ use Inertia\Response;
 #[Middleware('auth')]
 class TrainingController extends Controller
 {
-    public function index(): Response
+    #[Authorize('train', User::class)]
+    public function index(#[CurrentUser] User $user): Response
     {
-        $this->authorize('train', auth()->user());
-
-        $member = auth()->user()->member;
+        $member = $user->member;
 
         $modules = TrainingModule::active()->ordered()->withCount('sections')->get()
             ->filter(fn ($module) => $module->isAccessibleBy($member))
@@ -34,16 +36,15 @@ class TrainingController extends Controller
         return Inertia::render('training/index', ['modules' => $modules]);
     }
 
-    public function show(string $slug, Request $request): Response
+    #[Authorize('train', User::class)]
+    public function show(string $slug, Request $request, #[CurrentUser] User $user): Response
     {
-        $this->authorize('train', auth()->user());
-
         $module = TrainingModule::where('slug', $slug)
             ->where('is_active', true)
             ->with(['sections.checkpoints'])
             ->firstOrFail();
 
-        abort_unless($module->isAccessibleBy(auth()->user()->member), 403);
+        abort_unless($module->isAccessibleBy($user->member), 403);
 
         $trainee = $request->filled('member')
             ? Member::where('guid', $request->string('member'))->first()
@@ -74,16 +75,17 @@ class TrainingController extends Controller
         ]);
     }
 
-    public function sgtTraining(Request $request): Response
+    #[Authorize('train', User::class)]
+    public function sgtTraining(Request $request, #[CurrentUser] User $user): Response
     {
-        return $this->show('sgt', $request);
+        return $this->show('sgt', $request, $user);
     }
 
-    public function update(CompleteTrainingRequest $request): RedirectResponse
+    public function update(CompleteTrainingRequest $request, #[CurrentUser] User $user): RedirectResponse
     {
         Member::where('guid', $request->validated('member'))->update([
             'last_trained_at'   => now(),
-            'trainer_member_id' => auth()->user()->member_id,
+            'trainer_member_id' => $user->member_id,
         ]);
 
         $this->showSuccessToast('Training information successfully submitted!');

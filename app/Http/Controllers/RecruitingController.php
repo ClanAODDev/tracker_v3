@@ -18,6 +18,7 @@ use App\Services\RecruitmentService;
 use App\Support\UnitTree;
 use App\Transformers\PendingDiscordUserTransformer;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
@@ -55,11 +56,11 @@ class RecruitingController extends Controller
      * @throws AuthorizationException
      */
     #[Authorize('recruit', Member::class)]
-    public function submitRecruitment(SubmitRecruitmentRequest $request)
+    public function submitRecruitment(SubmitRecruitmentRequest $request, #[CurrentUser] User $user)
     {
 
         $division  = Division::whereSlug($request->division)->first();
-        $recruiter = auth()->user()->member;
+        $recruiter = $user->member;
 
         if ($request->pending_user_id) {
             return $this->recruitPendingDiscordUser($request, $division, $recruiter);
@@ -106,7 +107,7 @@ class RecruitingController extends Controller
     }
 
     #[Authorize('recruit', Member::class)]
-    public function form(Division $division)
+    public function form(Division $division, #[CurrentUser] User $user)
     {
         if ($division->isShutdown()) {
             $this->showErrorToast('This division has been shutdown and cannot receive new members');
@@ -118,7 +119,7 @@ class RecruitingController extends Controller
             ...$this->recruitData($division, request()->boolean('all_pending')),
             'divisionSlug'          => $division->slug,
             'cancelUrl'             => route('division', $division->slug),
-            'recruiterId'           => auth()->user()->member?->clan_id ?? auth()->id(),
+            'recruiterId'           => $user->member?->clan_id ?? auth()->id(),
             'ranks'                 => Rank::getAllRanks(),
             'forbiddenNamePrefixes' => Rank::forbiddenNamePrefixes(),
             'pendingUserId'         => request('pending_user_id') ? (int) request('pending_user_id') : null,

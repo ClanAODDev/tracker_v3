@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\ApiScope;
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
@@ -77,13 +79,13 @@ class DeveloperController extends Controller
         return redirect(route('developer'));
     }
 
-    public function destroyToken(Request $request): RedirectResponse
+    public function destroyToken(Request $request, #[CurrentUser] User $user): RedirectResponse
     {
         $this->authorize('destroy', [NewAccessToken::class, $request->token_id]);
 
         $request->validate(['token_id' => 'required']);
 
-        auth()->user()->tokens()->where('id', $request->token_id)->delete();
+        $user->tokens()->where('id', $request->token_id)->delete();
 
         $this->showSuccessToast('API token deleted!');
 
