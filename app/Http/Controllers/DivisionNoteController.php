@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Division;
 use App\Models\DivisionTag;
 use App\Models\Note;
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Inertia\Inertia;
@@ -14,7 +16,7 @@ use Inertia\Response;
 class DivisionNoteController extends Controller
 {
     #[Authorize('show', Note::class)]
-    public function index(Division $division): Response
+    public function index(Division $division, #[CurrentUser] User $user): Response
     {
 
         $type   = request('type');
@@ -42,7 +44,7 @@ class DivisionNoteController extends Controller
         $notes = $notes
             ->orderByDesc('created_at')
             ->get()
-            ->filter(fn ($note) => Note::isTypeVisibleTo($note->type, auth()->user()));
+            ->filter(fn ($note) => Note::isTypeVisibleTo($note->type, $user));
 
         $tags = DivisionTag::forDivision($division->id)
             ->visibleTo()

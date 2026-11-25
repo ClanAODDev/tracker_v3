@@ -15,6 +15,7 @@ use App\Rules\HandleFormat;
 use App\Services\DiscordRegistrationService;
 use App\Services\ForumProcedureService;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -79,9 +80,8 @@ class DiscordController extends Controller
         );
     }
 
-    public function pending(): RedirectResponse|InertiaResponse
+    public function pending(#[CurrentUser] User $user): RedirectResponse|InertiaResponse
     {
-        $user        = auth()->user();
         $previewSlug = request('preview');
 
         if ($previewSlug) {
@@ -163,9 +163,8 @@ class DiscordController extends Controller
         return redirect()->route('auth.discord.pending');
     }
 
-    public function submitApplication(Request $request): RedirectResponse
+    public function submitApplication(Request $request, #[CurrentUser] User $user): RedirectResponse
     {
-        $user       = auth()->user();
         $divisionId = session('pending_division_id');
 
         if (! $user->isPendingRegistration() || ! $divisionId) {

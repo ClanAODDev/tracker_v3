@@ -14,6 +14,7 @@ use App\Models\TicketType;
 use App\Models\User;
 use App\Services\TicketNotificationService;
 use App\Support\TicketSerializer;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
@@ -37,10 +38,8 @@ class TicketApiController extends Controller
         return response()->json(['tickets' => $tickets]);
     }
 
-    public function workableIndex(): JsonResponse
+    public function workableIndex(#[CurrentUser] User $user): JsonResponse
     {
-        $user = auth()->user();
-
         $canWorkAnyType = TicketType::get()->contains(fn ($type) => $type->userCanWork($user));
 
         if (! $canWorkAnyType) {
@@ -57,10 +56,8 @@ class TicketApiController extends Controller
         return response()->json(['tickets' => $tickets]);
     }
 
-    public function own(Ticket $ticket): JsonResponse
+    public function own(Ticket $ticket, #[CurrentUser] User $user): JsonResponse
     {
-        $user = auth()->user();
-
         if (! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
@@ -80,10 +77,8 @@ class TicketApiController extends Controller
         ]);
     }
 
-    public function resolve(Ticket $ticket): JsonResponse
+    public function resolve(Ticket $ticket, #[CurrentUser] User $user): JsonResponse
     {
-        $user = auth()->user();
-
         if (! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
@@ -103,10 +98,8 @@ class TicketApiController extends Controller
         ]);
     }
 
-    public function reject(RejectTicketRequest $request, Ticket $ticket): JsonResponse
+    public function reject(RejectTicketRequest $request, Ticket $ticket, #[CurrentUser] User $user): JsonResponse
     {
-        $user = auth()->user();
-
         if (! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
@@ -128,10 +121,8 @@ class TicketApiController extends Controller
         ]);
     }
 
-    public function reopen(Ticket $ticket): JsonResponse
+    public function reopen(Ticket $ticket, #[CurrentUser] User $user): JsonResponse
     {
-        $user = auth()->user();
-
         if (! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'You do not have permission to work this ticket type'], 403);
         }
@@ -150,9 +141,9 @@ class TicketApiController extends Controller
         ]);
     }
 
-    public function workers(Request $request): JsonResponse
+    public function workers(Request $request, #[CurrentUser] User $user): JsonResponse
     {
-        if (! TicketType::get()->contains(fn ($type) => $type->userCanWork(auth()->user()))) {
+        if (! TicketType::get()->contains(fn ($type) => $type->userCanWork($user))) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -163,10 +154,8 @@ class TicketApiController extends Controller
         return response()->json(['workers' => $workers]);
     }
 
-    public function reassign(ReassignTicketRequest $request, Ticket $ticket): JsonResponse
+    public function reassign(ReassignTicketRequest $request, Ticket $ticket, #[CurrentUser] User $user): JsonResponse
     {
-        $user = auth()->user();
-
         if (! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
@@ -196,14 +185,13 @@ class TicketApiController extends Controller
         ]);
     }
 
-    public function types(): JsonResponse
+    public function types(#[CurrentUser] User $user): JsonResponse
     {
-        return response()->json(['types' => TicketSerializer::types(auth()->user())]);
+        return response()->json(['types' => TicketSerializer::types($user)]);
     }
 
-    public function show(Ticket $ticket): JsonResponse
+    public function show(Ticket $ticket, #[CurrentUser] User $user): JsonResponse
     {
-        $user    = auth()->user();
         $canWork = $ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets);
 
         if ($ticket->caller_id !== $user->id && ! $canWork) {
@@ -217,7 +205,7 @@ class TicketApiController extends Controller
         ]);
     }
 
-    public function store(StoreTicketRequest $request): JsonResponse
+    public function store(StoreTicketRequest $request, #[CurrentUser] User $user): JsonResponse
     {
         $validated = $request->validated();
 
@@ -231,7 +219,7 @@ class TicketApiController extends Controller
             'ticket_type_id' => $validated['ticket_type_id'],
             'description'    => $validated['description'],
             'caller_id'      => auth()->id(),
-            'division_id'    => auth()->user()->member?->division_id ?? 1,
+            'division_id'    => $user->member?->division_id ?? 1,
             'attachments'    => $paths ?: null,
         ]);
 
@@ -245,10 +233,8 @@ class TicketApiController extends Controller
         ], 201);
     }
 
-    public function addComment(AddTicketCommentRequest $request, Ticket $ticket): JsonResponse
+    public function addComment(AddTicketCommentRequest $request, Ticket $ticket, #[CurrentUser] User $user): JsonResponse
     {
-        $user = auth()->user();
-
         if ($ticket->caller_id !== $user->id && ! ($ticket->type?->userCanWork($user) ?? $user->can(Ability::ManageAllTickets))) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
