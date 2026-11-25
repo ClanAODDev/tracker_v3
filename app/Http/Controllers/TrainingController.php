@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Training\CompleteTrainingRequest;
 use App\Models\Member;
 use App\Models\TrainingModule;
+use App\Models\User;
 use GrahamCampbell\Markdown\Facades\Markdown;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -15,10 +17,9 @@ use Inertia\Response;
 #[Middleware('auth')]
 class TrainingController extends Controller
 {
+    #[Authorize('train', User::class)]
     public function index(): Response
     {
-        $this->authorize('train', auth()->user());
-
         $member = auth()->user()->member;
 
         $modules = TrainingModule::active()->ordered()->withCount('sections')->get()
@@ -34,10 +35,9 @@ class TrainingController extends Controller
         return Inertia::render('training/index', ['modules' => $modules]);
     }
 
+    #[Authorize('train', User::class)]
     public function show(string $slug, Request $request): Response
     {
-        $this->authorize('train', auth()->user());
-
         $module = TrainingModule::where('slug', $slug)
             ->where('is_active', true)
             ->with(['sections.checkpoints'])
@@ -74,6 +74,7 @@ class TrainingController extends Controller
         ]);
     }
 
+    #[Authorize('train', User::class)]
     public function sgtTraining(Request $request): Response
     {
         return $this->show('sgt', $request);
