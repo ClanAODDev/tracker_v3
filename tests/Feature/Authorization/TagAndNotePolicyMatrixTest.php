@@ -25,7 +25,7 @@ class TagAndNotePolicyMatrixTest extends PermissionMatrixTestCase
 
         $checks = [
             ['viewAny', '(any tag)', fn () => [DivisionTag::class]],
-            ['create', '(any tag)', fn ()   => [DivisionTag::class]],
+            ['create', '(any tag)', fn () => [DivisionTag::class]],
             ['assign', '(no member)', fn () => [DivisionTag::class]],
         ];
 

@@ -73,8 +73,8 @@ class OrgStructurePolicyMatrixTest extends PermissionMatrixTestCase
     {
         $checks = [
             ['viewAny', '(any platoon)', fn () => [Unit::class]],
-            ['create', '(no division)', fn ()  => [Unit::class]],
-            ['create', 'own_division', fn ()   => [Unit::class, $this->world->divisionA->fresh()]],
+            ['create', '(no division)', fn () => [Unit::class]],
+            ['create', 'own_division', fn () => [Unit::class, $this->world->divisionA->fresh()]],
             ['create', 'other_division', fn () => [Unit::class, $this->world->divisionB->fresh()]],
         ];
 
