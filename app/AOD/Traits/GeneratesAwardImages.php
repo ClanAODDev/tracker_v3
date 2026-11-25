@@ -42,9 +42,6 @@ trait GeneratesAwardImages
         $resized    = $this->resizeImage($awardImage, $this->awardSize, $this->awardSize);
 
         imagecopy($canvas, $resized, $x, $y, 0, 0, $this->awardSize, $this->awardSize);
-
-        imagedestroy($awardImage);
-        imagedestroy($resized);
     }
 
     protected function fetchMemberAwardsCollapseTiered(Member $member, array $columns = ['awards.id', 'awards.image', 'awards.prerequisite_award_id']): Collection
@@ -110,10 +107,8 @@ trait GeneratesAwardImages
     {
         ob_start();
         imagepng($image);
-        $content = ob_get_clean();
-        imagedestroy($image);
 
-        return $content;
+        return ob_get_clean();
     }
 
     protected function loadFallbackImage(string $path): ?string
