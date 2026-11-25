@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Enums\ForumGroup;
 use App\Models\Member;
 use Exception;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Log;
@@ -48,7 +47,7 @@ class AODForumService
             $clean = strip_tags($resp->body());
             $clean = preg_replace('/\s+/', ' ', $clean);
             $parts = explode(' ', trim($clean));
-            $last  = end($parts);
+            $last  = array_last($parts);
 
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -213,7 +212,7 @@ class AODForumService
             return null;
         }
 
-        return Arr::first($results);
+        return array_first($results);
     }
 
     public function userExists(string $username, int $adminUserId): bool

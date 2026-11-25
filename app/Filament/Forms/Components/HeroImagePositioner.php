@@ -50,7 +50,7 @@ class HeroImagePositioner extends Field
     public function getImageUrl(): ?string
     {
         $state = $this->evaluate(fn (Get $get) => $get($this->imageField));
-        $file  = is_array($state) ? Arr::first($state) : $state;
+        $file  = is_array($state) ? array_first($state) : $state;
 
         if ($file instanceof TemporaryUploadedFile) {
             return $file->isPreviewable() ? $file->temporaryUrl() : null;
