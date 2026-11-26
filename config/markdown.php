@@ -18,13 +18,11 @@ use League\CommonMark\Extension\CommonMark\Node\Block\Heading;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 use League\CommonMark\Extension\CommonMark\Node\Inline\Link;
 use League\CommonMark\Extension\DefaultAttributes\DefaultAttributesExtension;
-use League\CommonMark\Extension\Embed\Bridge\OscaroteroEmbedAdapter;
 use League\CommonMark\Extension\Embed\EmbedExtension;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkExtension;
 use League\CommonMark\Extension\HeadingPermalink\HeadingPermalinkRenderer;
 use League\CommonMark\Extension\Table\Table;
 use League\CommonMark\Extension\Table\TableExtension;
-use League\CommonMark\Node\Block\Paragraph;
 
 return [
 
@@ -125,21 +123,9 @@ return [
         Code::class => [
             'class' => 'line-numbers',
         ],
-
-        Paragraph::class => [
-            'class' => static function (Paragraph $paragraph) {
-                if ($paragraph->previous() instanceof Heading && $paragraph->previous()->getLevel() === 1) {
-                    return 'lead';
-                }
-
-                return null;
-            },
-        ],
-
     ],
 
     'embed' => [
-        'adapter'         => new OscaroteroEmbedAdapter,
         'allowed_domains' => ['youtube.com'],
         'fallback'        => 'link',
     ],
