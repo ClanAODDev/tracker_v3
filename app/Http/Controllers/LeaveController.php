@@ -8,8 +8,10 @@ use App\Http\Requests\Leave\UpdateLeave;
 use App\Models\Division;
 use App\Models\Leave;
 use App\Models\Member;
+use App\Models\User;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
@@ -41,9 +43,9 @@ class LeaveController extends Controller
     /**
      * @return Redirector|RedirectResponse
      */
-    public function update(UpdateLeave $form, Member $member)
+    public function update(UpdateLeave $form, Member $member, #[CurrentUser] User $user)
     {
-        if ($form->approve_leave && ($form->requester_id === auth()->user()->id)) {
+        if ($form->approve_leave && ($form->requester_id === $user->id)) {
             return redirect()->back()
                 ->withErrors(['member_id' => 'You cannot approve an LOA that you requested'])
                 ->withInput();

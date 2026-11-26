@@ -6,6 +6,7 @@ use App\Enums\Ability;
 use App\Enums\Role;
 use App\Models\User;
 use App\Support\Impersonation;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
@@ -16,9 +17,9 @@ class ImpersonationController extends Controller
     use AuthorizesRequests;
 
     #[Authorize('impersonate', 'user')]
-    public function impersonate(User $user): Redirector|RedirectResponse
+    public function impersonate(User $user, #[CurrentUser] User $impersonator): Redirector|RedirectResponse
     {
-        Impersonation::start(auth()->user(), $user);
+        Impersonation::start($impersonator, $user);
 
         $this->showSuccessToast('You are now impersonating ' . $user->name);
 
@@ -34,9 +35,9 @@ class ImpersonationController extends Controller
         return redirect()->back();
     }
 
-    public function impersonateRole(string $role): RedirectResponse
+    public function impersonateRole(string $role, #[CurrentUser] User $user): RedirectResponse
     {
-        if (! auth()->user()->can(Ability::ImpersonateRoles) && ! auth()->user()->isDeveloper()) {
+        if (! $user->can(Ability::ImpersonateRoles) && ! $user->isDeveloper()) {
             abort(403);
         }
 
@@ -49,7 +50,7 @@ class ImpersonationController extends Controller
         }
 
         session(['impersonatingRole' => $roleEnum->value]);
-        session(['originalRole' => auth()->user()->role->value]);
+        session(['originalRole' => $user->role->value]);
 
         $this->showSuccessToast('Now viewing as ' . $roleEnum->getLabel());
 

@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Division;
 use App\Models\DivisionApplication;
 use App\Models\Member;
+use App\Models\User;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
@@ -86,11 +88,11 @@ class DivisionApplicationApiController extends Controller
         ]);
     }
 
-    public function destroy(Division $division, DivisionApplication $application): JsonResponse
+    public function destroy(Division $division, DivisionApplication $application, #[CurrentUser] User $user): JsonResponse
     {
         $this->assertBelongsToDivision($division, $application);
 
-        if (! auth()->user()->can(Ability::DeleteApplications)) {
+        if (! $user->can(Ability::DeleteApplications)) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
@@ -99,7 +101,7 @@ class DivisionApplicationApiController extends Controller
         return response()->json(['message' => 'Application deleted']);
     }
 
-    public function addComment(Request $request, Division $division, DivisionApplication $application): JsonResponse
+    public function addComment(Request $request, Division $division, DivisionApplication $application, #[CurrentUser] User $user): JsonResponse
     {
         $this->assertBelongsToDivision($division, $application);
 
@@ -107,7 +109,7 @@ class DivisionApplicationApiController extends Controller
             'body' => 'required|string|min:5',
         ]);
 
-        $comment = $application->comment($validated['body'], auth()->user());
+        $comment = $application->comment($validated['body'], $user);
 
         $comment->load('author.member');
 

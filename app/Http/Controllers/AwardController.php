@@ -7,8 +7,10 @@ use App\Data\AwardShowData;
 use App\Models\Award;
 use App\Models\Member;
 use App\Models\MemberAward;
+use App\Models\User;
 use App\Rules\UniqueAwardForMember;
 use App\Services\AwardCatalogService;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Attributes\Controllers\Middleware;
@@ -105,7 +107,7 @@ class AwardController extends Controller
         return Inertia::render('awards/show', AwardShowData::for($award)->toArray());
     }
 
-    public function storeRecommendation(Request $request, Award $award): RedirectResponse
+    public function storeRecommendation(Request $request, Award $award, #[CurrentUser] User $user): RedirectResponse
     {
         if (! $award->canBeRequestedBy()) {
             return redirect()->back()->withErrors(['award' => 'You cannot request this award.']);
@@ -124,7 +126,7 @@ class AwardController extends Controller
         $member = Member::where('guid', $validatedData['member'])->firstOrFail();
 
         MemberAward::create([
-            'requester_id' => auth()->user()->member_id,
+            'requester_id' => $user->member_id,
             'award_id'     => $award->id,
             'member_id'    => $member->id,
             'reason'       => $validatedData['reason'],

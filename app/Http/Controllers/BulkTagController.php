@@ -11,15 +11,16 @@ use App\Http\Requests\DivisionTag\StoreBulkTagRequest;
 use App\Models\Division;
 use App\Models\DivisionTag;
 use App\Models\Member;
+use App\Models\User;
 use App\Policies\DivisionTagPolicy;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Routing\Attributes\Controllers\Authorize;
 
 class BulkTagController extends Controller
 {
     #[Authorize('assign', [DivisionTag::class, 'member'])]
-    public function getTags(Division $division, Member $member)
+    public function getTags(Division $division, Member $member, #[CurrentUser] User $user)
     {
-        $user   = auth()->user();
         $policy = new DivisionTagPolicy;
 
         $availableTags = $policy->getAssignableTags($user)
@@ -39,11 +40,10 @@ class BulkTagController extends Controller
         ]);
     }
 
-    public function addTag(AddTagRequest $request, Division $division, Member $member)
+    public function addTag(AddTagRequest $request, Division $division, Member $member, #[CurrentUser] User $user)
     {
         $validated = $request->validated();
 
-        $user   = auth()->user();
         $policy = new DivisionTagPolicy;
 
         $tag = $policy->getAssignableTags($user)
@@ -59,10 +59,8 @@ class BulkTagController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function createTag(CreateDivisionTagRequest $request, Division $division, Member $member)
+    public function createTag(CreateDivisionTagRequest $request, Division $division, Member $member, #[CurrentUser] User $user)
     {
-        $user = auth()->user();
-
         $userDivision = $user->can(Ability::ActAcrossDivisions) ? $division : $user->member?->division;
         if (! $userDivision) {
             return response()->json(['error' => 'No division found'], 403);
@@ -100,10 +98,8 @@ class BulkTagController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function createDivisionTag(CreateDivisionTagRequest $request, Division $division)
+    public function createDivisionTag(CreateDivisionTagRequest $request, Division $division, #[CurrentUser] User $user)
     {
-        $user = auth()->user();
-
         $userDivision = $user->can(Ability::ActAcrossDivisions) ? $division : $user->member?->division;
         if (! $userDivision) {
             return response()->json(['error' => 'No division found'], 403);
@@ -131,12 +127,11 @@ class BulkTagController extends Controller
         ]);
     }
 
-    public function store(StoreBulkTagRequest $request, Division $division)
+    public function store(StoreBulkTagRequest $request, Division $division, #[CurrentUser] User $user)
     {
         $validated = $request->validated();
 
         $members    = Member::whereIn('guid', $validated['member_ids'])->get();
-        $user       = auth()->user();
         $assignerId = $user->member?->id;
 
         $policy = new DivisionTagPolicy;

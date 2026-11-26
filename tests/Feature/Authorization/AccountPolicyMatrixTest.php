@@ -80,11 +80,11 @@ class AccountPolicyMatrixTest extends PermissionMatrixTestCase
 
         $checks = [
             ['viewAny', '(no division)', fn () => [DivisionMemberField::class]],
-            ['viewAny', 'own_division', fn ()   => [DivisionMemberField::class, $this->world->divisionA->fresh()]],
+            ['viewAny', 'own_division', fn () => [DivisionMemberField::class, $this->world->divisionA->fresh()]],
             ['viewAny', 'other_division', fn () => [DivisionMemberField::class, $this->world->divisionB->fresh()]],
-            ['create', '(no division)', fn ()   => [DivisionMemberField::class]],
-            ['create', 'own_division', fn ()    => [DivisionMemberField::class, $this->world->divisionA->fresh()]],
-            ['create', 'other_division', fn ()  => [DivisionMemberField::class, $this->world->divisionB->fresh()]],
+            ['create', '(no division)', fn () => [DivisionMemberField::class]],
+            ['create', 'own_division', fn () => [DivisionMemberField::class, $this->world->divisionA->fresh()]],
+            ['create', 'other_division', fn () => [DivisionMemberField::class, $this->world->divisionB->fresh()]],
         ];
 
         foreach (['update', 'delete'] as $ability) {
@@ -105,9 +105,9 @@ class AccountPolicyMatrixTest extends PermissionMatrixTestCase
         $checks = [
             ['create', '(any token)', fn () => [NewAccessToken::class]],
             ['destroy', 'own_token (model)', fn (string $actor) => [NewAccessToken::class, $this->world->users[$actor]->createToken('own')->accessToken]],
-            ['destroy', 'others_token (model)', fn ()           => [NewAccessToken::class, $othersToken->fresh()]],
-            ['destroy', 'own_token (id)', fn (string $actor)    => [NewAccessToken::class, $this->world->users[$actor]->createToken('own')->accessToken->id]],
-            ['destroy', 'others_token (id)', fn ()              => [NewAccessToken::class, $othersToken->id]],
+            ['destroy', 'others_token (model)', fn () => [NewAccessToken::class, $othersToken->fresh()]],
+            ['destroy', 'own_token (id)', fn (string $actor) => [NewAccessToken::class, $this->world->users[$actor]->createToken('own')->accessToken->id]],
+            ['destroy', 'others_token (id)', fn () => [NewAccessToken::class, $othersToken->id]],
         ];
 
         $this->assertMatchesSnapshot('ApiTokenPolicy', $this->evaluate(PermissionWorld::ACTORS, $checks));

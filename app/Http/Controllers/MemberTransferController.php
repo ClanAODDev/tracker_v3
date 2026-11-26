@@ -5,16 +5,18 @@ namespace App\Http\Controllers;
 use App\Jobs\UpdateDivisionForMember;
 use App\Models\Division;
 use App\Models\Transfer;
+use App\Models\User;
 use App\Notifications\Channel\NotifyDivisionMemberTransferRequested;
+use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
 class MemberTransferController extends Controller
 {
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, #[CurrentUser] User $user): JsonResponse
     {
-        $member = auth()->user()->member;
+        $member = $user->member;
 
         if (! $member) {
             return response()->json(['error' => 'No member record found'], 400);

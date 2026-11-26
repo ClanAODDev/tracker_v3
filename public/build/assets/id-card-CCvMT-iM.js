@@ -1,0 +1,1 @@
+import{s as e}from"./flash-toaster-DOjibZaA.js";var t={name:`id-card`,size:24,node:[[`path`,{d:`M13 19a4 4 0 00-8 0`,key:`cugzd5`}],[`path`,{d:`M16 10h2`,key:`8sgtl7`}],[`path`,{d:`M16 14h2`,key:`epxaof`}],[`circle`,{cx:`9`,cy:`12`,r:`3`,key:`u3jwor`}],[`rect`,{x:`2`,y:`5`,width:`20`,height:`14`,rx:`2`,key:`qneu4z`}]]};t.node;var n=e(t);export{n as t};
