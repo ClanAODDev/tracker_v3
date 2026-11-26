@@ -21,6 +21,7 @@ use App\Models\Member;
 use App\Models\Unit;
 use App\Services\MemberHandleService;
 use App\Services\Units\UnitAssignment;
+use Closure;
 use Filament\Actions\Action;
 use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
@@ -42,6 +43,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 class MemberResource extends Resource
@@ -554,11 +556,20 @@ class MemberResource extends Resource
         ];
     }
 
+    public static function resolveRecordRouteBinding(int|string $key, ?Closure $modifyQuery = null): ?Model
+    {
+        if (! ctype_digit((string) $key)) {
+            return null;
+        }
+
+        return parent::resolveRecordRouteBinding($key, $modifyQuery);
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => ListMembers::route('/'),
-            'edit'  => EditMember::route('/{record}/edit'),
+            'edit'  => EditMember::route('/{record:id}/edit'),
         ];
     }
 }
