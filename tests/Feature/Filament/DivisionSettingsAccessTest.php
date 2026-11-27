@@ -7,6 +7,7 @@ use App\Enums\Rank;
 use App\Enums\Role;
 use App\Filament\Mod\Resources\DivisionResource;
 use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
+use App\Models\Handle;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -102,5 +103,21 @@ class DivisionSettingsAccessTest extends TestCase
         foreach (DivisionResource::chatAlertFields() as $alert) {
             $this->assertSame('officers', $alerts[$alert], $alert);
         }
+    }
+
+    #[Test]
+    public function the_welcome_message_hint_lists_a_tag_for_each_handle_type(): void
+    {
+        $na       = Handle::factory()->create(['label' => 'Warships NA', 'type' => 'warships_na']);
+        $eu       = Handle::factory()->create(['label' => 'Warships EU', 'type' => 'warships_eu']);
+        $division = $this->createDivisionWithHandles([$na, $eu]);
+        $co       = $this->createMemberWithUser(['division_id' => $division->id, 'position' => Position::COMMANDING_OFFICER], ['role' => Role::OFFICER]);
+
+        $this->actingAs($co);
+
+        Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->assertSee('{{ ingame_name }} for every handle entered, labelled', false)
+            ->assertSee('{{ handle.warships_na }} for Warships NA', false)
+            ->assertSee('{{ handle.warships_eu }} for Warships EU', false);
     }
 }

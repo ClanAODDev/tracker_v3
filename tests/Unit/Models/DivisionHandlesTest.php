@@ -117,4 +117,15 @@ class DivisionHandlesTest extends TestCase
 
         $this->assertSame(['name' => 'In-Game Handle', 'value' => 'N/A'], $division->handleFieldFor($this->createMember()));
     }
+
+    #[Test]
+    public function handle_types_carry_a_snake_case_tag_for_welcome_messages()
+    {
+        $na       = Handle::factory()->create(['label' => 'Warships NA', 'type' => 'warships_na']);
+        $tag      = Handle::factory()->create(['label' => 'Battle Tag', 'type' => 'Battle Tag']);
+        $xbox     = Handle::factory()->create(['label' => 'XBox Live', 'type' => 'xbox-live']);
+        $division = $this->createDivisionWithHandles([$na, $tag, $xbox]);
+
+        $this->assertSame(['warships_na', 'battle_tag', 'xbox_live'], array_column($division->handleTypes(), 'tag'));
+    }
 }

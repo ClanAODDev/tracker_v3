@@ -73,7 +73,6 @@ export function useRecruitForm(props: RecruitFormProps) {
         [props.handleTypes, member.handles],
     );
     const hasHandle = filledHandles.length > 0;
-    const welcomeHandle = filledHandles[0]?.value ?? '';
 
     const validateForumName = useCallback(
         (name: string, memberId: string, email?: string) => {
@@ -357,7 +356,6 @@ export function useRecruitForm(props: RecruitFormProps) {
         patchMember,
         patchHandle,
         filledHandles,
-        welcomeHandle,
         memberIdValidation,
         forumNameValidation,
         validating,
