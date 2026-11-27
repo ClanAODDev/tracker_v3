@@ -41,18 +41,26 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class DivisionResource extends Resource
 {
-    public const array CHAT_ALERT_FIELDS = [
-        'member_applied',
-        'member_created',
-        'member_approved',
-        'member_removed',
-        'member_transferred',
-        'pt_member_removed',
-        'loa_expiring',
-        'loa_expired',
-        'division_edited',
-        'member_promoted',
-        'member_awarded',
+    private const array CHAT_ALERT_SECTIONS = [
+        'Recruitment Notifications' => [
+            'member_applied'  => 'New Applications',
+            'member_created'  => 'New Recruitments',
+            'member_approved' => 'New Recruit Approval',
+        ],
+        'Membership Changes' => [
+            'member_removed'     => 'Member Removals',
+            'member_transferred' => 'Member Transfer',
+            'pt_member_removed'  => 'Part‑Time Member Removal',
+        ],
+        'Leave of Absence' => [
+            'loa_expiring' => 'LOA Expiring Soon (3 days out)',
+            'loa_expired'  => 'LOA Expired',
+        ],
+        'Administrative Updates' => [
+            'division_edited' => 'Division Settings Changes',
+            'member_promoted' => 'Member Promoted',
+            'member_awarded'  => 'Member Awarded',
+        ],
     ];
 
     protected static ?string $model = Division::class;
@@ -275,7 +283,7 @@ class DivisionResource extends Resource
                                             ->icon('heroicon-m-bell-alert')
                                             ->tooltip('Send every notification below to the officers channel. Save to apply.')
                                             ->action(function (Set $set): void {
-                                                foreach (self::CHAT_ALERT_FIELDS as $alert) {
+                                                foreach (self::chatAlertFields() as $alert) {
                                                     $set("settings.chat_alerts.{$alert}", 'officers');
                                                 }
 
@@ -297,73 +305,7 @@ class DivisionResource extends Resource
                                             )),
                                     ]),
 
-                                Section::make('Recruitment Notifications')
-                                    ->statePath('settings.chat_alerts')
-                                    ->columns(3)
-                                    ->schema([
-                                        Select::make('member_applied')
-                                            ->options($channelOptions)
-                                            ->default(false)
-                                            ->label('New Applications'),
-                                        Select::make('member_created')
-                                            ->options($channelOptions)
-                                            ->default(false)
-                                            ->label('New Recruitments'),
-                                        Select::make('member_approved')
-                                            ->options($channelOptions)
-                                            ->default(false)
-                                            ->label('New Recruit Approval'),
-                                    ]),
-
-                                Section::make('Membership Changes')
-                                    ->statePath('settings.chat_alerts')
-                                    ->columns(3)
-                                    ->schema([
-                                        Select::make('member_removed')
-                                            ->options($channelOptions)
-                                            ->default(false)
-                                            ->label('Member Removals'),
-                                        Select::make('member_transferred')
-                                            ->options($channelOptions)
-                                            ->default(false)
-                                            ->label('Member Transfer'),
-                                        Select::make('pt_member_removed')
-                                            ->options($channelOptions)
-                                            ->default(false)
-                                            ->label('Part‑Time Member Removal'),
-                                    ]),
-
-                                Section::make('Leave of Absence')
-                                    ->statePath('settings.chat_alerts')
-                                    ->columns(3)
-                                    ->schema([
-                                        Select::make('loa_expiring')
-                                            ->options($channelOptions)
-                                            ->default(false)
-                                            ->label('LOA Expiring Soon (3 days out)'),
-                                        Select::make('loa_expired')
-                                            ->options($channelOptions)
-                                            ->default(false)
-                                            ->label('LOA Expired'),
-                                    ]),
-
-                                Section::make('Administrative Updates')
-                                    ->statePath('settings.chat_alerts')
-                                    ->columns(3)
-                                    ->schema([
-                                        Select::make('division_edited')
-                                            ->options($channelOptions)
-                                            ->default(false)
-                                            ->label('Division Settings Changes'),
-                                        Select::make('member_promoted')
-                                            ->options($channelOptions)
-                                            ->default(false)
-                                            ->label('Member Promoted'),
-                                        Select::make('member_awarded')
-                                            ->options($channelOptions)
-                                            ->default(false)
-                                            ->label('Member Awarded'),
-                                    ]),
+                                ...self::chatAlertSections($channelOptions),
                             ]),
 
                         Tab::make('Website')
@@ -486,6 +428,36 @@ class DivisionResource extends Resource
             'index' => ListDivisions::route('/'),
             'edit'  => EditDivision::route('/{record}/edit'),
         ];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function chatAlertFields(): array
+    {
+        return array_keys(array_merge(...array_values(self::CHAT_ALERT_SECTIONS)));
+    }
+
+    /**
+     * @return list<Section>
+     */
+    private static function chatAlertSections(array $channelOptions): array
+    {
+        return array_map(
+            fn (string $title, array $alerts): Section => Section::make($title)
+                ->statePath('settings.chat_alerts')
+                ->columns(3)
+                ->schema(array_map(
+                    fn (string $alert, string $label): Select => Select::make($alert)
+                        ->options($channelOptions)
+                        ->default(false)
+                        ->label($label),
+                    array_keys($alerts),
+                    $alerts,
+                )),
+            array_keys(self::CHAT_ALERT_SECTIONS),
+            self::CHAT_ALERT_SECTIONS,
+        );
     }
 
     private static function applicationFieldsDescription(?Division $division): string
