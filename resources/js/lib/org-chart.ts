@@ -66,7 +66,7 @@ export interface OrgChartHandle {
     expandAll(): void;
     collapseAll(): void;
     toggleHandles(): boolean;
-    exportPng(): void;
+    exportPng(): Promise<void>;
     setSearch(term: string): SearchMatch[];
     focusNode(id: string): void;
     resize(): void;
@@ -117,6 +117,33 @@ function rankInk(hex: string, colors: any) {
 function truncate(str: string | null | undefined, len: number) {
     if (!str) return '';
     return str.length > len ? str.substring(0, len - 1) + '…' : str;
+}
+
+async function toDataUrl(url: string): Promise<string> {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Could not load ${url}`);
+    const blob = await response.blob();
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(blob);
+    });
+}
+
+async function embedImages(svg: SVGSVGElement): Promise<void> {
+    const images = [...svg.querySelectorAll('image')];
+    await Promise.all(
+        images.map(async (image) => {
+            const href = image.getAttribute('href') ?? image.getAttribute('xlink:href');
+            if (!href || href.startsWith('data:')) return;
+            try {
+                image.setAttribute('href', await toDataUrl(href));
+            } catch {
+                image.remove();
+            }
+        }),
+    );
 }
 
 export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHandle {
@@ -771,7 +798,7 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
             update(root);
             return showHandles;
         },
-        exportPng: () => {
+        exportPng: async () => {
             const bounds = (g.node() as SVGGElement).getBBox();
             const pad = 40;
             const cloned = svgEl.cloneNode(true) as SVGSVGElement;
@@ -781,6 +808,8 @@ export function createOrgChart(svgEl: SVGSVGElement, data: OrgNode): OrgChartHan
             clonedG.setAttribute('transform', `translate(${-bounds.x + pad}, ${-bounds.y + pad})`);
             const bg = themeColors().bgDark;
             cloned.style.backgroundColor = bg;
+            cloned.style.fontFamily = `${getComputedStyle(svgEl).fontFamily}, ui-sans-serif, system-ui, sans-serif`;
+            await embedImages(cloned);
             const svgString = new XMLSerializer().serializeToString(cloned);
             const url = URL.createObjectURL(new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' }));
             const img = new Image();
