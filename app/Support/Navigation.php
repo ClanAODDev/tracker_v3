@@ -40,8 +40,8 @@ class Navigation
                         ? ['label' => 'Division Turnover', 'route' => 'reports.division-turnover', 'match' => ['clan/division-turnover']]
                         : null,
                     ['label' => 'Leadership Structure', 'route' => 'leadership', 'match' => ['clan/leadership']],
-                    ['label' => 'Ranking Structure', 'route' => 'clan.ranks', 'match' => ['clan/ranks']],
-                    ['label' => 'Code of Conduct', 'route' => 'clan.code-of-conduct', 'match' => ['clan/code-of-conduct']],
+                    ['label' => 'Ranking Structure', 'href' => config('services.aod_site.url') . '/ranks', 'external' => true],
+                    ['label' => 'Code of Conduct', 'href' => config('services.aod_site.url') . '/code-of-conduct', 'external' => true],
                     ['label' => 'Outstanding Inactives', 'route' => 'reports.outstanding-inactives', 'match' => ['clan/outstanding-inactives']],
                 ]),
             ],

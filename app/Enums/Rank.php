@@ -171,54 +171,6 @@ enum Rank: int implements HasColor, HasLabel
         return $this->value >= self::MASTER_SERGEANT->value;
     }
 
-    public function getTier(): string
-    {
-        return match ($this) {
-            self::SERGEANT_MAJOR   => 'mythic',
-            self::COMMAND_SERGEANT => 'legendary',
-            self::FIRST_SERGEANT   => 'epic',
-            self::MASTER_SERGEANT  => 'rare-plus',
-            self::STAFF_SERGEANT   => 'rare',
-            self::SERGEANT         => 'uncommon',
-            self::CORPORAL,
-            self::LANCE_CORPORAL,
-            self::TRAINER => 'officer',
-            default       => 'enlisted',
-        };
-    }
-
-    public function getGroup(): string
-    {
-        if ($this->isSeniorLeader()) {
-            return 'admin';
-        }
-        if ($this->isOfficer()) {
-            return 'officer';
-        }
-
-        return 'enlisted';
-    }
-
-    public function getDuties(): string
-    {
-        return match ($this) {
-            self::SERGEANT_MAJOR      => 'Overall leader of Clan AOD, responsible for handling issues within the clan and representing AOD when working with other clan leaders. All major decisions, policy changes, and high-ranking promotions must pass through the Sergeant Major.',
-            self::COMMAND_SERGEANT    => 'Clan leader who assists the Sergeants Major in the leadership of AOD. Instructs clan management across all divisions, supports lower-ranking officers with division issues, and is involved in forum administration, division creation and deletion, Sergeant promotions, and policy changes.',
-            self::FIRST_SERGEANT      => 'Admin who oversees a number of divisions, assisting members of all ranks. First Sergeants are expected to aid in division decisions and leadership, and to participate in clan-wide decision making.',
-            self::MASTER_SERGEANT     => 'Active across a number of divisions, serving as liaison and advisor. Master Sergeants also oversee the communication of all Sergeant promotions.',
-            self::STAFF_SERGEANT      => 'Commonly serves as CO or XO. Staff Sergeants are expected to aid newer Sergeants and lower-ranking officers, and moderate division requests. If not serving as a CO or XO, Staff Sergeant should be active in more than one division, acting as an advisor and informant when requested by AOD leadership.',
-            self::SERGEANT            => 'Experienced member recognized as a strong leader by division and clan leadership. Sergeants serve as leaders in their full-time divisions and assist in moderating all AOD spaces.',
-            self::CORPORAL            => 'Often serves as a Platoon or Squad leader. Corporals are responsible for managing division recruits and setting the tone for daily activities.',
-            self::LANCE_CORPORAL      => 'Often serves as a Squad leader. Lance Corporals assist squad and platoon leaders with tasks as needed to help recruits settle into the clan.',
-            self::TRAINER             => '[Division Optional] A member who has demonstrated individual ability and has been granted preliminary officer roles to begin recruiting. Their primary focus is helping all new members within their division become productive contributors to the clan.',
-            self::SPECIALIST          => 'Member with demonstrated skill and game knowledge. A well-tenured member with broad clan experience — the rank most called upon to mentor others within their division.',
-            self::PRIVATE_FIRST_CLASS => 'Expected to help fellow clan members and set an example for incoming members. Rank is based on merit and time served. At this stage, a member should know and follow the Code of Conduct and strive to be the best representation of AOD they can be.',
-            self::PRIVATE             => 'Rank based on merit and time in AOD. A Private should be regularly active on Discord and consistently demonstrate clan loyalty and honor.',
-            self::CADET               => 'Active member who has demonstrated loyalty and honor in their first months in the clan.',
-            self::RECRUIT             => 'New member of AOD. Should begin learning the Code of Conduct and the clan rank system, and be active in both the division\'s AOD server and on the forums.',
-        };
-    }
-
     public function routeNotificationForAdmin()
     {
         return config('aod.msgt-channel');
