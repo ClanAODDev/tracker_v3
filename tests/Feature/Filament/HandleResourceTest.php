@@ -130,4 +130,44 @@ class HandleResourceTest extends TestCase
 
         $this->assertSame('https://steamcommunity.com/profiles/', $handle->fresh()->url);
     }
+
+    #[Test]
+    public function entering_a_label_fills_in_the_type(): void
+    {
+        $this->actingAs($this->createAdmin());
+
+        Livewire::test(CreateHandle::class)
+            ->fillForm(['label' => 'Arc Raiders ID'])
+            ->assertSchemaStateSet(['type' => 'arc_raiders_id'])
+            ->fillForm(['label' => 'Arc Raiders Name'])
+            ->assertSchemaStateSet(['type' => 'arc_raiders_name']);
+    }
+
+    #[Test]
+    public function a_manually_entered_type_is_not_overwritten(): void
+    {
+        $this->actingAs($this->createAdmin());
+
+        Livewire::test(CreateHandle::class)
+            ->fillForm(['label' => 'Arc Raiders ID'])
+            ->fillForm(['type' => 'embark-id'])
+            ->fillForm(['label' => 'Embark ID'])
+            ->assertSchemaStateSet(['type' => 'embark-id']);
+    }
+
+    #[Test]
+    public function renaming_an_existing_handle_type_keeps_its_type(): void
+    {
+        $this->actingAs($this->createAdmin());
+
+        $handle = Handle::create(['label' => 'UPlay', 'type' => 'uplay']);
+
+        Livewire::test(EditHandle::class, ['record' => $handle->getRouteKey()])
+            ->fillForm(['label' => 'Ubisoft Connect'])
+            ->assertSchemaStateSet(['type' => 'uplay'])
+            ->call('save')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame('uplay', $handle->fresh()->type);
+    }
 }
