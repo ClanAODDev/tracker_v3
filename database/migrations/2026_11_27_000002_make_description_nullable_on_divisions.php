@@ -9,14 +9,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('divisions', function (Blueprint $table) {
-            $table->string('description')->nullable()->change();
+            $table->string('description', 255)->nullable()->change();
         });
     }
 
     public function down(): void
     {
         Schema::table('divisions', function (Blueprint $table) {
-            $table->string('description')->nullable(false)->change();
+            $table->string('description', 255)->nullable(false)->change();
         });
     }
 };
