@@ -11,6 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
+use App\Support\Markdown\CalloutExtension;
 use League\CommonMark\Extension\Autolink\AutolinkExtension;
 use League\CommonMark\Extension\CommonMark\CommonMarkCoreExtension;
 use League\CommonMark\Extension\CommonMark\Node\Block\BlockQuote;
@@ -64,6 +65,7 @@ return [
         HeadingPermalinkExtension::class,
         AutolinkExtension::class,
         EmbedExtension::class,
+        CalloutExtension::class,
     ],
 
     /*

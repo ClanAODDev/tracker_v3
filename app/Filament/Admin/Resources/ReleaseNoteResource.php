@@ -18,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\HtmlString;
 
 class ReleaseNoteResource extends Resource
 {
@@ -61,7 +62,7 @@ class ReleaseNoteResource extends Resource
                     ->columnSpanFull()
                     ->minHeight('24rem')
                     ->fileAttachmentsDirectory('release-notes')
-                    ->helperText('Paste or drop images into the text. On the release note page they show as thumbnails that open full size when clicked.'),
+                    ->helperText(new HtmlString('Paste or drop images into the text. On the release note page they show as thumbnails that open full size when clicked.<br>For a callout, start a quote with a type on its own line: <code>&gt; [!HERO]</code> for an intro panel, or <code>&gt; [!NOTE]</code>, <code>[!TIP]</code>, <code>[!IMPORTANT]</code>, <code>[!WARNING]</code> or <code>[!CAUTION]</code>. Text after the type, like <code>&gt; [!TIP] Before you start</code>, replaces the label.')),
             ]);
     }
 
