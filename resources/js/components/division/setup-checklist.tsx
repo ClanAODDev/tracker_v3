@@ -8,7 +8,7 @@ export interface SetupStep {
     label: string;
     done: boolean;
     hint: string;
-    action?: { label: string; href: string };
+    action?: { label: string; href: string } | { label: string; onClick: () => void };
 }
 
 export function SetupChecklist({ steps }: { steps: SetupStep[] }) {
@@ -34,9 +34,14 @@ export function SetupChecklist({ steps }: { steps: SetupStep[] }) {
                             <p className={cn('text-sm font-medium', step.done && 'text-muted-foreground line-through')}>{step.label}</p>
                             {!step.done && <p className="text-xs text-muted-foreground">{step.hint}</p>}
                         </div>
-                        {!step.done && step.action && (
+                        {!step.done && step.action && 'href' in step.action && (
                             <Button size="xs" variant="outline" asChild>
                                 <a href={step.action.href}>{step.action.label}</a>
+                            </Button>
+                        )}
+                        {!step.done && step.action && 'onClick' in step.action && (
+                            <Button size="xs" variant="outline" onClick={step.action.onClick}>
+                                {step.action.label}
                             </Button>
                         )}
                     </li>

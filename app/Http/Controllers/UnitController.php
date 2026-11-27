@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Data\UnitStatsData;
 use App\Enums\Position;
 use App\Http\Requests\Unit\StoreChildUnitRequest;
+use App\Http\Requests\Unit\StoreTopLevelUnitRequest;
 use App\Models\Division;
 use App\Models\Unit;
 use App\Repositories\UnitRepository;
@@ -28,6 +29,15 @@ class UnitController extends Controller
     public function show(Division $division, Unit $unit): Response
     {
         return $unit->isSquad() ? $this->showSquad($division, $unit) : $this->showPlatoon($division, $unit);
+    }
+
+    public function store(StoreTopLevelUnitRequest $request, Division $division, UnitAssignment $assignment): RedirectResponse
+    {
+        $unit = $assignment->create($division, null, ['name' => $request->validated('name')]);
+
+        $this->showSuccessToast("{$unit->name} created");
+
+        return back();
     }
 
     public function storeChild(StoreChildUnitRequest $request, Division $division, Unit $unit, UnitAssignment $assignment): RedirectResponse

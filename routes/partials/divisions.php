@@ -57,6 +57,7 @@ Route::prefix('divisions/{division}')->group(function () {
     });
 
     Route::prefix('units')->scopeBindings()->group(function () {
+        Route::post('/', [UnitController::class, 'store'])->name('unit.store');
         Route::get('{unit}', [UnitController::class, 'show'])->name('unit');
         Route::get('{unit}/manage-assignments', [UnitController::class, 'manage'])->name('unit.manage');
         Route::post('{unit}/children', [UnitController::class, 'storeChild'])->name('unit.children.store');

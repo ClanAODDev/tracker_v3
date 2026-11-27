@@ -51,6 +51,7 @@ readonly class DivisionShowData
                 'canDeleteApplications' => $user->can(Ability::DeleteApplications),
                 'canRecruit'            => $user->can('recruit', Member::class),
                 'canCreatePlatoon'      => $user->can('create', [Unit::class, $division]),
+                'createUnitUrl'         => ! $division->isFlat() && $user->can('create', [Unit::class, $division]) ? route('unit.store', $division) : null,
                 'canManageUnassigned'   => $user->can('manageUnassigned', User::class),
                 'editUrl'               => route('filament.mod.resources.divisions.edit', $division),
                 'leadershipUrl'         => $this->leadershipUrl($user, $division),
