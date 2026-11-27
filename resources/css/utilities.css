@@ -159,6 +159,87 @@
         display: none;
     }
 
+    .prose-tron .callout {
+        --callout-color: var(--info);
+        margin-block: 1.25rem;
+        border: 1px solid color-mix(in srgb, var(--callout-color) 35%, transparent);
+        border-radius: var(--radius-md);
+        background: color-mix(in srgb, var(--callout-color) 7%, var(--card));
+        padding: 0.875rem 1.125rem;
+    }
+
+    .prose-tron .callout-tip {
+        --callout-color: var(--success);
+    }
+
+    .prose-tron .callout-important {
+        --callout-color: var(--primary);
+    }
+
+    .prose-tron .callout-warning {
+        --callout-color: var(--warning);
+    }
+
+    .prose-tron .callout-caution {
+        --callout-color: var(--destructive);
+    }
+
+    .prose-tron .callout-title {
+        margin: 0 0 0.25rem;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--callout-color);
+    }
+
+    .prose-tron .callout-body > :first-child {
+        margin-top: 0;
+    }
+
+    .prose-tron .callout-body > :last-child {
+        margin-bottom: 0;
+    }
+
+    .prose-tron .callout-hero {
+        --callout-color: var(--primary);
+        margin-block: 0 2rem;
+        border-radius: var(--radius-lg);
+        background:
+            radial-gradient(ellipse at top left, color-mix(in srgb, var(--primary) 16%, transparent), transparent 60%),
+            var(--card);
+        padding: 2rem 2.25rem;
+        font-size: 1rem;
+    }
+
+    .prose-tron .callout-hero .callout-title {
+        font-size: 0.8125rem;
+    }
+
+    .prose-tron .callout-hero :is(h1, h2) {
+        margin-block: 0 0.75rem;
+        border: 0;
+        font-size: clamp(1.5rem, 3vw, 2.25rem);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+    }
+
+    .prose-tron .callout-hero :is(h1, h2) strong {
+        color: var(--primary);
+    }
+
+    .prose-tron .callout-hero p {
+        max-width: 65ch;
+        color: color-mix(in srgb, var(--foreground) 85%, transparent);
+    }
+
+    @media (max-width: 640px) {
+        .prose-tron .callout-hero {
+            padding: 1.5rem 1.25rem;
+        }
+    }
+
     /* --- Tron surface treatments --------------------------------------- */
 
     /* Topographic contour lines behind page content: faint minor contours with

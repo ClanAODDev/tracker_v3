@@ -82,6 +82,7 @@ class ReleaseNote extends Model
     {
         return (string) Markdown::convertToHtml((string) $this->body)
             |> (fn (string $html) => preg_replace('#<h([1-6])\b[^>]*>.*?</h\1>#is', ' ', $html))
+            |> (fn (string $html) => preg_replace('#<p class="callout-title">.*?</p>#is', ' ', $html))
             |> strip_tags(...)
             |> (fn (string $text) => html_entity_decode($text, ENT_QUOTES | ENT_HTML5))
             |> (fn (string $text) => preg_replace('/\s+/u', ' ', $text))

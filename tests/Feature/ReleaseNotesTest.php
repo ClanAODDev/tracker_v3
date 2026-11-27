@@ -231,6 +231,16 @@ class ReleaseNotesTest extends TestCase
     }
 
     #[Test]
+    public function excerpts_leave_out_callout_labels(): void
+    {
+        $note = ReleaseNote::factory()->make([
+            'body' => "> [!HERO]\n> # What's new\n> A fresh look.\n\n> [!TIP]\n> Pin your division.",
+        ]);
+
+        $this->assertSame('A fresh look. Pin your division.', $note->excerpt());
+    }
+
+    #[Test]
     public function non_admins_get_no_edit_or_manage_links(): void
     {
         $note = ReleaseNote::factory()->create(['published_at' => now()->subDay()]);
