@@ -57,8 +57,6 @@ class DivisionResource extends Resource
 
     private static string $becy = 'https://jarlpenguin.github.io/BeCyIconGrabberPortable/';
 
-    private static string $forms = 'https://www.clanaod.net/forums/forms.php';
-
     private static string $usergroup_mod = 'https://www.clanaod.net/forums/admincp/usergroup.php?do=modify';
 
     public static function form(Schema $schema): Schema
@@ -239,11 +237,6 @@ class DivisionResource extends Resource
                             ->hint(self::externalLink('View Forum Usergroups', self::$usergroup_mod))
                             ->numeric()
                             ->required(),
-                        TextInput::make('forum_app_id')
-                            ->label('Application form id')
-                            ->hint(self::externalLink('View Division Forms', self::$forms))
-                            ->required()
-                            ->numeric(),
                     ])->columns(),
 
                 Section::make('Extra settings')

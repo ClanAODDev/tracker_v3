@@ -288,7 +288,7 @@ class DivisionResourceTest extends TestCase
 
         $html = Livewire::test(CreateDivision::class)->html();
 
-        foreach (['Icon Extraction Tool', 'View Forum Usergroups', 'View Division Forms'] as $label) {
+        foreach (['Icon Extraction Tool', 'View Forum Usergroups'] as $label) {
             $this->assertMatchesRegularExpression('#<a [^>]*target="_blank" rel="noopener noreferrer"[^>]*>' . preg_quote($label, '#') . '#', $html);
         }
     }
