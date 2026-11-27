@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\TrainingModuleResource\RelationManagers;
 
+use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
@@ -65,6 +66,11 @@ class SectionsRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('title')
             ->reorderable('display_order')
+            ->reorderRecordsTriggerAction(
+                fn (Action $action, bool $isReordering): Action => $action
+                    ->button()
+                    ->label($isReordering ? 'Done reordering' : 'Reorder sections'),
+            )
             ->defaultSort('display_order')
             ->paginated(false)
             ->columns([
