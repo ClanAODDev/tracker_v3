@@ -44,7 +44,6 @@ class DivisionResource extends Resource
 {
     private const array CHAT_ALERT_SECTIONS = [
         'Recruitment Notifications' => [
-            'member_applied'  => 'New Applications',
             'member_created'  => 'New Recruitments',
             'member_approved' => 'New Recruit Approval',
         ],

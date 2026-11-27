@@ -49,12 +49,11 @@ class Division extends Model
         'officer_channel' => '',
         'member_channel'  => '',
 
-        'use_welcome_thread'   => false,
-        'division_structure'   => '',
-        'welcome_area'         => '',
-        'welcome_pm'           => '',
-        'inactivity_days'      => 30,
-        'recruitment_rss_feed' => '',
+        'use_welcome_thread' => false,
+        'division_structure' => '',
+        'welcome_area'       => '',
+        'welcome_pm'         => '',
+        'inactivity_days'    => 30,
 
         'activity_threshold' => [
             ['days' => 30, 'class' => 'text-danger'], ['days' => 14, 'class' => 'text-warning'],
@@ -66,7 +65,6 @@ class Division extends Model
             'division_edited'    => false,
             'loa_expired'        => false,
             'loa_expiring'       => false,
-            'member_applied'     => false,
             'member_approved'    => false,
             'member_awarded'     => false,
             'member_created'     => false,
