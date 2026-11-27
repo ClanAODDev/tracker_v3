@@ -81,4 +81,27 @@ class DivisionControllerTest extends TestCase
                 ->where('members', fn ($members) => collect($members)->contains('clanId', $partTimer->clan_id))
                 ->has('addUrl'));
     }
+
+    #[Test]
+    public function admins_get_a_link_to_assign_division_leadership()
+    {
+        $division = $this->createActiveDivision();
+
+        $this->actingAs($this->createAdmin())
+            ->get(route('division', $division->slug))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('division.leadershipUrl', fn (string $url) => str_ends_with($url, "/admin/divisions/{$division->slug}/edit#leadership")));
+    }
+
+    #[Test]
+    public function officers_do_not_get_a_link_to_assign_division_leadership()
+    {
+        $officer = $this->createOfficer();
+
+        $this->actingAs($officer)
+            ->get(route('division', $officer->member->division->slug))
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page->where('division.leadershipUrl', null));
+    }
 }

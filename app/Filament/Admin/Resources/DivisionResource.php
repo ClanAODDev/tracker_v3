@@ -143,6 +143,7 @@ class DivisionResource extends Resource
                     ]),
 
                 Section::make('Leadership Management')
+                    ->id('leadership')
                     ->columnSpanFull()
                     ->description('Manage division leaders')
                     ->hiddenOn('create')

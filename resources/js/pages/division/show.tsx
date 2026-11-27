@@ -45,6 +45,7 @@ interface DivisionShowProps {
         canCreatePlatoon: boolean;
         canManageUnassigned: boolean;
         editUrl: string;
+        leadershipUrl: string | null;
         recruitUrl: string;
         unassignedToSquadUrl: string;
     };
@@ -122,6 +123,7 @@ export default function DivisionShow({
             label: 'Assign division leadership',
             done: leaders.length > 0,
             hint: 'Clan leadership assigns the CO and XOs.',
+            action: d.leadershipUrl ? { label: 'Assign leadership', href: d.leadershipUrl } : undefined,
         },
         ...(d.hasUnits
             ? [
@@ -352,9 +354,16 @@ export default function DivisionShow({
                     <section>
                         <SectionTitle>Leadership</SectionTitle>
                         {leaders.length === 0 ? (
-                            <div className="rounded-md border border-dashed border-border p-4 text-sm">
-                                <p className="font-medium">No leadership assigned</p>
-                                <p className="text-muted-foreground">Clan leadership assigns the CO and XOs.</p>
+                            <div className="flex flex-wrap items-center gap-3 rounded-md border border-dashed border-border p-4 text-sm">
+                                <div className="min-w-0 flex-1">
+                                    <p className="font-medium">No leadership assigned</p>
+                                    <p className="text-muted-foreground">Clan leadership assigns the CO and XOs.</p>
+                                </div>
+                                {d.leadershipUrl && (
+                                    <Button size="xs" variant="outline" asChild>
+                                        <a href={d.leadershipUrl}>Assign leadership</a>
+                                    </Button>
+                                )}
                             </div>
                         ) : (
                             <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">

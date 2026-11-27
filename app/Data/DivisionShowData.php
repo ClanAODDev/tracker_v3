@@ -3,12 +3,14 @@
 namespace App\Data;
 
 use App\Enums\Ability;
+use App\Filament\Admin\Resources\DivisionResource as AdminDivisionResource;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Unit;
 use App\Models\User;
 use App\Support\DivisionToolbar;
 use App\Support\MemberCard;
+use Filament\Facades\Filament;
 use Illuminate\Support\Collection;
 
 readonly class DivisionShowData
@@ -50,6 +52,7 @@ readonly class DivisionShowData
                 'canCreatePlatoon'      => $user->can('create', [Unit::class, $division]),
                 'canManageUnassigned'   => $user->can('manageUnassigned', User::class),
                 'editUrl'               => route('filament.mod.resources.divisions.edit', $division),
+                'leadershipUrl'         => $this->leadershipUrl($user, $division),
                 'recruitUrl'            => route('recruiting.form', $division),
                 'unassignedToSquadUrl'  => route('division.unassigned-to-squad', $division),
             ],
@@ -137,5 +140,14 @@ readonly class DivisionShowData
             ],
             'pendingApplicationCount' => $this->pendingApplicationCount,
         ];
+    }
+
+    private function leadershipUrl(User $user, Division $division): ?string
+    {
+        if (! $user->canAccessPanel(Filament::getPanel('admin')) || ! AdminDivisionResource::canEdit($division)) {
+            return null;
+        }
+
+        return AdminDivisionResource::getUrl('edit', ['record' => $division], panel: 'admin') . '#leadership';
     }
 }
