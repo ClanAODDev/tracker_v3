@@ -1,6 +1,6 @@
 import { pluralize } from '@/lib/format';
 import { Head } from '@inertiajs/react';
-import { Headset, History, Settings, Shield, Star, TriangleAlert, UserPlus, Users } from 'lucide-react';
+import { Headset, History, Plus, Settings, Shield, Star, TriangleAlert, UserPlus, Users } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
 import { ThemedLineChart } from '@/components/charts';
@@ -10,6 +10,7 @@ import { LeaderAvatar } from '@/components/division/leader-avatar';
 import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from '@/components/division/organize';
 import { PlatoonCard, type Platoon } from '@/components/division/platoon-card';
 import { NoSquadModal, noLevelFromKey } from '@/components/division/no-squad-modal';
+import { CreateUnitDialog } from '@/components/division/create-unit';
 import { RecentActivityModal, type RecentActivityGroup } from '@/components/division/recent-activity-modal';
 import { SetupChecklist, type SetupStep } from '@/components/division/setup-checklist';
 import { TileLink } from '@/components/division/tile-link';
@@ -43,6 +44,7 @@ interface DivisionShowProps {
         canDeleteApplications: boolean;
         canRecruit: boolean;
         canCreatePlatoon: boolean;
+        createUnitUrl: string | null;
         canManageUnassigned: boolean;
         editUrl: string;
         leadershipUrl: string | null;
@@ -117,6 +119,7 @@ export default function DivisionShow({
     const prev = census.previous;
     const memberDelta = prev && prev.count && stats.memberCount ? Math.round((1 - prev.count / stats.memberCount) * 1000) / 10 : 0;
 
+    const [createUnitOpen, setCreateUnitOpen] = useState(false);
     const hasMembers = stats.memberCount > 0;
     const hasCensusHistory = census.population.filter((count) => count > 0).length >= 2;
     const setupSteps: SetupStep[] = [
@@ -134,7 +137,7 @@ export default function DivisionShow({
                       label: `Create the first ${d.topLevelLabel.toLowerCase()}`,
                       done: platoons.length > 0,
                       hint: `Recruits are assigned to a ${d.topLevelLabel.toLowerCase()} when they join.`,
-                      action: d.canCreatePlatoon ? { label: `Create ${d.topLevelLabel}`, href: d.editUrl } : undefined,
+                      action: d.createUnitUrl ? { label: `Create ${d.topLevelLabel}`, onClick: () => setCreateUnitOpen(true) } : undefined,
                   },
               ]
             : []),
@@ -424,9 +427,9 @@ export default function DivisionShow({
                     <section ref={platoonsRef}>
                         <SectionTitle
                             action={
-                                d.canCreatePlatoon ? (
-                                    <Button variant="ghost" size="sm" asChild>
-                                        <a href={d.editUrl}>Create {d.topLevelLabel}</a>
+                                d.createUnitUrl ? (
+                                    <Button variant="ghost" size="sm" onClick={() => setCreateUnitOpen(true)}>
+                                        <Plus /> New {d.topLevelLabel}
                                     </Button>
                                 ) : undefined
                             }
@@ -447,10 +450,17 @@ export default function DivisionShow({
                         )}
 
                         {platoonList.length === 0 ? (
-                            <p className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
-                                No {pluralize(d.topLevelLabel).toLowerCase()} yet.
-                                {d.canCreatePlatoon && ` Create one to start assigning recruits.`}
-                            </p>
+                            <div className="flex flex-wrap items-center gap-3 rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+                                <p className="min-w-0 flex-1">
+                                    No {pluralize(d.topLevelLabel).toLowerCase()} yet.
+                                    {d.createUnitUrl && ` Create one to start assigning recruits.`}
+                                </p>
+                                {d.createUnitUrl && (
+                                    <Button size="xs" variant="outline" onClick={() => setCreateUnitOpen(true)}>
+                                        <Plus /> New {d.topLevelLabel}
+                                    </Button>
+                                )}
+                            </div>
                         ) : (
                             <div className="grid gap-3 lg:grid-cols-2">
                                 {platoonList.map((platoon, i) => (
@@ -516,6 +526,10 @@ export default function DivisionShow({
                     open={noLevel !== null}
                     onOpenChange={(open) => !open && setNoLevel(null)}
                 />
+            )}
+
+            {d.createUnitUrl && (
+                <CreateUnitDialog url={d.createUnitUrl} label={d.topLevelLabel} open={createUnitOpen} onOpenChange={setCreateUnitOpen} />
             )}
         </AppLayout>
     );

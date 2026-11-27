@@ -24,12 +24,14 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
@@ -39,6 +41,20 @@ use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class DivisionResource extends Resource
 {
+    public const array CHAT_ALERT_FIELDS = [
+        'member_applied',
+        'member_created',
+        'member_approved',
+        'member_removed',
+        'member_transferred',
+        'pt_member_removed',
+        'loa_expiring',
+        'loa_expired',
+        'division_edited',
+        'member_promoted',
+        'member_awarded',
+    ];
+
     protected static ?string $model = Division::class;
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-s-cog';
@@ -251,7 +267,25 @@ class DivisionResource extends Resource
                             ->icon('heroicon-o-bell')
                             ->schema([
                                 Section::make('Channel Configuration')
+                                    ->key('notification_channels')
                                     ->description('Test notification channels from the page header actions')
+                                    ->headerActions([
+                                        Action::make('setAllAlertsToOfficers')
+                                            ->label('Set to Officers')
+                                            ->icon('heroicon-m-bell-alert')
+                                            ->tooltip('Send every notification below to the officers channel. Save to apply.')
+                                            ->action(function (Set $set): void {
+                                                foreach (self::CHAT_ALERT_FIELDS as $alert) {
+                                                    $set("settings.chat_alerts.{$alert}", 'officers');
+                                                }
+
+                                                Notification::make()
+                                                    ->title('All notifications set to Officers')
+                                                    ->body('Save the settings to apply.')
+                                                    ->info()
+                                                    ->send();
+                                            }),
+                                    ])
                                     ->schema([
                                         Placeholder::make('channel_info')
                                             ->hiddenLabel()
