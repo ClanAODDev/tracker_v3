@@ -180,7 +180,7 @@ class DivisionTest extends TestCase
 
         Cache::put('division_leaderboard', ['stale' => true], 3600);
 
-        $division->update(['description' => 'Updated description']);
+        $division->update(['site_content' => 'Updated content']);
 
         $this->assertTrue(Cache::has('division_leaderboard'));
     }
@@ -445,11 +445,10 @@ class DivisionTest extends TestCase
     }
 
     #[Test]
-    public function a_division_can_be_saved_without_a_forum_app_id_or_description()
+    public function a_division_can_be_saved_without_a_forum_app_id()
     {
-        $division = Division::factory()->create(['forum_app_id' => null, 'description' => null]);
+        $division = Division::factory()->create(['forum_app_id' => null]);
 
         $this->assertNull($division->fresh()->forum_app_id);
-        $this->assertNull($division->fresh()->description);
     }
 }
