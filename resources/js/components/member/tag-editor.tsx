@@ -145,7 +145,7 @@ export function MemberTagEditor({ tags, management }: { tags: DisplayTag[]; mana
             <Popover open={open} onOpenChange={onOpenChange}>
                 <PopoverTrigger asChild>
                     <Button variant="outline" size="xs" className="h-6 gap-1 border-dashed text-muted-foreground">
-                        <Plus className="size-3" /> Tag
+                        <Plus className="size-3" /> <span className="text-[10px] font-bold tracking-wide uppercase">Tag</span>
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-64 p-0" align="start">

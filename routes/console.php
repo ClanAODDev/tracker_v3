@@ -2,7 +2,6 @@
 
 use App\Console\Commands\ClanSnapshot;
 use App\Console\Commands\DivisionCensus;
-use App\Console\Commands\FetchApplicationFeeds;
 use App\Console\Commands\LeaderboardSnapshot;
 use App\Console\Commands\MemberSync;
 use App\Console\Commands\NotifyExpiringLeaves;
@@ -13,10 +12,6 @@ use App\Jobs\PurgePendingDiscordRegistrations;
 use App\Jobs\ResetOrphanedUnitAssignments;
 use App\Jobs\SyncDivisionDns;
 use Illuminate\Support\Facades\Schedule;
-
-Schedule::command(FetchApplicationFeeds::class, ['--notify'])->everyFiveMinutes()
-    ->description('Poll AOD forum application feeds and send Discord notifications')
-    ->when(fn () => scheduledTaskEnabled('tracker:fetch-applications --notify'));
 
 Schedule::command(MemberSync::class)->hourly()
     ->description('Sync member data from AOD forums')
