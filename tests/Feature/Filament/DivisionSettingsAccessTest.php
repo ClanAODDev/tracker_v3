@@ -5,9 +5,12 @@ namespace Tests\Feature\Filament;
 use App\Enums\Position;
 use App\Enums\Rank;
 use App\Enums\Role;
+use App\Filament\Mod\Resources\DivisionResource;
 use App\Filament\Mod\Resources\DivisionResource\Pages\EditDivision;
+use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -75,5 +78,29 @@ class DivisionSettingsAccessTest extends TestCase
         Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
             ->assertSee('Division: 123456789012345678')
             ->assertFormFieldDoesNotExist('division_channel');
+    }
+
+    #[Test]
+    public function set_to_officers_sends_every_notification_to_the_officers_channel_once_saved(): void
+    {
+        $division = $this->createActiveDivision();
+        $co       = $this->createMemberWithUser(['division_id' => $division->id, 'position' => Position::COMMANDING_OFFICER], ['role' => Role::OFFICER]);
+
+        Notification::fake();
+        $this->actingAs($co);
+
+        $page = Livewire::test(EditDivision::class, ['record' => $division->getRouteKey()])
+            ->callAction(TestAction::make('setAllAlertsToOfficers')->schemaComponent('notification_channels'))
+            ->assertNotified('All notifications set to Officers');
+
+        $this->assertFalse((bool) $division->fresh()->chatAlert('member_created'));
+
+        $page->call('save')->assertHasNoFormErrors();
+
+        $alerts = collect($division->fresh()->settings()->get('chat_alerts'));
+
+        foreach (DivisionResource::CHAT_ALERT_FIELDS as $alert) {
+            $this->assertSame('officers', $alerts[$alert], $alert);
+        }
     }
 }
