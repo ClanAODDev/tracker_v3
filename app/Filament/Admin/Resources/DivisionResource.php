@@ -93,10 +93,9 @@ class DivisionResource extends Resource
                             TextInput::make('slug')
                                 ->disabled()
                                 ->dehydrated(false)
-                                ->hiddenOn('create')
-                                ->columnStart(2),
+                                ->hiddenOn('create'),
 
-                        ])->columns(3),
+                        ])->columns(fn (string $operation): int => $operation === 'create' ? 2 : 3),
 
                         Repeater::make('handleAssignments')
                             ->label('Game handles')
