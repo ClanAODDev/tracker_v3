@@ -264,7 +264,6 @@ Rough notes here. Needs some cleaning up.
 - Handle: Should already exist. Pick the most appropriate one. More information provided below regarding handles.
 - Settings: Leave this blank. It'll be populated later.
 - Created At, Updated At: Currently defaults to blank. Set this to today's date.
-- Description: Provide some appropriate sub-title for the division.
 - Active: Self-explanatory
 
 ### Division structure

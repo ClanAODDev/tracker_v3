@@ -443,4 +443,13 @@ class DivisionTest extends TestCase
 
         $this->assertSame(3, $division->fresh()->bottomUnitDepth());
     }
+
+    #[Test]
+    public function a_division_can_be_saved_without_a_forum_app_id_or_description()
+    {
+        $division = Division::factory()->create(['forum_app_id' => null, 'description' => null]);
+
+        $this->assertNull($division->fresh()->forum_app_id);
+        $this->assertNull($division->fresh()->description);
+    }
 }

@@ -139,11 +139,6 @@ class DivisionResource extends Resource
                                     ),
                             ),
 
-                        TextInput::make('description')
-                            ->default('Another AOD Division')
-                            ->hint('Deprecated and soon to be removed')
-                            ->maxLength(255),
-
                         JsonColumn::make('settings')
                             ->hiddenOn('create'),
                     ]),

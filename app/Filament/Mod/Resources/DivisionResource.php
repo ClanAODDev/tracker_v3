@@ -99,9 +99,6 @@ class DivisionResource extends Resource
                                             ->label('Division Name')
                                             ->helperText('Consult admin to update')
                                             ->readOnly(),
-                                        TextInput::make('description')
-                                            ->label('Sub‑header Text')
-                                            ->helperText('Division sub‑header (*DEPRECATING*)'),
                                     ]),
 
                                 Section::make('Welcome Area')
