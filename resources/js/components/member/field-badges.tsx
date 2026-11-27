@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Command, CommandGroup, CommandItem, CommandList } from '@/components/ui/command';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { postJson } from '@/lib/api';
 import { fieldBadgeClass } from '@/lib/field-colors';
 import { cn } from '@/lib/utils';
@@ -39,6 +40,26 @@ export function MemberFieldBadges({ fields, management }: { fields: FieldBadgeDa
     );
 }
 
+function FieldBadgeContent({ label, value }: { label: string; value: string | null }) {
+    return (
+        <>
+            <span className="text-[10px] font-normal tracking-wide uppercase opacity-60">{label}</span>
+            <span className="font-semibold">{value}</span>
+        </>
+    );
+}
+
+function FieldTooltip({ field, children }: { field: FieldBadgeData; children: React.ReactNode }) {
+    return (
+        <Tooltip>
+            <TooltipTrigger asChild>{children}</TooltipTrigger>
+            <TooltipContent>
+                {field.label}: {field.value}
+            </TooltipContent>
+        </Tooltip>
+    );
+}
+
 function FieldBadge({ field, saveUrl }: { field: FieldBadgeData; saveUrl: string }) {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(field.value ?? '');
@@ -46,9 +67,11 @@ function FieldBadge({ field, saveUrl }: { field: FieldBadgeData; saveUrl: string
 
     if (!field.canEdit) {
         return (
-            <Badge variant="outline" className={fieldBadgeClass(field.color)} title={field.label}>
-                <span className="text-[10px] font-bold tracking-wide uppercase">{field.label}</span>: {field.value}
-            </Badge>
+            <FieldTooltip field={field}>
+                <Badge variant="outline" className={cn('gap-1.5', fieldBadgeClass(field.color))} aria-label={`${field.label}: ${field.value}`}>
+                    <FieldBadgeContent label={field.label} value={field.value} />
+                </Badge>
+            </FieldTooltip>
         );
     }
 
@@ -67,19 +90,26 @@ function FieldBadge({ field, saveUrl }: { field: FieldBadgeData; saveUrl: string
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                {field.value ? (
-                    <button type="button">
-                        <Badge variant="outline" className={cn('cursor-pointer transition-opacity hover:opacity-80', fieldBadgeClass(field.color))}>
-                            <span className="text-[10px] font-bold tracking-wide uppercase">{field.label}</span>: {field.value}
-                        </Badge>
-                    </button>
-                ) : (
+            {field.value ? (
+                <FieldTooltip field={field}>
+                    <PopoverTrigger asChild>
+                        <button type="button" aria-label={`${field.label}: ${field.value}`}>
+                            <Badge
+                                variant="outline"
+                                className={cn('cursor-pointer gap-1.5 transition-opacity hover:opacity-80', fieldBadgeClass(field.color))}
+                            >
+                                <FieldBadgeContent label={field.label} value={field.value} />
+                            </Badge>
+                        </button>
+                    </PopoverTrigger>
+                </FieldTooltip>
+            ) : (
+                <PopoverTrigger asChild>
                     <Button variant="outline" size="xs" className="h-6 gap-1 border-dashed text-muted-foreground">
                         <Plus className="size-3" /> <span className="text-[10px] font-bold tracking-wide uppercase">{field.label}</span>
                     </Button>
-                )}
-            </PopoverTrigger>
+                </PopoverTrigger>
+            )}
             <PopoverContent className="w-56 p-0" align="start">
                 {field.type === 'select' ? (
                     <Command>
