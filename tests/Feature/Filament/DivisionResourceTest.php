@@ -280,4 +280,16 @@ class DivisionResourceTest extends TestCase
 
         $this->assertTrue($division->handles()->exists());
     }
+
+    #[Test]
+    public function forum_and_icon_tool_links_open_in_a_new_tab()
+    {
+        $this->actingAs($this->createAdmin());
+
+        $html = Livewire::test(CreateDivision::class)->html();
+
+        foreach (['Icon Extraction Tool', 'View Forum Usergroups', 'View Division Forms'] as $label) {
+            $this->assertMatchesRegularExpression('#<a [^>]*target="_blank" rel="noopener noreferrer"[^>]*>' . preg_quote($label, '#') . '#', $html);
+        }
+    }
 }

@@ -40,6 +40,7 @@ use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 use Illuminate\Validation\Rules\Unique;
 use Throwable;
 use ValentinMorice\FilamentJsonColumn\JsonColumn;
@@ -70,9 +71,7 @@ class DivisionResource extends Resource
                     ->schema([
                         FileUpload::make('logo')
                             ->label('Logo (48x48)')
-                            ->hint(str(sprintf('[Icon Extraction Tool >](%s)',
-                                self::$becy
-                            ))->inlineMarkdown()->toHtmlString())
+                            ->hint(self::externalLink('Icon Extraction Tool >', self::$becy))
                             ->required()
                             ->alignCenter()
                             ->avatar()
@@ -237,18 +236,12 @@ class DivisionResource extends Resource
                     ->description('Division must already have been created in the forums in order to populate these values')
                     ->schema([
                         TextInput::make('officer_role_id')
-                            ->hint(str(sprintf(
-                                '[View Forum Usergroups](%s)',
-                                self::$usergroup_mod
-                            ))->inlineMarkdown()->toHtmlString())
+                            ->hint(self::externalLink('View Forum Usergroups', self::$usergroup_mod))
                             ->numeric()
                             ->required(),
                         TextInput::make('forum_app_id')
                             ->label('Application form id')
-                            ->hint(str(sprintf(
-                                '[View Division Forms](%s)',
-                                self::$forms
-                            ))->inlineMarkdown()->toHtmlString())
+                            ->hint(self::externalLink('View Division Forms', self::$forms))
                             ->required()
                             ->numeric(),
                     ])->columns(),
@@ -268,6 +261,11 @@ class DivisionResource extends Resource
                     ])->columns(3),
 
             ]);
+    }
+
+    private static function externalLink(string $label, string $url): HtmlString
+    {
+        return new HtmlString(sprintf('<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>', e($url), e($label)));
     }
 
     public static function table(Table $table): Table
