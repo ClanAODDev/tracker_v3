@@ -99,7 +99,7 @@ class DivisionSettingsAccessTest extends TestCase
 
         $alerts = collect($division->fresh()->settings()->get('chat_alerts'));
 
-        foreach (DivisionResource::CHAT_ALERT_FIELDS as $alert) {
+        foreach (DivisionResource::chatAlertFields() as $alert) {
             $this->assertSame('officers', $alerts[$alert], $alert);
         }
     }
