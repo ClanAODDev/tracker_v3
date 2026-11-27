@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources;
 use App\Filament\Admin\Resources\ReleaseNoteResource\Pages\CreateReleaseNote;
 use App\Filament\Admin\Resources\ReleaseNoteResource\Pages\EditReleaseNote;
 use App\Filament\Admin\Resources\ReleaseNoteResource\Pages\ListReleaseNotes;
+use App\Filament\Forms\Components\MarkdownCalloutActions;
 use App\Models\ReleaseNote;
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
@@ -57,12 +58,12 @@ class ReleaseNoteResource extends Resource
                     ->seconds(false)
                     ->helperText('Leave empty to keep this as a draft. A future date schedules it; it appears for members once that time passes.')
                     ->columnSpanFull(),
-                MarkdownEditor::make('body')
+                MarkdownCalloutActions::apply(MarkdownEditor::make('body'))
                     ->required()
                     ->columnSpanFull()
                     ->minHeight('24rem')
                     ->fileAttachmentsDirectory('release-notes')
-                    ->helperText(new HtmlString('Paste or drop images into the text. On the release note page they show as thumbnails that open full size when clicked.<br>For a callout, start a quote with a type on its own line: <code>&gt; [!HERO]</code> for an intro panel, or <code>&gt; [!NOTE]</code>, <code>[!TIP]</code>, <code>[!IMPORTANT]</code>, <code>[!WARNING]</code> or <code>[!CAUTION]</code>. Text after the type, like <code>&gt; [!TIP] Before you start</code>, replaces the label.')),
+                    ->helperText(new HtmlString('Paste or drop images into the text. On the release note page they show as thumbnails that open full size when clicked.<br>Use <strong>Insert callout</strong> above to add a hero intro or a note, tip or warning box. Select text first to wrap it. Text after the type, like <code>&gt; [!TIP] Before you start</code>, replaces the label.')),
             ]);
     }
 
