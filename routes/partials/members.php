@@ -62,6 +62,11 @@ Route::get('rank-history/template.csv', function () {
     ]);
 })->middleware(['web', 'auth'])->name('rank-history.template');
 
+Route::get('transfer-history/template.csv', fn () => response("division,date (YYYY-MM-DD)\n", 200, [
+    'Content-Type'        => 'text/csv',
+    'Content-Disposition' => 'attachment; filename="transfer-history-template.csv"',
+]))->middleware(['web', 'auth'])->name('transfer-history.template');
+
 Route::controller(InactiveMemberController::class)->prefix('inactive-members')->group(function () {
     Route::post('{member}/flag-inactive', 'create')->name('member.flag-inactive');
     Route::post('{member}/unflag-inactive', 'destroy')->name('member.unflag-inactive');
