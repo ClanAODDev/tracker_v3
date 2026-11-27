@@ -9,7 +9,6 @@ adding a new division. Deviations for deleting a Division will also be noted.
   - [Forum Category](#content-forum-category-parent-forum)
   - [Forum Permissions](#content-forum-permission-duplication)
   - [vbCerberus](#content-vbcerberus)
-  - [Application Form](#content-application-form)
   - [Navigation](#content-navigation-options)
   - [User Profile Fields](#content-user-profile-fields)
 - [Discord](#content-discord)
@@ -166,41 +165,7 @@ description=AOD {Division Name} Division Forums!
 
 6. Click `Save`
 
-### Application Form
-
-To create a division application form:
-
-1. Open the [Forms Manager](https://www.clanaod.net/forums/forms.php?do=forms)
-2. Find `Default Application` and click `Copy Form` underneath
-3. Enter 1 for the number of times to copy form
-4. Find `Default Application - Copy` and click `Edit Form` underneath
-5. Click `Form Title and Description` in the tabs
-5. Set `Title` to `[COLOR=Red]{Division Name} Application[/COLOR]`
-6. Clear `Category`
-7. Click `Save Changes`
-8. Click `Form Actions` in the tabs
-9. Enable `Post New Thread`
-10. Select the recruiting forum for the division
-11. Click `Save Changes`
-
 ### Navigation Options
-
-#### Application
-
-To create the Division Application link:
-
-1. Open the [AdminCP](https://www.clanaod.net/forums/admincp/index.php)
-2. Open the `Settings` section in the left menu
-3. Click on `Navigation Manager`
-4. Click on `Forum`
-5. Find `Apply Here` and select `Add Link` in the edit dropdown
-6. Set Title to `{Division Name}`
-7. Set Target URL to the division application form excluding
-   https: `//www.clanaod.net/forums/misc.php?do=form&fid={Division application form id})`
-8. Set `Active` to `Yes`
-9. Click `Save`
-10. Sort the links alphabetically using `Display Order`
-11. Scroll to the bottom and click `Save
 
 #### Forum Jump
 
@@ -281,7 +246,6 @@ Rough notes here. Needs some cleaning up.
 
 - Forum officer role (Division Officers)
 - Agreed upon abbreviation (short-hand version of a division name. IE., Battlefield => bf, World of Warcraft => wow
-- Forum Form Application (IE., https://www.clanaod.net/forums/forms.php?do=form&fid=34)
 - Ingame handle (developer or platform specific). There's a good chance it already exists. If not, make a new one (
   tracker admin cp => Handles)
 - Division icon - this should **come from the official game binary** and can be extracted
@@ -298,10 +262,8 @@ Rough notes here. Needs some cleaning up.
 - Officer role id: Id of the role/group created in the forums. You can find this under Forum Admin > Usergroups > Id
   listed on the right-hand side in the "Edit" dropdown
 - Handle: Should already exist. Pick the most appropriate one. More information provided below regarding handles.
-- Forum app ID: The form id of the division application
 - Settings: Leave this blank. It'll be populated later.
 - Created At, Updated At: Currently defaults to blank. Set this to today's date.
-- Description: Provide some appropriate sub-title for the division.
 - Active: Self-explanatory
 
 ### Division structure
@@ -365,10 +327,6 @@ folder using the **division abbreviation (LOWERCASE)**.
 
 Only add game artwork underneath the "division content" folder layer. Do not make any other changes to the template, or
 it will break other elements of the site.
-
-Assuming you provided a forum_app_id on the tracker, an "apply" button will send them directly to your division
-application. This is automatically added to the page. **If the apply button takes you to a 404, it's because you're
-missing the forum_app_id for the division on the tracker.**
 
 #### Tracker banner
 

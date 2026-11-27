@@ -15,7 +15,6 @@ class DivisionBasicTransformer extends Transformer
             'name'             => $item->name,
             'slug'             => $item->slug,
             'abbreviation'     => $item->abbreviation,
-            'description'      => $item->description,
             'forum_app_id'     => $item->forum_app_id,
             'members_count'    => $item->members_count,
             'show_on_site'     => $item->show_on_site,

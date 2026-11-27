@@ -28,7 +28,6 @@ class DivisionFactory extends Factory
             'name'         => $name,
             'slug'         => Str::slug($name),
             'abbreviation' => 'td' . $uniqueId,
-            'description'  => $this->faker->sentence,
             'forum_app_id' => rand(100, 999),
             'active'       => true,
             'settings'     => '[]',

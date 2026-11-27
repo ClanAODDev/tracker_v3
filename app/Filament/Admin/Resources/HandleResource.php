@@ -16,12 +16,14 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TernaryFilter;
 use Filament\Tables\Table;
+use Illuminate\Support\Str;
 
 class HandleResource extends Resource
 {
@@ -43,7 +45,19 @@ class HandleResource extends Resource
                     ->schema([
                         TextInput::make('label')
                             ->required()
-                            ->maxLength(255),
+                            ->maxLength(255)
+                            ->live(onBlur: true)
+                            ->afterStateUpdated(function (string $operation, Get $get, Set $set, ?string $old, ?string $state): void {
+                                if ($operation !== 'create') {
+                                    return;
+                                }
+
+                                if (filled($get('type')) && $get('type') !== Str::slug((string) $old, '_')) {
+                                    return;
+                                }
+
+                                $set('type', Str::slug((string) $state, '_'));
+                            }),
                         TextInput::make('type')
                             ->required()
                             ->maxLength(255),

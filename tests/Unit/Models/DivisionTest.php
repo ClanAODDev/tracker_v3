@@ -180,7 +180,7 @@ class DivisionTest extends TestCase
 
         Cache::put('division_leaderboard', ['stale' => true], 3600);
 
-        $division->update(['description' => 'Updated description']);
+        $division->update(['site_content' => 'Updated content']);
 
         $this->assertTrue(Cache::has('division_leaderboard'));
     }
@@ -442,5 +442,13 @@ class DivisionTest extends TestCase
         DivisionUnitLevel::create(['division_id' => $division->id, 'depth' => 3, 'label' => 'Team', 'label_plural' => 'Teams', 'leader_title' => 'Team Leader']);
 
         $this->assertSame(3, $division->fresh()->bottomUnitDepth());
+    }
+
+    #[Test]
+    public function a_division_can_be_saved_without_a_forum_app_id()
+    {
+        $division = Division::factory()->create(['forum_app_id' => null]);
+
+        $this->assertNull($division->fresh()->forum_app_id);
     }
 }
