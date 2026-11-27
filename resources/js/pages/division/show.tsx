@@ -11,6 +11,7 @@ import { OrganizeBanner, dropZoneProps, useOrganize, type OrganizeMember } from 
 import { PlatoonCard, type Platoon } from '@/components/division/platoon-card';
 import { NoSquadModal, noLevelFromKey } from '@/components/division/no-squad-modal';
 import { RecentActivityModal, type RecentActivityGroup } from '@/components/division/recent-activity-modal';
+import { SetupChecklist, type SetupStep } from '@/components/division/setup-checklist';
 import { TileLink } from '@/components/division/tile-link';
 import { DivisionToolbar, type DivisionTool } from '@/components/division/division-toolbar';
 import { PendingActionIcon } from '@/components/dashboard/pending-action-icon';
@@ -112,6 +113,36 @@ export default function DivisionShow({
     });
     const prev = census.previous;
     const memberDelta = prev && prev.count && stats.memberCount ? Math.round((1 - prev.count / stats.memberCount) * 1000) / 10 : 0;
+
+    const hasMembers = stats.memberCount > 0;
+    const hasCensusHistory = census.population.filter((count) => count > 0).length >= 2;
+    const setupSteps: SetupStep[] = [
+        {
+            key: 'leadership',
+            label: 'Assign division leadership',
+            done: leaders.length > 0,
+            hint: 'Clan leadership assigns the CO and XOs.',
+        },
+        ...(d.hasUnits
+            ? [
+                  {
+                      key: 'platoon',
+                      label: `Create the first ${d.topLevelLabel.toLowerCase()}`,
+                      done: platoons.length > 0,
+                      hint: `Recruits are assigned to a ${d.topLevelLabel.toLowerCase()} when they join.`,
+                      action: d.canCreatePlatoon ? { label: `Create ${d.topLevelLabel}`, href: d.editUrl } : undefined,
+                  },
+              ]
+            : []),
+        {
+            key: 'recruit',
+            label: 'Add the first recruit',
+            done: hasMembers,
+            hint: 'Member counts, voice activity and reports fill in as people join.',
+            action: d.canRecruit && !d.isShutdown ? { label: 'Add recruit', href: d.recruitUrl } : undefined,
+        },
+    ];
+    const showSetup = !d.isShutdown && !hasCensusHistory && setupSteps.some((step) => !step.done);
 
     const censusData = census.labels.map((label, i) => ({
         label,
@@ -241,6 +272,8 @@ export default function DivisionShow({
                     </div>
                 )}
 
+                {showSetup && <SetupChecklist steps={setupSteps} />}
+
                 {/* Quick stats */}
                 <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
                     <StatCard
@@ -260,12 +293,12 @@ export default function DivisionShow({
                     />
                     <StatCard
                         align="center"
-                        icon={<Headset className={cn('size-5', voiceTone(stats.voiceRate))} />}
+                        icon={<Headset className={cn('size-5', hasMembers && voiceTone(stats.voiceRate))} />}
                         value={<CountUp value={stats.voiceActiveCount} />}
                         label="Voice active"
                         sub={<span className="text-muted-foreground">({stats.activityThresholdDays}d)</span>}
                         trend={voiceRateTrend}
-                        delta={<span className={cn('text-xs', voiceTone(stats.voiceRate))}>{stats.voiceRate}%</span>}
+                        delta={hasMembers ? <span className={cn('text-xs', voiceTone(stats.voiceRate))}>{stats.voiceRate}%</span> : undefined}
                     />
                     <StatCard
                         align="center"
@@ -295,46 +328,54 @@ export default function DivisionShow({
                             </span>
                         )}
                     </div>
-                    <div className="rounded-md border border-border bg-card p-4">
-                        <ThemedLineChart
-                            data={censusData}
-                            x="label"
-                            series={[
-                                { key: 'Members', label: 'Members' },
-                                { key: 'Voice active', label: 'Voice active' },
-                            ]}
-                            height={260}
-                        />
-                    </div>
+                    {hasCensusHistory ? (
+                        <div className="rounded-md border border-border bg-card p-4">
+                            <ThemedLineChart
+                                data={censusData}
+                                x="label"
+                                series={[
+                                    { key: 'Members', label: 'Members' },
+                                    { key: 'Voice active', label: 'Voice active' },
+                                ]}
+                                height={260}
+                            />
+                        </div>
+                    ) : (
+                        <p className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+                            The weekly census records this division's population. The trend appears once it has two snapshots with members.
+                        </p>
+                    )}
                 </section>
 
                 {/* Leadership */}
-                <section>
-                    <SectionTitle>Leadership</SectionTitle>
-                    {leaders.length === 0 ? (
-                        <div className="rounded-md border border-primary/30 bg-primary/5 p-4 text-sm">
-                            <p className="font-medium">No leadership assigned</p>
-                            <p className="text-muted-foreground">See clan leadership for assistance with assignments</p>
-                        </div>
-                    ) : (
-                        <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-                            {leaders.map((leader) => (
-                                <a
-                                    key={leader.profileUrl}
-                                    href={leader.profileUrl}
-                                    className="flex items-center gap-3 rounded-md border border-destructive/30 bg-card p-4 transition-colors hover:border-destructive/50"
-                                >
-                                    <LeaderAvatar leader={leader} size="md" />
-                                    <div className="min-w-0">
-                                        <p className="truncate text-sm font-medium">{leader.rankName}</p>
-                                        <p className="text-xs text-muted-foreground">{leader.position}</p>
-                                    </div>
-                                    <Shield className="ml-auto size-4 text-muted-foreground" />
-                                </a>
-                            ))}
-                        </div>
-                    )}
-                </section>
+                {!(showSetup && leaders.length === 0) && (
+                    <section>
+                        <SectionTitle>Leadership</SectionTitle>
+                        {leaders.length === 0 ? (
+                            <div className="rounded-md border border-dashed border-border p-4 text-sm">
+                                <p className="font-medium">No leadership assigned</p>
+                                <p className="text-muted-foreground">Clan leadership assigns the CO and XOs.</p>
+                            </div>
+                        ) : (
+                            <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+                                {leaders.map((leader) => (
+                                    <a
+                                        key={leader.profileUrl}
+                                        href={leader.profileUrl}
+                                        className="flex items-center gap-3 rounded-md border border-destructive/30 bg-card p-4 transition-colors hover:border-destructive/50"
+                                    >
+                                        <LeaderAvatar leader={leader} size="md" />
+                                        <div className="min-w-0">
+                                            <p className="truncate text-sm font-medium">{leader.rankName}</p>
+                                            <p className="text-xs text-muted-foreground">{leader.position}</p>
+                                        </div>
+                                        <Shield className="ml-auto size-4 text-muted-foreground" />
+                                    </a>
+                                ))}
+                            </div>
+                        )}
+                    </section>
+                )}
 
                 {/* Milestones */}
                 {anniversaries.length > 0 && (
@@ -388,8 +429,9 @@ export default function DivisionShow({
                         )}
 
                         {platoonList.length === 0 ? (
-                            <p className="rounded-md border border-destructive/30 bg-card p-4 text-sm text-muted-foreground">
-                                No {pluralize(d.topLevelLabel)} found
+                            <p className="rounded-md border border-dashed border-border p-4 text-sm text-muted-foreground">
+                                No {pluralize(d.topLevelLabel).toLowerCase()} yet.
+                                {d.canCreatePlatoon && ` Create one to start assigning recruits.`}
                             </p>
                         ) : (
                             <div className="grid gap-3 lg:grid-cols-2">
