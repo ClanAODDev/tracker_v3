@@ -250,4 +250,19 @@ class ReleaseNotesTest extends TestCase
         $this->assertNull($this->get(route('changelog.show', $note->slug))->viewData('page')['props']['editUrl']);
         $this->assertNull($this->get(route('changelog'))->viewData('page')['props']['manageUrl']);
     }
+
+    #[Test]
+    public function the_editor_offers_a_button_for_each_callout_type(): void
+    {
+        Filament::setCurrentPanel('admin');
+        $this->actingAs($this->createAdmin());
+
+        $html = Livewire::test(CreateReleaseNote::class)->html();
+
+        $this->assertStringContainsString('Insert callout:', $html);
+
+        foreach (['HERO', 'NOTE', 'TIP', 'IMPORTANT', 'WARNING', 'CAUTION'] as $type) {
+            $this->assertStringContainsString("[!{$type}]", $html);
+        }
+    }
 }

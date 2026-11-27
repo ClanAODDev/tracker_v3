@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { SimpleSelect } from '@/components/ui/simple-select';
 import { postJson } from '@/lib/api';
 import { relativeDate } from '@/lib/format';
+import { cn } from '@/lib/utils';
 import AppLayout from '@/layouts/AppLayout';
 
 interface Props {
@@ -172,10 +173,13 @@ export default function TicketShow({ ticket, canWork, currentUserId, workers }: 
                     </div>
                 )}
 
-                <section className="overflow-hidden rounded-md border border-border">
-                    <h3 className="border-b border-border bg-card/40 px-4 py-2 text-sm font-semibold">Description</h3>
+                <section className="overflow-hidden rounded-md border border-border bg-card">
+                    <h3 className="border-b border-border bg-muted/40 px-4 py-2 text-sm font-semibold">Description</h3>
                     <div className="p-4">
-                        <div className="text-sm whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: renderTicketText(ticket.description) }} />
+                        <div
+                            className="text-sm leading-relaxed whitespace-pre-wrap"
+                            dangerouslySetInnerHTML={{ __html: renderTicketText(ticket.description) }}
+                        />
                         {ticket.attachments.length > 0 && (
                             <div className="mt-3 flex flex-wrap gap-2">
                                 {ticket.attachments.map((url, i) => (
@@ -188,8 +192,8 @@ export default function TicketShow({ ticket, canWork, currentUserId, workers }: 
                     </div>
                 </section>
 
-                <section className="overflow-hidden rounded-md border border-border">
-                    <h3 className="flex items-center gap-2 border-b border-border bg-card/40 px-4 py-2 text-sm font-semibold">
+                <section className="overflow-hidden rounded-md border border-border bg-card">
+                    <h3 className="flex items-center gap-2 border-b border-border bg-muted/40 px-4 py-2 text-sm font-semibold">
                         Discussion
                         <span className="text-xs font-normal text-muted-foreground">{comments.filter((c) => !isSystemMessage(c)).length}</span>
                         <button
@@ -263,7 +267,9 @@ function CommentRow({ comment, isOwner }: { comment: TicketComment; isOwner: boo
     return (
         <div className="flex gap-3">
             <Avatar person={comment.user ?? { name: '?', avatar: null }} />
-            <div className="min-w-0 flex-1 rounded-md bg-card p-2.5">
+            <div
+                className={cn('min-w-0 flex-1 rounded-md border p-3', isOwner ? 'border-primary/25 bg-primary/5' : 'border-border bg-background/60')}
+            >
                 <div className="flex items-center justify-between gap-2 text-xs">
                     <span className="font-medium">
                         {comment.user?.name ?? 'Unknown'}
@@ -272,7 +278,7 @@ function CommentRow({ comment, isOwner }: { comment: TicketComment; isOwner: boo
                     <span className="text-muted-foreground">{relativeDate(comment.created_at)}</span>
                 </div>
                 <div
-                    className="mt-1 text-sm whitespace-pre-wrap text-muted-foreground"
+                    className="mt-1 text-sm leading-relaxed whitespace-pre-wrap text-foreground/90"
                     dangerouslySetInnerHTML={{ __html: renderTicketText(comment.body) }}
                 />
             </div>
