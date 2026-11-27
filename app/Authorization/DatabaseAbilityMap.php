@@ -18,13 +18,11 @@ class DatabaseAbilityMap implements AbilityMap
 
     public function allows(User $user, Ability $ability): bool
     {
-        if ($this->grantedTo($user, $ability)) {
+        if (! $user->isImpersonatingRole() && $this->grantedTo($user, $ability)) {
             return true;
         }
 
-        $role = $ability->resolvesAgainstStoredRole()
-            ? $this->roles->storedRole($user)
-            : $this->roles->effectiveRole($user);
+        $role = $this->roles->effectiveRole($user);
 
         if ($role === null) {
             return false;

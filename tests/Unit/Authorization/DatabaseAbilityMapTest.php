@@ -37,6 +37,7 @@ class DatabaseAbilityMapTest extends TestCase
                 }
 
                 $user = (new User)->forceFill(['role' => $stored]);
+                auth()->setUser($user);
 
                 foreach (Ability::cases() as $ability) {
                     $this->assertSame(
