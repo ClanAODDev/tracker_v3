@@ -127,7 +127,7 @@ class RecruitingControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertInertia(fn ($page) => $page
-            ->where('handleTypes', [['id' => $handle->id, 'label' => 'Steam Profile', 'hint' => 'Steam ID must be numeric.']]));
+            ->where('handleTypes', [['id' => $handle->id, 'label' => 'Steam Profile', 'hint' => 'Steam ID must be numeric.', 'tag' => '']]));
     }
 
     #[Test]

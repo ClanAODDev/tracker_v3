@@ -50,7 +50,7 @@ class Handle extends Model
 
     public function messageTag(): string
     {
-        return Str::slug($this->type, '_');
+        return Str::slug((string) $this->type, '_');
     }
 
     public function selectLabel(): string

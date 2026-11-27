@@ -96,7 +96,7 @@ manageUnassigned         | (any user)                               | banned    
 manageUnassigned         | (any user)                               | pending                  | deny
 train                    | (any user)                               | admin                    | allow
 train                    | (any user)                               | developer                | allow
-train                    | (any user)                               | admin_viewing_as_officer | allow
+train                    | (any user)                               | admin_viewing_as_officer | deny
 train                    | (any user)                               | senior_leader            | deny
 train                    | (any user)                               | commanding_officer       | allow
 train                    | (any user)                               | executive_officer        | allow
