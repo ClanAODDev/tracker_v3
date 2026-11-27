@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 #[Unguarded]
 class Handle extends Model
@@ -45,6 +46,11 @@ class Handle extends Model
     {
         $query->where(fn (Builder $q) => $q->where('enabled', true)->orWhereIn('id', collect($includeIds)))
             ->orderBy('label');
+    }
+
+    public function messageTag(): string
+    {
+        return Str::slug((string) $this->type, '_');
     }
 
     public function selectLabel(): string

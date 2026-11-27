@@ -16,6 +16,7 @@ import { Switch } from '@/components/ui/switch';
 import { UnitCascadeSelect } from '@/components/units/unit-cascade-select';
 import { inlineRichText, linkifyHtml } from '@/lib/format';
 import { cn } from '@/lib/utils';
+import { renderWelcomeMessage } from '@/lib/welcome-message';
 
 const GUIDED_MODE_KEY = 'recruit-form:guided-mode';
 
@@ -27,9 +28,7 @@ export function FormStep({ form }: { form: RecruitForm }) {
     const [welcomeOpen, setWelcomeOpen] = useState(true);
     const [appOpen, setAppOpen] = useState(false);
     const [guided, setGuided] = useState(() => localStorage.getItem(GUIDED_MODE_KEY) === '1');
-    const welcomePm = (props.welcome_pm || '')
-        .replace(/\{\{\s*name\s*\}\}/g, form.member.forum_name)
-        .replace(/\{\{\s*ingame_name\s*\}\}/g, form.welcomeHandle);
+    const welcomePm = renderWelcomeMessage(props.welcome_pm || '', form.member.forum_name, props.handleTypes, form.filledHandles);
 
     /*
      * revealed[k] gates whether the (k+1)th section may show in guided mode — revealed[0] is

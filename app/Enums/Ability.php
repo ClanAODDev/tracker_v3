@@ -224,13 +224,4 @@ enum Ability: string
             self::ManagePermissions           => 'Edit role permissions and grant abilities to users',
         };
     }
-
-    public function resolvesAgainstStoredRole(): bool
-    {
-        return in_array($this, [
-            self::Recruit,
-            self::ConductTraining,
-            self::UseAdvancedApiScopes,
-        ], true);
-    }
 }

@@ -38,7 +38,7 @@ trait HasHandles
     public function handleTypes(): array
     {
         return $this->handles
-            ->map(fn (Handle $handle) => ['id' => $handle->id, 'label' => $handle->label, 'hint' => $handle->regex_hint])
+            ->map(fn (Handle $handle) => ['id' => $handle->id, 'label' => $handle->label, 'hint' => $handle->regex_hint, 'tag' => $handle->messageTag()])
             ->values()
             ->all();
     }

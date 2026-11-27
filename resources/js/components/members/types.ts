@@ -42,6 +42,7 @@ export interface HandleType {
     id: number;
     label: string;
     hint: string | null;
+    tag?: string;
 }
 
 export interface MemberFieldDefinition {

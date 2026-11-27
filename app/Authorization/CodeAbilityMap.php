@@ -12,9 +12,7 @@ class CodeAbilityMap implements AbilityMap
 
     public function allows(User $user, Ability $ability): bool
     {
-        $role = $ability->resolvesAgainstStoredRole()
-            ? $this->roles->storedRole($user)
-            : $this->roles->effectiveRole($user);
+        $role = $this->roles->effectiveRole($user);
 
         return $role !== null && in_array($role, $this->rolesFor($ability), true);
     }

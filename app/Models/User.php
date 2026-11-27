@@ -174,7 +174,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function getEffectiveRole(): ?Role
     {
-        if (session('impersonatingRole')) {
+        if ($this->isImpersonatingRole()) {
             return Role::tryFrom(session('impersonatingRole'));
         }
 
@@ -183,7 +183,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function isImpersonatingRole(): bool
     {
-        return session('impersonatingRole') !== null;
+        return session('impersonatingRole') !== null && $this->is(auth()->user());
     }
 
     public function isMember(): bool
@@ -201,7 +201,7 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function isDeveloper(): bool
     {
-        return (bool) $this->developer;
+        return (bool) $this->developer && ! $this->isImpersonatingRole();
     }
 
     public function assignRole(Role|string|int $role): void

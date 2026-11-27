@@ -11,6 +11,7 @@ use App\Filament\Mod\Resources\DivisionResource\RelationManagers\MemberFieldsRel
 use App\Filament\Mod\Resources\DivisionResource\RelationManagers\PlatoonsRelationManager;
 use App\Filament\Mod\Resources\DivisionResource\Schemas\StructureSection;
 use App\Models\Division;
+use App\Models\Handle;
 use App\Support\HeroImageOptimizer;
 use App\Support\ImageUploads;
 use Filament\Actions\Action;
@@ -267,7 +268,7 @@ class DivisionResource extends Resource
                                             ->label('Welcome DM')
                                             ->rows(6)
                                             ->columnSpanFull()
-                                            ->helperText('Available replacement tags (wrap with {{ tag }}): ingame_name, name'),
+                                            ->helperText(fn (?Division $record): string => self::welcomeMessageTags($record)),
                                     ]),
                             ]),
 
@@ -428,6 +429,18 @@ class DivisionResource extends Resource
             'index' => ListDivisions::route('/'),
             'edit'  => EditDivision::route('/{record}/edit'),
         ];
+    }
+
+    private static function welcomeMessageTags(?Division $division): string
+    {
+        $handles = $division?->handles ?? collect();
+        $tags    = ['{{ name }} for the forum name', '{{ ingame_name }} for ' . ($handles->count() > 1 ? 'every handle entered, labelled' : 'the in-game handle')];
+
+        if ($handles->count() > 1) {
+            $tags[] = $handles->map(fn (Handle $handle) => "{{ handle.{$handle->messageTag()} }} for {$handle->label}")->implode(', ');
+        }
+
+        return 'Replacement tags: ' . implode(', ', $tags) . '.';
     }
 
     /**

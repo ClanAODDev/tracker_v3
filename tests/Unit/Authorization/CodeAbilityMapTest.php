@@ -34,7 +34,7 @@ class CodeAbilityMapTest extends TestCase
         $map = $this->app->make(AbilityMap::class);
 
         foreach ($this->users() as $label => [$user, $impersonating]) {
-            $this->impersonate($impersonating);
+            $this->impersonate($impersonating, $user);
 
             foreach ($sites as $value => [$today, $shortcut]) {
                 $ability = Ability::from($value);
@@ -50,18 +50,32 @@ class CodeAbilityMapTest extends TestCase
     }
 
     #[Test]
-    public function stored_role_abilities_ignore_role_impersonation(): void
+    public function viewing_as_a_role_limits_every_ability_to_that_role(): void
     {
         $map  = $this->app->make(AbilityMap::class);
         $user = $this->user(Role::ADMIN);
 
-        $this->impersonate(Role::MEMBER);
+        $this->impersonate(Role::MEMBER, $user);
 
         $this->assertFalse($user->isRole('admin'));
-        $this->assertTrue($map->allows($user, Ability::Recruit));
-        $this->assertTrue($map->allows($user, Ability::ConductTraining));
-        $this->assertTrue($map->allows($user, Ability::UseAdvancedApiScopes));
+        $this->assertFalse($map->allows($user, Ability::Recruit));
+        $this->assertFalse($map->allows($user, Ability::ConductTraining));
+        $this->assertFalse($map->allows($user, Ability::UseAdvancedApiScopes));
         $this->assertFalse($map->allows($user, Ability::ManageAllMembers));
+    }
+
+    #[Test]
+    public function viewing_as_a_role_only_changes_the_signed_in_user(): void
+    {
+        $map    = $this->app->make(AbilityMap::class);
+        $viewer = $this->user(Role::ADMIN)->forceFill(['id' => 1]);
+        $other  = $this->user(Role::SENIOR_LEADER)->forceFill(['id' => 2]);
+
+        $this->impersonate(Role::MEMBER, $viewer);
+
+        $this->assertSame(Role::MEMBER, $viewer->getEffectiveRole());
+        $this->assertSame(Role::SENIOR_LEADER, $other->getEffectiveRole());
+        $this->assertTrue($map->allows($other, Ability::ManageMembers));
     }
 
     #[Test]
@@ -70,7 +84,7 @@ class CodeAbilityMapTest extends TestCase
         $map = $this->app->make(AbilityMap::class);
 
         foreach ($this->users() as $label => [$user, $impersonating]) {
-            $this->impersonate($impersonating);
+            $this->impersonate($impersonating, $user);
 
             foreach (Ability::cases() as $ability) {
                 $this->assertSame(
@@ -121,7 +135,6 @@ class CodeAbilityMapTest extends TestCase
     {
         $is     = fn (string|array|Role $roles) => fn (User $user) => $user->isRole($roles);
         $isNot  = fn (string|array|Role $roles) => fn (User $user) => ! $user->isRole($roles);
-        $stored = fn (array $roles) => fn (User $user) => in_array($user->role, $roles, true);
         $admin  = $is('admin');
         $checks = [
             Ability::AccessModPanel->value              => [$is(['admin', 'sr_ldr', 'officer']), null],
@@ -135,7 +148,7 @@ class CodeAbilityMapTest extends TestCase
             Ability::ImpersonateUsers->value            => [$is('admin'), null],
             Ability::ManageUsers->value                 => [$is('admin'), null],
             Ability::ManageApiTokens->value             => [$is('admin'), null],
-            Ability::UseAdvancedApiScopes->value        => [$stored([Role::SENIOR_LEADER, Role::ADMIN]), null],
+            Ability::UseAdvancedApiScopes->value        => [$is(['sr_ldr', 'admin']), null],
             Ability::ManageDivisions->value             => [$is('admin'), null],
             Ability::ViewDivisionSettings->value        => [$is('sr_ldr'), $admin],
             Ability::SeeDivisionHealthAlerts->value     => [$is('sr_ldr'), null],
@@ -144,7 +157,7 @@ class CodeAbilityMapTest extends TestCase
             Ability::ViewUnits->value                   => [$is(['officer', 'sr_ldr']), $admin],
             Ability::ManageUnits->value                 => [$is('sr_ldr'), $admin],
             Ability::ManageAllMembers->value            => [$is('admin'), null],
-            Ability::Recruit->value                     => [fn (User $user) => $user->role->value > Role::MEMBER->value, $admin],
+            Ability::Recruit->value                     => [fn (User $user) => ($user->getEffectiveRole()?->value ?? 0) > Role::MEMBER->value, $admin],
             Ability::ManageMembers->value               => [$is('sr_ldr'), $admin],
             Ability::ManageDivisionMembers->value       => [$is('officer'), $is(['admin', 'sr_ldr'])],
             Ability::RemindInactiveMembers->value       => [$is(['officer', 'sr_ldr']), $admin],
@@ -156,7 +169,7 @@ class CodeAbilityMapTest extends TestCase
             Ability::ViewDivisionActivity->value        => [$isNot('member'), null],
             Ability::ViewAllActivity->value             => [$is(['sr_ldr', 'admin']), null],
             Ability::ManageUnassignedMembers->value     => [$is('sr_ldr'), $admin],
-            Ability::ConductTraining->value             => [$stored([Role::ADMIN, Role::SENIOR_LEADER]), null],
+            Ability::ConductTraining->value             => [$is(['admin', 'sr_ldr']), null],
             Ability::ManageAllTransfers->value          => [$is('admin'), null],
             Ability::ViewTransfers->value               => [$is(['officer', 'sr_ldr']), $admin],
             Ability::TransferMembers->value             => [$is(['admin', 'sr_ldr']), null],
@@ -214,9 +227,13 @@ class CodeAbilityMapTest extends TestCase
         return (new User)->forceFill(['role' => $role]);
     }
 
-    private function impersonate(?Role $role): void
+    private function impersonate(?Role $role, ?User $user = null): void
     {
         session()->forget('impersonatingRole');
+
+        if ($user) {
+            auth()->setUser($user);
+        }
 
         if ($role) {
             session(['impersonatingRole' => $role->value]);

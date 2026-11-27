@@ -15,7 +15,7 @@ class MustBeDeveloper
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->check() && $request->user()->developer) {
+        if (auth()->check() && $request->user()->isDeveloper()) {
             return $next($request);
         }
 
