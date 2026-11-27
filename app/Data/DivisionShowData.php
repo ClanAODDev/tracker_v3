@@ -4,6 +4,7 @@ namespace App\Data;
 
 use App\Enums\Ability;
 use App\Filament\Admin\Resources\DivisionResource as AdminDivisionResource;
+use App\Filament\Mod\Resources\DivisionResource as ModDivisionResource;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\Unit;
@@ -53,6 +54,8 @@ readonly class DivisionShowData
                 'canManageUnassigned'   => $user->can('manageUnassigned', User::class),
                 'editUrl'               => route('filament.mod.resources.divisions.edit', $division),
                 'leadershipUrl'         => $this->leadershipUrl($user, $division),
+                'notificationsUrl'      => $this->notificationsUrl($user, $division),
+                'hasChatAlerts'         => collect($division->settings()->get('chat_alerts', []))->contains(fn ($channel) => in_array($channel, ['officers', 'members'], true)),
                 'recruitUrl'            => route('recruiting.form', $division),
                 'unassignedToSquadUrl'  => route('division.unassigned-to-squad', $division),
             ],
@@ -149,5 +152,14 @@ readonly class DivisionShowData
         }
 
         return AdminDivisionResource::getUrl('edit', ['record' => $division], panel: 'admin') . '#leadership';
+    }
+
+    private function notificationsUrl(User $user, Division $division): ?string
+    {
+        if (! $user->canAccessPanel(Filament::getPanel('mod')) || ! ModDivisionResource::canEdit($division)) {
+            return null;
+        }
+
+        return ModDivisionResource::getUrl('edit', ['record' => $division, 'tab' => 'notifications::data::tab'], panel: 'mod');
     }
 }

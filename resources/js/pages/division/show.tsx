@@ -46,6 +46,8 @@ interface DivisionShowProps {
         canManageUnassigned: boolean;
         editUrl: string;
         leadershipUrl: string | null;
+        notificationsUrl: string | null;
+        hasChatAlerts: boolean;
         recruitUrl: string;
         unassignedToSquadUrl: string;
     };
@@ -136,6 +138,13 @@ export default function DivisionShow({
                   },
               ]
             : []),
+        {
+            key: 'notifications',
+            label: 'Configure Discord notifications',
+            done: d.hasChatAlerts,
+            hint: 'Choose which events post to the officer and member channels.',
+            action: d.notificationsUrl ? { label: 'Set up notifications', href: d.notificationsUrl } : undefined,
+        },
         {
             key: 'recruit',
             label: 'Add the first recruit',
