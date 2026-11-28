@@ -8,12 +8,12 @@ division A show          | organize.canOrganize                     | admin     
 division A show          | pendingActions                           | admin                    | [expiring-leaves, overdue-leaves, pending-leaves, unassigned-members, unassigned-to-squad]
 division A show          | (status)                                 | developer                | 200
 division A show          | canViewAllActivity                       | developer                | false
-division A show          | division.canCreatePlatoon                | developer                | true
+division A show          | division.canCreatePlatoon                | developer                | false
 division A show          | division.canDeleteApplications           | developer                | false
-division A show          | division.canManageUnassigned             | developer                | true
-division A show          | division.canRecruit                      | developer                | true
-division A show          | organize.canOrganize                     | developer                | true
-division A show          | pendingActions                           | developer                | [unassigned-members, unassigned-to-squad]
+division A show          | division.canManageUnassigned             | developer                | false
+division A show          | division.canRecruit                      | developer                | false
+division A show          | organize.canOrganize                     | developer                | false
+division A show          | pendingActions                           | developer                | []
 division A show          | (status)                                 | admin_viewing_as_officer | 200
 division A show          | canViewAllActivity                       | admin_viewing_as_officer | false
 division A show          | division.canCreatePlatoon                | admin_viewing_as_officer | false
@@ -90,11 +90,11 @@ division B show          | organize.canOrganize                     | admin     
 division B show          | pendingActions                           | admin                    | []
 division B show          | (status)                                 | developer                | 200
 division B show          | canViewAllActivity                       | developer                | false
-division B show          | division.canCreatePlatoon                | developer                | true
+division B show          | division.canCreatePlatoon                | developer                | false
 division B show          | division.canDeleteApplications           | developer                | false
-division B show          | division.canManageUnassigned             | developer                | true
-division B show          | division.canRecruit                      | developer                | true
-division B show          | organize.canOrganize                     | developer                | true
+division B show          | division.canManageUnassigned             | developer                | false
+division B show          | division.canRecruit                      | developer                | false
+division B show          | organize.canOrganize                     | developer                | false
 division B show          | pendingActions                           | developer                | []
 division B show          | (status)                                 | admin_viewing_as_officer | 200
 division B show          | canViewAllActivity                       | admin_viewing_as_officer | false
@@ -169,9 +169,9 @@ division A members       | bulk.canRemind                           | admin     
 division A members       | members[].canRemind                      | admin                    | true
 division A members       | (status)                                 | developer                | 200
 division A members       | bulk.canAssignTags                       | developer                | false
-division A members       | bulk.canMoveMembers                      | developer                | true
-division A members       | bulk.canRemind                           | developer                | true
-division A members       | members[].canRemind                      | developer                | true
+division A members       | bulk.canMoveMembers                      | developer                | false
+division A members       | bulk.canRemind                           | developer                | false
+division A members       | members[].canRemind                      | developer                | false
 division A members       | (status)                                 | admin_viewing_as_officer | 200
 division A members       | bulk.canAssignTags                       | admin_viewing_as_officer | true
 division A members       | bulk.canMoveMembers                      | admin_viewing_as_officer | false

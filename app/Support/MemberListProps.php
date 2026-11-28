@@ -86,7 +86,7 @@ class MemberListProps
         $canRemind      = $user->can('remindActivity', Member::class);
         $canAssignTags  = $user->can('assign', DivisionTag::class);
         $canMoveMembers = $user->can('manageUnassigned', User::class);
-        $canUseBulkMode = $user->can(Ability::UseBulkMode) || $user->isDeveloper();
+        $canUseBulkMode = $user->can(Ability::UseBulkMode);
 
         return [
             'enabled'        => $canUseBulkMode,

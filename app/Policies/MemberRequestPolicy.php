@@ -14,7 +14,7 @@ class MemberRequestPolicy
 
     public function before(User $user)
     {
-        if ($user->isDeveloper() || $user->can(Ability::ManageAllMemberRequests)) {
+        if ($user->can(Ability::ManageAllMemberRequests)) {
             return true;
         }
     }

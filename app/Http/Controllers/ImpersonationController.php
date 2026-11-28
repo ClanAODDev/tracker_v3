@@ -37,7 +37,7 @@ class ImpersonationController extends Controller
 
     public function impersonateRole(string $role, #[CurrentUser] User $user): RedirectResponse
     {
-        if (! $user->can(Ability::ImpersonateRoles) && ! $user->isDeveloper()) {
+        if (! $user->can(Ability::ImpersonateRoles)) {
             abort(403);
         }
 

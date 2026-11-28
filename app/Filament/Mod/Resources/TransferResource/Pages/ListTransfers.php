@@ -2,7 +2,7 @@
 
 namespace App\Filament\Mod\Resources\TransferResource\Pages;
 
-use App\Enums\Rank;
+use App\Enums\Ability;
 use App\Filament\Mod\Resources\TransferResource;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
@@ -22,7 +22,7 @@ class ListTransfers extends ListRecords
                 ->icon('heroicon-o-arrow-up-tray')
                 ->color('gray')
                 ->url(TransferResource::getUrl('import-history'))
-                ->visible(fn () => auth()->user()?->member?->rank->value >= Rank::MASTER_SERGEANT->value),
+                ->visible(fn () => auth()->user()?->can(Ability::ImportHistory)),
             CreateAction::make(),
         ];
     }

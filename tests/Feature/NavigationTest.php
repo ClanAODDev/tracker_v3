@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Ability;
+use App\Models\UserAbility;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
@@ -36,12 +38,14 @@ class NavigationTest extends TestCase
     }
 
     #[Test]
-    public function developer_with_member_role_sees_admin_nav_links()
+    public function a_member_granted_admin_abilities_sees_admin_nav_links()
     {
-        $division             = $this->createActiveDivision();
-        $developer            = $this->createMemberWithUser(['division_id' => $division->id]);
-        $developer->developer = true;
-        $developer->save();
+        $division  = $this->createActiveDivision();
+        $developer = $this->createMemberWithUser(['division_id' => $division->id]);
+
+        foreach ([Ability::AccessAdminPanel, Ability::AccessModPanel, Ability::ViewLogs] as $ability) {
+            UserAbility::create(['user_id' => $developer->id, 'ability' => $ability->value, 'reason' => 'test']);
+        }
 
         $this->actingAs($developer)
             ->get(route('home'))
@@ -72,12 +76,11 @@ class NavigationTest extends TestCase
     }
 
     #[Test]
-    public function developer_with_member_role_gets_bulk_mode_enabled()
+    public function a_member_granted_bulk_mode_gets_bulk_mode_enabled()
     {
-        $division             = $this->createActiveDivision();
-        $developer            = $this->createMemberWithUser(['division_id' => $division->id]);
-        $developer->developer = true;
-        $developer->save();
+        $division  = $this->createActiveDivision();
+        $developer = $this->createMemberWithUser(['division_id' => $division->id]);
+        UserAbility::create(['user_id' => $developer->id, 'ability' => Ability::UseBulkMode->value, 'reason' => 'test']);
 
         $this->actingAs($developer)
             ->get(route('home'))

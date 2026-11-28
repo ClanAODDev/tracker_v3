@@ -33,9 +33,10 @@ class RoleViewAsTest extends TestCase
     }
 
     #[Test]
-    public function a_developer_admin_sees_privileged_links_normally(): void
+    public function an_admin_granted_view_logs_sees_privileged_links_normally(): void
     {
         $admin = $this->createAdmin();
+        UserAbility::create(['user_id' => $admin->id, 'ability' => Ability::ViewLogs->value, 'reason' => 'test']);
 
         $this->actingAs($admin)
             ->get(route('home'))
@@ -54,12 +55,13 @@ class RoleViewAsTest extends TestCase
     public function viewing_as_a_member_hides_links_the_member_role_lacks(): void
     {
         $admin = $this->createAdmin();
+        UserAbility::create(['user_id' => $admin->id, 'ability' => Ability::ViewLogs->value, 'reason' => 'test']);
 
         $this->actingAs($admin)
             ->withSession(['impersonatingRole' => Role::MEMBER->value])
             ->get(route('home'))
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('auth.permissions.isDeveloper', false)
+                ->where('auth.permissions.canViewAsRole', false)
                 ->where('nav', function ($nav) {
                     $labels = $this->navLabels($nav->toArray());
 

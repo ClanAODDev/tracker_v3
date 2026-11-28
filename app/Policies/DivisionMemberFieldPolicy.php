@@ -14,7 +14,7 @@ class DivisionMemberFieldPolicy
 
     public function before(User $user)
     {
-        if ($user->can(Ability::ManageDivisions) || $user->isDeveloper()) {
+        if ($user->can(Ability::ManageDivisions)) {
             return true;
         }
     }

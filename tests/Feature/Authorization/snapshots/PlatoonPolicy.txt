@@ -1,5 +1,5 @@
 viewAny                  | (any platoon)                            | admin                    | allow
-viewAny                  | (any platoon)                            | developer                | allow
+viewAny                  | (any platoon)                            | developer                | deny
 viewAny                  | (any platoon)                            | admin_viewing_as_officer | allow
 viewAny                  | (any platoon)                            | senior_leader            | allow
 viewAny                  | (any platoon)                            | commanding_officer       | allow
@@ -11,7 +11,7 @@ viewAny                  | (any platoon)                            | member    
 viewAny                  | (any platoon)                            | banned                   | deny
 viewAny                  | (any platoon)                            | pending                  | deny
 create                   | (no division)                            | admin                    | allow
-create                   | (no division)                            | developer                | allow
+create                   | (no division)                            | developer                | deny
 create                   | (no division)                            | admin_viewing_as_officer | deny
 create                   | (no division)                            | senior_leader            | allow
 create                   | (no division)                            | commanding_officer       | allow
@@ -23,7 +23,7 @@ create                   | (no division)                            | member    
 create                   | (no division)                            | banned                   | deny
 create                   | (no division)                            | pending                  | deny
 create                   | own_division                             | admin                    | allow
-create                   | own_division                             | developer                | allow
+create                   | own_division                             | developer                | deny
 create                   | own_division                             | admin_viewing_as_officer | deny
 create                   | own_division                             | senior_leader            | allow
 create                   | own_division                             | commanding_officer       | allow
@@ -35,7 +35,7 @@ create                   | own_division                             | member    
 create                   | own_division                             | banned                   | deny
 create                   | own_division                             | pending                  | deny
 create                   | other_division                           | admin                    | allow
-create                   | other_division                           | developer                | allow
+create                   | other_division                           | developer                | deny
 create                   | other_division                           | admin_viewing_as_officer | deny
 create                   | other_division                           | senior_leader            | deny
 create                   | other_division                           | commanding_officer       | deny
@@ -47,7 +47,7 @@ create                   | other_division                           | member    
 create                   | other_division                           | banned                   | deny
 create                   | other_division                           | pending                  | deny
 update                   | own_platoon                              | admin                    | allow
-update                   | own_platoon                              | developer                | allow
+update                   | own_platoon                              | developer                | deny
 update                   | own_platoon                              | admin_viewing_as_officer | deny
 update                   | own_platoon                              | senior_leader            | allow
 update                   | own_platoon                              | commanding_officer       | allow
@@ -59,7 +59,7 @@ update                   | own_platoon                              | member    
 update                   | own_platoon                              | banned                   | deny
 update                   | own_platoon                              | pending                  | deny
 update                   | other_platoon                            | admin                    | allow
-update                   | other_platoon                            | developer                | allow
+update                   | other_platoon                            | developer                | deny
 update                   | other_platoon                            | admin_viewing_as_officer | deny
 update                   | other_platoon                            | senior_leader            | allow
 update                   | other_platoon                            | commanding_officer       | allow
@@ -71,7 +71,7 @@ update                   | other_platoon                            | member    
 update                   | other_platoon                            | banned                   | deny
 update                   | other_platoon                            | pending                  | deny
 update                   | other_division_platoon                   | admin                    | allow
-update                   | other_division_platoon                   | developer                | allow
+update                   | other_division_platoon                   | developer                | deny
 update                   | other_division_platoon                   | admin_viewing_as_officer | deny
 update                   | other_division_platoon                   | senior_leader            | deny
 update                   | other_division_platoon                   | commanding_officer       | deny
@@ -83,7 +83,7 @@ update                   | other_division_platoon                   | member    
 update                   | other_division_platoon                   | banned                   | deny
 update                   | other_division_platoon                   | pending                  | deny
 delete                   | own_platoon                              | admin                    | allow
-delete                   | own_platoon                              | developer                | allow
+delete                   | own_platoon                              | developer                | deny
 delete                   | own_platoon                              | admin_viewing_as_officer | deny
 delete                   | own_platoon                              | senior_leader            | allow
 delete                   | own_platoon                              | commanding_officer       | allow
@@ -95,7 +95,7 @@ delete                   | own_platoon                              | member    
 delete                   | own_platoon                              | banned                   | deny
 delete                   | own_platoon                              | pending                  | deny
 delete                   | other_platoon                            | admin                    | allow
-delete                   | other_platoon                            | developer                | allow
+delete                   | other_platoon                            | developer                | deny
 delete                   | other_platoon                            | admin_viewing_as_officer | deny
 delete                   | other_platoon                            | senior_leader            | allow
 delete                   | other_platoon                            | commanding_officer       | allow
@@ -107,7 +107,7 @@ delete                   | other_platoon                            | member    
 delete                   | other_platoon                            | banned                   | deny
 delete                   | other_platoon                            | pending                  | deny
 delete                   | other_division_platoon                   | admin                    | allow
-delete                   | other_division_platoon                   | developer                | allow
+delete                   | other_division_platoon                   | developer                | deny
 delete                   | other_division_platoon                   | admin_viewing_as_officer | deny
 delete                   | other_division_platoon                   | senior_leader            | deny
 delete                   | other_division_platoon                   | commanding_officer       | deny

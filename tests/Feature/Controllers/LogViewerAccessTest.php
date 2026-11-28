@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Controllers;
 
+use App\Enums\Ability;
+use App\Models\UserAbility;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
@@ -15,9 +17,10 @@ class LogViewerAccessTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function developer_can_access_log_viewer()
+    public function a_user_granted_view_logs_can_access_log_viewer()
     {
-        $developer = $this->createMemberWithUser([], ['developer' => true]);
+        $developer = $this->createMemberWithUser();
+        UserAbility::create(['user_id' => $developer->id, 'ability' => Ability::ViewLogs->value, 'reason' => 'test']);
 
         $response = $this->actingAs($developer)
             ->get('/log-viewer');
@@ -26,14 +29,14 @@ class LogViewerAccessTest extends TestCase
     }
 
     #[Test]
-    public function admin_with_developer_flag_can_access_log_viewer()
+    public function the_developer_flag_alone_does_not_open_the_log_viewer()
     {
         $admin = $this->createAdmin([], ['developer' => true]);
 
         $response = $this->actingAs($admin)
             ->get('/log-viewer');
 
-        $response->assertOk();
+        $response->assertForbidden();
     }
 
     #[Test]

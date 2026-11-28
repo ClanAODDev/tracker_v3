@@ -1,5 +1,5 @@
 viewAny                  | (any user)                               | admin                    | allow
-viewAny                  | (any user)                               | developer                | allow
+viewAny                  | (any user)                               | developer                | deny
 viewAny                  | (any user)                               | admin_viewing_as_officer | deny
 viewAny                  | (any user)                               | senior_leader            | deny
 viewAny                  | (any user)                               | commanding_officer       | deny
@@ -11,7 +11,7 @@ viewAny                  | (any user)                               | member    
 viewAny                  | (any user)                               | banned                   | deny
 viewAny                  | (any user)                               | pending                  | deny
 view                     | (any user)                               | admin                    | allow
-view                     | (any user)                               | developer                | allow
+view                     | (any user)                               | developer                | deny
 view                     | (any user)                               | admin_viewing_as_officer | deny
 view                     | (any user)                               | senior_leader            | deny
 view                     | (any user)                               | commanding_officer       | deny
@@ -23,7 +23,7 @@ view                     | (any user)                               | member    
 view                     | (any user)                               | banned                   | deny
 view                     | (any user)                               | pending                  | deny
 create                   | (any user)                               | admin                    | allow
-create                   | (any user)                               | developer                | allow
+create                   | (any user)                               | developer                | deny
 create                   | (any user)                               | admin_viewing_as_officer | deny
 create                   | (any user)                               | senior_leader            | deny
 create                   | (any user)                               | commanding_officer       | deny
@@ -35,7 +35,7 @@ create                   | (any user)                               | member    
 create                   | (any user)                               | banned                   | deny
 create                   | (any user)                               | pending                  | deny
 update                   | (any user)                               | admin                    | allow
-update                   | (any user)                               | developer                | allow
+update                   | (any user)                               | developer                | deny
 update                   | (any user)                               | admin_viewing_as_officer | deny
 update                   | (any user)                               | senior_leader            | deny
 update                   | (any user)                               | commanding_officer       | deny
@@ -47,7 +47,7 @@ update                   | (any user)                               | member    
 update                   | (any user)                               | banned                   | deny
 update                   | (any user)                               | pending                  | deny
 delete                   | (any user)                               | admin                    | allow
-delete                   | (any user)                               | developer                | allow
+delete                   | (any user)                               | developer                | deny
 delete                   | (any user)                               | admin_viewing_as_officer | deny
 delete                   | (any user)                               | senior_leader            | deny
 delete                   | (any user)                               | commanding_officer       | deny
@@ -59,7 +59,7 @@ delete                   | (any user)                               | member    
 delete                   | (any user)                               | banned                   | deny
 delete                   | (any user)                               | pending                  | deny
 restore                  | (any user)                               | admin                    | allow
-restore                  | (any user)                               | developer                | allow
+restore                  | (any user)                               | developer                | deny
 restore                  | (any user)                               | admin_viewing_as_officer | deny
 restore                  | (any user)                               | senior_leader            | deny
 restore                  | (any user)                               | commanding_officer       | deny
@@ -71,7 +71,7 @@ restore                  | (any user)                               | member    
 restore                  | (any user)                               | banned                   | deny
 restore                  | (any user)                               | pending                  | deny
 forceDelete              | (any user)                               | admin                    | allow
-forceDelete              | (any user)                               | developer                | allow
+forceDelete              | (any user)                               | developer                | deny
 forceDelete              | (any user)                               | admin_viewing_as_officer | deny
 forceDelete              | (any user)                               | senior_leader            | deny
 forceDelete              | (any user)                               | commanding_officer       | deny
@@ -83,7 +83,7 @@ forceDelete              | (any user)                               | member    
 forceDelete              | (any user)                               | banned                   | deny
 forceDelete              | (any user)                               | pending                  | deny
 manageUnassigned         | (any user)                               | admin                    | allow
-manageUnassigned         | (any user)                               | developer                | allow
+manageUnassigned         | (any user)                               | developer                | deny
 manageUnassigned         | (any user)                               | admin_viewing_as_officer | deny
 manageUnassigned         | (any user)                               | senior_leader            | allow
 manageUnassigned         | (any user)                               | commanding_officer       | allow
@@ -95,7 +95,7 @@ manageUnassigned         | (any user)                               | member    
 manageUnassigned         | (any user)                               | banned                   | deny
 manageUnassigned         | (any user)                               | pending                  | deny
 train                    | (any user)                               | admin                    | allow
-train                    | (any user)                               | developer                | allow
+train                    | (any user)                               | developer                | deny
 train                    | (any user)                               | admin_viewing_as_officer | deny
 train                    | (any user)                               | senior_leader            | deny
 train                    | (any user)                               | commanding_officer       | allow

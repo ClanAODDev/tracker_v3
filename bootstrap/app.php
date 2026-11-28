@@ -1,12 +1,12 @@
 <?php
 
+use App\Http\Middleware\CanViewLogs;
 use App\Http\Middleware\DivisionMustBeActive;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\HasPrimaryDivision;
 use App\Http\Middleware\IsBanned;
 use App\Http\Middleware\LogApiRequests;
 use App\Http\Middleware\MustBeAdmin;
-use App\Http\Middleware\MustBeDeveloper;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\VerifyBotToken;
 use App\Support\QueryBindingRedactor;
@@ -60,7 +60,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ])->appendToGroup('api', ['auth:sanctum', IsBanned::class]);
 
         $middleware->alias([
-            'developer'      => MustBeDeveloper::class,
+            'view-logs'      => CanViewLogs::class,
             'admin'          => MustBeAdmin::class,
             'activeDivision' => DivisionMustBeActive::class,
             'banned'         => IsBanned::class,

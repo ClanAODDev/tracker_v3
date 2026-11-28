@@ -36,9 +36,9 @@ return [
     |
     */
 
-    'middleware' => ['web', 'developer'],
+    'middleware' => ['web', 'view-logs'],
 
-    'api_middleware' => ['web', 'developer'],
+    'api_middleware' => ['web', 'view-logs'],
 
     /*
     |--------------------------------------------------------------------------

@@ -12,18 +12,6 @@ class DivisionPolicy
     use HandlesAuthorization;
 
     /**
-     * Create a new policy instance.
-     *
-     * @return bool
-     */
-    public function before(User $user)
-    {
-        if ($user->isDeveloper()) {
-            return true;
-        }
-    }
-
-    /**
      * @return bool
      */
     public function update(User $user, Division $division)
@@ -37,12 +25,12 @@ class DivisionPolicy
 
     public function delete(User $user, Division $division)
     {
-        return false;
+        return $user->can(Ability::DeleteDivisions);
     }
 
     public function deleteAny(User $user): bool
     {
-        return false;
+        return $user->can(Ability::DeleteDivisions);
     }
 
     public function show(User $user)

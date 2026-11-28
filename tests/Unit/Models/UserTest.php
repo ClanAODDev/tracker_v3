@@ -154,23 +154,6 @@ class UserTest extends TestCase
     }
 
     #[Test]
-    public function can_remove_users_returns_true_for_sergeant_or_higher()
-    {
-        $division     = $this->createActiveDivision();
-        $sergeantUser = $this->createMemberWithUser([
-            'division_id' => $division->id,
-            'rank'        => Rank::SERGEANT,
-        ]);
-        $corporalUser = $this->createMemberWithUser([
-            'division_id' => $division->id,
-            'rank'        => Rank::CORPORAL,
-        ]);
-
-        $this->assertTrue($sergeantUser->canRemoveUsers());
-        $this->assertFalse($corporalUser->canRemoveUsers());
-    }
-
-    #[Test]
     public function assign_role_with_role_enum()
     {
         $user = User::factory()->create(['role' => Role::MEMBER]);

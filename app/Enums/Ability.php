@@ -9,6 +9,7 @@ enum Ability: string
     case AccessModPanel         = 'ability:access_mod_panel';
     case AccessAdminPanel       = 'ability:access_admin_panel';
     case ViewAdminPages         = 'ability:view_admin_pages';
+    case ViewLogs               = 'ability:view_logs';
     case UseHelpDesk            = 'ability:use_help_desk';
     case ViewRecruitingGuide    = 'ability:view_recruiting_guide';
     case PreviewApplicationForm = 'ability:preview_application_form';
@@ -20,6 +21,7 @@ enum Ability: string
     case UseAdvancedApiScopes   = 'ability:use_advanced_api_scopes';
 
     case ManageDivisions         = 'ability:manage_divisions';
+    case DeleteDivisions         = 'ability:delete_divisions';
     case ViewDivisionSettings    = 'ability:view_division_settings';
     case SeeDivisionHealthAlerts = 'ability:see_division_health_alerts';
     case ActAcrossDivisions      = 'ability:act_across_divisions';
@@ -44,6 +46,7 @@ enum Ability: string
     case ManageAllTransfers      = 'ability:manage_all_transfers';
     case ViewTransfers           = 'ability:view_transfers';
     case TransferMembers         = 'ability:transfer_members';
+    case ImportHistory           = 'ability:import_history';
     case ManageAllMemberRequests = 'ability:manage_all_member_requests';
     case ManageMemberRequests    = 'ability:manage_member_requests';
     case DeleteApplications      = 'ability:delete_applications';
@@ -67,6 +70,7 @@ enum Ability: string
     case AutoApproveJuniorPromotions = 'ability:auto_approve_junior_promotions';
     case ManageMemberAwards          = 'ability:manage_member_awards';
     case ApproveAwards               = 'ability:approve_awards';
+    case DeleteAwards                = 'ability:delete_awards';
     case RequestAwards               = 'ability:request_awards';
 
     case ManageGlobalTags    = 'ability:manage_global_tags';
@@ -89,6 +93,7 @@ enum Ability: string
             self::AccessModPanel              => 'Access',
             self::AccessAdminPanel            => 'Access',
             self::ViewAdminPages              => 'Access',
+            self::ViewLogs                    => 'Access',
             self::UseHelpDesk                 => 'Access',
             self::ViewRecruitingGuide         => 'Access',
             self::PreviewApplicationForm      => 'Access',
@@ -99,6 +104,7 @@ enum Ability: string
             self::ManageApiTokens             => 'Access',
             self::UseAdvancedApiScopes        => 'Access',
             self::ManageDivisions             => 'Divisions and units',
+            self::DeleteDivisions             => 'Divisions and units',
             self::ViewDivisionSettings        => 'Divisions and units',
             self::SeeDivisionHealthAlerts     => 'Divisions and units',
             self::ActAcrossDivisions          => 'Divisions and units',
@@ -122,6 +128,7 @@ enum Ability: string
             self::ManageAllTransfers          => 'Members',
             self::ViewTransfers               => 'Members',
             self::TransferMembers             => 'Members',
+            self::ImportHistory               => 'Members',
             self::ManageAllMemberRequests     => 'Members',
             self::ManageMemberRequests        => 'Members',
             self::DeleteApplications          => 'Members',
@@ -143,6 +150,7 @@ enum Ability: string
             self::AutoApproveJuniorPromotions => 'Rank actions and awards',
             self::ManageMemberAwards          => 'Rank actions and awards',
             self::ApproveAwards               => 'Rank actions and awards',
+            self::DeleteAwards                => 'Rank actions and awards',
             self::RequestAwards               => 'Rank actions and awards',
             self::ManageGlobalTags            => 'Tags and tickets',
             self::ManageDivisionTags          => 'Tags and tickets',
@@ -160,6 +168,7 @@ enum Ability: string
             self::AccessModPanel              => 'Open the operations (mod) panel',
             self::AccessAdminPanel            => 'Open the admin panel',
             self::ViewAdminPages              => 'See admin-only tracker pages (division turnover, contributor docs)',
+            self::ViewLogs                    => 'Open the application log viewer',
             self::UseHelpDesk                 => 'See the Get Help link in the navigation',
             self::ViewRecruitingGuide         => 'See the recruiting documentation',
             self::PreviewApplicationForm      => 'Preview a division\'s Discord application form',
@@ -170,6 +179,7 @@ enum Ability: string
             self::ManageApiTokens             => 'Create and revoke API tokens',
             self::UseAdvancedApiScopes        => 'Give API tokens division write and advanced read scopes',
             self::ManageDivisions             => 'Create divisions and edit any division\'s settings',
+            self::DeleteDivisions             => 'Delete divisions',
             self::ViewDivisionSettings        => 'See the division settings link in the operations panel',
             self::SeeDivisionHealthAlerts     => 'See outstanding inactive and voice issue alerts',
             self::ActAcrossDivisions          => 'Work with every division\'s records instead of only your own',
@@ -193,6 +203,7 @@ enum Ability: string
             self::ManageAllTransfers          => 'Full control of transfers, including deletion',
             self::ViewTransfers               => 'View transfer requests',
             self::TransferMembers             => 'Transfer members between divisions in bulk',
+            self::ImportHistory               => 'Import historical rank and transfer records',
             self::ManageAllMemberRequests     => 'Full control of member requests',
             self::ManageMemberRequests        => 'Approve, cancel, and delete member requests',
             self::DeleteApplications          => 'Delete division applications',
@@ -214,6 +225,7 @@ enum Ability: string
             self::AutoApproveJuniorPromotions => 'Auto-approve promotions up to Corporal',
             self::ManageMemberAwards          => 'Edit and delete member awards',
             self::ApproveAwards               => 'Approve member award requests',
+            self::DeleteAwards                => 'Delete awards',
             self::RequestAwards               => 'Request awards for members',
             self::ManageGlobalTags            => 'Manage clan-wide tags',
             self::ManageDivisionTags          => 'Create, edit, and delete division tags',

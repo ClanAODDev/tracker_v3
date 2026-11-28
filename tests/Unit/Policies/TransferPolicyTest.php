@@ -2,8 +2,10 @@
 
 namespace Tests\Unit\Policies;
 
+use App\Enums\Ability;
 use App\Enums\Position;
 use App\Models\Transfer;
+use App\Models\UserAbility;
 use App\Policies\TransferPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -35,7 +37,7 @@ class TransferPolicyTest extends TestCase
     }
 
     #[Test]
-    public function developer_bypasses_all_checks()
+    public function the_developer_flag_does_not_bypass_checks()
     {
         $division  = $this->createActiveDivision();
         $developer = $this->createMemberWithUser([
@@ -44,7 +46,17 @@ class TransferPolicyTest extends TestCase
         $developer->developer = true;
         $developer->save();
 
-        $this->assertTrue($this->policy->before($developer));
+        $this->assertNull($this->policy->before($developer));
+    }
+
+    #[Test]
+    public function a_user_granted_manage_all_transfers_bypasses_all_checks()
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+        UserAbility::create(['user_id' => $user->id, 'ability' => Ability::ManageAllTransfers->value, 'reason' => 'test']);
+
+        $this->assertTrue($this->policy->before($user));
     }
 
     #[Test]

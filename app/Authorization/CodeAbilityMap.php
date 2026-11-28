@@ -36,6 +36,7 @@ class CodeAbilityMap implements AbilityMap
             Ability::ManageAllUnits,
             Ability::ManageAllMembers,
             Ability::ManageAllTransfers,
+            Ability::ImportHistory,
             Ability::ManageAllMemberRequests,
             Ability::ManageAllNotes,
             Ability::UseMasterSergeantNotes,
@@ -46,6 +47,10 @@ class CodeAbilityMap implements AbilityMap
             Ability::ManageGlobalTags,
             Ability::ManageAllTickets,
             Ability::ManagePermissions => [$admin],
+
+            Ability::ViewLogs,
+            Ability::DeleteDivisions,
+            Ability::DeleteAwards => [],
 
             Ability::SeeDivisionHealthAlerts,
             Ability::ApproveDivisionRankActions,

@@ -22,7 +22,7 @@ class MemberPolicy
             return Response::deny('Cannot clear your own reminders');
         }
 
-        if ($user->can(Ability::ManageAllMembers) || $user->isDeveloper()) {
+        if ($user->can(Ability::ManageAllMembers)) {
             return true;
         }
     }

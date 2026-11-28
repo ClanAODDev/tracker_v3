@@ -1,5 +1,5 @@
 manage                   | (any request)                            | admin                    | allow
-manage                   | (any request)                            | developer                | allow
+manage                   | (any request)                            | developer                | deny
 manage                   | (any request)                            | admin_viewing_as_officer | deny
 manage                   | (any request)                            | senior_leader            | deny
 manage                   | (any request)                            | commanding_officer       | allow
@@ -47,7 +47,7 @@ view                     | requested_by_actor                       | member    
 view                     | requested_by_actor                       | banned                   | allow
 view                     | requested_by_actor                       | pending                  | n/a
 update                   | requested_by_other                       | admin                    | allow
-update                   | requested_by_other                       | developer                | allow
+update                   | requested_by_other                       | developer                | deny
 update                   | requested_by_other                       | admin_viewing_as_officer | deny
 update                   | requested_by_other                       | senior_leader            | allow
 update                   | requested_by_other                       | commanding_officer       | allow
@@ -71,7 +71,7 @@ update                   | requested_by_actor                       | member    
 update                   | requested_by_actor                       | banned                   | allow
 update                   | requested_by_actor                       | pending                  | n/a
 cancel                   | requested_by_other                       | admin                    | allow
-cancel                   | requested_by_other                       | developer                | allow
+cancel                   | requested_by_other                       | developer                | deny
 cancel                   | requested_by_other                       | admin_viewing_as_officer | deny
 cancel                   | requested_by_other                       | senior_leader            | allow
 cancel                   | requested_by_other                       | commanding_officer       | allow
@@ -95,7 +95,7 @@ cancel                   | requested_by_actor                       | member    
 cancel                   | requested_by_actor                       | banned                   | allow
 cancel                   | requested_by_actor                       | pending                  | n/a
 delete                   | requested_by_other                       | admin                    | allow
-delete                   | requested_by_other                       | developer                | allow
+delete                   | requested_by_other                       | developer                | deny
 delete                   | requested_by_other                       | admin_viewing_as_officer | deny
 delete                   | requested_by_other                       | senior_leader            | allow
 delete                   | requested_by_other                       | commanding_officer       | allow

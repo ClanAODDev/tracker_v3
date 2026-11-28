@@ -83,7 +83,7 @@ ListDivisionTags delete on global tag | -                                       
 ListDivisionTags delete on global tag | -                                        | banned                   | record not listed
 ListDivisionTags delete on global tag | -                                        | pending                  | error:ViewException
 ListTransfers delete bulk action | -                                        | admin                    | visible
-ListTransfers delete bulk action | -                                        | developer                | hidden
+ListTransfers delete bulk action | -                                        | developer                | page not accessible
 ListTransfers delete bulk action | -                                        | admin_viewing_as_officer | hidden
 ListTransfers delete bulk action | -                                        | senior_leader            | hidden
 ListTransfers delete bulk action | -                                        | commanding_officer       | hidden

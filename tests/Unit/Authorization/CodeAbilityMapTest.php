@@ -173,6 +173,7 @@ class CodeAbilityMapTest extends TestCase
             Ability::ManageAllTransfers->value          => [$is('admin'), null],
             Ability::ViewTransfers->value               => [$is(['officer', 'sr_ldr']), $admin],
             Ability::TransferMembers->value             => [$is(['admin', 'sr_ldr']), null],
+            Ability::ImportHistory->value               => [$is('admin'), null],
             Ability::ManageAllMemberRequests->value     => [$is('admin'), null],
             Ability::ManageMemberRequests->value        => [$is(['sr_ldr', 'admin']), null],
             Ability::DeleteApplications->value          => [$is(['sr_ldr', 'admin']), null],
@@ -202,6 +203,9 @@ class CodeAbilityMapTest extends TestCase
             Ability::UseOfficerTags->value              => [$is('officer'), $is(['admin', 'sr_ldr'])],
             Ability::ManageAllTickets->value            => [$is('admin'), null],
             Ability::ManagePermissions->value           => [$is('admin'), null],
+            Ability::ViewLogs->value                    => [fn () => false, null],
+            Ability::DeleteDivisions->value             => [fn () => false, null],
+            Ability::DeleteAwards->value                => [fn () => false, null],
         ];
 
         return $checks;

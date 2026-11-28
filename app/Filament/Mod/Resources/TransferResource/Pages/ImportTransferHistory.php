@@ -2,7 +2,7 @@
 
 namespace App\Filament\Mod\Resources\TransferResource\Pages;
 
-use App\Enums\Rank;
+use App\Enums\Ability;
 use App\Filament\Concerns\ImportsDatedHistory;
 use App\Filament\Mod\Resources\TransferResource;
 use App\Models\Division;
@@ -34,10 +34,7 @@ class ImportTransferHistory extends CreateRecord
 
     protected function authorizeAccess(): void
     {
-        abort_unless(
-            auth()->user()?->member?->rank->value >= Rank::MASTER_SERGEANT->value,
-            403
-        );
+        abort_unless(auth()->user()?->can(Ability::ImportHistory), 403);
     }
 
     public function form(Schema $schema): Schema

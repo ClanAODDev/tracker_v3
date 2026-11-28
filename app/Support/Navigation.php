@@ -46,16 +46,16 @@ class Navigation
                 ]),
             ],
 
-            $user->can(Ability::AccessModPanel) || $user->isDeveloper()
+            $user->can(Ability::AccessModPanel) || $user->can(Ability::ViewLogs)
                 ? ['type' => 'heading', 'label' => 'Admin']
                 : null,
-            $user->isDeveloper()
+            $user->can(Ability::ViewLogs)
                 ? ['label' => 'Log Viewer', 'href' => url('/log-viewer'), 'external' => true, 'icon' => 'scroll-text']
                 : null,
-            $user->can(Ability::AccessAdminPanel) || $user->isDeveloper()
+            $user->can(Ability::AccessAdminPanel)
                 ? ['label' => 'Admin Panel', 'href' => url('/admin'), 'external' => true, 'icon' => 'sliders-horizontal']
                 : null,
-            $user->can(Ability::AccessModPanel) || $user->isDeveloper()
+            $user->can(Ability::AccessModPanel)
                 ? ['label' => 'Operations', 'href' => url('/operations'), 'external' => true, 'icon' => 'radio']
                 : null,
 
