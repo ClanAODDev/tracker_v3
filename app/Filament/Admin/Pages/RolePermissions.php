@@ -60,6 +60,7 @@ class RolePermissions extends Page
                             ->options(collect($abilities)->mapWithKeys(fn (Ability $ability) => [$ability->value => $ability->label()]))
                             ->descriptions(fn (Get $get) => $this->descriptionsFor($abilities, Role::from((int) $get('role'))))
                             ->disableOptionWhen(fn (Get $get, string $value) => (int) $get('role') === Role::ADMIN->value && $value === Ability::ManagePermissions->value)
+                            ->mutateStateForValidationUsing(fn (?array $state) => array_values(array_diff($state ?? [], [Ability::ManagePermissions->value])))
                             ->bulkToggleable()
                             ->columns(2),
                     ]))

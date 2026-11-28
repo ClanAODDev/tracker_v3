@@ -85,4 +85,20 @@ class RolePermissionsPageTest extends TestCase
 
         $this->assertTrue(RoleAbility::where('role', Role::OFFICER)->where('ability', Ability::AccessModPanel->value)->exists());
     }
+
+    #[Test]
+    public function the_administrator_role_can_be_saved_with_its_locked_permission(): void
+    {
+        $this->actingAs($this->admin);
+
+        Livewire::test(RolePermissions::class)
+            ->set('data.role', Role::ADMIN->value)
+            ->set('data.abilities.access', [Ability::AccessModPanel->value, Ability::AccessAdminPanel->value])
+            ->callAction('save', data: ['reason' => 'Trim admin access'])
+            ->assertHasNoFormErrors()
+            ->assertNotified();
+
+        $this->assertFalse(RoleAbility::where('role', Role::ADMIN)->where('ability', Ability::ViewAdminPages->value)->exists());
+        $this->assertTrue(RoleAbility::where('role', Role::ADMIN)->where('ability', Ability::AccessAdminPanel->value)->exists());
+    }
 }
