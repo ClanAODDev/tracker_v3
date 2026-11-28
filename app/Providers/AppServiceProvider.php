@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Http\Responses\LogoutResponse;
+use App\Listeners\CheckApplicationHealth;
 use App\Models\Division;
 use App\Models\Member;
 use App\Models\PersonalAccessToken;
@@ -10,6 +11,7 @@ use App\Models\User;
 use App\Settings\UserSettings;
 use Filament\Actions\Action;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Foundation\Events\DiagnosingHealth;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Event;
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
         Paginator::useBootstrap();
 
         Event::listen(SocialiteWasCalled::class, DiscordExtendSocialite::class . '@handle');
+        Event::listen(DiagnosingHealth::class, CheckApplicationHealth::class);
 
         Route::bind('division', function ($division) {
             return Division::where('slug', strtolower($division))->first();
