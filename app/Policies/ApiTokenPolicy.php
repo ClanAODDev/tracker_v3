@@ -12,7 +12,7 @@ class ApiTokenPolicy
 
     public function before(User $user)
     {
-        if ($user->isDeveloper() || $user->can(Ability::ManageApiTokens)) {
+        if ($user->can(Ability::ManageApiTokens)) {
             return true;
         }
     }

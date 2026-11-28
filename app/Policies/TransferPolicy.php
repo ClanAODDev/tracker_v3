@@ -11,7 +11,7 @@ class TransferPolicy
 {
     public function before(User $user)
     {
-        if ($user->can(Ability::ManageAllTransfers) || $user->isDeveloper()) {
+        if ($user->can(Ability::ManageAllTransfers)) {
             return true;
         }
     }

@@ -12,7 +12,7 @@ class UnitPolicy
 {
     public function before(User $user)
     {
-        if ($user->can(Ability::ManageAllUnits) || $user->isDeveloper()) {
+        if ($user->can(Ability::ManageAllUnits)) {
             return true;
         }
     }

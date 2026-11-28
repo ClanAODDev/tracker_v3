@@ -57,9 +57,9 @@ class HandleInertiaRequests extends Middleware
             ],
             'permissions' => [
                 'canWorkTickets' => TicketType::get()->contains(fn (TicketType $type) => $type->userCanWork($user)),
-                'canUseBulkMode' => $user->can(Ability::UseBulkMode) || $user->isDeveloper(),
+                'canUseBulkMode' => $user->can(Ability::UseBulkMode),
                 'isAdmin'        => $user->can(Ability::ViewAdminPages),
-                'isDeveloper'    => $user->isDeveloper(),
+                'canViewAsRole'  => $user->can(Ability::ImpersonateRoles),
             ],
         ];
     }

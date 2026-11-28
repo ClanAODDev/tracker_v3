@@ -35,7 +35,7 @@ ActivityResource::canCreate | -                                        | member 
 ActivityResource::canCreate | -                                        | banned                   | deny
 ActivityResource::canCreate | -                                        | pending                  | deny
 DivisionResource::canAccess | -                                        | admin                    | allow
-DivisionResource::canAccess | -                                        | developer                | allow
+DivisionResource::canAccess | -                                        | developer                | deny
 DivisionResource::canAccess | -                                        | admin_viewing_as_officer | deny
 DivisionResource::canAccess | -                                        | senior_leader            | deny
 DivisionResource::canAccess | -                                        | commanding_officer       | allow
@@ -47,7 +47,7 @@ DivisionResource::canAccess | -                                        | member 
 DivisionResource::canAccess | -                                        | banned                   | deny
 DivisionResource::canAccess | -                                        | pending                  | error:ErrorException
 DivisionResource::canViewAny | -                                        | admin                    | allow
-DivisionResource::canViewAny | -                                        | developer                | allow
+DivisionResource::canViewAny | -                                        | developer                | deny
 DivisionResource::canViewAny | -                                        | admin_viewing_as_officer | deny
 DivisionResource::canViewAny | -                                        | senior_leader            | deny
 DivisionResource::canViewAny | -                                        | commanding_officer       | allow
@@ -59,7 +59,7 @@ DivisionResource::canViewAny | -                                        | member
 DivisionResource::canViewAny | -                                        | banned                   | deny
 DivisionResource::canViewAny | -                                        | pending                  | error:ErrorException
 DivisionResource::canCreate | -                                        | admin                    | allow
-DivisionResource::canCreate | -                                        | developer                | allow
+DivisionResource::canCreate | -                                        | developer                | deny
 DivisionResource::canCreate | -                                        | admin_viewing_as_officer | deny
 DivisionResource::canCreate | -                                        | senior_leader            | deny
 DivisionResource::canCreate | -                                        | commanding_officer       | deny
@@ -179,7 +179,7 @@ MemberAwardResource::canCreate | -                                        | memb
 MemberAwardResource::canCreate | -                                        | banned                   | allow
 MemberAwardResource::canCreate | -                                        | pending                  | allow
 MemberRequestResource::canAccess | -                                        | admin                    | allow
-MemberRequestResource::canAccess | -                                        | developer                | allow
+MemberRequestResource::canAccess | -                                        | developer                | deny
 MemberRequestResource::canAccess | -                                        | admin_viewing_as_officer | deny
 MemberRequestResource::canAccess | -                                        | senior_leader            | deny
 MemberRequestResource::canAccess | -                                        | commanding_officer       | allow
@@ -191,7 +191,7 @@ MemberRequestResource::canAccess | -                                        | me
 MemberRequestResource::canAccess | -                                        | banned                   | deny
 MemberRequestResource::canAccess | -                                        | pending                  | deny
 MemberRequestResource::canViewAny | -                                        | admin                    | allow
-MemberRequestResource::canViewAny | -                                        | developer                | allow
+MemberRequestResource::canViewAny | -                                        | developer                | deny
 MemberRequestResource::canViewAny | -                                        | admin_viewing_as_officer | deny
 MemberRequestResource::canViewAny | -                                        | senior_leader            | deny
 MemberRequestResource::canViewAny | -                                        | commanding_officer       | allow
@@ -239,7 +239,7 @@ MemberResource::canViewAny | -                                        | member  
 MemberResource::canViewAny | -                                        | banned                   | allow
 MemberResource::canViewAny | -                                        | pending                  | allow
 MemberResource::canCreate | -                                        | admin                    | allow
-MemberResource::canCreate | -                                        | developer                | allow
+MemberResource::canCreate | -                                        | developer                | deny
 MemberResource::canCreate | -                                        | admin_viewing_as_officer | deny
 MemberResource::canCreate | -                                        | senior_leader            | deny
 MemberResource::canCreate | -                                        | commanding_officer       | deny
@@ -287,7 +287,7 @@ RankActionResource::canCreate | -                                        | membe
 RankActionResource::canCreate | -                                        | banned                   | allow
 RankActionResource::canCreate | -                                        | pending                  | allow
 TransferResource::canAccess | -                                        | admin                    | allow
-TransferResource::canAccess | -                                        | developer                | allow
+TransferResource::canAccess | -                                        | developer                | deny
 TransferResource::canAccess | -                                        | admin_viewing_as_officer | allow
 TransferResource::canAccess | -                                        | senior_leader            | allow
 TransferResource::canAccess | -                                        | commanding_officer       | allow
@@ -299,7 +299,7 @@ TransferResource::canAccess | -                                        | member 
 TransferResource::canAccess | -                                        | banned                   | deny
 TransferResource::canAccess | -                                        | pending                  | deny
 TransferResource::canViewAny | -                                        | admin                    | allow
-TransferResource::canViewAny | -                                        | developer                | allow
+TransferResource::canViewAny | -                                        | developer                | deny
 TransferResource::canViewAny | -                                        | admin_viewing_as_officer | allow
 TransferResource::canViewAny | -                                        | senior_leader            | allow
 TransferResource::canViewAny | -                                        | commanding_officer       | allow
@@ -323,7 +323,7 @@ TransferResource::canCreate | -                                        | member 
 TransferResource::canCreate | -                                        | banned                   | allow
 TransferResource::canCreate | -                                        | pending                  | error:ErrorException
 UnitResource::canAccess  | -                                        | admin                    | allow
-UnitResource::canAccess  | -                                        | developer                | allow
+UnitResource::canAccess  | -                                        | developer                | deny
 UnitResource::canAccess  | -                                        | admin_viewing_as_officer | allow
 UnitResource::canAccess  | -                                        | senior_leader            | allow
 UnitResource::canAccess  | -                                        | commanding_officer       | allow
@@ -335,7 +335,7 @@ UnitResource::canAccess  | -                                        | member    
 UnitResource::canAccess  | -                                        | banned                   | deny
 UnitResource::canAccess  | -                                        | pending                  | deny
 UnitResource::canViewAny | -                                        | admin                    | allow
-UnitResource::canViewAny | -                                        | developer                | allow
+UnitResource::canViewAny | -                                        | developer                | deny
 UnitResource::canViewAny | -                                        | admin_viewing_as_officer | allow
 UnitResource::canViewAny | -                                        | senior_leader            | allow
 UnitResource::canViewAny | -                                        | commanding_officer       | allow
@@ -347,7 +347,7 @@ UnitResource::canViewAny | -                                        | member    
 UnitResource::canViewAny | -                                        | banned                   | deny
 UnitResource::canViewAny | -                                        | pending                  | deny
 UnitResource::canCreate  | -                                        | admin                    | allow
-UnitResource::canCreate  | -                                        | developer                | allow
+UnitResource::canCreate  | -                                        | developer                | deny
 UnitResource::canCreate  | -                                        | admin_viewing_as_officer | deny
 UnitResource::canCreate  | -                                        | senior_leader            | allow
 UnitResource::canCreate  | -                                        | commanding_officer       | allow
@@ -443,7 +443,7 @@ MemberAwardResource::canDeleteAny | -                                        | m
 MemberAwardResource::canDeleteAny | -                                        | banned                   | deny
 MemberAwardResource::canDeleteAny | -                                        | pending                  | deny
 GET member awards index  | (status)                                 | admin                    | 200
-GET member awards index  | (status)                                 | developer                | 200
+GET member awards index  | (status)                                 | developer                | 403
 GET member awards index  | (status)                                 | admin_viewing_as_officer | 200
 GET member awards index  | (status)                                 | senior_leader            | 200
 GET member awards index  | (status)                                 | commanding_officer       | 200

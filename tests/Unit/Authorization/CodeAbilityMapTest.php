@@ -203,6 +203,9 @@ class CodeAbilityMapTest extends TestCase
             Ability::UseOfficerTags->value              => [$is('officer'), $is(['admin', 'sr_ldr'])],
             Ability::ManageAllTickets->value            => [$is('admin'), null],
             Ability::ManagePermissions->value           => [$is('admin'), null],
+            Ability::ViewLogs->value                    => [fn () => false, null],
+            Ability::DeleteDivisions->value             => [fn () => false, null],
+            Ability::DeleteAwards->value                => [fn () => false, null],
         ];
 
         return $checks;

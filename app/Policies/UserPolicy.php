@@ -20,7 +20,7 @@ class UserPolicy
             return null;
         }
 
-        if ($user->isDeveloper() || $user->can(Ability::ManageUsers)) {
+        if ($user->can(Ability::ManageUsers)) {
             return true;
         }
     }

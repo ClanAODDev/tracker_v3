@@ -1,5 +1,5 @@
 GET divisions index      | (status)                                 | admin                    | 200
-GET divisions index      | (status)                                 | developer                | 302 -> /operations/divisions/division-a/edit
+GET divisions index      | (status)                                 | developer                | 403
 GET divisions index      | (status)                                 | admin_viewing_as_officer | 403
 GET divisions index      | (status)                                 | senior_leader            | 403
 GET divisions index      | (status)                                 | commanding_officer       | 302 -> /operations/divisions/division-a/edit
@@ -11,7 +11,7 @@ GET divisions index      | (status)                                 | member    
 GET divisions index      | (status)                                 | banned                   | 403
 GET divisions index      | (status)                                 | pending                  | 403
 GET edit own division    | (status)                                 | admin                    | 200
-GET edit own division    | (status)                                 | developer                | 200
+GET edit own division    | (status)                                 | developer                | 403
 GET edit own division    | (status)                                 | admin_viewing_as_officer | 403
 GET edit own division    | (status)                                 | senior_leader            | 403
 GET edit own division    | (status)                                 | commanding_officer       | 200

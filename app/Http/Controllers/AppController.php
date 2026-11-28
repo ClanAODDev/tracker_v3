@@ -75,7 +75,7 @@ class AppController extends Controller
     {
         $user = auth()->user();
 
-        return $user->isDeveloper() || $user->can(Ability::AccessAdminPanel);
+        return $user->can(Ability::AccessAdminPanel);
     }
 
     public function index(#[CurrentUser] User $user): Response

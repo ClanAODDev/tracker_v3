@@ -23,7 +23,7 @@ class NotePolicy
             return Response::deny('You cannot change notes on your own profile');
         }
 
-        if ($user->can(Ability::ManageAllNotes) || $user->isDeveloper()) {
+        if ($user->can(Ability::ManageAllNotes)) {
             return true;
         }
     }

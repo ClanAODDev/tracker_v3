@@ -1,5 +1,5 @@
 deleteAny                | (any award)                              | admin                    | deny
-deleteAny                | (any award)                              | developer                | allow
+deleteAny                | (any award)                              | developer                | deny
 deleteAny                | (any award)                              | admin_viewing_as_officer | deny
 deleteAny                | (any award)                              | senior_leader            | deny
 deleteAny                | (any award)                              | commanding_officer       | deny
@@ -11,7 +11,7 @@ deleteAny                | (any award)                              | member    
 deleteAny                | (any award)                              | banned                   | deny
 deleteAny                | (any award)                              | pending                  | deny
 delete                   | an_award                                 | admin                    | deny
-delete                   | an_award                                 | developer                | allow
+delete                   | an_award                                 | developer                | deny
 delete                   | an_award                                 | admin_viewing_as_officer | deny
 delete                   | an_award                                 | senior_leader            | deny
 delete                   | an_award                                 | commanding_officer       | deny

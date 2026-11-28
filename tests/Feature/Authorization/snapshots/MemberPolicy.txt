@@ -1,5 +1,5 @@
 recruit                  | (any member)                             | admin                    | allow
-recruit                  | (any member)                             | developer                | allow
+recruit                  | (any member)                             | developer                | deny
 recruit                  | (any member)                             | admin_viewing_as_officer | allow
 recruit                  | (any member)                             | senior_leader            | allow
 recruit                  | (any member)                             | commanding_officer       | allow
@@ -11,7 +11,7 @@ recruit                  | (any member)                             | member    
 recruit                  | (any member)                             | banned                   | allow
 recruit                  | (any member)                             | pending                  | deny
 create                   | (any member)                             | admin                    | allow
-create                   | (any member)                             | developer                | allow
+create                   | (any member)                             | developer                | deny
 create                   | (any member)                             | admin_viewing_as_officer | deny
 create                   | (any member)                             | senior_leader            | deny
 create                   | (any member)                             | commanding_officer       | deny
@@ -23,7 +23,7 @@ create                   | (any member)                             | member    
 create                   | (any member)                             | banned                   | deny
 create                   | (any member)                             | pending                  | deny
 flagInactive             | (any member)                             | admin                    | allow
-flagInactive             | (any member)                             | developer                | allow
+flagInactive             | (any member)                             | developer                | deny
 flagInactive             | (any member)                             | admin_viewing_as_officer | allow
 flagInactive             | (any member)                             | senior_leader            | allow
 flagInactive             | (any member)                             | commanding_officer       | allow
@@ -47,7 +47,7 @@ viewAny                  | (any member)                             | member    
 viewAny                  | (any member)                             | banned                   | allow
 viewAny                  | (any member)                             | pending                  | allow
 remindActivity           | (any member)                             | admin                    | allow
-remindActivity           | (any member)                             | developer                | allow
+remindActivity           | (any member)                             | developer                | deny
 remindActivity           | (any member)                             | admin_viewing_as_officer | allow
 remindActivity           | (any member)                             | senior_leader            | allow
 remindActivity           | (any member)                             | commanding_officer       | allow
@@ -155,7 +155,7 @@ view                     | part_timer                               | member    
 view                     | part_timer                               | banned                   | allow
 view                     | part_timer                               | pending                  | allow
 update                   | self                                     | admin                    | allow
-update                   | self                                     | developer                | allow
+update                   | self                                     | developer                | deny
 update                   | self                                     | admin_viewing_as_officer | deny
 update                   | self                                     | senior_leader            | deny
 update                   | self                                     | commanding_officer       | deny
@@ -167,7 +167,7 @@ update                   | self                                     | member    
 update                   | self                                     | banned                   | deny
 update                   | self                                     | pending                  | n/a
 update                   | same_squad                               | admin                    | allow
-update                   | same_squad                               | developer                | allow
+update                   | same_squad                               | developer                | deny
 update                   | same_squad                               | admin_viewing_as_officer | deny
 update                   | same_squad                               | senior_leader            | allow
 update                   | same_squad                               | commanding_officer       | allow
@@ -179,7 +179,7 @@ update                   | same_squad                               | member    
 update                   | same_squad                               | banned                   | deny
 update                   | same_squad                               | pending                  | deny
 update                   | same_platoon_other_squad                 | admin                    | allow
-update                   | same_platoon_other_squad                 | developer                | allow
+update                   | same_platoon_other_squad                 | developer                | deny
 update                   | same_platoon_other_squad                 | admin_viewing_as_officer | deny
 update                   | same_platoon_other_squad                 | senior_leader            | allow
 update                   | same_platoon_other_squad                 | commanding_officer       | allow
@@ -191,7 +191,7 @@ update                   | same_platoon_other_squad                 | member    
 update                   | same_platoon_other_squad                 | banned                   | deny
 update                   | same_platoon_other_squad                 | pending                  | deny
 update                   | other_platoon                            | admin                    | allow
-update                   | other_platoon                            | developer                | allow
+update                   | other_platoon                            | developer                | deny
 update                   | other_platoon                            | admin_viewing_as_officer | deny
 update                   | other_platoon                            | senior_leader            | allow
 update                   | other_platoon                            | commanding_officer       | allow
@@ -203,7 +203,7 @@ update                   | other_platoon                            | member    
 update                   | other_platoon                            | banned                   | deny
 update                   | other_platoon                            | pending                  | deny
 update                   | unassigned                               | admin                    | allow
-update                   | unassigned                               | developer                | allow
+update                   | unassigned                               | developer                | deny
 update                   | unassigned                               | admin_viewing_as_officer | deny
 update                   | unassigned                               | senior_leader            | allow
 update                   | unassigned                               | commanding_officer       | allow
@@ -215,7 +215,7 @@ update                   | unassigned                               | member    
 update                   | unassigned                               | banned                   | deny
 update                   | unassigned                               | pending                  | deny
 update                   | other_division                           | admin                    | allow
-update                   | other_division                           | developer                | allow
+update                   | other_division                           | developer                | deny
 update                   | other_division                           | admin_viewing_as_officer | deny
 update                   | other_division                           | senior_leader            | allow
 update                   | other_division                           | commanding_officer       | allow
@@ -227,7 +227,7 @@ update                   | other_division                           | member    
 update                   | other_division                           | banned                   | deny
 update                   | other_division                           | pending                  | deny
 update                   | higher_rank                              | admin                    | allow
-update                   | higher_rank                              | developer                | allow
+update                   | higher_rank                              | developer                | deny
 update                   | higher_rank                              | admin_viewing_as_officer | deny
 update                   | higher_rank                              | senior_leader            | allow
 update                   | higher_rank                              | commanding_officer       | allow
@@ -239,7 +239,7 @@ update                   | higher_rank                              | member    
 update                   | higher_rank                              | banned                   | deny
 update                   | higher_rank                              | pending                  | deny
 update                   | part_timer                               | admin                    | allow
-update                   | part_timer                               | developer                | allow
+update                   | part_timer                               | developer                | deny
 update                   | part_timer                               | admin_viewing_as_officer | deny
 update                   | part_timer                               | senior_leader            | allow
 update                   | part_timer                               | commanding_officer       | allow
@@ -251,7 +251,7 @@ update                   | part_timer                               | member    
 update                   | part_timer                               | banned                   | deny
 update                   | part_timer                               | pending                  | deny
 reset                    | self                                     | admin                    | allow
-reset                    | self                                     | developer                | allow
+reset                    | self                                     | developer                | deny
 reset                    | self                                     | admin_viewing_as_officer | deny
 reset                    | self                                     | senior_leader            | deny
 reset                    | self                                     | commanding_officer       | deny
@@ -263,7 +263,7 @@ reset                    | self                                     | member    
 reset                    | self                                     | banned                   | deny
 reset                    | self                                     | pending                  | n/a
 reset                    | same_squad                               | admin                    | allow
-reset                    | same_squad                               | developer                | allow
+reset                    | same_squad                               | developer                | deny
 reset                    | same_squad                               | admin_viewing_as_officer | deny
 reset                    | same_squad                               | senior_leader            | allow
 reset                    | same_squad                               | commanding_officer       | allow
@@ -275,7 +275,7 @@ reset                    | same_squad                               | member    
 reset                    | same_squad                               | banned                   | deny
 reset                    | same_squad                               | pending                  | deny
 reset                    | same_platoon_other_squad                 | admin                    | allow
-reset                    | same_platoon_other_squad                 | developer                | allow
+reset                    | same_platoon_other_squad                 | developer                | deny
 reset                    | same_platoon_other_squad                 | admin_viewing_as_officer | deny
 reset                    | same_platoon_other_squad                 | senior_leader            | allow
 reset                    | same_platoon_other_squad                 | commanding_officer       | allow
@@ -287,7 +287,7 @@ reset                    | same_platoon_other_squad                 | member    
 reset                    | same_platoon_other_squad                 | banned                   | deny
 reset                    | same_platoon_other_squad                 | pending                  | deny
 reset                    | other_platoon                            | admin                    | allow
-reset                    | other_platoon                            | developer                | allow
+reset                    | other_platoon                            | developer                | deny
 reset                    | other_platoon                            | admin_viewing_as_officer | deny
 reset                    | other_platoon                            | senior_leader            | allow
 reset                    | other_platoon                            | commanding_officer       | allow
@@ -299,7 +299,7 @@ reset                    | other_platoon                            | member    
 reset                    | other_platoon                            | banned                   | deny
 reset                    | other_platoon                            | pending                  | deny
 reset                    | unassigned                               | admin                    | allow
-reset                    | unassigned                               | developer                | allow
+reset                    | unassigned                               | developer                | deny
 reset                    | unassigned                               | admin_viewing_as_officer | deny
 reset                    | unassigned                               | senior_leader            | allow
 reset                    | unassigned                               | commanding_officer       | allow
@@ -311,7 +311,7 @@ reset                    | unassigned                               | member    
 reset                    | unassigned                               | banned                   | deny
 reset                    | unassigned                               | pending                  | deny
 reset                    | other_division                           | admin                    | allow
-reset                    | other_division                           | developer                | allow
+reset                    | other_division                           | developer                | deny
 reset                    | other_division                           | admin_viewing_as_officer | deny
 reset                    | other_division                           | senior_leader            | allow
 reset                    | other_division                           | commanding_officer       | allow
@@ -323,7 +323,7 @@ reset                    | other_division                           | member    
 reset                    | other_division                           | banned                   | deny
 reset                    | other_division                           | pending                  | deny
 reset                    | higher_rank                              | admin                    | allow
-reset                    | higher_rank                              | developer                | allow
+reset                    | higher_rank                              | developer                | deny
 reset                    | higher_rank                              | admin_viewing_as_officer | deny
 reset                    | higher_rank                              | senior_leader            | allow
 reset                    | higher_rank                              | commanding_officer       | allow
@@ -335,7 +335,7 @@ reset                    | higher_rank                              | member    
 reset                    | higher_rank                              | banned                   | deny
 reset                    | higher_rank                              | pending                  | deny
 reset                    | part_timer                               | admin                    | allow
-reset                    | part_timer                               | developer                | allow
+reset                    | part_timer                               | developer                | deny
 reset                    | part_timer                               | admin_viewing_as_officer | deny
 reset                    | part_timer                               | senior_leader            | allow
 reset                    | part_timer                               | commanding_officer       | allow
@@ -347,7 +347,7 @@ reset                    | part_timer                               | member    
 reset                    | part_timer                               | banned                   | deny
 reset                    | part_timer                               | pending                  | deny
 delete                   | self                                     | admin                    | allow
-delete                   | self                                     | developer                | allow
+delete                   | self                                     | developer                | deny
 delete                   | self                                     | admin_viewing_as_officer | deny
 delete                   | self                                     | senior_leader            | deny
 delete                   | self                                     | commanding_officer       | deny
@@ -359,7 +359,7 @@ delete                   | self                                     | member    
 delete                   | self                                     | banned                   | deny
 delete                   | self                                     | pending                  | n/a
 delete                   | same_squad                               | admin                    | allow
-delete                   | same_squad                               | developer                | allow
+delete                   | same_squad                               | developer                | deny
 delete                   | same_squad                               | admin_viewing_as_officer | deny
 delete                   | same_squad                               | senior_leader            | deny
 delete                   | same_squad                               | commanding_officer       | deny
@@ -371,7 +371,7 @@ delete                   | same_squad                               | member    
 delete                   | same_squad                               | banned                   | deny
 delete                   | same_squad                               | pending                  | deny
 delete                   | same_platoon_other_squad                 | admin                    | allow
-delete                   | same_platoon_other_squad                 | developer                | allow
+delete                   | same_platoon_other_squad                 | developer                | deny
 delete                   | same_platoon_other_squad                 | admin_viewing_as_officer | deny
 delete                   | same_platoon_other_squad                 | senior_leader            | deny
 delete                   | same_platoon_other_squad                 | commanding_officer       | deny
@@ -383,7 +383,7 @@ delete                   | same_platoon_other_squad                 | member    
 delete                   | same_platoon_other_squad                 | banned                   | deny
 delete                   | same_platoon_other_squad                 | pending                  | deny
 delete                   | other_platoon                            | admin                    | allow
-delete                   | other_platoon                            | developer                | allow
+delete                   | other_platoon                            | developer                | deny
 delete                   | other_platoon                            | admin_viewing_as_officer | deny
 delete                   | other_platoon                            | senior_leader            | deny
 delete                   | other_platoon                            | commanding_officer       | deny
@@ -395,7 +395,7 @@ delete                   | other_platoon                            | member    
 delete                   | other_platoon                            | banned                   | deny
 delete                   | other_platoon                            | pending                  | deny
 delete                   | unassigned                               | admin                    | allow
-delete                   | unassigned                               | developer                | allow
+delete                   | unassigned                               | developer                | deny
 delete                   | unassigned                               | admin_viewing_as_officer | deny
 delete                   | unassigned                               | senior_leader            | deny
 delete                   | unassigned                               | commanding_officer       | deny
@@ -407,7 +407,7 @@ delete                   | unassigned                               | member    
 delete                   | unassigned                               | banned                   | deny
 delete                   | unassigned                               | pending                  | deny
 delete                   | other_division                           | admin                    | allow
-delete                   | other_division                           | developer                | allow
+delete                   | other_division                           | developer                | deny
 delete                   | other_division                           | admin_viewing_as_officer | deny
 delete                   | other_division                           | senior_leader            | deny
 delete                   | other_division                           | commanding_officer       | deny
@@ -419,7 +419,7 @@ delete                   | other_division                           | member    
 delete                   | other_division                           | banned                   | deny
 delete                   | other_division                           | pending                  | deny
 delete                   | higher_rank                              | admin                    | allow
-delete                   | higher_rank                              | developer                | allow
+delete                   | higher_rank                              | developer                | deny
 delete                   | higher_rank                              | admin_viewing_as_officer | deny
 delete                   | higher_rank                              | senior_leader            | deny
 delete                   | higher_rank                              | commanding_officer       | deny
@@ -431,7 +431,7 @@ delete                   | higher_rank                              | member    
 delete                   | higher_rank                              | banned                   | deny
 delete                   | higher_rank                              | pending                  | deny
 delete                   | part_timer                               | admin                    | allow
-delete                   | part_timer                               | developer                | allow
+delete                   | part_timer                               | developer                | deny
 delete                   | part_timer                               | admin_viewing_as_officer | deny
 delete                   | part_timer                               | senior_leader            | deny
 delete                   | part_timer                               | commanding_officer       | deny
@@ -443,7 +443,7 @@ delete                   | part_timer                               | member    
 delete                   | part_timer                               | banned                   | deny
 delete                   | part_timer                               | pending                  | deny
 separate                 | self                                     | admin                    | allow
-separate                 | self                                     | developer                | allow
+separate                 | self                                     | developer                | deny
 separate                 | self                                     | admin_viewing_as_officer | deny
 separate                 | self                                     | senior_leader            | deny
 separate                 | self                                     | commanding_officer       | deny
@@ -455,7 +455,7 @@ separate                 | self                                     | member    
 separate                 | self                                     | banned                   | deny
 separate                 | self                                     | pending                  | n/a
 separate                 | same_squad                               | admin                    | allow
-separate                 | same_squad                               | developer                | allow
+separate                 | same_squad                               | developer                | deny
 separate                 | same_squad                               | admin_viewing_as_officer | deny
 separate                 | same_squad                               | senior_leader            | allow
 separate                 | same_squad                               | commanding_officer       | allow
@@ -467,7 +467,7 @@ separate                 | same_squad                               | member    
 separate                 | same_squad                               | banned                   | deny
 separate                 | same_squad                               | pending                  | deny
 separate                 | same_platoon_other_squad                 | admin                    | allow
-separate                 | same_platoon_other_squad                 | developer                | allow
+separate                 | same_platoon_other_squad                 | developer                | deny
 separate                 | same_platoon_other_squad                 | admin_viewing_as_officer | deny
 separate                 | same_platoon_other_squad                 | senior_leader            | allow
 separate                 | same_platoon_other_squad                 | commanding_officer       | allow
@@ -479,7 +479,7 @@ separate                 | same_platoon_other_squad                 | member    
 separate                 | same_platoon_other_squad                 | banned                   | deny
 separate                 | same_platoon_other_squad                 | pending                  | deny
 separate                 | other_platoon                            | admin                    | allow
-separate                 | other_platoon                            | developer                | allow
+separate                 | other_platoon                            | developer                | deny
 separate                 | other_platoon                            | admin_viewing_as_officer | deny
 separate                 | other_platoon                            | senior_leader            | allow
 separate                 | other_platoon                            | commanding_officer       | allow
@@ -491,7 +491,7 @@ separate                 | other_platoon                            | member    
 separate                 | other_platoon                            | banned                   | deny
 separate                 | other_platoon                            | pending                  | deny
 separate                 | unassigned                               | admin                    | allow
-separate                 | unassigned                               | developer                | allow
+separate                 | unassigned                               | developer                | deny
 separate                 | unassigned                               | admin_viewing_as_officer | deny
 separate                 | unassigned                               | senior_leader            | allow
 separate                 | unassigned                               | commanding_officer       | allow
@@ -503,7 +503,7 @@ separate                 | unassigned                               | member    
 separate                 | unassigned                               | banned                   | deny
 separate                 | unassigned                               | pending                  | deny
 separate                 | other_division                           | admin                    | allow
-separate                 | other_division                           | developer                | allow
+separate                 | other_division                           | developer                | deny
 separate                 | other_division                           | admin_viewing_as_officer | deny
 separate                 | other_division                           | senior_leader            | allow
 separate                 | other_division                           | commanding_officer       | allow
@@ -515,7 +515,7 @@ separate                 | other_division                           | member    
 separate                 | other_division                           | banned                   | deny
 separate                 | other_division                           | pending                  | deny
 separate                 | higher_rank                              | admin                    | allow
-separate                 | higher_rank                              | developer                | allow
+separate                 | higher_rank                              | developer                | deny
 separate                 | higher_rank                              | admin_viewing_as_officer | deny
 separate                 | higher_rank                              | senior_leader            | deny
 separate                 | higher_rank                              | commanding_officer       | deny
@@ -527,7 +527,7 @@ separate                 | higher_rank                              | member    
 separate                 | higher_rank                              | banned                   | deny
 separate                 | higher_rank                              | pending                  | deny
 separate                 | part_timer                               | admin                    | allow
-separate                 | part_timer                               | developer                | allow
+separate                 | part_timer                               | developer                | deny
 separate                 | part_timer                               | admin_viewing_as_officer | deny
 separate                 | part_timer                               | senior_leader            | allow
 separate                 | part_timer                               | commanding_officer       | allow
@@ -539,7 +539,7 @@ separate                 | part_timer                               | member    
 separate                 | part_timer                               | banned                   | deny
 separate                 | part_timer                               | pending                  | deny
 promote                  | self                                     | admin                    | allow
-promote                  | self                                     | developer                | allow
+promote                  | self                                     | developer                | deny
 promote                  | self                                     | admin_viewing_as_officer | deny
 promote                  | self                                     | senior_leader            | deny
 promote                  | self                                     | commanding_officer       | deny
@@ -551,7 +551,7 @@ promote                  | self                                     | member    
 promote                  | self                                     | banned                   | deny
 promote                  | self                                     | pending                  | n/a
 promote                  | same_squad                               | admin                    | allow
-promote                  | same_squad                               | developer                | allow
+promote                  | same_squad                               | developer                | deny
 promote                  | same_squad                               | admin_viewing_as_officer | allow
 promote                  | same_squad                               | senior_leader            | deny
 promote                  | same_squad                               | commanding_officer       | deny
@@ -563,7 +563,7 @@ promote                  | same_squad                               | member    
 promote                  | same_squad                               | banned                   | deny
 promote                  | same_squad                               | pending                  | deny
 promote                  | same_platoon_other_squad                 | admin                    | allow
-promote                  | same_platoon_other_squad                 | developer                | allow
+promote                  | same_platoon_other_squad                 | developer                | deny
 promote                  | same_platoon_other_squad                 | admin_viewing_as_officer | allow
 promote                  | same_platoon_other_squad                 | senior_leader            | deny
 promote                  | same_platoon_other_squad                 | commanding_officer       | deny
@@ -575,7 +575,7 @@ promote                  | same_platoon_other_squad                 | member    
 promote                  | same_platoon_other_squad                 | banned                   | deny
 promote                  | same_platoon_other_squad                 | pending                  | deny
 promote                  | other_platoon                            | admin                    | allow
-promote                  | other_platoon                            | developer                | allow
+promote                  | other_platoon                            | developer                | deny
 promote                  | other_platoon                            | admin_viewing_as_officer | allow
 promote                  | other_platoon                            | senior_leader            | deny
 promote                  | other_platoon                            | commanding_officer       | deny
@@ -587,7 +587,7 @@ promote                  | other_platoon                            | member    
 promote                  | other_platoon                            | banned                   | deny
 promote                  | other_platoon                            | pending                  | deny
 promote                  | unassigned                               | admin                    | allow
-promote                  | unassigned                               | developer                | allow
+promote                  | unassigned                               | developer                | deny
 promote                  | unassigned                               | admin_viewing_as_officer | allow
 promote                  | unassigned                               | senior_leader            | deny
 promote                  | unassigned                               | commanding_officer       | deny
@@ -599,7 +599,7 @@ promote                  | unassigned                               | member    
 promote                  | unassigned                               | banned                   | deny
 promote                  | unassigned                               | pending                  | deny
 promote                  | other_division                           | admin                    | allow
-promote                  | other_division                           | developer                | allow
+promote                  | other_division                           | developer                | deny
 promote                  | other_division                           | admin_viewing_as_officer | deny
 promote                  | other_division                           | senior_leader            | deny
 promote                  | other_division                           | commanding_officer       | deny
@@ -611,7 +611,7 @@ promote                  | other_division                           | member    
 promote                  | other_division                           | banned                   | deny
 promote                  | other_division                           | pending                  | deny
 promote                  | higher_rank                              | admin                    | allow
-promote                  | higher_rank                              | developer                | allow
+promote                  | higher_rank                              | developer                | deny
 promote                  | higher_rank                              | admin_viewing_as_officer | deny
 promote                  | higher_rank                              | senior_leader            | deny
 promote                  | higher_rank                              | commanding_officer       | deny
@@ -623,7 +623,7 @@ promote                  | higher_rank                              | member    
 promote                  | higher_rank                              | banned                   | deny
 promote                  | higher_rank                              | pending                  | deny
 promote                  | part_timer                               | admin                    | allow
-promote                  | part_timer                               | developer                | allow
+promote                  | part_timer                               | developer                | deny
 promote                  | part_timer                               | admin_viewing_as_officer | deny
 promote                  | part_timer                               | senior_leader            | deny
 promote                  | part_timer                               | commanding_officer       | deny
@@ -635,7 +635,7 @@ promote                  | part_timer                               | member    
 promote                  | part_timer                               | banned                   | deny
 promote                  | part_timer                               | pending                  | deny
 updateLeave              | self                                     | admin                    | allow
-updateLeave              | self                                     | developer                | allow
+updateLeave              | self                                     | developer                | deny
 updateLeave              | self                                     | admin_viewing_as_officer | deny
 updateLeave              | self                                     | senior_leader            | deny
 updateLeave              | self                                     | commanding_officer       | deny
@@ -647,7 +647,7 @@ updateLeave              | self                                     | member    
 updateLeave              | self                                     | banned                   | deny
 updateLeave              | self                                     | pending                  | n/a
 updateLeave              | same_squad                               | admin                    | allow
-updateLeave              | same_squad                               | developer                | allow
+updateLeave              | same_squad                               | developer                | deny
 updateLeave              | same_squad                               | admin_viewing_as_officer | deny
 updateLeave              | same_squad                               | senior_leader            | allow
 updateLeave              | same_squad                               | commanding_officer       | allow
@@ -659,7 +659,7 @@ updateLeave              | same_squad                               | member    
 updateLeave              | same_squad                               | banned                   | deny
 updateLeave              | same_squad                               | pending                  | deny
 updateLeave              | same_platoon_other_squad                 | admin                    | allow
-updateLeave              | same_platoon_other_squad                 | developer                | allow
+updateLeave              | same_platoon_other_squad                 | developer                | deny
 updateLeave              | same_platoon_other_squad                 | admin_viewing_as_officer | deny
 updateLeave              | same_platoon_other_squad                 | senior_leader            | allow
 updateLeave              | same_platoon_other_squad                 | commanding_officer       | allow
@@ -671,7 +671,7 @@ updateLeave              | same_platoon_other_squad                 | member    
 updateLeave              | same_platoon_other_squad                 | banned                   | deny
 updateLeave              | same_platoon_other_squad                 | pending                  | deny
 updateLeave              | other_platoon                            | admin                    | allow
-updateLeave              | other_platoon                            | developer                | allow
+updateLeave              | other_platoon                            | developer                | deny
 updateLeave              | other_platoon                            | admin_viewing_as_officer | deny
 updateLeave              | other_platoon                            | senior_leader            | allow
 updateLeave              | other_platoon                            | commanding_officer       | allow
@@ -683,7 +683,7 @@ updateLeave              | other_platoon                            | member    
 updateLeave              | other_platoon                            | banned                   | deny
 updateLeave              | other_platoon                            | pending                  | deny
 updateLeave              | unassigned                               | admin                    | allow
-updateLeave              | unassigned                               | developer                | allow
+updateLeave              | unassigned                               | developer                | deny
 updateLeave              | unassigned                               | admin_viewing_as_officer | deny
 updateLeave              | unassigned                               | senior_leader            | allow
 updateLeave              | unassigned                               | commanding_officer       | allow
@@ -695,7 +695,7 @@ updateLeave              | unassigned                               | member    
 updateLeave              | unassigned                               | banned                   | deny
 updateLeave              | unassigned                               | pending                  | deny
 updateLeave              | other_division                           | admin                    | allow
-updateLeave              | other_division                           | developer                | allow
+updateLeave              | other_division                           | developer                | deny
 updateLeave              | other_division                           | admin_viewing_as_officer | deny
 updateLeave              | other_division                           | senior_leader            | allow
 updateLeave              | other_division                           | commanding_officer       | allow
@@ -707,7 +707,7 @@ updateLeave              | other_division                           | member    
 updateLeave              | other_division                           | banned                   | deny
 updateLeave              | other_division                           | pending                  | deny
 updateLeave              | higher_rank                              | admin                    | allow
-updateLeave              | higher_rank                              | developer                | allow
+updateLeave              | higher_rank                              | developer                | deny
 updateLeave              | higher_rank                              | admin_viewing_as_officer | deny
 updateLeave              | higher_rank                              | senior_leader            | allow
 updateLeave              | higher_rank                              | commanding_officer       | allow
@@ -719,7 +719,7 @@ updateLeave              | higher_rank                              | member    
 updateLeave              | higher_rank                              | banned                   | deny
 updateLeave              | higher_rank                              | pending                  | deny
 updateLeave              | part_timer                               | admin                    | allow
-updateLeave              | part_timer                               | developer                | allow
+updateLeave              | part_timer                               | developer                | deny
 updateLeave              | part_timer                               | admin_viewing_as_officer | deny
 updateLeave              | part_timer                               | senior_leader            | allow
 updateLeave              | part_timer                               | commanding_officer       | allow
@@ -731,7 +731,7 @@ updateLeave              | part_timer                               | member    
 updateLeave              | part_timer                               | banned                   | deny
 updateLeave              | part_timer                               | pending                  | deny
 remindActivity           | self                                     | admin                    | allow
-remindActivity           | self                                     | developer                | allow
+remindActivity           | self                                     | developer                | deny
 remindActivity           | self                                     | admin_viewing_as_officer | deny
 remindActivity           | self                                     | senior_leader            | deny
 remindActivity           | self                                     | commanding_officer       | deny
@@ -743,7 +743,7 @@ remindActivity           | self                                     | member    
 remindActivity           | self                                     | banned                   | deny
 remindActivity           | self                                     | pending                  | n/a
 remindActivity           | same_squad                               | admin                    | allow
-remindActivity           | same_squad                               | developer                | allow
+remindActivity           | same_squad                               | developer                | deny
 remindActivity           | same_squad                               | admin_viewing_as_officer | allow
 remindActivity           | same_squad                               | senior_leader            | allow
 remindActivity           | same_squad                               | commanding_officer       | allow
@@ -755,7 +755,7 @@ remindActivity           | same_squad                               | member    
 remindActivity           | same_squad                               | banned                   | deny
 remindActivity           | same_squad                               | pending                  | deny
 remindActivity           | same_platoon_other_squad                 | admin                    | allow
-remindActivity           | same_platoon_other_squad                 | developer                | allow
+remindActivity           | same_platoon_other_squad                 | developer                | deny
 remindActivity           | same_platoon_other_squad                 | admin_viewing_as_officer | allow
 remindActivity           | same_platoon_other_squad                 | senior_leader            | allow
 remindActivity           | same_platoon_other_squad                 | commanding_officer       | allow
@@ -767,7 +767,7 @@ remindActivity           | same_platoon_other_squad                 | member    
 remindActivity           | same_platoon_other_squad                 | banned                   | deny
 remindActivity           | same_platoon_other_squad                 | pending                  | deny
 remindActivity           | other_platoon                            | admin                    | allow
-remindActivity           | other_platoon                            | developer                | allow
+remindActivity           | other_platoon                            | developer                | deny
 remindActivity           | other_platoon                            | admin_viewing_as_officer | allow
 remindActivity           | other_platoon                            | senior_leader            | allow
 remindActivity           | other_platoon                            | commanding_officer       | allow
@@ -779,7 +779,7 @@ remindActivity           | other_platoon                            | member    
 remindActivity           | other_platoon                            | banned                   | deny
 remindActivity           | other_platoon                            | pending                  | deny
 remindActivity           | unassigned                               | admin                    | allow
-remindActivity           | unassigned                               | developer                | allow
+remindActivity           | unassigned                               | developer                | deny
 remindActivity           | unassigned                               | admin_viewing_as_officer | allow
 remindActivity           | unassigned                               | senior_leader            | allow
 remindActivity           | unassigned                               | commanding_officer       | allow
@@ -791,7 +791,7 @@ remindActivity           | unassigned                               | member    
 remindActivity           | unassigned                               | banned                   | deny
 remindActivity           | unassigned                               | pending                  | deny
 remindActivity           | other_division                           | admin                    | allow
-remindActivity           | other_division                           | developer                | allow
+remindActivity           | other_division                           | developer                | deny
 remindActivity           | other_division                           | admin_viewing_as_officer | allow
 remindActivity           | other_division                           | senior_leader            | allow
 remindActivity           | other_division                           | commanding_officer       | allow
@@ -803,7 +803,7 @@ remindActivity           | other_division                           | member    
 remindActivity           | other_division                           | banned                   | deny
 remindActivity           | other_division                           | pending                  | deny
 remindActivity           | higher_rank                              | admin                    | allow
-remindActivity           | higher_rank                              | developer                | allow
+remindActivity           | higher_rank                              | developer                | deny
 remindActivity           | higher_rank                              | admin_viewing_as_officer | allow
 remindActivity           | higher_rank                              | senior_leader            | allow
 remindActivity           | higher_rank                              | commanding_officer       | allow
@@ -815,7 +815,7 @@ remindActivity           | higher_rank                              | member    
 remindActivity           | higher_rank                              | banned                   | deny
 remindActivity           | higher_rank                              | pending                  | deny
 remindActivity           | part_timer                               | admin                    | allow
-remindActivity           | part_timer                               | developer                | allow
+remindActivity           | part_timer                               | developer                | deny
 remindActivity           | part_timer                               | admin_viewing_as_officer | allow
 remindActivity           | part_timer                               | senior_leader            | allow
 remindActivity           | part_timer                               | commanding_officer       | allow
@@ -839,7 +839,7 @@ clearActivityReminders   | self                                     | member    
 clearActivityReminders   | self                                     | banned                   | deny
 clearActivityReminders   | self                                     | pending                  | n/a
 clearActivityReminders   | same_squad                               | admin                    | allow
-clearActivityReminders   | same_squad                               | developer                | allow
+clearActivityReminders   | same_squad                               | developer                | deny
 clearActivityReminders   | same_squad                               | admin_viewing_as_officer | deny
 clearActivityReminders   | same_squad                               | senior_leader            | allow
 clearActivityReminders   | same_squad                               | commanding_officer       | allow
@@ -851,7 +851,7 @@ clearActivityReminders   | same_squad                               | member    
 clearActivityReminders   | same_squad                               | banned                   | deny
 clearActivityReminders   | same_squad                               | pending                  | deny
 clearActivityReminders   | same_platoon_other_squad                 | admin                    | allow
-clearActivityReminders   | same_platoon_other_squad                 | developer                | allow
+clearActivityReminders   | same_platoon_other_squad                 | developer                | deny
 clearActivityReminders   | same_platoon_other_squad                 | admin_viewing_as_officer | deny
 clearActivityReminders   | same_platoon_other_squad                 | senior_leader            | allow
 clearActivityReminders   | same_platoon_other_squad                 | commanding_officer       | allow
@@ -863,7 +863,7 @@ clearActivityReminders   | same_platoon_other_squad                 | member    
 clearActivityReminders   | same_platoon_other_squad                 | banned                   | deny
 clearActivityReminders   | same_platoon_other_squad                 | pending                  | deny
 clearActivityReminders   | other_platoon                            | admin                    | allow
-clearActivityReminders   | other_platoon                            | developer                | allow
+clearActivityReminders   | other_platoon                            | developer                | deny
 clearActivityReminders   | other_platoon                            | admin_viewing_as_officer | deny
 clearActivityReminders   | other_platoon                            | senior_leader            | allow
 clearActivityReminders   | other_platoon                            | commanding_officer       | allow
@@ -875,7 +875,7 @@ clearActivityReminders   | other_platoon                            | member    
 clearActivityReminders   | other_platoon                            | banned                   | deny
 clearActivityReminders   | other_platoon                            | pending                  | deny
 clearActivityReminders   | unassigned                               | admin                    | allow
-clearActivityReminders   | unassigned                               | developer                | allow
+clearActivityReminders   | unassigned                               | developer                | deny
 clearActivityReminders   | unassigned                               | admin_viewing_as_officer | deny
 clearActivityReminders   | unassigned                               | senior_leader            | allow
 clearActivityReminders   | unassigned                               | commanding_officer       | allow
@@ -887,7 +887,7 @@ clearActivityReminders   | unassigned                               | member    
 clearActivityReminders   | unassigned                               | banned                   | deny
 clearActivityReminders   | unassigned                               | pending                  | deny
 clearActivityReminders   | other_division                           | admin                    | allow
-clearActivityReminders   | other_division                           | developer                | allow
+clearActivityReminders   | other_division                           | developer                | deny
 clearActivityReminders   | other_division                           | admin_viewing_as_officer | deny
 clearActivityReminders   | other_division                           | senior_leader            | allow
 clearActivityReminders   | other_division                           | commanding_officer       | allow
@@ -899,7 +899,7 @@ clearActivityReminders   | other_division                           | member    
 clearActivityReminders   | other_division                           | banned                   | deny
 clearActivityReminders   | other_division                           | pending                  | deny
 clearActivityReminders   | higher_rank                              | admin                    | allow
-clearActivityReminders   | higher_rank                              | developer                | allow
+clearActivityReminders   | higher_rank                              | developer                | deny
 clearActivityReminders   | higher_rank                              | admin_viewing_as_officer | deny
 clearActivityReminders   | higher_rank                              | senior_leader            | allow
 clearActivityReminders   | higher_rank                              | commanding_officer       | allow
@@ -911,7 +911,7 @@ clearActivityReminders   | higher_rank                              | member    
 clearActivityReminders   | higher_rank                              | banned                   | deny
 clearActivityReminders   | higher_rank                              | pending                  | deny
 clearActivityReminders   | part_timer                               | admin                    | allow
-clearActivityReminders   | part_timer                               | developer                | allow
+clearActivityReminders   | part_timer                               | developer                | deny
 clearActivityReminders   | part_timer                               | admin_viewing_as_officer | deny
 clearActivityReminders   | part_timer                               | senior_leader            | allow
 clearActivityReminders   | part_timer                               | commanding_officer       | allow
@@ -923,7 +923,7 @@ clearActivityReminders   | part_timer                               | member    
 clearActivityReminders   | part_timer                               | banned                   | deny
 clearActivityReminders   | part_timer                               | pending                  | deny
 managePartTime           | self                                     | admin                    | allow
-managePartTime           | self                                     | developer                | allow
+managePartTime           | self                                     | developer                | deny
 managePartTime           | self                                     | admin_viewing_as_officer | allow
 managePartTime           | self                                     | senior_leader            | allow
 managePartTime           | self                                     | commanding_officer       | allow
@@ -935,7 +935,7 @@ managePartTime           | self                                     | member    
 managePartTime           | self                                     | banned                   | deny
 managePartTime           | self                                     | pending                  | n/a
 managePartTime           | same_squad                               | admin                    | allow
-managePartTime           | same_squad                               | developer                | allow
+managePartTime           | same_squad                               | developer                | deny
 managePartTime           | same_squad                               | admin_viewing_as_officer | allow
 managePartTime           | same_squad                               | senior_leader            | allow
 managePartTime           | same_squad                               | commanding_officer       | allow
@@ -947,7 +947,7 @@ managePartTime           | same_squad                               | member    
 managePartTime           | same_squad                               | banned                   | deny
 managePartTime           | same_squad                               | pending                  | deny
 managePartTime           | same_platoon_other_squad                 | admin                    | allow
-managePartTime           | same_platoon_other_squad                 | developer                | allow
+managePartTime           | same_platoon_other_squad                 | developer                | deny
 managePartTime           | same_platoon_other_squad                 | admin_viewing_as_officer | allow
 managePartTime           | same_platoon_other_squad                 | senior_leader            | allow
 managePartTime           | same_platoon_other_squad                 | commanding_officer       | allow
@@ -959,7 +959,7 @@ managePartTime           | same_platoon_other_squad                 | member    
 managePartTime           | same_platoon_other_squad                 | banned                   | deny
 managePartTime           | same_platoon_other_squad                 | pending                  | deny
 managePartTime           | other_platoon                            | admin                    | allow
-managePartTime           | other_platoon                            | developer                | allow
+managePartTime           | other_platoon                            | developer                | deny
 managePartTime           | other_platoon                            | admin_viewing_as_officer | allow
 managePartTime           | other_platoon                            | senior_leader            | allow
 managePartTime           | other_platoon                            | commanding_officer       | allow
@@ -971,7 +971,7 @@ managePartTime           | other_platoon                            | member    
 managePartTime           | other_platoon                            | banned                   | deny
 managePartTime           | other_platoon                            | pending                  | deny
 managePartTime           | unassigned                               | admin                    | allow
-managePartTime           | unassigned                               | developer                | allow
+managePartTime           | unassigned                               | developer                | deny
 managePartTime           | unassigned                               | admin_viewing_as_officer | allow
 managePartTime           | unassigned                               | senior_leader            | allow
 managePartTime           | unassigned                               | commanding_officer       | allow
@@ -983,7 +983,7 @@ managePartTime           | unassigned                               | member    
 managePartTime           | unassigned                               | banned                   | deny
 managePartTime           | unassigned                               | pending                  | deny
 managePartTime           | other_division                           | admin                    | allow
-managePartTime           | other_division                           | developer                | allow
+managePartTime           | other_division                           | developer                | deny
 managePartTime           | other_division                           | admin_viewing_as_officer | allow
 managePartTime           | other_division                           | senior_leader            | allow
 managePartTime           | other_division                           | commanding_officer       | allow
@@ -995,7 +995,7 @@ managePartTime           | other_division                           | member    
 managePartTime           | other_division                           | banned                   | deny
 managePartTime           | other_division                           | pending                  | deny
 managePartTime           | higher_rank                              | admin                    | allow
-managePartTime           | higher_rank                              | developer                | allow
+managePartTime           | higher_rank                              | developer                | deny
 managePartTime           | higher_rank                              | admin_viewing_as_officer | allow
 managePartTime           | higher_rank                              | senior_leader            | allow
 managePartTime           | higher_rank                              | commanding_officer       | allow
@@ -1007,7 +1007,7 @@ managePartTime           | higher_rank                              | member    
 managePartTime           | higher_rank                              | banned                   | deny
 managePartTime           | higher_rank                              | pending                  | deny
 managePartTime           | part_timer                               | admin                    | allow
-managePartTime           | part_timer                               | developer                | allow
+managePartTime           | part_timer                               | developer                | deny
 managePartTime           | part_timer                               | admin_viewing_as_officer | allow
 managePartTime           | part_timer                               | senior_leader            | allow
 managePartTime           | part_timer                               | commanding_officer       | allow
@@ -1031,7 +1031,7 @@ manageHandles            | self                                     | member    
 manageHandles            | self                                     | banned                   | allow
 manageHandles            | self                                     | pending                  | n/a
 manageHandles            | same_squad                               | admin                    | allow
-manageHandles            | same_squad                               | developer                | allow
+manageHandles            | same_squad                               | developer                | deny
 manageHandles            | same_squad                               | admin_viewing_as_officer | allow
 manageHandles            | same_squad                               | senior_leader            | allow
 manageHandles            | same_squad                               | commanding_officer       | allow
@@ -1043,7 +1043,7 @@ manageHandles            | same_squad                               | member    
 manageHandles            | same_squad                               | banned                   | deny
 manageHandles            | same_squad                               | pending                  | deny
 manageHandles            | same_platoon_other_squad                 | admin                    | allow
-manageHandles            | same_platoon_other_squad                 | developer                | allow
+manageHandles            | same_platoon_other_squad                 | developer                | deny
 manageHandles            | same_platoon_other_squad                 | admin_viewing_as_officer | allow
 manageHandles            | same_platoon_other_squad                 | senior_leader            | allow
 manageHandles            | same_platoon_other_squad                 | commanding_officer       | allow
@@ -1055,7 +1055,7 @@ manageHandles            | same_platoon_other_squad                 | member    
 manageHandles            | same_platoon_other_squad                 | banned                   | deny
 manageHandles            | same_platoon_other_squad                 | pending                  | deny
 manageHandles            | other_platoon                            | admin                    | allow
-manageHandles            | other_platoon                            | developer                | allow
+manageHandles            | other_platoon                            | developer                | deny
 manageHandles            | other_platoon                            | admin_viewing_as_officer | allow
 manageHandles            | other_platoon                            | senior_leader            | allow
 manageHandles            | other_platoon                            | commanding_officer       | allow
@@ -1067,7 +1067,7 @@ manageHandles            | other_platoon                            | member    
 manageHandles            | other_platoon                            | banned                   | deny
 manageHandles            | other_platoon                            | pending                  | deny
 manageHandles            | unassigned                               | admin                    | allow
-manageHandles            | unassigned                               | developer                | allow
+manageHandles            | unassigned                               | developer                | deny
 manageHandles            | unassigned                               | admin_viewing_as_officer | allow
 manageHandles            | unassigned                               | senior_leader            | allow
 manageHandles            | unassigned                               | commanding_officer       | allow
@@ -1079,7 +1079,7 @@ manageHandles            | unassigned                               | member    
 manageHandles            | unassigned                               | banned                   | deny
 manageHandles            | unassigned                               | pending                  | deny
 manageHandles            | other_division                           | admin                    | allow
-manageHandles            | other_division                           | developer                | allow
+manageHandles            | other_division                           | developer                | deny
 manageHandles            | other_division                           | admin_viewing_as_officer | deny
 manageHandles            | other_division                           | senior_leader            | allow
 manageHandles            | other_division                           | commanding_officer       | allow
@@ -1091,7 +1091,7 @@ manageHandles            | other_division                           | member    
 manageHandles            | other_division                           | banned                   | deny
 manageHandles            | other_division                           | pending                  | deny
 manageHandles            | higher_rank                              | admin                    | allow
-manageHandles            | higher_rank                              | developer                | allow
+manageHandles            | higher_rank                              | developer                | deny
 manageHandles            | higher_rank                              | admin_viewing_as_officer | allow
 manageHandles            | higher_rank                              | senior_leader            | allow
 manageHandles            | higher_rank                              | commanding_officer       | allow
@@ -1103,7 +1103,7 @@ manageHandles            | higher_rank                              | member    
 manageHandles            | higher_rank                              | banned                   | deny
 manageHandles            | higher_rank                              | pending                  | deny
 manageHandles            | part_timer                               | admin                    | allow
-manageHandles            | part_timer                               | developer                | allow
+manageHandles            | part_timer                               | developer                | deny
 manageHandles            | part_timer                               | admin_viewing_as_officer | deny
 manageHandles            | part_timer                               | senior_leader            | allow
 manageHandles            | part_timer                               | commanding_officer       | allow
@@ -1127,7 +1127,7 @@ manageFields             | self                                     | member    
 manageFields             | self                                     | banned                   | allow
 manageFields             | self                                     | pending                  | n/a
 manageFields             | same_squad                               | admin                    | allow
-manageFields             | same_squad                               | developer                | allow
+manageFields             | same_squad                               | developer                | deny
 manageFields             | same_squad                               | admin_viewing_as_officer | allow
 manageFields             | same_squad                               | senior_leader            | allow
 manageFields             | same_squad                               | commanding_officer       | allow
@@ -1139,7 +1139,7 @@ manageFields             | same_squad                               | member    
 manageFields             | same_squad                               | banned                   | deny
 manageFields             | same_squad                               | pending                  | deny
 manageFields             | same_platoon_other_squad                 | admin                    | allow
-manageFields             | same_platoon_other_squad                 | developer                | allow
+manageFields             | same_platoon_other_squad                 | developer                | deny
 manageFields             | same_platoon_other_squad                 | admin_viewing_as_officer | allow
 manageFields             | same_platoon_other_squad                 | senior_leader            | allow
 manageFields             | same_platoon_other_squad                 | commanding_officer       | allow
@@ -1151,7 +1151,7 @@ manageFields             | same_platoon_other_squad                 | member    
 manageFields             | same_platoon_other_squad                 | banned                   | deny
 manageFields             | same_platoon_other_squad                 | pending                  | deny
 manageFields             | other_platoon                            | admin                    | allow
-manageFields             | other_platoon                            | developer                | allow
+manageFields             | other_platoon                            | developer                | deny
 manageFields             | other_platoon                            | admin_viewing_as_officer | allow
 manageFields             | other_platoon                            | senior_leader            | allow
 manageFields             | other_platoon                            | commanding_officer       | allow
@@ -1163,7 +1163,7 @@ manageFields             | other_platoon                            | member    
 manageFields             | other_platoon                            | banned                   | deny
 manageFields             | other_platoon                            | pending                  | deny
 manageFields             | unassigned                               | admin                    | allow
-manageFields             | unassigned                               | developer                | allow
+manageFields             | unassigned                               | developer                | deny
 manageFields             | unassigned                               | admin_viewing_as_officer | allow
 manageFields             | unassigned                               | senior_leader            | allow
 manageFields             | unassigned                               | commanding_officer       | allow
@@ -1175,7 +1175,7 @@ manageFields             | unassigned                               | member    
 manageFields             | unassigned                               | banned                   | deny
 manageFields             | unassigned                               | pending                  | deny
 manageFields             | other_division                           | admin                    | allow
-manageFields             | other_division                           | developer                | allow
+manageFields             | other_division                           | developer                | deny
 manageFields             | other_division                           | admin_viewing_as_officer | deny
 manageFields             | other_division                           | senior_leader            | allow
 manageFields             | other_division                           | commanding_officer       | allow
@@ -1187,7 +1187,7 @@ manageFields             | other_division                           | member    
 manageFields             | other_division                           | banned                   | deny
 manageFields             | other_division                           | pending                  | deny
 manageFields             | higher_rank                              | admin                    | allow
-manageFields             | higher_rank                              | developer                | allow
+manageFields             | higher_rank                              | developer                | deny
 manageFields             | higher_rank                              | admin_viewing_as_officer | allow
 manageFields             | higher_rank                              | senior_leader            | allow
 manageFields             | higher_rank                              | commanding_officer       | allow
@@ -1199,7 +1199,7 @@ manageFields             | higher_rank                              | member    
 manageFields             | higher_rank                              | banned                   | deny
 manageFields             | higher_rank                              | pending                  | deny
 manageFields             | part_timer                               | admin                    | allow
-manageFields             | part_timer                               | developer                | allow
+manageFields             | part_timer                               | developer                | deny
 manageFields             | part_timer                               | admin_viewing_as_officer | deny
 manageFields             | part_timer                               | senior_leader            | allow
 manageFields             | part_timer                               | commanding_officer       | allow
@@ -1223,7 +1223,7 @@ manageField              | self / self_editable_field               | member    
 manageField              | self / self_editable_field               | banned                   | allow
 manageField              | self / self_editable_field               | pending                  | n/a
 manageField              | same_squad / self_editable_field         | admin                    | allow
-manageField              | same_squad / self_editable_field         | developer                | allow
+manageField              | same_squad / self_editable_field         | developer                | deny
 manageField              | same_squad / self_editable_field         | admin_viewing_as_officer | allow
 manageField              | same_squad / self_editable_field         | senior_leader            | allow
 manageField              | same_squad / self_editable_field         | commanding_officer       | allow
@@ -1235,7 +1235,7 @@ manageField              | same_squad / self_editable_field         | member    
 manageField              | same_squad / self_editable_field         | banned                   | deny
 manageField              | same_squad / self_editable_field         | pending                  | deny
 manageField              | same_platoon_other_squad / self_editable_field | admin                    | allow
-manageField              | same_platoon_other_squad / self_editable_field | developer                | allow
+manageField              | same_platoon_other_squad / self_editable_field | developer                | deny
 manageField              | same_platoon_other_squad / self_editable_field | admin_viewing_as_officer | allow
 manageField              | same_platoon_other_squad / self_editable_field | senior_leader            | allow
 manageField              | same_platoon_other_squad / self_editable_field | commanding_officer       | allow
@@ -1247,7 +1247,7 @@ manageField              | same_platoon_other_squad / self_editable_field | memb
 manageField              | same_platoon_other_squad / self_editable_field | banned                   | deny
 manageField              | same_platoon_other_squad / self_editable_field | pending                  | deny
 manageField              | other_platoon / self_editable_field      | admin                    | allow
-manageField              | other_platoon / self_editable_field      | developer                | allow
+manageField              | other_platoon / self_editable_field      | developer                | deny
 manageField              | other_platoon / self_editable_field      | admin_viewing_as_officer | allow
 manageField              | other_platoon / self_editable_field      | senior_leader            | allow
 manageField              | other_platoon / self_editable_field      | commanding_officer       | allow
@@ -1259,7 +1259,7 @@ manageField              | other_platoon / self_editable_field      | member    
 manageField              | other_platoon / self_editable_field      | banned                   | deny
 manageField              | other_platoon / self_editable_field      | pending                  | deny
 manageField              | unassigned / self_editable_field         | admin                    | allow
-manageField              | unassigned / self_editable_field         | developer                | allow
+manageField              | unassigned / self_editable_field         | developer                | deny
 manageField              | unassigned / self_editable_field         | admin_viewing_as_officer | allow
 manageField              | unassigned / self_editable_field         | senior_leader            | allow
 manageField              | unassigned / self_editable_field         | commanding_officer       | allow
@@ -1271,7 +1271,7 @@ manageField              | unassigned / self_editable_field         | member    
 manageField              | unassigned / self_editable_field         | banned                   | deny
 manageField              | unassigned / self_editable_field         | pending                  | deny
 manageField              | other_division / self_editable_field     | admin                    | allow
-manageField              | other_division / self_editable_field     | developer                | allow
+manageField              | other_division / self_editable_field     | developer                | deny
 manageField              | other_division / self_editable_field     | admin_viewing_as_officer | deny
 manageField              | other_division / self_editable_field     | senior_leader            | allow
 manageField              | other_division / self_editable_field     | commanding_officer       | allow
@@ -1283,7 +1283,7 @@ manageField              | other_division / self_editable_field     | member    
 manageField              | other_division / self_editable_field     | banned                   | deny
 manageField              | other_division / self_editable_field     | pending                  | deny
 manageField              | higher_rank / self_editable_field        | admin                    | allow
-manageField              | higher_rank / self_editable_field        | developer                | allow
+manageField              | higher_rank / self_editable_field        | developer                | deny
 manageField              | higher_rank / self_editable_field        | admin_viewing_as_officer | allow
 manageField              | higher_rank / self_editable_field        | senior_leader            | allow
 manageField              | higher_rank / self_editable_field        | commanding_officer       | allow
@@ -1295,7 +1295,7 @@ manageField              | higher_rank / self_editable_field        | member    
 manageField              | higher_rank / self_editable_field        | banned                   | deny
 manageField              | higher_rank / self_editable_field        | pending                  | deny
 manageField              | part_timer / self_editable_field         | admin                    | allow
-manageField              | part_timer / self_editable_field         | developer                | allow
+manageField              | part_timer / self_editable_field         | developer                | deny
 manageField              | part_timer / self_editable_field         | admin_viewing_as_officer | deny
 manageField              | part_timer / self_editable_field         | senior_leader            | allow
 manageField              | part_timer / self_editable_field         | commanding_officer       | allow
@@ -1307,7 +1307,7 @@ manageField              | part_timer / self_editable_field         | member    
 manageField              | part_timer / self_editable_field         | banned                   | deny
 manageField              | part_timer / self_editable_field         | pending                  | deny
 manageField              | self / leader_only_field                 | admin                    | allow
-manageField              | self / leader_only_field                 | developer                | allow
+manageField              | self / leader_only_field                 | developer                | deny
 manageField              | self / leader_only_field                 | admin_viewing_as_officer | allow
 manageField              | self / leader_only_field                 | senior_leader            | allow
 manageField              | self / leader_only_field                 | commanding_officer       | allow
@@ -1319,7 +1319,7 @@ manageField              | self / leader_only_field                 | member    
 manageField              | self / leader_only_field                 | banned                   | deny
 manageField              | self / leader_only_field                 | pending                  | n/a
 manageField              | same_squad / leader_only_field           | admin                    | allow
-manageField              | same_squad / leader_only_field           | developer                | allow
+manageField              | same_squad / leader_only_field           | developer                | deny
 manageField              | same_squad / leader_only_field           | admin_viewing_as_officer | allow
 manageField              | same_squad / leader_only_field           | senior_leader            | allow
 manageField              | same_squad / leader_only_field           | commanding_officer       | allow
@@ -1331,7 +1331,7 @@ manageField              | same_squad / leader_only_field           | member    
 manageField              | same_squad / leader_only_field           | banned                   | deny
 manageField              | same_squad / leader_only_field           | pending                  | deny
 manageField              | same_platoon_other_squad / leader_only_field | admin                    | allow
-manageField              | same_platoon_other_squad / leader_only_field | developer                | allow
+manageField              | same_platoon_other_squad / leader_only_field | developer                | deny
 manageField              | same_platoon_other_squad / leader_only_field | admin_viewing_as_officer | allow
 manageField              | same_platoon_other_squad / leader_only_field | senior_leader            | allow
 manageField              | same_platoon_other_squad / leader_only_field | commanding_officer       | allow
@@ -1343,7 +1343,7 @@ manageField              | same_platoon_other_squad / leader_only_field | member
 manageField              | same_platoon_other_squad / leader_only_field | banned                   | deny
 manageField              | same_platoon_other_squad / leader_only_field | pending                  | deny
 manageField              | other_platoon / leader_only_field        | admin                    | allow
-manageField              | other_platoon / leader_only_field        | developer                | allow
+manageField              | other_platoon / leader_only_field        | developer                | deny
 manageField              | other_platoon / leader_only_field        | admin_viewing_as_officer | allow
 manageField              | other_platoon / leader_only_field        | senior_leader            | allow
 manageField              | other_platoon / leader_only_field        | commanding_officer       | allow
@@ -1355,7 +1355,7 @@ manageField              | other_platoon / leader_only_field        | member    
 manageField              | other_platoon / leader_only_field        | banned                   | deny
 manageField              | other_platoon / leader_only_field        | pending                  | deny
 manageField              | unassigned / leader_only_field           | admin                    | allow
-manageField              | unassigned / leader_only_field           | developer                | allow
+manageField              | unassigned / leader_only_field           | developer                | deny
 manageField              | unassigned / leader_only_field           | admin_viewing_as_officer | allow
 manageField              | unassigned / leader_only_field           | senior_leader            | allow
 manageField              | unassigned / leader_only_field           | commanding_officer       | allow
@@ -1367,7 +1367,7 @@ manageField              | unassigned / leader_only_field           | member    
 manageField              | unassigned / leader_only_field           | banned                   | deny
 manageField              | unassigned / leader_only_field           | pending                  | deny
 manageField              | other_division / leader_only_field       | admin                    | allow
-manageField              | other_division / leader_only_field       | developer                | allow
+manageField              | other_division / leader_only_field       | developer                | deny
 manageField              | other_division / leader_only_field       | admin_viewing_as_officer | deny
 manageField              | other_division / leader_only_field       | senior_leader            | allow
 manageField              | other_division / leader_only_field       | commanding_officer       | allow
@@ -1379,7 +1379,7 @@ manageField              | other_division / leader_only_field       | member    
 manageField              | other_division / leader_only_field       | banned                   | deny
 manageField              | other_division / leader_only_field       | pending                  | deny
 manageField              | higher_rank / leader_only_field          | admin                    | allow
-manageField              | higher_rank / leader_only_field          | developer                | allow
+manageField              | higher_rank / leader_only_field          | developer                | deny
 manageField              | higher_rank / leader_only_field          | admin_viewing_as_officer | allow
 manageField              | higher_rank / leader_only_field          | senior_leader            | allow
 manageField              | higher_rank / leader_only_field          | commanding_officer       | allow
@@ -1391,7 +1391,7 @@ manageField              | higher_rank / leader_only_field          | member    
 manageField              | higher_rank / leader_only_field          | banned                   | deny
 manageField              | higher_rank / leader_only_field          | pending                  | deny
 manageField              | part_timer / leader_only_field           | admin                    | allow
-manageField              | part_timer / leader_only_field           | developer                | allow
+manageField              | part_timer / leader_only_field           | developer                | deny
 manageField              | part_timer / leader_only_field           | admin_viewing_as_officer | deny
 manageField              | part_timer / leader_only_field           | senior_leader            | allow
 manageField              | part_timer / leader_only_field           | commanding_officer       | allow

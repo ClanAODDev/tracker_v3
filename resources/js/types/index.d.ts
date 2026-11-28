@@ -21,7 +21,7 @@ export interface AuthPermissions {
     canWorkTickets: boolean;
     canUseBulkMode: boolean;
     isAdmin: boolean;
-    isDeveloper: boolean;
+    canViewAsRole: boolean;
 }
 
 export interface NavItem {

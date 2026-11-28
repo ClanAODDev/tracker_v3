@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Enums\Ability;
 use App\Enums\Role;
 use App\Models\User;
+use App\Models\UserAbility;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
@@ -30,7 +32,7 @@ final class ApiTokenGenerationTest extends TestCase
     #[Test]
     public function developer_page_renders_the_inertia_page_with_tokens(): void
     {
-        $user = User::factory()->create(['developer' => true]);
+        $user = $this->apiDeveloper();
         $user->createToken('existing');
 
         $this->actingAs($user)
@@ -45,7 +47,7 @@ final class ApiTokenGenerationTest extends TestCase
     #[Test]
     public function a_basic_developer_is_not_offered_advanced_scopes(): void
     {
-        $user = User::factory()->create(['developer' => true, 'role' => Role::OFFICER]);
+        $user = $this->apiDeveloper(Role::OFFICER);
 
         $this->actingAs($user)
             ->get(route('developer'))
@@ -60,7 +62,7 @@ final class ApiTokenGenerationTest extends TestCase
     #[Test]
     public function a_senior_leader_developer_is_offered_advanced_scopes(): void
     {
-        $user = User::factory()->create(['developer' => true, 'role' => Role::SENIOR_LEADER]);
+        $user = $this->apiDeveloper(Role::SENIOR_LEADER);
 
         $this->actingAs($user)
             ->get(route('developer'))
@@ -75,7 +77,7 @@ final class ApiTokenGenerationTest extends TestCase
     #[Test]
     public function a_developer_cannot_generate_a_token_with_a_scope_outside_their_access(): void
     {
-        $user = User::factory()->create(['developer' => true, 'role' => Role::OFFICER]);
+        $user = $this->apiDeveloper(Role::OFFICER);
 
         $this->actingAs($user)
             ->post(route('developer.token.store'), [
@@ -90,7 +92,7 @@ final class ApiTokenGenerationTest extends TestCase
     #[Test]
     public function a_developer_can_generate_a_token_with_an_allowed_scope(): void
     {
-        $user = User::factory()->create(['developer' => true, 'role' => Role::SENIOR_LEADER]);
+        $user = $this->apiDeveloper(Role::SENIOR_LEADER);
 
         $this->actingAs($user)
             ->post(route('developer.token.store'), [
@@ -106,7 +108,7 @@ final class ApiTokenGenerationTest extends TestCase
     #[Test]
     public function a_developer_can_update_an_existing_tokens_scopes(): void
     {
-        $user  = User::factory()->create(['developer' => true, 'role' => Role::SENIOR_LEADER]);
+        $user  = $this->apiDeveloper(Role::SENIOR_LEADER);
         $token = $user->createToken('existing', ['division:read']);
 
         $this->actingAs($user)
@@ -122,7 +124,7 @@ final class ApiTokenGenerationTest extends TestCase
     #[Test]
     public function a_developer_cannot_update_a_tokens_scopes_beyond_their_own_access(): void
     {
-        $user  = User::factory()->create(['developer' => true, 'role' => Role::OFFICER]);
+        $user  = $this->apiDeveloper(Role::OFFICER);
         $token = $user->createToken('existing', ['division:read']);
 
         $this->actingAs($user)
@@ -138,8 +140,8 @@ final class ApiTokenGenerationTest extends TestCase
     #[Test]
     public function a_developer_cannot_update_another_users_token_scopes(): void
     {
-        $owner = User::factory()->create(['developer' => true, 'role' => Role::SENIOR_LEADER]);
-        $other = User::factory()->create(['developer' => true, 'role' => Role::SENIOR_LEADER]);
+        $owner = $this->apiDeveloper(Role::SENIOR_LEADER);
+        $other = $this->apiDeveloper(Role::SENIOR_LEADER);
         $token = $owner->createToken('existing', ['division:read']);
 
         $this->actingAs($other)
@@ -212,5 +214,13 @@ final class ApiTokenGenerationTest extends TestCase
         $this->delete(route('developer.token.delete'), ['token_id' => $admin->tokens->first()->id]);
 
         $this->assertCount(0, $admin->refresh()->tokens);
+    }
+
+    private function apiDeveloper(Role $role = Role::MEMBER): User
+    {
+        $user = User::factory()->create(['role' => $role]);
+        UserAbility::create(['user_id' => $user->id, 'ability' => Ability::ManageApiTokens->value, 'reason' => 'test']);
+
+        return $user;
     }
 }

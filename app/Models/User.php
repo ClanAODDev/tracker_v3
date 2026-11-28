@@ -257,10 +257,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
 
     public function canAccessPanel(Panel $panel): bool
     {
-        if ($this->isDeveloper()) {
-            return true;
-        }
-
         $panelId = $panel->getId();
 
         $panelToAbility = [

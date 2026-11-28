@@ -34,7 +34,7 @@ export function UserMenu({ onOpenSettings }: { onOpenSettings: () => void }) {
     const { user, permissions } = useAuth();
     if (!user) return null;
 
-    const canViewAsRole = (permissions?.isAdmin || permissions?.isDeveloper) && !user.impersonatingRole;
+    const canViewAsRole = permissions?.canViewAsRole && !user.impersonatingRole;
 
     return (
         <DropdownMenu>

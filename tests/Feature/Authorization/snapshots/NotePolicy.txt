@@ -1,5 +1,5 @@
 show                     | (any note)                               | admin                    | allow
-show                     | (any note)                               | developer                | allow
+show                     | (any note)                               | developer                | deny
 show                     | (any note)                               | admin_viewing_as_officer | allow
 show                     | (any note)                               | senior_leader            | allow
 show                     | (any note)                               | commanding_officer       | allow
@@ -11,7 +11,7 @@ show                     | (any note)                               | member    
 show                     | (any note)                               | banned                   | allow
 show                     | (any note)                               | pending                  | deny
 create                   | (any note)                               | admin                    | allow
-create                   | (any note)                               | developer                | allow
+create                   | (any note)                               | developer                | deny
 create                   | (any note)                               | admin_viewing_as_officer | allow
 create                   | (any note)                               | senior_leader            | allow
 create                   | (any note)                               | commanding_officer       | allow
@@ -23,7 +23,7 @@ create                   | (any note)                               | member    
 create                   | (any note)                               | banned                   | allow
 create                   | (any note)                               | pending                  | deny
 viewTrashed              | (any note)                               | admin                    | allow
-viewTrashed              | (any note)                               | developer                | allow
+viewTrashed              | (any note)                               | developer                | deny
 viewTrashed              | (any note)                               | admin_viewing_as_officer | deny
 viewTrashed              | (any note)                               | senior_leader            | deny
 viewTrashed              | (any note)                               | commanding_officer       | allow
@@ -35,7 +35,7 @@ viewTrashed              | (any note)                               | member    
 viewTrashed              | (any note)                               | banned                   | deny
 viewTrashed              | (any note)                               | pending                  | deny
 edit                     | same_squad misc                          | admin                    | allow
-edit                     | same_squad misc                          | developer                | allow
+edit                     | same_squad misc                          | developer                | deny
 edit                     | same_squad misc                          | admin_viewing_as_officer | deny
 edit                     | same_squad misc                          | senior_leader            | allow
 edit                     | same_squad misc                          | commanding_officer       | allow
@@ -47,7 +47,7 @@ edit                     | same_squad misc                          | member    
 edit                     | same_squad misc                          | banned                   | deny
 edit                     | same_squad misc                          | pending                  | deny
 delete                   | same_squad misc                          | admin                    | allow
-delete                   | same_squad misc                          | developer                | allow
+delete                   | same_squad misc                          | developer                | deny
 delete                   | same_squad misc                          | admin_viewing_as_officer | deny
 delete                   | same_squad misc                          | senior_leader            | deny
 delete                   | same_squad misc                          | commanding_officer       | allow
@@ -59,7 +59,7 @@ delete                   | same_squad misc                          | member    
 delete                   | same_squad misc                          | banned                   | deny
 delete                   | same_squad misc                          | pending                  | deny
 restore                  | same_squad misc                          | admin                    | allow
-restore                  | same_squad misc                          | developer                | allow
+restore                  | same_squad misc                          | developer                | deny
 restore                  | same_squad misc                          | admin_viewing_as_officer | deny
 restore                  | same_squad misc                          | senior_leader            | deny
 restore                  | same_squad misc                          | commanding_officer       | allow
@@ -71,7 +71,7 @@ restore                  | same_squad misc                          | member    
 restore                  | same_squad misc                          | banned                   | deny
 restore                  | same_squad misc                          | pending                  | deny
 forceDelete              | same_squad misc                          | admin                    | allow
-forceDelete              | same_squad misc                          | developer                | allow
+forceDelete              | same_squad misc                          | developer                | deny
 forceDelete              | same_squad misc                          | admin_viewing_as_officer | deny
 forceDelete              | same_squad misc                          | senior_leader            | deny
 forceDelete              | same_squad misc                          | commanding_officer       | allow
@@ -83,7 +83,7 @@ forceDelete              | same_squad misc                          | member    
 forceDelete              | same_squad misc                          | banned                   | deny
 forceDelete              | same_squad misc                          | pending                  | deny
 edit                     | same_squad msgt                          | admin                    | allow
-edit                     | same_squad msgt                          | developer                | allow
+edit                     | same_squad msgt                          | developer                | deny
 edit                     | same_squad msgt                          | admin_viewing_as_officer | deny
 edit                     | same_squad msgt                          | senior_leader            | deny
 edit                     | same_squad msgt                          | commanding_officer       | allow
@@ -95,7 +95,7 @@ edit                     | same_squad msgt                          | member    
 edit                     | same_squad msgt                          | banned                   | deny
 edit                     | same_squad msgt                          | pending                  | deny
 delete                   | same_squad msgt                          | admin                    | allow
-delete                   | same_squad msgt                          | developer                | allow
+delete                   | same_squad msgt                          | developer                | deny
 delete                   | same_squad msgt                          | admin_viewing_as_officer | deny
 delete                   | same_squad msgt                          | senior_leader            | deny
 delete                   | same_squad msgt                          | commanding_officer       | allow
@@ -107,7 +107,7 @@ delete                   | same_squad msgt                          | member    
 delete                   | same_squad msgt                          | banned                   | deny
 delete                   | same_squad msgt                          | pending                  | deny
 restore                  | same_squad msgt                          | admin                    | allow
-restore                  | same_squad msgt                          | developer                | allow
+restore                  | same_squad msgt                          | developer                | deny
 restore                  | same_squad msgt                          | admin_viewing_as_officer | deny
 restore                  | same_squad msgt                          | senior_leader            | deny
 restore                  | same_squad msgt                          | commanding_officer       | allow
@@ -119,7 +119,7 @@ restore                  | same_squad msgt                          | member    
 restore                  | same_squad msgt                          | banned                   | deny
 restore                  | same_squad msgt                          | pending                  | deny
 forceDelete              | same_squad msgt                          | admin                    | allow
-forceDelete              | same_squad msgt                          | developer                | allow
+forceDelete              | same_squad msgt                          | developer                | deny
 forceDelete              | same_squad msgt                          | admin_viewing_as_officer | deny
 forceDelete              | same_squad msgt                          | senior_leader            | deny
 forceDelete              | same_squad msgt                          | commanding_officer       | allow
@@ -131,7 +131,7 @@ forceDelete              | same_squad msgt                          | member    
 forceDelete              | same_squad msgt                          | banned                   | deny
 forceDelete              | same_squad msgt                          | pending                  | deny
 edit                     | same_squad sr_ldr                        | admin                    | allow
-edit                     | same_squad sr_ldr                        | developer                | allow
+edit                     | same_squad sr_ldr                        | developer                | deny
 edit                     | same_squad sr_ldr                        | admin_viewing_as_officer | deny
 edit                     | same_squad sr_ldr                        | senior_leader            | allow
 edit                     | same_squad sr_ldr                        | commanding_officer       | allow
@@ -143,7 +143,7 @@ edit                     | same_squad sr_ldr                        | member    
 edit                     | same_squad sr_ldr                        | banned                   | deny
 edit                     | same_squad sr_ldr                        | pending                  | deny
 delete                   | same_squad sr_ldr                        | admin                    | allow
-delete                   | same_squad sr_ldr                        | developer                | allow
+delete                   | same_squad sr_ldr                        | developer                | deny
 delete                   | same_squad sr_ldr                        | admin_viewing_as_officer | deny
 delete                   | same_squad sr_ldr                        | senior_leader            | deny
 delete                   | same_squad sr_ldr                        | commanding_officer       | allow
@@ -155,7 +155,7 @@ delete                   | same_squad sr_ldr                        | member    
 delete                   | same_squad sr_ldr                        | banned                   | deny
 delete                   | same_squad sr_ldr                        | pending                  | deny
 restore                  | same_squad sr_ldr                        | admin                    | allow
-restore                  | same_squad sr_ldr                        | developer                | allow
+restore                  | same_squad sr_ldr                        | developer                | deny
 restore                  | same_squad sr_ldr                        | admin_viewing_as_officer | deny
 restore                  | same_squad sr_ldr                        | senior_leader            | deny
 restore                  | same_squad sr_ldr                        | commanding_officer       | allow
@@ -167,7 +167,7 @@ restore                  | same_squad sr_ldr                        | member    
 restore                  | same_squad sr_ldr                        | banned                   | deny
 restore                  | same_squad sr_ldr                        | pending                  | deny
 forceDelete              | same_squad sr_ldr                        | admin                    | allow
-forceDelete              | same_squad sr_ldr                        | developer                | allow
+forceDelete              | same_squad sr_ldr                        | developer                | deny
 forceDelete              | same_squad sr_ldr                        | admin_viewing_as_officer | deny
 forceDelete              | same_squad sr_ldr                        | senior_leader            | deny
 forceDelete              | same_squad sr_ldr                        | commanding_officer       | allow
@@ -179,7 +179,7 @@ forceDelete              | same_squad sr_ldr                        | member    
 forceDelete              | same_squad sr_ldr                        | banned                   | deny
 forceDelete              | same_squad sr_ldr                        | pending                  | deny
 edit                     | other_division misc                      | admin                    | allow
-edit                     | other_division misc                      | developer                | allow
+edit                     | other_division misc                      | developer                | deny
 edit                     | other_division misc                      | admin_viewing_as_officer | deny
 edit                     | other_division misc                      | senior_leader            | allow
 edit                     | other_division misc                      | commanding_officer       | allow
@@ -191,7 +191,7 @@ edit                     | other_division misc                      | member    
 edit                     | other_division misc                      | banned                   | deny
 edit                     | other_division misc                      | pending                  | deny
 delete                   | other_division misc                      | admin                    | allow
-delete                   | other_division misc                      | developer                | allow
+delete                   | other_division misc                      | developer                | deny
 delete                   | other_division misc                      | admin_viewing_as_officer | deny
 delete                   | other_division misc                      | senior_leader            | deny
 delete                   | other_division misc                      | commanding_officer       | allow
@@ -203,7 +203,7 @@ delete                   | other_division misc                      | member    
 delete                   | other_division misc                      | banned                   | deny
 delete                   | other_division misc                      | pending                  | deny
 restore                  | other_division misc                      | admin                    | allow
-restore                  | other_division misc                      | developer                | allow
+restore                  | other_division misc                      | developer                | deny
 restore                  | other_division misc                      | admin_viewing_as_officer | deny
 restore                  | other_division misc                      | senior_leader            | deny
 restore                  | other_division misc                      | commanding_officer       | allow
@@ -215,7 +215,7 @@ restore                  | other_division misc                      | member    
 restore                  | other_division misc                      | banned                   | deny
 restore                  | other_division misc                      | pending                  | deny
 forceDelete              | other_division misc                      | admin                    | allow
-forceDelete              | other_division misc                      | developer                | allow
+forceDelete              | other_division misc                      | developer                | deny
 forceDelete              | other_division misc                      | admin_viewing_as_officer | deny
 forceDelete              | other_division misc                      | senior_leader            | deny
 forceDelete              | other_division misc                      | commanding_officer       | allow

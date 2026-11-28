@@ -1,5 +1,5 @@
 viewAny                  | (any squad)                              | admin                    | allow
-viewAny                  | (any squad)                              | developer                | allow
+viewAny                  | (any squad)                              | developer                | deny
 viewAny                  | (any squad)                              | admin_viewing_as_officer | allow
 viewAny                  | (any squad)                              | senior_leader            | allow
 viewAny                  | (any squad)                              | commanding_officer       | allow
@@ -11,7 +11,7 @@ viewAny                  | (any squad)                              | member    
 viewAny                  | (any squad)                              | banned                   | deny
 viewAny                  | (any squad)                              | pending                  | deny
 deleteAny                | (any squad)                              | admin                    | allow
-deleteAny                | (any squad)                              | developer                | allow
+deleteAny                | (any squad)                              | developer                | deny
 deleteAny                | (any squad)                              | admin_viewing_as_officer | deny
 deleteAny                | (any squad)                              | senior_leader            | allow
 deleteAny                | (any squad)                              | commanding_officer       | allow
@@ -23,7 +23,7 @@ deleteAny                | (any squad)                              | member    
 deleteAny                | (any squad)                              | banned                   | deny
 deleteAny                | (any squad)                              | pending                  | deny
 create                   | (any squad)                              | admin                    | allow
-create                   | (any squad)                              | developer                | allow
+create                   | (any squad)                              | developer                | deny
 create                   | (any squad)                              | admin_viewing_as_officer | deny
 create                   | (any squad)                              | senior_leader            | allow
 create                   | (any squad)                              | commanding_officer       | allow
@@ -35,7 +35,7 @@ create                   | (any squad)                              | member    
 create                   | (any squad)                              | banned                   | deny
 create                   | (any squad)                              | pending                  | deny
 update                   | own_squad                                | admin                    | allow
-update                   | own_squad                                | developer                | allow
+update                   | own_squad                                | developer                | deny
 update                   | own_squad                                | admin_viewing_as_officer | deny
 update                   | own_squad                                | senior_leader            | allow
 update                   | own_squad                                | commanding_officer       | allow
@@ -47,7 +47,7 @@ update                   | own_squad                                | member    
 update                   | own_squad                                | banned                   | deny
 update                   | own_squad                                | pending                  | deny
 update                   | same_platoon_other_squad                 | admin                    | allow
-update                   | same_platoon_other_squad                 | developer                | allow
+update                   | same_platoon_other_squad                 | developer                | deny
 update                   | same_platoon_other_squad                 | admin_viewing_as_officer | deny
 update                   | same_platoon_other_squad                 | senior_leader            | allow
 update                   | same_platoon_other_squad                 | commanding_officer       | allow
@@ -59,7 +59,7 @@ update                   | same_platoon_other_squad                 | member    
 update                   | same_platoon_other_squad                 | banned                   | deny
 update                   | same_platoon_other_squad                 | pending                  | deny
 update                   | other_platoon_squad                      | admin                    | allow
-update                   | other_platoon_squad                      | developer                | allow
+update                   | other_platoon_squad                      | developer                | deny
 update                   | other_platoon_squad                      | admin_viewing_as_officer | deny
 update                   | other_platoon_squad                      | senior_leader            | allow
 update                   | other_platoon_squad                      | commanding_officer       | allow
@@ -71,7 +71,7 @@ update                   | other_platoon_squad                      | member    
 update                   | other_platoon_squad                      | banned                   | deny
 update                   | other_platoon_squad                      | pending                  | deny
 update                   | other_division_squad                     | admin                    | allow
-update                   | other_division_squad                     | developer                | allow
+update                   | other_division_squad                     | developer                | deny
 update                   | other_division_squad                     | admin_viewing_as_officer | deny
 update                   | other_division_squad                     | senior_leader            | deny
 update                   | other_division_squad                     | commanding_officer       | deny
@@ -83,7 +83,7 @@ update                   | other_division_squad                     | member    
 update                   | other_division_squad                     | banned                   | deny
 update                   | other_division_squad                     | pending                  | deny
 delete                   | own_squad                                | admin                    | allow
-delete                   | own_squad                                | developer                | allow
+delete                   | own_squad                                | developer                | deny
 delete                   | own_squad                                | admin_viewing_as_officer | deny
 delete                   | own_squad                                | senior_leader            | allow
 delete                   | own_squad                                | commanding_officer       | allow
@@ -95,7 +95,7 @@ delete                   | own_squad                                | member    
 delete                   | own_squad                                | banned                   | deny
 delete                   | own_squad                                | pending                  | deny
 delete                   | same_platoon_other_squad                 | admin                    | allow
-delete                   | same_platoon_other_squad                 | developer                | allow
+delete                   | same_platoon_other_squad                 | developer                | deny
 delete                   | same_platoon_other_squad                 | admin_viewing_as_officer | deny
 delete                   | same_platoon_other_squad                 | senior_leader            | allow
 delete                   | same_platoon_other_squad                 | commanding_officer       | allow
@@ -107,7 +107,7 @@ delete                   | same_platoon_other_squad                 | member    
 delete                   | same_platoon_other_squad                 | banned                   | deny
 delete                   | same_platoon_other_squad                 | pending                  | deny
 delete                   | other_platoon_squad                      | admin                    | allow
-delete                   | other_platoon_squad                      | developer                | allow
+delete                   | other_platoon_squad                      | developer                | deny
 delete                   | other_platoon_squad                      | admin_viewing_as_officer | deny
 delete                   | other_platoon_squad                      | senior_leader            | allow
 delete                   | other_platoon_squad                      | commanding_officer       | allow
@@ -119,7 +119,7 @@ delete                   | other_platoon_squad                      | member    
 delete                   | other_platoon_squad                      | banned                   | deny
 delete                   | other_platoon_squad                      | pending                  | deny
 delete                   | other_division_squad                     | admin                    | allow
-delete                   | other_division_squad                     | developer                | allow
+delete                   | other_division_squad                     | developer                | deny
 delete                   | other_division_squad                     | admin_viewing_as_officer | deny
 delete                   | other_division_squad                     | senior_leader            | deny
 delete                   | other_division_squad                     | commanding_officer       | deny

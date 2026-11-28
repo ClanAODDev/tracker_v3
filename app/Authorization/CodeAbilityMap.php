@@ -48,6 +48,10 @@ class CodeAbilityMap implements AbilityMap
             Ability::ManageAllTickets,
             Ability::ManagePermissions => [$admin],
 
+            Ability::ViewLogs,
+            Ability::DeleteDivisions,
+            Ability::DeleteAwards => [],
+
             Ability::SeeDivisionHealthAlerts,
             Ability::ApproveDivisionRankActions,
             Ability::RequestDivisionRankActions => [$senior],

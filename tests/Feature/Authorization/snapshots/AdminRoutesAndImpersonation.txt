@@ -23,7 +23,7 @@ GET division turnover    | (status)                                 | member    
 GET division turnover    | (status)                                 | banned                   | 403
 GET division turnover    | (status)                                 | pending                  | 408
 GET developers           | (status)                                 | admin                    | 200
-GET developers           | (status)                                 | developer                | 200
+GET developers           | (status)                                 | developer                | 403
 GET developers           | (status)                                 | admin_viewing_as_officer | 403
 GET developers           | (status)                                 | senior_leader            | 403
 GET developers           | (status)                                 | commanding_officer       | 403
@@ -47,7 +47,7 @@ POST impersonate member  | (status)                                 | member    
 POST impersonate member  | (status)                                 | banned                   | 403
 POST impersonate member  | (status)                                 | pending                  | 408
 POST impersonate role    | (status)                                 | admin                    | 302
-POST impersonate role    | (status)                                 | developer                | 302
+POST impersonate role    | (status)                                 | developer                | 403
 POST impersonate role    | (status)                                 | admin_viewing_as_officer | 403
 POST impersonate role    | (status)                                 | senior_leader            | 403
 POST impersonate role    | (status)                                 | commanding_officer       | 403

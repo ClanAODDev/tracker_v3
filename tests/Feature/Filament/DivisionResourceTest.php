@@ -2,11 +2,13 @@
 
 namespace Tests\Feature\Filament;
 
+use App\Enums\Ability;
 use App\Enums\Position;
 use App\Filament\Admin\Resources\DivisionResource;
 use App\Filament\Admin\Resources\DivisionResource\Pages\CreateDivision;
 use App\Filament\Admin\Resources\DivisionResource\Pages\EditDivision;
 use App\Models\Handle;
+use App\Models\UserAbility;
 use App\Services\Units\UnitAssignment;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
@@ -40,9 +42,10 @@ class DivisionResourceTest extends TestCase
     }
 
     #[Test]
-    public function developer_can_bulk_delete_divisions()
+    public function a_user_granted_delete_divisions_can_bulk_delete_divisions()
     {
         $developer = $this->createAdmin();
+        UserAbility::create(['user_id' => $developer->id, 'ability' => Ability::DeleteDivisions->value, 'reason' => 'test']);
 
         $this->actingAs($developer);
 

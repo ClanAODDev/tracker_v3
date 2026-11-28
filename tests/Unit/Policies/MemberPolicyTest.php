@@ -2,11 +2,13 @@
 
 namespace Tests\Unit\Policies;
 
+use App\Enums\Ability;
 use App\Enums\DivisionMemberFieldType;
 use App\Enums\Rank;
 use App\Enums\Role;
 use App\Models\DivisionMemberField;
 use App\Models\User;
+use App\Models\UserAbility;
 use App\Policies\MemberPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
@@ -59,7 +61,7 @@ class MemberPolicyTest extends TestCase
     }
 
     #[Test]
-    public function developer_bypasses_all_checks()
+    public function the_developer_flag_does_not_bypass_checks()
     {
         $division  = $this->createActiveDivision();
         $developer = $this->createMemberWithUser([
@@ -68,7 +70,17 @@ class MemberPolicyTest extends TestCase
         $developer->developer = true;
         $developer->save();
 
-        $this->assertTrue($this->policy->before($developer));
+        $this->assertNull($this->policy->before($developer));
+    }
+
+    #[Test]
+    public function a_user_granted_manage_all_members_bypasses_all_checks()
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id]);
+        UserAbility::create(['user_id' => $user->id, 'ability' => Ability::ManageAllMembers->value, 'reason' => 'test']);
+
+        $this->assertTrue($this->policy->before($user));
     }
 
     #[Test]
