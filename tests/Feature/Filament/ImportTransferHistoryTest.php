@@ -142,6 +142,44 @@ class ImportTransferHistoryTest extends TestCase
     }
 
     #[Test]
+    public function submitting_a_division_that_does_not_exist_is_rejected(): void
+    {
+        $user   = $this->createMasterSergeant();
+        $target = $this->createMember(['division_id' => $user->member->division_id]);
+
+        $this->actingAs($user);
+
+        Livewire::test(ImportTransferHistory::class)
+            ->fillForm([
+                'member_id' => $target->id,
+                'entries'   => [['division' => '999999', 'date' => '2021-01-01']],
+            ])
+            ->call('create')
+            ->assertHasFormErrors(['entries.0.division']);
+
+        $this->assertSame(0, Transfer::count());
+    }
+
+    #[Test]
+    public function closed_divisions_can_be_pasted_and_imported(): void
+    {
+        $user   = $this->createMasterSergeant();
+        $closed = $this->createInactiveDivision(['name' => 'Star Citizen', 'abbreviation' => 'sc', 'shutdown_at' => '2022-05-01']);
+        $target = $this->createMember(['division_id' => $user->member->division_id]);
+
+        $this->actingAs($user);
+
+        Livewire::test(ImportTransferHistory::class)
+            ->set('data.member_id', $target->id)
+            ->set('data.csv_paste', 'Star Citizen,2020-02-02')
+            ->callAction(TestAction::make('addPastedRows')->schemaComponent('history_paste_actions'))
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $this->assertSame($closed->id, Transfer::where('member_id', $target->id)->sole()->division_id);
+    }
+
+    #[Test]
     public function the_template_downloads_as_csv(): void
     {
         $this->actingAs($this->createMasterSergeant())
