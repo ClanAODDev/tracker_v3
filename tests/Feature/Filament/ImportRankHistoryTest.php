@@ -8,6 +8,7 @@ use App\Filament\Mod\Resources\RankActionResource\Pages\ImportRankHistory;
 use App\Jobs\UpdateRankForMember;
 use App\Models\RankAction;
 use App\Models\User;
+use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Bus;
 use Livewire\Livewire;
@@ -99,6 +100,7 @@ class ImportRankHistoryTest extends TestCase
         $entries = Livewire::test(ImportRankHistory::class)
             ->set('data.member_id', $target->id)
             ->set('data.csv_paste', "Private,2020-01-01\nSpecialist," . now()->addDay()->toDateString())
+            ->callAction(TestAction::make('addPastedRows')->schemaComponent('history_paste_actions'))
             ->get('data.entries');
 
         $this->assertSame(['2020-01-01'], collect($entries)->pluck('date')->values()->all());
@@ -309,7 +311,8 @@ class ImportRankHistoryTest extends TestCase
                 ['rank' => (string) Rank::PRIVATE->value, 'date' => '2020-01-01'],
                 ['rank' => (string) Rank::CORPORAL->value, 'date' => '2022-06-01'],
             ])
-            ->set('data.csv_paste', 'Specialist,2021-03-15');
+            ->set('data.csv_paste', 'Specialist,2021-03-15')
+            ->callAction(TestAction::make('addPastedRows')->schemaComponent('history_paste_actions'));
 
         $entries = $component->get('data.entries');
 
@@ -327,13 +330,43 @@ class ImportRankHistoryTest extends TestCase
         $this->actingAs($user);
 
         $component = Livewire::test(ImportRankHistory::class)
-            ->set('data.csv_paste', "Corporal,2021-06-01\nPrivate,2020-01-01");
+            ->set('data.csv_paste', "Corporal,2021-06-01\nPrivate,2020-01-01")
+            ->callAction(TestAction::make('addPastedRows')->schemaComponent('history_paste_actions'));
 
         $entries = $component->get('data.entries');
 
         $this->assertCount(2, $entries);
         $this->assertEquals('2020-01-01', $entries[0]['date']);
         $this->assertEquals('2021-06-01', $entries[1]['date']);
+    }
+
+    #[Test]
+    public function typing_in_the_paste_box_does_not_add_rows_until_requested(): void
+    {
+        $this->actingAs($this->createMasterSergeant());
+
+        $component = Livewire::test(ImportRankHistory::class)
+            ->set('data.csv_paste', 'Priv')
+            ->set('data.csv_paste', 'Private,2020-0')
+            ->set('data.csv_paste', 'Private,2020-01-01');
+
+        $this->assertEmpty(collect($component->get('data.entries'))->filter(fn ($entry) => filled($entry['rank'] ?? null)));
+        $component->assertNotNotified();
+    }
+
+    #[Test]
+    public function adding_pasted_rows_skips_rows_already_listed_and_clears_the_box(): void
+    {
+        $this->actingAs($this->createMasterSergeant());
+
+        $component = Livewire::test(ImportRankHistory::class)
+            ->set('data.entries', [['rank' => (string) Rank::PRIVATE->value, 'date' => '2020-01-01']])
+            ->set('data.csv_paste', "rank,date\nPrivate,2020-01-01\nCorporal,2021-06-01")
+            ->callAction(TestAction::make('addPastedRows')->schemaComponent('history_paste_actions'));
+
+        $this->assertSame(['2020-01-01', '2021-06-01'], collect($component->get('data.entries'))->pluck('date')->all());
+        $this->assertEmpty($component->get('data.csv_paste'));
+        $component->assertNotified('Added 1 row');
     }
 
     protected function createMasterSergeant(): User

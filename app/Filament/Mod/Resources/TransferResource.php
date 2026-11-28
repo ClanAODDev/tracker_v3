@@ -4,6 +4,7 @@ namespace App\Filament\Mod\Resources;
 
 use App\Enums\Ability;
 use App\Filament\Mod\Resources\TransferResource\Pages\CreateTransfer;
+use App\Filament\Mod\Resources\TransferResource\Pages\ImportTransferHistory;
 use App\Filament\Mod\Resources\TransferResource\Pages\ListTransfers;
 use App\Jobs\UpdateDivisionForMember;
 use App\Models\Division;
@@ -215,8 +216,9 @@ class TransferResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index'  => ListTransfers::route('/'),
-            'create' => CreateTransfer::route('/create'),
+            'index'          => ListTransfers::route('/'),
+            'create'         => CreateTransfer::route('/create'),
+            'import-history' => ImportTransferHistory::route('/import-history'),
         ];
     }
 }

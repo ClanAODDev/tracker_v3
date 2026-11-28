@@ -65,6 +65,7 @@ return [
     ],
 
     'aod_site' => [
+        'url'                  => env('AOD_SITE_URL', 'https://www.clanaod.net'),
         'division_webhook_url' => env('AOD_SITE_DIVISION_WEBHOOK_URL'),
         'webhook_secret'       => env('AOD_SITE_WEBHOOK_SECRET'),
     ],
