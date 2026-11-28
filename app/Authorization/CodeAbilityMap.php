@@ -45,6 +45,7 @@ class CodeAbilityMap implements AbilityMap
             Ability::DemoteMembers,
             Ability::AutoApproveJuniorPromotions,
             Ability::ManageGlobalTags,
+            Ability::GrantClanWideAwards,
             Ability::ManageAllTickets,
             Ability::ManagePermissions => [$admin],
 

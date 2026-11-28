@@ -70,6 +70,7 @@ enum Ability: string
     case AutoApproveJuniorPromotions = 'ability:auto_approve_junior_promotions';
     case ManageMemberAwards          = 'ability:manage_member_awards';
     case ApproveAwards               = 'ability:approve_awards';
+    case GrantClanWideAwards         = 'ability:grant_clan_wide_awards';
     case DeleteAwards                = 'ability:delete_awards';
     case RequestAwards               = 'ability:request_awards';
 
@@ -150,6 +151,7 @@ enum Ability: string
             self::AutoApproveJuniorPromotions => 'Rank actions and awards',
             self::ManageMemberAwards          => 'Rank actions and awards',
             self::ApproveAwards               => 'Rank actions and awards',
+            self::GrantClanWideAwards         => 'Rank actions and awards',
             self::DeleteAwards                => 'Rank actions and awards',
             self::RequestAwards               => 'Rank actions and awards',
             self::ManageGlobalTags            => 'Tags and tickets',
@@ -225,6 +227,7 @@ enum Ability: string
             self::AutoApproveJuniorPromotions => 'Auto-approve promotions up to Corporal',
             self::ManageMemberAwards          => 'Edit and delete member awards',
             self::ApproveAwards               => 'Approve member award requests',
+            self::GrantClanWideAwards         => 'Grant clan-wide awards and review clan-wide award requests',
             self::DeleteAwards                => 'Delete awards',
             self::RequestAwards               => 'Request awards for members',
             self::ManageGlobalTags            => 'Manage clan-wide tags',
