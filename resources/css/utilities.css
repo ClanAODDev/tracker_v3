@@ -230,7 +230,6 @@
     }
 
     .prose-tron .callout-hero p {
-        max-width: 65ch;
         color: color-mix(in srgb, var(--foreground) 85%, transparent);
     }
 
