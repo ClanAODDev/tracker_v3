@@ -218,11 +218,6 @@ class User extends Authenticatable implements Commenter, FilamentUser, HasAvatar
         }
     }
 
-    public function canRemoveUsers(): bool
-    {
-        return $this->member->rank->value >= Rank::SERGEANT->value;
-    }
-
     public function settings(): UserSettings
     {
         return new UserSettings($this->settings, $this);
