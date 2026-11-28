@@ -57,7 +57,7 @@ readonly class PendingActionsData
 
             $url = route('filament.mod.resources.rank-actions.index');
 
-            if ($user->isRole('admin')) {
+            if ($user->can(Ability::ManageAllRankActions)) {
                 $query->where('rank', '>=', Rank::SERGEANT->value);
                 $url .= '?tableFilters[sgt_plus][isActive]=true';
             }
@@ -100,7 +100,7 @@ readonly class PendingActionsData
             );
         }
 
-        if ($user->isRole('admin')) {
+        if ($user->can(Ability::GrantClanWideAwards)) {
             self::pushAction(
                 $actions,
                 MemberAward::needsApproval()

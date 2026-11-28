@@ -47,7 +47,7 @@ class MemberAwardResource extends Resource
     {
         $user = auth()->user();
 
-        if (! $user->isRole('admin') && ! $user->isDivisionLeader()) {
+        if (! $user->can(Ability::GrantClanWideAwards) && ! $user->isDivisionLeader()) {
             return null;
         }
 
@@ -88,7 +88,7 @@ class MemberAwardResource extends Resource
                                     ? [$user->member->division_id => $user->member->division->name]
                                     : [];
 
-                                if ($user->isRole('admin')) {
+                                if ($user->can(Ability::GrantClanWideAwards)) {
                                     return $ownDivision + ['clan-wide' => 'Clan-Wide'];
                                 }
 
@@ -110,9 +110,9 @@ class MemberAwardResource extends Resource
                                     return $user->member?->division_id;
                                 }
 
-                                return $user->isRole('admin') ? 'clan-wide' : null;
+                                return $user->can(Ability::GrantClanWideAwards) ? 'clan-wide' : null;
                             })
-                            ->disabled(fn () => ! auth()->user()->isDivisionLeader() && auth()->user()->isRole('admin') || (auth()->user()->isDivisionLeader() && ! auth()->user()->isRole('admin') && ! self::canGrantClanWideAwards(auth()->user())))
+                            ->disabled(fn () => ! auth()->user()->isDivisionLeader() && auth()->user()->can(Ability::GrantClanWideAwards) || (auth()->user()->isDivisionLeader() && ! auth()->user()->can(Ability::GrantClanWideAwards) && ! self::canGrantClanWideAwards(auth()->user())))
                             ->placeholder('All divisions')
                             ->live()
                             ->dehydrated(false),
@@ -140,9 +140,9 @@ class MemberAwardResource extends Resource
                                         return;
                                     }
 
-                                    if ($user->isRole('admin') && $award->division_id !== null && $award->division_id !== ($user->isDivisionLeader() ? $user->member?->division_id : null)) {
+                                    if ($user->can(Ability::GrantClanWideAwards) && $award->division_id !== null && $award->division_id !== ($user->isDivisionLeader() ? $user->member?->division_id : null)) {
                                         $fail($user->isDivisionLeader() ? 'You can only grant clan-wide awards or awards for your own division.' : 'Admins can only grant clan-wide awards here.');
-                                    } elseif (! $user->isRole('admin') && $user->isDivisionLeader() && $award->division_id !== $user->member?->division_id && ! ($award->division_id === null && self::canGrantClanWideAwards($user))) {
+                                    } elseif (! $user->can(Ability::GrantClanWideAwards) && $user->isDivisionLeader() && $award->division_id !== $user->member?->division_id && ! ($award->division_id === null && self::canGrantClanWideAwards($user))) {
                                         $fail('You can only grant awards for your own division.');
                                     }
                                 },

@@ -195,6 +195,7 @@ class CodeAbilityMapTest extends TestCase
             Ability::AutoApproveJuniorPromotions->value => [$is('admin'), null],
             Ability::ManageMemberAwards->value          => [$is(['admin', 'sr_ldr']), null],
             Ability::ApproveAwards->value               => [$is(['admin', 'sr_ldr']), null],
+            Ability::GrantClanWideAwards->value         => [$is('admin'), null],
             Ability::RequestAwards->value               => [$is(['officer', 'sr_ldr', 'admin']), null],
             Ability::ManageGlobalTags->value            => [$is('admin'), null],
             Ability::ManageDivisionTags->value          => [$is('sr_ldr'), $admin],

@@ -2,12 +2,14 @@
 
 namespace Tests\Feature\Filament;
 
+use App\Enums\Ability;
 use App\Enums\Position;
 use App\Filament\Mod\Resources\MemberAwardResource;
 use App\Filament\Mod\Resources\MemberAwardResource\Pages\CreateMemberAward;
 use App\Filament\Mod\Resources\MemberAwardResource\Pages\EditMemberAward;
 use App\Models\Award;
 use App\Models\MemberAward;
+use App\Models\UserAbility;
 use Filament\Facades\Filament;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -159,6 +161,26 @@ class MemberAwardResourceScopeTest extends TestCase
             ->fillForm(['award_id' => $award->id, 'member_id' => $recipient->id, 'reason' => 'x'])
             ->call('create')
             ->assertHasFormErrors(['award_id']);
+    }
+
+    #[Test]
+    public function an_officer_division_leader_granted_clan_wide_awards_can_request_one(): void
+    {
+        $division = $this->createActiveDivision();
+        $leader   = $this->createOfficer($division);
+        $leader->member->update(['position' => Position::COMMANDING_OFFICER]);
+        UserAbility::create(['user_id' => $leader->id, 'ability' => Ability::GrantClanWideAwards->value, 'reason' => 'test']);
+        $award     = Award::factory()->create(['division_id' => null]);
+        $recipient = $this->createMember(['division_id' => $division->id]);
+
+        $this->actingAs($leader);
+
+        Livewire::test(CreateMemberAward::class)
+            ->fillForm(['division_filter' => 'clan-wide', 'award_id' => $award->id, 'member_id' => $recipient->id, 'reason' => 'x'])
+            ->call('create')
+            ->assertHasNoFormErrors(['award_id']);
+
+        $this->assertTrue(MemberAward::where('award_id', $award->id)->where('member_id', $recipient->id)->exists());
     }
 
     #[Test]

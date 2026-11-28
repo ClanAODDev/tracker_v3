@@ -35,7 +35,7 @@ class MemberAward extends Model
     #[Scope]
     protected function visibleTo(Builder $query, User $user): void
     {
-        $isAdmin  = $user->isRole('admin');
+        $isAdmin  = $user->can(Ability::GrantClanWideAwards);
         $isLeader = $user->isDivisionLeader();
 
         if (! $isAdmin && ! $isLeader) {
