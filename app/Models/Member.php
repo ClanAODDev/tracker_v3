@@ -8,6 +8,7 @@ use App\Enums\Ability;
 use App\Enums\DiscordStatus;
 use App\Enums\Position;
 use App\Enums\Rank;
+use App\Enums\Role;
 use App\Enums\UnitLevel;
 use App\Models\Member\HasCustomAttributes;
 use App\Models\Member\HasUnits;
@@ -220,6 +221,10 @@ class Member extends Model
 
         $divisionSpecificTagIds = $this->tags()->whereNotNull('division_tags.division_id')->pluck('division_tags.id');
         $this->tags()->detach($divisionSpecificTagIds);
+
+        User::where('member_id', $this->id)
+            ->whereNot('role', Role::BANNED)
+            ->update(['role' => Role::MEMBER]);
     }
 
     public function discardPendingRankActions(): void
