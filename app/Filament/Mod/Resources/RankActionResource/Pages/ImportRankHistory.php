@@ -2,6 +2,7 @@
 
 namespace App\Filament\Mod\Resources\RankActionResource\Pages;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Filament\Concerns\ImportsDatedHistory;
 use App\Filament\Mod\Resources\RankActionResource;
@@ -30,10 +31,7 @@ class ImportRankHistory extends CreateRecord
 
     protected function authorizeAccess(): void
     {
-        abort_unless(
-            auth()->user()?->member?->rank->value >= Rank::MASTER_SERGEANT->value,
-            403
-        );
+        abort_unless(auth()->user()?->can(Ability::ImportHistory), 403);
     }
 
     public function form(Schema $schema): Schema

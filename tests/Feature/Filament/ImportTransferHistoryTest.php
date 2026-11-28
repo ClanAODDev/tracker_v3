@@ -2,11 +2,13 @@
 
 namespace Tests\Feature\Filament;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Enums\Role;
 use App\Filament\Mod\Resources\TransferResource\Pages\ImportTransferHistory;
 use App\Models\Transfer;
 use App\Models\User;
+use App\Models\UserAbility;
 use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Bus;
@@ -24,22 +26,34 @@ class ImportTransferHistoryTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function msgt_can_access_the_import_page(): void
+    public function admins_can_access_the_import_page(): void
     {
-        $this->actingAs($this->createMasterSergeant())
+        $this->actingAs($this->createImporter())
             ->get(route('filament.mod.resources.transfers.import-history'))
             ->assertOk();
     }
 
     #[Test]
-    public function below_msgt_cannot_access_the_import_page(): void
+    public function non_admins_cannot_access_the_import_page_even_at_master_sergeant(): void
     {
         $division = $this->createActiveDivision();
-        $user     = $this->createMemberWithUser(['division_id' => $division->id, 'rank' => Rank::STAFF_SERGEANT]);
+        $user     = $this->createMemberWithUser(['division_id' => $division->id, 'rank' => Rank::MASTER_SERGEANT], ['role' => Role::SENIOR_LEADER]);
 
         $this->actingAs($user)
             ->get(route('filament.mod.resources.transfers.import-history'))
             ->assertForbidden();
+    }
+
+    #[Test]
+    public function a_non_admin_granted_import_history_can_access_the_import_page(): void
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id, 'rank' => Rank::SERGEANT], ['role' => Role::SENIOR_LEADER]);
+        UserAbility::create(['user_id' => $user->id, 'ability' => Ability::ImportHistory->value, 'reason' => 'test']);
+
+        $this->actingAs($user)
+            ->get(route('filament.mod.resources.transfers.import-history'))
+            ->assertOk();
     }
 
     #[Test]
@@ -48,7 +62,7 @@ class ImportTransferHistoryTest extends TestCase
         Bus::fake();
         Notification::fake();
 
-        $user    = $this->createMasterSergeant();
+        $user    = $this->createImporter();
         $current = $user->member->division;
         $past    = $this->createActiveDivision(['name' => 'World of Warships']);
         $target  = $this->createMember(['division_id' => $current->id]);
@@ -77,7 +91,7 @@ class ImportTransferHistoryTest extends TestCase
     #[Test]
     public function import_skips_transfers_already_on_record(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $past   = $this->createActiveDivision();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
@@ -103,7 +117,7 @@ class ImportTransferHistoryTest extends TestCase
     #[Test]
     public function choosing_a_member_lists_their_existing_transfers(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $past   = $this->createActiveDivision();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
@@ -124,7 +138,7 @@ class ImportTransferHistoryTest extends TestCase
     #[Test]
     public function pasted_rows_match_divisions_by_name_abbreviation_or_slug(): void
     {
-        $user = $this->createMasterSergeant();
+        $user = $this->createImporter();
         $wows = $this->createActiveDivision(['name' => 'World of Warships', 'abbreviation' => 'wows']);
         $bf   = $this->createActiveDivision(['name' => 'Battlefield', 'abbreviation' => 'bf']);
 
@@ -144,7 +158,7 @@ class ImportTransferHistoryTest extends TestCase
     #[Test]
     public function submitting_a_division_that_does_not_exist_is_rejected(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         $this->actingAs($user);
@@ -163,7 +177,7 @@ class ImportTransferHistoryTest extends TestCase
     #[Test]
     public function closed_divisions_can_be_pasted_and_imported(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $closed = $this->createInactiveDivision(['name' => 'Star Citizen', 'abbreviation' => 'sc', 'shutdown_at' => '2022-05-01']);
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
@@ -182,19 +196,19 @@ class ImportTransferHistoryTest extends TestCase
     #[Test]
     public function the_template_downloads_as_csv(): void
     {
-        $this->actingAs($this->createMasterSergeant())
+        $this->actingAs($this->createImporter())
             ->get(route('transfer-history.template'))
             ->assertOk()
             ->assertHeader('Content-Disposition', 'attachment; filename="transfer-history-template.csv"');
     }
 
-    protected function createMasterSergeant(): User
+    protected function createImporter(): User
     {
         $division = $this->createActiveDivision();
 
         return $this->createMemberWithUser(
             ['division_id' => $division->id, 'rank' => Rank::MASTER_SERGEANT],
-            ['role' => Role::OFFICER],
+            ['role' => Role::ADMIN],
         );
     }
 }

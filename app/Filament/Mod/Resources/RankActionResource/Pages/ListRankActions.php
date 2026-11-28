@@ -2,7 +2,7 @@
 
 namespace App\Filament\Mod\Resources\RankActionResource\Pages;
 
-use App\Enums\Rank;
+use App\Enums\Ability;
 use App\Filament\Mod\Resources\RankActionResource;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
@@ -20,7 +20,7 @@ class ListRankActions extends ListRecords
                 ->icon('heroicon-o-arrow-up-tray')
                 ->color('gray')
                 ->url(RankActionResource::getUrl('import-history'))
-                ->visible(fn () => auth()->user()?->member?->rank->value >= Rank::MASTER_SERGEANT->value),
+                ->visible(fn () => auth()->user()?->can(Ability::ImportHistory)),
             CreateAction::make(),
         ];
     }

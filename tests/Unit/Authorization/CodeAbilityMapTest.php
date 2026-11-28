@@ -173,6 +173,7 @@ class CodeAbilityMapTest extends TestCase
             Ability::ManageAllTransfers->value          => [$is('admin'), null],
             Ability::ViewTransfers->value               => [$is(['officer', 'sr_ldr']), $admin],
             Ability::TransferMembers->value             => [$is(['admin', 'sr_ldr']), null],
+            Ability::ImportHistory->value               => [$is('admin'), null],
             Ability::ManageAllMemberRequests->value     => [$is('admin'), null],
             Ability::ManageMemberRequests->value        => [$is(['sr_ldr', 'admin']), null],
             Ability::DeleteApplications->value          => [$is(['sr_ldr', 'admin']), null],

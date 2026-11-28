@@ -2,12 +2,14 @@
 
 namespace Tests\Feature\Filament;
 
+use App\Enums\Ability;
 use App\Enums\Rank;
 use App\Enums\Role;
 use App\Filament\Mod\Resources\RankActionResource\Pages\ImportRankHistory;
 use App\Jobs\UpdateRankForMember;
 use App\Models\RankAction;
 use App\Models\User;
+use App\Models\UserAbility;
 use Filament\Actions\Testing\TestAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Bus;
@@ -24,24 +26,34 @@ class ImportRankHistoryTest extends TestCase
     use RefreshDatabase;
 
     #[Test]
-    public function msgt_can_access_import_page(): void
+    public function admins_can_access_the_import_page(): void
     {
-        $user = $this->createMasterSergeant();
-
-        $this->actingAs($user)
+        $this->actingAs($this->createImporter())
             ->get(route('filament.mod.resources.rank-actions.import-history'))
             ->assertOk();
     }
 
     #[Test]
-    public function below_msgt_cannot_access_import_page(): void
+    public function non_admins_cannot_access_the_import_page_even_at_master_sergeant(): void
     {
         $division = $this->createActiveDivision();
-        $user     = $this->createMemberWithUser(['division_id' => $division->id, 'rank' => Rank::STAFF_SERGEANT]);
+        $user     = $this->createMemberWithUser(['division_id' => $division->id, 'rank' => Rank::MASTER_SERGEANT], ['role' => Role::SENIOR_LEADER]);
 
         $this->actingAs($user)
             ->get(route('filament.mod.resources.rank-actions.import-history'))
             ->assertForbidden();
+    }
+
+    #[Test]
+    public function a_non_admin_granted_import_history_can_access_the_import_page(): void
+    {
+        $division = $this->createActiveDivision();
+        $user     = $this->createMemberWithUser(['division_id' => $division->id, 'rank' => Rank::SERGEANT], ['role' => Role::SENIOR_LEADER]);
+        UserAbility::create(['user_id' => $user->id, 'ability' => Ability::ImportHistory->value, 'reason' => 'test']);
+
+        $this->actingAs($user)
+            ->get(route('filament.mod.resources.rank-actions.import-history'))
+            ->assertOk();
     }
 
     #[Test]
@@ -54,7 +66,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function import_creates_rank_action_records(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         $this->actingAs($user);
@@ -73,7 +85,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function import_rejects_dates_after_yesterday(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         $this->actingAs($user);
@@ -92,7 +104,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function pasted_rows_dated_after_yesterday_are_skipped(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         $this->actingAs($user);
@@ -111,7 +123,7 @@ class ImportRankHistoryTest extends TestCase
     {
         Bus::fake();
 
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember([
             'division_id' => $user->member->division_id,
             'rank'        => Rank::PRIVATE,
@@ -134,7 +146,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function import_sets_historical_dates_on_approved_and_accepted(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         $this->actingAs($user);
@@ -155,7 +167,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function import_sets_awarded_at_for_officer_ranks(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         $this->actingAs($user);
@@ -175,7 +187,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function import_does_not_set_awarded_at_for_enlisted_ranks(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         $this->actingAs($user);
@@ -193,7 +205,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function import_sets_requester_and_approver_to_current_user(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         $this->actingAs($user);
@@ -213,7 +225,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function import_marks_entries_as_historical(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         $this->actingAs($user);
@@ -231,7 +243,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function selecting_member_pre_populates_entries_with_existing_rank_history(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         RankAction::create([
@@ -271,7 +283,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function import_skips_entries_that_collide_on_date(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         RankAction::create([
@@ -300,7 +312,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function csv_paste_merges_with_existing_entries_sorted_by_date(): void
     {
-        $user   = $this->createMasterSergeant();
+        $user   = $this->createImporter();
         $target = $this->createMember(['division_id' => $user->member->division_id]);
 
         $this->actingAs($user);
@@ -325,7 +337,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function csv_paste_into_empty_entries_populates_sorted_by_date(): void
     {
-        $user = $this->createMasterSergeant();
+        $user = $this->createImporter();
 
         $this->actingAs($user);
 
@@ -343,7 +355,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function typing_in_the_paste_box_does_not_add_rows_until_requested(): void
     {
-        $this->actingAs($this->createMasterSergeant());
+        $this->actingAs($this->createImporter());
 
         $component = Livewire::test(ImportRankHistory::class)
             ->set('data.csv_paste', 'Priv')
@@ -357,7 +369,7 @@ class ImportRankHistoryTest extends TestCase
     #[Test]
     public function adding_pasted_rows_skips_rows_already_listed_and_clears_the_box(): void
     {
-        $this->actingAs($this->createMasterSergeant());
+        $this->actingAs($this->createImporter());
 
         $component = Livewire::test(ImportRankHistory::class)
             ->set('data.entries', [['rank' => (string) Rank::PRIVATE->value, 'date' => '2020-01-01']])
@@ -369,13 +381,13 @@ class ImportRankHistoryTest extends TestCase
         $component->assertNotified('Added 1 row');
     }
 
-    protected function createMasterSergeant(): User
+    protected function createImporter(): User
     {
         $division = $this->createActiveDivision();
 
         return $this->createMemberWithUser(
             ['division_id' => $division->id, 'rank' => Rank::MASTER_SERGEANT],
-            ['role' => Role::OFFICER],
+            ['role' => Role::ADMIN],
         );
     }
 }

@@ -44,6 +44,7 @@ enum Ability: string
     case ManageAllTransfers      = 'ability:manage_all_transfers';
     case ViewTransfers           = 'ability:view_transfers';
     case TransferMembers         = 'ability:transfer_members';
+    case ImportHistory           = 'ability:import_history';
     case ManageAllMemberRequests = 'ability:manage_all_member_requests';
     case ManageMemberRequests    = 'ability:manage_member_requests';
     case DeleteApplications      = 'ability:delete_applications';
@@ -122,6 +123,7 @@ enum Ability: string
             self::ManageAllTransfers          => 'Members',
             self::ViewTransfers               => 'Members',
             self::TransferMembers             => 'Members',
+            self::ImportHistory               => 'Members',
             self::ManageAllMemberRequests     => 'Members',
             self::ManageMemberRequests        => 'Members',
             self::DeleteApplications          => 'Members',
@@ -193,6 +195,7 @@ enum Ability: string
             self::ManageAllTransfers          => 'Full control of transfers, including deletion',
             self::ViewTransfers               => 'View transfer requests',
             self::TransferMembers             => 'Transfer members between divisions in bulk',
+            self::ImportHistory               => 'Import historical rank and transfer records',
             self::ManageAllMemberRequests     => 'Full control of member requests',
             self::ManageMemberRequests        => 'Approve, cancel, and delete member requests',
             self::DeleteApplications          => 'Delete division applications',

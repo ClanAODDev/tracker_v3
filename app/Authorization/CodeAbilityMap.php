@@ -36,6 +36,7 @@ class CodeAbilityMap implements AbilityMap
             Ability::ManageAllUnits,
             Ability::ManageAllMembers,
             Ability::ManageAllTransfers,
+            Ability::ImportHistory,
             Ability::ManageAllMemberRequests,
             Ability::ManageAllNotes,
             Ability::UseMasterSergeantNotes,
